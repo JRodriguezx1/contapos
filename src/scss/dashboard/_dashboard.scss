@@ -1,0 +1,213 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+
+.dashboard{
+    &.swal2-height-auto{  //clase interna que se agrega por js de sweetalert  una espacion al final con esto se quita
+        height: 100% !important;
+    }
+    
+    background-color: v.$azul0;
+    @include m.tablet{
+        display: flex;
+        height: 100vh;
+    }
+    .principal{ //clase esta en header_dashboard.php
+        flex: 1;
+        overflow: hidden;
+    }
+    .contenido{  //clase esta en header_dashboard.php
+        padding: 1rem 1.6rem 2rem 1.6rem;
+        height: 94%;
+        overflow: auto;
+    }
+
+    /*.formulario{
+
+        input:not([type="submit"]){
+            background-color: v.$blanco;
+        }
+        input[type="submit"]{
+            @include m.boton(v.$indigo, v.$blanco);
+            text-transform: uppercase;
+            padding: 1rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+    }*/
+
+    .enlace{
+        color: v.$indigo;
+        &:hover{
+            cursor: pointer;
+            color: darken(v.$indigo, 20%);
+        }
+
+    }
+
+//////////////////////////estilos al sidebar.php////////////////////////////
+    .sidebar{
+        transition: .5s all ease;
+        display: none;  //me oculta el sidebar lateral en dipositivo movil
+        overflow: hidden;
+        @include m.tablet{  //cuando es igual o superior a tablet muesta el sidebar lateral
+            display: block;
+            width: 26rem;
+        }
+        
+        background-color: v.$indigo;
+        //padding: 2rem 0rem 2rem 2rem;
+        padding: 2rem;
+        &.mostrar{   //clase hecha en app.js
+            display: block;
+        }
+        .uptask{  //clase del h1 y de la x cerraren dispositivo movil
+            height: 4.85rem;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            h1{
+                color: v.$blanco;
+                margin: 0;
+                text-align: center;
+            }
+            .menux{
+                img{ 
+                    width: 1.8rem;
+                    &:hover{
+                        cursor: pointer;
+                    }
+                }
+                @include m.tablet{
+                    display: none;
+                }
+            }
+        }
+
+        .noneElement{ //clase agegada en app.ts
+            display: none;
+        }
+        
+        &.minsidebar{ //clase agregada en app.ts
+            width: 8.5rem;
+        }
+
+        .sidebar-nav{
+            margin-top: 5rem;
+            a{              //el tamaño de las letras de los links a esta definido en globales.scss de 1.6rem
+                white-space: nowrap;
+                color: v.$blanco;
+                display: block;
+                margin-bottom: .8rem;
+                padding: 1rem;
+                transition-property: background-color;
+                transition-duration: 300ms;
+                font-size: 1.4rem;
+                text-align: center;
+                &:hover, &.activo{
+                    background-color: darken(v.$indigo, 20%);
+                    border-radius: 0.5rem;
+                    /*border-bottom-left-radius: .5rem;
+                    border-top-left-radius: .5rem;
+                    background-color: v.$azul10;
+                    color: v.$indigo;*/
+                }
+                @include m.tablet{
+                    display: flex;
+                    align-items: center;
+                    gap: .5rem;
+                    font-size: 1.2rem;
+                    margin-bottom: .5rem;
+                    text-align: left;
+                }
+            }
+        }
+    
+    
+        .cerrar-sesion-mobile{  //clase al boton cerrar sesion que esta en el sidebar barra lateral
+            margin-top: 10rem;
+            @include m.tablet{
+               display: none;
+            }
+            p{
+                text-align: center;
+                margin: 0;
+                font-size: 1.4rem;
+                color: v.$cyan;
+                span{
+                    color: v.$blanco;
+                    font-weight: 700;
+                }
+            }
+            .cerrar-sesion{
+                @include m.boton(v.$indigo, v.$blanco);
+            }
+        }//cierre del .cerrar-sesion-mobile
+    
+    }//cierre del .sidebar
+
+
+
+    .barra-mobile{  //clase que esta en header.php, crea sub barra para ocultar los links <a> del sidebar en dispositivos moviles
+        &.ocultarmenu{
+            display: none;
+        }
+        background-color: v.$indigo;
+        padding: 2rem 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include m.tablet{
+            display: none;
+        }
+        h1{
+            color: v.$blanco;
+            margin: 0;
+        }
+        .menu{  
+            img{   //iamgen de los 3 botoncitos
+                width: .8rem;
+                &:hover{
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    
+///////////////////////estilos al header.php /////////////////////////////
+    .barra{
+        display: none;
+        background-color: v.$blanco;
+        /*background: rgb(239,242,247);
+        background: linear-gradient(90deg, rgba(239,242,247,1) 2%, rgba(255,255,255,1) 13%);*/
+        padding: 1rem 2rem;
+        box-shadow: 1px 12px 9px -13px rgba(0, 0, 0, .4);
+        @include m.tablet{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .toggleanduser{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            .sidebartoggle{
+                cursor: pointer;
+            }
+            p{
+                margin: 0;
+                font-size: 1.4rem;
+                span{
+                    color: v.$indigo;
+                    font-weight: 700;
+                }
+            }
+        }
+        .cerrar-sesion{  // etiqueta <a> de cerrar sesion
+            @include m.boton(darken(v.$indigo, 20%), v.$blanco);
+            width: auto;
+        }
+    }
+    
+}

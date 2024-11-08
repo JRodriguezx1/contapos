@@ -1,0 +1,158 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.formulario{
+    display: flex;
+    flex-direction: column;
+    /*
+    &__legend{
+        color: v.$gris;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }*/
+    &__fieldset{
+        border: none;
+        padding: 0;
+    }
+    &__campo{
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+        margin: 0 0 1.5rem 0;
+    }
+    &__contenedor-icono{
+        display: flex;
+        border-radius: .5rem;
+        overflow: hidden;
+    }
+    &__icono{
+        background-color: v.$gris60;
+        width: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        i{
+           color: v.$blanco;
+           font-size: 2rem;
+        }
+    }
+    &__label{
+        display: block;
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: rgba(v.$negro90, 0.85);
+    }
+    &__input, &__select{
+        outline: none;
+        font-size: 1.2rem;
+        padding: .5rem;
+        border: 1px solid darken(v.$gris20, 20);
+        border-radius: .5rem;
+        &--file{
+            border: none;
+        }
+        &--sociales{
+            @extend .formulario__input;
+            flex: 1;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+    &__contentinputfile{
+        margin: 0 auto;
+        height: 15rem;
+        width: 15rem;
+        border: 2px dashed v.$gris20;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &--sm{
+            height: 9rem;
+            width: 10rem;
+        }
+    }
+    &__imginputfile{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            
+        }
+    }
+    &__textarea{
+        font-size: 1.2rem;
+        padding: 1rem;
+        border: 1px solid darken(v.$gris20, 20);
+        border-radius: .5rem;
+        outline-color: v.$gris50;
+    }
+    &__dato{
+        display: flex;
+        input{
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        label{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: .5rem;
+            border: 1px solid darken(v.$gris20, 20);
+            width: 4rem;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: none;
+        }
+    }
+    &__radio{
+        display: flex;
+        gap: 2rem;
+    }
+    &__texto{
+        margin-top: 3rem
+    }
+    &__imagen{
+        max-width: 20rem
+    }
+    &__listado{
+       // @include m.tags;
+    }
+    &__submit{
+        @include m.boton(v.$azul50, v.$blanco);
+        align-self: flex-start;
+        width: auto;
+        border-radius: .4rem;
+        &--eliminar{  //aplicado en adinconfig/index.php para eliminar empleado
+            @include m.boton(v.$rojo60, v.$blanco);  
+            width: auto;
+            align-self: flex-start;
+        }
+        &--login{  //aplicado en login, olvide, registro y dash-cliente
+            @include m.boton(rgba(v.$azul50, .9), v.$blanco);
+            width: auto;
+            border-radius: .4rem;
+            align-self: center;    
+        }
+    }
+
+}
+
+.bloqueformulario {
+
+    &__submit {
+
+        &--login {
+            background-color: v.$azul50;
+            width: 100%;
+            border-radius: .4rem;
+            &:hover {
+                background-color: v.$gris80
+            }
+        }
+    }
+}

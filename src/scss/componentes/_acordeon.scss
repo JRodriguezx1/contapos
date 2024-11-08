@@ -1,0 +1,90 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.wrapper {
+  display: flex;
+}
+.acordeon{
+  max-height: 0rem;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.showacordeon{
+  max-height: 100%; 
+}
+
+
+///////////////// con input tipe chekbox sin usar js, en vista cerrarcaja.php//////////////////
+.accordion{
+  margin-top: 2rem;
+  input[type="checkbox"]{
+    display: none;
+  }
+  label{
+    cursor: pointer;
+    display: block;
+    padding: 1rem;
+    font-size: 1.7rem;
+    text-align: center;
+    position: relative;
+    &::before{
+      content: "+";
+      position: absolute;
+      right: 0;
+      margin-right: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+  }
+  .wrapper-content{
+    margin-top: 1rem;
+    flex: 1;
+    max-height: 0rem;
+    transition: max-height 0.2s ease-out;
+  }
+  .content{
+    max-height: 0rem;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  input[type="checkbox"]:checked + label + .wrapper{
+    .wrapper-content{
+      max-height: 100%;
+      .content{
+        max-height: 100%; 
+      }
+    }
+  }
+
+  input[type="checkbox"]:checked + label::before{
+    content: "-";
+  }
+}
+
+///////////////// con input tipe radio sin usar js, en vista index.php de almacen tab//////////////////
+.accordion_inv{
+    #stockproducto:checked ~ .btn_inv_info_rapido .btnstockproducto{
+      background-color: darken(v.$gris20, 0);
+      color: v.$gris80;
+      border-color: lighten(v.$gris80, 10);
+    }
+    #utilidadproducto:checked ~ .btn_inv_info_rapido .btnutilidadproducto{
+      background-color: darken(v.$gris20, 0);
+      color: v.$gris80;
+      border-color: lighten(v.$gris80, 10);
+    }
+    .accordion_tab_content{
+      display: none;
+    }
+    input[type="radio"]{
+      display: none;
+    }
+    #stockproducto:checked ~ .tablas_inv_rapido .tablastock{
+      display: block;
+    }
+    #utilidadproducto:checked ~ .tablas_inv_rapido .tablautilidad{
+      display: block;
+    }
+}

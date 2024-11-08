@@ -1,0 +1,186 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+//tamaño de botones
+.btn-xs{
+    display: inline-block;
+    width: auto;
+    font-size: 1.1rem;
+    padding: .4rem .6rem;
+    border-radius: .4rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-md{
+    display: inline-block;
+    width: auto;
+    font-size: 1.6rem;
+    padding: .5rem 1rem;
+    border-radius: .4rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-lg{
+    display: inline-block;
+    width: auto;
+    font-size: 1.7rem;
+    font-weight: 600;
+    padding: .6rem 1.4rem;
+    border-radius: .4rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+//colores de botones
+
+.btn-bluedark{
+    background-color:v.$azul70;
+    border-color:v.$azul70;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$azul70, 15);
+        border-color: darken(v.$azul70, 15);
+    }
+}
+.btn-blueintense{
+    background-color:v.$azul60;
+    border-color:v.$azul60;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$azul60, 15);
+        border-color: darken(v.$azul60, 15);
+    }
+}
+.btn-blue{
+    background-color:v.$azul40;
+    border-color:v.$azul40;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$azul40, 15);
+        border-color: darken(v.$azul40, 15);
+    }
+}
+.btn-bluelight{
+    background-color:v.$azul20;
+    border-color:v.$azul20;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$azul20, 15);
+        border-color: darken(v.$azul20, 15);
+    }
+}
+.btn-red{
+    background-color:v.$rojo60;
+    border-color:v.$rojo60;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$rojo60, 15);
+        border-color: darken(v.$rojo60, 15);
+    }
+}
+.btn-green{
+    background-color:v.$verde70;
+    border-color:v.$verde70;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$verde70, 15);
+        border-color: darken(v.$verde70, 15);
+    }
+}
+.btn-lima{
+    background-color:v.$lima;
+    border-color:v.$lima;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$lima, 15);
+        border-color: darken(v.$lima, 15);
+    }
+}
+.btn-pink{
+    background-color:v.$rosa;
+    border-color:v.$rosa;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$rosa, 15);
+        border-color: darken(v.$rosa, 15);
+    }
+}
+.btn-orange{
+    background-color:v.$naranja100;
+    border-color:v.$naranja100;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$naranja100, 15);
+        border-color: darken(v.$naranja100, 15);
+    }
+}
+.btn-turquoise{
+    background-color:v.$turquesa;
+    border-color:v.$turquesa;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$turquesa, 15);
+        border-color: darken(v.$turquesa, 15);
+    }
+}
+.btn-light{
+    background-color:v.$blanco;
+    border-color:lighten( v.$gris60, 7);
+    color: v.$negro90;
+    &:hover{
+        background-color: darken(v.$blanco, 15);
+        border-color: darken(v.$blanco, 15);
+    }
+}
+.btn-dark{
+    background-color:v.$negro90;
+    border-color: v.$negro90;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$gris20, 0);
+        color: v.$gris80;
+        border-color: lighten(v.$gris80, 10);
+    }
+}
+.btn-locked{
+    background-color:v.$gris10;
+    border-color:darken(v.$gris20, 7);
+    color: darken(v.$gris20, 7);
+    &:hover{
+        cursor: auto;
+    }
+}
+.btn-command{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 10rem;
+    width: 100%;
+    padding: .7rem;
+    border: solid 1px v.$gris30;
+    border-radius: .5rem;
+    height: 7rem;
+    color: v.$gris50;
+    font-size: 1.25rem;
+    &:hover{
+        //background-color: v.$negro90;
+        color: v.$gris80;
+        //border-color: v.$azul40;
+    }
+}
+//animacion de botones de alternancia de flecha
+.btnrotated{
+    position: relative;
+    padding-right: 3rem;
+}
+#arrow{
+    position: absolute;
+    right: .9rem;
+    transition: transform 0.3s ease;
+}
+.rotated {
+    transform: rotate(180deg);
+}

@@ -1,0 +1,97 @@
+<div class="box productos">
+  <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a>
+  <h4 class="text-gray-600 mb-12 mt-4">Productos</h4>
+  <?php include __DIR__. "/../../templates/alertas.php"; ?>
+  <button id="crearProducto" class="btn-md btn-blueintense mb-4">Crear producto</button>
+  <a class="btn-md btn-turquoise" href="/admin/almacen/categorias">Ir a categorias</a>
+  <table class="display responsive nowrap tabla" width="100%" id="tablaProductos">
+      <thead>
+          <tr>
+              <th>Nº</th>
+              <th>Imagen</th>
+              <th>Producto</th>
+              <th>Categoria</th>
+              <th>Marca</th>
+              <th>Codigo</th>
+              <th>Precio venta</th>
+              <th class="accionesth">Acciones</th>
+          </tr>
+      </thead>
+      <tbody>
+          <?php foreach($productos as $index => $value): ?>
+          <tr> 
+              <td class=""><?php echo $index+1;?></td>
+              <td class=""><div class=" text-center "><img class="inline" style="width: 50px;" src="/build/img/<?php echo $value->foto;?>" alt=""></div></td>
+              <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
+              <td class="" ><?php echo $value->categoria;?></td>
+              <td class=""><?php echo $value->marca;?></td>
+              <td class=""><?php echo $value->codigo;?></td>
+              <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-md btn-turquoise editarProductos"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-lima ">Mas</button><button class="btn-md btn-red eliminarProductos"><i class="fa-solid fa-trash-can"></i></button></div></td>
+          </tr>
+          <?php endforeach; ?>
+      </tbody>
+  </table>
+
+  <dialog class="midialog-sm p-5" id="miDialogoProducto">
+    <h4 id="modalProducto" class="font-semibold text-gray-700 mb-4">Crear producto</h4>
+    <div id="divmsjalerta1"></div>
+    <form id="formCrearUpdateProducto" class="formulario" action="/admin/almacen/crear_producto" enctype="multipart/form-data" method="POST">
+        
+        <div class="formulario__campo">
+            <label class="formulario__label" for="categoria">Categoria</label>
+            <select class="formulario__select" name="idcategoria" id="categoria" required>
+                <option value="" disabled selected>-Seleccionar-</option>
+                <?php foreach($categorias as $categoria): ?>
+                <option value="<?php echo $categoria->id;?>" <?php echo $categoria->id==$producto->idcategoria?'selected':'';?>><?php echo $categoria->nombre;?></option>
+                <?php endforeach; ?>
+            </select>             
+        </div>
+        <div class="formulario__campo">
+            <label class="formulario__label" for="nombre">Nombre</label>
+            <div class="formulario__dato">
+                <input class="formulario__input" type="text" placeholder="Nombre del producto" id="nombre" name="nombre" value="<?php echo $producto->nombre??'';?>" required>
+                <label data-num="46" class="count-charts" for="">46</label>
+            </div>
+        </div>
+        <div class="">
+            <div class="formulario__campo">
+                <label class="formulario__label" for="preciocompra">Precio Compra</label>
+                <div class="formulario__dato">
+                    <input class="formulario__input" type="number" min="0" placeholder="Precio de venta" id="preciocompra" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
+                </div>
+            </div>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="precioventa">Precio venta</label>
+                <div class="formulario__dato">
+                    <input class="formulario__input" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+                </div>
+            </div>
+        </div>
+        <div class="formulario__campo">
+            <label class="formulario__label" for="sku">SKU Producto</label>
+            <div class="formulario__dato">
+                <input class="formulario__input" type="text" placeholder="Codigo del producto" id="sku" name="sku" value="<?php echo $producto->codigo??'';?>">
+                <label data-num="36" class="count-charts" for="">36</label>
+            </div>
+        </div>
+        <div class="formulario__campo">
+            <div class="formulario__contentinputfile formulario__contentinputfile--sm">
+                <div class="formulario__imginputfile"><img id="imginputfile" src="" alt=""></div>
+                <p class="text-greymouse">Subir imagen</p>
+            </div>
+            <input id="upImage" class="formulario__inputfile" type="file" name="foto" hidden>
+            <button id="customUpImage" class="btn-xs btn-blue self-center !rounded-3xl !px-8 !py-4" type="button">Cargar Imagen</button>
+        </div>
+        
+        <div class="masopciones">
+
+        </div>
+        
+        <div class="text-right">
+            <button class="btn-md btn-red" type="button" value="salir">Salir</button>
+            <input id="btnEditarCrearProducto" class="btn-md btn-blue" type="submit" value="Crear">
+        </div>
+    </form>
+  </dialog><!--fin crear/editar producto-->
+</div>

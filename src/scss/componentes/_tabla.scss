@@ -1,0 +1,63 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.tabla{
+    width: 100%;
+    border-collapse: collapse;
+    thead{
+        color: v.$gris80;
+        tr{
+            th{
+                border:  solid 1px darken(v.$gris20, 0);
+                padding: 1rem;
+            }
+        }
+    }
+    tbody{
+        color: v.$gris70;
+        text-align: center;
+        tr{
+            td{
+                padding: 1rem;
+            }
+            .accionestd{  //td
+                padding: 0;
+            }
+            .acciones-btns{
+                display: inline-flex;
+                gap: .6rem;
+            }
+        } //fin tr
+    } //fin tbody
+}//fin tabla
+
+.tabla2{
+    width: 100%;
+    border-collapse: collapse;
+    thead{
+        color: v.$gris80;
+        tr{
+            th{
+                border:  solid 1px darken(v.$gris20, 0);
+                padding: 1rem;
+            }
+        }
+    }
+    tbody{
+        color: v.$gris70;
+        text-align: center;
+        tr{
+            border-bottom:  solid 1px v.$gris20;
+            td{
+                padding: 1rem;
+            }
+            .accionestd{  //td
+                padding: 0;
+            }
+            .acciones-btns{
+                display: inline-flex;
+                gap: .6rem;
+            }
+        } //fin tr
+    } //fin tbody
+}//fin tabla

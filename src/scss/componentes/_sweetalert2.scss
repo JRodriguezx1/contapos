@@ -1,0 +1,33 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.sweetbtnconfirm{  //clase de sweetalert2
+    font-size: 1.4rem !important;
+    color: v.$blanco !important;
+    background-color: v.$turquesa !important;
+}
+.sweetbtncancel{
+    font-size: 1.4rem !important;
+    color: v.$blanco !important;
+    background-color: v.$gris50 !important;
+}
+
+///clase interna de sweetalert2 corresponde al icono del success
+.swal2-success-ring{
+    border: 0.25em solid v.$azul60 !important;
+}
+.swal2-success-line-long, .swal2-success-line-tip{
+    background-color: v.$azul60 !important;
+}
+
+.swal2-confirm{ //clase interna de sweetalert es el boton ok despues de confirmar
+    background-color: v.$turquesa !important;
+    font-size: 1.2rem !important;
+}
+.swal2-cancel{
+    font-size: 1.2rem !important;
+}
+
+.swal2-title{  //titulo = title
+    padding-top: 2rem !important;
+}
