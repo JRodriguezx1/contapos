@@ -106,23 +106,19 @@
       <div class="mt-4">
         <button class="group relative btn-md btn-blueintense">Categorias
           <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-focus:scale-y-100 origin-top duration-200">
+            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
             <?php foreach($categorias as $categoria): ?>
               <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
             <?php endforeach; ?>
-            <!--<a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#1">hola</a>
-            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Herramientas electricas</a>
-            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#3">lulu</a>
-            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#1">hola lupe lulu</a>
-            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Herramientas electricas</a>
-            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#3">lupe lulu</a>-->
           </div>
         </button>
         <button class="btn-md btn-lima">Otros</button>
       </div>
 
-      <div class="grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
+      <div id="productos" class="grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
+        
         <?php foreach($productos as $producto): ?>
-        <div class="rounded-lg bg-slate-200 flex gap-4 py-4 pr-4">
+        <div id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 py-4 pr-4" data-id="<?php echo $producto->id;?>">
           <img src="/build/img/<?php echo $producto->foto;?>" class="inline h-24 min-w-24 w-24 object-contain" alt="">
           <div class="flex flex-col justify-between grow overflow-hidden">
             <p class="m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre; ?></p>
@@ -130,35 +126,6 @@
           </div>
         </div>
         <?php endforeach; ?>
-        <!--
-        <div class="rounded-lg bg-slate-200 flex gap-4 py-4 pr-4">
-          <img src="/build/img/cliente1/productos/tenis1.jpg" class="inline h-24 min-w-24 w-24 object-contain" alt="">
-          <div class="flex flex-col justify-between grow overflow-hidden">
-            <p class="m-0 text-xl leading-5 text-slate-500">Multivitaminico Womens Blend</p>
-            <p class="m-0 text-blue-600 font-semibold">$135.000</p>
-          </div>
-        </div>
-        <div class="rounded-lg bg-slate-200 flex gap-4 py-4 pr-4">
-          <img src="/build/img/cliente1/productos/vitaminas5.jpg" class="inline h-24 min-w-24 w-24 object-contain" alt="">
-          <div class="flex flex-col justify-between grow overflow-hidden">
-            <p class="m-0 text-xl leading-5 text-slate-400">Multivitaminico Womens Blend</p>
-            <p class="m-0 text-blue-600 font-semibold">$135.000</p>
-          </div>
-        </div>
-        <div class="rounded-lg border-solid border border-gray-300 flex gap-4 py-4 pr-4">
-          <img src="/build/img/cliente1/productos/movil2.jpg" class="inline h-24 min-w-24 w-24 object-contain" alt="">
-          <div class="flex flex-col justify-between grow overflow-hidden">
-            <p class="m-0 text-xl leading-5 text-slate-400">Multivitaminico Womens Blend</p>
-            <p class="m-0 text-blue-600 font-semibold">$135.000</p>
-          </div>
-        </div>
-        <div class="rounded-lg bg-indigo-50 flex gap-4 py-4 pr-4">
-          <img src="/build/img/cliente1/productos/control1.jpg" class="inline h-24 min-w-24 w-24 object-contain" alt="">
-          <div class="flex flex-col justify-between grow overflow-hidden">
-            <p class="m-0 text-xl leading-5 text-slate-400">Multivitaminico Womens Blend</p>
-            <p class="m-0 text-blue-600 font-semibold">$135.000</p>
-          </div>
-        </div>-->
 
       </div> <!-- fin contenedor de productos -->
     </div> <!-- fin primera columna -->
@@ -191,34 +158,25 @@
       </div>
       <!-- Apilamiento de productos -->
       <div class="border-solid border-t-2 border-blue-600 pt-4">
-        <table class=" tabla" width="100%" id="">
+        <table class=" tabla" width="100%" id="tablaventa">
             <thead>
                 <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th class="accionesth">Eliminar</th>
+                    <th>Und</th>
+                    <th>Total</th>
+                    <th class="accionesth text-red-500"><i class="fa-solid fa-x"></i></th>
                 </tr>
             </thead>
             <tbody>
-                <tr>        
+                <!--<tr>        
                     <td class="!p-2 text-xl text-gray-500 leading-5">Multivitaminico Womens Blend</td> 
-                    <td class="!p-2"><div class="flex"><button><span class="material-symbols-outlined">remove</span></button><input type="text" class="w-20 px-2 text-center" value="2"><button><span class="material-symbols-outlined">add</span></button></div></td>
+                    <td class="!px-0 !py-2"><div class="flex"><button><span class="material-symbols-outlined">remove</span></button><input type="text" class="w-20 px-2 text-center" value="2"><button><span class="material-symbols-outlined">add</span></button></div></td>
+                    <td class="!p-2 text-xl text-gray-500 leading-5">$320.000</td>
                     <td class="!p-2 text-xl text-gray-500 leading-5">$320.000</td>
                     <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>
-                </tr>
-                <tr>        
-                    <td class="!p-2 text-xl text-gray-500 leading-5">Multivitaminico Womens Blend</td> 
-                    <td class="!p-2"><div class="flex"><button><span class="material-symbols-outlined">remove</span></button><input type="text" class="w-20 px-2 text-center" value="1"><button><span class="material-symbols-outlined">add</span></button></div></td>
-                    <td class="!p-2 text-xl text-gray-500 leading-5">$320.000</td>
-                    <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>
-                </tr>
-                <tr>        
-                    <td class="!p-2 text-xl text-gray-500 leading-5">Multivitaminico Womens Blend</td> 
-                    <td class="!p-2"><div class="flex"><button><span class="material-symbols-outlined">remove</span></button><input type="text" class="w-20 px-2 text-center" value="6"><button><span class="material-symbols-outlined">add</span></button></div></td>
-                    <td class="!p-2 text-xl text-gray-500 leading-5">$4.320.000</td>
-                    <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>
-                </tr>
+                </tr>-->
+                
             </tbody>
         </table>
       </div> <!-- FIn Apilamiento de productos -->
@@ -232,19 +190,97 @@
             <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
           </div>
           <div>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$987.250</p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$84.500</p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$4.500</p>
-            <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">$1.172.374</p>
+            <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+            <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+            <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+            <p id="total" class="m-0 mb-2 text-slate-600 text-3xl font-semibold">$0</p>
           </div>
         </div>
       </div>
       <div class="text-center p-4">
-        <button class="btn-md btn-red mr-6">Vaciar</button>
-        <button class="btn-md btn-turquoise mr-6">Guardar</button>
-        <button class="btn-md btn-blueintense">Facturar</button>
+        <button id="btnvaciar" class="btn-md btn-red mr-6">Vaciar</button>
+        <button id="btnguardar" class="btn-md btn-turquoise mr-6">Guardar</button>
+        <button id="btnfacturar" class="btn-md btn-blueintense">Facturar</button>
       </div>
     </div> <!-- fin segunda columna -->
 
   </div>
+
+
+  <!-- MODAL PARA FINALizAR LA CITA Y CAMBIAR SU ESTADO A FINALIZAR, O ELIMINAR LA CITA-->
+  <dialog class="midialog-xs px-2 pb-2" id="miDialogoVaciar">
+      <div>
+          <p class="text-weight500 text-greydark"></p>
+          <p class="text-weight500 text-greydark"></p>
+          <p class="text-xs text-greydark mb-0 pb-1"></p>
+      </div>
+      <div id="" class="terminarcita dflex flex-justifyAround borderT-greyclear pt-1">
+          <div class="fincita dflex cursorpointer t-AllEase03 hoverScale1 text-blue text-weight600"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Pagar</p></div>
+          <div class="eliminarcita dflex cursorpointer t-AllEase03 hoverScale1 text-red text-weight600"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">Eliminar</p></div>
+      </div>
+  </dialog>
+  <!--///////////////////// Moal procesar el pago boton facturar /////////////////////////-->
+  <dialog class="midialog-lg px-2 pb-2" id="miDialogoFinCita">
+      <h4 class="dashboard__heading2 m-0">Registrar venta de cita</h4>
+      <form class="formulario" action="/admin/citas/finalizar" method="POST">
+          <input id="idcita" name="id" type="hidden">
+          <div class="tabslife">
+              <p class="text-center text-greydark">Elegir metodo de pago</p>
+              <div id="metodospago" class="tabslife-content">
+                  <?php foreach($mediospago as $index => $value): ?>
+                      <label><input type="radio" name="radio" value="<?php echo $value->id??'';?>" <?php echo $index==0?'checked':'';?> ><span><?php echo $value->mediopago;?></span></label>
+                  <?php endforeach; ?>
+              </div>
+          </div>
+          <div class="dflex alignItems-center flex-justifyEvenly">
+              <p class="text-greydark">Total: $<span id="valorcita" class="text-md text-greydark text-weight600">28.000</span></p>
+              <p class="text-greydark text-xs">Cambio: <span id="cambio" class="text-orange text-sm text-weight500">$0</span></p>
+          </div>
+          <div class="dflex-sm flex-justifyAround">
+              <div class="">
+                  <p class="m-0 mb-1 text-md text-weight700 text-greyblack">Fecha de la cita:</p>
+                  <span id="finfecha" class="dblock mb-2 text-xs text-greydark text-weight600">2024/8/11 - 11:30am</span>
+                  <div class="formulario__campo">
+                      <label class="formulario__label" for="">Cliente: </label>
+                      <input id="fincliente" class="formulario__input" name="" type="text" value="Lupe lulu">
+                  </div>
+                  <div class="formulario__campo">
+                      <label class="formulario__label" for="">Servicio</label>
+                      <select class="formulario__select"  id="finservicios" name="" required disabled>
+                          <option value="0" disabled selected> -Selecionar- </option>
+                      </select>
+                  </div>
+              </div>
+              <div class="">
+                  <div class="formulario__campo">
+                      <label class="formulario__label" for="">Empleado</label>
+                      <select class="formulario__select"  id="finprofesionales" name="" required>
+                          <option value="0" disabled selected> -Selecionar- </option>
+                          <?php foreach($profesionales as $value):  ?>
+                          <option value="<?php echo $value->id??'';?>"><?php echo $value->nombre??''.' '.$value->apellido??'';?></option>
+                          <?php endforeach;  ?>
+                      </select>
+                  </div>
+                  <div class="finRefPago formulario__campo dnone">
+                      <label class="formulario__label" for="finRefPago">Referencia de pago: </label>
+                      <input class="formulario__input" id="finRefPago" name="" type="text" placeholder="transaccion" value="" disabled>
+                  </div>
+                  <div class="finRecibio formulario__campo">
+                      <label class="formulario__label" for="finRecibio">Recibido: </label>
+                      <input class="formulario__input inputfocus-orange-2 text-orange text-weight500" id="finRecibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                  </div>
+                  <div class="formulario__campo">
+                      <textarea class="formulario__textarea" id="finobservacion" name="finobservacion" placeholder="Observaciones" rows="4"></textarea>
+                  </div>
+
+              </div>
+
+          </div>
+          <div class="aselfEnd">
+              <button class="btn-md btn-red" type="button" value="cancelar">cancelar</button>
+              <input class="btn-md btn-blue" type="submit" value="Crear Venta">
+          </div>
+          
+      </form>
+  </dialog>
 </div>

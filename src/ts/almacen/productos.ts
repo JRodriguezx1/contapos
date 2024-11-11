@@ -35,7 +35,7 @@
 
     (async ()=>{
       try {
-          const url = "/admin/api/getproducts"; //llamado a la API REST
+          const url = "/admin/api/allproducts"; //llamado a la API REST
           const respuesta = await fetch(url); 
           products = await respuesta.json(); 
           console.log(products);

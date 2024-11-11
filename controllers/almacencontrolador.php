@@ -14,12 +14,12 @@ class almacencontrolador{
     session_start();
     isadmin();
     $alertas = [];
-
+    $productos = productos::all();
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'productos'=>$productos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -135,7 +135,7 @@ class almacencontrolador{
     echo json_encode($alertas);
   }
 
-  public static function getproducts(){
+  public static function allproducts(){
     $productos = productos::all();  //arreglo de obj = [{},{},{}]
     /*$array = json_decode(json_encode($productos), true); // se convierte a arreglo de arreglos: [["id"=>"1", "nombre"="2"], ["id"=>"1", "nombre"="2"]]
     $string = "[".join(', ', array_map(function($subarray){

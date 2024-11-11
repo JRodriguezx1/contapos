@@ -4,7 +4,7 @@ namespace Model;
 
 class productos extends ActiveRecord {
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'idcategoria', 'nombre', 'foto', 'marca', 'codigo', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'categoria', 'precio_compra', 'precio_venta', 'fecha_ingreso'];
+    protected static $columnasDB = ['id', 'idcategoria', 'nombre', 'foto', 'impuesto', 'marca', 'codigo', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'categoria', 'precio_compra', 'precio_venta', 'fecha_ingreso'];
     
     public function __construct($args = [])
     {
@@ -12,6 +12,7 @@ class productos extends ActiveRecord {
         $this->idcategoria = $args['idcategoria'] ?? '';
         $this->nombre = $args['nombre'] ?? '';
         $this->foto = $args['foto'] ?? '';
+        $this->impuesto = $args['impuesto'] ?? 0;
         $this->marca = $args['marca'] ?? '';
         $this->codigo = $args['codigo'] ?? '';
         $this->descripcion = $args['descripcion'] ?? '';
@@ -22,7 +23,7 @@ class productos extends ActiveRecord {
         $this->uso = $args['uso'] ?? '';
         $this->fabricante = $args['fabricante'] ?? '';
         $this->garantia = $args['garantia'] ?? '';
-        $this->stock = $args['stock'] ?? '';
+        $this->stock = $args['stock'] ?? 0;
         $this->categoria = $args['categoria'] ?? '';
         $this->precio_compra = $args['precio_compra'] ?? '';
         $this->precio_venta = $args['precio_venta'] ?? '';

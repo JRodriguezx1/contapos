@@ -96,7 +96,7 @@ $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
 /////////////////////////////////////--   API'S   --////////////////////////////////////////
 $router->post('/admin/api/actualizar_categoria', [almacencontrolador::class, 'actualizar_categoria']);
 $router->post('/admin/api/eliminarCategoria', [almacencontrolador::class, 'eliminarCategoria']);
-$router->get('/admin/api/getproducts', [almacencontrolador::class, 'getproducts']);
+$router->get('/admin/api/allproducts', [almacencontrolador::class, 'allproducts']); //trae todos los productos
 $router->post('/admin/api/actualizarproducto', [almacencontrolador::class, 'actualizarproducto']);  //actualizar en general el producto
 $router->post('/admin/api/eliminarProducto', [almacencontrolador::class, 'eliminarProducto']);
 

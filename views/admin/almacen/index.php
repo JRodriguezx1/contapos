@@ -38,25 +38,16 @@
                 
             </thead>
             <tbody>
-                <?php //foreach($empleados as $index => $value): ?>
+                <?php foreach($productos as $index => $value): ?>
                 <tr> 
-                    <td class="">1<?php //echo $index+1;?></td>        
-                    <td class="">Hidrolavadora pw1450 black decker<?php //echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="" >Equipos Eletricos</td> 
-                    <td class="">27<?php // echo $value->movil;?></td>
-                    <td class="">26 Sep 2024, 06:24 AM<?php // echo $value->cedula;?></td>
-                    <td class="accionestd"><div class="acciones-btns" id="<?php // echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
+                    <td class=""><?php echo $index+1;?></td>        
+                    <td class=""><?php echo $value->nombre;?></td> 
+                    <td class="" ><?php echo $value->categoria;?></td> 
+                    <td class=""><?php echo $value->stock;?></td>
+                    <td class=""><?php echo $value->fecha_ingreso;?></td>
+                    <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
                 </tr>
-
-                <tr> 
-                    <td class="">2<?php //echo $index+1;?></td>        
-                    <td class="">Taladro percutor BLACK AND DECKER 550W 1/2<?php //echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="" >Equipos Eletricos</td> 
-                    <td class="">5<?php // echo $value->movil;?></td>
-                    <td class="">26 Sep 2024, 06:24 AM<?php // echo $value->cedula;?></td>
-                    <td class="accionestd"><div class="acciones-btns" id="<?php // echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
-                </tr>
-                <?php //endforeach; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
       </div> <!-- fin <div class="stockproductos"> -->
@@ -79,31 +70,19 @@
                 </tr>
             </thead>
             <tbody>
-                <?php //foreach($empleados as $index => $value): ?>
+                <?php foreach($productos as $index => $value): ?>
                 <tr> 
-                    <td class="">1<?php //echo $index+1;?></td>        
-                    <td class="">Hidrolavadora pw1450 black decker<?php //echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="">19%<?php // echo $value->cedula;?></td>
-                    <td class="" >$344120</td> 
-                    <td class="">$550000<?php // echo $value->movil;?></td>
+                    <td class=""><?php echo $index+1;?></td>        
+                    <td class=""><?php echo $value->nombre;?></td> 
+                    <td class=""><?php echo $value->impuesto;?>%</td>
+                    <td class="" >$<?php echo $value->precio_compra;?></td> 
+                    <td class="">$<?php echo $value->precio_venta;?><?php // echo $value->movil;?></td>
                     <td class="">$272000<?php // echo $value->movil;?></td>
                     <td class="">$66%<?php // echo $value->movil;?></td>
                     <td class="">101%<?php // echo $value->movil;?></td>
-                    <td class="accionestd"><div class="acciones-btns" id="<?php // echo $value->id;?>"><button class="btn-xs btn-turquoise">Mas</button></div></td>
+                    <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise">Mas</button></div></td>
                 </tr>
-
-                <tr> 
-                    <td class="">2<?php //echo $index+1;?></td>        
-                    <td class="">Taladro percutor BLACK AND DECKER 550W 1/2<?php //echo $value->nombre.' '.$value->apellido;?></td>
-                    <td class="">19%<?php // echo $value->cedula;?></td>
-                    <td class="">$390000</td> 
-                    <td class="">$872000<?php // echo $value->movil;?></td>
-                    <td class="">$472000<?php // echo $value->movil;?></td>
-                    <td class="">$71%<?php // echo $value->movil;?></td>
-                    <td class="">121%<?php // echo $value->movil;?></td>
-                    <td class="accionestd"><div class="acciones-btns" id="<?php // echo $value->id;?>"><button class="btn-xs btn-turquoise">Mas</button></div></td>
-                </tr>
-                <?php //endforeach; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
       </div> <!-- fin tablautilidad-->
