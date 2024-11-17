@@ -169,14 +169,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!--<tr>        
-                    <td class="!p-2 text-xl text-gray-500 leading-5">Multivitaminico Womens Blend</td> 
-                    <td class="!px-0 !py-2"><div class="flex"><button><span class="material-symbols-outlined">remove</span></button><input type="text" class="w-20 px-2 text-center" value="2"><button><span class="material-symbols-outlined">add</span></button></div></td>
-                    <td class="!p-2 text-xl text-gray-500 leading-5">$320.000</td>
-                    <td class="!p-2 text-xl text-gray-500 leading-5">$320.000</td>
-                    <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>
-                </tr>-->
-                
+                <!-- productos seleccionados a vender-->
             </tbody>
         </table>
       </div> <!-- FIn Apilamiento de productos -->
@@ -207,39 +200,57 @@
   </div>
 
 
-  <!-- MODAL PARA FINALizAR LA CITA Y CAMBIAR SU ESTADO A FINALIZAR, O ELIMINAR LA CITA-->
-  <dialog class="midialog-xs px-2 pb-2" id="miDialogoVaciar">
+  <!-- MODAL PARA VACIAR EL CARRITO-->
+  <dialog class="midialog-xs px-8 pb-8" id="miDialogoVaciar">
       <div>
-          <p class="text-weight500 text-greydark"></p>
-          <p class="text-weight500 text-greydark"></p>
-          <p class="text-xs text-greydark mb-0 pb-1"></p>
+          <p class="text-2xl font-semibold text-gray-500">Desea vaciar el carrito de venta?</p>
       </div>
-      <div id="" class="terminarcita dflex flex-justifyAround borderT-greyclear pt-1">
-          <div class="fincita dflex cursorpointer t-AllEase03 hoverScale1 text-blue text-weight600"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Pagar</p></div>
-          <div class="eliminarcita dflex cursorpointer t-AllEase03 hoverScale1 text-red text-weight600"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">Eliminar</p></div>
+      <div class="flex justify-around border-t-gray-300 pt-4">
+          <div class="sivaciar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
+          <div class="novaciar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
+      </div>
+  </dialog>
+  <!-- MODAL PARA GUARDAR EL PEDIDO-->
+  <dialog class="midialog-xs px-8 pb-8" id="miDialogoGuardar">
+      <div>
+          <p class="text-3xl font-semibold text-gray-500">Desea guardar el pedido?</p>
+          <p class="text-xl text-gray-500">El pedido de venta No: 34512 se guardara en sistema.</p>
+      </div>
+      <div id="" class="flex justify-around border-t-gray-300 pt-4">
+          <div class="siguardar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
+          <div class="noguardar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
       </div>
   </dialog>
   <!--///////////////////// Moal procesar el pago boton facturar /////////////////////////-->
-  <dialog class="midialog-lg px-2 pb-2" id="miDialogoFinCita">
-      <h4 class="dashboard__heading2 m-0">Registrar venta de cita</h4>
+  <dialog class="midialog-lg p-4" id="miDialogoFacturar">
+      <h4 class="text-3xl text-gray-600 font-semibold m-0">Registrar pago</h4>
       <form class="formulario" action="/admin/citas/finalizar" method="POST">
           <input id="idcita" name="id" type="hidden">
-          <div class="tabslife">
-              <p class="text-center text-greydark">Elegir metodo de pago</p>
-              <div id="metodospago" class="tabslife-content">
-                  <?php foreach($mediospago as $index => $value): ?>
-                      <label><input type="radio" name="radio" value="<?php echo $value->id??'';?>" <?php echo $index==0?'checked':'';?> ><span><?php echo $value->mediopago;?></span></label>
+          <p class="text-gray-600 text-3xl text-center font-light m-0">Total: $<span id="" class="text-gray-700 font-semibold">28.000</span></p>
+          <div class="accordion">
+            <input type="checkbox" id="first">
+            <label class="etiqueta text-gray-500" for="first">Elegir metodo de pago</label>
+            <div class="wrapper">
+              <div class="wrapper-content">
+                <div id="metodospago" class="content flex flex-col items-end w-96 mx-auto">
+                  <?php foreach($mediospago as $index => $value):?>
+                    <div id="<?php echo $value->id??'';?>" class="mb-4"><label class="text-gray-700 text-xl"><?php echo $value->mediopago;?>: </label><input class="w-44 py-1 px-3 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500 text-xl" type="number" value="0"></div>
                   <?php endforeach; ?>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <div class="finRecibio formulario__campo">
+              <label class="formulario__label" for="finRecibio">Recibido: </label>
+              <input class="formulario__input inputfocus-orange-2 text-orange text-weight500" id="finRecibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
           </div>
           <div class="dflex alignItems-center flex-justifyEvenly">
-              <p class="text-greydark">Total: $<span id="valorcita" class="text-md text-greydark text-weight600">28.000</span></p>
-              <p class="text-greydark text-xs">Cambio: <span id="cambio" class="text-orange text-sm text-weight500">$0</span></p>
+              <p class="text-center text-gray-500">Cambio: <span id="cambio" class="text-gray-700 font-semibold">$0</span></p>
           </div>
           <div class="dflex-sm flex-justifyAround">
               <div class="">
-                  <p class="m-0 mb-1 text-md text-weight700 text-greyblack">Fecha de la cita:</p>
-                  <span id="finfecha" class="dblock mb-2 text-xs text-greydark text-weight600">2024/8/11 - 11:30am</span>
+                  
                   <div class="formulario__campo">
                       <label class="formulario__label" for="">Cliente: </label>
                       <input id="fincliente" class="formulario__input" name="" type="text" value="Lupe lulu">
@@ -264,10 +275,6 @@
                   <div class="finRefPago formulario__campo dnone">
                       <label class="formulario__label" for="finRefPago">Referencia de pago: </label>
                       <input class="formulario__input" id="finRefPago" name="" type="text" placeholder="transaccion" value="" disabled>
-                  </div>
-                  <div class="finRecibio formulario__campo">
-                      <label class="formulario__label" for="finRecibio">Recibido: </label>
-                      <input class="formulario__input inputfocus-orange-2 text-orange text-weight500" id="finRecibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
                   </div>
                   <div class="formulario__campo">
                       <textarea class="formulario__textarea" id="finobservacion" name="finobservacion" placeholder="Observaciones" rows="4"></textarea>

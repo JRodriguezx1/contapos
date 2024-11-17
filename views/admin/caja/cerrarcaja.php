@@ -60,7 +60,7 @@
 
   <div class="accordion">
       <input type="checkbox" id="first">
-      <label class="text-gray-500" for="first">Resumen</label>
+      <label class="etiqueta text-gray-500" for="first">Resumen</label>
       <div class="wrapper">
           <div class="wrapper-content">
             <div class="content">

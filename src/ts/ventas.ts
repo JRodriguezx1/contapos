@@ -4,7 +4,11 @@
   const contentproducts = document.querySelector('#productos');
   const tablaventa = document.querySelector('#tablaventa tbody');
   const btnvaciar = document.querySelector('#btnvaciar');
+  const btnguardar = document.querySelector('#btnguardar');
+  const btnfacturar = document.querySelector('#btnfacturar');
   const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
+  const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
+  const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
    
   let carrito:{id:string, idcategoria: string, nombre: string, precio_venta: string, cantidad: number, total: number}[]=[];
   const valorTotal = {subtotal: 0, impuesto: 0, descuento: 0, total: 0}
@@ -141,7 +145,29 @@
 
   btnvaciar?.addEventListener('click', ()=>{
     if(carrito.length)
-    miDialogoVaciar.showModal();
+      miDialogoVaciar.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
   });
+
+  btnguardar?.addEventListener('click', ()=>{
+    if(carrito.length)
+      miDialogoGuardar.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+  });
+
+  btnfacturar?.addEventListener('click', ()=>{
+    if(carrito.length)
+      miDialogoFacturar.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+  });
+
+  function cerrarDialogoExterno(event:Event) {
+    if (event.target === miDialogoVaciar || event.target === miDialogoGuardar || event.target === miDialogoFacturar || (event.target as HTMLInputElement).closest('.novaciar') || (event.target as HTMLInputElement).closest('.sivaciar') || (event.target as HTMLInputElement).closest('.noguardar') || (event.target as HTMLInputElement).closest('.siguardar')) {
+      miDialogoVaciar.close();
+      miDialogoGuardar.close();
+      miDialogoFacturar.close();
+      document.removeEventListener("click", cerrarDialogoExterno);
+    }
+  }
 
 })();
