@@ -7,6 +7,7 @@ use MVC\Router;  //namespace\clase
 use Model\usuarios;
 use Model\clientes;
 use Model\empleados;
+use Model\direcciones;
 
  
 class clientescontrolador{
@@ -150,9 +151,43 @@ class clientescontrolador{
     }
      
 
+
+    ///////////////////////////////////  Apis ////////////////////////////////////
     public static function allclientes(){  //api llamado desde citas.js
         //$clientes = usuarios::all();
         $clientes = usuarios::whereArray(['admin'=>0, 'habilitar'=>1]);
         echo json_encode($clientes);
+    }
+    
+
+    public static function apiCrearCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea un cliente
+        session_start();
+        isadmin();
+        $cliente = new clientes($_POST);
+        $direccion = new direcciones($_POST);
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $cliente->validar_nuevo_cliente();
+            $documentID = $cliente->validar_regDinamic('identificacion');
+            $alertas = $direccion->validarDireccion();
+            if(empty($alertas) && !$documentID){ //si los campos cumplen los criterios y cliente no existe por documento   
+                //guardar cliente recien creado en bd  
+                $resultado = $cliente->crear_guardar();  
+                if($resultado){
+                    $direccion->idcliente =  $resultado[1];
+                    $r1 = $direccion->crear_guardar();
+                    if($r1){
+                        $alertas['exito'][] = 'Cliente Registrado correctamente';
+                        $alertas['nextID'] = $resultado[1];
+                    }
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }else{
+                if($documentID)$cliente::setAlerta('error', 'El cliente ya esta registrado');
+                $alertas = $cliente::getAlertas();
+            }
+        }
+        echo json_encode($alertas);
     }
 }

@@ -1,0 +1,4 @@
+(()=>{
+    if(document.querySelector('.paginadorventas')){
+    }
+})();

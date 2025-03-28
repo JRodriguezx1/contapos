@@ -16,7 +16,7 @@
     display: inline-block;
     width: auto;
     font-size: 1.6rem;
-    padding: .5rem 1rem;
+    padding: .5rem .9rem;
     border-radius: .4rem;
     border: 1px solid transparent;
     cursor: pointer;
@@ -125,6 +125,15 @@
         border-color: darken(v.$turquesa, 15);
     }
 }
+.btn-indigo{
+    background-color:v.$indigo;
+    border-color:v.$indigo;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$indigo, 15);
+        border-color: darken(v.$indigo, 15);
+    }
+}
 .btn-light{
     background-color:v.$blanco;
     border-color:lighten( v.$gris60, 7);
@@ -137,6 +146,16 @@
 .btn-dark{
     background-color:v.$negro90;
     border-color: v.$negro90;
+    color: v.$blanco;
+    &:hover{
+        background-color: darken(v.$gris20, 0);
+        color: v.$gris80;
+        border-color: lighten(v.$gris80, 10);
+    }
+}
+.btn-semidark{
+    background-color:v.$gris80;
+    border-color: v.$gris80;
     color: v.$blanco;
     &:hover{
         background-color: darken(v.$gris20, 0);
@@ -157,7 +176,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 10rem;
+    max-width: 9.6rem;
     width: 100%;
     padding: .7rem;
     border: solid 1px v.$gris30;

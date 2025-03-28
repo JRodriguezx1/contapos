@@ -25,9 +25,16 @@
               <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
               <td class="" ><?php echo $value->categoria;?></td>
               <td class=""><?php echo $value->marca;?></td>
-              <td class=""><?php echo $value->codigo;?></td>
+              <td class=""><?php echo $value->sku;?></td>
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-md btn-turquoise editarProductos"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-lima ">Mas</button><button class="btn-md btn-red eliminarProductos"><i class="fa-solid fa-trash-can"></i></button></div></td>
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
+                    <button class="btn-md btn-turquoise editarProductos"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
+                        <a class="btn-md btn-blue" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    <?php endif; ?>
+                    <button class="btn-xs btn-lima ">Mas</button>
+                    <button class="btn-md btn-red eliminarProductos"><i class="fa-solid fa-trash-can"></i></button>
+              </div></td>
           </tr>
           <?php endforeach; ?>
       </tbody>
@@ -54,24 +61,30 @@
                 <label data-num="46" class="count-charts" for="">46</label>
             </div>
         </div>
+        <div class="formulario__campo">
+            <label class="formulario__label" for="tipoproducto">Tipo de producto</label>
+            <select class="formulario__select" id="tipoproducto" name="tipoproducto" required>
+                <option value="" disabled selected>-Seleccionar-</option>
+                <option value="simple">Simple</option>
+                <option value="compuesto">Compuesto</option>
+            </select>          
+        </div>
         <div class="">
-            <div class="formulario__campo">
+            <div class="formulario__campo preciocompra">
                 <label class="formulario__label" for="preciocompra">Precio Compra</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="number" min="0" placeholder="Precio de venta" id="preciocompra" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
+                    <input class="formulario__input" id="preciocompra" type="number" min="0" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="precioventa">Precio venta</label>
-                <div class="formulario__dato">
-                    <input class="formulario__input" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
-                </div>
+                <input class="formulario__input" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="sku">SKU Producto</label>
             <div class="formulario__dato">
-                <input class="formulario__input" type="text" placeholder="Codigo del producto" id="sku" name="sku" value="<?php echo $producto->codigo??'';?>">
+                <input class="formulario__input" type="text" placeholder="Codigo del producto" id="sku" name="sku" value="<?php echo $producto->sku??'';?>">
                 <label data-num="36" class="count-charts" for="">36</label>
             </div>
         </div>

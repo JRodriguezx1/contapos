@@ -63,8 +63,14 @@
   }
 }
 
+
 ///////////////// con input tipe radio sin usar js, en vista index.php de almacen tab//////////////////
 .accordion_inv{
+    #infoalmacen:checked ~ .btn_inv_info_rapido .btninfoalmacen{
+      background-color: darken(v.$gris20, 0);
+      color: v.$gris80;
+      border-color: lighten(v.$gris80, 10);
+    }
     #stockproducto:checked ~ .btn_inv_info_rapido .btnstockproducto{
       background-color: darken(v.$gris20, 0);
       color: v.$gris80;
@@ -81,10 +87,135 @@
     input[type="radio"]{
       display: none;
     }
+    #infoalmacen:checked ~ .tablas_inv_rapido .infoalmacen{
+      display: block;
+    }
     #stockproducto:checked ~ .tablas_inv_rapido .tablastock{
       display: block;
     }
     #utilidadproducto:checked ~ .tablas_inv_rapido .tablautilidad{
       display: block;
     }
+}
+
+///////////////// con input tipe radio sin usar js, en vista index.php de configuracion//////////////////
+.accordion_inv{
+  #btn1:checked ~ .btnsetup .btn1{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn2:checked ~ .btnsetup .btn2{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn3:checked ~ .btnsetup .btn3{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn4:checked ~ .btnsetup .btn4{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn5:checked ~ .btnsetup .btn5{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn6:checked ~ .btnsetup .btn6{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn7:checked ~ .btnsetup .btn7{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn8:checked ~ .btnsetup .btn8{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn9:checked ~ .btnsetup .btn9{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn10:checked ~ .btnsetup .btn10{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn11:checked ~ .btnsetup .btn11{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn12:checked ~ .btnsetup .btn12{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn13:checked ~ .btnsetup .btn13{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  #btn14:checked ~ .btnsetup .btn14{
+    background-color: darken(v.$gris20, 0);
+    color: v.$gris80;
+    border-color: lighten(v.$gris80, 10);
+  }
+  .accordion_tab_content{
+    display: none;
+  }
+  input[type="radio"]{
+    display: none;
+  }
+  #btn1:checked ~ .contenedorsetup .contenido1{
+    display: block;
+  }
+  #btn2:checked ~ .contenedorsetup .contenido2{
+    display: block;
+  }
+  #btn3:checked ~ .contenedorsetup .contenido3{
+    display: block;
+  }
+  #btn4:checked ~ .contenedorsetup .contenido4{
+    display: block;
+  }
+  #btn5:checked ~ .contenedorsetup .contenido5{
+    display: block;
+  }
+  #btn6:checked ~ .contenedorsetup .contenido6{
+    display: block;
+  }
+  #btn7:checked ~ .contenedorsetup .contenido7{
+    display: block;
+  }
+  #btn8:checked ~ .contenedorsetup .contenido8{
+    display: block;
+  }
+  #btn9:checked ~ .contenedorsetup .contenido9{
+    display: block;
+  }
+  #btn10:checked ~ .contenedorsetup .contenido10{
+    display: block;
+  }
+  #btn11:checked ~ .contenedorsetup .contenido11{
+    display: block;
+  }
+  #btn12:checked ~ .contenedorsetup .contenido12{
+    display: block;
+  }
+  #btn13:checked ~ .contenedorsetup .contenido13{
+    display: block;
+  }
+  #btn14:checked ~ .contenedorsetup .contenido14{
+    display: block;
+  }
 }

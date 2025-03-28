@@ -56,16 +56,21 @@ const configdatatables = {
 }
 
 ///////////////////// FUNCION QUE IMPRIME MENSAJE TIPO ALERTA /////////////////////
-function msjAlert(tipo:string, msj:string, divmsjalerta:HTMLElement){
+function msjAlert(tipo:string, msj:string, divmsjalerta:HTMLElement):void{
   divmsjalerta.insertAdjacentHTML('beforeend', `<div class="alerta alerta__${tipo}">
       <p><i class="fa-solid fa-circle-exclamation"></i> ${msj}</p></div>`
   );
+  borrarMsjAlert(divmsjalerta);
 }
 //////////////////// BORRAR MENSAJES TIPO ALERTA /////////////////////
 /*(borrarMsjAlert =()=>{  //se aplica de manera global
   const msj = document.querySelector('#divmsjalerta');
   if(document.querySelector('.alerta'))setTimeout(()=>{ while(msj.firstChild)msj.removeChild(msj.firstChild);}, 5000);
 })();*/
+function borrarMsjAlert(divmsj:HTMLElement):void{  //se aplica de manera global
+  //const msj = document.querySelector('#divmsjalerta')!;
+  if(document.querySelector('.alerta'))setTimeout(()=>{ while(divmsj.firstChild)divmsj.removeChild(divmsj.firstChild);}, 5000);
+}
 //////////////////// FUNCION QUE IMPRIME UN MENSAJE FORMATO TOAST ////////////////////
 //msjalertToast('error', '¡Error!', 'debe seleccionar una imagen')
 function msjalertToast(icono:string, tipo:string, msj:string){

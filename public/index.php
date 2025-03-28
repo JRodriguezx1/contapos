@@ -14,11 +14,12 @@ use Controllers\cajacontrolador;
 use Controllers\ventascontrolador;
 use Controllers\reportescontrolador;
 use Controllers\clientescontrolador;
+use Controllers\direccionescontrolador;
 use Controllers\configcontrolador;
 use Controllers\paginacontrolador;
 
 // me importa la clase router
-use MVC\Router;  
+use MVC\Router;
 
 
 
@@ -50,7 +51,9 @@ $router->get('/mensaje', [logincontrolador::class, 'mensaje']);
 $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta']);
 
 //area publica
-$router->get('/', [paginacontrolador::class, 'index']);
+//$router->get('/', [paginacontrolador::class, 'index']);
+$router->get('/', [logincontrolador::class, 'login']);
+$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen 
 
 
 /////area dashboard/////
@@ -62,17 +65,34 @@ $router->post('/admin/perfil/cambiarpassword', [dashboardcontrolador::class, 'ca
 $router->get('/admin/viewmobile', [dashboardcontrolador::class, 'viewmobile']);
 ///// area de contabilidad /////
 $router->get('/admin/contabilidad', [contabilidadcontrolador::class, 'index']);
-///// area de almacen categorias, productos etc /////
+///// area de almacen categorias, productos, subproductos, compras etc /////
 $router->get('/admin/almacen', [almacencontrolador::class, 'index']);
 $router->get('/admin/almacen/categorias', [almacencontrolador::class, 'categorias']);
 $router->post('/admin/almacen/crear_categoria', [almacencontrolador::class, 'crear_categoria']);
 $router->get('/admin/almacen/productos', [almacencontrolador::class, 'productos']);
 $router->post('/admin/almacen/crear_producto', [almacencontrolador::class, 'crear_producto']);
+$router->get('/admin/almacen/subproductos', [almacencontrolador::class, 'subproductos']);
+$router->post('/admin/almacen/crear_subproducto', [almacencontrolador::class, 'crear_subproducto']);
+$router->get('/admin/almacen/componer', [almacencontrolador::class, 'componer']);
+$router->get('/admin/almacen/ajustarcostos', [almacencontrolador::class, 'ajustarcostos']);
+$router->get('/admin/almacen/compras', [almacencontrolador::class, 'compras']);
+$router->get('/admin/almacen/distribucion', [almacencontrolador::class, 'distribucion']);
+$router->get('/admin/almacen/inventariar', [almacencontrolador::class, 'inventariar']);
+$router->get('/admin/almacen/unidadesmedida', [almacencontrolador::class, 'unidadesmedida']);
+$router->post('/admin/almacen/unidadesmedida', [almacencontrolador::class, 'unidadesmedida']);
+$router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, 'crear_unidadmedida']);
+$router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
+
 ///// area de caja /////
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
 $router->get('/admin/caja/cerrarcaja', [cajacontrolador::class, 'cerrarcaja']);
 $router->get('/admin/caja/zetadiario', [cajacontrolador::class, 'zetadiario']);
 $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscierres']);
+$router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
+$router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
+$router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen']);  //resumen de la orden
+//$router->get('/admin/caja/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']);  //imprimir factura tipo carta
+$router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
 ///// area de reportes /////
@@ -99,9 +119,33 @@ $router->post('/admin/api/eliminarCategoria', [almacencontrolador::class, 'elimi
 $router->get('/admin/api/allproducts', [almacencontrolador::class, 'allproducts']); //trae todos los productos
 $router->post('/admin/api/actualizarproducto', [almacencontrolador::class, 'actualizarproducto']);  //actualizar en general el producto
 $router->post('/admin/api/eliminarProducto', [almacencontrolador::class, 'eliminarProducto']);
+$router->get('/admin/api/allsubproducts', [almacencontrolador::class, 'allsubproducts']); //trae todos los sub-productos
+$router->post('/admin/api/actualizarsubproducto', [almacencontrolador::class, 'actualizarsubproducto']);  //actualizar en general el producto
+$router->post('/admin/api/eliminarSubProducto', [almacencontrolador::class, 'eliminarSubProducto']);
+$router->post('/admin/api/ensamblar', [almacencontrolador::class, 'ensamblar']);  //asociar un o unos subproductos a un producto principal
+$router->get('/admin/api/desasociarsubproducto', [almacencontrolador::class, 'desasociarsubproducto']);
+$router->get('/admin/api/allConversionesUnidades', [almacencontrolador::class, 'allConversionesUnidades']); //trae todos los sub-productos con todas las unidades equivalentes
+$router->post('/admin/api/actualizarcostos', [almacencontrolador::class, 'actualizarcostos']);  //actualizar costos, api llamada desde ajustarcostos.ts
+$router->get('/admin/api/totalitems', [almacencontrolador::class, 'totalitems']);  //api llamada desde compras.ts para obtener los productos simples y subproductos
+$router->post('/admin/api/registrarCompra', [almacencontrolador::class, 'registrarCompra']);  //actualizar costos, api llamada desde ajustarcostos.ts
+
+$router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
+$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
+$router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
+
+$router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts
+$router->get('/admin/api/direccionesXcliente', [direccionescontrolador::class, 'direccionesXcliente']); //obtener direcciones segun cliente elegido en ventas.ts
+$router->post('/admin/api/addDireccionCliente', [direccionescontrolador::class, 'addDireccionCliente']); //add direccion segun cliente elegido desde ventas.ts
+
+$router->post('/admin/api/declaracionDinero', [cajacontrolador::class, 'declaracionDinero']);  //aip llamada desde cerrarcaja.ts
+$router->post('/admin/api/arqueocaja', [cajacontrolador::class, 'arqueocaja']);  //aip llamada desde cerrarcaja.ts
+$router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierrecajaconfirmado']);  //aip llamada desde cerrarcaja.ts
 
 
-//////***************************/*****************************//////
+
+
+
+//////***************************/***NO**************************//////
 ////// api de categorias y servicios //////
 $router->post('/admin/api/updateStateCategoria', [servicioscontrolador::class ,'updateStateCategoria']); //fetch en servicios.js para cambiar estado categoria
 $router->post('/admin/api/actualizarCategoria', [servicioscontrolador::class ,'actualizarCategoria']); //fetch en servicios.js para actualizar categoria
@@ -135,4 +179,3 @@ $router->get('/admin/api/gettimeservice', [configcontrolador::class, 'gettimeser
 
 
 $router->comprobarRutas();
-

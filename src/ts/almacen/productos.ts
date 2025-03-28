@@ -5,6 +5,7 @@
     const inputupImage = document.querySelector('#upImage') as HTMLInputElement;
     const btncustomUpImage = document.querySelector('#customUpImage');
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
+    const tipoproducto = document.querySelector('#tipoproducto') as HTMLSelectElement;
     let indiceFila=0, control=0, tablaProductos:HTMLElement;
     
 
@@ -35,7 +36,7 @@
 
     (async ()=>{
       try {
-          const url = "/admin/api/allproducts"; //llamado a la API REST
+          const url = "/admin/api/allproducts"; //llamado a la API REST y se trae todos los productos
           const respuesta = await fetch(url); 
           products = await respuesta.json(); 
           console.log(products);
@@ -43,6 +44,21 @@
           console.log(error);
       }
     })();
+
+
+    ///////// Habilita el select precio de compra si es producto simple, si es compuesto lo deshabilita
+    tipoproducto?.addEventListener('change', (e:Event)=>{
+      const targetDom = e.target as HTMLSelectElement;
+      const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
+      if(targetDom.value == 'simple'){
+        preciocompra.style.display = 'flex';
+        document.querySelector('#preciocompra')?.setAttribute("required", "");
+      }
+      else{
+        preciocompra.style.display = 'none';
+        document.querySelector('#preciocompra')?.removeAttribute("required");
+      }
+    });
 
     //////////////////  TABLA //////////////////////
     tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);

@@ -3,30 +3,28 @@ namespace Model;
 
 class clientes extends ActiveRecord {
     protected static $tabla = 'clientes';
-    protected static $columnasDB = ['id', 'nombre', 'apellido', 'identificacion', 'telefono', 'email', 'direccion', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'ciudad', 'departamento', 'data1'];
+    protected static $columnasDB = ['id', 'nombre', 'apellido', 'tipodocumento', 'identificacion', 'telefono', 'email', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'data1'];
     
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
         $this->nombre = $args['nombre'] ?? '';
         $this->apellido = $args['apellido'] ?? '';
+        $this->tipodocumento = $args['tipodocumento'] ?? '';
         $this->identificacion = $args['identificacion'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
         $this->email = $args['email'] ?? '';
-        $this->direccion = $args['direccion'] ?? '';
         $this->fecha_nacimiento = $args['fecha_nacimiento'] ?? '';
         $this->total_compras = $args['total_compras '] ?? '';
         $this->ultima_compra = $args['ultima_compra'] ?? '';
-        $this->ciudad = $args['ciudad'] ?? '';
-        $this->departamento = $args['departamento'] ?? '';
         $this->data1 = $args['data1'] ?? '';
     }
 
     // Validación para clientes nuevos
     public function validar_nuevo_cliente():array {
-        if(!$this->nombre)self::$alertas['error'][] = 'El Nombre del producto es Obligatorio';
+        if(!$this->nombre)self::$alertas['error'][] = 'El Nombre del cliente es Obligatorio';
         
-        if(strlen($this->nombre)>32)self::$alertas['error'][] = 'El Nombre del cliente no debe superar los 32 caracteres';
+        if(strlen($this->nombre)>32)self::$alertas['error'][] = 'Has excecido el limite de caracteres';
         
         if(!$this->apellido || strlen($this->apellido)>32)self::$alertas['error'][] = 'El apellido del cliente no debe ir vacio o ser mayor a 32 digitos';
         
@@ -36,11 +34,11 @@ class clientes extends ActiveRecord {
         
         if(!$this->telefono)self::$alertas['error'][] = 'El telefono del cliente es Obligatorio';
 
-        if(!is_numeric(substr($this->telefono, -1)))self::$alertas['error'][] = 'El telefono debe ser de 10 digitos';
+        if(!is_numeric($this->telefono) || strlen($this->telefono) >10)self::$alertas['error'][] = 'El telefono es incorrecto o debe ser de 10 digitos';
 
         if($this->email)if(!filter_var($this->email, FILTER_VALIDATE_EMAIL)) self::$alertas['error'][] = 'Email no válido';
 
-        if(strlen($this->direccion)>74)self::$alertas['error'][] = 'Direccion muy larga';
+       // if(strlen($this->direccion)>74)self::$alertas['error'][] = 'Direccion muy larga';
 
         return self::$alertas;
     }

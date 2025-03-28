@@ -45,7 +45,7 @@
 
 <aside class="sidebar">
     <div class="uptask">
-        <h1 class="font-bold nametop">UpTask</h1>
+        <h1 class="font-bold nametop">InterPos</h1>
         <div class="menux">
             <img id="mobile-menux" src="/build/img/cerrar.svg" alt="cerrar menu">
         </div>

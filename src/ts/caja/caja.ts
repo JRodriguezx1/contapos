@@ -17,17 +17,20 @@
     operacion?.addEventListener('change', (e:Event)=>{
       const targetDom = e.target as HTMLSelectElement;
       const tipodegasto = document.querySelector('.tipodegasto') as HTMLElement;
-      if(targetDom.value == '2'){
+
+      if(targetDom.value == 'gasto'){
         tipodegasto.style.display = 'flex';
+        document.querySelector('#tipodegasto')?.setAttribute("required", "");
       }
       else{
         tipodegasto.style.display = 'none';
+        document.querySelector('#tipodegasto')?.removeAttribute("required");
       }
     });
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === modalGastosIngresos || (event.target as HTMLInputElement).value === 'cancelar' || (event.target as HTMLInputElement).value === 'Aplicar') {
+      if (event.target === modalGastosIngresos || (event.target as HTMLInputElement).value === 'cancelar') {
           modalGastosIngresos.close();
           document.removeEventListener("click", cerrarDialogoExterno);
       }

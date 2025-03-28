@@ -16,27 +16,18 @@
                 </tr>
             </thead>
             <tbody>
-                <?php //foreach($empleados as $index => $value): ?>
+                <?php foreach($ultimoscierres as $index => $value): ?>
                 <tr> 
-                    <td class="">1<?php //echo $index+1;?></td>        
-                    <td class="">Caja Principal<?php //echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="" >26 Sep 2024, 06:24 AM</td> 
-                    <td class="">27 Sep 2024, 03:24 PM<?php // echo $value->movil;?></td>
-                    <td class="">$8.985.000<?php // echo $value->email;?></td>
-                    <td class="">sami<?php // echo $value->cedula;?></td>
-                    <td class="accionestd"><div class="acciones-btns" id="<?php // echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
+                    <td class=""><?php echo $index+1;?></td>        
+                    <td class=""><?php echo $value->idcaja??'Caja eliminada';?></td> 
+                    <td class="" ><?php echo $value->fechainicio;?></td> 
+                    <td class=""><?php echo $value->fechacierre;?></td>
+                    <td class="">$<?php echo number_format($value->ingresoventas, "0", ",", ".");?></td>
+                    <td class=""><?php echo $value->id_usuario;?></td>
+                    <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><a class="btn-xs btn-turquoise" href="/admin/caja/detallecierrecaja?id=<?php echo $value->id;?>">Ver</a></div></td>
                 </tr>
 
-                <tr> 
-                    <td class="">2<?php //echo $index+1;?></td>        
-                    <td class="">Caja Principal<?php //echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="" >29 Sep 2024, 03:24 PM</td> 
-                    <td class="">5 Oct 2024, 08:24 PM<?php // echo $value->movil;?></td>
-                    <td class="">$18.485.004<?php // echo $value->email;?></td>
-                    <td class="">sami<?php // echo $value->cedula;?></td>
-                    <td class="accionestd"><div class="acciones-btns" id="<?php // echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
-                </tr>
-                <?php //endforeach; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
