@@ -10,13 +10,14 @@
     <a class="btn-xs btn-turquoise" href="/admin/caja">Guardadas</a>
   </div>
   <h5 class="text-gray-600 mb-3">Lista de facturas</h5>
-  <table class="display responsive nowrap tabla" width="100%" id="tablaempleados">
+  <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
       <thead>
           <tr>
               <th>N.</th>
               <th>Fecha</th>
               <th>Cliente</th>
               <th>Factura</th>
+              <th>Medio Pago</th>
               <th>Estado</th>
               <th>Valor Bruto</th>
               <th>Total</th>
@@ -30,6 +31,13 @@
               <td class=""><?php echo $value->fechapago;?></td> 
               <td class=""><?php echo $value->cliente;?></td>
               <td class=""><?php echo $value->id;?></td>
+              <td>
+                <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
+                    <?php foreach($value->mediosdepago as $idx => $element): ?>
+                    <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                    <?php endforeach; ?>
+                </div>
+              </td>
               <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':($value->estado=='Guardado'?'btn-xs btn-turquoise':'btn-xs btn-light');?>"><?php echo $value->estado;?></td>
               <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
               <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
@@ -56,7 +64,7 @@
 
   <dialog class="midialog-sm p-5" id="gastosIngresos">
     <h4 class="font-semibold text-gray-700 mb-4">Gastos e ingresos</h4>
-    <div id="divmsjalerta2"></div>
+    <div id="divmsjalerta1"></div>
     <form id="formGastosingresos" class="formulario" action="/admin/caja/ingresoGastoCaja" method="POST">
         <div class="formulario__campo">
             <label class="formulario__label" for="operacion">Operacion</label>
@@ -107,6 +115,35 @@
             <input id="btnEnviargastosingresos" class="btn-md btn-blue" type="submit" value="Aplicar">
         </div>
     </form>
-</dialog>
+  </dialog>
+
+
+  <dialog class="midialog-sm p-5" id="cambioMedioPago">
+    <h4 class="font-semibold text-gray-700 mb-4">Cambio medio de pago</h4>
+    <div id="divmsjalerta2"></div>
+    <form id="formCambioMedioPago" class="formulario" action="/admin/caja/cambioMedioPago" method="POST">
+        <label id="numfactura" class="text-gray-700 text-2xl text-center mb-2">Factura N° : </label>
+        <p class="text-gray-600 text-3xl text-center font-light m-0 mb-8">Total Pagado: $<span id="totalPagado" class="text-gray-700 font-semibold">0</span></p>
+        <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto">
+            <?php foreach($mediospago as $index => $value):?>
+            <div class="mb-4">
+                <label class="text-gray-700 text-xl"><?php echo $value->mediopago??'';?>: </label>
+                <input id="<?php echo $value->id??'';?>" 
+                    class="w-44 py-1 px-3 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500 text-xl mediopago <?php echo $value->mediopago??'';?>"
+                    type="text" 
+                    value="0" 
+                    <?php //echo $value->mediopago=='Efectivo'?'readonly':'';?> 
+                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
+                >
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <div class="text-right">
+            <button class="btn-md btn-red" type="button" value="cancelar">cancelar</button>
+            <input id="btnEnviarCambioMedioPago" class="btn-md btn-blue" type="submit" value="Aplicar">
+        </div>
+    </form>
+  </dialog>
 
 </div>

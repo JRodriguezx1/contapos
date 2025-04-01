@@ -751,6 +751,14 @@ video {
   margin-top: 2rem;
 }
 
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
 .block {
   display: block;
 }
@@ -781,6 +789,10 @@ video {
 
 .hidden {
   display: none;
+}
+
+.\!hidden {
+  display: none !important;
 }
 
 .size-4 {
@@ -841,10 +853,6 @@ video {
   width: 6rem;
 }
 
-.w-32 {
-  width: 8rem;
-}
-
 .w-40 {
   width: 10rem;
 }
@@ -887,14 +895,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-4 {
-  width: 1rem;
-}
-
-.w-28 {
-  width: 7rem;
 }
 
 .min-w-24 {
@@ -943,6 +943,50 @@ video {
 
 .max-w-screen-md {
   max-width: 768px;
+}
+
+.max-w-72 {
+  max-width: 18rem;
+}
+
+.max-w-60 {
+  max-width: 15rem;
+}
+
+.max-w-80 {
+  max-width: 20rem;
+}
+
+.max-w-\[300px\] {
+  max-width: 300px;
+}
+
+.max-w-\[400px\] {
+  max-width: 400px;
+}
+
+.max-w-24 {
+  max-width: 6rem;
+}
+
+.max-w-\[600px\] {
+  max-width: 600px;
+}
+
+.max-w-\[100rem\] {
+  max-width: 100rem;
+}
+
+.max-w-\[30rem\] {
+  max-width: 30rem;
+}
+
+.max-w-48 {
+  max-width: 12rem;
+}
+
+.max-w-64 {
+  max-width: 16rem;
 }
 
 .\!flex-none {
@@ -1092,6 +1136,10 @@ video {
 
 .gap-8 {
   gap: 2rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .gap-x-1\.5 {

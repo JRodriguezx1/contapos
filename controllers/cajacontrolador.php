@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\ActiveRecord;
 use Model\usuarios; //namespace\clase hija
 //use Model\negocio;
 use Model\facturas;
@@ -12,6 +13,7 @@ use Model\gastos;
 use Model\caja;
 use Model\declaracionesdineros;
 use Model\mediospago;
+use Model\factmediospago;
 use Model\arqueoscajas;
 use Model\clientes;
 use Model\direcciones;
@@ -28,14 +30,20 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
 
+    $mediospago = mediospago::all();
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
     }
     //$alertas = usuarios::getAlertas();
     $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+    foreach($facturas as $value)
+      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
+    
+    
+
     $cajas = caja::all();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'ultimocierre'=>$ultimocierre, 'cajas'=>$cajas, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'ultimocierre'=>$ultimocierre, 'cajas'=>$cajas, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -55,6 +63,7 @@ class cajacontrolador{
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
+      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){
@@ -68,20 +77,21 @@ class cajacontrolador{
         $newobj->id_mediopago = $dis['idmediopago'];
         $newobj->idcierrecajaid = $ultimocierre->id;
         $newobj->nombremediopago = $dis['mediopago'];
-        $newobj->valordeclarado = 0;
-        $newobj->valorsistema = $dis['valor'];
+        $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
+        $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
         $sobrantefaltante[] = $newobj;
       }
     }
     $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
-
+  
+//////// ingreso de base o gasto de caja /////////
   public static function ingresoGastoCaja(Router $router){
     session_start();
     isadmin();
     $alertas = [];
-
+    $mediospago = mediospago::all();
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
       if($ultimocierre->estado == 0){  // si es igual a cero esta abierto el cierre de caja
@@ -130,14 +140,15 @@ class cajacontrolador{
             }
           }
         }
-
       }else{
         $alertas['error'][] = "Error al obtener el id del cierre de caja";
       }      
     }
-    $facturas = facturas::all();
+    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+    foreach($facturas as $value)
+      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     $cajas = caja::all();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'cajas'=>$cajas, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'cajas'=>$cajas, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -311,7 +322,6 @@ class cajacontrolador{
     session_start();
     isauth();
     $idcierrecaja = $_POST['idcierrecaja'];
-    $nombrecaja = caja::uncampo('id', $idcierrecaja, 'nombre');
     $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       if($idcierrecaja == $ultimocierre->id && $ultimocierre->estado == 0){
@@ -322,8 +332,9 @@ class cajacontrolador{
         $ultimocierre->realcaja = $ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios;
         $ultimocierre->realventas = $ultimocierre->ingresoventas-$ultimocierre->totaldescuentos;
         $ultimocierre->totalbruto = $ultimocierre->ingresoventas;
-        $ultimocierre->estado = 1;
-        $crearcierrecaja = new cierrescajas(['idcaja'=>$idcierrecaja, 'nombrecaja'=>$nombrecaja, 'fechacierre'=>$ultimocierre->fechacierre]);
+        $ultimocierre->estado = 1; //cerrar caja
+        // crear el siguiente cierre de caja
+        $crearcierrecaja = new cierrescajas(['idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>$ultimocierre->nombrecaja, 'fechacierre'=>$ultimocierre->fechacierre]);
         $r = $crearcierrecaja->crear_guardar();
         if($r[0]){
           $r = $ultimocierre->actualizar();
@@ -339,6 +350,104 @@ class cajacontrolador{
         $alertas['error'][] = "Error ingresa nuevamente al cierre de caja.";
       }
     }
+    echo json_encode($alertas);
+  }
+
+
+  public static function mediospagoXfactura(){  //api llamado desde caja.js me trae los medios de pago segun factura
+    $id = $_GET['id'];
+    $factmediospago = factmediospago::idregistros('id_factura', $id);
+    echo json_encode($factmediospago);
+  }
+
+
+  public static function cambioMedioPago(){  //api llamado desde caja.js me actualiza los medios de pago
+    $alertas = [];
+    $idfactura = $_POST['id_factura'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+      if($ultimocierre->estado == 0){  //validar que el ultimo cierre de caja este abierto
+
+        $nuevosmediospago = json_decode($_POST['nuevosMediosPago']);
+        //// obtener los medios de pago de la base de datos segun factura
+        ////cruzar con los nuevos medios de pago
+        //// si los medios de pagos son iguales actualizar
+
+        //// si los nuevos medios de pago no estan en la base de datos, crearlos
+        //// si los medios de pago de la DB no estan en los nuevos medios de pago, elminarlos
+        //// Obtener los muevos medios de pago de la factura y enviarla como respuesta
+
+        $mediospagoDB = factmediospago::idregistros('id_factura', $idfactura);
+
+        if(count($nuevosmediospago) >= count($mediospagoDB)){
+          foreach($mediospagoDB as $index => $value){
+            $value->idmediopago = $nuevosmediospago[$index]->idmediopago;
+            $value->valor = $nuevosmediospago[$index]->valor;
+          }
+          //actualizar $mediospagoDB
+          $ac = factmediospago::updatemultiregobj($mediospagoDB, ['idmediopago', 'valor']);
+          if($ac){
+            $alertas['exito'][] = "Cambio de medios de pago aplicados.";
+          }else{
+            $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
+          }
+        }
+      
+        if(count($nuevosmediospago)>count($mediospagoDB)){
+          $crearMP=[];
+          $j=0;
+          for($i = count($mediospagoDB); $i<count($nuevosmediospago); $i++){
+            $crearMP[$j]['id_factura'] = $mediospagoDB[0]->id_factura;
+            $crearMP[$j]['idmediopago'] = $nuevosmediospago[$i]->idmediopago;
+            $crearMP[$j]['valor'] = $nuevosmediospago[$i]->valor;
+            $j++;
+          }
+          //// crear $crearMP
+          if($ac){
+            $crearMediosPago = new factmediospago();
+            $cmp = $crearMediosPago->crear_varios_reg($crearMP);
+            if(!$cmp){
+              /// revertir la actualizacion
+              $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
+            }
+          }
+        }
+
+        if(count($nuevosmediospago)<count($mediospagoDB)){
+          foreach($mediospagoDB as $index => $value){
+            if($index < count($nuevosmediospago)){
+              $value->idmediopago = $nuevosmediospago[$index]->idmediopago;
+              $value->valor = $nuevosmediospago[$index]->valor;
+            }
+            if($index>=count($nuevosmediospago))$arrayeliminar[] = $value->id;
+          }
+          //actualizar $mediospagoDB
+          //eliminar los medios de pago sobrantes de la DB $arrayeliminar
+          $ac = factmediospago::updatemultiregobj($mediospagoDB, ['idmediopago', 'valor']);
+          if($ac){
+            $elminarMP = factmediospago::eliminar_idregistros('id', $arrayeliminar);
+            if($elminarMP){
+              $alertas['exito'][] = "Cambio de medios de pago aplicados.";
+            }else{
+              /// revertir la actualizacion
+              $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
+            }
+          }else{
+            $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
+          }
+        }
+
+        /////////// Recalcular el efectivo del cierre de caja /////////////
+        if((int)$_POST['efectivoDB']!=(int)$_POST['nuevoEfectivo']){ //
+          $efectivo = (int)$_POST['nuevoEfectivo'] - (int)$_POST['efectivoDB'];
+          $ultimocierre->ventasenefectivo = $ultimocierre->ventasenefectivo + $efectivo;
+          $ru = $ultimocierre->actualizar();
+        }
+
+        $alertas['mediosPagoUpdate'] = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $idfactura;");
+      } //fin cierradecaja abierto
+    } //fin SERVER == $_POS
+
     echo json_encode($alertas);
   }
 

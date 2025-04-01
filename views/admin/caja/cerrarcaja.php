@@ -21,7 +21,7 @@
       <div class="formulario__campo">
           <label class="formulario__label" for="EF">Efectivo en caja</label>
           <div class="formulario__dato">
-              <input class="formulario__input inputmediopago" type="text" placeholder="Dinero en caja" id="EF" name="EF" data-idmediopago="1" value="" required>
+              <input class="formulario__input inputmediopago" type="text" placeholder="Dinero en caja" id="Efectivo" name="Efectivo" data-idmediopago="1" value="" required>
               <button class="btn-xs btn-blue" id="btnArqueocaja">Arqueo de caja</button>
           </div>
       </div>
@@ -57,7 +57,7 @@
           <div>
           <p class="m-0 mb-2 text-slate-600 text-2xl font-normal" id="idCierrecaja"><?php echo $ultimocierre->id;?></p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalfacturas??0;?></p>
@@ -98,7 +98,7 @@
                                 </tr>
                                 <tr>        
                                     <td class="">Gastos de la caja</td> 
-                                    <td class="">- $0</td>
+                                    <td class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Dinero en caja</td> 

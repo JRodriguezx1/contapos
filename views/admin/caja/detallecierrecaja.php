@@ -47,7 +47,7 @@
                                 </tr>
                                 <tr>        
                                     <td class="">Gastos de la caja</td> 
-                                    <td class="">- $0</td>
+                                    <td class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Dinero en caja</td> 

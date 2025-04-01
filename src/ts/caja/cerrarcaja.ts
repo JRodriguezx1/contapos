@@ -17,7 +17,7 @@
       Modalcerrarcaja.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
-
+    
 
     //////////////////     Arqueo de caja      //////////////////////
     formArqueocaja?.addEventListener('submit', (e:Event)=>{
@@ -44,7 +44,7 @@
     });
 
     function sumatoriaDenominaciones():void{
-      const ef = document.querySelector('#EF') as HTMLInputElement;
+      const ef = document.querySelector('#Efectivo') as HTMLInputElement;
       const inputsDenominaciones = Array.from( document.querySelectorAll<HTMLInputElement>('.denominacion'));
       const sum = inputsDenominaciones.reduce((total, denominaicon)=>(Number(denominaicon.dataset.moneda)*Number(denominaicon.value))+total, 0);
       ef.value = sum+'';
