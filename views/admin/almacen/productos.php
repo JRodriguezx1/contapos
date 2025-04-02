@@ -65,8 +65,8 @@
             <label class="formulario__label" for="tipoproducto">Tipo de producto</label>
             <select class="formulario__select" id="tipoproducto" name="tipoproducto" required>
                 <option value="" disabled selected>-Seleccionar-</option>
-                <option value="simple">Simple</option>
-                <option value="compuesto">Compuesto</option>
+                <option value="0">Simple</option>
+                <option value="1">Compuesto</option>
             </select>          
         </div>
         <div class="">
