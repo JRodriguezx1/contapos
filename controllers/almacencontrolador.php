@@ -407,7 +407,13 @@ class almacencontrolador{
                 $url_temp = $_FILES["foto"]["tmp_name"];
                 move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
             }
+
+      ///// si de simple paso a compuesto, validar que el producto existe en productos_sub
+      ///// si producto existe en productos_sub, realizar sumatoria en la tabla productos_sub para el precio de compra
+      ///// si no existe, establer valor de compra en 0
+      
             $r = $producto->actualizar();
+            
             if($r){
               $alertas['exito'][] = "Datos del producto actualizados";
             }

@@ -12,10 +12,14 @@
     type productsapi = {
       id:string,
       idcategoria: string,
+      idunidadmedida: string,
       nombre: string,
       foto: string,
+      impuesto: string,
       marca: string,
-      codigo: string,
+      tipoproducto: string,
+      sku: string,
+      unidadmedida: string;
       descripcion: string,
       peso: string,
       medidas: string,
@@ -25,6 +29,7 @@
       fabricante: string,
       garantia: string,
       stock: string,
+      stockminimo: string,
       categoria: string,
       precio_compra: string,
       precio_venta: string,
@@ -50,7 +55,7 @@
     tipoproducto?.addEventListener('change', (e:Event)=>{
       const targetDom = e.target as HTMLSelectElement;
       const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
-      if(targetDom.value == 'simple'){
+      if(targetDom.value == '0'){
         preciocompra.style.display = 'flex';
         document.querySelector('#preciocompra')?.setAttribute("required", "");
       }
@@ -87,9 +92,12 @@
       unproducto = products.find(x=>x.id === idproducto)!;
       $('#categoria').val(unproducto?.idcategoria??'');
       (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
+      $('#tipoproducto').val(unproducto?.tipoproducto??'');
+      (document.querySelector('#preciocompra')as HTMLInputElement).removeAttribute('readonly');
+      if(unproducto?.tipoproducto == '1')(document.querySelector('#preciocompra')as HTMLInputElement).setAttribute('readonly', '');
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
-      (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.codigo??'';
+      (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
       imginputfile.src = "/build/img/"+unproducto?.foto;
       indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoProducto.showModal();
