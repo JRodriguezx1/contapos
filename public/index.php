@@ -32,7 +32,7 @@ $router->get('/loginauth', [logincontrolador::class, 'loginauth']);
 $router->post('/loginauth', [logincontrolador::class, 'loginauth']);
 $router->get('/login', [logincontrolador::class, 'login']);
 $router->post('/login', [logincontrolador::class, 'login']);
-$router->post('/logout', [logincontrolador::class, 'logout']);
+$router->get('/logout', [logincontrolador::class, 'logout']);
 
 // Crear Cuenta
 $router->get('/registro', [logincontrolador::class, 'registro']);
