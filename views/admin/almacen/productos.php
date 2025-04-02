@@ -19,7 +19,7 @@
       </thead>
       <tbody>
           <?php foreach($productos as $index => $value): ?>
-          <tr> 
+          <tr>
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class=" text-center "><img class="inline" style="width: 50px;" src="/build/img/<?php echo $value->foto;?>" alt=""></div></td>
               <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 

@@ -383,6 +383,7 @@ class almacencontrolador{
     session_start();
     $alertas = []; 
     $producto = productos::find('id', $_POST['id']);
+    $tipo = $producto->tipoproducto;
     
     /////// valiadar que es una nueva imagen o distinta
     if(!$producto->foto && isset($_FILES['foto'])){
@@ -408,9 +409,19 @@ class almacencontrolador{
                 move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
             }
 
-      ///// si de simple paso a compuesto, validar que el producto existe en productos_sub
-      ///// si producto existe en productos_sub, realizar sumatoria en la tabla productos_sub para el precio de compra
-      ///// si no existe, establer valor de compra en 0
+            ///// si de simple paso a compuesto, validar que el producto existe en productos_sub
+            ///// si producto existe en productos_sub, realizar sumatoria en la tabla productos_sub para el precio de compra
+            ///// si no existe, establer valor de compra en 0
+            if($tipo == 0 && $producto->tipoproducto == 1){
+              $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo');
+              if($costo){
+                $producto->precio_compra = $costo;
+              }else{
+                $producto->precio_compra = 0;
+              }
+            }
+
+            debuguear($costo);
       
             $r = $producto->actualizar();
             

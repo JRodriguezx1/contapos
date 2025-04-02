@@ -129,6 +129,7 @@
           datos.append('idcategoria', $('#categoria').val()as string);
           datos.append('nombre', $('#nombre').val()as string);
           datos.append('foto', imgFile); //en el backend no se lee con $_POST, se lee con $_FILES
+          datos.append('tipoproducto', $('#tipoproducto').val()as string);
           datos.append('precio_compra', $('#preciocompra').val()as string);
           datos.append('precio_venta', $('#precioventa').val()as string);
           datos.append('codigo', $('#sku').val()as string);
