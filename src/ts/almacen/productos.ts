@@ -132,7 +132,7 @@
           datos.append('tipoproducto', $('#tipoproducto').val()as string);
           datos.append('precio_compra', $('#preciocompra').val()as string);
           datos.append('precio_venta', $('#precioventa').val()as string);
-          datos.append('codigo', $('#sku').val()as string);
+          datos.append('sku', $('#sku').val()as string);
           try {
               const url = "/admin/api/actualizarproducto";
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -143,7 +143,7 @@
                 /// actualizar el arregle del producto ///
                 products.forEach(a=>{if(a.id == unproducto.id)a = Object.assign(a, resultado.producto[0]);});
                 ///////// cambiar la fila completa, su contenido //////////
-                const datosActuales = (tablaProductos as any).row(indiceFila+=info.start).data();
+                const datosActuales = (tablaProductos as any).row(indiceFila).data();
                 /*img*/datosActuales[1] = `<div class="text-center"><img class="inline" style="width: 50px;" src="/build/img/${resultado.producto[0].foto}" alt=""></div>`;
                 /*NOMBRE*/datosActuales[2] ='<div class="w-80 whitespace-normal">'+$('#nombre').val()+'</div>';
                 /*CATEGORIA*/datosActuales[3] = $('#categoria option:selected').text();
@@ -214,9 +214,9 @@
       }
     });
 
-    function limpiarformdialog(){
+    function limpiarformdialog():void{
       (document.querySelector('#formCrearUpdateProducto') as HTMLFormElement)?.reset();
-      (document.querySelector('#formCrearUpdateProducto') as HTMLFormElement).action = "/admin/almacen/crear_producto";
+      imginputfile.src = '';
     }
     function cerrarDialogoExterno(event:Event) {
       if (event.target === miDialogoProducto || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Actualizar') {

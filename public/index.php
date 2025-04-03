@@ -143,6 +143,9 @@ $router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierr
 $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospagoXfactura']); //obtener los medios de pago segun factura elegido en caja.ts
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 
+$router->get('/admin/api/allclientes', [clientescontrolador::class, 'allclientes']); // me trae todos los clientes desde clientes.js
+$router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiActualizarcliente']);  //actualizar en general el producto
+$router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']);
 
 
 

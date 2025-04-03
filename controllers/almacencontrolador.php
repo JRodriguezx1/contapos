@@ -420,8 +420,6 @@ class almacencontrolador{
                 $producto->precio_compra = 0;
               }
             }
-
-            debuguear($costo);
       
             $r = $producto->actualizar();
             

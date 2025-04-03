@@ -1,158 +1,110 @@
 (()=>{
-    if(document.querySelector('.productos')){
+    if(document.querySelector('.clientes')){
       const crearCliente = document.querySelector('#crearCliente');
       const miDialogoCliente = document.querySelector('#miDialogoCliente') as any;
-      const inputupImage = document.querySelector('#upImage') as HTMLInputElement;
-      const btncustomUpImage = document.querySelector('#customUpImage');
-      const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
-      const tipoproducto = document.querySelector('#tipoproducto') as HTMLSelectElement;
-      let indiceFila=0, control=0, tablaProductos:HTMLElement;
+      let indiceFila=0, control=0, tablaClientes:HTMLElement;
       
   
-      type productsapi = {
+      type clientesapi = {
         id:string,
-        idcategoria: string,
-        idunidadmedida: string,
         nombre: string,
-        foto: string,
-        impuesto: string,
-        marca: string,
-        tipoproducto: string,
-        sku: string,
-        unidadmedida: string;
-        descripcion: string,
-        peso: string,
-        medidas: string,
-        color: string,
-        funcion: string,
-        uso:string,
-        fabricante: string,
-        garantia: string,
-        stock: string,
-        stockminimo: string,
-        categoria: string,
-        precio_compra: string,
-        precio_venta: string,
-        fecha_ingreso: string,
+        apellido: string,
+        tipodocumento: string,
+        identificacion: string,
+        telefono: string,
+        email: string,
+        fecha_nacimiento: string,
+        total_compras: string,
+        ultima_compra: string;
+        data1: string,
         //idservicios:{idempleado:string, idservicio:string}[]
       };
   
-      let products:productsapi[]=[], unproducto:productsapi;
+      let clientes:clientesapi[]=[], uncliente:clientesapi;
   
       (async ()=>{
         try {
-            const url = "/admin/api/allproducts"; //llamado a la API REST y se trae todos los productos
+            const url = "/admin/api/allclientes"; //llamado a la API REST y se trae todos los productos
             const respuesta = await fetch(url); 
-            products = await respuesta.json(); 
-            console.log(products);
+            clientes = await respuesta.json(); 
+            console.log(clientes);
         } catch (error) {
             console.log(error);
         }
       })();
   
   
-      ///////// Habilita el select precio de compra si es producto simple, si es compuesto lo deshabilita
-      tipoproducto?.addEventListener('change', (e:Event)=>{
-        const targetDom = e.target as HTMLSelectElement;
-        const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
-        if(targetDom.value == '0'){
-          preciocompra.style.display = 'flex';
-          document.querySelector('#preciocompra')?.setAttribute("required", "");
-        }
-        else{
-          preciocompra.style.display = 'none';
-          document.querySelector('#preciocompra')?.removeAttribute("required");
-        }
-      });
-  
       //////////////////  TABLA //////////////////////
-      tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);
+      tablaClientes = ($('#tablaClientes') as any).DataTable(configdatatables);
   
       crearCliente?.addEventListener('click', (e):void=>{
         control = 0;
         limpiarformdialog();
-        document.querySelector('#modalProducto')!.textContent = "Crear producto";
-        (document.querySelector('#btnEditarcrearCliente') as HTMLInputElement).value = "Crear";
+        document.querySelector('#modalCliente')!.textContent = "Crear cliente";
+        (document.querySelector('#btnEditarCrearCliente') as HTMLInputElement).value = "Crear";
         miDialogoCliente.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       });
   
-      document.querySelector('#tablaProductos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+      document.querySelector('#tablaClientes')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
         const target = e.target as HTMLElement;
-        if((e.target as HTMLElement)?.classList.contains("editarProductos")||(e.target as HTMLElement).parentElement?.classList.contains("editarProductos"))editarProductos(e);
-        if(target?.classList.contains("eliminarProductos")||target.parentElement?.classList.contains("eliminarProductos"))eliminarProductos(e);
+        if((e.target as HTMLElement)?.classList.contains("editarClientes")||(e.target as HTMLElement).parentElement?.classList.contains("editarClientes"))editarClientes(e);
+        if(target?.classList.contains("eliminarClientes")||target.parentElement?.classList.contains("eliminarClientes"))eliminarClientes(e);
       });
   
-      function editarProductos(e:Event){
-        let idproducto = (e.target as HTMLElement).parentElement?.id!;
-        if((e.target as HTMLElement)?.tagName === 'I')idproducto = (e.target as HTMLElement).parentElement?.parentElement?.id!;
+      function editarClientes(e:Event){
+        let idcliente = (e.target as HTMLElement).parentElement?.id!;
+        if((e.target as HTMLElement)?.tagName === 'I')idcliente = (e.target as HTMLElement).parentElement?.parentElement?.id!;
         control = 1;
-        document.querySelector('#modalProducto')!.textContent = "Actualizar producto";
-        (document.querySelector('#btnEditarcrearCliente') as HTMLInputElement)!.value = "Actualizar";
-        unproducto = products.find(x=>x.id === idproducto)!;
-        $('#categoria').val(unproducto?.idcategoria??'');
-        (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
-        $('#tipoproducto').val(unproducto?.tipoproducto??'');
-        (document.querySelector('#preciocompra')as HTMLInputElement).removeAttribute('readonly');
-        if(unproducto?.tipoproducto == '1')(document.querySelector('#preciocompra')as HTMLInputElement).setAttribute('readonly', '');
-        (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
-        (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
-        (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
-        imginputfile.src = "/build/img/"+unproducto?.foto;
-        indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
+        document.querySelector('#modalCliente')!.textContent = "Actualizar cliente";
+        (document.querySelector('#btnEditarCrearCliente') as HTMLInputElement)!.value = "Actualizar";
+        uncliente = clientes.find(x=>x.id === idcliente)!;
+        (document.querySelector('#nombre')as HTMLInputElement).value = uncliente?.nombre!;
+        (document.querySelector('#apellido')as HTMLInputElement).value = uncliente?.apellido!;
+        $('#tipodocumento').val(uncliente?.tipodocumento??'');
+        (document.querySelector('#identificacion')as HTMLInputElement).value = uncliente?.identificacion??'';
+        (document.querySelector('#telefono')as HTMLInputElement).value = uncliente?.telefono??'';
+        (document.querySelector('#email')as HTMLInputElement).value = uncliente?.email??'';
+        (document.querySelector('#fecha_nacimiento')as HTMLInputElement).value = uncliente?.fecha_nacimiento??'';
+        
         miDialogoCliente.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
   
-      ////////////////////  Actualizar/Editar producto  //////////////////////
+      ////////////////////  Actualizar/Editar clientes  //////////////////////
       document.querySelector('#formCrearUpdateProducto')?.addEventListener('submit', e=>{
         if(control){
           e.preventDefault();
-          var imgFile:(string|File), info = (tablaProductos as any).page.info();
-          imgFile=unproducto.foto;
-          if(!imginputfile.src.includes(unproducto.foto)){ //cambio de imagen
-            imgFile = ((e.target as HTMLFormElement).elements.namedItem("upImage") as HTMLInputElement).files?.[0]!; //obtengo el archivo
-            if(imgFile){
-              if(imgFile.type!=="image/png"&&imgFile.type!=="image/jpeg"){
-                msjAlert('error', 'No es un formato valido para la foto', (document.querySelector('#divmsjalerta1') as HTMLElement));
-                return;
-              }
-              if(imgFile.size>550000){ //si es mayor a 550KB
-                msjAlert('error', 'La imagen no debe superar los 500KB', document.querySelector('#divmsjalerta1')!);
-                return;
-              }
-            }
-          }
+          var info = (tablaClientes as any).page.info();
+          
           (async ()=>{ 
             const datos = new FormData();
-            datos.append('id', unproducto!.id);
-            datos.append('idcategoria', $('#categoria').val()as string);
+            datos.append('id', uncliente!.id);
             datos.append('nombre', $('#nombre').val()as string);
-            datos.append('foto', imgFile); //en el backend no se lee con $_POST, se lee con $_FILES
-            datos.append('tipoproducto', $('#tipoproducto').val()as string);
-            datos.append('precio_compra', $('#preciocompra').val()as string);
-            datos.append('precio_venta', $('#precioventa').val()as string);
-            datos.append('codigo', $('#sku').val()as string);
+            datos.append('apellido', $('#apellido').val()as string);
+            datos.append('tipodocumento', $('#tipodocumento').val()as string);
+            datos.append('identificacion', $('#identificacion').val()as string);
+            datos.append('telefono', $('#telefono').val()as string);
+            datos.append('email', $('#email').val()as string);
+            datos.append('fecha_nacimiento', $('#fecha_nacimiento').val()as string);
             try {
-                const url = "/admin/api/actualizarproducto";
+                const url = "/admin/api/actualizarCliente";
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json(); 
                 console.log(resultado); 
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                   /// actualizar el arregle del producto ///
-                  products.forEach(a=>{if(a.id == unproducto.id)a = Object.assign(a, resultado.producto[0]);});
+                  clientes.forEach(a=>{if(a.id == uncliente.id)a = Object.assign(a, resultado.cliente[0]);});
                   ///////// cambiar la fila completa, su contenido //////////
-                  const datosActuales = (tablaProductos as any).row(indiceFila+=info.start).data();
-                  /*img*/datosActuales[1] = `<div class="text-center"><img class="inline" style="width: 50px;" src="/build/img/${resultado.producto[0].foto}" alt=""></div>`;
-                  /*NOMBRE*/datosActuales[2] ='<div class="w-80 whitespace-normal">'+$('#nombre').val()+'</div>';
-                  /*CATEGORIA*/datosActuales[3] = $('#categoria option:selected').text();
-                  /*MARCA*/datosActuales[4] = '';
-                  /*CODIGO*/datosActuales[5] = $('#sku').val();
-                  /*PRECIOVENTA*/datosActuales[6] = $('#precioventa').val();
+                  const datosActuales = (tablaClientes as any).row(indiceFila).data();
+                  /*NOMBRE*/datosActuales[1] = $('#nombre').val();
+                  /*APELLIDO*/datosActuales[2] = $('#apellido').val();
+                  /*TELEFONO*/datosActuales[3] = $('#telefono').val();
+                  /*EMAIL*/datosActuales[4] = $('#email').val();
                   
-                  (tablaProductos as any).row(indiceFila).data(datosActuales).draw();
-                  (tablaProductos as any).page(info.page).draw('page'); //me mantiene la pagina actual
+                  (tablaClientes as any).row(indiceFila).data(datosActuales).draw();
+                  (tablaClientes as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
@@ -164,15 +116,15 @@
         } //fin if(control)
       });
   
-      function eliminarProductos(e:Event){
-        let idproducto = (e.target as HTMLElement).parentElement!.id, info = (tablaProductos as any).page.info();
-        if((e.target as HTMLElement).tagName === 'I')idproducto = (e.target as HTMLElement).parentElement!.parentElement!.id;
-        indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
+      function eliminarClientes(e:Event){
+        let idcliente = (e.target as HTMLElement).parentElement!.id, info = (tablaClientes as any).page.info();
+        if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
+        indiceFila = (tablaClientes as any).row((e.target as HTMLElement).closest('tr')).index();
         Swal.fire({
             customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
             icon: 'question',
-            title: 'Desea eliminar el prducto?',
-            text: "El prducto sera eliminado definitivamente.",
+            title: 'Desea eliminar el cliente?',
+            text: "El cliente sera eliminado definitivamente.",
             showCancelButton: true,
             confirmButtonText: 'Si',
             cancelButtonText: 'No',
@@ -180,14 +132,14 @@
             if (result.isConfirmed) {
                 (async ()=>{ 
                     const datos = new FormData();
-                    datos.append('id', idproducto);
+                    datos.append('id', idcliente);
                     try {
-                        const url = "/admin/api/eliminarProducto";
+                        const url = "/admin/api/eliminarCliente";
                         const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                         const resultado = await respuesta.json();  
                         if(resultado.exito !== undefined){
-                          (tablaProductos as any).row(indiceFila+info.start).remove().draw(); 
-                          (tablaProductos as any).page(info.page).draw('page');
+                          (tablaClientes as any).row(indiceFila+info.start).remove().draw(); 
+                          (tablaClientes as any).page(info.page).draw('page');
                           Swal.fire(resultado.exito[0], '', 'success') 
                         }else{
                             Swal.fire(resultado.error[0], '', 'error')
@@ -200,23 +152,9 @@
         });
       }
   
-      //////////////////// Cargar imagen como preview  //////////////////////
-      btncustomUpImage?.addEventListener('click', ()=>inputupImage?.click());
-      inputupImage?.addEventListener('change', function(){
-        const file = this.files?.[0];
-        if(file){
-          const reader = new FileReader();
-          reader.onload = function(){
-            const resrult = reader.result;
-            if(typeof resrult == "string")imginputfile.src = resrult;
-          } 
-          reader.readAsDataURL(file);
-        }
-      });
   
       function limpiarformdialog(){
-        (document.querySelector('#formCrearUpdateProducto') as HTMLFormElement)?.reset();
-        (document.querySelector('#formCrearUpdateProducto') as HTMLFormElement).action = "/admin/almacen/crear_producto";
+        (document.querySelector('#formCrearUpdateCliente') as HTMLFormElement)?.reset();
       }
       function cerrarDialogoExterno(event:Event) {
         if (event.target === miDialogoCliente || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Actualizar') {
