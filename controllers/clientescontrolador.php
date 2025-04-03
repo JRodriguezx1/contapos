@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\ActiveRecord;
 use MVC\Router;  //namespace\clase
 use Model\usuarios;
 use Model\clientes;
@@ -113,17 +114,8 @@ class clientescontrolador{
         $alertas = []; 
  
         $cliente = usuarios::find('id', $id);
-        $citas = citas::idregistros('id_usuario', $id);
-        foreach($citas as $cita){
-            if($cita->id_empserv){
-                $cita->idservicio = empserv::uncampo('id', $cita->id_empserv, 'idservicio');
-                $cita->idempleado = empserv::uncampo('id', $cita->id_empserv, 'idempleado');
-                $cita->servicio = servicios::find('id', $cita->idservicio);
-                $cita->empleado = empleados::uncampo('id', $cita->idempleado, 'nombre').' '.empleados::uncampo('id', $cita->idempleado, 'apellido');
-                $cita->facturacion = facturacion::find('idcita', $cita->id);
-            }
-        }
-        $router->render('admin/clientes/detalle', ['titulo'=>'clientes', 'cliente'=>$cliente, 'citas'=>$citas, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        
+        $router->render('admin/clientes/detalle', ['titulo'=>'clientes', 'cliente'=>$cliente, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
      
 
@@ -171,11 +163,42 @@ class clientescontrolador{
 
 
     public static function apiActualizarcliente(){
-
+        session_start();
+        $alertas = []; 
+        $cliente = clientes::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $cliente->compara_objetobd_post($_POST);
+            $alertas = $cliente->validar_nuevo_cliente();
+            if(empty($alertas)){
+                $r = $cliente->actualizar();
+                if($r){
+                    $alertas['exito'][] = "Datos del cliente actualizados";
+                }else{
+                    $alertas['error'][] = "Error al actualizar cliente";
+                }
+            }
+        }
+        $alertas['cliente'][] = $cliente;
+        echo json_encode($alertas);  
     }
 
 
     public static function apiEliminarCliente(){
-        
+        session_start();
+        $cliente = clientes::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($cliente)){
+                $r = $cliente->eliminar_registro();
+                if($r){
+                    ActiveRecord::setAlerta('exito', 'Cliente eliminado correctamente');
+                }else{
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Cliente no encontrado');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
     }
 }

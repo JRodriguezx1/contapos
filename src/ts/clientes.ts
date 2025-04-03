@@ -1,7 +1,10 @@
 (()=>{
     if(document.querySelector('.clientes')){
-      const crearCliente = document.querySelector('#crearCliente');
+      const btncrearCliente = document.querySelector('#crearCliente');
+      const btncrearDireccion = document.querySelector('#crearDireccion');
       const miDialogoCliente = document.querySelector('#miDialogoCliente') as any;
+      const miDialogoCrearDireccion = document.querySelector('#miDialogoCrearDireccion') as any;
+      const miDialogoUpDireccion = document.querySelector('#miDialogoUpDireccion') as any;
       let indiceFila=0, control=0, tablaClientes:HTMLElement;
       
   
@@ -33,11 +36,12 @@
         }
       })();
   
+      
   
       //////////////////  TABLA //////////////////////
       tablaClientes = ($('#tablaClientes') as any).DataTable(configdatatables);
   
-      crearCliente?.addEventListener('click', (e):void=>{
+      btncrearCliente?.addEventListener('click', (e):void=>{
         control = 0;
         limpiarformdialog();
         document.querySelector('#modalCliente')!.textContent = "Crear cliente";
@@ -45,11 +49,26 @@
         miDialogoCliente.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       });
+
+
+      btncrearDireccion?.addEventListener('click', (e):void=>{
+        control = 0;
+        document.querySelector('#modalDireccion')!.textContent = "Crear direccion";
+        (document.querySelector('#btnEditarCrearDireccion') as HTMLInputElement).value = "Crear";
+        miDialogoCrearDireccion.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+        ($('#selectcliente') as any).select2({
+          dropdownParent: $('#miDialogoCrearDireccion'),
+          placeholder: "Seleccionar el cliente",
+          maximumSelectionLength: 1
+        });
+      });
   
       document.querySelector('#tablaClientes')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
         const target = e.target as HTMLElement;
         if((e.target as HTMLElement)?.classList.contains("editarClientes")||(e.target as HTMLElement).parentElement?.classList.contains("editarClientes"))editarClientes(e);
         if(target?.classList.contains("eliminarClientes")||target.parentElement?.classList.contains("eliminarClientes"))eliminarClientes(e);
+        if(target?.classList.contains("editarEliminarDireccion")||target.parentElement?.classList.contains("editarEliminarDireccion"))upRemoveDir(e);
       });
   
       function editarClientes(e:Event){
@@ -72,7 +91,7 @@
       }
   
       ////////////////////  Actualizar/Editar clientes  //////////////////////
-      document.querySelector('#formCrearUpdateProducto')?.addEventListener('submit', e=>{
+      document.querySelector('#formCrearUpdateCliente')?.addEventListener('submit', e=>{
         if(control){
           e.preventDefault();
           var info = (tablaClientes as any).page.info();
@@ -108,7 +127,8 @@
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
-                document.addEventListener("click", cerrarDialogoExterno);
+                miDialogoCliente.close();
+                document.removeEventListener("click", cerrarDialogoExterno);
             } catch (error) {
                 console.log(error);
             }
@@ -116,6 +136,12 @@
         } //fin if(control)
       });
   
+
+      function upRemoveDir(e:Event){
+        miDialogoUpDireccion.showModal();
+      }
+
+
       function eliminarClientes(e:Event){
         let idcliente = (e.target as HTMLElement).parentElement!.id, info = (tablaClientes as any).page.info();
         if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
@@ -157,8 +183,9 @@
         (document.querySelector('#formCrearUpdateCliente') as HTMLFormElement)?.reset();
       }
       function cerrarDialogoExterno(event:Event) {
-        if (event.target === miDialogoCliente || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Actualizar') {
+        if (event.target === miDialogoCliente || event.target === miDialogoCrearDireccion || (event.target as HTMLInputElement).value === 'salir') {
           miDialogoCliente.close();
+          miDialogoCrearDireccion.close();
           document.removeEventListener("click", cerrarDialogoExterno);
         }
       }
