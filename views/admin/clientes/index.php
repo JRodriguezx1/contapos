@@ -149,14 +149,14 @@
         <dialog class="midialog-sm p-5" id="miDialogoCrearDireccion">
             <h4 id="modalDireccion" class="font-semibold text-gray-700 mb-4">Crear Direccion</h4>
             <div id="divmsjalerta2"></div>
-            <form id="formCrearUpdateDireccion" class="formulario" action="/admin/direccions/crear" method="POST">
+            <form id="formCrearUpdateDireccion" class="formulario" action="/admin/direcciones/crear" method="POST">
                 
                 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-900/10 pb-10 mb-3">
                     
                     <div class="sm:col-span-6">
                         <label class="formulario__label" for="selectcliente">Seleccionar Cliente</label>
                         <div class="mt-2">
-                            <select id="selectcliente" name="selectcliente" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" multiple="multiple" required>
+                            <select id="selectcliente" name="idcliente" class=" w-full" multiple="multiple" required>
                                 <?php foreach($clientes as $cliente): ?>
                                     <?php if($cliente->id > 1){ ?>
                                         <option value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
@@ -169,7 +169,7 @@
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="tarifa">Tarifa</label>
                         <div class="mt-2">
-                            <select id="tarifa" name="tarifa" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="tarifa" name="idtarifa" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($tarifas as $tarifa): ?>
                                 <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre;?></option>
@@ -198,7 +198,7 @@
                         <label class="formulario__label" for="direccion">Direccion</label>
                         <div class="formulario__dato mt-2">
                             <input type="text" placeholder="direccion de vivienda" id="direccion" name="direccion" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="28" class="count-charts" for="">28</label>
+                            <label data-num="36" class="count-charts" for="">36</label>
                         </div>
                     </div>
                 </div>
@@ -212,11 +212,24 @@
     
 
         <dialog class="midialog-sm p-5" id="miDialogoUpDireccion">
-            <h4 id="modalUpDireccion" class="font-semibold text-gray-700 mb-4">Crear Direccion</h4>
+            <div class="flex justify-between items-center">
+                <h4 id="modalUpDireccion" class="font-semibold text-gray-700 mb-4">Actualizar Direccion</h4>
+                <button id="btnCerrarUpDireccion" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div id="divmsjalerta3"></div>
             <form id="formUpDireccion" class="formulario" action="/admin/direccions/actualizar" method="POST">
                 
                 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-900/10 pb-10 mb-3">
+                    
+                    <div class="sm:col-span-6">
+                        <label class="formulario__label" for="direcciones">Seleccionar direcciones</label>
+                        <div class="mt-2">
+                            <select id="selectdirecciones" name="direcciones" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                                <option value="" disabled selected>-Seleccionar-</option>
+                                
+                            </select>  
+                        </div>        
+                    </div>
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="tarifa">Tarifa</label>
                         <div class="mt-2">
@@ -246,14 +259,14 @@
                         <label class="formulario__label" for="direccion">Direccion</label>
                         <div class="formulario__dato mt-2">
                             <input type="text" placeholder="direccion de vivienda" id="updireccion" name="direccion" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="28" class="count-charts" for="">28</label>
+                            <label data-num="36" class="count-charts" for="">36</label>
                         </div>
                     </div>
                 </div>
                 
                 <div class="text-right">
-                    <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-                    <input id="btnUpDireccion" class="btn-md btn-blue" type="submit" value="Crear">
+                    <button id="btnRemoveDireccion" class="btn-md btn-red" type="submit" value="Eliminar">Eliminar</button>
+                    <input id="btnUpDireccion" class="btn-md btn-blue" type="submit" value="Actualizar">
                 </div>
             </form>
         </dialog><!--fin actualizar direccion-->
