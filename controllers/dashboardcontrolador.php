@@ -42,47 +42,45 @@ class dashboardcontrolador{
         isadmin();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuario = usuarios::find('id', $_SESSION['id']);
+            $x = $usuario->comprobar_password($_POST['password']);
             $usuario->compara_objetobd_post($_POST);
             $alertas = $usuario->validarEmail();
             if(empty($alertas)){
                 //////// validar el password principal
-                //////// validar si hubo cambio de passoword
-                $r = $usuario->actualizar();
-                if($r){
-                    $alertas['exito'][] = "Datos actualizados";
-                }else{ $alertas['error'][] = "Hubo un error al actualizar los datos de usuario"; }
+                if($x){
+                    //////// validar si hubo cambio de passoword
+                    if(isset($_POST['password2'])){
+                        $usuario->password = $usuario->password2;
+                        $usuario->hashPassword();
+                    }
+                    $r = $usuario->actualizar();
+                    if($r){
+                        $alertas['exito'][] = "Datos actualizados";
+                    }else{ $alertas['error'][] = "Hubo un error al actualizar los datos de usuario"; }
+                }else{
+                    $alertas['error'][] = "Password incorrecto";
+                }
             }
         }
         $usuario = usuarios::find('id', $_SESSION['id']);
         $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
-    public static function cambiarpassword(Router $router){
+    public static function actualizaremail(Router $router) {
         $alertas = [];
         session_start();
         isadmin();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuario = usuarios::find('id', $_SESSION['id']);
-            $x = $usuario->comprobar_password($_POST['passwordactual']);
-            if($x){
-                $usuario->compara_objetobd_post($_POST);
-                $alertas = $usuario->validarPassword();
-                if(empty($alertas)){
-                    if($usuario->password == $usuario->password2){
-                        $usuario->hashPassword();
-                        $a = $usuario->actualizar();
-                        $alertas['exito'][] = "Password Actualizado";
-                    }else{
-                        $alertas['error'][] = "El password nuevo no coincide cuando se repite";
-                    }
-                }
-            }else{
-                $alertas['error'][] = "Password actual no es correcto";
-            }
+            $usuario->compara_objetobd_post($_POST);
+            $r = $usuario->actualizar();
+            if($r){
+                $alertas['exito'][] = "Email actualizado";
+            }else{ $alertas['error'][] = "Hubo un error al actualizar el email"; }
         }
-        $router->render('admin/dashboard/cambiarpassword', ['titulo'=>'Cambio de password', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $usuario = usuarios::find('id', $_SESSION['id']);
+        $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
-
     
 
     public static function alldays(){  //api
