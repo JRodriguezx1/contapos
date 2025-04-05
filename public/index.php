@@ -62,7 +62,6 @@ $router->get('/admin/perfil', [dashboardcontrolador::class, 'perfil']);
 $router->post('/admin/perfil', [dashboardcontrolador::class, 'perfil']);
 $router->get('/admin/perfil/cambiarpassword', [dashboardcontrolador::class, 'cambiarpassword']);
 $router->post('/admin/perfil/cambiarpassword', [dashboardcontrolador::class, 'cambiarpassword']);
-$router->get('/admin/viewmobile', [dashboardcontrolador::class, 'viewmobile']);
 ///// area de contabilidad /////
 $router->get('/admin/contabilidad', [contabilidadcontrolador::class, 'index']);
 ///// area de almacen categorias, productos, subproductos, compras etc /////

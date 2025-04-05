@@ -29,11 +29,6 @@ class dashboardcontrolador{
         ...
         */
 
-        
-
-
-        
-
 
         //$totalempleados = empleados::numregistros();
         //$totalclientes = usuarios::numreg_multicolum(['confirmado'=>1, 'admin'=>0]);
@@ -50,10 +45,12 @@ class dashboardcontrolador{
             $usuario->compara_objetobd_post($_POST);
             $alertas = $usuario->validarEmail();
             if(empty($alertas)){
+                //////// validar el password principal
+                //////// validar si hubo cambio de passoword
                 $r = $usuario->actualizar();
                 if($r){
                     $alertas['exito'][] = "Datos actualizados";
-                }else{ $alertas['error'][] = "Hubo un error"; }
+                }else{ $alertas['error'][] = "Hubo un error al actualizar los datos de usuario"; }
             }
         }
         $usuario = usuarios::find('id', $_SESSION['id']);
@@ -86,12 +83,7 @@ class dashboardcontrolador{
         $router->render('admin/dashboard/cambiarpassword', ['titulo'=>'Cambio de password', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
-    public static function viewmobile(Router $router){
-        $alertas = [];
-        session_start();
-        isadmin();
-        $router->render('admin/viewmobile/index', ['titulo'=>'mas...', 'user'=>$_SESSION, 'alertas'=>$alertas]);
-    }
+    
 
     public static function alldays(){  //api
         $alldays = pagosxdia::ordenarlimite('id', 'DESC', 8);
