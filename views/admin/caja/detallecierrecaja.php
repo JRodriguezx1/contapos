@@ -77,7 +77,7 @@
                                 <?php foreach($discriminarmediospagos as $index => $value): ?>
                                 <tr>        
                                     <td class=""><?php echo $value['mediopago'];?></td> 
-                                    <td class=""><?php echo $value['valor'];?></td>
+                                    <td class="">$ <?php echo number_format($value['valor'], "0", ",", ".");?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>

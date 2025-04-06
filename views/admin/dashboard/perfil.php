@@ -59,7 +59,7 @@
         </div>
            
         <p class="mt-2">No puede recordar tu password actual. <a class="text-xl font-semibold text-blue-600 underline decoration-2" href="#">Recuperar Cuenta</a></p>
-        <input class="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white" type="submit" value="Guardar Cambios">
+        <input class="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:cursor-pointer" type="submit" value="Guardar Cambios">
       </form>
       <hr class="mt-4 mb-8" />
       <div class="mb-10">

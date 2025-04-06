@@ -48,8 +48,8 @@ class dashboardcontrolador{
             if(empty($alertas)){
                 //////// validar el password principal
                 if($x){
-                    //////// validar si hubo cambio de passoword
-                    if(isset($_POST['password2'])){
+                    //////// validar si hubo cambio de passoword y que no se vacio el nuevo password
+                    if(isset($_POST['password2'])&&!empty(trim($_POST['password2']))){
                         $usuario->password = $usuario->password2;
                         $usuario->hashPassword();
                     }

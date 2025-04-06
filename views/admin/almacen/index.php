@@ -118,13 +118,14 @@
 
       <div class="tablastock accordion_tab_content">
         <p class="text-xl mt-0 text-gray-600">Stock de productos</p>
-        <table class="display responsive nowrap tabla" width="100%" id="">
+        <table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%" id="">
             <thead>
                 <tr>
                     <th>Nº</th>
                     <th>Producto</th>
                     <th>Categoria</th>
                     <th>Stock</th>
+                    <th>Unidad</th>
                     <th>Agregado</th>
                     <th class="accionesth">Acciones</th>
                 </tr>
@@ -134,12 +135,13 @@
                 <?php foreach($productos as $index => $value): ?>
                   <?php if($value->tipoproducto == '0'): ?>  <!-- productos simple -->
                   <tr> 
-                      <td class=""><?php echo $index+1;?></td>        
-                      <td class=""><?php echo $value->nombre;?></td> 
-                      <td class="" ><?php echo $value->categoria;?></td> 
+                      <td class=""><?php echo $index+1;?></td>
+                      <td class=""><div class="w-96 whitespace-normal"><?php echo $value->nombre;?></div></td> 
+                      <td class="" ><?php echo $value->categoria;?></td>
                       <td class="flex items-center justify-center text-cyan-600 text-xl bg-cyan-50 px-3 py-1.5 tracking-wide rounded-lg"><?php echo $value->stock;?></td>
+                      <td class=""><?php echo $value->unidadmedida;?></td>
                       <td class=""><?php echo $value->fecha_ingreso;?></td>
-                      <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
+                      <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise editarStock">Ver</button></div></td>
                   </tr>
                   <?php endif; ?>
                 <?php endforeach; ?>
@@ -147,12 +149,13 @@
                 <!-- subproductos -->
                 <?php foreach($subproductos as $index => $value): ?>  
                   <tr> 
-                      <td class=""><?php echo $index+1;?></td>        
-                      <td class="">* <?php echo $value->nombre;?></td> 
+                      <td class=""><?php echo $index+1;?></td>
+                      <td class=""><div class="w-96 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
                       <td class="" ><?php echo $value->categoria??'';?></td> 
                       <td class="flex items-center justify-center text-cyan-600 text-xl bg-cyan-50 px-3 py-1.5 tracking-wide rounded-lg"><?php echo $value->stock;?></td>
+                      <td class=""><?php echo $value->unidadmedida;?></td>
                       <td class=""><?php echo $value->fecha_ingreso;?></td>
-                      <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise">Ver</button></div></td>
+                      <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise editarStock">Ver</button></div></td>
                   </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -181,8 +184,8 @@
                     <td class=""><?php echo $index+1;?></td>        
                     <td class=""><?php echo $value->nombre;?></td> 
                     <td class=""><?php echo $value->impuesto;?>%</td>
-                    <td class="" >$<?php echo $value->precio_compra;?></td> 
-                    <td class="">$<?php echo number_format($value->precio_venta, '0', ',', '.');?></td>
+                    <td class="" ><strong>$ </strong><?php echo $value->precio_compra;?></td> 
+                    <td class=""><strong>$ </strong><?php echo number_format($value->precio_venta, '0', ',', '.');?></td>
                     <td class="text-blue-600 text-xl bg-blue-50 px-3 py-1.5 tracking-wide rounded-lg">$<?php echo number_format($value->precio_venta - $value->precio_compra, '0', ',', '.');?></td>
                     <td class=" flex items-center justify-center text-purple-600 text-xl bg-purple-50 px-3 py-1.5 tracking-wide rounded-lg">%<?php echo number_format((($value->precio_venta - $value->precio_compra)/$value->precio_venta)*100, '1', ',', '.')?></td>
                     <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-xs btn-turquoise">Mas</button></div></td>
@@ -194,5 +197,45 @@
     </div>
 
   </div> <!-- fin accordion_inv -->
+
+  <!-- MODAL PARA AJUSTAR SUMAR, PRODUCIR O DESCONTAR UNUDADES-->
+  <dialog class="midialog-sm p-5" id="miDialogoStock">
+    <h4 class=" text-gray-700 font-semibold">Stock Almacen</h4>
+    <form id="formStock" class="formulario">
+
+      <div class="border-b border-gray-900/10 pb-10 mb-3">
+        
+        <p class="mt-2 text-xl text-gray-600">Ajuste de STOCK de inventario.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <label for="stockitem" class="block text-2xl font-medium text-gray-600">Cantidad</label>
+            <div class="mt-2">
+              <input type="text" name="stockitem" id="stockitem" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+            </div>
+          </div>
+
+
+          <div class="sm:col-span-6">
+            <label for="Opciones" class="block text-2xl font-medium text-gray-600">Opciones</label>
+            <div class="mt-2 grid grid-cols-1">
+              <select id="Opciones" name="Opciones" autocomplete="Opciones-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+                
+              </select>
+              <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-right">
+          <button class="btn-md btn-red salir" type="button" value="salir">Salir</button>
+          <input id="btnAjusteStock" class="btn-md btn-blue ajusteStock" type="submit" value="Confirmar">
+      </div>
+    </form>
+  </dialog>
 
 </div>

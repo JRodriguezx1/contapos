@@ -55,11 +55,14 @@
     tipoproducto?.addEventListener('change', (e:Event)=>{
       const targetDom = e.target as HTMLSelectElement;
       const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
-      if(targetDom.value == '0'){
+      const stock = document.querySelector('.stock') as HTMLElement;
+      if(targetDom.value == '0'){  //  0 = simple
+        stock.style.display = 'flex';
         preciocompra.style.display = 'flex';
         document.querySelector('#preciocompra')?.setAttribute("required", "");
       }
       else{
+        stock.style.display = 'none';
         preciocompra.style.display = 'none';
         document.querySelector('#preciocompra')?.removeAttribute("required");
       }
@@ -93,8 +96,13 @@
       $('#categoria').val(unproducto?.idcategoria??'');
       (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
       $('#tipoproducto').val(unproducto?.tipoproducto??'');
+      (document.querySelector('#stock')as HTMLInputElement).removeAttribute('readonly');
       (document.querySelector('#preciocompra')as HTMLInputElement).removeAttribute('readonly');
-      if(unproducto?.tipoproducto == '1')(document.querySelector('#preciocompra')as HTMLInputElement).setAttribute('readonly', '');
+      if(unproducto?.tipoproducto == '1'){
+        (document.querySelector('#stock')as HTMLInputElement).setAttribute('readonly', '');
+        (document.querySelector('#preciocompra')as HTMLInputElement).setAttribute('readonly', '');
+      }
+      (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
       (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';

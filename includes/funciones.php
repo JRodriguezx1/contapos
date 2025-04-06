@@ -19,7 +19,7 @@ function validar_string_url($path):bool{ //retorna bolean
 
 function isauth():void  //valida si el usuario esta registrao
 {
-  if(!isset($_SESSION['login'])||$_SESSION['perfil']==null){
+  if(!isset($_SESSION['login'])){
       header('Location: /');       //lo redirecciona a la pagina web
   }
 }
@@ -29,6 +29,7 @@ function isadmin():void
     if($_SESSION['perfil']!=1){
         header('Location: /');
     }*/
+    isauth();
     if($_SESSION['perfil']==NULL){
         header('Location: /');
     }

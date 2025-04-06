@@ -80,9 +80,9 @@ class logincontrolador{
                             header('Location: /Cliente/app');
                         }
 
-                    }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado, verfica tu email');  }
+                    }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado.');  }
                 }else{
-                    $alertas = usuarios::setAlerta('error', 'usuario no encontrado o no existe o deshailitado');
+                    $alertas = usuarios::setAlerta('error', 'usuario no encontrado o no existe o deshailitado.');
                 }
             } //cierre del empty de alertas
         } //cierre de $_SERVER['REQUEST_METHOD'] === 'POST'

@@ -48,7 +48,7 @@
       
       <div class="mt-4">
         <button class="group relative btn-md btn-blueintense">Categorias
-          <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-focus:scale-y-100 origin-top duration-200">
+          <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
             <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
             <?php foreach($categorias as $categoria): ?>
               <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
@@ -96,7 +96,7 @@
         </div>
         <div class="flex items-center gap-4">
           <span class="text-3xl text-neutral-500">CARRITO:</span>
-          <span id="totalunidades" class="text-3xl font-medium text-neutral-500">4</span>
+          <span id="totalunidades" class="text-3xl font-medium text-neutral-500">0</span>
         </div>
       </div>
       <!-- Apilamiento de productos -->

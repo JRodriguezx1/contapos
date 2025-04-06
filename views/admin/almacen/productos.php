@@ -69,6 +69,14 @@
                 <option value="1">Compuesto</option>
             </select>          
         </div>
+
+        <div class="formulario__campo stock">
+            <label class="formulario__label" for="stock">Cantidad</label>
+            <div class="formulario__dato">
+                <input class="formulario__input" id="stock" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+            </div>
+        </div>
+
         <div class="">
             <div class="formulario__campo preciocompra">
                 <label class="formulario__label" for="preciocompra">Precio Compra</label>
@@ -97,9 +105,25 @@
             <button id="customUpImage" class="btn-xs btn-blue self-center !rounded-3xl !px-8 !py-4" type="button">Cargar Imagen</button>
         </div>
         
-        <div class="masopciones">
-
-        </div>
+        <div class="accordion md:px-12 !mt-4">
+            <input type="checkbox" id="first">
+            <label class="etiqueta text-gray-500" for="first">Mostrar/Ocultar mas opciones</label>
+            <div class="wrapper">
+              <div class="wrapper-content">
+                <div id="mediospagos" class="content flex flex-col w-full mx-auto">
+                  
+                    <div class="mb-4">
+                      <p class="text-gray-700 text-xl">Opcion 1</p>
+                      <p class="text-gray-700 text-xl">Opcion 2</p>
+                      <p class="text-gray-700 text-xl">Opcion 3</p>
+                      <p class="text-gray-700 text-xl">Opcion 4</p>
+                      <p class="text-gray-700 text-xl">Opcion 5</p>
+                    </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div> <!-- fin accordion  -->
         
         <div class="text-right">
             <button class="btn-md btn-red" type="button" value="salir">Salir</button>

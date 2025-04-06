@@ -85,7 +85,7 @@
             }
         }
 
-        .noneElement{ //clase agegada en app.ts
+        .noneElement{ //clase agregada en app.ts
             display: none;
         }
         
@@ -97,7 +97,7 @@
             margin-top: 5rem;
             a{              //el tamaño de las letras de los links a esta definido en globales.scss de 1.6rem
                 white-space: nowrap;
-                color: v.$blanco;
+                color: v.$gris30; //blanco
                 display: block;
                 margin-bottom: .8rem;
                 padding: 1rem;
@@ -105,13 +105,17 @@
                 transition-duration: 300ms;
                 font-size: 1.4rem;
                 text-align: center;
+                label{
+                    cursor: pointer;
+                }
                 &:hover, &.activo{
-                    background-color: darken(v.$indigo, 20%);
+                    //background-color: darken(v.$indigo, 20%);
+                    background-color: v.$azul0;
                     border-radius: 0.5rem;
                     /*border-bottom-left-radius: .5rem;
                     border-top-left-radius: .5rem;
-                    background-color: v.$azul10;
-                    color: v.$indigo;*/
+                    background-color: v.$azul10;*/
+                    color: v.$indigo;
                 }
                 @include m.tablet{
                     display: flex;
