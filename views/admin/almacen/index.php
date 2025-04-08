@@ -20,11 +20,11 @@
     <div class="text-center border border-gray-300 p-3 tlg:w-40 btn_inv_info_rapido">
       <span class="text-xl text-gray-600">Informacion Inventario</span>
       <div>
-        <label class="btn-xs btn-dark mt-4 btninfoalmacen" for="infoalmacen">Inform... Almacen</label>
-        <label class="btn-xs btn-dark mt-4 btnstockproducto" for="stockproducto">Stock Rapido</label>
-        <label class="btn-xs btn-dark mt-4 btnutilidadproducto" for="utilidadproducto">Utilidad Producto</label>
-        <label class="btn-xs btn-dark mt-4 tlg:!w-full sedes" for="sedes">Sedes</label>
-        <label class="btn-xs btn-dark mt-4 tlg:!w-full proveedores" for="proveedores">Proveedores</label> 
+        <label class="btn-xs btn-indigo !py-4 mt-4 btninfoalmacen" for="infoalmacen">Inform... Almacen</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 btnstockproducto" for="stockproducto">Stock Rapido</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 btnutilidadproducto" for="utilidadproducto">Utilidad Producto</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full sedes" for="sedes">Sedes</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full proveedores" for="proveedores">Proveedores</label> 
       </div>
     </div>
     

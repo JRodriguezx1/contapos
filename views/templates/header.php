@@ -1,5 +1,5 @@
 <div class="barra-mobile">
-    <img id="logoj2" class="w-80 h-80" src="/build/img/logoj2blanco.png" alt="logoj2">
+    <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2blanco.png" alt="logoj2">
     <div class="menu">
         <img id="mobile-menu" src="/build/img/menu.svg" alt="imagen menu">
     </div>

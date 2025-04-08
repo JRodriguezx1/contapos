@@ -2,12 +2,12 @@
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
   <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Gestion de caja</h4>
   <div class="flex flex-wrap gap-2 mb-6">
-    <a class="btn-xs btn-light" href="/admin/caja/cerrarcaja">Cerrar caja</a>
-    <button class="btn-xs btn-light" id="btnGastosingresos">Gastos/ingresos</button>
-    <a class="btn-xs btn-light" href="/admin/caja/zetadiario">Zeta diario</a>
-    <a class="btn-xs btn-light" href="/admin/caja/ultimoscierres">Ultimos cierres</a>
-    <button class="btn-xs btn-dark">Abrir cajon</button>
-    <a class="btn-xs btn-turquoise" href="/admin/caja">Guardadas</a>
+    <a class="btn-md btn-light" href="/admin/caja/cerrarcaja">Cerrar caja</a>
+    <button class="btn-md btn-light" id="btnGastosingresos">Gastos/ingresos</button>
+    <a class="btn-md btn-light" href="/admin/caja/zetadiario">Zeta diario</a>
+    <a class="btn-md btn-light" href="/admin/caja/ultimoscierres">Ultimos cierres</a>
+    <button class="btn-md btn-dark">Abrir cajon</button>
+    <a class="btn-md btn-turquoise" href="/admin/caja">Guardadas</a>
   </div>
   <h5 class="text-gray-600 mb-3">Lista de facturas</h5>
   <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
