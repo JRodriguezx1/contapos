@@ -351,7 +351,8 @@ class ventascontrolador{
     $mediospago = factmediospago::uniquewhereArray(['id_factura'=>$factura->id, 'idmediopago'=>1])->valor??0; //me trae la factura que pago en efectivo
     $tempfactura = clone $factura;
     $tempcierrecaja = clone $cierrecaja;
-    
+    $invSub = true;
+    $invPro = true;
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce(json_decode($_POST['inv']), function($acumulador, $objeto){
