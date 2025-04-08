@@ -46,7 +46,7 @@
     <div class="grid gap-8">
       <?php include __DIR__. "/../templates/alertas.php"; ?>
       <div id="back-div" class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-[30px] rounded-tl-[34px] m-4">
-      <img  src="/build/img/logoj2blancosinfondo.png" class="w-80" alt="logoj2">  
+      <img  src="/build/img/logoj2blanco.png" class="w-80" alt="logoj2">  
       <div class="border-[20px] border-transparent rounded-[24px] dark:bg-gray-900 bg-white shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-2 m-2">
           <h1 class="pt-8 pb-6 font-bold dark:text-gray-400 text-5xl text-center cursor-default">
             Iniciar Session
