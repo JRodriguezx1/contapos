@@ -42,9 +42,11 @@ class dashboardcontrolador{
         isadmin();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuario = usuarios::find('id', $_SESSION['id']);
+            $hashpass = $usuario->password;
             $x = $usuario->comprobar_password($_POST['password']);
             $usuario->compara_objetobd_post($_POST);
             $alertas = $usuario->validarEmail();
+            $usuario->password = $hashpass;
             if(empty($alertas)){
                 //////// validar el password principal
                 if($x){
