@@ -6,6 +6,7 @@
         let indiceFila=0, control=0;
     
 
+
         //////////////////  TABLA //////////////////////
         ($('#tablaStockRapido') as any).DataTable(configdatatables);
 
@@ -20,6 +21,10 @@
             document.addEventListener("click", cerrarDialogoExterno);
         }
 
+        //SELECT2 DE itemAproducir
+        ($('#itemAproducir') as any).select2({
+            maximumSelectionLength: 1,
+        });
 
         function cerrarDialogoExterno(event:Event) {
             if (event.target === miDialogoStock || (event.target as HTMLInputElement).value === 'salir') {
@@ -27,6 +32,8 @@
             document.removeEventListener("click", cerrarDialogoExterno);
             }
         }
+
+
 
     }
 

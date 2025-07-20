@@ -4,7 +4,7 @@ namespace Model;
 
 class subproductos extends ActiveRecord {
     protected static $tabla = 'subproductos';
-    protected static $columnasDB = ['id', 'id_unidadmedida', 'unidadmedida', 'nombre', 'sku', 'proveedor', 'descripcion', 'medidas', 'color', 'uso', 'stock', 'stockminimo', 'precio_compra', 'fecha_ingreso'];
+    protected static $columnasDB = ['id', 'id_unidadmedida', 'unidadmedida', 'insumoprocesado', 'nombre', 'sku', 'proveedor', 'descripcion', 'medidas', 'color', 'uso', 'stock', 'stockminimo', 'precio_compra', 'fecha_ingreso'];
     
     //public $id;
     public function __construct($args = [])
@@ -12,6 +12,7 @@ class subproductos extends ActiveRecord {
         $this->id = $args['id'] ?? null;
         $this->id_unidadmedida = $args['id_unidadmedida']??1;
         $this->unidadmedida = $args['unidadmedida'] ?? '';
+        $this->insumoprocesado = $args['insumoprocesado']??0; //0 = si es comprado, 1 = si es producido en planta
         $this->nombre = $args['nombre'] ?? '';
         $this->sku = $args['sku'] ?? '';
         $this->proveedor = $args['proveedor'] ?? '';

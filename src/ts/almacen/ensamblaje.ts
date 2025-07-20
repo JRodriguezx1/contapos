@@ -69,6 +69,29 @@
             factorC = Number(reg?.factorconversion);
         }
 
+        //////////////  EVENTO AL INPUT RENDIMIENTO ESTANDAR /////////////////
+        document.querySelector('#rendimientoestandar')?.addEventListener('input', (e:Event)=>{
+            const inputRendimiendoEstandar = (e.target as HTMLInputElement);
+            (async ()=>{ 
+                const datos = new FormData();
+                datos.append('id', (document.querySelector('#idproducto') as HTMLInputElement).value);
+                datos.append('rendimientoestandar', inputRendimiendoEstandar.value);
+                try {
+                    const url = "/admin/api/setrendimientoestandar";
+                    const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                    const resultado = await respuesta.json();
+                    if(resultado.exito !== undefined){
+                        inputRendimiendoEstandar.style.color = "#02db02";
+                        inputRendimiendoEstandar.style.fontWeight = "500";
+                    }else{
+                      msjalertToast('error', '¡Error!', resultado.error[0]);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            })();
+        
+        });
 
         ///////////////// EVENTO AL FORMULARIO ASOCIAR SUBPRODUCTO //////////////////
         document.querySelector('#formAddSubproducto')?.addEventListener('submit', (e)=>{

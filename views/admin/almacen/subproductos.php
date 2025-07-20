@@ -25,7 +25,13 @@
               <td class=""><?php echo $value->sku;?></td>
               <td class=""><?php echo $value->unidadmedida;?></td>
               <td class="">$<?php echo number_format($value->precio_compra, "0", ",", ".");?></td>
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-md btn-turquoise editarSubProductos"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarSubProductos"><i class="fa-solid fa-trash-can"></i></button></div></td>
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
+                <button class="btn-md btn-turquoise editarSubProductos"><i class="fa-solid fa-pen-to-square"></i></button>
+                <?php if($value->insumoprocesado == '1'): //0=comprado,   1=creado ?> 
+                    <a class="btn-md btn-blue" href="/admin/almacen/componer?id=frabricado<?php echo $value->id;?>"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                <?php endif; ?>
+                <button class="btn-md btn-red eliminarSubProductos"><i class="fa-solid fa-trash-can"></i></button>
+            </div></td>
           </tr>
           <?php endforeach; ?>
       </tbody>
@@ -51,6 +57,13 @@
                 <?php foreach($unidadesmedida as $unidadmedida): ?>
                 <option value="<?php echo $unidadmedida->id;?>" <?php //echo $unidadmedida->id==$subproducto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
                 <?php endforeach; ?>
+            </select>             
+        </div>
+        <div class="formulario__campo">
+            <label class="formulario__label" for="insumoprocesado">Insumo fabricado</label>
+            <select class="formulario__select" name="insumoprocesado" id="insumoprocesado" required>
+                <option value="0" selected> No </option>
+                <option value="1"> Si </option>
             </select>             
         </div>
         <div class="formulario__campo">

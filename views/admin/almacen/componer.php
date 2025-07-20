@@ -1,7 +1,7 @@
 <div class="box ensamblaje !pb-10">
   <a class="btn-xs btn-dark" href="/admin/almacen/productos">Atras</a>
   <div class="w-full md:w-4/5 mx-auto rounded-lg shadow-lg px-6 pt-8">
-    <h4 class=" text-gray-700 font-semibold"><?php echo $producto->nombre;?></h4>
+    <h4 class=" text-gray-700 font-semibold"><?php echo $producto->nombre;?> - "<?php echo $producto->unidadmedida;?>"</h4>
 
     <form id="formAddSubproducto" class="formulario" action="/" method="POST">
       <div class="border-b border-gray-900/10 pb-10 mb-3">
@@ -26,7 +26,7 @@
             </div>
           </div>
 
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
             <label for="unidadmedida" class="block text-2xl font-medium text-gray-600">Unidad de medida</label>
             <div class="mt-2 grid grid-cols-1">
               <select id="unidadmedida" name="unidadmedida" autocomplete="unidadmedida-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-2">
             <label for="cantidad" class="block text-2xl font-medium text-gray-600">Cantidad</label>
             <div class="mt-2">
               <input id="cantidad"
@@ -47,6 +47,20 @@
                      autocomplete="cantidad ID"
                      class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
                      maxlength="7"
+                     oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                     required>
+            </div>
+          </div>
+
+          <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2 p-4 shadow-lg rounded-lg">
+            <label for="rendimientoestandar" class="block text-2xl font-medium text-gray-600">Rendimiento estandar</label>
+            <div class="mt-2">
+              <input id="rendimientoestandar"
+                     type="text"
+                     autocomplete="rendimientoestandar ID"
+                     class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-green-400"
+                     maxlength="7"
+                     value="<?php echo $producto->rendimientoestandar;?>"
                      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                      required>
             </div>
@@ -61,7 +75,7 @@
       </div>
 
       <div>
-        <h5 class="mb-2 mt-4 text-slate-600 font-medium">Lista de sub productos asociados</h5>
+        <h5 class="mb-2 mt-4 text-slate-600 font-medium">Lista de insumos de produccion</h5>
           <div class="w-full md:w-4/5 mx-auto bg-white md:px-14 pt-4 pb-14 listaSubproductos">
             <?php foreach($subproductosenlazados as $value): ?>
               <div id="<?php echo $value->id_subproducto;?>" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">

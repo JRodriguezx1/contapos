@@ -84,13 +84,14 @@ class almacencontrolador{
 
     $productos = productos::all();
     $categorias = categorias::all();
+    $unidadesmedida = unidadesmedida::all();
     $producto = new productos;
     
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'producto'=>$producto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function crear_producto(Router $router){
@@ -164,9 +165,9 @@ class almacencontrolador{
         }
       }
     }
-    $unidadesmedidas = unidadesmedida::all();
+    $unidadesmedida = unidadesmedida::all();
     $subproductos = subproductos::all();
-    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'unidadesmedidas'=>$unidadesmedidas, 'subproducto'=>$subproducto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'unidadesmedida'=>$unidadesmedida, 'subproducto'=>$subproducto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -541,6 +542,33 @@ class almacencontrolador{
         }else{
             $alertas['error'][] = "Error durante el proceso, intentalo nuevamnete.";
         }
+    }
+    echo json_encode($alertas);
+  }
+
+  //ESTABLECER RENDIMIENTO ESTANDAR DE LA FORMULA DE SALIDA
+  public static function setrendimientoestandar(){
+    session_start();
+    $alertas = [];
+    /*$tipoelemento = $_POST['tipoelemento'];
+    if($tipoelemento == 1){  // 1 = subproducto
+      $element = subproductos::find('id', $_POST['idelemento']);
+    }else{   //0 = producto
+      $element = productos::find('id', $_POST['idelemento']);
+    }*/
+    $element = productos::find('id', $_POST['id']);
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      if(!empty($element)){
+        $element->rendimientoestandar = $_POST['rendimientoestandar'];
+        $r = $element->actualizar();
+        if($r){
+          $alertas['exito'][] = 1;
+        }else{
+          $alertas['error'][] = "Error al establecer el rendimiento de la formula";
+        }
+      }else{
+        $alertas['error'][] = "Error, intenta nuevamente";
+      }
     }
     echo json_encode($alertas);
   }

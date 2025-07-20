@@ -46,6 +46,7 @@
         document.addEventListener("click", cerrarDialogoExterno);
       });
   
+      ///////////// EVENTOS A LA TABLA SUBPRODUCTOS /////////////
       document.querySelector('#tablaSubProductos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
         const target = e.target as HTMLElement;
         if(target?.classList.contains("editarSubProductos")||target.parentElement?.classList.contains("editarSubProductos"))editarSubProductos(e);

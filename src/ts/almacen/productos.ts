@@ -2,7 +2,7 @@
   if(document.querySelector('.productos')){
     const crearProducto = document.querySelector('#crearProducto');
     const miDialogoProducto = document.querySelector('#miDialogoProducto') as any;
-    const inputupImage = document.querySelector('#upImage') as HTMLInputElement;
+    const inputupImage = document.querySelector('#upImage') as HTMLInputElement;  //input para cargar el archivo imagen
     const btncustomUpImage = document.querySelector('#customUpImage');
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
     const tipoproducto = document.querySelector('#tipoproducto') as HTMLSelectElement;
@@ -50,6 +50,8 @@
       }
     })();
 
+    const divAlert = document.querySelector('.divmsjalerta0') as HTMLElement;
+    if(divAlert)borrarMsjAlert(divAlert);
 
     ///////// Habilita el select precio de compra si es producto simple, si es compuesto lo deshabilita
     tipoproducto?.addEventListener('change', (e:Event)=>{
@@ -71,6 +73,7 @@
     //////////////////  TABLA //////////////////////
     tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);
 
+    //btn para crear producto
     crearProducto?.addEventListener('click', (e):void=>{
       control = 0;
       limpiarformdialog();
@@ -92,10 +95,11 @@
       control = 1;
       document.querySelector('#modalProducto')!.textContent = "Actualizar producto";
       (document.querySelector('#btnEditarCrearProducto') as HTMLInputElement)!.value = "Actualizar";
-      unproducto = products.find(x=>x.id === idproducto)!;
+      unproducto = products.find(x=>x.id === idproducto)!; //obtengo el producto.
       $('#categoria').val(unproducto?.idcategoria??'');
       (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
       $('#tipoproducto').val(unproducto?.tipoproducto??'');
+      $('#idunidadmedida').val(unproducto?.idunidadmedida??'');
       (document.querySelector('#stock')as HTMLInputElement).removeAttribute('readonly');
       (document.querySelector('#preciocompra')as HTMLInputElement).removeAttribute('readonly');
       if(unproducto?.tipoproducto == '1'){
@@ -118,7 +122,7 @@
         e.preventDefault();
         var imgFile:(string|File), info = (tablaProductos as any).page.info();
         imgFile=unproducto.foto;
-        if(!imginputfile.src.includes(unproducto.foto)){ //cambio de imagen
+        if(!imginputfile.src.includes(unproducto.foto)){ //se lee la etiqueta img para cambio de imagen
           imgFile = ((e.target as HTMLFormElement).elements.namedItem("upImage") as HTMLInputElement).files?.[0]!; //obtengo el archivo
           if(imgFile){
             if(imgFile.type!=="image/png"&&imgFile.type!=="image/jpeg"){
@@ -164,7 +168,8 @@
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
-              document.addEventListener("click", cerrarDialogoExterno);
+              miDialogoProducto.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
           } catch (error) {
               console.log(error);
           }
@@ -227,7 +232,7 @@
       imginputfile.src = '';
     }
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === miDialogoProducto || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Actualizar') {
+      if (event.target === miDialogoProducto || (event.target as HTMLInputElement).value === 'salir') {
         miDialogoProducto.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }

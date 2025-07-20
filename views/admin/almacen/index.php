@@ -16,6 +16,7 @@
     <input type="radio" name="radio" id="infoalmacen" checked>
     <input type="radio" name="radio" id="stockproducto">
     <input type="radio" name="radio" id="utilidadproducto">
+    <input type="radio" name="radio" id="ordenproduccion">
 
     <div class="text-center border border-gray-300 p-3 tlg:w-40 btn_inv_info_rapido">
       <span class="text-xl text-gray-600">Informacion Inventario</span>
@@ -23,8 +24,9 @@
         <label class="btn-xs btn-indigo !py-4 mt-4 btninfoalmacen" for="infoalmacen">Inform... Almacen</label>
         <label class="btn-xs btn-indigo !py-4 mt-4 btnstockproducto" for="stockproducto">Stock Rapido</label>
         <label class="btn-xs btn-indigo !py-4 mt-4 btnutilidadproducto" for="utilidadproducto">Utilidad Producto</label>
-        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full sedes" for="sedes">Sedes</label>
-        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full proveedores" for="proveedores">Proveedores</label> 
+        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btnsedes" for="sedes">Sedes</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btnproveedores" for="proveedores">Proveedores</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btnordenproduccion" for="ordenproduccion">Orden Produccion</label>
       </div>
     </div>
     
@@ -194,7 +196,10 @@
             </tbody>
         </table>
       </div> <!-- fin tablautilidad-->
-    </div>
+
+      <div class="ordenproduccion accordion_tab_content pt-12 bg-gray-50 dark:bg-gray-900 sm:pt-20 pb-12 sm:pb-16">
+        <?php include __DIR__. "/ordenproduccion.php"; ?>
+      </div>
 
   </div> <!-- fin accordion_inv -->
 

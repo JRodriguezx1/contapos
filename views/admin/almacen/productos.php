@@ -1,7 +1,7 @@
 <div class="box productos">
   <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a>
   <h4 class="text-gray-600 mb-12 mt-4">Productos</h4>
-  <?php include __DIR__. "/../../templates/alertas.php"; ?>
+  <div class="divmsjalerta0"><?php include __DIR__. "/../../templates/alertas.php"; ?></div>
   <button id="crearProducto" class="btn-md btn-blueintense mb-4">Crear producto</button>
   <a class="btn-md btn-turquoise" href="/admin/almacen/categorias">Ir a categorias</a>
   <table class="display responsive nowrap tabla" width="100%" id="tablaProductos">
@@ -30,7 +30,7 @@
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
                     <button class="btn-md btn-turquoise editarProductos"><i class="fa-solid fa-pen-to-square"></i></button>
                     <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
-                        <a class="btn-md btn-blue" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <a class="btn-md btn-blue" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript"></i></a>
                     <?php endif; ?>
                     <button class="btn-xs btn-lima ">Mas</button>
                     <button class="btn-md btn-red eliminarProductos"><i class="fa-solid fa-trash-can"></i></button>
@@ -40,6 +40,7 @@
       </tbody>
   </table>
 
+  <!-- MODAL PARA CREAR/ACTUALIZAR PRODUCTOS-->
   <dialog class="midialog-sm p-5" id="miDialogoProducto">
     <h4 id="modalProducto" class="font-semibold text-gray-700 mb-4">Crear producto</h4>
     <div id="divmsjalerta1"></div>
@@ -68,6 +69,15 @@
                 <option value="0">Simple</option>
                 <option value="1">Compuesto</option>
             </select>          
+        </div>
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
+            <select class="formulario__select" id="idunidadmedida" name="idunidadmedida" required>
+                <?php foreach($unidadesmedida as $unidadmedida): ?>
+                <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
+                <?php endforeach; ?>
+            </select>       
         </div>
 
         <div class="formulario__campo stock">
@@ -113,7 +123,14 @@
                 <div id="mediospagos" class="content flex flex-col w-full mx-auto">
                   
                     <div class="mb-4">
-                      <p class="text-gray-700 text-xl">Opcion 1</p>
+                      <div class="formulario__campo">
+                        <label class="formulario__label" for="tipoproducccion">Tipo de produccion</label>
+                        <select class="formulario__select" id="tipoproducccion" name="tipoproducccion" required>
+                            <option value="" disabled selected>-Seleccionar-</option>
+                            <option value="0">Inmediato</option>
+                            <option value="1">Construccion</option>
+                        </select>          
+                      </div>
                       <p class="text-gray-700 text-xl">Opcion 2</p>
                       <p class="text-gray-700 text-xl">Opcion 3</p>
                       <p class="text-gray-700 text-xl">Opcion 4</p>

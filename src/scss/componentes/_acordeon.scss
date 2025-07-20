@@ -81,6 +81,11 @@
       color: v.$gris80;
       border-color: lighten(v.$gris80, 10);
     }
+    #ordenproduccion:checked ~ .btn_inv_info_rapido .btnordenproduccion{
+      background-color: darken(v.$gris20, 0);
+      color: v.$gris80;
+      border-color: lighten(v.$gris80, 10);
+    }
     .accordion_tab_content{
       display: none;
     }
@@ -94,6 +99,9 @@
       display: block;
     }
     #utilidadproducto:checked ~ .tablas_inv_rapido .tablautilidad{
+      display: block;
+    }
+    #ordenproduccion:checked ~ .tablas_inv_rapido .ordenproduccion{
       display: block;
     }
 }
