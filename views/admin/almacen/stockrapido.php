@@ -43,9 +43,9 @@
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>">
-                    <button class="btn-xs btn-bluelight editarStock"><i class="fa-solid fa-minus"></i></button>
-                    <button class="btn-xs btn-blue editarStock"><i class="fa-solid fa-plus"></i></button>
-                    <button class="btn-xs btn-turquoise editarStock"><i class="fa-solid fa-wrench"></i></button>
+                    <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
+                    <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
+                    <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
                 </div></td>
             </tr>
         <?php endforeach; ?>
@@ -54,7 +54,7 @@
 
 <!-- MODAL PARA AJUSTAR SUMAR, PRODUCIR O DESCONTAR UNUDADES-->
   <dialog class="midialog-sm p-5" id="miDialogoStock">
-      <h4 id="modalStock" class="font-semibold text-gray-600 mb-4">Ingreasar produccion a inventario</h4>
+      <h4 id="modalStock" class="font-semibold text-gray-600 mb-4">Ingreasar cantidad a inventario</h4>
       <div id="divmsjalertaStock"></div>
       <form id="formStock" class="formulario" action="/" method="POST">
 
@@ -62,11 +62,11 @@
           <p id="nombreItemstockrapido" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg"></p>
 
           <div class="formulario__campo">
-              <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
-              <select class="formulario__select" id="idunidadmedida" name="idunidadmedida" required>
+              <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida</label>
+              <select class="formulario__select" id="selectStockRapidoUndmedida" name="selectStockRapidoUndmedida" required>
                   <option value="" disabled selected>-Seleccionar-</option>
 
-              </select>       
+              </select>
           </div>
 
           <div class="formulario__campo cantidad">
