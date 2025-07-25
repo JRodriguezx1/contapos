@@ -4,7 +4,7 @@ namespace Model;
 
 class productos extends ActiveRecord {
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'sku', 'unidadmedida', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso'];
+    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso'];
     
     //public $id;
     public function __construct($args = [])
@@ -17,6 +17,7 @@ class productos extends ActiveRecord {
         $this->impuesto = $args['impuesto'] ?? 0;
         $this->marca = $args['marca'] ?? '';
         $this->tipoproducto = $args['tipoproducto']??0;  // 0 = simple,  1 = compuesto
+        $this->tipoproduccion = $args['tipoproduccion']??0; // 0 = inmediato,  1 = construccion
         $this->sku = $args['sku'] ?? '';
         $this->unidadmedida = $args['unidadmedida']??'Unidades';
         $this->descripcion = $args['descripcion'] ?? '';

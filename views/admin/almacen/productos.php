@@ -123,9 +123,9 @@
                 <div id="mediospagos" class="content flex flex-col w-full mx-auto">
                   
                     <div class="mb-4">
-                      <div class="formulario__campo">
-                        <label class="formulario__label" for="tipoproducccion">Tipo de produccion</label>
-                        <select class="formulario__select" id="tipoproducccion" name="tipoproducccion" required>
+                      <div class="formulario__campo habtipoproduccion">
+                        <label class="formulario__label" for="tipoproduccion">Tipo de produccion</label>
+                        <select class="formulario__select" id="tipoproduccion" name="tipoproduccion" required>
                             <option value="" disabled selected>-Seleccionar-</option>
                             <option value="0">Inmediato</option>
                             <option value="1">Construccion</option>

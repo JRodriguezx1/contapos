@@ -1,7 +1,4 @@
-<div class="box inventariar">
-     <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a>
-    <h4 class="text-gray-600 mb-12 mt-4">inventariar en construccion</h4>
-    <div>
+<p class="text-xl mt-0 text-gray-600">Utilidad de los productos</p>
         <table class="display responsive nowrap tabla" width="100%" id="">
             <thead>
                 <tr>
@@ -30,5 +27,3 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
-</div>

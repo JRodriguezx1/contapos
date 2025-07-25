@@ -9,17 +9,88 @@
             <label for="itemAproducir" class="block text-2xl font-medium text-gray-600">Producto/Insumo</label>
             <div class="mt-2 grid grid-cols-1">
                 <select id="itemAproducir" name="itemAproducir" autocomplete="itemAproducir-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" multiple="multiple" required>
-                    <?php foreach($productos as $value): ?>
-                        <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                    <?php endforeach; ?>
+                    <?php foreach($productos as $value):
+                        if($value->tipoproducto == 1):?>
+                            <option 
+                                data-idund="<?php echo $value->idunidadmedida;?>"
+                                data-nombreund="<?php echo $value->unidadmedida;?>"
+                                value="<?php echo $value->id;?>">
+                                <?php echo $value->nombre;?>
+                            </option>
+                    <?php endif; endforeach; ?>
                 </select>
             </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-lg flex flex-wrap gap-4 mb-4 p-8">
-            <button class="btn-command"><span class="material-symbols-outlined">assignment_add</span>Ingresar Cantidad</button>
-            <button class="btn-command"><span class="material-symbols-outlined">playlist_remove</span>Descontar Cantidad</button>
+            <button id="ingresarProduccion" class="btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-green-500">assignment_add</span>Ingresar Produccion</button>
+            <button id="descontarCantidad" class="btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-red-500">playlist_remove</span>Descontar Cantidad</button>
+             <button id="descontarCantidad" class="btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-cyan-500">checkbook</span>Ajustar Cantidad</button>
         </div>
 
+        
+
     </div>
+
+    <div class="max-w-6xl mx-auto">
+            <dl class="bg-white dark:bg-gray-800 rounded-lg shadow-lg sm:grid sm:grid-cols-3">
+                <div class="flex flex-col p-6 text-center border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-r">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400" id="item-1">
+                        Disponibilidad
+                    </dt>
+                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
+                        aria-describedby="item-1" id="starsCount">
+                        $<?php echo $valorInv;?>
+                    </dd>
+                </div>
+                <div class="flex flex-col p-6 text-center border-t border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l sm:border-r">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
+                        Costo produccion
+                    </dt>
+                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
+                        id="downloadsCount">
+                        <?php echo number_format($cantidadProductos??0, "0", ",", ".");?>
+                    </dd>
+                </div>
+                <div class="flex flex-col p-6 text-center border-t border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
+                        Precio de venta
+                    </dt>
+                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
+                        id="sponsorsCount">
+                        <?php echo number_format($cantidadReferencias??0, "0", ",", ".");?>
+                    </dd>
+                </div>
+            </dl>
+        </div>
     
+
+    <dialog class="midialog-sm p-5" id="miDialogoIngresarProduccion">
+        <h4 id="modalIngresarProduccion" class="font-semibold text-gray-600 mb-4">Ingreasar produccion a inventario</h4>
+        <div id="divmsjalerta1"></div>
+        <form id="formIngresarProduccion" class="formulario" action="/" method="POST">
+
+            
+            <p id="nombreItem" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg"> </p>
+
+            <div class="formulario__campo">
+                <label class="formulario__label" for="selectidunidadmedida">Unidad de medida</label>
+                <select class="formulario__select" id="selectidunidadmedida" name="selectidunidadmedida" required>
+                    <option value="" disabled selected>-Seleccionar-</option>
+
+                </select>       
+            </div>
+
+            <div class="formulario__campo stock">
+                <label class="formulario__label" for="stock">Cantidad</label>
+                <div class="formulario__dato">
+                    <input class="formulario__input" id="stock" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+                </div>
+            </div>
+
+            <div class="text-right">
+                <button class="btn-md btn-red" type="button" value="salir">Salir</button>
+                <input id="btnIngresarProduccion" class="btn-md btn-blue" type="submit" value="Ingresar">
+            </div>
+        </form>
+    </dialog>

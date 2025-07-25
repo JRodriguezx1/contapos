@@ -53,20 +53,25 @@
     const divAlert = document.querySelector('.divmsjalerta0') as HTMLElement;
     if(divAlert)borrarMsjAlert(divAlert);
 
-    ///////// Habilita el select precio de compra si es producto simple, si es compuesto lo deshabilita
+    ///////// Habilita el select precio de compra, y deshabilita el select de tipo de produccion si es producto simple, si es compuesto lo deshabilita y habilita el select de tipo de produccion
     tipoproducto?.addEventListener('change', (e:Event)=>{
       const targetDom = e.target as HTMLSelectElement;
       const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
       const stock = document.querySelector('.stock') as HTMLElement;
+      const habtipoproduccion = document.querySelector('.habtipoproduccion') as HTMLElement;
       if(targetDom.value == '0'){  //  0 = simple
         stock.style.display = 'flex';
         preciocompra.style.display = 'flex';
+        habtipoproduccion.style.display = "none";
         document.querySelector('#preciocompra')?.setAttribute("required", "");
+        document.querySelector('#tipoproduccion')?.removeAttribute("required");
       }
       else{
         stock.style.display = 'none';
         preciocompra.style.display = 'none';
+        habtipoproduccion.style.display = "flex";
         document.querySelector('#preciocompra')?.removeAttribute("required");
+        document.querySelector('#tipoproduccion')?.setAttribute("required", "");
       }
     });
 
