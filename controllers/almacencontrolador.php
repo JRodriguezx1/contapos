@@ -889,33 +889,9 @@ class almacencontrolador{
     $alertas = [];
     $ensamblar = new productos_sub($_POST);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $alertas = $ensamblar->validar();
-      if(empty($alertas)){
-        $existe = productos_sub::uniquewhereArray(['id_producto'=>$_POST['id_producto'], 'id_subproducto'=>$_POST['id_subproducto']]);
-        if($existe){//actualizar
-          $existe->compara_objetobd_post($_POST);
-          $ra = $existe->actualizar();
-          if($ra){
-            $alertas['exito'][] = "subproducto asociado y actualizado al producto principal.";
-          }else{
-            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
-          }
-        }else{//crear
-          $r = $ensamblar->crear_guardar();
-          if($r[0]){
-            $alertas['exito'][] = "subproducto asociado al producto principal.";
-          }else{
-            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
-          }
-        }
-      }
+      
       ///////   actualizar costo (precio de compra) del producto compuesto   ////////
-      if(isset($alertas['exito'])){
-        $producto = productos::find('id', $ensamblar->id_producto);
-        $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo');
-        $producto->precio_compra = $costo;
-        $rap = $producto->actualizar();
-      }
+      
     }
     echo json_encode($alertas);
   }

@@ -4,14 +4,15 @@
         //const btncrearDireccion = document.querySelector('#crearDireccion');
         const miDialogoStock = document.querySelector('#miDialogoStock') as any;
         const modalStock = document.querySelector('#modalStock') as HTMLElement;
-        let amount = document.querySelector('#cantidad') as HTMLInputElement; //input cantidad
+        const selectStockRapidoUndmedida = document.querySelector('#selectStockRapidoUndmedida') as HTMLSelectElement;
+        let amount = document.querySelector('#cantidadStockRapido') as HTMLInputElement; //input cantidad de modal de stock rapido
 
         const miDialogoIngresarProduccion = document.querySelector('#miDialogoIngresarProduccion') as any;
         const selectitemAproducir = document.querySelector('#itemAproducir') as HTMLSelectElement;
         const ingresarProduccion = document.querySelector('#ingresarProduccion') as HTMLButtonElement;
         const descontarCantidad = document.querySelector('#descontarCantidad') as HTMLButtonElement
         const selectidunidadmedida = document.querySelector('#selectidunidadmedida') as HTMLSelectElement;
-        let indiceFila=0, control=0, factorC = 0;
+        let indiceFila=0, control=0, factorC = 0, tipoelemento:string = '', idelemento:string = '';
     
 
         type conversionunidadesapi = {
@@ -44,8 +45,6 @@
 
 
         document.querySelector('#tablaStockRapido')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
-            let tipoelemento:string = '', idelemento:string = '';
-            const selectStockRapidoUndmedida = document.querySelector('#selectStockRapidoUndmedida') as HTMLSelectElement;
             let options:string = '';
             const target = e.target as HTMLElement;
 
@@ -94,17 +93,18 @@
 
         document.querySelector('#formStock')?.addEventListener('submit', (e)=>{
             e.preventDefault();
-            const subproducto = $('#subproducto').find('option:selected');
-            const unidadmedida:string = $('#unidadmedida').find('option:selected').text();
-            let AmountSubpx:number = factorC*Number(amount.value);
+            factorC = Number(selectStockRapidoUndmedida.options[selectStockRapidoUndmedida.selectedIndex].dataset.factor);
+            //const subproducto = $('#subproducto').find('option:selected');
+            //const unidadmedida:string = $('#unidadmedida').find('option:selected').text();
+            let AmountItem:number = factorC*Number(amount.value);
             (async ()=>{
                 const datos = new FormData();
-                datos.append('id_producto', (document.querySelector('#idproducto') as HTMLInputElement).value);
-                datos.append('id_subproducto', $('#subproducto').val()as string);
-                datos.append('cantidadsubproducto', AmountSubpx.toString());
-                datos.append('costo', (Number(subproducto.data('costo'))*AmountSubpx)+'');
+                datos.append('tipoitem', tipoelemento);
+                datos.append('iditem', idelemento);
+                datos.append('cantidadactualizar', AmountItem.toString());
+                //datos.append('costo', (Number(subproducto.data('costo'))*AmountItem)+'');
                 try {
-                    const url = "/admin/api/ensamblar";  //asocia el producto con el sub producto en la tabla productos_sub
+                    const url = "/admin/api/ajustarstock";  //asocia el producto con el sub producto en la tabla productos_sub
                     const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                     const resultado = await respuesta.json();
                     if(resultado.exito !== undefined){
@@ -112,7 +112,7 @@
                         /////validar si es el mismo subproducto, y actualizar 
                         //validarSubproducto($('#subproducto').val()as string, unidadmedida, subproducto.data('subproducto'));
                         ////// reset form ///////
-                        ($('#subproducto') as any).val([]).trigger('change');
+                        //($('#subproducto') as any).val([]).trigger('change');
                         //$(`#subproducto option[value="${$('#subproducto').val()}"]`).remove();
                         (document.querySelector('#formAddSubproducto') as HTMLFormElement)?.reset();
                     }else{
@@ -123,6 +123,8 @@
                 }
             })();//cierre de async()
         });
+
+
 
         ///////////////////////// INGRESAR ORDEN DE PRODUCCION /////////////////////////////////
         //SELECT2 DE itemAproducir

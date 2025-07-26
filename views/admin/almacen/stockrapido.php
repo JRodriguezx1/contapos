@@ -65,14 +65,14 @@
               <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida</label>
               <select class="formulario__select" id="selectStockRapidoUndmedida" name="selectStockRapidoUndmedida" required>
                   <option value="" disabled selected>-Seleccionar-</option>
-
+                    <!-- se inserta por ts en almacen.ts -->
               </select>
           </div>
 
-          <div class="formulario__campo cantidad">
-              <label class="formulario__label" for="cantidad">Cantidad</label>
+          <div class="formulario__campo">
+              <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
               <div class="formulario__dato">
-                  <input class="formulario__input" id="cantidad" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+                  <input class="formulario__input" id="cantidadStockRapido" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="">
               </div>
           </div>
 

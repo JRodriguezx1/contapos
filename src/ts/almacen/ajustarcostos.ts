@@ -1,5 +1,4 @@
 (()=>{
-
     if(document.querySelector('.ajustarcostos')){
         let tablaAjustarCostos:HTMLElement;
 
