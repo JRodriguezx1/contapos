@@ -72,7 +72,7 @@
           <div class="formulario__campo">
               <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
               <div class="formulario__dato">
-                  <input class="formulario__input" id="cantidadStockRapido" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="">
+                  <input class="formulario__input" id="cantidadStockRapido" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
               </div>
           </div>
 

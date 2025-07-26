@@ -884,14 +884,33 @@ class almacencontrolador{
     echo json_encode($alertas);
   }
 
+
   public static function ajustarstock(){  //
     session_start();
     $alertas = [];
-    $ensamblar = new productos_sub($_POST);
+    
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      
-      ///////   actualizar costo (precio de compra) del producto compuesto   ////////
-      
+      $iditem = $_POST['iditem'];
+      $cantidad = $_POST['cantidad'];
+      if($_POST['tipoitem'] == 0){ //si es producto
+        $producto = productos::find('id', $iditem);
+        $producto->stock = $cantidad;
+        $ra = $producto->actualizar();
+        if($ra){
+            $alertas['exito'][] = "Stock del producto actualizado con exito";
+        }else{
+            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+        }
+      }else{  // si es insumo subproducto
+        $insumo = subproductos::find('id', $iditem);
+        $insumo->stock = $cantidad;
+         $ra = $insumo->actualizar();
+        if($ra){
+            $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
+        }else{
+            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+        }
+      }
     }
     echo json_encode($alertas);
   }

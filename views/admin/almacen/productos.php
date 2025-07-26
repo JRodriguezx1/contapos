@@ -1,9 +1,16 @@
 <div class="box productos">
-  <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a>
+  
+  <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+    <span class="sr-only">Atrás</span>
+  </a>
+
   <h4 class="text-gray-600 mb-12 mt-4">Productos</h4>
   <div class="divmsjalerta0"><?php include __DIR__. "/../../templates/alertas.php"; ?></div>
-  <button id="crearProducto" class="btn-md btn-blueintense mb-4">Crear producto</button>
-  <a class="btn-md btn-turquoise" href="/admin/almacen/categorias">Ir a categorias</a>
+  <button id="crearProducto" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">Crear producto</button>
+  <a class="btn-md btn-turquoise !py-4 !px-6" href="/admin/almacen/categorias">Ir a categorias</a>
   <table class="display responsive nowrap tabla" width="100%" id="tablaProductos">
       <thead>
           <tr>
@@ -27,13 +34,13 @@
               <td class=""><?php echo $value->marca;?></td>
               <td class=""><?php echo $value->sku;?></td>
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                    <button class="btn-md btn-turquoise editarProductos"><i class="fa-solid fa-pen-to-square"></i></button>
+              <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>">
                     <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
-                        <a class="btn-md btn-blue" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript"></i></a>
+                        <a class="btn-md btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript text-[18px] leading-none"></i></a>
                     <?php endif; ?>
-                    <button class="btn-xs btn-lima ">Mas</button>
-                    <button class="btn-md btn-red eliminarProductos"><i class="fa-solid fa-trash-can"></i></button>
+                    <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[18px] leading-none"></i></button>
+                    <button class="btn-md btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[18px] leading-none"></i></button>
+                    <button class="btn-md btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[18px] leading-none"></i></button>
               </div></td>
           </tr>
           <?php endforeach; ?>
@@ -48,7 +55,7 @@
         
         <div class="formulario__campo">
             <label class="formulario__label" for="categoria">Categoria</label>
-            <select class="formulario__select" name="idcategoria" id="categoria" required>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idcategoria" id="categoria" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($categorias as $categoria): ?>
                 <option value="<?php echo $categoria->id;?>" <?php echo $categoria->id==$producto->idcategoria?'selected':'';?>><?php echo $categoria->nombre;?></option>
@@ -57,14 +64,14 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="nombre">Nombre</label>
-            <div class="formulario__dato">
-                <input class="formulario__input" type="text" placeholder="Nombre del producto" id="nombre" name="nombre" value="<?php echo $producto->nombre??'';?>" required>
-                <label data-num="46" class="count-charts" for="">46</label>
+            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del producto" id="nombre" name="nombre" value="<?php echo $producto->nombre??'';?>" required>
+                <!--<label data-num="46" class="count-charts" for="">46</label>-->
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="tipoproducto">Tipo de producto</label>
-            <select class="formulario__select" id="tipoproducto" name="tipoproducto" required>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipoproducto" name="tipoproducto" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <option value="0">Simple</option>
                 <option value="1">Compuesto</option>
@@ -73,7 +80,7 @@
 
         <div class="formulario__campo">
             <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
-            <select class="formulario__select" id="idunidadmedida" name="idunidadmedida" required>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="idunidadmedida" name="idunidadmedida" required>
                 <?php foreach($unidadesmedida as $unidadmedida): ?>
                 <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
                 <?php endforeach; ?>
@@ -83,7 +90,7 @@
         <div class="formulario__campo stock">
             <label class="formulario__label" for="stock">Cantidad</label>
             <div class="formulario__dato">
-                <input class="formulario__input" id="stock" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="stock" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
             </div>
         </div>
 
@@ -91,19 +98,19 @@
             <div class="formulario__campo preciocompra">
                 <label class="formulario__label" for="preciocompra">Precio Compra</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" id="preciocompra" type="number" min="0" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
+                    <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="preciocompra" type="number" min="0" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="precioventa">Precio venta</label>
-                <input class="formulario__input" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="sku">SKU Producto</label>
             <div class="formulario__dato">
-                <input class="formulario__input" type="text" placeholder="Codigo del producto" id="sku" name="sku" value="<?php echo $producto->sku??'';?>">
-                <label data-num="36" class="count-charts" for="">36</label>
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Codigo del producto" id="sku" name="sku" value="<?php echo $producto->sku??'';?>">
+                <!--<label data-num="36" class="count-charts" for="">36</label>-->
             </div>
         </div>
         <div class="formulario__campo">
@@ -112,7 +119,7 @@
                 <p class="text-greymouse">Subir imagen</p>
             </div>
             <input id="upImage" class="formulario__inputfile" type="file" name="foto" hidden>
-            <button id="customUpImage" class="btn-xs btn-blue self-center !rounded-3xl !px-8 !py-4" type="button">Cargar Imagen</button>
+            <button id="customUpImage" class="text-white bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium rounded-lg text-sm px-5 py-2.5 text-center !w-[23%] !mx-auto mb-2" type="button">Cargar Imagen</button>
         </div>
         
         <div class="accordion md:px-12 !mt-4">
@@ -125,7 +132,7 @@
                     <div class="mb-4">
                       <div class="formulario__campo habtipoproduccion">
                         <label class="formulario__label" for="tipoproduccion">Tipo de produccion</label>
-                        <select class="formulario__select" id="tipoproduccion" name="tipoproduccion" required>
+                        <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipoproduccion" name="tipoproduccion" required>
                             <option value="" disabled selected>-Seleccionar-</option>
                             <option value="0">Inmediato</option>
                             <option value="1">Construccion</option>
@@ -143,8 +150,8 @@
           </div> <!-- fin accordion  -->
         
         <div class="text-right">
-            <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-            <input id="btnEditarCrearProducto" class="btn-md btn-blue" type="submit" value="Crear">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="salir">Salir</button>
+            <input id="btnEditarCrearProducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar producto-->

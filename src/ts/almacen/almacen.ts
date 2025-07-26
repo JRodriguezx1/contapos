@@ -101,8 +101,7 @@
                 const datos = new FormData();
                 datos.append('tipoitem', tipoelemento);
                 datos.append('iditem', idelemento);
-                datos.append('cantidadactualizar', AmountItem.toString());
-                //datos.append('costo', (Number(subproducto.data('costo'))*AmountItem)+'');
+                datos.append('cantidad', AmountItem.toString());
                 try {
                     const url = "/admin/api/ajustarstock";  //asocia el producto con el sub producto en la tabla productos_sub
                     const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -114,7 +113,7 @@
                         ////// reset form ///////
                         //($('#subproducto') as any).val([]).trigger('change');
                         //$(`#subproducto option[value="${$('#subproducto').val()}"]`).remove();
-                        (document.querySelector('#formAddSubproducto') as HTMLFormElement)?.reset();
+                        //(document.querySelector('#formAddSubproducto') as HTMLFormElement)?.reset();
                     }else{
                       msjalertToast('error', '¡Error!', resultado.error[0]);
                     }
