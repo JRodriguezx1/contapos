@@ -11,7 +11,6 @@
             <th>Agregado</th>
             <th class="accionesth">Acciones</th>
         </tr>
-        
     </thead>
     <tbody>
         <?php foreach($productos as $index => $value): ?>

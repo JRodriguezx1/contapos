@@ -49,7 +49,7 @@
                 customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
                 icon: 'question',
                 title: 'Desea reiniciar el inventario a cero?',
-                text: "Todos los productos e insumos se reiniciaran a cero.",
+                text: "Todos los productos e insumos del inventario se reiniciaran a cero.",
                 showCancelButton: true,
                 confirmButtonText: 'Si',
                 cancelButtonText: 'No',
@@ -287,18 +287,24 @@
 
 
         function actualizarStockRapido(insumosProductos:{id:string, stock:string, stockminimo:string}[], tipoItem:string){
-            let trinsumoProducto = document.querySelector(`tr.subproducto[data-idsubproducto="${insumosProductos[0].id}"]`);
-            if(tipoItem == '0')trinsumoProducto = document.querySelector(`tr.producto[data-idproducto="${insumosProductos[0].id}"]`);
-            indiceFila = (tablaStockRapido as any).row(trinsumoProducto).index();
-            (tablaStockRapido as any).cell(indiceFila, 3).data(insumosProductos[0].stock).draw();
-            //(tablaStockRapido as any).page(info.page).draw('page'); //me mantiene la pagina actual
-            if(Number(insumosProductos[0].stock) <= Number(insumosProductos[0].stockminimo)){
-                trinsumoProducto?.children[3].classList.remove('bg-cyan-50', 'text-cyan-600');
-                trinsumoProducto?.children[3].classList.add('bg-red-300', 'text-white');
-            }else{
-                trinsumoProducto?.children[3].classList.remove('bg-red-300', 'text-white');
-                trinsumoProducto?.children[3].classList.add('bg-cyan-50', 'text-cyan-600');
-            }  
+            
+            let info = (tablaStockRapido as any).page.info();
+
+            insumosProductos.forEach(element => {
+                let trinsumoProducto = document.querySelector(`tr.subproducto[data-idsubproducto="${element.id}"]`);
+                if(tipoItem == '0')trinsumoProducto = document.querySelector(`tr.producto[data-idproducto="${element.id}"]`);
+                indiceFila = (tablaStockRapido as any).row(trinsumoProducto).index();
+                (tablaStockRapido as any).cell(indiceFila, 3).data(element.stock);
+                //(tablaStockRapido as any).page(info.page).draw('page'); //me mantiene la pagina actual
+                if(Number(element.stock) <= Number(element.stockminimo)){
+                    trinsumoProducto?.children[3].classList.remove('bg-cyan-50', 'text-cyan-600');
+                    trinsumoProducto?.children[3].classList.add('bg-red-300', 'text-white');
+                }else{
+                    trinsumoProducto?.children[3].classList.remove('bg-red-300', 'text-white');
+                    trinsumoProducto?.children[3].classList.add('bg-cyan-50', 'text-cyan-600');
+                }
+            });
+            (tablaStockRapido as any).draw(false);
         }
 
 

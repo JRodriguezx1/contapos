@@ -6,48 +6,48 @@
         <div class="formulario__campo flex-1">
           <label class="formulario__label" for="selectCliente">Cliente</label>
           <div class="formulario__dato">
-            <select class="formulario__select !border-gray-300 !rounded-r-none !border-r-0" id="selectCliente" name="selectCliente" required>
+            <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="selectCliente" name="selectCliente" required>
                 <option value="1" disabled selected>-Seleccionar-</option>
                 <?php foreach($clientes as $cliente): ?>
                   <option data-tipoID="<?php echo $cliente->tipodocumento;?>" data-identidad="<?php echo $cliente->identificacion;?>" value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
                 <?php endforeach ?>
             </select>
-            <div class="grid place-items-center  rounded-r-lg border-solid border border-gray-300 !border-l-0 hover:cursor-pointer">
+            <div class="grid place-items-center  rounded-r-lg   hover:cursor-pointer">
               <span id="addcliente" class="material-symbols-outlined text-blue-500 hover:text-blue-800">add_circle</span>
             </div>
           </div> <!-- fin formulario dato-->
           <div class="formulario__campo flex-1 xs:flex-none">
             <label class="formulario__label" for="documento">N. Documento</label>
-            <input class="formulario__input !border-gray-300" type="number" placeholder="Documento del cliente" id="documento" name="documento" readonly>
+            <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Documento del cliente" id="documento" name="documento" readonly>
           </div>
         </div>
         <div class="formulario__campo flex-1">
             <label class="formulario__label" for="direccionEntrega">Direccion</label>
             <div class="formulario__dato">
-              <select class="formulario__select !border-gray-300 !rounded-r-none !border-r-0" id="direccionEntrega" name="direccionEntrega" required>
+              <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="direccionEntrega" name="direccionEntrega" required>
                   <option value="1" disabled selected>-Seleccionar-</option>
               </select>
-              <div class="grid place-items-center  rounded-r-lg border-solid border border-gray-300 !border-l-0 hover:cursor-pointer">
+              <div class="grid place-items-center hover:cursor-pointer">
                 <span id="adddir" class="material-symbols-outlined text-blue-500 hover:text-blue-800">add_circle</span>
               </div>
             </div> <!-- fin formulario dato-->
         </div>
         <div class="formulario__campo flex-1">
             <label class="formulario__label" for="ciudad">Ciudad</label>
-            <input class="formulario__input !border-gray-300" type="text" placeholder="Ciudad de entrega" id="ciudadEntrega" name="ciudadEntrega" readonly>
+            <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" id="ciudadEntrega" name="ciudadEntrega" readonly>
         </div>
       </div>
 
     
       <div class="formulario__dato justify-center">
-          <input class="formulario__input !border-gray-300 !flex-none w-11/12 xs:w-2/3 !border-r-0" type="text" placeholder="Buscar nombre de producto/SKU/escanear codigo" id="buscarproducto" name="buscarproducto" value="" required>
+          <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Buscar nombre de producto/SKU/escanear codigo" id="buscarproducto" name="buscarproducto" value="" required>
           <div class="grid place-items-center  rounded-r-lg border-solid border border-gray-300 !border-l-0 hover:cursor-pointer">
             <span class="material-symbols-outlined pr-1">search</span>
           </div>
       </div>
       
       <div class="mt-4">
-        <button class="group relative btn-md btn-blueintense">Categorias
+        <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
           <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
             <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
             <?php foreach($categorias as $categoria): ?>
@@ -55,37 +55,40 @@
             <?php endforeach; ?>
           </div>
         </button>
-        <button class="btn-md btn-lima">Otros</button>
+        <button class="btn-md btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Otros</button>
       </div>
 
       <div id="productos" class="grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
-        
-        <?php foreach($productos as $producto): ?>
-        <div id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 py-4 pr-4" data-id="<?php echo $producto->id;?>">
-          <img src="/build/img/<?php echo $producto->foto;?>" class="inline h-24 min-w-24 w-24 object-contain" alt="">
-          <div class="flex flex-col justify-between grow overflow-hidden">
-            <p class="m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre; ?></p>
-            <p class="m-0 text-blue-600 font-semibold"><?php echo $producto->precio_venta; ?></p>
+          <?php foreach($productos as $producto): ?>
+          <div id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
+              <img 
+                  src="/build/img/<?php echo $producto->foto;?>" 
+                  onerror="this.onerror=null;this.src='/build/img/default-product.png';"
+                  class="inline h-24 min-w-24 w-24 object-contain rounded-md" 
+                  alt="Imagen de <?php echo $producto->nombre; ?>">
+              
+              <div class="flex flex-col justify-between grow overflow-hidden">
+                  <p class="m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre; ?></p>
+                  <p class="m-0 text-blue-600 font-semibold"><?php echo $producto->precio_venta; ?></p>
+              </div> 
           </div>
-        </div>
-        <?php endforeach; ?>
-
+          <?php endforeach; ?>
       </div> <!-- fin contenedor de productos -->
     </div> <!-- fin primera columna -->
 
     <div class="basis-1/3">
       <div class="formulario__campo">
           <label class="formulario__label" for="vendedor">vendedor</label>
-          <div class="formulario__dato">
+          <div class="formulario__dato flex items-center gap-2">
             <span class="material-symbols-outlined">person</span>
-            <input data-idVendedor="<?php echo $user['id'];?>" class="formulario__input !border-gray-300" type="text" placeholder="Nombre del Vendedor" id="vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
+            <input data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" id="vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
           </div>
       </div>
       <div class="formulario__campo">
           <label class="formulario__label" for="pedido">N. Ultima Factura/Pedido</label>
-          <div class="formulario__dato">
+          <div class="formulario__dato flex items-center gap-2">
             <span class="material-symbols-outlined">arrow_right</span>
-            <input class="formulario__input !border-gray-300" type="number" placeholder="Numero de pedido" id="pedido" name="pedido" value="1" readonly>
+            <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de pedido" id="pedido" name="pedido" value="1" readonly>
           </div>
       </div>
 
@@ -141,12 +144,11 @@
         </div>
       </div>
       <div class="text-center p-4">
-        <button id="btnvaciar" class="btn-md btn-red mr-6">Vaciar</button>
-        <button id="btnguardar" class="btn-md btn-turquoise mr-6">Guardar</button>
-        <button id="btnfacturar" class="btn-md btn-blueintense">Facturar</button>
+        <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">Vaciar</button>
+        <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Guardar</button>
+        <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">Facturar</button>
       </div>
     </div> <!-- fin segunda columna -->
-
   </div>
 
 
@@ -344,36 +346,45 @@
   </dialog>
   
   <!-- MODAL PARA VACIAR EL CARRITO-->
-  <dialog class="midialog-xs px-8 pb-8" id="miDialogoVaciar">
-      <div>
-          <p class="text-2xl font-semibold text-gray-500">Desea vaciar el carrito de venta?</p>
+  <dialog id="miDialogoVaciar" class="bg-white rounded-xl shadow-lg p-8 max-w-lg w-full relative z-50">
+    <div class="text-center">
+      <p class="text-2xl font-semibold text-gray-600 mb-6">¿Desea vaciar el carrito de venta?</p>
+      <div class="flex justify-around w-full border-t border-gray-300 pt-6">
+        <div class="sivaciar flex items-center cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold">
+          <i class="fa-regular fa-pen-to-square"></i>
+          <p class="ml-2">Sí</p>
+        </div>
+        <div class="novaciar flex items-center cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold">
+          <i class="fa-regular fa-trash-can"></i>
+          <p class="ml-2">No</p>
+        </div>
       </div>
-      <div class="flex justify-around border-t-gray-300 pt-4">
-          <div class="sivaciar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
-          <div class="novaciar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
-      </div>
+    </div>
   </dialog>
+
+
   <!-- MODAL PARA GUARDAR EL PEDIDO-->
-  <dialog class="midialog-xs px-8 pb-8" id="miDialogoGuardar">
-      <div>
-          <p class="text-3xl font-semibold text-gray-500">Desea guardar el pedido?</p>
+  <dialog class="bg-white rounded-xl shadow-lg p-8 relative z-50" id="miDialogoGuardar">
+      <div class="text-center">
+          <p class="text-2xl font-semibold text-gray-600 mb-6">Desea guardar el pedido?</p>
           <p class="text-xl text-gray-500">El pedido de venta No: 34512 se guardara en sistema.</p>
       </div>
-      <div id="" class="flex justify-around border-t-gray-300 pt-4">
+      <div id="" class="flex justify-around w-full border-t border-gray-300 pt-6">
           <div class="siguardar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
           <div class="noguardar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
       </div>
   </dialog>
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
   <dialog class="midialog-md p-4" id="miDialogoFacturar">
-      <h4 class="text-3xl text-gray-600 font-semibold m-0">Registro de pago</h4>
+      <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
+      <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
           <input id="idcita" name="id" type="hidden">
-          <p class="text-gray-600 text-3xl text-center font-light m-0">Total: $<span id="totalPagar" class="text-gray-700 font-semibold">0</span></p>
+          <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
           <div class="flex justify-center gap-12 mt-8">
-            <div class="formulario__campo w-60">
+            <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
-              <select class="formulario__select !border-gray-300" name="caja" id="caja" required>
+              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" id="caja" required>
                   <!--<option value="" disabled selected>-Seleccionar-</option>
                   <option value="1">Caja principal</option>
                   <option value="2">Caja bodega</option>-->
@@ -382,26 +393,25 @@
                   <?php endforeach; ?>
               </select>
             </div>
-            <div class="formulario__campo w-60">
+            <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select class="formulario__select !border-gray-300" name="facturador" id="facturador" required>
+              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" id="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
               </select>
             </div>
-
           </div>
           <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">
-            <label class="etiqueta text-gray-500" for="first">Elegir metodo de pago</label>
+            <label class="etiqueta text-indigo-700" for="first">Elegir método de pago</label>
             <div class="wrapper">
               <div class="wrapper-content">
-                <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto">
+                <div id="mediospagos" class="content flex flex-col items-center w-1/2 mx-auto text-center">
                   <?php foreach($mediospago as $index => $value):?>
-                    <div class="mb-4">
-                      <label class="text-gray-700 text-xl"><?php echo $value->mediopago??'';?>: </label>
-                      <input id="<?php echo $value->id??'';?>" class="w-44 py-1 px-3 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500 text-xl mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                    <div class="mb-4 text-center">
+                      <label class="text-gray-700 text-xl text-center leading-relaxed"><?php echo $value->mediopago??'';?>: </label>
+                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
                     </div>
                   <?php endforeach; ?>
                 </div>
@@ -409,13 +419,13 @@
             </div>
           </div> <!-- fin accordion  -->
 
-          <div class="mx-auto w-40">
-            <div class="formulario__campo">
-                <label class="formulario__label" for="recibio">Recibido: </label>
-                <input class="formulario__input !text-2xl !border-0 !border-b-2 !border-blue-500 !rounded-none" id="recibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+          <div class="mx-auto">
+            <div class="formulario__campo w-80 mx-auto">
+                <label class="formulario__label leading-relaxed text-center" for="recibio">Efectivo Recibido</label>
+                <input class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" id="recibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
             </div>
-            <div class="">
-                <p class="text-center text-gray-500">Cambio: <span id="cambio" class="text-gray-700 font-semibold">$0</span></p>
+            <div class="flex flex-col items-center">
+                <p class="text-center formulario__label">Devolver: <span id="cambio" class="text-gray-700 font-semibold text-2xl">$0</span></p>
             </div>
           </div>
           
@@ -424,8 +434,8 @@
           </div>
 
           <div class="self-end">
-              <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
-              <input class="btn-md btn-blue" type="submit" value="Pagar">
+              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="Cancelar">Cancelar</button>
+              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Pagar">
           </div>
           
       </form>

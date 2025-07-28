@@ -2,7 +2,12 @@
 <div class="relative">
     <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
 <div class="box cerrarcaja">
-  <a class="btn-xs btn-dark" href="/admin/caja">Atras</a>
+  <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+    <span class="sr-only">Atrás</span>
+    </a>
   <h4 class="text-gray-600 mb-12 mt-4">Cierre de caja</h4>
   <div class="flex gap-4">
     <div>
@@ -17,12 +22,12 @@
     </div>
   </div>
   <div class="flex flex-col tlg:flex-row tlg:items-start gap-4 mt-4">
-    <div class="basis-1/3 border border-gray-300 p-4 declaracionvalores">
+    <div class="basis-1/3 border border-gray-300 p-4 declaracionvalores rounded-lg">
       <div class="formulario__campo">
           <label class="formulario__label" for="EF">Efectivo en caja</label>
-          <div class="formulario__dato">
-              <input class="formulario__input inputmediopago" type="text" placeholder="Dinero en caja" id="Efectivo" name="Efectivo" data-idmediopago="1" value="" required>
-              <button class="btn-xs btn-blue" id="btnArqueocaja">Arqueo de caja</button>
+          <div class="formulario__dato gap-x-[0.7rem]">
+              <input class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Dinero en caja" id="Efectivo" name="Efectivo" data-idmediopago="1" value="" required>
+              <button class="btn-md btn-turquoise !py-auto !px-6" id="btnArqueocaja">Arqueo de caja</button>
           </div>
       </div>
       <?php foreach($mediospagos as $index => $value): 
@@ -30,7 +35,7 @@
         <div class="formulario__campo">
           <label class="formulario__label" for="<?php echo $value->nick??'';?>"><?php echo $value->mediopago??'';?></label>
           
-          <input class="formulario__input inputmediopago" 
+          <input class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
             type="text" 
             placeholder="Dinero en <?php echo $value->mediopago??'';?>" 
             id="<?php echo $value->nick??'';?>" 

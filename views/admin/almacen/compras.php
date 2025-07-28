@@ -1,6 +1,11 @@
 <div class="box compras">
     <div>
-        <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a>
+        <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+        </svg>
+        <span class="sr-only">Atrás</span>
+        </a>
         <h4 class="text-gray-600 mb-12 mt-4">Compras</h4>
         <?php include __DIR__. "/../../templates/alertas.php"; ?>
         <form id="formComprar" action="">
@@ -13,7 +18,7 @@
                     <div class="sm:col-span-3">
                         <label for="proveedor" class="block text-2xl font-medium text-gray-600">Proveedor</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <option value="1">Predeterminado</option>
                                 <option value="2">Makro tech</option>
@@ -21,51 +26,51 @@
                                 <option value="4">Argos</option>
                                 <option value="5">Electro house</option>
                             </select>
-                            <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                            </svg>
+                            </svg> -->
                         </div>
                     </div>
 
                     <div class="sm:col-span-1 md:col-span-2 tlg:col-span-1">
                         <label for="impuesto" class="block text-2xl font-medium text-gray-600">Impuesto</label>
                         <div class="mt-2">
-                        <input id="inputimpuesto" name="impuesto" type="text" autocomplete="impuesto ID" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                        <input id="inputimpuesto" name="impuesto" type="text" autocomplete="impuesto ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
 
                     <div class="sm:col-span-1 md:col-span-2 tlg:col-span-1">
                         <label for="factura" class="block text-2xl font-medium text-gray-600">N° Factura</label>
                         <div class="mt-2">
-                            <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
                     <div class="sm:col-span-2">
                         <label for="fecha" class="block text-2xl font-medium text-gray-600">Fecha</label>
                         <div class="mt-2">
-                            <input type="date" name="fecha" id="fecha" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <input type="date" name="fecha" id="fecha" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
 
                     <div class="sm:col-span-2">
                         <label for="origen" class="block text-2xl font-medium text-gray-600">Origen</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="origenPago" name="origen" autocomplete="origen-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($cajas as $value): ?>
                                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                            </svg>
+                            </svg> -->
                         </div>
                     </div>
 
                     <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="formapago" class="block text-2xl font-medium text-gray-600">Forma de pago</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="formapago" name="formapago" autocomplete="formapago-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <option value="1">Contado</option>
                                 <option value="2">Credito 1 mes</option>
@@ -79,16 +84,16 @@
                                 <option value="10">Credito 18 mes</option>
                                 <option value="11">Credito 24 mes</option>
                             </select>
-                            <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                            </svg>
+                            </svg> -->
                         </div>
                     </div>
 
                     <div class="sm:col-span-3 md:col-span-7 tlg:col-span-3">
                         <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
                         <div class="mt-2">
-                        <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+                        <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                         </div>
                     </div>
                 
@@ -150,8 +155,8 @@
             </div> <!-- FIn Apilamiento de productos -->
 
             <div class="text-right">
-                <button id="btnvaciar" class="btn-md btn-red vaciar" type="button" value="vaciar">Vaciar</button>
-                <input id="btnRegistrarCompra" class="btn-md btn-blue registrarCompra" type="submit" value="Regsitrar">
+                <button id="btnvaciar" class="btn-md btn-turquoise !py-4 !px-6 !w-[180px] vaciar" type="button" value="vaciar">Vaciar</button>
+                <input id="btnRegistrarCompra" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px] registrarCompra" type="submit" value="Registrar">
             </div>
         </form>
 

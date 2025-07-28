@@ -1,15 +1,15 @@
 <div class="box caja">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
-  <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Gestion de caja</h4>
-  <div class="flex flex-wrap gap-2 mb-6">
-    <a class="btn-md btn-light" href="/admin/caja/cerrarcaja">Cerrar caja</a>
-    <button class="btn-md btn-light" id="btnGastosingresos">Gastos/ingresos</button>
-    <a class="btn-md btn-light" href="/admin/caja/zetadiario">Zeta diario</a>
-    <a class="btn-md btn-light" href="/admin/caja/ultimoscierres">Ultimos cierres</a>
-    <button class="btn-md btn-dark">Abrir cajon</button>
-    <a class="btn-md btn-turquoise" href="/admin/caja">Guardadas</a>
+  <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Gestion de Caja</h4>
+  <div class="flex flex-wrap gap-4 mb-6">
+    <a class="btn-command" href="/admin/caja/cerrarcaja"><span class="material-symbols-outlined">hard_drive</span>Cerrar Caja</a>
+    <button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/productos" id="btnGastosingresos"><span class="material-symbols-outlined">paid</span>Gastos</br>Ingresos</button>
+    <a class="btn-command" href="/admin/caja/zetadiario"><span class="material-symbols-outlined">document_search</span>Zeta Diario</a>
+    <a class="btn-command text-center" href="/admin/caja/ultimoscierres"><span class="material-symbols-outlined">list_alt</span>Ultimos Cierres</a>
+    <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
+    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/productos" href="/admin/caja"><span class="material-symbols-outlined">folder_check_2</span>Guardados</a>
   </div>
-  <h5 class="text-gray-600 mb-3">Lista de facturas</h5>
+  <h5 class="text-gray-600 mb-3"><span  class="material-symbols-outlined"></span>Lista de Facturas</h5>
   <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
       <thead>
           <tr>
@@ -68,7 +68,7 @@
     <form id="formGastosingresos" class="formulario" action="/admin/caja/ingresoGastoCaja" method="POST">
         <div class="formulario__campo">
             <label class="formulario__label" for="operacion">Operacion</label>
-            <select class="formulario__select" name="operacion" id="operacion" required>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="operacion" id="operacion" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <option value="ingreso">Ingreso a caja</option>
                 <option value="gasto">Gasto de la caja</option>
@@ -76,7 +76,7 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="caja">Caja</label>
-            <select class="formulario__select" name="id_caja" id="caja" required>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" id="caja" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($cajas as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -85,7 +85,7 @@
         </div>
         <div class="formulario__campo tipodegasto" style="display: none;"> <!-- solo aplica para gastos -->
             <label class="formulario__label" for="tipodegasto">Tipo de gasto</label>
-            <select class="formulario__select" name="idcategoriagastos" id="tipodegasto">
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos" id="tipodegasto">
                 <option value="" disabled selected>-Seleccionar-</option>
                 <option value="1">Reabastecimiento</option>
                 <option value="2">Arriendo o alquiler de espacio</option>
@@ -102,17 +102,17 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="dinero">Ingresar dinero</label>
             <div class="formulario__dato">
-                <input class="formulario__input" type="number" min="1" placeholder="Ingresa el dinero" id="dinero" name="valor" value="" required>
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="1" placeholder="Ingresa el dinero" id="dinero" name="valor" value="" required>
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="descripcion">Descripcion: </label>
-            <textarea class="formulario__textarea" id="descripcion" name="descripcion" rows="4"></textarea>
+            <textarea class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-40 text-xl focus:outline-none focus:ring-1" id="descripcion" name="descripcion" rows="4"></textarea>
         </div>
         
         <div class="text-right">
-            <button class="btn-md btn-red" type="button" value="cancelar">cancelar</button>
-            <input id="btnEnviargastosingresos" class="btn-md btn-blue" type="submit" value="Aplicar">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="cancelar">cancelar</button>
+            <input id="btnEnviargastosingresos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Aplicar">
         </div>
     </form>
   </dialog>

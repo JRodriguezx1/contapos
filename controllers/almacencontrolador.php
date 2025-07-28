@@ -440,7 +440,9 @@ class almacencontrolador{
             if($r){
               if($idunidadmedidaDB != $_POST['idunidadmedida']){ //validar si hubo cambio de unidad de medida
                 $conversion = new conversionunidades;
-                $cvdelete = conversionunidades::eliminar_idregistros('idsubproducto', [$producto->id]);
+                
+                $cvdelete = conversionunidades::eliminar_idregistros('idproducto', [$producto->id]);
+                
                 if($cvdelete){
                   $arrayequivalencias = $producto->equivalencias($producto->id, $_POST['idunidadmedida']);
                   $cv = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
@@ -876,7 +878,7 @@ class almacencontrolador{
     echo json_encode($alertas);
   }
 
-  public static function aumentarstock(){  //sumar o ingresar cantidad a inventario
+  public static function aumentarstock(){  //sumar o ingresar cantidad o produccion a inventario
     session_start();
     $alertas = [];
     $iditem = $_POST['iditem'];
@@ -898,16 +900,23 @@ class almacencontrolador{
             $value->id = $value->id_subproducto;
             $soloIdSubProduct[] = $value->id;
           }
-          $invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
-          $returnInsumos = subproductos::paginarwhere('', '', 'id', $soloIdSubProduct);
-          if($invSub){
-              $alertas['exito'][] = "Se realizo produccion con exito";
-              $alertas['item'][] = $producto;
-              $alertas['insumos'][] = $returnInsumos;  //se retorna solo para produccion
+
+          
+          if(!empty($descontarSubproductos)){
+            $invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
+            $returnInsumos = subproductos::paginarwhere('', '', 'id', $soloIdSubProduct);
+            if($invSub){
+                $alertas['exito'][] = "Se realizo produccion con exito";
+                $alertas['item'][] = $producto;
+                $alertas['insumos'][] = $returnInsumos;  //se retorna solo para produccion
+            }else{
+                $alertas['error'][] = "Error al descontar los insumos";
+                
+                ///*revertir el inventario del producto compuesto
+            }
           }else{
-              $alertas['error'][] = "Error al descontar los insumos";
-              
-              ///*revertir el inventario del producto compuesto
+            $alertas['exito'][] = "Se realizo produccion, sin embargo no hay insumos asociados a descontar";
+            $alertas['item'][] = $producto;
           }
         }elseif($ra){
           $alertas['exito'][] = "Stock del producto actualizado con exito";

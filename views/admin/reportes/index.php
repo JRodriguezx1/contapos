@@ -27,53 +27,52 @@
             <div class="max-h-96"><canvas class="max-h-96" id="chartutilidad"></canvas></div>
         </div>
         <div class="tlg:row-start-2 tlg:row-end-3 col-start-1 col-end-3">
-            <h5 class="mb-2 text-slate-600">Reportes de ventas</h5>
+            <h5 class="mb-5">Reportes de Ventas</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="btn-command" id="ventasgenerales"><span class="material-symbols-outlined">payments</span>Ventas generales</button>
-                <button class="btn-command" id="cierrescaja"><span class="material-symbols-outlined">attach_money</span>Cierres de caja</button>
-                <button class="btn-command"><i class="mb-1 text-3xl fa-solid fa-z"></i>Zeta diario</button>
-                <a href="/admin/reportes/ventasxtransaccion" class="btn-command text-center"><span class="material-symbols-outlined">speaker_notes</span>Ventas por transaccion</a>
-                <button class="btn-command"><span class="material-symbols-outlined">speaker_notes</span>Ventas por cliente</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" id="ventasgenerales"><span class="material-symbols-outlined">payments</span>Ventas generales</button> 
+                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" id="cierrescaja"><span class="material-symbols-outlined">attach_money</span>Cierres de caja</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><i class="mb-1 text-3xl fa-solid fa-z"></i>Zeta diario</button>
+                <a href="/admin/reportes/ventasxtransaccion" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Ventas por transaccion</a>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Ventas por cliente</button> 
             </div>
-            <h5 class="mb-2 text-slate-600">Reportes de facturas</h5>
+            <h5 class="mb-5 mt-14">Reportes de Facturas</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="btn-command"><span class="material-symbols-outlined">request_quote</span>Facturas pagas</button>
-                <button class="btn-command"><span class="material-symbols-outlined">speaker_notes</span>Facturas no pagas</button>
-                <button class="btn-command"><span class="material-symbols-outlined">receipt_long</span>Cotizaciones</button>
-                <button class="btn-command"><span class="material-symbols-outlined">contract_delete</span>Facturas anuladas</button>
-                <button class="btn-command"><span class="material-symbols-outlined">speaker_notes</span>Electronicas generadas</button>
-                <button class="btn-command"><span class="material-symbols-outlined">speaker_notes</span>Electronicas Pendientes</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">request_quote</span>Facturas pagas</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Facturas no pagas</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">receipt_long</span>Cotizaciones</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">contract_delete</span>Facturas anuladas</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Electronicas generadas</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Electronicas Pendientes</button>
             </div>
-            <h5 class="mb-2 text-slate-600">reportes de inventario</h5>
+            <h5 class="mb-5 mt-14">Reportes de Inventario</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="btn-command"><span class="material-symbols-outlined">category</span>Iventario por producto</button>
-                <button class="btn-command"><span class="material-symbols-outlined">splitscreen_bottom</span>Iventario por categoria</button>
-                <button class="btn-command"><span class="material-symbols-outlined">speaker_notes</span>Movimientos inventario</button>
-                <button class="btn-command"><span class="material-symbols-outlined">speaker_notes</span>Compras</button>
-                <button class="btn-command"><span class="material-symbols-outlined">move_up</span>Rotacion de inventario</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">category</span>Inventario por producto</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">splitscreen_bottom</span>Inventario por categoria</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Movimientos inventario</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"><span class="material-symbols-outlined">speaker_notes</span>Compras</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"><span class="material-symbols-outlined">move_up</span>Rotacion de inventario</button>
             </div>
         </div>
 
         <div class="col-span-2">
-            <h5 class="mb-2 text-slate-600">Utilidad, gastos y crecimiento</h5>
+            <h5 class="mb-5 mt-14">Utilidad Gastos y Crecimiento</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="btn-command"><span class="material-symbols-outlined">monitoring</span>Utilidad Rentabilidad</button>
-                <button class="btn-command"><span class="material-symbols-outlined">chart_data</span>Utilidad por producto</button>
-                <button class="btn-command"><span class="material-symbols-outlined">chart_data</span>Utilidad por categoria</button>
-                <button class="btn-command"><span class="material-symbols-outlined">fact_check</span>Gastos e ingresos</button>
-                <button class="btn-command"><span class="material-symbols-outlined">query_stats</span>Comparación interanual</button>
-                <button class="btn-command"><span class="material-symbols-outlined">deployed_code_update</span>Tasa de retorno</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">monitoring</span>Utilidad Rentabilidad</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">chart_data</span>Utilidad por producto</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">chart_data</span>Utilidad por categoria</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">fact_check</span>Gastos e ingresos</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">query_stats</span>Comparación interanual</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">deployed_code_update</span>Tasa de retorno</button>
             </div>
         </div>
         <div class="col-span-2 tlg:col-span-1">
-            <h5 class="mb-2 text-slate-600">Otros</h5>
+            <h5 class="mb-5 mt-14">Otros</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="btn-command"><span class="material-symbols-outlined">person_add</span>Clientes nuevos</button>
-                <button class="btn-command"><span class="material-symbols-outlined">person_check</span>Clientes recurrentes</button>
-                <button class="btn-command"><span class="material-symbols-outlined">vpn_key_alert</span>Registro de actividad</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">person_add</span>Clientes nuevos</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"><span class="material-symbols-outlined">person_check</span>Clientes recurrentes</button>
+                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"><span class="material-symbols-outlined">vpn_key_alert</span>Registro de actividad</button>
             </div>
         </div>
-
     </div>
 
 </div>

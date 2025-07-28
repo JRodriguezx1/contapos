@@ -120,11 +120,11 @@
             tr.insertAdjacentHTML('afterbegin', `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5">${unItem?.text}</td> 
             <td class="!p-2 text-xl text-gray-500 leading-5">
                 <select class="formulario__select selectunidad">
-                    ${options}
+                    ${options}  
                 </select>
             </td>
             <td class="!px-0 !py-2"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" value="1" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
-            <td class="!p-2 text-xl text-gray-500 leading-5"><input type="text" class="inputcompra w-32 px-2 text-center" value="" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||0)"></td>
+            <td class="!p-2 text-xl text-gray-500 leading-5"><input type="text" placeholder="Ingresa Valor Total Producto" class="inputcompra text-base sm:text-lg md:text-xl lg:text-2xl placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg lg:placeholder:text-xl bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 focus:outline-none focus:ring-1" value="" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||0)"></td>
             <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarItem"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
             tablaCompras?.appendChild(tr);
         }
