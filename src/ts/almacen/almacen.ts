@@ -83,7 +83,7 @@
             const target = e.target as HTMLElement;
 
             var trx = target.closest('.fila') as HTMLElement;
-            if(trx.classList.contains('producto')){
+            /*if(trx.classList.contains('producto')){
                     idelemento = trx.dataset.idproducto!;
                     tipoelemento = '0'; //si es producto
                 }
@@ -91,7 +91,8 @@
                 idelemento = trx.dataset.idsubproducto!;
                 tipoelemento = '1';  // si es un subproducto
 
-            }
+            }*/
+            //console.log((e.target as HTMLElement)?.classList.contains("producto"));
             if(tipoelemento == '0'){
                 while(selectStockRapidoUndmedida.firstChild)selectStockRapidoUndmedida.removeChild(selectStockRapidoUndmedida.firstChild);
                 const productounidades = allConversionUnidades.filter(x => x.idproducto == idelemento); 
@@ -287,24 +288,15 @@
 
 
         function actualizarStockRapido(insumosProductos:{id:string, stock:string, stockminimo:string}[], tipoItem:string){
-            
-            let info = (tablaStockRapido as any).page.info();
-
             insumosProductos.forEach(element => {
-                let trinsumoProducto = document.querySelector(`tr.subproducto[data-idsubproducto="${element.id}"]`);
-                if(tipoItem == '0')trinsumoProducto = document.querySelector(`tr.producto[data-idproducto="${element.id}"]`);
-                indiceFila = (tablaStockRapido as any).row(trinsumoProducto).index();
-                (tablaStockRapido as any).cell(indiceFila, 3).data(element.stock);
-                //(tablaStockRapido as any).page(info.page).draw('page'); //me mantiene la pagina actual
-                if(Number(element.stock) <= Number(element.stockminimo)){
-                    trinsumoProducto?.children[3].classList.remove('bg-cyan-50', 'text-cyan-600');
-                    trinsumoProducto?.children[3].classList.add('bg-red-300', 'text-white');
-                }else{
-                    trinsumoProducto?.children[3].classList.remove('bg-red-300', 'text-white');
-                    trinsumoProducto?.children[3].classList.add('bg-cyan-50', 'text-cyan-600');
-                }
-            });
-            (tablaStockRapido as any).draw(false);
+                (tablaStockRapido as any).rows().every(function (this: any){
+                    const rowNode = this.node() as HTMLTableRowElement;
+                    let idAttr = rowNode.getAttribute('data-idsubproducto');
+                    if(tipoItem == '0')idAttr = rowNode.getAttribute('data-idproducto');
+                    if (idAttr && idAttr === element.id)
+                        this.cell(this.index(), 3).data(element.stock); 
+                });
+            })
         }
 
 

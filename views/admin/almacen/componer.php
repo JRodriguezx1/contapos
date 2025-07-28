@@ -61,7 +61,7 @@
                      class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-green-400"
                      maxlength="7"
                      value="<?php echo $producto->rendimientoestandar;?>"
-                     oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                      required>
             </div>
           </div>
