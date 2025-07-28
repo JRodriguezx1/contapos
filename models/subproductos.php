@@ -21,7 +21,7 @@ class subproductos extends ActiveRecord {
         $this->color = $args['color '] ?? '';
         $this->uso = $args['uso'] ?? '';
         $this->stock = $args['stock'] ?? 0;
-        $this->stockminimo = $args['stockminimo']??100;
+        $this->stockminimo = $args['stockminimo']??1;
         $this->precio_compra = $args['precio_compra'] ?? 0;
         $this->fecha_ingreso = $args['fecha_ingreso'] ?? date('Y-m-d H:i:s');
     }
@@ -97,6 +97,7 @@ class subproductos extends ActiveRecord {
         // Generar conversiones para cada unidad destino
         foreach ($factores[$idunidadbase] as $unidaddestino => $factorconversion) {
           $equivalencias[] = (object) [
+              'idproducto' => 'NULL',
               'idsubproducto' => $idsubproducto,
               'idunidadmedidabase' => $idunidadbase,
               'idunidadmedidadestino' => $unidaddestino,

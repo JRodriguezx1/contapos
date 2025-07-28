@@ -14,6 +14,9 @@
                             <option 
                                 data-idund="<?php echo $value->idunidadmedida;?>"
                                 data-nombreund="<?php echo $value->unidadmedida;?>"
+                                data-stock="<?php echo $value->stock;?>"
+                                data-precio_compra="<?php echo $value->precio_compra;?>"
+                                data-precio_venta="<?php echo $value->precio_venta;?>"
                                 value="<?php echo $value->id;?>">
                                 <?php echo $value->nombre;?>
                             </option>
@@ -23,9 +26,9 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-lg flex flex-wrap gap-4 mb-4 p-8">
-            <button id="ingresarProduccion" class="btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-green-500">assignment_add</span>Ingresar Produccion</button>
-            <button id="descontarCantidad" class="btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-red-500">playlist_remove</span>Descontar Cantidad</button>
-             <button id="descontarCantidad" class="btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-cyan-500">checkbook</span>Ajustar Cantidad</button>
+            <button id="ingresarProduccion" class="btnproduccion btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-green-500">assignment_add</span>Ingresar Produccion</button>
+            <button id="descontarProduccion" class="btnproduccion btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-red-500">playlist_remove</span>Descontar Cantidad</button>
+            <button id="ajustarProduccion" class="btnproduccion btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-cyan-500">checkbook</span>Ajustar Cantidad</button>
         </div>
 
         
@@ -35,12 +38,12 @@
     <div class="max-w-6xl mx-auto">
             <dl class="bg-white dark:bg-gray-800 rounded-lg shadow-lg sm:grid sm:grid-cols-3">
                 <div class="flex flex-col p-6 text-center border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-r">
-                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400" id="item-1">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
                         Disponibilidad
                     </dt>
                     <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
-                        aria-describedby="item-1" id="starsCount">
-                        $<?php echo $valorInv;?>
+                        aria-describedby="item-1" id="stock">
+                        0
                     </dd>
                 </div>
                 <div class="flex flex-col p-6 text-center border-t border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l sm:border-r">
@@ -48,8 +51,8 @@
                         Costo produccion
                     </dt>
                     <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
-                        id="downloadsCount">
-                        <?php echo number_format($cantidadProductos??0, "0", ",", ".");?>
+                        id="costoProduccion">
+                        $0
                     </dd>
                 </div>
                 <div class="flex flex-col p-6 text-center border-t border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l">
@@ -57,8 +60,8 @@
                         Precio de venta
                     </dt>
                     <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
-                        id="sponsorsCount">
-                        <?php echo number_format($cantidadReferencias??0, "0", ",", ".");?>
+                        id="precioVenta">
+                        $0
                     </dd>
                 </div>
             </dl>
@@ -71,20 +74,27 @@
         <form id="formIngresarProduccion" class="formulario" action="/" method="POST">
 
             
-            <p id="nombreItem" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg"> </p>
+            <p id="nombreItemAProducir" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg"> </p>
 
             <div class="formulario__campo">
-                <label class="formulario__label" for="selectidunidadmedida">Unidad de medida</label>
-                <select class="formulario__select" id="selectidunidadmedida" name="selectidunidadmedida" required>
+                <label class="formulario__label" for="selectIngresarProduccionUnidadmedida">Unidad de medida</label>
+                <select class="formulario__select" id="selectIngresarProduccionUnidadmedida" name="selectIngresarProduccionUnidadmedida" required>
                     <option value="" disabled selected>-Seleccionar-</option>
 
                 </select>       
             </div>
 
-            <div class="formulario__campo stock">
-                <label class="formulario__label" for="stock">Cantidad</label>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="stockIngresarProduccion">Cantidad</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" id="stock" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+                    <input class="formulario__input" 
+                           id="stockIngresarProduccion" 
+                           type="number" 
+                           min="0" 
+                           placeholder="Precio de venta"  
+                           value="" 
+                           required
+                    >
                 </div>
             </div>
 

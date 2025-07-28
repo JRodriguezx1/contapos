@@ -29,7 +29,7 @@ class productos extends ActiveRecord {
         $this->fabricante = $args['fabricante'] ?? '';
         $this->garantia = $args['garantia'] ?? '';
         $this->stock = $args['stock'] ?? 0;
-        $this->stockminimo = $args['stockminimo']??100;
+        $this->stockminimo = $args['stockminimo']??1;
         $this->categoria = $args['categoria'] ?? '';
         $this->rendimientoestandar = $args['rendimientoestandar'] ?? 1;
         $this->precio_compra = $args['precio_compra'] ?? 0;
@@ -67,6 +67,72 @@ class productos extends ActiveRecord {
       return self::$alertas;
     }
 
+
+    public function equivalencias($idproducto, $idunidadbase):array {
+      $arrayunidadesmedida = ['1'=>'unidad', '2'=>'gramos', '3'=>'libras', '4'=>'kilogramos', '5'=>'milimetros', '6'=>'centimetros', '7'=>'metros', '8'=>'mililitros', '9'=>'litros'];
+      $equivalencias = [];
+      // Factores de conversión
+      $factores = [
+          '1' => [ //1=unidad
+              '1' => 1
+          ],
+          '2' => [ //2=gramos
+              '2' => 1,
+              '3' => 453.592,   //453.592 gramos equivale a 1 libra
+              '4' => 1000  //1000 gramos equivale a 1 kilogramo
+          ],
+          '3' => [  //3=libras
+              '3' => 1,
+              '2' => 0.002,
+              '4' => 2.204
+          ],
+          '4' => [ //4=kilogramos
+              '4' => 1,
+              '2' => 0.001,
+              '3' => 0.453
+          ],
+          '5' => [ //5=milimetros
+              '5' => 1,
+              '6' => 10,      //10 milimetros = 1 centimetro 
+              '7' => 1000    //1000 milimetros = 1 metro
+          ],
+          '6' => [  //6=centimetros
+              '6' => 1,
+              '5' => 0.1,    // 0.1 centimetro = 1 milimetro
+              '7' => 100     // 100cm = 1mt
+          ],
+          '7' => [ //7=metros
+              '7' => 1,
+              '5' => 0.001,  //0.001 mt  =  1 mm
+              '6' => 0.01    //0.01 mt  =  1 cm
+          ],
+          '8' => [ //8=mililitros
+              '8' => 1,   
+              '9' => 1000   //1000 ml = 1lt
+          ],
+          '9' => [  //9=litros
+              '9' => 1,
+              '8' => 0.001   //0.001lt = 1ml 
+          ]
+      ];
+
+      // Verificar si la unidad base está en los factores de conversión
+      if (array_key_exists($idunidadbase, $factores)) {
+        // Generar conversiones para cada unidad destino
+        foreach ($factores[$idunidadbase] as $unidaddestino => $factorconversion) {
+          $equivalencias[] = (object) [
+              'idproducto' => $idproducto,
+              'idsubproducto' => 'NULL',
+              'idunidadmedidabase' => $idunidadbase,
+              'idunidadmedidadestino' => $unidaddestino,
+              'nombreunidadbase' => $arrayunidadesmedida[$idunidadbase],
+              'nombreunidaddestino' => $arrayunidadesmedida[$unidaddestino],
+              'factorconversion' => $factorconversion
+          ];
+        }
+      }
+      return $equivalencias;
+    }
 
     public static function indicadoresAllProducts():array|NULL{
       $query="SELECT *, SUM(stock*precio_compra) OVER () AS valorinv, 

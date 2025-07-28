@@ -84,28 +84,28 @@
                 <?php foreach($unidadesmedida as $unidadmedida): ?>
                 <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
                 <?php endforeach; ?>
-            </select>       
+            </select>  
         </div>
 
         <div class="formulario__campo stock">
             <label class="formulario__label" for="stock">Cantidad</label>
             <div class="formulario__dato">
-                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="stock" type="number" min="0" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="stock" type="number" min="0" step="0.01" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
             </div>
         </div>
 
-        <div class="">
-            <div class="formulario__campo preciocompra">
-                <label class="formulario__label" for="preciocompra">Precio Compra</label>
-                <div class="formulario__dato">
-                    <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="preciocompra" type="number" min="0" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
-                </div>
-            </div>
-            <div class="formulario__campo">
-                <label class="formulario__label" for="precioventa">Precio venta</label>
-                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+        <div class="formulario__campo preciocompra">
+            <label class="formulario__label" for="preciocompra">Precio Compra</label>
+            <div class="formulario__dato">
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="preciocompra" type="number" min="0" step="0.01" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
             </div>
         </div>
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="precioventa">Precio venta</label>
+            <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+        </div>
+        
         <div class="formulario__campo">
             <label class="formulario__label" for="sku">SKU Producto</label>
             <div class="formulario__dato">
@@ -113,6 +113,23 @@
                 <!--<label data-num="36" class="count-charts" for="">36</label>-->
             </div>
         </div>
+
+        <div class="formulario__campo habtipoproduccion" style="display: none;">
+            <label class="formulario__label" for="tipoproduccion">Tipo de produccion</label>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipoproduccion" name="tipoproduccion">
+                <option disabled selected>-Seleccionar-</option>
+                <option value="0">Inmediato</option>
+                <option value="1">Construccion</option>
+            </select>          
+        </div>
+
+         <div class="formulario__campo">
+            <label class="formulario__label" for="impuesto">Impuesto</label>
+            <div class="formulario__dato">
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Impuesto del producto" id="impuesto" name="impuesto" value="<?php echo $producto->impuesto??'';?>">
+            </div>
+        </div>
+
         <div class="formulario__campo">
             <div class="formulario__contentinputfile formulario__contentinputfile--sm">
                 <div class="formulario__imginputfile"><img id="imginputfile" src="" alt=""></div>
@@ -130,24 +147,18 @@
                 <div id="mediospagos" class="content flex flex-col w-full mx-auto">
                   
                     <div class="mb-4">
-                      <div class="formulario__campo habtipoproduccion">
-                        <label class="formulario__label" for="tipoproduccion">Tipo de produccion</label>
-                        <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipoproduccion" name="tipoproduccion" required>
-                            <option value="" disabled selected>-Seleccionar-</option>
-                            <option value="0">Inmediato</option>
-                            <option value="1">Construccion</option>
-                        </select>          
+
+                      <div class="formulario__campo">
+                        <label class="formulario__label" for="stockminimo">Stock minimo</label>
+                        <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Establecer el stock minimo" id="stockminimo" name="stockminimo" value="<?php echo $producto->stockminimo??'';?>">      
                       </div>
-                      <p class="text-gray-700 text-xl">Opcion 2</p>
-                      <p class="text-gray-700 text-xl">Opcion 3</p>
-                      <p class="text-gray-700 text-xl">Opcion 4</p>
-                      <p class="text-gray-700 text-xl">Opcion 5</p>
+                      
                     </div>
                   
                 </div>
               </div>
             </div>
-          </div> <!-- fin accordion  -->
+        </div> <!-- fin accordion  -->
         
         <div class="text-right">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="salir">Salir</button>

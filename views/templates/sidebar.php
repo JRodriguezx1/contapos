@@ -64,6 +64,6 @@
     </nav>
     <div class="cerrar-sesion-mobile">
         <p>Bienvenido: <span> <?php echo $_SESSION['nombre']; ?></span></p>
-        <a class="cerrar-sesion" href="/logout">Cerrar Sesion</a>
+        <a class="cerrar-sesion" href="/logout">Cerrar Sesión</a>
     </div>
 </aside>

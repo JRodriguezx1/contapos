@@ -18,6 +18,7 @@
       impuesto: string,
       marca: string,
       tipoproducto: string,
+      tipoproduccion: string,
       sku: string,
       unidadmedida: string;
       descripcion: string,
@@ -84,6 +85,8 @@
       limpiarformdialog();
       document.querySelector('#modalProducto')!.textContent = "Crear producto";
       (document.querySelector('#btnEditarCrearProducto') as HTMLInputElement).value = "Crear";
+      (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
+      (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
       miDialogoProducto.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
@@ -103,18 +106,20 @@
       unproducto = products.find(x=>x.id === idproducto)!; //obtengo el producto.
       $('#categoria').val(unproducto?.idcategoria??'');
       (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
-      $('#tipoproducto').val(unproducto?.tipoproducto??'');
-      $('#idunidadmedida').val(unproducto?.idunidadmedida??'');
-      (document.querySelector('#stock')as HTMLInputElement).removeAttribute('readonly');
-      (document.querySelector('#preciocompra')as HTMLInputElement).removeAttribute('readonly');
+      $('#tipoproducto').val(unproducto?.tipoproducto??'0');  //0 = simple,  1 = compuesto
+      $('#idunidadmedida').val(unproducto?.idunidadmedida??'1');
+      (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
+      (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
       if(unproducto?.tipoproducto == '1'){
-        (document.querySelector('#stock')as HTMLInputElement).setAttribute('readonly', '');
-        (document.querySelector('#preciocompra')as HTMLInputElement).setAttribute('readonly', '');
+        (document.querySelector('.stock')as HTMLInputElement).style.display = "none";
+        (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "none";
       }
       (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
       (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
+      (document.querySelector('#impuesto')as HTMLInputElement).value = unproducto?.impuesto??'';
+      (document.querySelector('#stockminimo')as HTMLInputElement).value = unproducto?.stockminimo??'';
       imginputfile.src = "/build/img/"+unproducto?.foto;
       indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoProducto.showModal();
@@ -146,10 +151,16 @@
           datos.append('idcategoria', $('#categoria').val()as string);
           datos.append('nombre', $('#nombre').val()as string);
           datos.append('foto', imgFile); //en el backend no se lee con $_POST, se lee con $_FILES
-          datos.append('tipoproducto', $('#tipoproducto').val()as string);
+          datos.append('tipoproducto', $('#tipoproducto').val()as string);  //0=simple o 1=compuesto
+          datos.append('idunidadmedida', $('#idunidadmedida').val()as string);
+          datos.append('unidadmedida', $('#idunidadmedida option:selected').text());
+          datos.append('stock', $('#stock').val()as string);
           datos.append('precio_compra', $('#preciocompra').val()as string);
           datos.append('precio_venta', $('#precioventa').val()as string);
           datos.append('sku', $('#sku').val()as string);
+          datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
+          datos.append('impuesto', $('#impuesto').val()as string);
+          datos.append('stockminimo', $('#stockminimo').val()as string);
           try {
               const url = "/admin/api/actualizarproducto";
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 

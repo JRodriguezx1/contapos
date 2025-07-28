@@ -4,10 +4,11 @@ namespace Model;
 
 class conversionunidades extends ActiveRecord{
     protected static $tabla = 'conversionunidades';
-    protected static $columnasDB = ['id', 'idsubproducto', 'idunidadmedidabase', 'idunidadmedidadestino', 'nombreunidadbase', 'nombreunidaddestino', 'factorconversion'];
+    protected static $columnasDB = ['id', 'idproducto', 'idsubproducto', 'idunidadmedidabase', 'idunidadmedidadestino', 'nombreunidadbase', 'nombreunidaddestino', 'factorconversion'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+         $this->idproducto = $args['idproducto']??'';
         $this->idsubproducto = $args['idsubproducto']??'';
         $this->idunidadmedidabase = $args['idunidadmedidabase']??'';
         $this->idunidadmedidadestino = $args['idunidadmedidadestino']??'';
@@ -18,6 +19,7 @@ class conversionunidades extends ActiveRecord{
 
     public function validar():array
     {
+        if(!$this->idproducto)self::$alertas['error'][] = "Error subproducto intenta nuevamnete";
         if(!$this->idsubproducto)self::$alertas['error'][] = "Error subproducto intenta nuevamnete";
         if(!$this->idunidadmedidabase)self::$alertas['error'][] = "Error unidad base intenta nuevamnete.";
         if(!$this->idunidadmedidadestino)self::$alertas['error'][] = "Error unidad destino intenta nuevamnete.";

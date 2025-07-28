@@ -98,6 +98,7 @@ class almacencontrolador{
     session_start();
     isadmin();
     $alertas = [];
+    $conversion = new conversionunidades;
     $categoria = categorias::find('id', $_POST['idcategoria']);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $producto = new productos($_POST);
@@ -113,7 +114,18 @@ class almacencontrolador{
         $r = $producto->crear_guardar();
         $categoria->totalproductos = $producto->numreg_where('idcategoria', $categoria->id);//productos::numreg_where('idcategoria', $categoria->id);
         $r1 = $categoria->actualizar();
-        if($r[0])$alertas['exito'][] = "Producto creado correctamente";
+        if($r[0]){
+          $arrayequivalencias = $producto->equivalencias($r[1], $producto->idunidadmedida);
+          $rc = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
+          if($rc){
+            $alertas['exito'][] = "Producto creado correctamente";
+          }else{
+            //**** eliminar subproducto
+            $productodelete = productos::find('id', $r[1]);
+            $productodelete->eliminar_registro();
+            $alertas['error'][] = "Error, intentalo nuevamente";
+          }
+        }
       }
     }
     $categorias = categorias::all();
@@ -384,7 +396,8 @@ class almacencontrolador{
     session_start();
     $alertas = []; 
     $producto = productos::find('id', $_POST['id']);
-    $tipo = $producto->tipoproducto;
+    $tipo = $producto->tipoproducto;  //0 = simple,  1 = compuesto
+    $idunidadmedidaDB = $producto->idunidadmedida;  //obtener el id de unidad de medida actual del subproducto
     
     /////// valiadar que es una nueva imagen o distinta
     if(!$producto->foto && isset($_FILES['foto'])){
@@ -425,13 +438,33 @@ class almacencontrolador{
             $r = $producto->actualizar();
             
             if($r){
-              $alertas['exito'][] = "Datos del producto actualizados";
+              if($idunidadmedidaDB != $_POST['idunidadmedida']){ //validar si hubo cambio de unidad de medida
+                $conversion = new conversionunidades;
+                $cvdelete = conversionunidades::eliminar_idregistros('idsubproducto', [$producto->id]);
+                if($cvdelete){
+                  $arrayequivalencias = $producto->equivalencias($producto->id, $_POST['idunidadmedida']);
+                  $cv = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
+                  if($cv){
+                    $alertas['exito'][] = "Datos del producto actualizados";
+                  }else{
+                    //revertir los datos de producto
+                    //revertir las unidades de conversion equivalentes eliminadas, volviendo a crear las conversiones
+                    $alertas['error'][] = "Error al intentar crear las nuevas conversiones base equivalentes de subproducto";
+                  }
+                }else{
+                  //revertir los datos de subproducto
+                  $alertas['error'][] = "Error al eliminar las conversiones base equivalentes del producto";
+                }
+              }else{
+                $alertas['exito'][] = "Datos del producto actualizados";
+              }
             }
         }
     } //fin if(SERVER['REQUEST_METHOD])
     $alertas['producto'][] = $producto;
     echo json_encode($alertas);  
   }
+
 
   public static function eliminarProducto(){
     session_start();
@@ -812,92 +845,106 @@ class almacencontrolador{
   }
 
 
-  public static function descontarstock(){  //
+  public static function descontarstock(){  //descontar cantidad a inventario
     session_start();
     $alertas = [];
-    $ensamblar = new productos_sub($_POST);
+    $iditem = $_POST['iditem'];
+    $cantidad = $_POST['cantidad'];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $alertas = $ensamblar->validar();
-      if(empty($alertas)){
-        $existe = productos_sub::uniquewhereArray(['id_producto'=>$_POST['id_producto'], 'id_subproducto'=>$_POST['id_subproducto']]);
-        if($existe){//actualizar
-          $existe->compara_objetobd_post($_POST);
-          $ra = $existe->actualizar();
-          if($ra){
-            $alertas['exito'][] = "subproducto asociado y actualizado al producto principal.";
-          }else{
+      if($_POST['tipoitem'] == 0){ //si es producto
+        $producto = productos::find('id', $iditem);
+        $producto->stock =$producto->stock-$cantidad;
+        $ra = $producto->actualizar();
+        if($ra){
+            $alertas['exito'][] = "Stock del producto actualizado con exito";
+            $alertas['item'][] = $producto;
+        }else{
             $alertas['error'][] = "Hubo un error, intentalo nuevamente";
-          }
-        }else{//crear
-          $r = $ensamblar->crear_guardar();
-          if($r[0]){
-            $alertas['exito'][] = "subproducto asociado al producto principal.";
-          }else{
-            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
-          }
         }
-      }
-      ///////   actualizar costo (precio de compra) del producto compuesto   ////////
-      if(isset($alertas['exito'])){
-        $producto = productos::find('id', $ensamblar->id_producto);
-        $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo');
-        $producto->precio_compra = $costo;
-        $rap = $producto->actualizar();
+      }else{  // si es insumo subproducto
+        $insumo = subproductos::find('id', $iditem);
+        $insumo->stock =  $insumo->stock-$cantidad;
+         $ra = $insumo->actualizar();
+        if($ra){
+            $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
+            $alertas['item'][] = $insumo;
+        }else{
+            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+        }
       }
     }
     echo json_encode($alertas);
   }
 
-  public static function aumentarstock(){  //
+  public static function aumentarstock(){  //sumar o ingresar cantidad a inventario
     session_start();
     $alertas = [];
-    $ensamblar = new productos_sub($_POST);
+    $iditem = $_POST['iditem'];
+    $cantidad = $_POST['cantidad'];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $alertas = $ensamblar->validar();
-      if(empty($alertas)){
-        $existe = productos_sub::uniquewhereArray(['id_producto'=>$_POST['id_producto'], 'id_subproducto'=>$_POST['id_subproducto']]);
-        if($existe){//actualizar
-          $existe->compara_objetobd_post($_POST);
-          $ra = $existe->actualizar();
-          if($ra){
-            $alertas['exito'][] = "subproducto asociado y actualizado al producto principal.";
-          }else{
-            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+      if($_POST['tipoitem'] == 0){ //si es producto
+        $producto = productos::find('id', $iditem);
+        $producto->stock =  $producto->stock+$cantidad;
+        $ra = $producto->actualizar();
+        
+        //procesar el descuento de los insumos del produco compuesto y de produccion tipo contruccion
+        //validar si el producto compuesto tiene insumos asociados y si es de tipo construccion
+        if(isset($_POST['construccion']) && $_POST['construccion'] == 1){
+          //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
+          $producto->cantidad = $cantidad/$producto->rendimientoestandar;
+          $descontarSubproductos = productos_sub::cantidadSubproductosXventa([$producto]);
+          $soloIdSubProduct = [];
+          foreach($descontarSubproductos as $index => $value){
+            $value->id = $value->id_subproducto;
+            $soloIdSubProduct[] = $value->id;
           }
-        }else{//crear
-          $r = $ensamblar->crear_guardar();
-          if($r[0]){
-            $alertas['exito'][] = "subproducto asociado al producto principal.";
+          $invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
+          $returnInsumos = subproductos::paginarwhere('', '', 'id', $soloIdSubProduct);
+          if($invSub){
+              $alertas['exito'][] = "Se realizo produccion con exito";
+              $alertas['item'][] = $producto;
+              $alertas['insumos'][] = $returnInsumos;  //se retorna solo para produccion
           }else{
-            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+              $alertas['error'][] = "Error al descontar los insumos";
+              
+              ///*revertir el inventario del producto compuesto
           }
+        }elseif($ra){
+          $alertas['exito'][] = "Stock del producto actualizado con exito";
+          $alertas['item'][] = $producto;
+        }else{
+          $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
-      }
-      ///////   actualizar costo (precio de compra) del producto compuesto   ////////
-      if(isset($alertas['exito'])){
-        $producto = productos::find('id', $ensamblar->id_producto);
-        $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo');
-        $producto->precio_compra = $costo;
-        $rap = $producto->actualizar();
+
+      }else{  // si es insumo subproducto
+        $insumo = subproductos::find('id', $iditem);
+        $insumo->stock = $insumo->stock+$cantidad;
+         $ra = $insumo->actualizar();
+        if($ra){
+            $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
+            $alertas['item'][] = $insumo;
+        }else{
+            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+        }
       }
     }
     echo json_encode($alertas);
   }
 
 
-  public static function ajustarstock(){  //
+  public static function ajustarstock(){  //ajustar o reiniciar inventario
     session_start();
     $alertas = [];
-    
+    $iditem = $_POST['iditem'];
+    $cantidad = $_POST['cantidad'];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $iditem = $_POST['iditem'];
-      $cantidad = $_POST['cantidad'];
       if($_POST['tipoitem'] == 0){ //si es producto
         $producto = productos::find('id', $iditem);
         $producto->stock = $cantidad;
         $ra = $producto->actualizar();
         if($ra){
             $alertas['exito'][] = "Stock del producto actualizado con exito";
+            $alertas['item'][] = $producto;
         }else{
             $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
@@ -907,11 +954,19 @@ class almacencontrolador{
          $ra = $insumo->actualizar();
         if($ra){
             $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
-        }else{
+            $alertas['item'][] = $insumo;
+          }else{
             $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
       }
     }
     echo json_encode($alertas);
   }
+
+
+  public static function reiniciarinv(){
+    echo json_encode("reiniciando");
+  }
+
+
 }

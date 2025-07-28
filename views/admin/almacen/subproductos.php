@@ -79,6 +79,11 @@
                 <input class="formulario__input" type="number" min="0" placeholder="Precio de compra" id="preciocompra" name="precio_compra" value="<?php echo $subproducto->precio_compra??'';?>">
             </div>
         </div>
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="stockminimo">Stock minimo</label>
+            <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Establecer el stock minimo" id="stockminimo" name="stockminimo" value="<?php echo $subproducto->stockminimo??'';?>">      
+        </div>
         
         <div class="text-right">
             <button class="btn-md btn-red" type="button" value="salir">Salir</button>

@@ -9,7 +9,7 @@
     <div class="toggleanduser"><span class="sidebartoggle material-symbols-outlined">menu</span><p>hola: <span> <?php echo $_SESSION['nombre']; ?></span></p></div>
 
     <div class="flex items-center gap-4 mr-4">
-        <a class="cerrar-sesion" href="/logout">Cerrar Sesion</a>
+        <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">Cerrar Sesion</a>
 
         <button type="button" data-dropdown-toggle="notification-dropdown" class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300">
             <i class="text-4xl fa-solid fa-bell"></i>

@@ -64,6 +64,7 @@
         (document.querySelector('#nombre')as HTMLInputElement).value = unsubproducto?.nombre!;
         (document.querySelector('#sku')as HTMLInputElement).value = unsubproducto?.sku!;
         (document.querySelector('#preciocompra')as HTMLInputElement).value = unsubproducto?.precio_compra??'';
+        (document.querySelector('#stockminimo')as HTMLInputElement).value = unsubproducto?.stockminimo??'';
         
         indiceFila = (tablaSubProductos as any).row((e.target as HTMLElement).closest('tr')).index();
         miDialogoSubProducto.showModal();
@@ -84,6 +85,7 @@
             datos.append('nombre', $('#nombre').val()as string);
             datos.append('sku', $('#sku').val()as string);
             datos.append('precio_compra', $('#preciocompra').val()as string);
+             datos.append('stockminimo', $('#stockminimo').val()as string);
             try {
                 const url = "/admin/api/actualizarsubproducto";
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
