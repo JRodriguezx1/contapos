@@ -82,17 +82,19 @@
             let options:string = '';
             const target = e.target as HTMLElement;
 
-            var trx = target.closest('.fila') as HTMLElement;
-            /*if(trx.classList.contains('producto')){
-                    idelemento = trx.dataset.idproducto!;
-                    tipoelemento = '0'; //si es producto
-                }
-            else{
-                idelemento = trx.dataset.idsubproducto!;
-                tipoelemento = '1';  // si es un subproducto
+           if(target.closest('.btnsproducto')){
+                idelemento = target.closest('.btnsproducto')!.id;
+                tipoelemento = '0'; //si es producto
+                cantidadactual = Number((target.closest('.btnsproducto') as HTMLElement).dataset.stock);
+                document.querySelector('#nombreItemstockrapido')!.textContent = (target.closest('.btnsproducto') as HTMLElement).dataset.nombre!;
+            }
+            if(target.closest('.btnssubproducto')){
+                idelemento = target.closest('.btnssubproducto')!.id;
+                tipoelemento = '1'; //si es un subproducto
+                cantidadactual = Number((target.closest('.btnssubproducto') as HTMLElement).dataset.stock);
+                document.querySelector('#nombreItemstockrapido')!.textContent = (target.closest('.btnssubproducto') as HTMLElement).dataset.nombre!;
+            }
 
-            }*/
-            //console.log((e.target as HTMLElement)?.classList.contains("producto"));
             if(tipoelemento == '0'){
                 while(selectStockRapidoUndmedida.firstChild)selectStockRapidoUndmedida.removeChild(selectStockRapidoUndmedida.firstChild);
                 const productounidades = allConversionUnidades.filter(x => x.idproducto == idelemento); 
@@ -105,9 +107,6 @@
                 subproductounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idsubproducto}" >${u.nombreunidaddestino}</option>`);
                 selectStockRapidoUndmedida.insertAdjacentHTML('afterbegin', options);
             }
-            
-            cantidadactual = Number(trx.children[3].textContent);
-            document.querySelector('#nombreItemstockrapido')!.textContent = trx.children[1].textContent;  //nombre del producto o subproducto
             
             if((e.target as HTMLElement)?.classList.contains("descontarStock")||(e.target as HTMLElement).parentElement?.classList.contains("descontarStock"))descontarStock(e);
             if((e.target as HTMLElement)?.classList.contains("aumentarStock")||(e.target as HTMLElement).parentElement?.classList.contains("aumentarStock"))aumentarStock(e);
@@ -294,8 +293,20 @@
                     let idAttr = rowNode.getAttribute('data-idsubproducto');
                     if(tipoItem == '0')idAttr = rowNode.getAttribute('data-idproducto');
                     if (idAttr && idAttr === element.id)
-                        this.cell(this.index(), 3).data(element.stock); 
+                        this.cell(this.index(), 3).data(element.stock);
+
+                    // Obtén el <td> real
+                    const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;
+                
                 });
+
+                /*if(Number(element.stock) <= Number(element.stockminimo)){
+                    trinsumoProducto?.children[3].classList.remove('bg-cyan-50', 'text-cyan-600');
+                    trinsumoProducto?.children[3].classList.add('bg-red-300', 'text-white');
+                }else{
+                    trinsumoProducto?.children[3].classList.remove('bg-red-300', 'text-white');
+                    trinsumoProducto?.children[3].classList.add('bg-cyan-50', 'text-cyan-600');
+                }*/
             })
         }
 
@@ -307,7 +318,6 @@
             document.removeEventListener("click", cerrarDialogoExterno);
             }
         }
-
 
 
     }

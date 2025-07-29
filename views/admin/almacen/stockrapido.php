@@ -23,7 +23,7 @@
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
-                <div class="acciones-btns" id="<?php echo $value->id;?>">
+                <div class="acciones-btns btnsproducto" id="<?php echo $value->id;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
                     <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
                     <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
                     <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
@@ -42,7 +42,7 @@
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
-                <div class="acciones-btns" id="<?php echo $value->id;?>">
+                <div class="acciones-btns btnssubproducto" id="<?php echo $value->id;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
                     <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
                     <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
                     <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
