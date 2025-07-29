@@ -13,11 +13,7 @@
         const amountProduccion = document.querySelector('#stockIngresarProduccion') as HTMLInputElement;  //input cantidad cuando se ingresa orden de produccion
         let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement;
     
-        interface datosProducto {
-            stock: string,
-            precio_compra: string,
-            precio_venta: string
-        }
+        interface datosProducto { stock: string, precio_compra: string, precio_venta: string }
 
         type conversionunidadesapi = {
             id:string,
@@ -28,7 +24,6 @@
             nombreunidadbase: string,
             nombreunidaddestino: string,
             factorconversion: string,
-            //idservicios:{idempleado:string, idservicio:string}[]
           };
 
         let allConversionUnidades:conversionunidadesapi[] = [];
@@ -37,7 +32,6 @@
                 const url = "/admin/api/allConversionesUnidades"; //llamado a la API REST en el controlador almacencontrolador para treaer todas las conversiones de unidades
                 const respuesta = await fetch(url); 
                 allConversionUnidades = await respuesta.json();
-                console.log(allConversionUnidades);
             } catch (error) {
                 console.log(error);
             }
@@ -60,7 +54,6 @@
                         const url = "/admin/api/reiniciarinv"; //llamado a la API REST y se trae las direcciones segun cliente elegido
                         const respuesta = await fetch(url); 
                         const resultado = await respuesta.json();
-                        console.log(resultado);
                         msjalertToast('success', '¡Éxito!', resultado);
                         setTimeout(() => {
                           window.location.reload();  
@@ -76,7 +69,6 @@
 
         /////////////////////////////////////  SOTCK RAPIDO ////////////////////////////////////////
         tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatables);
-
 
         document.querySelector('#tablaStockRapido')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
             let options:string = '';
@@ -95,14 +87,13 @@
                 document.querySelector('#nombreItemstockrapido')!.textContent = (target.closest('.btnssubproducto') as HTMLElement).dataset.nombre!;
             }
 
+            while(selectStockRapidoUndmedida.firstChild)selectStockRapidoUndmedida.removeChild(selectStockRapidoUndmedida.firstChild);
             if(tipoelemento == '0'){
-                while(selectStockRapidoUndmedida.firstChild)selectStockRapidoUndmedida.removeChild(selectStockRapidoUndmedida.firstChild);
                 const productounidades = allConversionUnidades.filter(x => x.idproducto == idelemento); 
                 productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
                 selectStockRapidoUndmedida.insertAdjacentHTML('afterbegin', options);
             }
             if(tipoelemento == '1'){
-                while(selectStockRapidoUndmedida.firstChild)selectStockRapidoUndmedida.removeChild(selectStockRapidoUndmedida.firstChild);
                 const subproductounidades = allConversionUnidades.filter(x => x.idsubproducto == idelemento); 
                 subproductounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idsubproducto}" >${u.nombreunidaddestino}</option>`);
                 selectStockRapidoUndmedida.insertAdjacentHTML('afterbegin', options);
@@ -159,8 +150,6 @@
                     const resultado = await respuesta.json();
                     if(resultado.exito !== undefined){
                         msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                        /////validar si es el mismo subproducto, y actualizar 
-                        //validarSubproducto($('#subproducto').val()as string, unidadmedida, subproducto.data('subproducto'));
                         ////// reset form ///////
                         (document.querySelector('#formStock') as HTMLFormElement)?.reset();
                         //actualizar fila
@@ -292,21 +281,20 @@
                     const rowNode = this.node() as HTMLTableRowElement;
                     let idAttr = rowNode.getAttribute('data-idsubproducto');
                     if(tipoItem == '0')idAttr = rowNode.getAttribute('data-idproducto');
-                    if (idAttr && idAttr === element.id)
+                    if (idAttr && idAttr === element.id){
                         this.cell(this.index(), 3).data(element.stock);
 
-                    // Obtén el <td> real
-                    const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;
-                
+                        // Obtén el <td> real
+                        const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;
+                        if(Number(element.stock) <= Number(element.stockminimo)){
+                            td.classList.remove('bg-cyan-50', 'text-cyan-600');
+                            td.classList.add('bg-red-300', 'text-white');
+                        }else{
+                            td.classList.remove('bg-red-300', 'text-white');
+                            td.classList.add('bg-cyan-50', 'text-cyan-600');
+                        }
+                    } 
                 });
-
-                /*if(Number(element.stock) <= Number(element.stockminimo)){
-                    trinsumoProducto?.children[3].classList.remove('bg-cyan-50', 'text-cyan-600');
-                    trinsumoProducto?.children[3].classList.add('bg-red-300', 'text-white');
-                }else{
-                    trinsumoProducto?.children[3].classList.remove('bg-red-300', 'text-white');
-                    trinsumoProducto?.children[3].classList.add('bg-cyan-50', 'text-cyan-600');
-                }*/
             })
         }
 
