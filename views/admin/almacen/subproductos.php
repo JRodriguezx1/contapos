@@ -1,8 +1,13 @@
 <div class="box subproductos">
-  <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a>
+  <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+    <span class="sr-only">Atrás</span>
+  </a> 
   <h4 class="text-gray-600 mb-12 mt-4">Sub Productos</h4>
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
-  <button id="crearSubProducto" class="btn-md btn-blueintense mb-4">Crear sub producto</button>
+  <button id="crearSubProducto" class="btn-md btn-turquoise !py-4 !px-6 !w-auto">Crear sub producto</button>
   
   <table class="display responsive nowrap tabla" width="100%" id="tablaSubProductos">
       <thead>
@@ -46,13 +51,13 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="nombre">Nombre</label>
             <div class="formulario__dato">
-                <input class="formulario__input" type="text" placeholder="Nombre del sub-producto" id="nombre" name="nombre" value="<?php echo $subproducto->nombre??'';?>" required>
-                <label data-num="46" class="count-charts" for="">46</label>
+                <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del sub-producto" id="nombre" name="nombre" value="<?php echo $subproducto->nombre??'';?>" required>
+                <!-- <label data-num="46" class="count-charts" for="">46</label> -->
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="unidadmedida">Unidad de medida</label>
-            <select class="formulario__select" name="id_unidadmedida" id="unidadmedida" required>
+            <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="id_unidadmedida" id="unidadmedida" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($unidadesmedida as $unidadmedida): ?>
                 <option value="<?php echo $unidadmedida->id;?>" <?php //echo $unidadmedida->id==$subproducto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
@@ -61,7 +66,7 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="insumoprocesado">Insumo fabricado</label>
-            <select class="formulario__select" name="insumoprocesado" id="insumoprocesado" required>
+            <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="insumoprocesado" id="insumoprocesado" required>
                 <option value="0" selected> No </option>
                 <option value="1"> Si </option>
             </select>             
@@ -69,25 +74,25 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="sku">SKU subProducto</label>
             <div class="formulario__dato">
-                <input class="formulario__input" type="text" placeholder="Codigo del subproducto" id="sku" name="sku" value="<?php echo $subproducto->sku??'';?>">
-                <label data-num="15" class="count-charts" for="">15</label>
+                <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Codigo del subproducto" id="sku" name="sku" value="<?php echo $subproducto->sku??'';?>">
+                <!-- <label data-num="15" class="count-charts" for="">15</label> -->
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="preciocompra">Precio Compra</label>
             <div class="formulario__dato">
-                <input class="formulario__input" type="number" min="0" placeholder="Precio de compra" id="preciocompra" name="precio_compra" value="<?php echo $subproducto->precio_compra??'';?>">
+                <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de compra" id="preciocompra" name="precio_compra" value="<?php echo $subproducto->precio_compra??'';?>">
             </div>
         </div>
 
         <div class="formulario__campo">
             <label class="formulario__label" for="stockminimo">Stock minimo</label>
-            <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Establecer el stock minimo" id="stockminimo" name="stockminimo" value="<?php echo $subproducto->stockminimo??'';?>">      
+            <input class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Establecer el stock minimo" id="stockminimo" name="stockminimo" value="<?php echo $subproducto->stockminimo??'';?>">      
         </div>
         
         <div class="text-right">
-            <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-            <input id="btnEditarCrearSubProducto" class="btn-md btn-blue" type="submit" value="Crear">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="salir">Salir</button>
+            <input id="btnEditarCrearSubProducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar producto-->
