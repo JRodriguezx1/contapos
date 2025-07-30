@@ -228,6 +228,7 @@ class ventascontrolador{
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
     //////// sumar los subproductos repetidos
+    $invPro = true;
     $reduceSub = [];
     foreach($descontarSubproductos as $idx => $obj){
       if(!isset($reduceSub[$obj->id_subproducto])){
