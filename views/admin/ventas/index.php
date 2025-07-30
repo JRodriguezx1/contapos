@@ -9,7 +9,7 @@
             <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="selectCliente" name="selectCliente" required>
                 <option value="1" disabled selected>-Seleccionar-</option>
                 <?php foreach($clientes as $cliente): ?>
-                  <option data-tipoID="<?php echo $cliente->tipodocumento;?>" data-identidad="<?php echo $cliente->identificacion;?>" value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
+                  <option data-tipoID="<?php echo $cliente->tipodocumento;?>" data-identidad="<?php echo $cliente->identificacion;?>" value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option> 
                 <?php endforeach ?>
             </select>
             <div class="grid place-items-center  rounded-r-lg   hover:cursor-pointer">
@@ -159,27 +159,27 @@
 
       <div class="border-b border-gray-900/10 pb-10 mb-3">
         
-        <p class="mt-2 text-xl text-gray-600">Informacion Personal.</p>
+        <p class="mt-2 text-xl text-gray-600">Información Personal.</p>
 
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div class="sm:col-span-3">
             <label for="nombreclientenuevo" class="block text-2xl font-medium text-gray-600">Nombre</label>
             <div class="mt-2">
-              <input type="text" name="nombreclientenuevo" id="nombreclientenuevo" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
-            </div>
+              <input type="text" name="nombreclientenuevo" id="nombreclientenuevo" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+            </div> 
           </div>
 
           <div class="sm:col-span-3">
             <label for="clientenuevoapellido" class="block text-2xl font-medium text-gray-600">Apellido</label>
             <div class="mt-2">
-              <input type="text" name="clientenuevoapellido" id="clientenuevoapellido" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="clientenuevoapellido" id="clientenuevoapellido" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <label for="tipodocumento" class="block text-2xl font-medium text-gray-600">Tipo de documento</label>
             <div class="mt-2 grid grid-cols-1">
-              <select id="tipodocumento" name="tipodocumento" autocomplete="tipodocumento-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+              <select id="tipodocumento" name="tipodocumento" autocomplete="tipodocumento-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                 <option value="CC">CC</option>
                 <option value="NIT">NIT</option>
                 <option value="PASAPORTE">PASAPORTE</option>
@@ -189,112 +189,112 @@
                 <option value="CEDULA DE EXTRANJERIA">CEDULA DE EXTRANJERIA</option>
                 <option value="VISA">VISA</option>
               </select>
-              <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+              <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-              </svg>
+              </svg> -->
             </div>
           </div>
 
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-3">
             <label for="identificacion" class="block text-2xl font-medium text-gray-600">Documento</label>
             <div class="mt-2">
-              <input id="identificacion" name="identificacion" type="text" autocomplete="documento ID" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input id="identificacion" name="identificacion" type="text" autocomplete="documento ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-4">
             <label for="clientenuevoemail" class="block text-2xl font-medium text-gray-600">Email</label>
             <div class="mt-2">
-              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-2">
             <label for="tarifa" class="block text-2xl font-medium text-gray-600">Tarifa</label>
             <div class="mt-2 grid grid-cols-1">
-              <select id="clientenuevotarifa" name="tarifa" autocomplete="tarifa-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+              <select id="clientenuevotarifa" name="tarifa" autocomplete="tarifa-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                 <?php foreach($tarifas as $tarifa): ?>
                   <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre;?></option>
                 <?php endforeach; ?>
               </select>
-              <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+              <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-              </svg>
+              </svg> -->
             </div>
           </div>
 
           <div class="col-span-full">
-            <label for="clientenuevodireccion" class="block text-2xl font-medium text-gray-600">Direccion</label>
+            <label for="clientenuevodireccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
             <div class="mt-2">
-              <input type="text" name="clientenuevodireccion" id="clientenuevodireccion" autocomplete="clientenuevodireccion" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="clientenuevodireccion" id="clientenuevodireccion" autocomplete="clientenuevodireccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-2 sm:col-start-1">
-            <label for="telefono" class="block text-2xl font-medium text-gray-600">Telefono</label>
+            <label for="telefono" class="block text-2xl font-medium text-gray-600">Teléfono</label>
             <div class="mt-2">
-              <input type="text" name="telefono" id="telefono" autocomplete="address-level2" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="telefono" id="telefono" autocomplete="address-level2" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-2">
             <label for="departamento" class="block text-2xl font-medium text-gray-600">Departamento</label>
             <div class="mt-2">
-              <input type="text" name="departamento" id="departamento" autocomplete="address-level1" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="departamento" id="departamento" autocomplete="address-level1" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-2">
             <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad</label>
             <div class="mt-2">
-              <input type="text" name="ciudad" id="ciudad" autocomplete="ciudad" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="ciudad" id="ciudad" autocomplete="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-right">
-          <button class="btn-md btn-red salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddCliente" class="btn-md btn-blue crearAddCliente" type="submit" value="Crear">
+      <div class="text-right space-x-4 mt-6">
+        <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px] rounded-lg salir" type="button" value="salir">Salir</button>
+        <input id="btnCrearAddCliente" class="btn-md btn-indigo !py-4 !px-6 !w-[180px] rounded-lg" type="submit" value="Crear">
       </div>
     </form>
   </dialog>
 
   <!-- MODAL PARA CREAR NUEVA DIRECCION A CLIENTE-->
   <dialog class="midialog-sm p-5" id="miDialogoAddDir">
-    <h4 class=" text-gray-700 font-semibold">Nueva Direccion</h4>
+    <h4 class=" text-gray-700 font-semibold">Nueva Dirección</h4>
     <form id="formAddDir" class="formulario">
 
       <div class="border-b border-gray-900/10 pb-10 mb-3">
         
-        <p class="mt-2 text-xl text-gray-600">Crear nueva direccion para el cliente seleccionado.</p>
+        <p class="mt-2 text-xl text-gray-600">Crear nueva dirección para el cliente seleccionado.</p>
 
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div class="sm:col-span-3">
             <label for="adddepartamento" class="block text-2xl font-medium text-gray-600">Departamento</label>
             <div class="mt-2">
-              <input type="text" name="adddepartamento" id="adddepartamento" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="adddepartamento" id="adddepartamento" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <label for="addciudad" class="block text-2xl font-medium text-gray-600">Ciudad</label>
             <div class="mt-2">
-              <input type="text" name="addciudad" id="addciudad" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="addciudad" id="addciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="col-span-full">
-            <label for="adddireccion" class="block text-2xl font-medium text-gray-600">Direccion</label>
+            <label for="adddireccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
             <div class="mt-2">
-              <input type="text" name="adddireccion" id="adddireccion" autocomplete="adddireccion" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input type="text" name="adddireccion" id="adddireccion" autocomplete="adddireccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <label for="tarifa" class="block text-2xl font-medium text-gray-600">Tarifa</label>
             <div class="mt-2 grid grid-cols-1">
-              <select id="tarifa" name="tarifa" autocomplete="tarifa-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+              <select id="tarifa" name="tarifa" autocomplete="tarifa-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                 <?php foreach($tarifas as $tarifa): ?>
                   <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre.' - $'.$tarifa->valor;?></option>
                 <?php endforeach; ?>
@@ -309,8 +309,8 @@
       </div>
 
       <div class="text-right">
-          <button class="btn-md btn-red salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddDir" class="btn-md btn-blue crearAddDir" type="submit" value="Crear">
+          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px] salir" type="button" value="salir">Salir</button>
+          <input id="btnCrearAddDir" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Crear">
       </div>
     </form>
   </dialog>

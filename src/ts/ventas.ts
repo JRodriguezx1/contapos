@@ -248,7 +248,23 @@
       tr.classList.add('productselect');
       tr.dataset.id = `${id}`;
       tr.insertAdjacentHTML('afterbegin', `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5">${unproducto?.nombre}</td> 
-      <td class="!px-0 !py-2"><div class="flex"><button><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" value="1" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"><button><span class="mas material-symbols-outlined">add</span></button></div></td>
+
+      <td class="!px-0 !py-2">
+        <div class="flex items-center gap-2 px-4">
+          <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
+            <span class="menos material-symbols-outlined text-base">remove</span>
+          </button>
+
+          <input type="text" class="inputcantidad w-20 px-2 text-center" value="1"
+            oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)">
+
+          <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
+            <span class="mas material-symbols-outlined text-base">add</span>
+          </button>
+        </div>
+      </td>
+
+
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
       <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>`);

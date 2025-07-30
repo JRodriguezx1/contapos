@@ -2,9 +2,10 @@
 <div class="box clientes">
     
         <?php include __DIR__. "/../../templates/alertas.php"; ?>
-        <h4 class="text-gray-600 mb-12 mt-4">Gestion de clientes</h4>
-        <button id="crearCliente" class="btn-md btn-blue mb-4"> + Crear Cliente</button>
-        <button id="crearDireccion" class="btn-xs btn-light mb-4"> + Crear Direccion</button>
+        <h4 class="text-gray-600 mb-12 mt-4">Gestiòn de clientes</h4>
+        <button id="crearCliente" class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]"> + Crear Cliente</button>
+        <button id="crearDireccion" class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px]"> + Crear Cliente</button>
+        
         <table class="display responsive nowrap tabla" width="100%" id="tablaClientes">
             <thead>
                 <tr>
@@ -48,21 +49,21 @@
                 <div class="formulario__campo">
                     <label class="formulario__label" for="nombre">Nombre</label>
                     <div class="formulario__dato">
-                        <input class="formulario__input" type="text" placeholder="Nombre del cliente" id="nombre" name="nombre" value="<?php echo $crearcliente->nombre??'';?>" required>
-                        <label data-num="28" class="count-charts" for="">28</label>
+                        <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del cliente" id="nombre" name="nombre" value="<?php echo $crearcliente->nombre??'';?>" required>
+                        <!-- <label data-num="28" class="count-charts" for="">28</label> -->
                     </div>
                 </div>
 
                 <div class="formulario__campo">
                     <label class="formulario__label" for="apellido">Apellido</label>
                     <div class="formulario__dato">
-                        <input class="formulario__input" type="text" placeholder="Apellido del cliente" id="apellido" name="apellido" value="<?php echo $crearcliente->apellido??'';?>" required>
-                        <label data-num="28" class="count-charts" for="">28</label>
+                        <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Apellido del cliente" id="apellido" name="apellido" value="<?php echo $crearcliente->apellido??'';?>" required>
+                        <!-- <label data-num="28" class="count-charts" for="">28</label> -->
                     </div>
                 </div>
                 <div class="formulario__campo">
                     <label class="formulario__label" for="tipodocumento">Tipo de documento</label>
-                    <select class="formulario__select" id="tipodocumento" name="tipodocumento" required>
+                    <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipodocumento" name="tipodocumento" required>
                         <option value="" disabled selected>-Seleccionar-</option>
                         <option value="1">Registro civil</option>
                         <option value="2">Tarjeta de identidad</option>
@@ -79,26 +80,26 @@
                 
                 
                 <div class="formulario__campo">
-                    <label class="formulario__label" for="identificacion">Identificacion</label>
-                    <input class="formulario__input" type="text" min="0" placeholder="Identificacion del cliente" id="identificacion" name="identificacion" value="<?php echo $crearcliente->identificacion??'';?>" required>
+                    <label class="formulario__label" for="identificacion">Identificación</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" min="0" placeholder="Identificacion del cliente" id="identificacion" name="identificacion" value="<?php echo $crearcliente->identificacion??'';?>" required>
                 </div>
 
                 <div class="formulario__campo">
-                    <label class="formulario__label" for="telefono">telefono</label>
-                    <input class="formulario__input" type="text" minlength="7" placeholder="telefono del cliente" id="telefono" name="telefono" value="<?php echo $crearcliente->telefono??'';?>" required>
+                    <label class="formulario__label" for="telefono">Teléfono</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" minlength="7" placeholder="telefono del cliente" id="telefono" name="telefono" value="<?php echo $crearcliente->telefono??'';?>" required>
                 </div>
 
                 <div class="formulario__campo">
                     <label class="formulario__label" for="email">Correo Electrónico</label>
                     <div class="formulario__dato">
-                        <input class="formulario__input" type="email" placeholder="Ingresa correo electrónico" id="email" name="email" value="<?php echo $crearcliente->email ?? '';?>" required>
-                        <label data-num="50" class="count-charts" for="">50</label>
+                        <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Ingresa correo electrónico" id="email" name="email" value="<?php echo $crearcliente->email ?? '';?>" required>
+                        <!-- <label data-num="50" class="count-charts" for="">50</label> -->
                     </div>
                 </div>
                 
                 <div class="formulario__campo">
-                    <label class="formulario__label" for="fecha_nacimiento">Fecha de nacimiento</label>
-                    <input class="formulario__input" type="date" placeholder="Fecha de nacimiento del cliente" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo $crearcliente->fecha_nacimiento??'';?>">
+                    <label class="formulario__label" for="fecha_nacimiento">Fecha de Nacimiento</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="date" placeholder="Fecha de nacimiento del cliente" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo $crearcliente->fecha_nacimiento??'';?>">
                 </div>
 
                 <!--
@@ -139,15 +140,15 @@
                 <div class="masopciones"></div>
                 
                 <div class="text-right">
-                    <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-                    <input id="btnEditarCrearCliente" class="btn-md btn-blue" type="submit" value="Crear">
+                    <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="salir">Salir</button>
+                    <input id="btnEditarCrearCliente" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Crear">
                 </div>
             </form>
         </dialog><!--fin crear/editar cliente-->
 
 
         <dialog class="midialog-sm p-5" id="miDialogoCrearDireccion">
-            <h4 id="modalDireccion" class="font-semibold text-gray-700 mb-4">Crear Direccion</h4>
+            <h4 id="modalDireccion" class="font-semibold text-gray-700 mb-4">Crear Dirección</h4>
             <div id="divmsjalerta2"></div>
             <form id="formCrearUpdateDireccion" class="formulario" action="/admin/direcciones/crear" method="POST">
                 
@@ -156,7 +157,7 @@
                     <div class="sm:col-span-6">
                         <label class="formulario__label" for="selectcliente">Seleccionar Cliente</label>
                         <div class="mt-2">
-                            <select id="selectcliente" name="idcliente" class=" w-full" multiple="multiple" required>
+                            <select id="selectcliente" name="idcliente" class=" bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                                 <?php foreach($clientes as $cliente): ?>
                                     <?php if($cliente->id > 1){ ?>
                                         <option value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
@@ -169,7 +170,7 @@
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="tarifa">Tarifa</label>
                         <div class="mt-2">
-                            <select id="tarifa" name="idtarifa" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="tarifa" name="idtarifa" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($tarifas as $tarifa): ?>
                                 <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre;?></option>
@@ -181,31 +182,31 @@
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="departamento">Departamento</label>
                         <div class="formulario__dato mt-2">
-                            <input type="text" placeholder="Departamento o region" id="departamento" name="departamento" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="28" class="count-charts" for="">28</label>
+                            <input type="text" placeholder="Departamento o region" id="departamento" name="departamento" value="" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <!-- <label data-num="28" class="count-charts" for="">28</label> -->
                         </div>
                     </div>
 
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="ciudad">Ciudad</label>
                         <div class="formulario__dato mt-2">
-                            <input type="text" placeholder="ciudad de residencia" id="ciudad" name="ciudad" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="28" class="count-charts" for="">28</label>
+                            <input type="text" placeholder="ciudad de residencia" id="ciudad" name="ciudad" value="" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <!-- <label data-num="28" class="count-charts" for="">28</label> -->
                         </div>
                     </div>
 
                     <div class="sm:col-span-3">
-                        <label class="formulario__label" for="direccion">Direccion</label>
+                        <label class="formulario__label" for="direccion">Dirección</label>
                         <div class="formulario__dato mt-2">
-                            <input type="text" placeholder="direccion de vivienda" id="direccion" name="direccion" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="36" class="count-charts" for="">36</label>
+                            <input type="text" placeholder="direccion de vivienda" id="direccion" name="direccion" value="" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <!-- <label data-num="36" class="count-charts" for="">36</label> -->
                         </div>
                     </div>
                 </div>
                 
                 <div class="text-right">
-                    <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-                    <input id="btnEditarCrearDireccion" class="btn-md btn-blue" type="submit" value="Crear">
+                    <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="salir">Salir</button>
+                    <input id="btnEditarCrearDireccion" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Crear">
                 </div>
             </form>
         </dialog><!--fin crear/editar direccion-->
@@ -224,7 +225,7 @@
                     <div class="sm:col-span-6">
                         <label class="formulario__label" for="direcciones">Seleccionar direcciones</label>
                         <div class="mt-2">
-                            <select id="selectdirecciones" name="direcciones" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="selectdirecciones" name="direcciones" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 
                             </select>  
@@ -233,7 +234,7 @@
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="tarifa">Tarifa</label>
                         <div class="mt-2">
-                            <select id="uptarifa" name="tarifa" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+                            <select id="uptarifa" name="tarifa" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($tarifas as $tarifa): ?>
                                 <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre;?></option>
@@ -244,29 +245,29 @@
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="departamento">Departamento</label>
                         <div class="formulario__dato mt-2">
-                            <input type="text" placeholder="Departamento o region" id="updepartamento" name="departamento" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="28" class="count-charts" for="">28</label>
+                            <input type="text" placeholder="Departamento o region" id="updepartamento" name="departamento" value="" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <!-- <label data-num="28" class="count-charts" for="">28</label> -->
                         </div>
                     </div>
                     <div class="sm:col-span-3">
                         <label class="formulario__label" for="ciudad">Ciudad</label>
                         <div class="formulario__dato mt-2">
-                            <input type="text" placeholder="ciudad de residencia" id="upciudad" name="ciudad" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="28" class="count-charts" for="">28</label>
+                            <input type="text" placeholder="ciudad de residencia" id="upciudad" name="ciudad" value="" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <!-- <label data-num="28" class="count-charts" for="">28</label> -->
                         </div>
                     </div>
                     <div class="sm:col-span-3">
-                        <label class="formulario__label" for="direccion">Direccion</label>
+                        <label class="formulario__label" for="direccion">Dirección</label>
                         <div class="formulario__dato mt-2">
-                            <input type="text" placeholder="direccion de vivienda" id="updireccion" name="direccion" value="" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
-                            <label data-num="36" class="count-charts" for="">36</label>
+                            <input type="text" placeholder="direccion de vivienda" id="updireccion" name="direccion" value="" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <!-- <label data-num="36" class="count-charts" for="">36</label> -->
                         </div>
                     </div>
                 </div>
                 
                 <div class="text-right">
-                    <button id="btnRemoveDireccion" class="btn-md btn-red" type="submit" value="Eliminar">Eliminar</button>
-                    <input id="btnUpDireccion" class="btn-md btn-blue" type="submit" value="Actualizar">
+                    <button id="btnRemoveDireccion" class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="submit" value="Eliminar">Eliminar</button>
+                    <input id="btnUpDireccion" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Actualizar">
                 </div>
             </form>
         </dialog><!--fin actualizar direccion-->
