@@ -1,4 +1,4 @@
-<h4 class="text-gray-600 text-center mb-4">Gestion de empleado</h4>
+<h4 class="text-gray-600 text-center mb-4">Gestion De Empleado</h4>
 <button id="crearempleado" class="btn-md btn-blueintense mb-1">Crear Empleado</button>
 <table class="display responsive nowrap tabla" width="100%" id="tablaempleados">
     <thead>
