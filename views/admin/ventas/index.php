@@ -56,7 +56,7 @@
             </div>
           </button>
           <button class="btn-md btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Otros</button>
-          <button id="facturarA" class="btn-md btn-md btn-blue !py-4 !px-6 !w-[140px]">Facturar A:</button>
+          <button id="facturarA" class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px]">Facturar A:</button>
         </div>
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
