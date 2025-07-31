@@ -200,6 +200,8 @@ class ventascontrolador{
 
  //////////////// cuando de cotizacion o guardada pasa a orden pagada /////////////////
   public static function facturarCotizacion(){
+    $invPro = true;
+    $invSub = true;
     session_start();
     isadmin();
     $alertas = [];
@@ -228,7 +230,6 @@ class ventascontrolador{
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
     //////// sumar los subproductos repetidos
-    $invPro = true;
     $reduceSub = [];
     foreach($descontarSubproductos as $idx => $obj){
       if(!isset($reduceSub[$obj->id_subproducto])){
