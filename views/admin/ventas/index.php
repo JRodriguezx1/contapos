@@ -38,42 +38,46 @@
         </div>
       </div>
 
-    
-      <div class="formulario__dato justify-center">
-          <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Buscar nombre de producto/SKU/escanear codigo" id="buscarproducto" name="buscarproducto" value="" required>
-          <div class="grid place-items-center  rounded-r-lg border-solid border border-gray-300 !border-l-0 hover:cursor-pointer">
-            <span class="material-symbols-outlined pr-1">search</span>
-          </div>
-      </div>
-      
-      <div class="mt-4">
-        <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
-          <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
-            <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
-            <?php foreach($categorias as $categoria): ?>
-              <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
+      <div id="hacker-list" class="paginadorventas">
+        <div class="formulario__dato justify-center">
+            <input class="search bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Buscar nombre de producto/SKU/escanear codigo" id="buscarproducto" name="buscarproducto" value="" required>
+            <div class="grid place-items-center  rounded-r-lg border-solid border border-gray-300 !border-l-0 hover:cursor-pointer">
+              <span class="material-symbols-outlined pr-1">search</span>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+          <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
+            <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
+              <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
+              <?php foreach($categorias as $categoria): ?>
+                <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
+              <?php endforeach; ?>
+            </div>
+          </button>
+          <button class="btn-md btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Otros</button>
+          <button id="facturarA" class="btn-md btn-md btn-blue !py-4 !px-6 !w-[140px]">Facturar A:</button>
+        </div>
+
+        <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
+            <?php foreach($productos as $producto): ?>
+            <div id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
+                <img 
+                    src="/build/img/<?php echo $producto->foto;?>" 
+                    onerror="this.onerror=null;this.src='/build/img/default-product.png';"
+                    class="inline h-24 min-w-24 w-24 object-contain rounded-md" 
+                    alt="Imagen de <?php echo $producto->nombre; ?>">
+                
+                <div class="flex flex-col justify-between grow overflow-hidden">
+                    <p class="card-category m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
+                    <p class="card-title m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
+                </div> 
+            </div>
             <?php endforeach; ?>
-          </div>
-        </button>
-        <button class="btn-md btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Otros</button>
+        </div> <!-- fin contenedor de productos -->
+        <ul class="pagination flex justify-center gap-2 mt-4"></ul>
       </div>
 
-      <div id="productos" class="grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
-          <?php foreach($productos as $producto): ?>
-          <div id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
-              <img 
-                  src="/build/img/<?php echo $producto->foto;?>" 
-                  onerror="this.onerror=null;this.src='/build/img/default-product.png';"
-                  class="inline h-24 min-w-24 w-24 object-contain rounded-md" 
-                  alt="Imagen de <?php echo $producto->nombre; ?>">
-              
-              <div class="flex flex-col justify-between grow overflow-hidden">
-                  <p class="m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre; ?></p>
-                  <p class="m-0 text-blue-600 font-semibold"><?php echo $producto->precio_venta; ?></p>
-              </div> 
-          </div>
-          <?php endforeach; ?>
-      </div> <!-- fin contenedor de productos -->
     </div> <!-- fin primera columna -->
 
     <div class="basis-1/3">
@@ -439,6 +443,41 @@
           </div>
           
       </form>
+  </dialog>
+
+  <!-- MODAL DATOS DEL ADQUIRIENTE -->
+  <dialog class="midialog-sm p-5" id="miDialogoFacturarA">
+    <h4 class=" text-gray-700 font-semibold">Facturar A:</h4>
+    <form id="formFacturarA" class="formulario">  
+      <div class="border-b border-gray-900/10 pb-10 mb-3">
+        
+        <p class="mt-2 text-xl text-gray-600">Información del adquiriente.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+          <div class="sm:col-span-3">
+            <label for="dato1" class="block text-2xl font-medium text-gray-600">Tipo</label>
+            <div class="mt-2">
+              <input type="text" name="dato1" id="dato1" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Tipo de documento" required>
+            </div> 
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="dato2" class="block text-2xl font-medium text-gray-600">Nombre</label>
+            <div class="mt-2">
+              <input type="text" name="dato2" id="dato2" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del cliente" required>
+            </div> 
+          </div>
+
+        </div>
+
+      </div>
+        
+      <div class="text-right">
+          <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
+          <input class="btn-md btn-blue" type="submit" value="Confirmar">
+      </div>
+    </form>
   </dialog>
   
 </div>

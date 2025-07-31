@@ -4,6 +4,7 @@
     const btnAddDir = document.querySelector('#adddir') as HTMLElement;
     const selectCliente = document.querySelector('#selectCliente') as HTMLSelectElement;
     const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
+    const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
     const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
@@ -16,6 +17,7 @@
     const btnfacturar = document.querySelector('#btnfacturar');
     const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
     const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
+    const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
     const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
@@ -234,6 +236,12 @@
         nombretarifa = objtarifa?.nombre;
       }
     }
+
+    ///////////////////// evento al btn facturar A /////////////////////
+    facturarA.addEventListener('click', (e:Event)=>{
+      miDialogoFacturarA.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+    });
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
@@ -486,13 +494,14 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoVaciar || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoAddDir || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoVaciar || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoFacturarA || f === miDialogoAddDir || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
         miDialogoVaciar.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
         miDialogoAddCliente.close();
         miDialogoAddDir.close();
+        miDialogoFacturarA.close();
         document.removeEventListener("click", cerrarDialogoExterno);
         if((f as HTMLInputElement).closest('.siguardar'))procesarpedido('Guardado', '1');
         if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
