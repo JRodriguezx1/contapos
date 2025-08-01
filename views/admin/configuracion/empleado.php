@@ -20,7 +20,7 @@
             <td class=""><?php echo $value->nombre.' '.$value->apellido;?></td> 
             <td class="" ><div class="text-center"><img style="width: 40px;" src="/build/img/<?php echo $value->img;?>" alt=""></div></td> 
             <td class=""><?php echo $value->movil;?></td>
-            <td class=""><?php echo $value->email;?></td>
+            <td class=""><?php echo $value->email;?></td> 
             <td class=""><?php echo $value->cedula;?></td>
             <td class=""><?php echo $value->perfil==1?'Empleado':($value->perfil==2?'Admin':'Propietario');?></td>
             <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
