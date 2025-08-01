@@ -15,7 +15,11 @@
       filtrocategorias.forEach(element => {
         element.addEventListener('click', (e)=>{
           const categoria:string = (e.target as HTMLElement).dataset.categoria!;
-          hackerList.filter();
+          console.log(categoria);
+          hackerList.filter((item: any)=>{
+            
+            return item.values().categoria === categoria}
+          );
         });
       });
 
