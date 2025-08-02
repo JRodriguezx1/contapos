@@ -394,15 +394,16 @@
     </div>
 
 
-    <dialog class="midialog-md p-4" id="miDialogoFacturar">
-      <h4 class="text-3xl text-gray-600 font-semibold m-0">Registro de pago</h4>
+    <dialog class="midialog-md !p-12" id="miDialogoFacturar">
+      <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
+      <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
           <input id="idcita" name="id" type="hidden">
-          <p class="text-gray-600 text-3xl text-center font-light m-0">Total: $<span id="totalPagar" class="text-gray-700 font-semibold">0</span></p>
+          <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">0</span></p>
           <div class="flex justify-center gap-12 mt-8">
-            <div class="formulario__campo w-60">
+            <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
-              <select class="formulario__select !border-gray-300" name="caja" id="caja" required>
+              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" id="caja" required>
                   <!--<option value="" disabled selected>-Seleccionar-</option>
                   <option value="1">Caja principal</option>
                   <option value="2">Caja bodega</option>-->
@@ -411,9 +412,9 @@
                   <?php endforeach; ?>
               </select>
             </div>
-            <div class="formulario__campo w-60">
+            <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select class="formulario__select !border-gray-300" name="facturador" id="facturador" required>
+              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" id="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -423,14 +424,14 @@
           </div>
           <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">
-            <label class="etiqueta text-gray-500" for="first">Elegir metodo de pago</label>
+            <label class="etiqueta text-indigo-700" for="first">Elegir metodo de pago</label>
             <div class="wrapper">
               <div class="wrapper-content">
-                <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto">
+                <div id="mediospagos" class="content flex flex-col items-center w-1/2 mx-auto text-center">
                   <?php foreach($mediospago as $index => $value):?>
-                    <div class="mb-4">
-                      <label class="text-gray-700 text-xl"><?php echo $value->mediopago??'';?>: </label>
-                      <input id="<?php echo $value->id??'';?>" class="w-44 py-1 px-3 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500 text-xl mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                    <div class="mb-4 text-center">
+                      <label class="text-gray-700 text-xl text-center leading-relaxed"><?php echo $value->mediopago??'';?>: </label>
+                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
                     </div>
                   <?php endforeach; ?>
                 </div>
@@ -438,13 +439,13 @@
             </div>
           </div> <!-- fin accordion  -->
 
-          <div class="mx-auto w-40">
-            <div class="formulario__campo">
-                <label class="formulario__label" for="recibio">Recibido: </label>
-                <input class="formulario__input !text-2xl !border-0 !border-b-2 !border-blue-500 !rounded-none" id="recibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+          <div class="mx-auto">
+            <div class="formulario__campo w-80 mx-auto">
+                <label class="formulario__label leading-relaxed text-center" for="recibio">Efectivo Recibido</label>
+                <input class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" id="recibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
             </div>
-            <div class="">
-                <p class="text-center text-gray-500">Cambio: <span id="cambio" class="text-gray-700 font-semibold">$0</span></p>
+            <div class="flex flex-col items-center">
+                <p class="text-center formulario__label">Devolver: <span id="cambio" class="text-gray-700 font-semibold text-2xl">$0</span></p>
             </div>
           </div>
           
@@ -453,8 +454,8 @@
           </div>
 
           <div class="self-end">
-              <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
-              <input class="btn-md btn-blue" type="submit" value="Pagar">
+              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[145px]" type="button" value="Cancelar">Cancelar</button>
+              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[145px]" type="submit" value="Pagar">
           </div>
           
       </form>

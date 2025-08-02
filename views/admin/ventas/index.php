@@ -46,18 +46,32 @@
             </div>
         </div>
         
-        <div class="mt-4">
-          <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
-            <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
-              <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
+        <div class="mt-4 flex gap-4">
+          <!-- Botón Categorías -->
+          <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
+            <i class="fas fa-folder-open"></i>
+            Categorías
+            <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200 z-10">
+              <a class="text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
               <?php foreach($categorias as $categoria): ?>
-                <a class=" text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
+                <a class="text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
               <?php endforeach; ?>
             </div>
           </button>
-          <button class="btn-md btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Otros</button>
-          <button id="facturarA" class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px]">Adquiriente</button>
+
+          <!-- Botón Otros -->
+          <button class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
+            <i class="fas fa-th-large"></i>
+            Otros
+          </button>
+
+          <!-- Botón Adquiriente -->
+          <button id="facturarA" class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
+            <i class="fas fa-user"></i>
+            Adquiriente
+          </button>
         </div>
+
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
             <?php foreach($productos as $producto): ?>
@@ -147,10 +161,21 @@
           </div>
         </div>
       </div>
-      <div class="text-center p-4">
-        <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">Vaciar</button>
-        <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">Guardar</button>
-        <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">Facturar</button>
+      <div class="text-center p-4 flex justify-center gap-x-8">
+        <button id="btnvaciar" class="btn-md !flex !flex-row btn-red !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
+          <span class="material-symbols-outlined text-2xl">delete</span>
+          <span class="font-medium text-2xl">Vaciar</span>
+        </button>
+
+        <button id="btnguardar" class="btn-md !flex !flex-row btn-turquoise !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
+          <span class="material-symbols-outlined text-2xl">save</span>
+          <span class="font-medium text-2xl">Guardar</span>
+        </button>
+
+        <button id="btnfacturar" class="btn-md !flex !flex-row btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
+          <span class="material-symbols-outlined text-2xl">receipt_long</span>
+          <span class="font-medium text-2xl">Facturar</span>
+        </button>
       </div>
     </div> <!-- fin segunda columna -->
   </div>
@@ -379,7 +404,7 @@
       </div>
   </dialog>
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
-  <dialog class="midialog-md p-4" id="miDialogoFacturar">
+  <dialog class="midialog-md !p-12" id="miDialogoFacturar">
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
       <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
