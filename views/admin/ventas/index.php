@@ -72,7 +72,7 @@
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
             <?php foreach($productos as $producto): ?>
-            <div data-categoria="<?php echo $producto->categoria;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
@@ -174,6 +174,25 @@
           <span class="font-medium text-2xl">Facturar</span>
         </button>
       </div>
+
+      <!--
+      <div class="text-center p-4">
+        <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">
+          <span class="material-symbols-outlined text-2xl">delete</span>
+          <span class="font-medium text-2xl">Vaciar</span>
+        </button>
+
+        <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">
+          <span class="material-symbols-outlined text-2xl">save</span>
+          <span class="font-medium text-2xl">Guardar</span>
+        </button>
+
+        <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">
+          <span class="material-symbols-outlined text-2xl">receipt_long</span>
+          <span class="font-medium text-2xl">Facturar</span>
+        </button>
+      </div>
+       -->
     </div> <!-- fin segunda columna -->
   </div>
 
@@ -590,4 +609,40 @@
       </div>
   </form>
 </dialog> 
+
+<!-- MODAL OTROS PRODUCTOS -->
+  <dialog class="midialog-sm p-5" id="miDialogoOtrosProductos">
+    <h4 class=" text-gray-700 font-semibold">Facturar A:</h4>
+    <form id="formOtrosProductos" class="formulario">  
+      <div class="border-b border-gray-900/10 pb-10 mb-3">
+        
+        <p class="mt-2 text-xl text-gray-600">Información del adquiriente.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+          <div class="sm:col-span-3">
+            <label for="dato1" class="block text-2xl font-medium text-gray-600">Tipo</label>
+            <div class="mt-2">
+              <input type="text" name="dato1" id="dato1" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Tipo de documento" required>
+            </div> 
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="dato2" class="block text-2xl font-medium text-gray-600">Nombre</label>
+            <div class="mt-2">
+              <input type="text" name="dato2" id="dato2" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del cliente" required>
+            </div> 
+          </div>
+
+        </div>
+
+      </div>
+        
+      <div class="text-right">
+          <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
+          <input class="btn-md btn-blue" type="submit" value="Confirmar">
+      </div>
+    </form>
+  </dialog>
+  
 </div>
