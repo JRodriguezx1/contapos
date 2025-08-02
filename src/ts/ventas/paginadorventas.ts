@@ -1,7 +1,7 @@
 (()=>{
     if(document.querySelector('.paginadorventas')){
 
-      const filtrocategorias = document.querySelectorAll('.filtrocategorias');
+      const filtrocategorias = document.querySelectorAll('.filtrocategorias');  //los btns de las categorias
 
       var options = {
         valueNames: [ 'card-producto', { data: ['categoria', 'code'] }],

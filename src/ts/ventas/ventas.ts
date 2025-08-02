@@ -7,6 +7,7 @@
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
+    const btnotros = document.querySelector('#btnotros') as HTMLButtonElement;  //btn de otros
     const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
@@ -17,6 +18,7 @@
     const btnfacturar = document.querySelector('#btnfacturar');
     const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
     const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
+    const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
     const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
@@ -237,9 +239,22 @@
       }
     }
 
+    /////////////////////Evento al formulario de agregar otros productos //////////////////////
+    document.querySelector('#formOtrosProductos')?.addEventListener('submit', e=>{
+      e.preventDefault();
+      
+      actualizarCarrito("-1", 1, true);
+    });
+
     ///////////////////// evento al btn facturar A /////////////////////
     facturarA.addEventListener('click', (e:Event)=>{
       miDialogoFacturarA.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    ///////////////////// Evento al btn Otros /////////////////////////
+    btnotros.addEventListener('click', (e:Event)=>{
+      miDialogoOtrosProductos.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
@@ -298,6 +313,7 @@
         (tablaventa?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
+        
         const a:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
           id: producto?.id!,
           idproducto: producto?.id!,
@@ -311,6 +327,7 @@
           descuento: 0,
           total: Number(producto.precio_venta)
         }
+        
         carrito = [...carrito, a];
         valorCarritoTotal();
         printProduct(id);
@@ -494,7 +511,7 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoVaciar || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoFacturarA || f === miDialogoAddDir || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoVaciar || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
         miDialogoVaciar.close();
         miDialogoGuardar.close();
@@ -502,6 +519,7 @@
         miDialogoAddCliente.close();
         miDialogoAddDir.close();
         miDialogoFacturarA.close();
+        miDialogoOtrosProductos.close();
         document.removeEventListener("click", cerrarDialogoExterno);
         if((f as HTMLInputElement).closest('.siguardar'))procesarpedido('Guardado', '1');
         if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();

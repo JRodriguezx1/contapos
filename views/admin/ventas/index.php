@@ -57,7 +57,7 @@
           </button>
 
           <!-- Botón Otros -->
-          <button class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
+          <button id="btnotros" class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
             <i class="fas fa-th-large"></i>
             Otros
           </button>
@@ -612,7 +612,7 @@
 
 <!-- MODAL OTROS PRODUCTOS -->
   <dialog class="midialog-sm p-5" id="miDialogoOtrosProductos">
-    <h4 class=" text-gray-700 font-semibold">Facturar A:</h4>
+    <h4 class=" text-gray-700 font-semibold">Otros:</h4>
     <form id="formOtrosProductos" class="formulario">  
       <div class="border-b border-gray-900/10 pb-10 mb-3">
         
@@ -620,27 +620,33 @@
 
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-          <div class="sm:col-span-3">
-            <label for="dato1" class="block text-2xl font-medium text-gray-600">Tipo</label>
-            <div class="mt-2">
-              <input type="text" name="dato1" id="dato1" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Tipo de documento" required>
-            </div> 
-          </div>
-
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-6">
             <label for="dato2" class="block text-2xl font-medium text-gray-600">Nombre</label>
             <div class="mt-2">
               <input type="text" name="dato2" id="dato2" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del cliente" required>
             </div> 
           </div>
 
-        </div>
+          <div class="sm:col-span-2">
+            <label for="dato2" class="block text-2xl font-medium text-gray-600">Cantidad</label>
+            <div class="mt-2">
+              <input type="number" name="dato2" id="dato2" autocomplete="given-name" min="1" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Cantidad" required>
+            </div> 
+          </div>
 
+          <div class="sm:col-span-2">
+            <label for="dato2" class="block text-2xl font-medium text-gray-600">Precio</label>
+            <div class="mt-2">
+              <input type="number" name="dato2" id="dato2" autocomplete="given-name" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Valor producto" required>
+            </div> 
+          </div>
+
+        </div>
       </div>
         
       <div class="text-right">
           <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
-          <input class="btn-md btn-blue" type="submit" value="Confirmar">
+          <input class="btn-md btn-blue" type="submit" value="Agregar">
       </div>
     </form>
   </dialog>
