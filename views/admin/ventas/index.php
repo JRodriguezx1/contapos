@@ -46,6 +46,7 @@
             </div>
         </div>
         
+<<<<<<< HEAD
         <div class="mt-4 flex gap-4">
           <!-- Botón Categorías -->
           <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
@@ -55,6 +56,14 @@
               <a class="text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
               <?php foreach($categorias as $categoria): ?>
                 <a class="text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
+=======
+        <div class="mt-4">
+          <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
+            <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
+              <a data-categoria="Todos" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
+              <?php foreach($categorias as $categoria): ?>
+                <a data-categoria="<?php echo $categoria->nombre;?>" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
+>>>>>>> cdeb47d9590754e7a88bc72a28dfbbb591c70e5a
               <?php endforeach; ?>
             </div>
           </button>
@@ -75,7 +84,7 @@
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
             <?php foreach($productos as $producto): ?>
-            <div id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
+            <div data-categoria="<?php echo $producto->categoria;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
@@ -83,8 +92,8 @@
                     alt="Imagen de <?php echo $producto->nombre; ?>">
                 
                 <div class="flex flex-col justify-between grow overflow-hidden">
-                    <p class="card-category m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
-                    <p class="card-title m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
+                    <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
+                    <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div> 
             </div>
             <?php endforeach; ?>
