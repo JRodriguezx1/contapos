@@ -35,6 +35,14 @@
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', valorMax = 0;
 
+    let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
+      id: 0,
+      nombre: '',
+      cantidad: 0,
+      valorunidad: 0,
+      total: 0
+    }
+
     type productsapi = {
       id:string,
       idcategoria: string,
@@ -42,7 +50,7 @@
       foto: string,
       impuesto: string,
       marca: string,
-      tipoproducto: string,
+      tipoproducto: string, // 0 = simple,  1 = compuesto
       codigo: string,
       descripcion: string,
       peso: string,
@@ -239,13 +247,6 @@
       }
     }
 
-    /////////////////////Evento al formulario de agregar otros productos //////////////////////
-    document.querySelector('#formOtrosProductos')?.addEventListener('submit', e=>{
-      e.preventDefault();
-      
-      actualizarCarrito("-1", 1, true);
-    });
-
     ///////////////////// evento al btn facturar A /////////////////////
     facturarA.addEventListener('click', (e:Event)=>{
       miDialogoFacturarA.showModal();
@@ -256,6 +257,46 @@
     btnotros.addEventListener('click', (e:Event)=>{
       miDialogoOtrosProductos.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    /////////////////////Evento al formulario de agregar otros productos //////////////////////
+    document.querySelector('#formOtrosProductos')?.addEventListener('submit', (e:Event)=>{
+      e.preventDefault();
+      const formelements = (e.target as HTMLFormElement).elements;
+      const cantidadotros = Number((formelements.namedItem('cantidadotros') as HTMLInputElement).value);
+      const preciootros = Number((formelements.namedItem('preciootros') as HTMLInputElement).value);
+      
+      otrosproductos!.id += -1 ;
+      otrosproductos!.nombre = (formelements.namedItem('nombreotros') as HTMLInputElement).value;
+      otrosproductos!.cantidad = cantidadotros;
+      otrosproductos!.valorunidad = preciootros/cantidadotros;
+      otrosproductos!.total = preciootros;
+      
+      products = [...products, {
+        id: otrosproductos!.id+'', 
+        idcategoria: '-1',
+        nombre: otrosproductos!.nombre,
+        foto: 'na',
+        impuesto: '0',
+        marca: 'na',
+        tipoproducto: '-1', // 0 = simple,  1 = compuesto
+        codigo: '-1',
+        descripcion: 'na',
+        peso: 'na',
+        medidas: 'na',
+        color: 'na',
+        funcion: 'na',
+        uso: 'na',
+        fabricante: 'na',
+        garantia: 'na',
+        stock: '0',
+        categoria: 'na',
+        precio_compra: 'na',
+        precio_venta: otrosproductos!.valorunidad+'',
+        fecha_ingreso: ''
+      }];
+
+      actualizarCarrito(otrosproductos.id+'', 1, false);
     });
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
@@ -297,6 +338,7 @@
 
     function actualizarCarrito(id:string, cantidad:number, control:boolean){
       const index = carrito.findIndex(x=>x.idproducto==id); //devuelve el index si el producto existe
+      
       if(index>-1){
         if(cantidad == 0){
           carrito[index].cantidad = 1;
@@ -314,19 +356,19 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-        const a:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
-          id: producto?.id!,
-          idproducto: producto?.id!,
-          tipoproducto: producto.tipoproducto,
-          idcategoria: producto.idcategoria,
-          nombreproducto: producto.nombre,
-          valorunidad: producto.precio_venta,
-          cantidad: 1,
-          subtotal: 0, //este es el subtotal del producto
-          impuesto: 0,
-          descuento: 0,
-          total: Number(producto.precio_venta)
-        }
+          var a:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
+            id: producto?.id!,
+            idproducto: producto?.id!,
+            tipoproducto: producto.tipoproducto,
+            idcategoria: producto.idcategoria,
+            nombreproducto: producto.nombre,
+            valorunidad: producto.precio_venta,
+            cantidad: 1,
+            subtotal: 0, //este es el subtotal del producto
+            impuesto: 0,
+            descuento: 0,
+            total: Number(producto.precio_venta)
+          }
         
         carrito = [...carrito, a];
         valorCarritoTotal();

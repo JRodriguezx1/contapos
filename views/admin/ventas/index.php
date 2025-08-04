@@ -616,28 +616,28 @@
     <form id="formOtrosProductos" class="formulario">  
       <div class="border-b border-gray-900/10 pb-10 mb-3">
         
-        <p class="mt-2 text-xl text-gray-600">Información del adquiriente.</p>
+        <p class="mt-2 text-xl text-gray-600">Agregar producto/servicio personalizado.</p>
 
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
           <div class="sm:col-span-6">
-            <label for="dato2" class="block text-2xl font-medium text-gray-600">Nombre</label>
+            <label for="nombreotros" class="block text-2xl font-medium text-gray-600">Nombre</label>
             <div class="mt-2">
-              <input type="text" name="dato2" id="dato2" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del cliente" required>
+              <input type="text" name="nombreotros" id="nombreotros" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del producto/servicio" required>
             </div> 
           </div>
 
           <div class="sm:col-span-2">
-            <label for="dato2" class="block text-2xl font-medium text-gray-600">Cantidad</label>
+            <label for="cantidadotros" class="block text-2xl font-medium text-gray-600">Cantidad</label>
             <div class="mt-2">
-              <input type="number" name="dato2" id="dato2" autocomplete="given-name" min="1" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Cantidad" required>
-            </div> 
+              <input type="number" name="cantidadotros" id="cantidadotros" autocomplete="given-name" min="1" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Cantidad" required>
+            </div>
           </div>
 
           <div class="sm:col-span-2">
-            <label for="dato2" class="block text-2xl font-medium text-gray-600">Precio</label>
+            <label for="preciootros" class="block text-2xl font-medium text-gray-600">Precio</label>
             <div class="mt-2">
-              <input type="number" name="dato2" id="dato2" autocomplete="given-name" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Valor producto" required>
+              <input type="number" name="preciootros" id="preciootros" autocomplete="given-name" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Valor producto" required>
             </div> 
           </div>
 
