@@ -25,7 +25,8 @@
           </tr>
       </thead>
       <tbody>
-          <?php foreach($productos as $index => $value): ?>
+          <?php foreach($productos as $index => $value): 
+            if($value->visible == 1):?>
           <tr>
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class=" text-center "><img class="inline" style="width: 50px;" src="/build/img/<?php echo $value->foto;?>" alt=""></div></td>
@@ -43,7 +44,7 @@
                     <button class="btn-md btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[18px] leading-none"></i></button>
               </div></td>
           </tr>
-          <?php endforeach; ?>
+          <?php endif; endforeach; ?>
       </tbody>
   </table>
 

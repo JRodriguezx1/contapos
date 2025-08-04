@@ -4,7 +4,7 @@ namespace Model;
 
 class categorias extends ActiveRecord {
     protected static $tabla = 'categorias';
-    protected static $columnasDB = ['id', 'nombre', 'codigo', 'totalproductos', 'foto', 'fechacreacion'];
+    protected static $columnasDB = ['id', 'nombre', 'codigo', 'totalproductos', 'foto', 'fechacreacion', 'visible'];
     
     public function __construct($args = [])
     {
@@ -14,6 +14,7 @@ class categorias extends ActiveRecord {
         $this->totalproductos = $args['totalproductos'] ?? '';
         $this->foto = $args['foto'] ?? '';
         $this->fechacreacion = $args['fechacreacion'] ?? date('Y-m-d');
+        $this->visible = $args['visible']??1;
     }
 
     // Validación para categorias nuevas

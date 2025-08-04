@@ -120,7 +120,7 @@ class ventascontrolador{
                 $obj->idcategoria = 1;
               }
             }
-            //debuguear($carrito);
+
             $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta
             $r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
         
