@@ -296,14 +296,14 @@
         fecha_ingreso: ''
       }];
 
-      actualizarCarrito(otrosproductos.id+'', 1, false);
+      actualizarCarrito(otrosproductos.id+'', 1, false, false);
     });
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.producto');
       if(elementProduct)
-        actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true);
+        actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
     });
 
     function printProduct(id:string){
@@ -331,12 +331,12 @@
 
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
-      <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
+      <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
       tablaventa?.appendChild(tr);
     }
 
 
-    function actualizarCarrito(id:string, cantidad:number, control:boolean){
+    function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean){
       const index = carrito.findIndex(x=>x.idproducto==id); //devuelve el index si el producto existe
       
       if(index>-1){
@@ -349,8 +349,10 @@
         }else{ //cuando el producto se agrega por cantidad
           carrito[index].cantidad = cantidad;
         }
+        console.log(carrito[index].cantidad);
         carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
         valorCarritoTotal();
+        if(stateinput)
         (tablaventa?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
         (tablaventa?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
       }else{  //agregar a carrito si el producto no esta agregado en carrito
@@ -394,21 +396,21 @@
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
       if((e.target as HTMLElement).classList.contains('menos')){
         const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
-        actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false);
+        actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true);
       }
       if((e.target as HTMLElement).classList.contains('inputcantidad')){
         if((e.target as HTMLElement).dataset.event != "eventInput"){
           e.target?.addEventListener('input', (e)=>{
-            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false);
+            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false);
           });
           (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
         }
       }
       if((e.target as HTMLElement).classList.contains('mas')){
         const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
-        actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false);
+        actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true);
       }
-      if((e.target as HTMLElement).classList.contains('eliminarEmpleado') || (e.target as HTMLElement).tagName == "I"){
+      if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
         carrito = carrito.filter(x=>x.idproducto != idProduct);
         valorCarritoTotal();
         tablaventa?.querySelector(`TR[data-id="${idProduct}"]`)?.remove();
