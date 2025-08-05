@@ -320,7 +320,7 @@
           </button>
 
           <input type="text" class="inputcantidad w-20 px-2 text-center" value="1"
-            oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)">
+            >
 
           <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
             <span class="mas material-symbols-outlined text-base">add</span>
@@ -333,7 +333,7 @@
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
       <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
       tablaventa?.appendChild(tr);
-    }
+    } //oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"
 
 
     function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean){
@@ -349,7 +349,7 @@
         }else{ //cuando el producto se agrega por cantidad
           carrito[index].cantidad = cantidad;
         }
-        console.log(carrito[index].cantidad);
+        //console.log(carrito[index].cantidad);
         carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
         valorCarritoTotal();
         if(stateinput)
@@ -401,6 +401,14 @@
       if((e.target as HTMLElement).classList.contains('inputcantidad')){
         if((e.target as HTMLElement).dataset.event != "eventInput"){
           e.target?.addEventListener('input', (e)=>{
+           
+            let val = (e.target as HTMLInputElement).value;
+            val = val.replace(/[^0-9.]/g, '');
+            const partes = val.split('.');
+            if(partes.length > 2)
+              val = partes[0]+'.'+partes.slice(1).join('');
+            console.log(val);
+            
             actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false);
           });
           (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
