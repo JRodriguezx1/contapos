@@ -3,7 +3,7 @@ namespace Model;
 
 class ventas extends ActiveRecord {
     protected static $tabla = 'ventas';
-    protected static $columnasDB = ['id', 'idfactura', 'idproducto', 'tipoproducto', 'nombreproducto', 'valorunidad', 'cantidad', 'subtotal', 'impuesto', 'descuento', 'total', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idfactura', 'idproducto', 'tipoproducto', 'nombreproducto', 'foto', 'valorunidad', 'cantidad', 'subtotal', 'impuesto', 'descuento', 'total', 'dato1', 'dato2'];
     
     public function __construct($args = [])
     {
@@ -12,6 +12,7 @@ class ventas extends ActiveRecord {
         $this->idproducto = $args['idproducto'] ?? '';
         $this->tipoproducto = $args['tipoproducto'] ?? '';
         $this->nombreproducto = $args['nombreproducto'] ?? '';
+        $this->foto = $args['foto'] ?? '';
         $this->valorunidad = $args['valorunidad'] ?? '';
         $this->cantidad = $args['cantidad'] ?? '';
         $this->subtotal = $args['subtotal'] ?? 0;

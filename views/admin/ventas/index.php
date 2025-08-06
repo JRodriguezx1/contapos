@@ -71,7 +71,8 @@
 
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
-            <?php foreach($productos as $producto): ?>
+            <?php foreach($productos as $producto): 
+              if($producto->visible!=0):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
@@ -84,7 +85,7 @@
                     <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div> 
             </div>
-            <?php endforeach; ?>
+            <?php endif; endforeach; ?>
         </div> <!-- fin contenedor de productos -->
         <ul class="pagination flex justify-center gap-2 mt-4"></ul>
       </div>
@@ -424,7 +425,7 @@
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
       <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
-          <input id="idcita" name="id" type="hidden">
+          <div id="divmsjalerta2"></div>
           <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">

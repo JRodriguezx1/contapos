@@ -15,7 +15,7 @@
           <tr>
               <th>N.</th>
               <th>Fecha</th>
-              <th>Cliente</th>
+              <th>Orden</th>
               <th>Factura</th>
               <th>Medio Pago</th>
               <th>Estado</th>
@@ -27,9 +27,9 @@
       <tbody>
           <?php foreach($facturas as $index => $value): ?>
             <tr> 
-              <td class=""><?php echo $index+1;?></td>        
+              <td class=""><?php echo $index+1;?></td>
               <td class=""><?php echo $value->fechapago;?></td> 
-              <td class=""><?php echo $value->cliente;?></td>
+              <td class=""><?php echo $value->id;?></td>
               <td class=""><?php echo $value->id;?></td>
               <td>
                 <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">

@@ -37,11 +37,12 @@
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>">
                     <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
-                        <a class="btn-md btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript text-[18px] leading-none"></i></a>
+                        <a class="btn-xs btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript text-[17px] leading-none"></i></a>
                     <?php endif; ?>
-                    <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[18px] leading-none"></i></button>
-                    <button class="btn-md btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[18px] leading-none"></i></button>
-                    <button class="btn-md btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[18px] leading-none"></i></button>
+                    <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[17px] leading-none"></i></button>
+                    <button class="btn-xs btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[17px] leading-none"></i></button>
+                    <button class="btn-xs btn-light bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
+                    <button class="btn-xs btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[17px] leading-none"></i></button>
               </div></td>
           </tr>
           <?php endif; endforeach; ?>
@@ -96,15 +97,15 @@
         </div>
 
         <div class="formulario__campo preciocompra">
-            <label class="formulario__label" for="preciocompra">Precio Compra</label>
+            <label class="formulario__label" for="preciocompra">Precio compra</label>
             <div class="formulario__dato">
                 <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="preciocompra" type="number" min="0" step="0.01" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
             </div>
         </div>
 
         <div class="formulario__campo">
-            <label class="formulario__label" for="precioventa">Precio venta</label>
-            <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+            <label class="formulario__label" for="precioventa">Precio venta incluido impuesto</label>
+            <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta incluido el impuesto" id="precioventa" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
         </div>
         
         <div class="formulario__campo">

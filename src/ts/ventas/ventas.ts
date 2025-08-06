@@ -30,7 +30,7 @@
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, foto:string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', valorMax = 0;
@@ -46,12 +46,15 @@
     type productsapi = {
       id:string,
       idcategoria: string,
+      idunidadmedida: string,
       nombre: string,
       foto: string,
       impuesto: string,
       marca: string,
       tipoproducto: string, // 0 = simple,  1 = compuesto
+      tipoproduccion: string, //0 = inmediato, 1 = construccion
       codigo: string,
+      unidadmedida: string,
       descripcion: string,
       peso: string,
       medidas: string,
@@ -61,10 +64,14 @@
       fabricante: string,
       garantia: string,
       stock: string,
+      stockminimo: string,
       categoria: string,
+      rendimientoestandar: string,
       precio_compra: string,
       precio_venta: string,
       fecha_ingreso: string,
+      estado: string,
+      visible: string,
       //idservicios:{idempleado:string, idservicio:string}[]
     };
     
@@ -275,12 +282,15 @@
       products = [...products, {
         id: otrosproductos!.id+'', 
         idcategoria: '-1',
+        idunidadmedida: '1',
         nombre: otrosproductos!.nombre,
         foto: 'na',
         impuesto: '0',
         marca: 'na',
         tipoproducto: '-1', // 0 = simple,  1 = compuesto
+        tipoproduccion: '', //0 = inmediato, 1 = construccion
         codigo: '-1',
+        unidadmedida: 'Unidad',
         descripcion: 'na',
         peso: 'na',
         medidas: 'na',
@@ -290,10 +300,14 @@
         fabricante: 'na',
         garantia: 'na',
         stock: '0',
+        stockminimo: '1',
         categoria: 'na',
+        rendimientoestandar: '1',
         precio_compra: 'na',
         precio_venta: otrosproductos!.valorunidad+'',
-        fecha_ingreso: ''
+        fecha_ingreso: '',
+        estado: '1',
+        visible: '1'
       }];
 
       actualizarCarrito(otrosproductos.id+'', 1, false, false);
@@ -340,9 +354,13 @@
       const index = carrito.findIndex(x=>x.idproducto==id); //devuelve el index si el producto existe
       
       if(index>-1){
-        if(cantidad == 0){
-          carrito[index].cantidad = 1;
-          return;
+        if(cantidad <= 0){
+          cantidad = 0;
+          //carrito[index].cantidad = 0;
+          carrito[index].total = 0;
+          /*valorCarritoTotal();
+          (tablaventa?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
+          return;*/
         }
         if(control){ //cuando el producto se agrega desde la lista de productos
           carrito[index].cantidad += cantidad;
@@ -358,12 +376,13 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-          var a:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
+          var a:{id:string, idproducto:string, tipoproducto:string, idcategoria: string, nombreproducto: string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
             id: producto?.id!,
             idproducto: producto?.id!,
             tipoproducto: producto.tipoproducto,
             idcategoria: producto.idcategoria,
             nombreproducto: producto.nombre,
+            foto: producto.foto,
             valorunidad: producto.precio_venta,
             cantidad: 1,
             subtotal: 0, //este es el subtotal del producto
@@ -405,10 +424,11 @@
             let val = (e.target as HTMLInputElement).value;
             val = val.replace(/[^0-9.]/g, '');
             const partes = val.split('.');
-            if(partes.length > 2)
-              val = partes[0]+'.'+partes.slice(1).join('');
-            console.log(val);
-            
+            if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
+            if (val.startsWith('.'))val = '1';
+            if (val === '' || isNaN(parseFloat(val))) val = '0';
+
+            (e.target as HTMLInputElement).value = val;
             actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false);
           });
           (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
@@ -595,6 +615,10 @@
     ////////////////// evento al bton pagar del modal facturar //////////////////////
     document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
       e.preventDefault();
+      if(valorTotal.total <= 0 || valorTotal.subtotal <= 0){
+        msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalerta2') as HTMLElement));
+        return;
+      }
       procesarpedido('Paga', '0');
     });
 
@@ -612,7 +636,7 @@
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
       datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex].text);
       datos.append('tarifazona', nombretarifa||'');
-      datos.append('carrito', JSON.stringify(carrito));  //envio de todos los productos con sus cantidades
+      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
       datos.append('totalunidades', totalunidades.textContent!);
       //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
       datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
