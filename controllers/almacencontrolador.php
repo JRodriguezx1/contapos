@@ -978,4 +978,20 @@ class almacencontrolador{
   }
 
 
+  public static function cambiarestadoproducto(){
+    $producto = productos::find('id', $_POST['id']);
+    $alertas=[];
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $producto->estado == 1?$producto->estado=0:$producto->estado=1;
+      $r = $producto->actualizar();
+      if($r){
+        $alertas['exito'][] = "Estado del producto actualizado";
+      }else{
+        $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+      }
+    }
+    echo json_encode($alertas);
+  }
+
+
 }

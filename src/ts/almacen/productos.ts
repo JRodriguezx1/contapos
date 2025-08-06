@@ -94,6 +94,7 @@
     document.querySelector('#tablaProductos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
       if((e.target as HTMLElement)?.classList.contains("editarProductos")||(e.target as HTMLElement).parentElement?.classList.contains("editarProductos"))editarProductos(e);
+      if(target?.classList.contains("bloquearProductos")||target.parentElement?.classList.contains("bloquearProductos"))bloquearProductos(e);
       if(target?.classList.contains("eliminarProductos")||target.parentElement?.classList.contains("eliminarProductos"))eliminarProductos(e);
     });
 
@@ -192,6 +193,31 @@
         })();//cierre de async()
       } //fin if(control)
     });
+
+    function bloquearProductos(e:Event){
+      let reg = (e.target as HTMLElement).parentElement, info = (tablaProductos as any).page.info();
+      if((e.target as HTMLElement).tagName === 'SPAN')reg = (e.target as HTMLElement).parentElement!.parentElement;
+      indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
+      (async ()=>{
+
+          const datos = new FormData();
+          datos.append('id', reg!.id);
+          try {
+              const url = "/admin/api/cambiarestadoproducto";
+              const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+              const resultado = await respuesta.json();  
+              if(resultado.exito !== undefined){
+                //(tablaProductos as any).row(indiceFila+info.start).remove().draw(); 
+                //(tablaProductos as any).page(info.page).draw('page');
+                msjalertToast('success', '¡Éxito!', resultado.exito[0]); 
+              }else{
+                  Swal.fire(resultado.error[0], '', 'error')
+              }
+          } catch (error) {
+              console.log(error);
+          }
+      })();//cierre de async()
+    }
 
     function eliminarProductos(e:Event){
       let idproducto = (e.target as HTMLElement).parentElement!.id, info = (tablaProductos as any).page.info();

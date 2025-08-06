@@ -35,13 +35,13 @@
               <td class=""><?php echo $value->marca;?></td>
               <td class=""><?php echo $value->sku;?></td>
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
-              <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>">
+              <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>" data-state="<?php echo $value->estado;?>">
                     <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
                         <a class="btn-xs btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript text-[17px] leading-none"></i></a>
                     <?php endif; ?>
                     <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[17px] leading-none"></i></button>
                     <button class="btn-xs btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[17px] leading-none"></i></button>
-                    <button data-state="<?php echo $value->estado;?>" class="btn-xs <?php echo $value->estado?'btn-light':'btn-orange';?> bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
+                    <button class="btn-xs <?php echo $value->estado?'btn-light':'btn-orange';?> bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
                     <button class="btn-xs btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[17px] leading-none"></i></button>
               </div></td>
           </tr>
