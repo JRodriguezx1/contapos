@@ -17,7 +17,7 @@ class productos extends ActiveRecord {
         $this->impuesto = $args['impuesto'] ?? 0;
         $this->marca = $args['marca'] ?? '';
         $this->tipoproducto = $args['tipoproducto']??0;  // 0 = simple,  1 = compuesto
-        $this->tipoproduccion = $args['tipoproduccion']??0; // 0 = inmediato,  1 = construccion
+        $this->tipoproduccion = $args['tipoproduccion']??0; // 0 = inmediato,  1 = construccion solo aplica para productos compuesto
         $this->sku = $args['sku'] ?? '';
         $this->unidadmedida = $args['unidadmedida']??'Unidades';
         $this->descripcion = $args['descripcion'] ?? '';

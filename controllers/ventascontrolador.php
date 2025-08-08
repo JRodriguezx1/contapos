@@ -60,9 +60,9 @@ class ventascontrolador{
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
       //$objeto->id = $objeto->iditem;
       //unset($objeto->iditem);
-      if($objeto->tipoproducto == 0){
+      if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  // producto simple o producto compuesto de tipo produccion construccion, es decir solo se descuanta sus insumos cuando se hace produccion en almacen
         $acumulador['productosSimples'][] = $objeto;
-      }elseif($objeto->tipoproducto == 1){
+      }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
         $acumulador['productosCompuestos'][] = $objeto;
       }
       return $acumulador;
