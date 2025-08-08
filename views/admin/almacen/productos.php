@@ -9,8 +9,15 @@
 
   <h4 class="text-gray-600 mb-12 mt-4">Productos</h4>
   <div class="divmsjalerta0"><?php include __DIR__. "/../../templates/alertas.php"; ?></div>
-  <button id="crearProducto" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">Crear producto</button>
-  <a class="btn-md btn-turquoise !py-4 !px-6" href="/admin/almacen/categorias">Ir a categorias</a>
+  
+  <div class="flex flex-wrap gap-2">
+    <button id="crearProducto" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">Crear producto</button>
+    <a class="btn-md btn-turquoise mb-4 !py-4 !px-6" href="/admin/almacen/categorias">Ir a categorias</a>
+    <form action="/admin/almacen/downexcelproducts" method="POST">
+        <button class="btn-md btn-light mb-4 !py-2 !px-4" name="downexcel" title="Descargar en excel"><span class="material-symbols-outlined text-[24px] leading-none">download</span></button>
+    </form>
+  </div>
+
   <table class="display responsive nowrap tabla" width="100%" id="tablaProductos">
       <thead>
           <tr>
@@ -35,7 +42,7 @@
               <td class=""><?php echo $value->marca;?></td>
               <td class=""><?php echo $value->sku;?></td>
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
-              <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>" data-state="<?php echo $value->estado;?>">
+              <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>">
                     <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
                         <a class="btn-xs btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript text-[17px] leading-none"></i></a>
                     <?php endif; ?>
