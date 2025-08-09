@@ -401,6 +401,17 @@
 
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
+      //calcular el impuesto por producto
+      const mapImpuesto = new Map();
+      carrito.forEach(x=>{
+        if(mapImpuesto.has(x.impuesto)){
+          const valor = mapImpuesto.get(x.impuesto) + x.subtotal;
+          mapImpuesto.set(x.impuesto, valor);
+        }else{
+          mapImpuesto.set(x.impuesto, x.subtotal);
+        }
+      });
+      
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
       //console.log(valorTotal.subtotal);
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
