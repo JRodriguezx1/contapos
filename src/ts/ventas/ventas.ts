@@ -30,7 +30,7 @@
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', valorMax = 0;
@@ -376,13 +376,14 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
+          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
             id: producto?.id!,
             idproducto: producto?.id!,
             tipoproducto: producto.tipoproducto,
             tipoproduccion: producto.tipoproduccion,
             idcategoria: producto.idcategoria,
             nombreproducto: producto.nombre,
+            rendimientoestandar: producto.rendimientoestandar,
             foto: producto.foto,
             valorunidad: producto.precio_venta,
             cantidad: 1,
