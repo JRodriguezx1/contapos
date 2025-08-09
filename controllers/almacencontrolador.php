@@ -358,6 +358,32 @@ class almacencontrolador{
   }
 
 
+  public static function downexcelinsumos(Router $router){
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
+      $excelproductos = subproductos::all();
+      if(isset($_POST['downexcel'])){
+        //debuguear(isset($_POST['downexcel']));
+                if(!empty($excelproductos)){
+                    $filename = "excelinsumos.xls";
+                    header("Content-Type: application/vnd.ms-excel");
+                    header("Content-Disposition: attachment; filename=".$filename);
+
+                    $mostrar_columnas = false;
+
+                    foreach($excelproductos as $value){
+                        if(!$mostrar_columnas){
+                            echo implode("\t", array_keys((array)$value)) . "\n";
+                            $mostrar_columnas = true;
+                        }
+                        echo implode("\t", array_values((array)$value)) . "\n";
+                    }
+                }else{ echo 'No hay datos a exportar'; }
+                exit;
+            } 
+    }
+  }
+
+
   ////////////////////////////   API   //////////////////////////////
   public static function actualizar_categoria(){ //actualizar editar categoria
     session_start();

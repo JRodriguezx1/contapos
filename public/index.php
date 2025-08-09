@@ -81,6 +81,7 @@ $router->post('/admin/almacen/unidadesmedida', [almacencontrolador::class, 'unid
 $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, 'crear_unidadmedida']);
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
 $router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
+$router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 
 ///// area de caja /////
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
