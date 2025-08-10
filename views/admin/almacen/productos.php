@@ -135,7 +135,14 @@
          <div class="formulario__campo">
             <label class="formulario__label" for="impuesto">Impuesto</label>
             <div class="formulario__dato">
-                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Impuesto del producto" id="impuesto" name="impuesto" value="<?php echo $producto->impuesto??'';?>">
+                <input 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                    type="text" placeholder="Impuesto del producto en %" 
+                    id="impuesto" 
+                    name="impuesto" 
+                    value=""
+                    oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                >
             </div>
         </div>
 

@@ -30,10 +30,17 @@
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:string, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', valorMax = 0;
+    
+    const constImp: {[key:string]: number} = {};
+    constImp['0'] = 0;  //exento de iva, tarifa 0%
+    constImp['5'] = 0.0476190476190476; //iva, tarifa al 5%,  Bienes/servicios al 5
+    constImp['8'] = 0.0740740740740741; //inc, tarifa al 8%,  impuesto nacional al consumo
+    constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
+    constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
     let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
       id: 0,
@@ -49,7 +56,7 @@
       idunidadmedida: string,
       nombre: string,
       foto: string,
-      impuesto: string,
+      impuesto: string,  //porcentaje(%) de impuesto
       marca: string,
       tipoproducto: string, // 0 = simple,  1 = compuesto
       tipoproduccion: string, //0 = inmediato, 1 = construccion (aplica para productos compuestos)
@@ -285,7 +292,7 @@
         idunidadmedida: '1',
         nombre: otrosproductos!.nombre,
         foto: 'na',
-        impuesto: '0',
+        impuesto: '0', //impuesto en %
         marca: 'na',
         tipoproducto: '-1', // 0 = simple,  1 = compuesto
         tipoproduccion: '', //0 = inmediato, 1 = construccion
@@ -310,7 +317,9 @@
         visible: '1'
       }];
 
-      actualizarCarrito(otrosproductos.id+'', 1, false, false);
+      actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false);
+      miDialogoOtrosProductos.close();
+      document.removeEventListener("click", cerrarDialogoExterno);
     });
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
@@ -321,11 +330,11 @@
     });
 
     function printProduct(id:string){
-      unproducto = products.find(x=>x.id==id)!;
+      const uncarrito = carrito.find(x=>x.id==id)!;
       const tr = document.createElement('TR');
       tr.classList.add('productselect');
       tr.dataset.id = `${id}`;
-      tr.insertAdjacentHTML('afterbegin', `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5">${unproducto?.nombre}</td> 
+      tr.insertAdjacentHTML('afterbegin', `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5">${uncarrito?.nombreproducto}</td> 
 
       <td class="!px-0 !py-2">
         <div class="flex items-center gap-2 px-4">
@@ -333,7 +342,7 @@
             <span class="menos material-symbols-outlined text-base">remove</span>
           </button>
 
-          <input type="text" class="inputcantidad w-20 px-2 text-center" value="1"
+          <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.cantidad}"
             >
 
           <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
@@ -343,8 +352,8 @@
       </td>
 
 
-      <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
-      <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(unproducto?.precio_venta).toLocaleString()}</td>
+      <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.valorunidad).toLocaleString()}</td>
+      <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.total).toLocaleString()}</td>
       <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
       tablaventa?.appendChild(tr);
     } //oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"
@@ -376,7 +385,7 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:number, descuento:number, total:number} = {
+          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:string, descuento:number, total:number} = {
             id: producto?.id!,
             idproducto: producto?.id!,
             tipoproducto: producto.tipoproducto,
@@ -386,11 +395,11 @@
             rendimientoestandar: producto.rendimientoestandar,
             foto: producto.foto,
             valorunidad: producto.precio_venta,
-            cantidad: 1,
+            cantidad: cantidad,
             subtotal: 0, //este es el subtotal del producto
-            impuesto: 0,
+            impuesto: producto.impuesto, //porcentaje de impuesto
             descuento: 0,
-            total: Number(producto.precio_venta)
+            total: Number(producto.precio_venta)*cantidad //valorunidad x cantidad
           }
         
         carrito = [...carrito, a];
@@ -401,21 +410,25 @@
 
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
-      //calcular el impuesto por producto
+      //calcular el impuesto discriminado por tarifa
       const mapImpuesto = new Map();
       carrito.forEach(x=>{
         if(mapImpuesto.has(x.impuesto)){
-          const valor = mapImpuesto.get(x.impuesto) + x.subtotal;
+          const valor = mapImpuesto.get(x.impuesto) + x.total*constImp[x.impuesto];
           mapImpuesto.set(x.impuesto, valor);
         }else{
-          mapImpuesto.set(x.impuesto, x.subtotal);
+          mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
         }
       });
-      
+
+      //console.log(mapImpuesto);
+      let valorTotalImp:number = 0;
+      for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp; 
+
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
-      //console.log(valorTotal.subtotal);
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
+       (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+valorTotal.valortarifa.toLocaleString();
       document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
       // cantidad total de productos

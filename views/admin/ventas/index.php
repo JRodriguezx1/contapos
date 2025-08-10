@@ -636,9 +636,9 @@
           </div>
 
           <div class="sm:col-span-2">
-            <label for="preciootros" class="block text-2xl font-medium text-gray-600">Precio</label>
+            <label for="preciootros" class="block text-2xl font-medium text-gray-600">Precio total</label>
             <div class="mt-2">
-              <input type="number" name="preciootros" id="preciootros" autocomplete="given-name" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Valor producto" required>
+              <input type="number" name="preciootros" id="preciootros" autocomplete="given-name" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Valor" required>
             </div> 
           </div>
 
