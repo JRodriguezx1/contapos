@@ -50,9 +50,10 @@
           <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
             <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
               <a data-categoria="Todos" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
-              <?php foreach($categorias as $categoria): ?>
+              <?php foreach($categorias as $categoria): 
+                if($categoria->visible > 0):?>
                 <a data-categoria="<?php echo $categoria->nombre;?>" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
-              <?php endforeach; ?>
+              <?php endif; endforeach; ?>
             </div>
           </button>
 
@@ -72,7 +73,7 @@
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
             <?php foreach($productos as $producto): 
-              if($producto->visible!=0):?>
+              if($producto->visible==1&&$producto->estado==1):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
