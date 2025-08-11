@@ -424,6 +424,7 @@
       //console.log(mapImpuesto);
       let valorTotalImp:number = 0;
       for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp; 
+      valorTotal.impuesto = valorTotalImp;
 
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;

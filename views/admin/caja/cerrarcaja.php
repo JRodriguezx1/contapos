@@ -149,7 +149,7 @@
                             </thead>
                             <tbody>
                                 <tr>        
-                                    <td class="">Ingreso de ventas</td> 
+                                    <td class="">Ingreso de ventas total</td> 
                                     <td class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
@@ -161,8 +161,12 @@
                                     <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
+                                    <td class="text-blue-400 font-medium">Real de ventas sin domicilio</td> 
+                                    <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                </tr>
+                                <tr>        
                                     <td class="">Impuesto</td> 
-                                    <td class=""> - $0</td>
+                                    <td class=""> - $<?php echo number_format($ultimocierre->impuesto??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Total bruto</td> 

@@ -110,12 +110,13 @@ class ventascontrolador{
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
             $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
+            $ultimocierre->impuesto = $ultimocierre->impuesto + $factura->impuesto;
             //////////// Guardar los productos de la venta en tabla ventas //////////////
             foreach($carrito as $obj){
               $obj->dato1 = '';
               $obj->dato2 = '';
               $obj->idfactura = $r[1];
-              if($obj->id<0){
+              if($obj->id<0){  //para productos "Otros"
                 $obj->id = 1;
                 $obj->idproducto = 1;
                 $obj->idcategoria = 1;
