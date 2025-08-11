@@ -90,113 +90,130 @@
         <ul class="pagination flex justify-center gap-2 mt-4"></ul>
       </div>
 
+      <!-- Botón dle carrito de ventas solo en móvil -->
+      <button id="btnCarritoMovil" class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden" >
+        <span class="material-symbols-outlined">leak_add</span>
+      </button>
+
     </div> <!-- fin primera columna -->
 
-    <div class="basis-1/3">
-      <div class="formulario__campo">
-          <label class="formulario__label" for="vendedor">vendedor</label>
-          <div class="formulario__dato flex items-center gap-2">
-            <span class="material-symbols-outlined">person</span>
-            <input data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" id="vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
-          </div>
-      </div>
-      <div class="formulario__campo">
-          <label class="formulario__label" for="pedido">N. Ultima Factura/Pedido</label>
-          <div class="formulario__dato flex items-center gap-2">
-            <span class="material-symbols-outlined">arrow_right</span>
-            <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de pedido" id="pedido" name="pedido" value="1" readonly>
-          </div>
-      </div>
 
-      <div class="px-4 mb-4 flex items-center justify-between">
-        <div>
-          <button id="btnEntrega" class="btn-xs btn-light">Entrega</button>
-          <span id="modalidadEntrega" class="text-red-500 text-2xl font-medium">: Presencial</span>
+    <div id="contenedorDesktop" class="basis-1/3 hidden tlg:block">
+      <div id="contenidocarrito">
+        <div class="formulario__campo">
+            <label class="formulario__label" for="vendedor">vendedor</label>
+            <div class="formulario__dato flex items-center gap-2">
+              <span class="material-symbols-outlined">person</span>
+              <input data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" id="vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
+            </div>
         </div>
-        <div class="flex items-center gap-4">
-          <span class="text-3xl text-neutral-500">CARRITO:</span>
-          <span id="totalunidades" class="text-3xl font-medium text-neutral-500">0</span>
+        <div class="formulario__campo">
+            <label class="formulario__label" for="pedido">N. Ultima Factura/Pedido</label>
+            <div class="formulario__dato flex items-center gap-2">
+              <span class="material-symbols-outlined">arrow_right</span>
+              <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de pedido" id="pedido" name="pedido" value="1" readonly>
+            </div>
         </div>
-      </div>
-      <!-- Apilamiento de productos -->
-      <div class="border-solid border-t-2 border-blue-600 pt-4">
-        <table class=" tabla" width="100%" id="tablaventa">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Und</th>
-                    <th>Total</th>
-                    <th class="accionesth text-red-500"><i class="fa-solid fa-x"></i></th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- productos seleccionados a vender
-                <td class="!px-0 !py-2 text-xl text-gray-500 leading-5">lupe lulu</td> 
-                <td class="!px-0 !py-2"><div class="flex"><button><span class="menos material-symbols-outlined">remove</span></button><input type="text" class=" w-20 px-2 text-center" value="11" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"><button><span class="mas material-symbols-outlined">add</span></button></div></td>
-                <td class="!p-2 text-xl text-gray-500 leading-5">56000</td>
-                <td class="!p-2 text-xl text-gray-500 leading-5">56880</td>
-                <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>-->
-            </tbody>
-        </table>
-      </div> <!-- FIn Apilamiento de productos -->
-      <div class="flex justify-between items-start border-solid border border-gray-300 py-4 px-8">
-        <button id="btndescuento" class="btn-xs btn-light">Descuento</button>
-        <div class="flex justify-end gap-4">
-          <div class="text-end">
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Sub Total:</p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Impuesto:</p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Descuento:</p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Tarifa Envio:</p>
-            <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
-          </div>
+
+        <div class="px-4 mb-4 flex items-center justify-between">
           <div>
-            <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
-            <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
-            <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
-            <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
-            <p id="total" class="m-0 mb-2 text-green-500 text-4xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
+            <button id="btnEntrega" class="btn-xs btn-light">Entrega</button>
+            <span id="modalidadEntrega" class="text-red-500 text-2xl font-medium">: Presencial</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-3xl text-neutral-500">CARRITO:</span>
+            <span id="totalunidades" class="text-3xl font-medium text-neutral-500">0</span>
           </div>
         </div>
+        <!-- Apilamiento de productos -->
+        <div class="border-solid border-t-2 border-blue-600 pt-4">
+          <table class=" tabla" width="100%" id="tablaventa">
+              <thead>
+                  <tr>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Und</th>
+                      <th>Total</th>
+                      <th class="accionesth text-red-500"><i class="fa-solid fa-x"></i></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <!-- productos seleccionados a vender
+                  <td class="!px-0 !py-2 text-xl text-gray-500 leading-5">lupe lulu</td> 
+                  <td class="!px-0 !py-2"><div class="flex"><button><span class="menos material-symbols-outlined">remove</span></button><input type="text" class=" w-20 px-2 text-center" value="11" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"><button><span class="mas material-symbols-outlined">add</span></button></div></td>
+                  <td class="!p-2 text-xl text-gray-500 leading-5">56000</td>
+                  <td class="!p-2 text-xl text-gray-500 leading-5">56880</td>
+                  <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button></div></td>-->
+              </tbody>
+          </table>
+        </div> <!-- FIn Apilamiento de productos -->
+        <div class="flex justify-between items-start border-solid border border-gray-300 py-4 px-8">
+          <button id="btndescuento" class="btn-xs btn-light">Descuento</button>
+          <div class="flex justify-end gap-4">
+            <div class="text-end">
+              <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Sub Total:</p>
+              <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Impuesto:</p>
+              <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Descuento:</p>
+              <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Tarifa Envio:</p>
+              <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
+            </div>
+            <div>
+              <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+              <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+              <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+              <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$0</p>
+              <p id="total" class="m-0 mb-2 text-green-500 text-4xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-center p-4 flex justify-center gap-x-8">
+          <button id="btnvaciar" class="btn-md !flex !flex-row btn-red !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
+            <span class="material-symbols-outlined text-2xl">delete</span>
+            <span class="font-medium text-2xl">Vaciar</span>
+          </button>
+
+          <button id="btnguardar" class="btn-md !flex !flex-row btn-turquoise !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
+            <span class="material-symbols-outlined text-2xl">save</span>
+            <span class="font-medium text-2xl">Guardar</span>
+          </button>
+
+          <button id="btnfacturar" class="btn-md !flex !flex-row btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
+            <span class="material-symbols-outlined text-2xl">receipt_long</span>
+            <span class="font-medium text-2xl">Facturar</span>
+          </button>
+        </div>
+
+        <!--
+        <div class="text-center p-4">
+          <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">
+            <span class="material-symbols-outlined text-2xl">delete</span>
+            <span class="font-medium text-2xl">Vaciar</span>
+          </button>
+
+          <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">
+            <span class="material-symbols-outlined text-2xl">save</span>
+            <span class="font-medium text-2xl">Guardar</span>
+          </button>
+
+          <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">
+            <span class="material-symbols-outlined text-2xl">receipt_long</span>
+            <span class="font-medium text-2xl">Facturar</span>
+          </button>
+        </div>
+        -->
       </div>
-      <div class="text-center p-4 flex justify-center gap-x-8">
-        <button id="btnvaciar" class="btn-md !flex !flex-row btn-red !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
-          <span class="material-symbols-outlined text-2xl">delete</span>
-          <span class="font-medium text-2xl">Vaciar</span>
-        </button>
-
-        <button id="btnguardar" class="btn-md !flex !flex-row btn-turquoise !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
-          <span class="material-symbols-outlined text-2xl">save</span>
-          <span class="font-medium text-2xl">Guardar</span>
-        </button>
-
-        <button id="btnfacturar" class="btn-md !flex !flex-row btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
-          <span class="material-symbols-outlined text-2xl">receipt_long</span>
-          <span class="font-medium text-2xl">Facturar</span>
-        </button>
-      </div>
-
-      <!--
-      <div class="text-center p-4">
-        <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">
-          <span class="material-symbols-outlined text-2xl">delete</span>
-          <span class="font-medium text-2xl">Vaciar</span>
-        </button>
-
-        <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">
-          <span class="material-symbols-outlined text-2xl">save</span>
-          <span class="font-medium text-2xl">Guardar</span>
-        </button>
-
-        <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">
-          <span class="material-symbols-outlined text-2xl">receipt_long</span>
-          <span class="font-medium text-2xl">Facturar</span>
-        </button>
-      </div>
-       -->
     </div> <!-- fin segunda columna -->
   </div>
 
+  <!-- MODAL DEL CARRITO MOVIL-->
+  <dialog id="miDialogoCarritoMovil" class="midialog-sm p-5">
+    <div class="flex justify-between items-center">
+        <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
+        <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
+      <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
+    </div>
+    
+  </dialog>
 
   <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
   <dialog class="midialog-sm p-5" id="miDialogoAddCliente">

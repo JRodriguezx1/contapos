@@ -698,6 +698,7 @@
           console.log(error);
       }
       miDialogoFacturar.close();
+      (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
       document.removeEventListener("click", cerrarDialogoExterno);
     }
 
