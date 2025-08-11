@@ -766,6 +766,11 @@ video {
   margin-right: 1rem;
 }
 
+.ms-3 {
+  -webkit-margin-start: 0.75rem;
+          margin-inline-start: 0.75rem;
+}
+
 .mt-0 {
   margin-top: 0px;
 }
@@ -798,21 +803,16 @@ video {
   margin-top: 1rem;
 }
 
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
 .mt-6 {
   margin-top: 1.5rem;
 }
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.ms-3 {
-  -webkit-margin-start: 0.75rem;
-          margin-inline-start: 0.75rem;
-}
-
-.mt-5 {
-  margin-top: 1.25rem;
 }
 
 .block {
@@ -877,6 +877,10 @@ video {
   height: 10rem;
 }
 
+.h-5 {
+  height: 1.25rem;
+}
+
 .h-6 {
   height: 1.5rem;
 }
@@ -895,22 +899,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-10 {
-  height: 2.5rem;
-}
-
-.h-36 {
-  height: 9rem;
-}
-
-.h-32 {
-  height: 8rem;
-}
-
-.h-5 {
-  height: 1.25rem;
 }
 
 .max-h-96 {
@@ -945,6 +933,10 @@ video {
   width: 23% !important;
 }
 
+.\!w-\[83px\] {
+  width: 83px !important;
+}
+
 .\!w-auto {
   width: auto !important;
 }
@@ -977,12 +969,20 @@ video {
   width: 6rem;
 }
 
+.w-28 {
+  width: 7rem;
+}
+
 .w-44 {
   width: 11rem;
 }
 
 .w-48 {
   width: 12rem;
+}
+
+.w-5 {
+  width: 1.25rem;
 }
 
 .w-52 {
@@ -1027,30 +1027,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-10 {
-  width: 2.5rem;
-}
-
-.w-36 {
-  width: 9rem;
-}
-
-.w-28 {
-  width: 7rem;
-}
-
-.w-32 {
-  width: 8rem;
-}
-
-.\!w-\[83px\] {
-  width: 83px !important;
-}
-
-.w-5 {
-  width: 1.25rem;
 }
 
 .min-w-24 {
@@ -1297,12 +1273,12 @@ video {
        column-gap: 0.7rem;
 }
 
-.gap-y-8 {
-  row-gap: 2rem;
-}
-
 .gap-y-10 {
   row-gap: 2.5rem;
+}
+
+.gap-y-8 {
+  row-gap: 2rem;
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -1466,16 +1442,16 @@ video {
   border-width: 1px;
 }
 
+.border-2 {
+  border-width: 2px;
+}
+
 .border-\[20px\] {
   border-width: 20px;
 }
 
 .border-\[3px\] {
   border-width: 3px;
-}
-
-.border-2 {
-  border-width: 2px;
 }
 
 .\!border-b-2 {
@@ -1663,6 +1639,11 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.\!bg-\[\#00c8c2\] {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(0 200 194 / var(--tw-bg-opacity)) !important;
+}
+
 .bg-gradient-to-br {
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
@@ -1787,11 +1768,6 @@ video {
   padding-right: 0px !important;
 }
 
-.\!px-4 {
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-
 .\!px-6 {
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
@@ -1897,6 +1873,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.\!px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
 .\!pb-10 {
   padding-bottom: 2.5rem !important;
 }
@@ -1953,6 +1934,11 @@ video {
   padding-right: 2rem;
 }
 
+.ps-4 {
+  -webkit-padding-start: 1rem;
+          padding-inline-start: 1rem;
+}
+
 .pt-12 {
   padding-top: 3rem;
 }
@@ -1971,11 +1957,6 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.ps-4 {
-  -webkit-padding-start: 1rem;
-          padding-inline-start: 1rem;
 }
 
 .text-left {
@@ -2027,16 +2008,8 @@ video {
   line-height: 1;
 }
 
-.text-\[17px\] {
-  font-size: 17px;
-}
-
 .text-\[18px\] {
   font-size: 18px;
-}
-
-.text-\[24px\] {
-  font-size: 24px;
 }
 
 .text-\[4rem\] {
@@ -2066,6 +2039,14 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[17px\] {
+  font-size: 17px;
+}
+
+.text-\[24px\] {
+  font-size: 24px;
 }
 
 .font-bold {
@@ -3049,12 +3030,12 @@ video {
     flex-basis: 31%;
   }
 
-  .lg\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:gap-8 {
@@ -3263,10 +3244,6 @@ video {
 
   .tlg\:w-40 {
     width: 10rem;
-  }
-
-  .tlg\:w-44 {
-    width: 11rem;
   }
 
   .tlg\:flex-1 {
@@ -3502,10 +3479,5 @@ video {
   .dark\:focus\:ring-blue-800:focus {
     --tw-ring-opacity: 1;
     --tw-ring-color: rgb(30 64 175 / var(--tw-ring-opacity));
-  }
-
-  .dark\:focus\:ring-pink-800:focus {
-    --tw-ring-opacity: 1;
-    --tw-ring-color: rgb(157 23 77 / var(--tw-ring-opacity));
   }
 }
