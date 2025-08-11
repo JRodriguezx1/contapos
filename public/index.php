@@ -80,6 +80,8 @@ $router->get('/admin/almacen/unidadesmedida', [almacencontrolador::class, 'unida
 $router->post('/admin/almacen/unidadesmedida', [almacencontrolador::class, 'unidadesmedida']);
 $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, 'crear_unidadmedida']);
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
+$router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
+$router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 
 ///// area de caja /////
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
@@ -134,6 +136,7 @@ $router->post('/admin/api/descontarstock', [almacencontrolador::class, 'desconta
 $router->post('/admin/api/aumentarstock', [almacencontrolador::class, 'aumentarstock']);  //ingresar o aumentar unidades de inventario
 $router->post('/admin/api/ajustarstock', [almacencontrolador::class, 'ajustarstock']);  //reiniciar o ajustar inventario
 $router->get('/admin/api/reiniciarinv', [almacencontrolador::class, 'reiniciarinv']);  //reiniciar inv a cero, llamada desde almacen.ts
+$router->post('/admin/api/cambiarestadoproducto', [almacencontrolador::class, 'cambiarestadoproducto']);  //cambiar el estado del producto desde producto.ts
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada

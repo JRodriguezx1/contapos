@@ -4,7 +4,7 @@ namespace Model;
 
 class productos extends ActiveRecord {
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso'];
+    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso', 'estado', 'visible'];
     
     //public $id;
     public function __construct($args = [])
@@ -17,7 +17,7 @@ class productos extends ActiveRecord {
         $this->impuesto = $args['impuesto'] ?? 0;
         $this->marca = $args['marca'] ?? '';
         $this->tipoproducto = $args['tipoproducto']??0;  // 0 = simple,  1 = compuesto
-        $this->tipoproduccion = $args['tipoproduccion']??0; // 0 = inmediato,  1 = construccion
+        $this->tipoproduccion = $args['tipoproduccion']??0; // 0 = inmediato,  1 = construccion solo aplica para productos compuesto
         $this->sku = $args['sku'] ?? '';
         $this->unidadmedida = $args['unidadmedida']??'Unidades';
         $this->descripcion = $args['descripcion'] ?? '';
@@ -35,6 +35,8 @@ class productos extends ActiveRecord {
         $this->precio_compra = $args['precio_compra'] ?? 0;
         $this->precio_venta = $args['precio_venta'] ?? '';
         $this->fecha_ingreso = $args['fecha_ingreso'] ?? date('Y-m-d H:i:s');
+        $this->estado = $args['estado']??1;  // 0 = inactivo,  1 = activo
+        $this->visible = $args['visible']??1;  // 0 = no visible,  1 = visible
     }
 
     // Validación para productos nuevos

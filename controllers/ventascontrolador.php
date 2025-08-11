@@ -60,15 +60,15 @@ class ventascontrolador{
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
       //$objeto->id = $objeto->iditem;
       //unset($objeto->iditem);
-      if($objeto->tipoproducto == 0){
+      if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
         $acumulador['productosSimples'][] = $objeto;
-      }
-      else{
+      }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
+        $objeto->cantidad = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
         $acumulador['productosCompuestos'][] = $objeto;
       }
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
-
+    
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
     //////// sumar los subproductos repetidos
@@ -115,7 +115,13 @@ class ventascontrolador{
               $obj->dato1 = '';
               $obj->dato2 = '';
               $obj->idfactura = $r[1];
+              if($obj->id<0){
+                $obj->id = 1;
+                $obj->idproducto = 1;
+                $obj->idcategoria = 1;
+              }
             }
+
             $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta
             $r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
         
@@ -160,6 +166,7 @@ class ventascontrolador{
               $facturadelete = facturas::find('id', $r[1]);
               $facturadelete->eliminar_registro();
             }
+
           }else{  
     ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
             $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;

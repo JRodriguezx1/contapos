@@ -57,7 +57,7 @@
           </button>
 
           <!-- Botón Otros -->
-          <button class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
+          <button id="btnotros" class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
             <i class="fas fa-th-large"></i>
             Otros
           </button>
@@ -71,8 +71,9 @@
 
 
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
-            <?php foreach($productos as $producto): ?>
-            <div data-categoria="<?php echo $producto->categoria;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
+            <?php foreach($productos as $producto): 
+              if($producto->visible!=0):?>
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
@@ -84,7 +85,7 @@
                     <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div> 
             </div>
-            <?php endforeach; ?>
+            <?php endif; endforeach; ?>
         </div> <!-- fin contenedor de productos -->
         <div id="hacker-list" class="paginadorventas">
           <ul class="list">
@@ -181,6 +182,25 @@
           <span class="font-medium text-2xl">Facturar</span>
         </button>
       </div>
+
+      <!--
+      <div class="text-center p-4">
+        <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">
+          <span class="material-symbols-outlined text-2xl">delete</span>
+          <span class="font-medium text-2xl">Vaciar</span>
+        </button>
+
+        <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">
+          <span class="material-symbols-outlined text-2xl">save</span>
+          <span class="font-medium text-2xl">Guardar</span>
+        </button>
+
+        <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">
+          <span class="material-symbols-outlined text-2xl">receipt_long</span>
+          <span class="font-medium text-2xl">Facturar</span>
+        </button>
+      </div>
+       -->
     </div> <!-- fin segunda columna -->
   </div>
 
@@ -412,7 +432,7 @@
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
       <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
-          <input id="idcita" name="id" type="hidden">
+          <div id="divmsjalerta2"></div>
           <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">
@@ -597,4 +617,46 @@
       </div>
   </form>
 </dialog> 
+
+<!-- MODAL OTROS PRODUCTOS -->
+  <dialog class="midialog-sm p-5" id="miDialogoOtrosProductos">
+    <h4 class=" text-gray-700 font-semibold">Otros:</h4>
+    <form id="formOtrosProductos" class="formulario">  
+      <div class="border-b border-gray-900/10 pb-10 mb-3">
+        
+        <p class="mt-2 text-xl text-gray-600">Agregar producto/servicio personalizado.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+          <div class="sm:col-span-6">
+            <label for="nombreotros" class="block text-2xl font-medium text-gray-600">Nombre</label>
+            <div class="mt-2">
+              <input type="text" name="nombreotros" id="nombreotros" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del producto/servicio" required>
+            </div> 
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="cantidadotros" class="block text-2xl font-medium text-gray-600">Cantidad</label>
+            <div class="mt-2">
+              <input type="number" name="cantidadotros" id="cantidadotros" autocomplete="given-name" min="1" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Cantidad" required>
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="preciootros" class="block text-2xl font-medium text-gray-600">Precio total</label>
+            <div class="mt-2">
+              <input type="number" name="preciootros" id="preciootros" autocomplete="given-name" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Valor" required>
+            </div> 
+          </div>
+
+        </div>
+      </div>
+        
+      <div class="text-right">
+          <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
+          <input class="btn-md btn-blue" type="submit" value="Agregar">
+      </div>
+    </form>
+  </dialog>
+  
 </div>

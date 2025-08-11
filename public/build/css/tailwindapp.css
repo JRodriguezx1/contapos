@@ -570,6 +570,10 @@ video {
   pointer-events: none;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .absolute {
   position: absolute;
 }
@@ -1859,6 +1863,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.\!px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
 .\!pb-10 {
   padding-bottom: 2.5rem !important;
 }
@@ -2020,6 +2029,14 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[17px\] {
+  font-size: 17px;
+}
+
+.text-\[24px\] {
+  font-size: 24px;
 }
 
 .font-bold {

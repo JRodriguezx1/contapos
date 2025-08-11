@@ -7,7 +7,13 @@
   </a> 
   <h4 class="text-gray-600 mb-12 mt-4">Sub Productos</h4>
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
-  <button id="crearSubProducto" class="btn-md btn-turquoise !py-4 !px-6 !w-auto">Crear sub producto</button>
+  
+  <div class="flex flex-wrap gap-2">
+    <button id="crearSubProducto" class="btn-md btn-turquoise !py-4 !px-6 !w-auto">Crear sub producto</button>
+    <form action="/admin/almacen/downexcelinsumos" method="POST">
+        <button class="btn-md btn-light !py-2 !px-4" name="downexcel" title="Descargar en excel"><span class="material-symbols-outlined text-[24px] leading-none">download</span></button>
+    </form>
+  </div>
   
   <table class="display responsive nowrap tabla" width="100%" id="tablaSubProductos">
       <thead>

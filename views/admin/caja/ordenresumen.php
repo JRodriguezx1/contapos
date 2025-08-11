@@ -66,7 +66,12 @@
                             <tr class="bg-white dark:bg-gray-800">
                                 <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                     <div class="flex items-center gap-4">
-                                        <img class="w-24" src="https://pagedone.io/asset/uploads/1697620853.png" alt="Moncler image" />
+                                        <img 
+                                            class="w-24" 
+                                            src="/build/img/<?php echo $value->foto;?>"
+                                            onerror="this.onerror=null;this.src='/build/img/default-product.png';"
+                                            alt="J2SoftwarePOS" 
+                                        />
                                         <span> <?php echo $value->nombreproducto??'';?></span>
                                     </div>
                                 </td>
@@ -74,10 +79,10 @@
                                     <?php echo $value->cantidad??'';?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <?php echo number_format($value->valorunidad??0, "0", ",", ".");?>
+                                    $<?php echo number_format($value->valorunidad??0, "0", ",", ".");?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <?php echo number_format($value->total??0, "0", ",", ".");?>
+                                    $<?php echo number_format($value->total??0, "0", ",", ".");?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -139,7 +144,7 @@
                             <th scope="row" class="px-6 py-3">Total</th>
                             <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
                             <td class="px-6 py-3"> - </td>
-                            <td class="px-6 py-3"><?php echo number_format($factura->total??0, "0", ",", ".");?></td>
+                            <td class="px-6 py-3">$<?php echo number_format($factura->total??0, "0", ",", ".");?></td>
                         </tr>
                     </tfoot>
                 </table>

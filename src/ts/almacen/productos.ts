@@ -91,9 +91,11 @@
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
+    //evento a la tabla
     document.querySelector('#tablaProductos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
       if((e.target as HTMLElement)?.classList.contains("editarProductos")||(e.target as HTMLElement).parentElement?.classList.contains("editarProductos"))editarProductos(e);
+      if(target?.classList.contains("bloquearProductos")||target.parentElement?.classList.contains("bloquearProductos"))bloquearProductos(e);
       if(target?.classList.contains("eliminarProductos")||target.parentElement?.classList.contains("eliminarProductos"))eliminarProductos(e);
     });
 
@@ -192,6 +194,42 @@
         })();//cierre de async()
       } //fin if(control)
     });
+
+
+    function bloquearProductos(e:Event){
+      let reg = (e.target as HTMLElement).parentElement, info = (tablaProductos as any).page.info();
+      if((e.target as HTMLElement).tagName === 'SPAN')reg = (e.target as HTMLElement).parentElement!.parentElement;
+      indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
+      (async ()=>{
+
+          const datos = new FormData();
+          datos.append('id', reg!.id);
+          try {
+              const url = "/admin/api/cambiarestadoproducto";
+              const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+              const resultado = await respuesta.json();  
+              if(resultado.exito !== undefined){
+                
+                const s1 = `<div class="acciones-btns my-[0.7rem]" id="${reg!.id}">
+                              ${resultado.tipoproducto[0] == 1?`<a class="btn-xs btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=${reg!.id}"><i class="fa-solid fa-subscript text-[17px] leading-none"></i></a>`:''}
+                              <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[17px] leading-none"></i></button>
+                              <button class="btn-xs btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[17px] leading-none"></i></button>
+                              <button class="btn-xs ${resultado.estado[0]==1?'btn-light':'btn-orange'} bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
+                              <button class="btn-xs btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[17px] leading-none"></i></button>
+                            </div>`;
+                            
+                (tablaProductos as any).cell((tablaProductos as any).row(indiceFila+=info.start), 7).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
+                (tablaProductos as any).page(info.page).draw('page'); //me mantiene la pagina actual
+
+                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+              }else{
+                  Swal.fire(resultado.error[0], '', 'error')
+              }
+          } catch (error) {
+              console.log(error);
+          }
+      })();//cierre de async()
+    }
 
     function eliminarProductos(e:Event){
       let idproducto = (e.target as HTMLElement).parentElement!.id, info = (tablaProductos as any).page.info();

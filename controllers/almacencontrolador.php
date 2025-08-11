@@ -332,6 +332,57 @@ class almacencontrolador{
     $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
+  public static function downexcelproducts(Router $router){
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
+      $excelproductos = productos::all();
+      if(isset($_POST['downexcel'])){
+        //debuguear(isset($_POST['downexcel']));
+                if(!empty($excelproductos)){
+                    $filename = "excelproductos.xls";
+                    header("Content-Type: application/vnd.ms-excel");
+                    header("Content-Disposition: attachment; filename=".$filename);
+
+                    $mostrar_columnas = false;
+
+                    foreach($excelproductos as $value){
+                        if(!$mostrar_columnas){
+                            echo implode("\t", array_keys((array)$value)) . "\n";
+                            $mostrar_columnas = true;
+                        }
+                        echo implode("\t", array_values((array)$value)) . "\n";
+                    }
+                }else{ echo 'No hay datos a exportar'; }
+                exit;
+            } 
+    }
+  }
+
+
+  public static function downexcelinsumos(Router $router){
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
+      $excelproductos = subproductos::all();
+      if(isset($_POST['downexcel'])){
+        //debuguear(isset($_POST['downexcel']));
+                if(!empty($excelproductos)){
+                    $filename = "excelinsumos.xls";
+                    header("Content-Type: application/vnd.ms-excel");
+                    header("Content-Disposition: attachment; filename=".$filename);
+
+                    $mostrar_columnas = false;
+
+                    foreach($excelproductos as $value){
+                        if(!$mostrar_columnas){
+                            echo implode("\t", array_keys((array)$value)) . "\n";
+                            $mostrar_columnas = true;
+                        }
+                        echo implode("\t", array_values((array)$value)) . "\n";
+                    }
+                }else{ echo 'No hay datos a exportar'; }
+                exit;
+            } 
+    }
+  }
+
 
   ////////////////////////////   API   //////////////////////////////
   public static function actualizar_categoria(){ //actualizar editar categoria
@@ -975,6 +1026,24 @@ class almacencontrolador{
 
   public static function reiniciarinv(){
     echo json_encode("reiniciando");
+  }
+
+
+  public static function cambiarestadoproducto(){
+    $producto = productos::find('id', $_POST['id']);
+    $alertas=[];
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $producto->estado == 1?$producto->estado=0:$producto->estado=1;
+      $r = $producto->actualizar();
+      if($r){
+        $alertas['exito'][] = "Estado del producto actualizado";
+        $alertas['estado'][] = $producto->estado;
+        $alertas['tipoproducto'][] = $producto->tipoproducto;
+      }else{
+        $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+      }
+    }
+    echo json_encode($alertas);
   }
 
 
