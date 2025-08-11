@@ -28,6 +28,7 @@ class almacencontrolador{
     $subproductosqw = subproductos::all();
     $productos = productos::indicadoresAllProducts();
     $subproductos = subproductos::indicadoresAllSubProducts();
+    $cantidadCategorias = categorias::numreg_where('visible', 1);
 
     $valorInv = $productos[0]->valorinv + $subproductos[0]->valorinv; //valor total del inventario
     $cantidadProductos = $productos[0]->cantidadproductos; //
@@ -42,7 +43,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 

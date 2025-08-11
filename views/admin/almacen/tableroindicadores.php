@@ -46,7 +46,7 @@
                     </dt>
                     <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
                       id="sponsorsCount">
-                      0.5
+                      <?php echo $cantidadCategorias;?>
                     </dd>
                   </div>
                   <div class="flex flex-col p-6 text-center border-t border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l">

@@ -174,6 +174,7 @@
             </div>
           </div>
         </div>
+        <!--
         <div class="text-center p-4 flex justify-center gap-x-8">
           <button id="btnvaciar" class="btn-md !flex !flex-row btn-red !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
             <span class="material-symbols-outlined text-2xl">delete</span>
@@ -189,9 +190,9 @@
             <span class="material-symbols-outlined text-2xl">receipt_long</span>
             <span class="font-medium text-2xl">Facturar</span>
           </button>
-        </div>
+        </div>-->
 
-        <!--
+        
         <div class="text-center p-4">
           <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">
             <span class="material-symbols-outlined text-2xl">delete</span>
@@ -208,7 +209,8 @@
             <span class="font-medium text-2xl">Facturar</span>
           </button>
         </div>
-        -->
+      
+
       </div>
     </div> <!-- fin segunda columna -->
   </div>

@@ -28,6 +28,9 @@
       const contenedorDesktop = document.getElementById('contenedorDesktop') as HTMLDivElement;
       const miDialogoCarritoMovil = document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement;
       const btnCerrarCarritoMovil = document.querySelector('#btnCerrarCarritoMovil') as HTMLButtonElement;
+      const screenWidth:number = window.innerWidth;
+
+      if(screenWidth<992)miDialogoCarritoMovil.appendChild(contenidocarrito);
 
       window.addEventListener('resize', ()=>{
         if (window.innerWidth >= 992) {
@@ -45,7 +48,10 @@
         document.addEventListener("click", cerrarDialogoExterno);
       });
 
-      btnCerrarCarritoMovil.addEventListener('click', ()=>miDialogoCarritoMovil.close());
+      btnCerrarCarritoMovil.addEventListener('click', ()=>{
+        miDialogoCarritoMovil.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
+      });
 
       function cerrarDialogoExterno(event:Event) {
         const f = event.target;
