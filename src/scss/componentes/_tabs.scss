@@ -6,7 +6,7 @@
   .tabs-content{
       display: inline-flex;
       flex-wrap: wrap;
-      border: 1px solid v.$azul70;
+      border: 1px solid #4338ca;
       padding: 0.3rem;
       border-radius: 0.5rem;
       label{
@@ -22,14 +22,14 @@
           cursor: pointer;
           padding: .7rem 1.2rem;
           font-size: 1.3rem;
-          color: v.$azul70;
+          color: #4338ca;
           font-weight: 400;
           &:hover{
               background-color: v.$azul10;
           }
       }
       input[type="radio"]:checked + span{
-          background-color: lighten(v.$azul50, 0);
+          background-color: #4338ca;
           color: v.$blanco;
           border-radius: 0.5rem;
           font-weight: 500;
