@@ -86,7 +86,14 @@
             </div>
             <?php endforeach; ?>
         </div> <!-- fin contenedor de productos -->
-        <ul class="pagination flex justify-center gap-2 mt-4"></ul>
+        <div id="hacker-list" class="paginadorventas">
+          <ul class="list">
+            <!-- items aquí -->
+          </ul>
+
+          <!-- List.js inyectará aquí la paginación -->
+          <ul class="pagination mt-4 justify-center"></ul>
+        </div>
       </div>
 
     </div> <!-- fin primera columna -->
