@@ -110,7 +110,7 @@ class ventascontrolador{
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
             $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
-            $ultimocierre->impuesto = $ultimocierre->impuesto + $factura->impuesto;
+            $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             //////////// Guardar los productos de la venta en tabla ventas //////////////
             foreach($carrito as $obj){
               $obj->dato1 = '';
@@ -123,7 +123,7 @@ class ventascontrolador{
               }
             }
 
-            $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta
+            $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta (detalle de los productos de la factura de venta)
             $r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
         
             if($r1[0] && $r2[0]){
