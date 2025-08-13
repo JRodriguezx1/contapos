@@ -116,9 +116,10 @@
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
-              
-              window.location.href = `/admin/caja/detallecierrecaja?id=${resultado.ultimocierre[0]}`;
+              setTimeout(() => {
+                (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+                window.location.href = `/admin/caja/detallecierrecaja?id=${resultado.ultimocierre[0]}`;
+              }, 1600);
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
