@@ -31,7 +31,7 @@ class cierrescajas extends ActiveRecord {
         $this->realventas = $args['realventas'] ?? 0;
         $this->valorimpuestototal = $args['valorimpuestototal'] ?? 0;
         $this->totalbruto = $args['totalbruto'] ?? 0;
-        $this->estado = $args['estado'] ?? 0;
+        $this->estado = $args['estado'] ?? 0;  // 0 = abierto, 1 = cerrado
         $this->dato1 = $args['dato1'] ?? '';
         $this->dato2 = $args['dato2'] ?? '';
     }
