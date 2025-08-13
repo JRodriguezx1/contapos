@@ -160,17 +160,13 @@
             <label class="etiqueta text-gray-500" for="first">Mostrar/Ocultar mas opciones</label>
             <div class="wrapper">
               <div class="wrapper-content">
-                <div id="mediospagos" class="content flex flex-col w-full mx-auto">
-                  
+                <div id="mediospagos" class="content flex flex-col w-full mx-auto">  
                     <div class="mb-4">
-
                       <div class="formulario__campo">
                         <label class="formulario__label" for="stockminimo">Stock minimo</label>
                         <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Establecer el stock minimo" id="stockminimo" name="stockminimo" value="<?php echo $producto->stockminimo??'';?>">      
-                      </div>
-                      
+                      </div>  
                     </div>
-                  
                 </div>
               </div>
             </div>
