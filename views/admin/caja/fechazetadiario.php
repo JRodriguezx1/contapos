@@ -6,6 +6,8 @@
     <span class="sr-only">Atrás</span>
     </a>
     <h4 class="text-gray-600 my-2">Detalle del zeta diario</h4>
+
+    <input type="text" name="datetimes" />
     
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
         <button class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
