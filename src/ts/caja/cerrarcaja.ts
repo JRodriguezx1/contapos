@@ -16,6 +16,7 @@
     btnCerrarcaja?.addEventListener('click', ():void=>{
       Modalcerrarcaja.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
+      window.location.href = "/";
     });
     
 

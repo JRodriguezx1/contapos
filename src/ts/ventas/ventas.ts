@@ -30,8 +30,8 @@
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:string, descuento:number, total: number}[]=[];
-    const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
+    const valorTotal = {subtotal: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', valorMax = 0;
     
@@ -365,18 +365,14 @@
       if(index>-1){
         if(cantidad <= 0){
           cantidad = 0;
-          //carrito[index].cantidad = 0;
           carrito[index].total = 0;
-          /*valorCarritoTotal();
-          (tablaventa?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
-          return;*/
         }
         if(control){ //cuando el producto se agrega desde la lista de productos
           carrito[index].cantidad += cantidad;
         }else{ //cuando el producto se agrega por cantidad
           carrito[index].cantidad = cantidad;
         }
-        //console.log(carrito[index].cantidad);
+       
         carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
         valorCarritoTotal();
         if(stateinput)
@@ -385,7 +381,7 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:string, descuento:number, total:number} = {
+          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, impuesto:string, valorimp:number, descuento:number, total:number} = {
             id: producto?.id!,
             idproducto: producto?.id!,
             tipoproducto: producto.tipoproducto,
@@ -398,6 +394,7 @@
             cantidad: cantidad,
             subtotal: 0, //este es el subtotal del producto
             impuesto: producto.impuesto, //porcentaje de impuesto
+            valorimp: (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto],
             descuento: 0,
             total: Number(producto.precio_venta)*cantidad //valorunidad x cantidad
           }
@@ -424,6 +421,7 @@
       //console.log(mapImpuesto);
       let valorTotalImp:number = 0;
       for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp; 
+      valorTotal.valorimpuestototal = valorTotalImp;
 
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
@@ -671,7 +669,7 @@
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('subtotal', valorTotal.subtotal+'');
-      datos.append('impuesto', valorTotal.impuesto+'');
+      datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
       datos.append('dctox100',valorTotal.dctox100+'');
       datos.append('descuento',valorTotal.descuento+'');
       datos.append('total', valorTotal.total.toString());
