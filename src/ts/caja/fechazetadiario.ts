@@ -2,15 +2,37 @@
 
   if(document.querySelector('.fechazetadiario')){
 
-    const btnmultiselect = document.querySelector('.btnmultiselect') as HTMLElement;
+    const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
     const items = document.querySelectorAll<HTMLLIElement>('.item');
+    const consultarZDiario = document.querySelector('#consultarZDiario');
 
     //abrir el menu desplegable para seleccionar cajas
-    btnmultiselect.addEventListener('click', ()=>{btnmultiselect.classList.toggle('open');});
+    //btnmultiselect.addEventListener('click', ()=>{btnmultiselect.classList.toggle('open');});
 
-    
+    //evento a los select drop dawn para abrir y cerrar
+    btnsmultiselect.forEach((btnmultiselect, index) =>{
+      btnmultiselect.addEventListener('click', (e:Event)=>{
+        cerrarlosmultiselect(index);
+        btnmultiselect.classList.toggle('open');
+      });
+    });
+    function cerrarlosmultiselect(index:number){
+      btnsmultiselect.forEach((element, i) =>{
+        if(i != index || !element.classList.contains('open'))element.classList.remove('open');
+      });
+    }
+    document.querySelector('.fechazetadiario')?.addEventListener('click', (e:Event)=>{
+      if(!(e.target as HTMLElement).closest('.btnmultiselect')&&!(e.target as HTMLElement).closest('.list-items')){
+        const btnmultiselect = document.querySelector('.open');
+        if(btnmultiselect)btnmultiselect.classList.toggle('open');
+      }
+    });
 
 
+
+
+
+    // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
       timePicker: true,
       //startDate: moment().startOf('hour'),

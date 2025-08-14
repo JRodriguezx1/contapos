@@ -18,7 +18,7 @@
             </div>
             <ul class="list-items">
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="caja1" value="1">
+                    <input type="checkbox" id="caja1" value="1" checked>
                     <label for="caja1">caja principal</label>
                 </li>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
@@ -39,17 +39,17 @@
             </div>
             <ul class="list-items">
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="caja1" value="1">
-                    <label for="caja1">Factura POS</label>
+                    <input type="checkbox" id="facturador1" value="1" checked>
+                    <label for="facturador1">Factura POS</label>
                 </li>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="caja2" value="2">
-                    <label for="caja2">Factura electronica</label>
+                    <input type="checkbox" id="facturador2" value="2" checked>
+                    <label for="facturador2">Factura electronica</label>
                 </li>
             </ul>
         </div>
 
-        <button id="crearProducto" class="btn-md btn-blueintense !py-4 px-6 !bg-indigo-600">Consultar</button>
+        <button id="consultarZDiario" class="btn-md btn-blueintense !py-4 px-6 !bg-indigo-600">Consultar</button>
     </div>
 
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
