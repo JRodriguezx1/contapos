@@ -5,11 +5,11 @@
     </svg>
     <span class="sr-only">Atrás</span>
     </a>
-    <h4 class="text-gray-600 mb-12 mt-4">Zeta diario</h4>
+    <h4 class="text-gray-600 mb-12 mt-4">Zeta diarios</h4>
 
     <div class="flex gap-4 mb-4">
         <button class="btn-command"><span class="material-symbols-outlined">subject</span>Zeta diario de hoy</button>
-        <button class="btn-command"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</button>
+        <a id="zcalendario" href="/admin/caja/fechazetadiario" class="btn-command text-center"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</a>
     </div>
     
     <div class="">

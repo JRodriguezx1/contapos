@@ -165,6 +165,43 @@ class cajacontrolador{
   }
 
 
+  public static function fechazetadiario(Router $router){
+    session_start();
+    isadmin();
+    $id = 7;
+    if(!is_numeric($id))return;
+
+    $alertas = [];
+    $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
+    $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
+    $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
+    $mediospagos = mediospago::all();
+    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
+    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+    $sobrantefaltante = $declaracion;
+    foreach($discriminarmediospagos as $i => $dis){
+      $aux = 0;
+      foreach($declaracion as $j => $dec){
+        if($dis['idmediopago'] == $dec->id_mediopago){
+          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
+          $aux = 1;
+          break;
+        }
+      }
+      if($aux == 0){
+        $newobj = new stdClass();
+        $newobj->id_mediopago = $dis['idmediopago'];
+        $newobj->idcierrecajaid = $cierreselected->id;
+        $newobj->nombremediopago = $dis['mediopago'];
+        $newobj->valordeclarado = 0;
+        $newobj->valorsistema = $dis['valor'];
+        $sobrantefaltante[] = $newobj;
+      }
+    }
+    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
+
   public static function ultimoscierres(Router $router){
     session_start();
     isadmin();
@@ -340,6 +377,7 @@ class cajacontrolador{
           $r = $ultimocierre->actualizar();
           if($r){
             $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
+            $alertas['ultimocierre'][] = $ultimocierre->id;
           }else{
             $ultimocierrecaja = cierrescajas::find('id', $crearcierrecaja[1]);
             $ultimocierrecaja->eliminar_registro();

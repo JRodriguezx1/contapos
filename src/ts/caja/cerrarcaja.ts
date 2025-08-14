@@ -16,7 +16,6 @@
     btnCerrarcaja?.addEventListener('click', ():void=>{
       Modalcerrarcaja.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
-      window.location.href = "/";
     });
     
 
@@ -116,9 +115,11 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
-              (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              //redireccionar al resumen del cierre
+              setTimeout(() => {
+                (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+                window.location.href = `/admin/caja/detallecierrecaja?id=${resultado.ultimocierre[0]}`;
+              }, 1600);
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }

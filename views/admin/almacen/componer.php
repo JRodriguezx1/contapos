@@ -1,5 +1,10 @@
 <div class="box ensamblaje !pb-10">
-  <a class="btn-xs btn-dark" href="/admin/almacen/productos">Atras</a>
+   <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+    <span class="sr-only">Atrás</span>
+  </a>
   <div class="w-full md:w-4/5 mx-auto rounded-lg shadow-lg px-6 pt-8">
     <h4 class=" text-gray-700 font-semibold"><?php echo $producto->nombre;?> - "<?php echo $producto->unidadmedida;?>"</h4>
 
@@ -13,7 +18,7 @@
           <div class="sm:col-span-6">
             <label for="subproducto" class="block text-2xl font-medium text-gray-600">Subproducto</label>
             <div class="mt-2">
-              <select id="subproducto" name="subproducto" autocomplete="subproducto-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" multiple="multiple" required>
+              <select id="subproducto" name="subproducto" autocomplete="subproducto-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                 <?php foreach($subproductos as $value): ?>
                   <option 
                     value="<?php echo $value->id;?>" 
@@ -29,12 +34,12 @@
           <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
             <label for="unidadmedida" class="block text-2xl font-medium text-gray-600">Unidad de medida</label>
             <div class="mt-2 grid grid-cols-1">
-              <select id="unidadmedida" name="unidadmedida" autocomplete="unidadmedida-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+              <select id="unidadmedida" name="unidadmedida" autocomplete="unidadmedida-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                 <!-- se carga las unidades de medida del subproducto en ensamblar.ts -->
               </select>
-              <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+              <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-              </svg>
+              </svg> -->
             </div>
           </div>
 
@@ -45,20 +50,20 @@
                      name="cantidad"
                      type="text"
                      autocomplete="cantidad ID"
-                     class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                      maxlength="7"
                      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                      required>
             </div>
           </div>
 
-          <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2 p-4 shadow-lg rounded-lg">
+          <div class="sm:col-span-2">
             <label for="rendimientoestandar" class="block text-2xl font-medium text-gray-600">Rendimiento estandar</label>
             <div class="mt-2">
               <input id="rendimientoestandar"
                      type="text"
                      autocomplete="rendimientoestandar ID"
-                     class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-green-400"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                      maxlength="7"
                      value="<?php echo $producto->rendimientoestandar;?>"
                      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
@@ -70,8 +75,8 @@
       </div>
 
       <div class="text-right">
-          <button class="btn-md btn-red salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddSubproducto" class="btn-md btn-blue crearAddSubproducto" type="submit" value="Asociar">
+          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] salir" type="button" value="salir">Salir</button>
+          <input id="btnCrearAddSubproducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] crearAddSubproducto" type="submit" value="Asociar">
       </div>
 
       <div>

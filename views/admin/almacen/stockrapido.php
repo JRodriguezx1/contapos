@@ -1,5 +1,5 @@
 <p class="text-xl mt-0 text-gray-600">Stock de productos</p>
-<button id="reinciarinv" class="btn-md btn-turquoise !py-4 !px-6">Reiniciar inventario</button>
+<button id="reinciarinv" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]">Reiniciar inventario</button>
 <table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%" id="">
     <thead>
         <tr>
@@ -53,7 +53,7 @@
 </table>
 
 <!-- MODAL PARA AJUSTAR SUMAR, PRODUCIR O DESCONTAR UNUDADES-->
-  <dialog class="midialog-sm p-5" id="miDialogoStock">
+  <dialog class="midialog-sm !p-12" id="miDialogoStock">
       <h4 id="modalStock" class="font-semibold text-gray-600 mb-4">Ingreasar cantidad a inventario</h4>
       <div id="divmsjalertaStock"></div>
       <form id="formStock" class="formulario" action="/" method="POST">
@@ -63,7 +63,7 @@
 
           <div class="formulario__campo">
               <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida</label>
-              <select class="formulario__select" id="selectStockRapidoUndmedida" name="selectStockRapidoUndmedida" required>
+              <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="selectStockRapidoUndmedida" name="selectStockRapidoUndmedida" required>
                   <option value="" disabled selected>-Seleccionar-</option>
                     <!-- se inserta por ts en almacen.ts -->
               </select>
@@ -72,13 +72,13 @@
           <div class="formulario__campo">
               <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
               <div class="formulario__dato">
-                  <input class="formulario__input" id="cantidadStockRapido" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
+                  <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="cantidadStockRapido" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
               </div>
           </div>
 
           <div class="text-right">
-              <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-              <input id="btnAjusteStock" class="btn-md btn-blue" type="submit" value="Confirmar">
+              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="salir">Salir</button>
+              <input id="btnAjusteStock" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]" type="submit" value="Confirmar">
           </div>
       </form>
   </dialog>
