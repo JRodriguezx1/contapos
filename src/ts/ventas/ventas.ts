@@ -374,9 +374,9 @@
         }
        
         carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
-        //carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
-        //carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
-        
+        //carrito[index].base = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        //carrito[index].valorimp = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+
         valorCarritoTotal();
         if(stateinput)
         (tablaventa?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
