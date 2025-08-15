@@ -166,7 +166,7 @@
                                 </tr>
                                 <tr>        
                                     <td class="">Impuesto</td> 
-                                    <td class=""> - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "0", ",", ".");?></td>
+                                    <td class=""> - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "2", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Total bruto</td> 
