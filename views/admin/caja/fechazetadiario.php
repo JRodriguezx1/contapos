@@ -16,15 +16,15 @@
             </div>
             <ul class="list-items">
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="caja1" value="1" checked>
+                    <input class="caja" type="checkbox" id="caja1" value="1" checked>
                     <label for="caja1">caja principal</label>
                 </li>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="caja2" value="2">
+                    <input class="caja" type="checkbox" id="caja2" value="2">
                     <label for="caja2">caja bodega</label>
                 </li>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="caja3" value="3">
+                    <input class="caja" type="checkbox" id="caja3" value="3">
                     <label for="caja3">caja auxiliar</label>
                 </li>
             </ul>
@@ -36,11 +36,11 @@
             </div>
             <ul class="list-items">
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="facturador1" value="1" checked>
+                    <input class="facturador" type="checkbox" id="facturador1" value="1" checked>
                     <label for="facturador1">Factura POS</label>
                 </li>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input type="checkbox" id="facturador2" value="2" checked>
+                    <input class="facturador" type="checkbox" id="facturador2" value="2" checked>
                     <label for="facturador2">Factura electronica</label>
                 </li>
             </ul>

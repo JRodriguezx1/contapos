@@ -5,7 +5,7 @@
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
     const items = document.querySelectorAll<HTMLLIElement>('.item');
     const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
-
+    let fechainicio:string = "", fechafin = "";
 
     //evento a los select drop dawn para abrir y cerrar
     btnsmultiselect.forEach((btnmultiselect, index) =>{
@@ -46,10 +46,15 @@
         objDateRange.fin = endDate;*/
         console.log(startDate);
         console.log(endDate);
+        fechainicio = startDate;
+        fechafin = endDate;
     });
 
     consultarZDiario.addEventListener('click', ()=>{
+      const cajas = document.querySelectorAll('.caja input[type="radio"]:checked');
+      const facturadores = document.querySelectorAll('.facturador input[type="radio"]:checked');
       
+      console.log(cajas);
     });
 
   }
