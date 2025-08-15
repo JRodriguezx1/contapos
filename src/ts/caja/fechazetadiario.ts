@@ -6,8 +6,6 @@
     const items = document.querySelectorAll<HTMLLIElement>('.item');
     const consultarZDiario = document.querySelector('#consultarZDiario');
 
-    //abrir el menu desplegable para seleccionar cajas
-    //btnmultiselect.addEventListener('click', ()=>{btnmultiselect.classList.toggle('open');});
 
     //evento a los select drop dawn para abrir y cerrar
     btnsmultiselect.forEach((btnmultiselect, index) =>{

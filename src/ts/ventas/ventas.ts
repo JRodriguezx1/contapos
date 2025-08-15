@@ -31,7 +31,7 @@
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
-    const valorTotal = {subtotal: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
+    const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', valorMax = 0;
     
@@ -374,6 +374,9 @@
         }
        
         carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        //carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        //carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        
         valorCarritoTotal();
         if(stateinput)
         (tablaventa?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
@@ -381,24 +384,27 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-          var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
-            id: producto?.id!,
-            idproducto: producto?.id!,
-            tipoproducto: producto.tipoproducto,
-            tipoproduccion: producto.tipoproduccion,
-            idcategoria: producto.idcategoria,
-            nombreproducto: producto.nombre,
-            rendimientoestandar: producto.rendimientoestandar,
-            foto: producto.foto,
-            valorunidad: producto.precio_venta,
-            cantidad: cantidad,
-            subtotal: 0, //este es el subtotal del producto
-            base: 0,
-            impuesto: producto.impuesto, //porcentaje de impuesto
-            valorimp: (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto],
-            descuento: 0,
-            total: Number(producto.precio_venta)*cantidad //valorunidad x cantidad
-          }
+        const productovalorimp = (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto];
+        const productototal = Number(producto.precio_venta)*cantidad;
+        
+        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
+          id: producto?.id!,
+          idproducto: producto?.id!,
+          tipoproducto: producto.tipoproducto,
+          tipoproduccion: producto.tipoproduccion,
+          idcategoria: producto.idcategoria,
+          nombreproducto: producto.nombre,
+          rendimientoestandar: producto.rendimientoestandar,
+          foto: producto.foto,
+          valorunidad: producto.precio_venta,
+          cantidad: cantidad,
+          subtotal: productototal, //este es el subtotal del producto
+          base: productototal-productovalorimp,
+          impuesto: producto.impuesto, //porcentaje de impuesto
+          valorimp: productovalorimp,
+          descuento: 0,
+          total: productototal //valorunidad x cantidad
+        }
         
         carrito = [...carrito, a];
         valorCarritoTotal();
@@ -419,12 +425,13 @@
         }
       });
 
-      //console.log(mapImpuesto);
+      //Valor del impuesto total de todos los productos, es decir de la factura;
       let valorTotalImp:number = 0;
       for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp; 
-      valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(2));
+      valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));
 
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
+      valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
        (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -670,6 +677,7 @@
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('subtotal', valorTotal.subtotal+'');
+      datos.append('base', valorTotal.base+'');
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
       datos.append('dctox100',valorTotal.dctox100+'');
       datos.append('descuento',valorTotal.descuento+'');
