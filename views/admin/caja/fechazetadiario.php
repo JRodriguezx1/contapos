@@ -8,9 +8,7 @@
     <h4 class="text-gray-600 my-2">Detalle del zeta diario</h4>
 
     <div class="mt-6 mb-20 flex justify-between">
-        
         <input type="text" class="border border-gray-500 rounded-lg text-lg leading-4 px-3 py-1 outline-cyan-500" name="datetimes" />
-
         <div class="content-dropdawn">
             <div class="btnmultiselect">
                 <span class="btnmultiselect-text">Seleccionar Caja</span>
@@ -31,7 +29,6 @@
                 </li>
             </ul>
         </div>
-
         <div class="content-dropdawn">
             <div class="btnmultiselect">
                 <span class="btnmultiselect-text">Seleccionar Facturador</span>
@@ -48,7 +45,6 @@
                 </li>
             </ul>
         </div>
-
         <button id="consultarZDiario" class="btn-md btn-blueintense !py-4 px-6 !bg-indigo-600">Consultar</button>
     </div>
 
@@ -63,57 +59,21 @@
         <div class="flex flex-col tlg:flex-row gap-12 mb-8">
             <div class="tlg:basis-1/2">
 
-            <div class="flex gap-4 mb-4">
-                <div>
-                    <p class="m-0 text-slate-500 text-xl font-semibold">Caja: </p>
-                    <p class="m-0 text-slate-500 text-xl font-semibold">Cajero: </p>
-                    <p class="m-0 text-slate-500 text-xl font-semibold">Fecha inicio: </p>
-                    <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
+                <div class="flex gap-4 mb-4">
+                    <div>
+                        <p class="m-0 text-slate-500 text-xl font-semibold">Caja: </p>
+                        <p class="m-0 text-slate-500 text-xl font-semibold">Cajero: </p>
+                        <p class="m-0 text-slate-500 text-xl font-semibold">Fecha inicio: </p>
+                        <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
+                    </div>
+                    <div>
+                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->nombrecaja;?></p>
+                        <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
+                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechainicio;?></p>
+                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechacierre;?></p>
+                    </div>
                 </div>
-                <div>
-                    <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->nombrecaja;?></p>
-                    <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
-                    <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechainicio;?></p>
-                    <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechacierre;?></p>
-                </div>
-            </div>
 
-                <table class="tabla2" width="100%" id="">
-                    <thead>
-                        <tr>
-                            <th>Cuadre de caja</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>        
-                            <td class="">Base + ingresos de caja</td> 
-                            <td class="">+ $<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></td>
-                        </tr>
-                        <tr>        
-                            <td class="">Ventas en efectivo</td> 
-                            <td class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
-                        </tr>
-                        <tr>        
-                            <td class="">Gastos de la caja</td> 
-                            <td class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
-                        </tr>
-                        <tr>        
-                            <td class="text-blue-400 font-medium">Dinero en caja</td> 
-                            <td class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
-                        </tr>
-                        <tr>        
-                            <td class="">Domicilios</td> 
-                            <td class="">- $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
-                        </tr>
-                        <tr>        
-                            <td class="text-blue-600 font-medium">Real en caja</td> 
-                            <td class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="tlg:basis-1/2">
                 <table class="tabla2 mb-12" width="100%" id="">
                     <thead>
                         <tr>
@@ -131,6 +91,51 @@
                     </tbody>
                 </table>
 
+                <table class="tabla2 mb-12" width="100%" id="">
+                    <thead>
+                        <tr>
+                            <th>Detalle de impuesto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>        
+                            <td class="">Impuesto 19%</td> 
+                            <td class=""> - $0</td>
+                        </tr>
+                        <tr>        
+                            <td class="">Impuesto 16%</td> 
+                            <td class=""> - $0</td>
+                        </tr>
+                        <tr>        
+                            <td class="">Impuesto 8%</td> 
+                            <td class=""> - $0</td>
+                        </tr>
+                        <tr>        
+                            <td class="">Impuest 5%</td> 
+                            <td class=""> - $0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="tabla2 mb-12" width="100%" id="">
+                    <thead>
+                        <tr>
+                            <th>Detalle Bruto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>        
+                            <td class="">Total Bruto</td> 
+                            <td class=""> - $0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+
+            <div class="tlg:basis-1/2">
                 
                 <table class="tabla2" width="100%" id="">
                     <thead>
@@ -151,14 +156,6 @@
                         <tr>        
                             <td class="text-blue-400 font-medium">Real de ventas</td> 
                             <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
-                        </tr>
-                        <tr>        
-                            <td class="">Impuesto</td> 
-                            <td class=""> - $0</td>
-                        </tr>
-                        <tr>        
-                            <td class="text-blue-600 font-medium">Total bruto</td> 
-                            <td class="text-blue-600 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -181,30 +178,25 @@
                         </tr>
                     </tbody>
                 </table>
-                
-                <div>
-                    <p class="text-sky-400 font-medium">Analisis Sobrantes y Faltantes</p>
-                    <table class="tabla2 mb-12" width="100%" id="">
-                        <thead>
-                            <tr>
-                                <th>Medios de pago</th>
-                                <th> Sisitema </th>
-                                <th> Valor declarado </th>
-                                <th> Diferencia </th>
-                            </tr>
-                        </thead>
-                        <tbody class="cuerpoanalisis">
-                            <?php foreach($sobrantefaltante as $index => $value): ?>
-                            <tr class="<?php echo $value->nombremediopago=='Efectivo'?'!border-2 !border-indigo-600':'';?>">        
-                                <td class=""><?php echo $value->nombremediopago;?></td> 
-                                <td class="colsistem"><?php echo number_format($value->valorsistema, "0", ",", ".");?></td>
-                                <td class="coldeclarado" data-mediopagoid="<?php echo $value->id_mediopago;?>"><?php echo number_format($value->valordeclarado, "0", ",", ".");?></td>
-                                <td class="coldif"><?php echo number_format($value->valordeclarado-$value->valorsistema, "0", ",", ".");?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+            
+                <table class="tabla2 mb-12" width="100%" id="">
+                    <thead>
+                        <tr>
+                            <th>Ingreso por tipo de facturas</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>        
+                            <td class="">Facturas electronicas</td> 
+                            <td class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                        </tr>
+                        <tr>        
+                            <td class="">Facturas POS</td> 
+                            <td class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                        </tr>
+                    </tbody>
+                </table>
             
             </div>
         </div>   

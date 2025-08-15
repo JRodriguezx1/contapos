@@ -29,6 +29,8 @@ class reportescontrolador{
 
         $router->render('admin/reportes/cierrescaja', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+    
     public static function zdiario(Router $router){
         session_start();
         isadmin();
@@ -36,6 +38,7 @@ class reportescontrolador{
 
         $router->render('admin/reportes/zdiario', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
     public static function ventasxtransaccion(Router $router){
         session_start();
         isadmin();

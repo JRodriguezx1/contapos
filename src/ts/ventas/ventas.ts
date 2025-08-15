@@ -373,9 +373,11 @@
           carrito[index].cantidad = cantidad;
         }
        
+        
         carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
-        //carrito[index].base = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
-        //carrito[index].valorimp = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        //calculo del impuesto y base por producto en el carrito deventas
+        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto]).toFixed(3));
+        carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
 
         valorCarritoTotal();
         if(stateinput)

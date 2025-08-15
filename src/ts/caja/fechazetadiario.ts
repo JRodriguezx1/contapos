@@ -4,7 +4,7 @@
 
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
     const items = document.querySelectorAll<HTMLLIElement>('.item');
-    const consultarZDiario = document.querySelector('#consultarZDiario');
+    const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
 
 
     //evento a los select drop dawn para abrir y cerrar
@@ -28,8 +28,6 @@
 
 
 
-
-
     // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
       timePicker: true,
@@ -49,6 +47,11 @@
         console.log(startDate);
         console.log(endDate);
     });
+
+    consultarZDiario.addEventListener('click', ()=>{
+      
+    });
+
   }
 
 })();
