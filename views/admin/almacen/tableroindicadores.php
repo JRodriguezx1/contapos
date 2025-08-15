@@ -5,7 +5,7 @@
                 Tablero de indicadores
               </h2>
               <p class="mt-3 text-xl leading-7 text-gray-600 dark:text-gray-400 sm:mt-4">
-                Informacion de los principales indicadores de inventario del almacen.
+                Información de los principales indicadores de inventario del almacen.
               </p>
             </div>
             

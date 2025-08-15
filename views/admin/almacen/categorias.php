@@ -34,7 +34,7 @@
       </tbody>
   </table>
 
-  <dialog class="w-[500px] h-[195px] p-6 rounded-lg shadow-lg" id="miDialogoCategoria" id="miDialogoCategoria">
+  <dialog class="w-[500px] h-[195px] py-6 px-12 rounded-lg shadow-lg" id="miDialogoCategoria" id="miDialogoCategoria">
     <h4 id="modalCategoria" class="font-semibold text-gray-700 mb-4 mt-10">Crear categoria</h4>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateCategoria" class="formulario" action="/admin/almacen/crear_categoria" method="POST">

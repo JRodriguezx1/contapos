@@ -57,7 +57,7 @@
   </table>
 
   <!-- MODAL PARA CREAR/ACTUALIZAR PRODUCTOS-->
-  <dialog class="midialog-sm p-5" id="miDialogoProducto">
+  <dialog class="midialog-sm p-12" id="miDialogoProducto">
     <h4 id="modalProducto" class="font-semibold text-gray-700 mb-4">Crear producto</h4>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateProducto" class="formulario" action="/admin/almacen/crear_producto" enctype="multipart/form-data" method="POST">
@@ -157,7 +157,7 @@
         
         <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">
-            <label class="etiqueta text-gray-500" for="first">Mostrar/Ocultar mas opciones</label>
+            <label class="etiqueta flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none" for="first">Mostrar/Ocultar mas opciones</label>
             <div class="wrapper">
               <div class="wrapper-content">
                 <div id="mediospagos" class="content flex flex-col w-full mx-auto">  

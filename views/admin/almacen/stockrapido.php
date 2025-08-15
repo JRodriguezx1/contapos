@@ -1,5 +1,8 @@
 <p class="text-xl mt-0 text-gray-600">Stock de productos</p>
-<button id="reinciarinv" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]">Reiniciar inventario</button>
+<div class="flex items-center gap-2 bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !mb-4 !py-4 px-6 !w-[200px]">
+    <i class="fas fa-sync-alt text-2xl text-gray-600"></i>
+    <button id="reinciarinv" class="text-2xl text-gray-600">Reiniciar Inventario</button>
+</div>
 <table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%" id="">
     <thead>
         <tr>
@@ -19,7 +22,7 @@
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-96 whitespace-normal"><?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria;?></td>
-                <td class="flex items-center justify-center text-xl px-3 py-1.5 tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'bg-red-300 text-white':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></td>
+                <td class="flex items-center justify-center text-xl px-3 !p-[1.2rem] tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></td>
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
@@ -38,7 +41,7 @@
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-96 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria??'';?></td> 
-                <td class="flex items-center justify-center px-3 py-1.5 tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'bg-red-300 text-white':'bg-cyan-50 text-cyan-600';?>"><?php echo $value->stock;?></td>
+                <td class="flex items-center justify-center px-3 py-1.5 tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></td>
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">

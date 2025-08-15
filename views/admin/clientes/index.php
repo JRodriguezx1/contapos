@@ -41,7 +41,7 @@
             </tbody>
         </table>
 
-        <dialog class="midialog-sm p-5" id="miDialogoCliente">
+        <dialog class="midialog-sm p-12" id="miDialogoCliente">
             <h4 id="modalCliente" class="font-semibold text-gray-700 mb-4">Crear cliente</h4>
             <div id="divmsjalerta1"></div>
             <form id="formCrearUpdateCliente" class="formulario" action="/admin/clientes/crear" method="POST">
@@ -147,7 +147,7 @@
         </dialog><!--fin crear/editar cliente-->
 
 
-        <dialog class="midialog-sm p-5" id="miDialogoCrearDireccion">
+        <dialog class="midialog-sm p-12" id="miDialogoCrearDireccion">
             <h4 id="modalDireccion" class="font-semibold text-gray-700 mb-4">Crear Dirección</h4>
             <div id="divmsjalerta2"></div>
             <form id="formCrearUpdateDireccion" class="formulario" action="/admin/direcciones/crear" method="POST">
@@ -212,7 +212,7 @@
         </dialog><!--fin crear/editar direccion-->
     
 
-        <dialog class="midialog-sm p-5" id="miDialogoUpDireccion">
+        <dialog class="midialog-sm p-12" id="miDialogoUpDireccion">
             <div class="flex justify-between items-center">
                 <h4 id="modalUpDireccion" class="font-semibold text-gray-700 mb-4">Actualizar Direccion</h4>
                 <button id="btnCerrarUpDireccion" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
