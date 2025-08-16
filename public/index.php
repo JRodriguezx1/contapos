@@ -150,6 +150,10 @@ $router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierr
 $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospagoXfactura']); //obtener los medios de pago segun factura elegido en caja.ts
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 
+
+$router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
+
+
 $router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts
 $router->get('/admin/api/direccionesXcliente', [direccionescontrolador::class, 'direccionesXcliente']); //obtener direcciones segun cliente elegido en ventas.ts y en clientes.ts
 $router->post('/admin/api/addDireccionCliente', [direccionescontrolador::class, 'addDireccionCliente']); //add direccion segun cliente elegido desde ventas.ts

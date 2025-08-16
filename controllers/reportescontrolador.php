@@ -46,4 +46,19 @@ class reportescontrolador{
 
         $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+
+    //////////////////////////----    API      ----////////////////////////////////
+
+  ///////////  API REST llamada desde cerrarcaja.ts cuando se declara dinero  ////////////
+  public static function consultafechazetadiario(){
+    $alertas = [];
+
+    $cajas = $_POST['cajas'];
+    $facturadores = $_POST['facturadores'];
+
+    
+    echo json_encode($alertas);
+  }
+
 }

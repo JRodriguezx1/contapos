@@ -12,11 +12,11 @@
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginamalla??'';?> >
-                <span id="pagina3">Malla</span>
+                <span id="pagina3">Cajas</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina4">Fecha desc..</span>
+                <span id="pagina4">Facturadores</span>
             </label>
             <label>
                 <input type="radio" name="radio">
@@ -33,18 +33,14 @@
     </div>
     
     <!-- crear empleado -->
-    <div class="hidden mt-6 empleado paginas pagina2">
-        <?php include __DIR__. "/empleado.php";?>
-    </div>  
-
-    <!-- malla -->
-    <div class="hidden paginas pagina3 mallaempleado"></div>
-
-    <div class="hidden paginas pagina4 descpagina3"></div>
+    <div class="hidden mt-6 empleado paginas pagina2"><?php include __DIR__. "/empleado.php";?></div>  
+    <!-- crear cajas -->
+    <div class="hidden paginas pagina3 cajas"><?php include __DIR__. "/cajas.php";?></div>
+    <!-- crear facturadores -->
+    <div class="hidden paginas pagina4 facturadores"><?php include __DIR__. "/facturadores.php";?></div>
 
     <!-- configuración -->
     <div class="hidden mt-6 paginas pagina5 configAdd">
-        
         <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
             <!-- Inputs de control de pestañas verticales -->
             <input type="radio" name="config" id="btn1" checked>
@@ -82,13 +78,6 @@
                 <?php include __DIR__. "/ajustesdelsistema/impresion.php"; ?>
                 <?php include __DIR__. "/ajustesdelsistema/impuestos.php"; ?>
                 <?php include __DIR__. "/ajustesdelsistema/facturacion.php"; ?>
-
-                <div class="contenido8 accordion_tab_content">
-                    <p class="text-xl mt-0 text-gray-600">Medios de pago</p>
-                </div>
-                <div class="contenido10 accordion_tab_content">
-                    <p class="text-xl mt-0 text-gray-600">Mas aqui..</p>
-                </div>
             </div>
         </div>
     </div>
