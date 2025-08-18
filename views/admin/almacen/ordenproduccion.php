@@ -68,7 +68,7 @@
         </div>
     
 
-    <dialog class="midialog-sm p-5" id="miDialogoIngresarProduccion">
+    <dialog id="miDialogoIngresarProduccion" class="midialog-sm p-5">
         <h4 id="modalIngresarProduccion" class="font-semibold text-gray-600 mb-4">Ingreasar produccion a inventario</h4>
         <div id="divmsjalerta1"></div>
         <form id="formIngresarProduccion" class="formulario" action="/" method="POST">

@@ -9,7 +9,7 @@
     <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/productos" href="/admin/caja"><span class="material-symbols-outlined">folder_check_2</span>Guardados</a>
   </div>
-  <h5 class="text-gray-600 mb-3"><span  class="material-symbols-outlined"></span>Lista de Facturas</h5>
+  <h5 class="text-gray-600 mb-3">Lista de Facturas</h5>
   <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
       <thead>
           <tr>
@@ -62,13 +62,13 @@
       </tfoot>
   </table>
 
-  <dialog class="midialog-sm p-5" id="gastosIngresos">
+  <dialog id="gastosIngresos" class="midialog-sm p-5">
     <h4 class="font-semibold text-gray-700 mb-4">Gastos e ingresos</h4>
     <div id="divmsjalerta1"></div>
     <form id="formGastosingresos" class="formulario" action="/admin/caja/ingresoGastoCaja" method="POST">
         <div class="formulario__campo">
             <label class="formulario__label" for="operacion">Operacion</label>
-            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="operacion" id="operacion" required>
+            <select id="operacion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="operacion" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <option value="ingreso">Ingreso a caja</option>
                 <option value="gasto">Gasto de la caja</option>
@@ -76,7 +76,7 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="caja">Caja</label>
-            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" id="caja" required>
+            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($cajas as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -85,7 +85,7 @@
         </div>
         <div class="formulario__campo tipodegasto" style="display: none;"> <!-- solo aplica para gastos -->
             <label class="formulario__label" for="tipodegasto">Tipo de gasto</label>
-            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos" id="tipodegasto">
+            <select id="tipodegasto" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos">
                 <option value="" disabled selected>-Seleccionar-</option>
                 <option value="1">Reabastecimiento</option>
                 <option value="2">Arriendo o alquiler de espacio</option>
@@ -102,12 +102,12 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="dinero">Ingresar dinero</label>
             <div class="formulario__dato">
-                <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="1" placeholder="Ingresa el dinero" id="dinero" name="valor" value="" required>
+                <input id="dinero" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="1" placeholder="Ingresa el dinero" name="valor" value="" required>
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="descripcion">Descripcion: </label>
-            <textarea class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-40 text-xl focus:outline-none focus:ring-1" id="descripcion" name="descripcion" rows="4"></textarea>
+            <textarea id="descripcion" class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-40 text-xl focus:outline-none focus:ring-1" name="descripcion" rows="4"></textarea>
         </div>
         
         <div class="text-right">
@@ -118,7 +118,7 @@
   </dialog>
 
 
-  <dialog class="midialog-sm p-5" id="cambioMedioPago">
+  <dialog id="cambioMedioPago" class="midialog-sm p-5">
     <h4 class="font-semibold text-gray-700 mb-4">Cambio medio de pago</h4>
     <div id="divmsjalerta2"></div>
     <form id="formCambioMedioPago" class="formulario" action="/admin/caja/cambioMedioPago" method="POST">

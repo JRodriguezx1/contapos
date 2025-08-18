@@ -19,8 +19,12 @@
                 <span id="pagina4">Facturadores</span>
             </label>
             <label>
+                <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
+                <span id="pagina5">Dian</span>
+            </label>
+            <label>
                 <input type="radio" name="radio">
-                <span id="pagina5">Configuración</span>
+                <span id="pagina6">Configuración</span>
             </label>
         </div>
     </div>
@@ -28,19 +32,19 @@
     <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
     <!-- negocio -->
-    <div class="hidden max-w-screen-md mx-auto mt-6 negocio paginas pagina1">
+    <div class="hidden max-w-screen-md mx-auto mt-6 paginas pagina1">
         <?php include __DIR__. "/negocio.php";?>
     </div>
-    
-    <!-- crear empleado -->
-    <div class="hidden mt-6 empleado paginas pagina2"><?php include __DIR__. "/empleado.php";?></div>  
-    <!-- crear cajas -->
-    <div class="hidden paginas pagina3 cajas"><?php include __DIR__. "/cajas.php";?></div>
-    <!-- crear facturadores -->
-    <div class="hidden paginas pagina4 facturadores"><?php include __DIR__. "/facturadores.php";?></div>
-
+    <!-- gestion empleado -->
+    <div class="hidden mt-6 paginas pagina2"><?php include __DIR__. "/empleado.php";?></div>  
+    <!-- gestion cajas -->
+    <div class="hidden paginas pagina3"><?php include __DIR__. "/gestioncajas.php";?></div>
+    <!-- gestion facturadores -->
+    <div class="hidden paginas pagina4"><?php include __DIR__. "/gestionfacturadores.php";?></div>
+    <!-- gestion dian -->
+    <div class="hidden paginas pagina5"><?php include __DIR__. "/dian.php";?></div>
     <!-- configuración -->
-    <div class="hidden mt-6 paginas pagina5 configAdd">
+    <div class="hidden mt-6 paginas pagina6">
         <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
             <!-- Inputs de control de pestañas verticales -->
             <input type="radio" name="config" id="btn1" checked>

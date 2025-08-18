@@ -125,7 +125,7 @@
                 console.log(resultado); 
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                  /// actualizar el arregle del producto ///
+                  /// actualizar el arregle de clientes ///
                   clientes.forEach(a=>{if(a.id == uncliente.id)a = Object.assign(a, resultado.cliente[0]);});
                   ///////// cambiar la fila completa, su contenido //////////
                   const datosActuales = (tablaClientes as any).row(indiceFila).data();

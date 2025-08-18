@@ -103,6 +103,10 @@
       });
     });*/
 
+    /////select 2 a btn selectCliente
+    //selectCliente.select2  multiple="multiple" maximumSelectionLength: 1,
+    ($('#selectCliente') as any).select2();
+
     //////////// evento al boton añadir cliente nuevo //////////////
     btnAddCliente?.addEventListener('click', (e)=>{
       miDialogoAddCliente.showModal();

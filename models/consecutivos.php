@@ -3,7 +3,7 @@ namespace Model;
 
 class consecutivos extends ActiveRecord {
     protected static $tabla = 'consecutivos';
-    protected static $columnasDB = ['id', 'idtipofacturador', 'idnegocio', 'nombre', 'rangoinicial', 'rangofinal', 'siguientevalor', 'fechainicio', 'fechafin', 'resolucion', 'consecutivoremplazo', 'prefijo', 'mostrarresolucion', 'mostrarimpuestodiscriminado', 'tokenfacturaelectronica'];
+    protected static $columnasDB = ['id', 'idtipofacturador', 'idnegocio', 'nombre', 'rangoinicial', 'rangofinal', 'siguientevalor', 'fechainicio', 'fechafin', 'resolucion', 'consecutivoremplazo', 'prefijo', 'mostrarresolucion', 'mostrarimpuestodiscriminado', 'tokenfacturaelectronica', 'estado'];
 
     public function __construct($args = [])
     {
@@ -22,6 +22,7 @@ class consecutivos extends ActiveRecord {
         $this->mostrarresolucion = $args['mostrarresolucion'] ?? '';  
         $this->mostrarimpuestodiscriminado = $args['mostrarimpuestodiscriminado'] ?? 0;
         $this->tokenfacturaelectronica = $args['tokenfacturaelectronica'] ?? 0;
+        $this->estado = $args['estado'] ?? 1;
     }
 
     // Validación para clientes nuevos

@@ -70,7 +70,11 @@ class almacencontrolador{
       $alertas = $categoria->validar_nueva_categoria();
       if(empty($alertas)){
         $r = $categoria->crear_guardar();
-        if($r[0])$alertas['exito'][] = "Categoria creado correctamente";
+        if($r[0]){
+          $alertas['exito'][] = "Categoria creado correctamente";
+        }else{
+          $alertas['error'][] = "Error, intenta nuevamente";
+        }
       }
     }
     

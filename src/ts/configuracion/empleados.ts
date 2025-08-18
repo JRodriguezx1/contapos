@@ -166,7 +166,7 @@
                 (tablaempleados as any).row(indiceFila).data(datosActuales).draw();
                 (tablaempleados as any).page(info.page).draw('page'); //me mantiene la pagina actual
               }else{
-                msjalertToast('error', '¡Error!', resultado.exito[0]);
+                msjalertToast('error', '¡Error!', resultado.error[0]);
               }
           } catch (error) {
               console.log(error);

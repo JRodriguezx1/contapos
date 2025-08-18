@@ -6,7 +6,7 @@
         <div class="formulario__campo flex-1">
           <label class="formulario__label" for="selectCliente">Cliente</label>
           <div class="formulario__dato">
-            <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="selectCliente" name="selectCliente" required>
+            <select id="selectCliente" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="selectCliente" required>
                 <option value="1" disabled selected>-Seleccionar-</option>
                 <?php foreach($clientes as $cliente): ?>
                   <option data-tipoID="<?php echo $cliente->tipodocumento;?>" data-identidad="<?php echo $cliente->identificacion;?>" value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option> 
@@ -18,13 +18,13 @@
           </div> <!-- fin formulario dato-->
           <div class="formulario__campo flex-1 xs:flex-none">
             <label class="formulario__label" for="documento">N. Documento</label>
-            <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Documento del cliente" id="documento" name="documento" readonly>
+            <input id="documento" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Documento del cliente" name="documento" readonly>
           </div>
         </div>
         <div class="formulario__campo flex-1">
             <label class="formulario__label" for="direccionEntrega">Direccion</label>
             <div class="formulario__dato">
-              <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="direccionEntrega" name="direccionEntrega" required>
+              <select id="direccionEntrega" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="direccionEntrega" required>
                   <option value="1" disabled selected>-Seleccionar-</option>
               </select>
               <div class="grid place-items-center hover:cursor-pointer">
@@ -34,13 +34,13 @@
         </div>
         <div class="formulario__campo flex-1">
             <label class="formulario__label" for="ciudad">Ciudad</label>
-            <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" id="ciudadEntrega" name="ciudadEntrega" readonly>
+            <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" name="ciudadEntrega" readonly>
         </div>
       </div>
 
       <div id="hacker-list" class="paginadorventas">
         <div class="formulario__dato justify-center">
-            <input class="search bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Buscar nombre de producto/SKU/escanear codigo" id="buscarproducto" name="buscarproducto" value="" required>
+            <input id="buscarproducto" class="search bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Buscar nombre de producto/SKU/escanear codigo" name="buscarproducto" value="" required>
             <div class="grid place-items-center  rounded-r-lg border-solid border border-gray-300 !border-l-0 hover:cursor-pointer">
               <span class="material-symbols-outlined pr-1">search</span>
             </div>
@@ -228,7 +228,7 @@
   </dialog>
 
   <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
-  <dialog class="midialog-sm p-5" id="miDialogoAddCliente">
+  <dialog id="miDialogoAddCliente" class="midialog-sm p-5">
       <h4 class=" text-gray-700 font-semibold">Crear Cliente</h4>
       <form id="formAddCliente" class="formulario" action="/" enctype="multipart/form-data" method="POST">
 
@@ -336,7 +336,7 @@
   </dialog>
 
   <!-- MODAL PARA CREAR NUEVA DIRECCION A CLIENTE-->
-  <dialog class="midialog-sm p-5" id="miDialogoAddDir">
+  <dialog id="miDialogoAddDir" class="midialog-sm p-5">
     <h4 class=" text-gray-700 font-semibold">Nueva Dirección</h4>
     <form id="formAddDir" class="formulario">
 
@@ -391,7 +391,7 @@
   </dialog>
 
   <!-- MODAL PARA AGREGAR DESCUENTO -->
-  <dialog class="midialog-xs p-5" id="miDialogoDescuento">
+  <dialog id="miDialogoDescuento" class="midialog-xs p-5">
     <h4 class=" text-gray-700 font-semibold">Aplicar Descuento</h4>
     <form id="formDescuento" class=" border-b border-gray-900/10 pb-6 text-center">
         <p class="mt-2 text-xl text-gray-600">Aplicar descuento al subtotal del pedido.</p>
@@ -439,7 +439,7 @@
 
 
   <!-- MODAL PARA GUARDAR EL PEDIDO-->
-  <dialog class="bg-white rounded-xl shadow-lg p-8 relative z-50" id="miDialogoGuardar">
+  <dialog id="miDialogoGuardar" class="bg-white rounded-xl shadow-lg p-8 relative z-50">
       <div class="text-center">
           <p class="text-2xl font-semibold text-gray-600 mb-6">Desea guardar el pedido?</p>
           <p class="text-xl text-gray-500">El pedido de venta No: 34512 se guardara en sistema.</p>
@@ -450,7 +450,7 @@
       </div>
   </dialog>
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
-  <dialog class="midialog-md !p-12" id="miDialogoFacturar">
+  <dialog id="miDialogoFacturar" class="midialog-md !p-12">
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
       <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
@@ -517,7 +517,7 @@
   </dialog>
 
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
-<dialog class="midialog-sm !p-12" id="miDialogoFacturarA">
+<dialog id="miDialogoFacturarA" class="midialog-sm !p-12">
 
     <div class="flex items-start gap-3 mb-4">
       <div class="text-indigo-600 mt-1">
@@ -685,7 +685,7 @@
 </dialog> 
 
 <!-- MODAL OTROS PRODUCTOS -->
-  <dialog class="midialog-sm p-5" id="miDialogoOtrosProductos">
+  <dialog id="miDialogoOtrosProductos" class="midialog-sm p-5">
     <h4 class=" text-gray-700 font-semibold">Otros:</h4>
     <form id="formOtrosProductos" class="formulario">  
       <div class="border-b border-gray-900/10 pb-10 mb-3">

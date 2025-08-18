@@ -49,7 +49,7 @@
   </table>
 
 
-  <dialog class="midialog-sm p-5" id="miDialogoSubProducto">
+  <dialog id="miDialogoSubProducto" class="midialog-sm p-5">
     <h4 id="modalSubProducto" class="font-semibold text-gray-700 mb-4">Crear Subproducto</h4>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateSubProducto" class="formulario" action="/admin/almacen/crear_subproducto" method="POST">

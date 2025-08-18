@@ -143,16 +143,13 @@ $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  /
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
 $router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
 
-
 $router->post('/admin/api/declaracionDinero', [cajacontrolador::class, 'declaracionDinero']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/arqueocaja', [cajacontrolador::class, 'arqueocaja']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierrecajaconfirmado']);  //aip llamada desde cerrarcaja.ts
 $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospagoXfactura']); //obtener los medios de pago segun factura elegido en caja.ts
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 
-
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
-
 
 $router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts
 $router->get('/admin/api/direccionesXcliente', [direccionescontrolador::class, 'direccionesXcliente']); //obtener direcciones segun cliente elegido en ventas.ts y en clientes.ts
@@ -160,6 +157,15 @@ $router->post('/admin/api/addDireccionCliente', [direccionescontrolador::class, 
 $router->get('/admin/api/allclientes', [clientescontrolador::class, 'allclientes']); // me trae todos los clientes desde clientes.js
 $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiActualizarcliente']);  //actualizar cliente en clientes.ts
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
+
+$router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.js
+$router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.js para crear cajas
+$router->post('/admin/api/actualizarCaja', [configcontrolador::class, 'actualizarCaja']); //api llamada desde gestioncajas.js para actualizar cajas
+$router->post('/admin/api/eliminarCaja', [configcontrolador::class, 'eliminarCaja']); //api llamada desde gestioncajas.js para eliminar cajas
+$router->get('/admin/api/allfacturadores', [configcontrolador::class, 'allfacturadores']); // me trae todos las cajas desde gestioncajas.js
+$router->post('/admin/api/crearFacturador', [configcontrolador::class, 'crearFacturador']); //api llamada desde gestioncajas.js para crear cajas
+$router->post('/admin/api/actualizarFacturador', [configcontrolador::class, 'actualizarFacturador']); //api llamada desde gestioncajas.js para actualizar cajas
+$router->post('/admin/api/eliminarFacturador', [configcontrolador::class, 'eliminarFacturador']); //api llamada desde gestioncajas.js para eliminar cajas
 
 
 

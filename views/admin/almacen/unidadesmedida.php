@@ -41,7 +41,7 @@
   </table>
 
 
-  <dialog class="w-[500px] h-[195px] p-6 rounded-lg shadow-lg" id="miDialogoUnidadMedida">
+  <dialog id="miDialogoUnidadMedida" class="w-[500px] h-[195px] p-6 rounded-lg shadow-lg">
     <h4 id="modalUnidadMedida" class="font-semibold text-gray-700 mb-4 mt-3">Crear unidad de medida</h4>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateUnidad" class="formulario" action="/admin/almacen/crear_unidadmedida" enctype="multipart/form-data" method="POST">
