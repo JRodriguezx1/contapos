@@ -1,3 +1,8 @@
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Flowbite -->
+<script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script>
+
 <div class="barra-mobile">
     <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2blanco.png" alt="logoj2">
     <!-- <div class="menu">
@@ -101,7 +106,54 @@
 
 </div>
 
-<dialog id="miDialogomenumovil" class="midialog-sm p-5">
-    <h4 class=" text-gray-700 font-semibold">menu flotante movil</h4>
-    
+<dialog id="miDialogomenumovil" class="p-0 w-[73%] max-w-4xl h-[51%] bg-white rounded-lg" hidden>
+  <!-- Fondo semi-transparente -->
+  <div class="fixed inset-0 bg-black bg-opacity-40" onclick="document.getElementById('miDialogomenumovil').close()"></div>
+  
+  <!-- Contenedor del menú -->
+  <div class="relative w-auto h-full p-6 flex flex-col justify-between bg-white">
+    <!-- Encabezado con botón cerrar -->
+    <div class="flex items-center justify-between mb-6">
+      <h4 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Menú</h4>
+      <button onclick="document.getElementById('miDialogomenumovil').close()" 
+              class="w-10 h-10 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+    </div>
+
+    <nav class="flex flex-col space-y-3">
+      <!-- Inicio -->
+      <a href="/admin/dashboard" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500">home</span>
+        <span>Inicio</span>
+      </a>
+
+      <!-- Reportes -->
+      <a href="/admin/reportes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500">format_list_bulleted</span>
+        <span>Reportes</span>
+      </a>
+
+      <!-- Clientes -->
+      <a href="/admin/clientes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500">support_agent</span>
+        <span>Clientes</span>
+      </a>
+
+      <!-- Perfil -->
+      <a href="/admin/perfil" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500">manage_accounts</span>
+        <span>Perfil</span>
+      </a>
+    </nav>
+
+    <!-- Pie -->
+    <div class="border-t mt-4 pt-4 text-base text-right">
+      <p class="text-gray-500">Bienvenido: 
+        <span class="text-indigo-600 font-bold text-right"><?php echo $_SESSION['nombre']; ?></span>
+      </p>
+      <a class="cerrar-sesion mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout">Cerrar Sesión</a>
+    </div>
+  </div>
 </dialog>
+

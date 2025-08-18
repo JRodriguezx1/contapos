@@ -1,10 +1,10 @@
 
-<div class="box clientes">
+<div class="box clientes pb-20">
     
         <?php include __DIR__. "/../../templates/alertas.php"; ?>
         <h4 class="text-gray-600 mb-12 mt-4">Gestiòn de clientes</h4>
-        <button id="crearCliente" class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]"> + Crear Cliente</button>
-        <button id="crearDireccion" class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px]"> + Crear Dirección</button>
+        <button id="crearCliente" class="btn-md btn-turquoise !py-4 !px-6 !w-[168px]"> + Crear Cliente</button>
+        <button id="crearDireccion" class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 py-4 px-6 w-[168px] md:mt-0 mt-[0.8rem]"> + Crear Dirección</button>
         
         <table class="display responsive nowrap tabla" width="100%" id="tablaClientes">
             <thead>
