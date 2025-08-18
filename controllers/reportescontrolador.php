@@ -29,6 +29,8 @@ class reportescontrolador{
 
         $router->render('admin/reportes/cierrescaja', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+    
     public static function zdiario(Router $router){
         session_start();
         isadmin();
@@ -36,6 +38,7 @@ class reportescontrolador{
 
         $router->render('admin/reportes/zdiario', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
     public static function ventasxtransaccion(Router $router){
         session_start();
         isadmin();
@@ -43,4 +46,19 @@ class reportescontrolador{
 
         $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+
+    //////////////////////////----    API      ----////////////////////////////////
+
+  ///////////  API REST llamada desde cerrarcaja.ts cuando se declara dinero  ////////////
+  public static function consultafechazetadiario(){
+    $alertas = [];
+
+    $cajas = $_POST['cajas'];
+    $facturadores = $_POST['facturadores'];
+
+    
+    echo json_encode($alertas);
+  }
+
 }

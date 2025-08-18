@@ -4,8 +4,8 @@
 
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
     const items = document.querySelectorAll<HTMLLIElement>('.item');
-    const consultarZDiario = document.querySelector('#consultarZDiario');
-
+    const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
+    let fechainicio:string = "", fechafin = "";
 
     //evento a los select drop dawn para abrir y cerrar
     btnsmultiselect.forEach((btnmultiselect, index) =>{
@@ -28,8 +28,6 @@
 
 
 
-
-
     // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
       timePicker: true,
@@ -48,7 +46,44 @@
         objDateRange.fin = endDate;*/
         console.log(startDate);
         console.log(endDate);
+        fechainicio = startDate;
+        fechafin = endDate;
     });
+
+    consultarZDiario.addEventListener('click', ()=>{
+      const cajas = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+      const facturadores = document.querySelectorAll<HTMLInputElement>('input.facturador[type="checkbox"]:checked');
+      
+      const valuecajas:string[] = Array.from(cajas).map(c=>c.value);
+      const valuefacturadores:string[] = Array.from(facturadores).map(f=>f.value);
+
+      (async ()=>{
+        const datos = new FormData();
+        datos.append('cajas', JSON.stringify(valuecajas));
+        datos.append('facturadores', JSON.stringify(valuefacturadores));
+        try {
+            const url = "/admin/api/consultafechazetadiario";
+            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+            const resultado = await respuesta.json();
+            console.log(resultado);
+            if(resultado.exito !== undefined){
+              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+              imprimirDatosVenta();
+            }else{
+              msjalertToast('error', '¡Error!', resultado.error[0]);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+
+    });
+
+
+    function imprimirDatosVenta(){
+      
+    }
+
   }
 
 })();
