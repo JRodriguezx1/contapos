@@ -1,4 +1,4 @@
-<div class="box ventas">
+<div class="box ventas pb-20">
   <div class="flex flex-col tlg:flex-row">
     <div class="basis-2/3 p-4">
       <div id="divmsjalerta1"></div>
@@ -100,7 +100,7 @@
 
       <!-- Botón dle carrito de ventas solo en móvil -->
       </style>
-      <button id="btnCarritoMovil" style="top:57rem; right:2rem;" 
+      <button id="btnCarritoMovil" style="top:52rem; right:2rem;" 
         class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden fixed z-50 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
         <span class="material-symbols-outlined">leak_add</span>
       </button> 
@@ -395,7 +395,7 @@
     <h4 class=" text-gray-700 font-semibold">Aplicar Descuento</h4>
     <form id="formDescuento" class=" border-b border-gray-900/10 pb-6 text-center">
         <p class="mt-2 text-xl text-gray-600">Aplicar descuento al subtotal del pedido.</p>
-        <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">  
+        <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">   
             <label class="flex  p-1 cursor-pointer">
               <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked/>
               <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Valor </span>
@@ -409,13 +409,13 @@
           <div class="sm:col-start-2 col-span-4">
             <label for="descuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
             <div class="mt-2">
-              <input id="inputDescuento" type="number" min="0" name="descuento" class="block w-full rounded-md bg-white px-3 py-1.5 text-xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required>
+              <input id="inputDescuento" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
           </div>
         </div>
       <div class="text-right">
-          <button class="btn-md btn-indigo salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddDir" class="btn-md btn-lima crearAddDir" type="submit" value="Aplicar">
+          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] salir" type="button" value="salir">Salir</button>
+          <input id="btnCrearAddDir" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] crearAddDir" type="submit" value="Aplicar">
       </div>
     </form>
   </dialog>
@@ -587,26 +587,6 @@
             </div>
           </div>
 
-          <!-- Dirección -->
-          <div>
-            <label for="direccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
-            <div class="mt-2">
-              <input type="text" name="direccion" id="direccion"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="Dirección del adquiriente">
-            </div>
-          </div>
-
-          <!-- Ciudad o Municipio -->
-          <div>
-            <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad / Municipio</label>
-            <div class="mt-2">
-              <input type="text" name="ciudad" id="ciudad"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="Ciudad o municipio">
-            </div>
-          </div>
-
           <!-- Correo Electrónico -->
           <div>
             <label for="correo" class="block text-2xl font-medium text-gray-600">Correo Electrónico</label>
@@ -614,42 +594,6 @@
               <input type="email" name="correo" id="correo"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 placeholder="correo@ejemplo.com">
-            </div>
-          </div>
-
-          <!-- Tipo Régimen -->
-          <div>
-            <label for="tipo_regimen" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
-            <div class="mt-2">
-              <select name="tipo_regimen" id="tipo_regimen" required
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-                <option value="">Seleccione tipo de régimen</option>
-                <option value="responsable_iva">Responsable de IVA</option>
-                <option value="no_responsable_iva">No responsable de IVA</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Tipo de Organización -->
-          <div>
-            <label for="tipo_organizacion" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
-            <div class="mt-2">
-              <select name="tipo_organizacion" id="tipo_organizacion" required
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-                <option value="">Seleccione tipo de organización</option>
-                <option value="persona_natural">Persona natural</option>
-                <option value="persona_juridica">Persona jurídica</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Teléfono -->
-          <div>
-            <label for="telefono" class="block text-2xl font-medium text-gray-600">Teléfono</label>
-            <div class="mt-2">
-              <input type="tel" name="telefono" id="telefono"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="Teléfono de contacto">
             </div>
           </div>
         </div>
@@ -661,26 +605,70 @@
         <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[145px]" type="submit" value="Confirmar">
       </div>
 
+      <!-- Botón para mostrar/ocultar -->
       <div class="accordion md:px-12 !mt-4">
-        <input type="checkbox" id="first">
-        <label class="etiqueta text-gray-500" for="first">Mostrar/Ocultar mas opciones</label>
-        <div class="wrapper">
-          <div class="wrapper-content">
-            <div id="mediospagos" class="content flex flex-col w-full mx-auto">
-              
-                <div class="mb-4">
+        <!-- ID ÚNICO -->
+        <input type="checkbox" id="toggleOpcionesAdq" class="peer sr-only">
 
-                  <div class="formulario__campo">
-                    <label class="formulario__label" for="stockminimo">Stock minimo</label>
-                    <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Establecer el stock minimo" id="stockminimo" name="stockminimo" value="<?php echo $producto->stockminimo??'';?>">      
-                  </div>
-                  
-                </div>
-              
-            </div>
+      <label for="toggleOpcionesAdq"
+            class="flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none">
+        <span>Mostrar/Ocultar más opciones</span>
+        <span class="text-xl peer-checked:hidden">+</span>
+        <span class="text-xl hidden peer-checked:inline">–</span>
+      </label>
+
+      <!-- Contenido oculto -->
+      <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out peer-checked:max-h-[120rem]">
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8">
+          
+          <!-- Dirección -->
+          <div>
+            <label for="direccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
+            <input type="text" name="direccion" id="direccion"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+              placeholder="Dirección del adquiriente">
+          </div>
+
+          <!-- Ciudad o Municipio -->
+          <div>
+            <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad / Municipio</label>
+            <input type="text" name="ciudad" id="ciudad"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+              placeholder="Ciudad o municipio">
+          </div>
+
+          <!-- Tipo Régimen -->
+          <div>
+            <label for="tipo_regimen" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
+            <select name="tipo_regimen" id="tipo_regimen"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+              <option value="">Seleccione tipo de régimen</option>
+              <option value="responsable_iva">Responsable de IVA</option>
+              <option value="no_responsable_iva">No responsable de IVA</option>
+            </select>
+          </div>
+
+          <!-- Tipo de Organización -->
+          <div>
+            <label for="tipo_organizacion" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
+            <select name="tipo_organizacion" id="tipo_organizacion"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+              <option value="">Seleccione tipo de organización</option>
+              <option value="persona_natural">Persona natural</option>
+              <option value="persona_juridica">Persona jurídica</option>
+            </select>
+          </div>
+
+          <!-- Teléfono -->
+          <div>
+            <label for="telefono" class="block text-2xl font-medium text-gray-600">Teléfono</label>
+            <input type="tel" name="telefono" id="telefono"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+              placeholder="Teléfono de contacto">
           </div>
         </div>
-      </div> <!-- fin accordion  -->
+      </div>
+    </div>
   </form>
 </dialog> 
 
