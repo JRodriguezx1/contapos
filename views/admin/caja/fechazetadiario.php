@@ -15,18 +15,12 @@
                 <span class="arrow"><i class="fa-solid fa-chevron-down"></i></span>
             </div>
             <ul class="list-items">
+                <?php foreach($cajas as $value): ?>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="caja" type="checkbox" id="caja1" value="1" checked>
-                    <label for="caja1">caja principal</label>
+                    <input class="caja" type="checkbox" id="caja<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
+                    <label for="caja<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
-                <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="caja" type="checkbox" id="caja2" value="2">
-                    <label for="caja2">caja bodega</label>
-                </li>
-                <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="caja" type="checkbox" id="caja3" value="3">
-                    <label for="caja3">caja auxiliar</label>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
         <div class="content-dropdawn">
@@ -35,14 +29,12 @@
                 <span class="arrow"><i class="fa-solid fa-chevron-down"></i></span>
             </div>
             <ul class="list-items">
+                <?php foreach($consecutivos as $value): ?>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="facturador" type="checkbox" id="facturador1" value="1" checked>
-                    <label for="facturador1">Factura POS</label>
+                    <input class="facturador" type="checkbox" id="<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
+                    <label for="<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
-                <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="facturador" type="checkbox" id="facturador2" value="2" checked>
-                    <label for="facturador2">Factura electronica</label>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
         <button id="consultarZDiario" class="btn-md btn-blueintense !py-4 px-6 !bg-indigo-600">Consultar</button>

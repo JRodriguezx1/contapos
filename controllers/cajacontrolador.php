@@ -172,6 +172,8 @@ class cajacontrolador{
     if(!is_numeric($id))return;
 
     $alertas = [];
+    $cajas = caja::all();
+    $consecutivos = consecutivos::all();
     $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
     $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
@@ -198,7 +200,7 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
-    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

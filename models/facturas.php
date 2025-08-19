@@ -46,12 +46,27 @@ class facturas extends ActiveRecord {
         $this->opc2 = $args['opc2'] ?? '';
     }
 
-    // Validación para clientes nuevos
+    // Validación para facturas nuevos
     public function validar_nueva_factura():array {
         if(!$this->idcliente)self::$alertas['error'][] = 'El cliente es Obligatorio';
         if(!$this->idvendedor)self::$alertas['error'][] = 'El vendedor es obligatorio';
         return self::$alertas;
     }
+
+     public static function zDiarioPorFecha($fechaini="", $fechafin="", $idconsecutivos=[], $idcajas=[], $asc_desc="ASC"){
+        $sql = "SELECT SUM(total) as totalventa, 
+                SUM(CASE WHEN consecutivos.idtipofacturador = 1 THEN 1 ELSE 0 END) AS ELECTRONICAS, /*cuantas facturas electronicas hay*/
+                SUM(CASE WHEN consecutivos.idtipofacturador = 2 THEN 1 ELSE 0 END) AS POS,          /*cuantas facturas POS hay*/
+                SUM(CASE WHEN consecutivos.idtipofacturador = 1 THEN total ELSE 0 END) AS total_ELECTRONICAS,
+                SUM(CASE WHEN consecutivos.idtipofacturador = 2 THEN total ELSE 0 END) AS total_POS
+                FROM facturas JOIN consecutivos ON facturas.idconsecutivo = consecutivos.id WHERE idconsecutivo IN(";
+        
+        $consecutivos = join(", ", array_values($idconsecutivos));
+        $cajas = join(", ", array_values($idcajas));
+
+        $sql .= $consecutivos.") AND idcaja IN(".$cajas.");";
+        debuguear($sql);
+     }
 
     public static function rangoentre2R_Factura($fecha, $totalventa, $fechaini, $fechafin, $asc_desc="ASC"){
         $sql = "SELECT DATE($fecha) AS fecha, COUNT(*) AS numventasxdia, SUM($totalventa) AS totalventasxdia, ";

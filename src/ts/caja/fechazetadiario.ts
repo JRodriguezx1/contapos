@@ -68,7 +68,7 @@
             console.log(resultado);
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              imprimirDatosVenta();
+              imprimirIngresos();
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -80,7 +80,7 @@
     });
 
 
-    function imprimirDatosVenta(){
+    function imprimirIngresos(){
       
     }
 
