@@ -19,8 +19,6 @@
     <link rel="stylesheet" href="/build/css/tailwindapp.css">
     <link rel="icon" type="image/x-icon" href="/build/img/favicon.ico"/>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin="" defer></script>
-    <!-- Tailwind (si no lo tienes ya) -->
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <?php 
@@ -28,18 +26,11 @@
         echo $contenido;
         //include_once __DIR__ .'/templates/footer.php'; 
     ?>
-    <!-- Popper.js (necesario para popovers y tooltips) -->
-   <script src="https://unpkg.com/@popperjs/core@2"></script>
-
-    <!-- Flowbite -->
-    <!-- <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script> -->
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
     <script src="/build/js/bundle.min.js" defer></script>
-    
 </body>
 </html>

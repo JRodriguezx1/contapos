@@ -1,7 +1,7 @@
-<script src="https://cdn.tailwindcss.com"></script>
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
 <!-- Flowbite -->
-<script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script>
+<!-- <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script> -->
 
 <div class="barra-mobile">
     <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2blanco.png" alt="logoj2">
