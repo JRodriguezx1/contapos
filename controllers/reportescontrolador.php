@@ -57,7 +57,7 @@ class reportescontrolador{
     $cajas = $_POST['cajas'];
     $facturadores = $_POST['facturadores'];
 
-    
+    debuguear($cajas);
     echo json_encode($alertas);
   }
 
