@@ -46,14 +46,14 @@
 
 .list-items{
     display: none;
-    min-width: 26rem;
+    min-width: 26.3rem;
     max-width: 32rem;
     position: absolute;
     z-index: 15;
     margin-top: 1.4rem;
     background-color: v.$blanco;
     border-radius: 1rem;
-    padding: 2rem 2rem 0rem 2rem;
+    padding: 2rem 1.5rem 0rem 1.5rem;
     .item{
         height: 4rem;
         color: v.$gris70;
