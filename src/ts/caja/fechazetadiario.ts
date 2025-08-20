@@ -3,7 +3,7 @@
   if(document.querySelector('.fechazetadiario')){
 
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
-    const items = document.querySelectorAll<HTMLLIElement>('.item');
+    const selectedcajas = document.querySelectorAll<HTMLLIElement>('.caja');
     const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
     const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
     const base = document.querySelector('#base') as HTMLElement;
@@ -37,6 +37,14 @@
     });
 
 
+    selectedcajas.forEach(c=>{
+      c.addEventListener('click', cajas_seleccionadas);
+    });
+
+    function cajas_seleccionadas(){
+      const cajas = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+    }
+
 
     // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
@@ -53,10 +61,6 @@
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
         var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
         var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
-        /*objDateRange.inicio = startDate;
-        objDateRange.fin = endDate;*/
-        console.log(startDate);
-        console.log(endDate);
         fechainicio = startDate;
         fechafin = endDate;
     });
