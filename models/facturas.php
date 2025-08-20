@@ -53,20 +53,36 @@ class facturas extends ActiveRecord {
         return self::$alertas;
     }
 
-     public static function zDiarioPorFecha($fechaini="", $fechafin="", $idconsecutivos=[], $idcajas=[], $asc_desc="ASC"){
-        $sql = "SELECT SUM(total) as totalventa, 
+
+    public static function zDiarioTotalVentas($cajas, $consecutivos, $asc_desc="ASC", $fechaini="", $fechafin="",){
+        $sql = "SELECT SUM(total) as totalventa,
                 SUM(CASE WHEN consecutivos.idtipofacturador = 1 THEN 1 ELSE 0 END) AS ELECTRONICAS, /*cuantas facturas electronicas hay*/
                 SUM(CASE WHEN consecutivos.idtipofacturador = 2 THEN 1 ELSE 0 END) AS POS,          /*cuantas facturas POS hay*/
                 SUM(CASE WHEN consecutivos.idtipofacturador = 1 THEN total ELSE 0 END) AS total_ELECTRONICAS,
                 SUM(CASE WHEN consecutivos.idtipofacturador = 2 THEN total ELSE 0 END) AS total_POS
-                FROM facturas JOIN consecutivos ON facturas.idconsecutivo = consecutivos.id WHERE idconsecutivo IN(";
+                FROM facturas JOIN consecutivos ON facturas.idconsecutivo = consecutivos.id WHERE idcaja IN(";
         
-        $consecutivos = join(", ", array_values($idconsecutivos));
-        $cajas = join(", ", array_values($idcajas));
+        $sql .= $cajas.") AND idconsecutivo IN(".$consecutivos.") AND facturas.estado = 'Paga';";
+        $resultado = self::$db->query($sql);
+        $total = $resultado->fetch_assoc();
+        $resultado->free();
+        return $total;
+    }
 
-        $sql .= $consecutivos.") AND idcaja IN(".$cajas.");";
-        debuguear($sql);
-     }
+    public static function zDiarioMediosPago($cajas, $consecutivos, $asc_desc="ASC", $fechaini="", $fechafin="", ){
+        $sql = "SELECT mediospago.id, mediospago.mediopago as nombre, SUM(factmediospago.valor) as valor
+                FROM mediospago JOIN factmediospago ON mediospago.id = factmediospago.idmediopago
+                JOIN facturas ON factmediospago.id_factura = facturas.id WHERE idcaja IN(";
+        
+        $sql .= $cajas.") AND idconsecutivo IN(".$consecutivos.") AND facturas.estado = 'Paga' GROUP BY mediospago.mediopago;";
+        $resultado = self::$db->query($sql);
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
 
     public static function rangoentre2R_Factura($fecha, $totalventa, $fechaini, $fechafin, $asc_desc="ASC"){
         $sql = "SELECT DATE($fecha) AS fecha, COUNT(*) AS numventasxdia, SUM($totalventa) AS totalventasxdia, ";

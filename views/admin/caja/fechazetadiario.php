@@ -54,13 +54,11 @@
                 <div class="flex gap-4 mb-4">
                     <div>
                         <p class="m-0 text-slate-500 text-xl font-semibold">Caja: </p>
-                        <p class="m-0 text-slate-500 text-xl font-semibold">Cajero: </p>
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha inicio: </p>
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
                     </div>
                     <div>
                         <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->nombrecaja;?></p>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
                         <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechainicio;?></p>
                         <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechacierre;?></p>
                     </div>
@@ -92,21 +90,14 @@
                     </thead>
                     <tbody>
                         <tr>        
-                            <td class="">Impuesto 19%</td> 
+                            <td class="">Base</td> 
                             <td class=""> - $0</td>
                         </tr>
                         <tr>        
-                            <td class="">Impuesto 16%</td> 
+                            <td class="">Impuesto</td> 
                             <td class=""> - $0</td>
                         </tr>
-                        <tr>        
-                            <td class="">Impuesto 8%</td> 
-                            <td class=""> - $0</td>
-                        </tr>
-                        <tr>        
-                            <td class="">Impuest 5%</td> 
-                            <td class=""> - $0</td>
-                        </tr>
+                        
                     </tbody>
                 </table>
 
