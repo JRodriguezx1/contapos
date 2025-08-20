@@ -1,4 +1,5 @@
-<div class="fechazetadiario">
+<div class="fechazetadiario relative">
+    <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
     <a href="/admin/caja/zetadiario" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -64,7 +65,7 @@
                     </div>
                 </div>
 
-                <table class="tabla2 mb-12" width="100%" id="">
+                <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                     <thead>
                         <tr>
                             <th>Medios de pago</th>
@@ -72,12 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($discriminarmediospagos as $index => $value): ?>
-                        <tr>        
-                            <td class=""><?php echo $value['mediopago'];?></td> 
-                            <td class="">$ <?php echo number_format($value['valor'], "0", ",", ".");?></td>
-                        </tr>
-                        <?php endforeach; ?>
+                        <!-- se inserta datos desde fechazetadiario.ts -->
                     </tbody>
                 </table>
 
@@ -130,15 +126,15 @@
                     <tbody>
                         <tr>        
                             <td class="">Ingreso de ventas</td> 
-                            <td class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                            <td id="ingresoVentas" class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
                         </tr>
                         <tr>        
                             <td class="">Total descuentos</td> 
-                            <td class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                            <td id="totalDescuentos" class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                         </tr>
                         <tr>        
                             <td class="text-blue-400 font-medium">Real de ventas</td> 
-                            <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                            <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -153,11 +149,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                            <td id="cantidadElectronicas" class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                            <td id="cantidadPOS" class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -172,11 +168,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                            <td id="valorElectronicas" class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                            <td id="valorPOS" class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
                         </tr>
                     </tbody>
                 </table>

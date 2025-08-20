@@ -63,10 +63,9 @@ class reportescontrolador{
 
     $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, 'ASC');
     $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, 'ASC');
-
-    debuguear($datosventa);
-
-    echo json_encode($alertas);
+    $datos['datosventa'] = $datosventa;
+    $datos['datosmediospago'] = $datosmediospago;
+    echo json_encode($datos);
   }
 
 }

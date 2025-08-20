@@ -5,6 +5,14 @@
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
     const items = document.querySelectorAll<HTMLLIElement>('.item');
     const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
+    const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
+    const ingresoVentas = document.querySelector('#ingresoVentas') as HTMLElement;
+    const totalDescuentos = document.querySelector('#totalDescuentos') as HTMLElement;
+    const realVentas = document.querySelector('#realVentas') as HTMLElement;
+    const cantidadElectronicas = document.querySelector('#cantidadElectronicas') as HTMLElement;
+    const cantidadPOS = document.querySelector('#cantidadPOS') as HTMLElement;
+    const valorElectronicas = document.querySelector('#valorElectronicas') as HTMLElement;
+    const valorPOS = document.querySelector('#valorPOS') as HTMLElement;
     let fechainicio:string = "", fechafin = "";
 
     //evento a los select drop dawn para abrir y cerrar
@@ -57,6 +65,7 @@
       const valuecajas:string[] = Array.from(cajas).map(c=>c.value);
       const valuefacturadores:string[] = Array.from(facturadores).map(f=>f.value);
 
+      (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
       (async ()=>{
         const datos = new FormData();
         datos.append('cajas', JSON.stringify(valuecajas));
@@ -66,12 +75,16 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             console.log(resultado);
-            if(resultado.exito !== undefined){
+            /*if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              imprimirIngresos();
+              //imprimirIngresos();
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
-            }
+            }*/
+           (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+           reiniciarTablas();
+           imprimirtablaMediosPago(resultado.datosmediospago);
+           imprimirIngresos(resultado.datosventa);
         } catch (error) {
             console.log(error);
         }
@@ -80,8 +93,34 @@
     });
 
 
-    function imprimirIngresos(){
-      
+    function imprimirtablaMediosPago(datosmediospago:{id:string, nombre:string, valor:string}[]){
+      datosmediospago.forEach(mp =>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="">${mp.nombre}</td> 
+                        <td class="">$${Number(mp.valor).toLocaleString()}</td>`;
+        tbodyMediosPago.appendChild(tr);
+      });
+    }
+
+    function imprimirIngresos(datosmediospago:{totalventa:string, ELECTRONICAS:string, POS:string, total_ELECTRONICAS:string, total_POS:string}){
+      ingresoVentas.textContent = datosmediospago.totalventa;
+      totalDescuentos.textContent = "0";
+      realVentas.textContent = datosmediospago.totalventa;
+      cantidadElectronicas.textContent = datosmediospago.ELECTRONICAS;
+      cantidadPOS.textContent = datosmediospago.POS;
+      valorElectronicas.textContent = datosmediospago.total_ELECTRONICAS;
+      valorPOS.textContent = datosmediospago.total_POS;
+    }
+
+    function reiniciarTablas(){
+      while(tbodyMediosPago.firstChild)tbodyMediosPago.removeChild(tbodyMediosPago.firstChild);
+      ingresoVentas.textContent = '';
+      totalDescuentos.textContent = "";
+      realVentas.textContent = "";
+      cantidadElectronicas.textContent = '';
+      cantidadPOS.textContent = '';
+      valorElectronicas.textContent = '';
+      valorPOS.textContent = '';
     }
 
   }
