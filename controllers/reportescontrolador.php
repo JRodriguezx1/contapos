@@ -53,16 +53,14 @@ class reportescontrolador{
 
   ///////////  API REST llamada desde reportes o fechazetadiario.ts  ////////////
   public static function consultafechazetadiario(){
-    $alertas = [];
-
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
     $idcajas = json_decode($_POST['cajas']);
     $idconsecutivos = json_decode($_POST['facturadores']);
-
     $cajas = join(", ", array_values($idcajas));
     $consecutivos = join(", ", array_values($idconsecutivos));
-
-    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, 'ASC');
-    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, 'ASC');
+    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, $fechainicio, $fechafin);
+    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, $fechainicio, $fechafin);
     $datos['datosventa'] = $datosventa;
     $datos['datosmediospago'] = $datosmediospago;
     echo json_encode($datos);

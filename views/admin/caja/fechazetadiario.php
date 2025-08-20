@@ -87,11 +87,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Base</td> 
-                            <td class=""> - $0</td>
+                            <td id="base" class=""> - $0</td>
                         </tr>
                         <tr>        
                             <td class="">Impuesto</td> 
-                            <td class=""> - $0</td>
+                            <td id="valorImpuestoTotal" class=""> - $0</td>
                         </tr>
                         
                     </tbody>

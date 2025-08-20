@@ -6,6 +6,8 @@
     const items = document.querySelectorAll<HTMLLIElement>('.item');
     const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
     const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
+    const base = document.querySelector('#base') as HTMLElement;
+    const valorImpuestoTotal = document.querySelector('#valorImpuestoTotal') as HTMLElement;
     const ingresoVentas = document.querySelector('#ingresoVentas') as HTMLElement;
     const totalDescuentos = document.querySelector('#totalDescuentos') as HTMLElement;
     const realVentas = document.querySelector('#realVentas') as HTMLElement;
@@ -13,7 +15,7 @@
     const cantidadPOS = document.querySelector('#cantidadPOS') as HTMLElement;
     const valorElectronicas = document.querySelector('#valorElectronicas') as HTMLElement;
     const valorPOS = document.querySelector('#valorPOS') as HTMLElement;
-    let fechainicio:string = "", fechafin = "";
+    let fechainicio:string = "", fechafin:string = "";
 
     //evento a los select drop dawn para abrir y cerrar
     btnsmultiselect.forEach((btnmultiselect, index) =>{
@@ -41,6 +43,7 @@
       timePicker: true,
       //startDate: moment().startOf('hour'),
       //endDate: moment().startOf('hour').add(32, 'hour'),
+      startDate: moment().set({ hour: 0, minute: 0, second: 1 }),
       endDate: moment().set({ hour: 23, minute: 59, second: 59 }),
       locale: {
         format: 'M/DD hh:mm A'
@@ -68,6 +71,8 @@
       (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
       (async ()=>{
         const datos = new FormData();
+        datos.append('fechainicio', fechainicio);
+        datos.append('fechafin', fechafin);
         datos.append('cajas', JSON.stringify(valuecajas));
         datos.append('facturadores', JSON.stringify(valuefacturadores));
         try {
@@ -75,12 +80,6 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             console.log(resultado);
-            /*if(resultado.exito !== undefined){
-              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              //imprimirIngresos();
-            }else{
-              msjalertToast('error', '¡Error!', resultado.error[0]);
-            }*/
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
            reiniciarTablas();
            imprimirtablaMediosPago(resultado.datosmediospago);
@@ -102,14 +101,16 @@
       });
     }
 
-    function imprimirIngresos(datosmediospago:{totalventa:string, ELECTRONICAS:string, POS:string, total_ELECTRONICAS:string, total_POS:string}){
-      ingresoVentas.textContent = datosmediospago.totalventa;
-      totalDescuentos.textContent = "0";
-      realVentas.textContent = datosmediospago.totalventa;
-      cantidadElectronicas.textContent = datosmediospago.ELECTRONICAS;
-      cantidadPOS.textContent = datosmediospago.POS;
-      valorElectronicas.textContent = datosmediospago.total_ELECTRONICAS;
-      valorPOS.textContent = datosmediospago.total_POS;
+    function imprimirIngresos(datosventa:{subtotalventa:string, base:string, valorimpuestototal:string, totalventa:string, ELECTRONICAS:string, POS:string, total_ELECTRONICAS:string, total_POS:string}){
+      base.textContent = '$'+Number(datosventa.base).toLocaleString();
+      valorImpuestoTotal.textContent = '$'+Number(datosventa.valorimpuestototal).toLocaleString();
+      ingresoVentas.textContent = '$'+Number(datosventa.subtotalventa).toLocaleString();
+      totalDescuentos.textContent = '$'+(Number(datosventa.subtotalventa)-Number(datosventa.totalventa)).toLocaleString();
+      realVentas.textContent = '$'+Number(datosventa.totalventa).toLocaleString();
+      cantidadElectronicas.textContent = datosventa.ELECTRONICAS;
+      cantidadPOS.textContent = datosventa.POS;
+      valorElectronicas.textContent = '$'+Number(datosventa.total_ELECTRONICAS).toLocaleString();
+      valorPOS.textContent = '$'+Number(datosventa.total_POS).toLocaleString();
     }
 
     function reiniciarTablas(){
