@@ -59,9 +59,9 @@
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
                     </div>
                     <div>
-                        <p id="cajastext" class="m-0 text-slate-500 text-xl"> Cajas </p>
-                        <p id="fechainicio" class="m-0 text-slate-500 text-xl"></p>
-                        <p id="fechafin" class="m-0 text-slate-500 text-xl"></p>
+                        <p id="cajastext" class="m-0 text-slate-500 text-xl"> <?php echo $cajaselected; ?> </p>
+                        <p id="fechainicio" class="m-0 text-slate-500 text-xl"> <?php echo $cierreselected->fechainicio??''; ?> </p>
+                        <p id="fechafin" class="m-0 text-slate-500 text-xl"> <?php echo $cierreselected->fechacierre??''; ?> </p>
                     </div>
                 </div>
 

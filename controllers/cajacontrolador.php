@@ -157,7 +157,8 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1]);
-    $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $idultimocierreabierto = cierrescajas::uncampo('estado', 0, 'id');
+    $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -173,37 +174,13 @@ class cajacontrolador{
     $consecutivos = consecutivos::all();
     
     $cierreselected = cierrescajas::find('id', $id);
-    if($cierreselected != null)
-    $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
-    //debuguear($cierreselected);
-    /*
-    $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
-    $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
-    $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
-    $mediospagos = mediospago::all();
-    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
-    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    $sobrantefaltante = $declaracion;
-    foreach($discriminarmediospagos as $i => $dis){
-      $aux = 0;
-      foreach($declaracion as $j => $dec){
-        if($dis['idmediopago'] == $dec->id_mediopago){
-          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
-          $aux = 1;
-          break;
-        }
-      }
-      if($aux == 0){
-        $newobj = new stdClass();
-        $newobj->id_mediopago = $dis['idmediopago'];
-        $newobj->idcierrecajaid = $cierreselected->id;
-        $newobj->nombremediopago = $dis['mediopago'];
-        $newobj->valordeclarado = 0;
-        $newobj->valorsistema = $dis['valor'];
-        $sobrantefaltante[] = $newobj;
-      }
-    }*/
-    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    if($cierreselected != null){
+      $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
+      $cajaselected = caja::find('id', $cierreselected->idcaja)->nombre; 
+    }else{
+      $cajaselected = '';
+    }
+    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
