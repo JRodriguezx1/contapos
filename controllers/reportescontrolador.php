@@ -2,6 +2,7 @@
 //$dias = facturacion::inner_join('SELECT COUNT(id) AS servicios, fecha_pago, SUM(total) AS totaldia FROM facturacion GROUP BY fecha_pago ORDER BY COUNT(id) DESC;');
 namespace Controllers;
 
+use Model\facturas;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{
@@ -50,15 +51,19 @@ class reportescontrolador{
 
     //////////////////////////----    API      ----////////////////////////////////
 
-  ///////////  API REST llamada desde cerrarcaja.ts cuando se declara dinero  ////////////
+  ///////////  API REST llamada desde reportes o fechazetadiario.ts  ////////////
   public static function consultafechazetadiario(){
-    $alertas = [];
-
-    $cajas = $_POST['cajas'];
-    $facturadores = $_POST['facturadores'];
-
-    
-    echo json_encode($alertas);
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $idcajas = json_decode($_POST['cajas']);
+    $idconsecutivos = json_decode($_POST['facturadores']);
+    $cajas = join(", ", array_values($idcajas));
+    $consecutivos = join(", ", array_values($idconsecutivos));
+    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, $fechainicio, $fechafin);
+    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, $fechainicio, $fechafin);
+    $datos['datosventa'] = $datosventa;
+    $datos['datosmediospago'] = $datosmediospago;
+    echo json_encode($datos);
   }
 
 }

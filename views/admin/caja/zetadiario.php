@@ -8,8 +8,8 @@
     <h4 class="text-gray-600 mb-12 mt-4">Zeta diarios</h4>
 
     <div class="flex gap-4 mb-4">
-        <button class="btn-command"><span class="material-symbols-outlined">subject</span>Zeta diario de hoy</button>
-        <a id="zcalendario" href="/admin/caja/fechazetadiario" class="btn-command text-center"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</a>
+        <a class="btn-command text-center" href="/admin/caja/fechazetadiario?id=<?php echo $idultimocierreabierto; ?>"><span class="material-symbols-outlined">subject</span>Zeta diario de hoy</a>
+        <a id="zcalendario" href="/admin/caja/fechazetadiario?id=0" class="btn-command text-center"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</a>
     </div>
     
     <div class="">
@@ -32,7 +32,7 @@
                         <td class="" ><?php echo $value->nombrecaja;?></td> 
                         <td class="" ><?php echo $value->fechainicio;?></td> 
                         <td class=""><?php echo $value->fechacierre;?></td>
-                        <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><a class="btn-xs btn-turquoise" href="/admin/caja/zetadiario?id=<?php echo $value->id;?>">Ver</a></div></td>
+                        <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><a class="btn-xs btn-turquoise" href="/admin/caja/fechazetadiario?id=<?php echo $value->id;?>">Ver</a></div></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

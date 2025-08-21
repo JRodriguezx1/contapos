@@ -1,4 +1,5 @@
-<div class="fechazetadiario">
+<div class="fechazetadiario relative">
+    <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
     <a href="/admin/caja/zetadiario" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -15,18 +16,12 @@
                 <span class="arrow"><i class="fa-solid fa-chevron-down"></i></span>
             </div>
             <ul class="list-items">
+                <?php foreach($cajas as $value): ?>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="caja" type="checkbox" id="caja1" value="1" checked>
-                    <label for="caja1">caja principal</label>
+                    <input class="caja" type="checkbox" id="caja<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
+                    <label for="caja<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
-                <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="caja" type="checkbox" id="caja2" value="2">
-                    <label for="caja2">caja bodega</label>
-                </li>
-                <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="caja" type="checkbox" id="caja3" value="3">
-                    <label for="caja3">caja auxiliar</label>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
         <div class="content-dropdawn">
@@ -35,14 +30,12 @@
                 <span class="arrow"><i class="fa-solid fa-chevron-down"></i></span>
             </div>
             <ul class="list-items">
+                <?php foreach($consecutivos as $value): ?>
                 <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="facturador" type="checkbox" id="facturador1" value="1" checked>
-                    <label for="facturador1">Factura POS</label>
+                    <input class="facturador" type="checkbox" id="<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
+                    <label for="<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
-                <li class="item stylecheckbox border-radius05 border-greyclear p-08">
-                    <input class="facturador" type="checkbox" id="facturador2" value="2" checked>
-                    <label for="facturador2">Factura electronica</label>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
         <button id="consultarZDiario" class="btn-md btn-blueintense !py-4 px-6 !bg-indigo-600">Consultar</button>
@@ -62,19 +55,17 @@
                 <div class="flex gap-4 mb-4">
                     <div>
                         <p class="m-0 text-slate-500 text-xl font-semibold">Caja: </p>
-                        <p class="m-0 text-slate-500 text-xl font-semibold">Cajero: </p>
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha inicio: </p>
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
                     </div>
                     <div>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->nombrecaja;?></p>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechainicio;?></p>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechacierre;?></p>
+                        <p id="cajastext" class="m-0 text-slate-500 text-xl"> <?php echo $cajaselected; ?> </p>
+                        <p id="fechainicio" class="m-0 text-slate-500 text-xl"> <?php echo $cierreselected->fechainicio??''; ?> </p>
+                        <p id="fechafin" class="m-0 text-slate-500 text-xl"> <?php echo $cierreselected->fechacierre??''; ?> </p>
                     </div>
                 </div>
 
-                <table class="tabla2 mb-12" width="100%" id="">
+                <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                     <thead>
                         <tr>
                             <th>Medios de pago</th>
@@ -82,11 +73,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($discriminarmediospagos as $index => $value): ?>
-                        <tr>        
-                            <td class=""><?php echo $value['mediopago'];?></td> 
-                            <td class="">$ <?php echo number_format($value['valor'], "0", ",", ".");?></td>
-                        </tr>
+                        <!-- se inserta datos desde fechazetadiario.ts -->
+                        <?php foreach($discriminarmediospagos as $value):  ?>
+                            <tr>
+                                <td class=""><?php echo $value['mediopago']; ?></td> 
+                                <td class="">$<?php echo number_format($value['valor'], '0', ',', '.'); ?></td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -100,21 +92,14 @@
                     </thead>
                     <tbody>
                         <tr>        
-                            <td class="">Impuesto 19%</td> 
-                            <td class=""> - $0</td>
+                            <td class="">Base</td>
+                            <td id="base" class=""> - $<?php echo $cierreselected?number_format($cierreselected->ingresoventas-$cierreselected->valorimpuestototal, '0', ',', '.'):'0'; ?></td>
                         </tr>
                         <tr>        
-                            <td class="">Impuesto 16%</td> 
-                            <td class=""> - $0</td>
+                            <td class="">Impuesto</td> 
+                            <td id="valorImpuestoTotal" class=""> - $<?php echo number_format($cierreselected->valorimpuestototal??'0','0', ',', '.');?></td>
                         </tr>
-                        <tr>        
-                            <td class="">Impuesto 8%</td> 
-                            <td class=""> - $0</td>
-                        </tr>
-                        <tr>        
-                            <td class="">Impuest 5%</td> 
-                            <td class=""> - $0</td>
-                        </tr>
+                        
                     </tbody>
                 </table>
 
@@ -147,15 +132,15 @@
                     <tbody>
                         <tr>        
                             <td class="">Ingreso de ventas</td> 
-                            <td class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                            <td id="ingresoVentas" class=""> + $<?php echo number_format($cierreselected->ingresoventas??'0', '0', ',', '.');?></td>
                         </tr>
                         <tr>        
                             <td class="">Total descuentos</td> 
-                            <td class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                            <td id="totalDescuentos" class=""> - $<?php echo number_format($cierreselected->totaldescuentos??'0', '0', ',', '.');?></td>
                         </tr>
                         <tr>        
                             <td class="text-blue-400 font-medium">Real de ventas</td> 
-                            <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                            <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format($cierreselected->realventas??'0', '0', ',', '.');?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -170,11 +155,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                            <td id="cantidadElectronicas" class=""><?php echo $cierreselected->facturaselectronicas??'0';?></td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                            <td id="cantidadPOS" class=""><?php echo $cierreselected->facturaspos??'0';?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -189,11 +174,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                            <td id="valorElectronicas" class="">0</td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                            <td id="valorPOS" class="">0</td>
                         </tr>
                     </tbody>
                 </table>

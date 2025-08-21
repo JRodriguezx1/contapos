@@ -3,9 +3,19 @@
   if(document.querySelector('.fechazetadiario')){
 
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
-    const items = document.querySelectorAll<HTMLLIElement>('.item');
+    const selectedcajas = document.querySelectorAll<HTMLLIElement>('.caja');
     const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
-    let fechainicio:string = "", fechafin = "";
+    const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
+    const base = document.querySelector('#base') as HTMLElement;
+    const valorImpuestoTotal = document.querySelector('#valorImpuestoTotal') as HTMLElement;
+    const ingresoVentas = document.querySelector('#ingresoVentas') as HTMLElement;
+    const totalDescuentos = document.querySelector('#totalDescuentos') as HTMLElement;
+    const realVentas = document.querySelector('#realVentas') as HTMLElement;
+    const cantidadElectronicas = document.querySelector('#cantidadElectronicas') as HTMLElement;
+    const cantidadPOS = document.querySelector('#cantidadPOS') as HTMLElement;
+    const valorElectronicas = document.querySelector('#valorElectronicas') as HTMLElement;
+    const valorPOS = document.querySelector('#valorPOS') as HTMLElement;
+    let fechainicio:string = "", fechafin:string = "";
 
     //evento a los select drop dawn para abrir y cerrar
     btnsmultiselect.forEach((btnmultiselect, index) =>{
@@ -25,7 +35,21 @@
         if(btnmultiselect)btnmultiselect.classList.toggle('open');
       }
     });
+    // mostrar el nombre de las cajas,segun se selecciona
+    selectedcajas.forEach(c=>{c.addEventListener('click', cajas_seleccionadas);});
 
+    function cajas_seleccionadas(){
+      const inputscaja = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+      const cajastext = document.querySelector('#cajastext') as HTMLElement;
+      cajastext.textContent = ". ";
+      inputscaja.forEach((inputcaja, i) =>{
+        if(i<inputscaja.length-1){
+          cajastext.textContent += inputcaja.nextElementSibling?.textContent!+' - ';
+        }else{
+          cajastext.textContent += inputcaja.nextElementSibling?.textContent!;
+        }
+      });
+    }
 
 
     // SELECTOR DE FECHAS DEL CALENDARIO
@@ -33,6 +57,7 @@
       timePicker: true,
       //startDate: moment().startOf('hour'),
       //endDate: moment().startOf('hour').add(32, 'hour'),
+      startDate: moment().set({ hour: 0, minute: 0, second: 1 }),
       endDate: moment().set({ hour: 23, minute: 59, second: 59 }),
       locale: {
         format: 'M/DD hh:mm A'
@@ -42,23 +67,28 @@
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
         var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
         var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
-        /*objDateRange.inicio = startDate;
-        objDateRange.fin = endDate;*/
-        console.log(startDate);
-        console.log(endDate);
         fechainicio = startDate;
         fechafin = endDate;
+        (document.querySelector('#fechainicio') as HTMLParagraphElement).textContent = fechainicio;
+        (document.querySelector('#fechafin') as HTMLParagraphElement).textContent = fechafin;
     });
 
     consultarZDiario.addEventListener('click', ()=>{
+      if(fechainicio == '' || fechafin == ''){
+         msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
+         return;
+      }
       const cajas = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
       const facturadores = document.querySelectorAll<HTMLInputElement>('input.facturador[type="checkbox"]:checked');
       
       const valuecajas:string[] = Array.from(cajas).map(c=>c.value);
       const valuefacturadores:string[] = Array.from(facturadores).map(f=>f.value);
 
+      (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
       (async ()=>{
         const datos = new FormData();
+        datos.append('fechainicio', fechainicio);
+        datos.append('fechafin', fechafin);
         datos.append('cajas', JSON.stringify(valuecajas));
         datos.append('facturadores', JSON.stringify(valuefacturadores));
         try {
@@ -66,12 +96,10 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             console.log(resultado);
-            if(resultado.exito !== undefined){
-              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              imprimirDatosVenta();
-            }else{
-              msjalertToast('error', '¡Error!', resultado.error[0]);
-            }
+           (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+           reiniciarTablas();
+           imprimirtablaMediosPago(resultado.datosmediospago);
+           imprimirIngresos(resultado.datosventa);
         } catch (error) {
             console.log(error);
         }
@@ -80,8 +108,36 @@
     });
 
 
-    function imprimirDatosVenta(){
-      
+    function imprimirtablaMediosPago(datosmediospago:{id:string, nombre:string, valor:string}[]){
+      datosmediospago.forEach(mp =>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="">${mp.nombre}</td> 
+                        <td class="">$${Number(mp.valor).toLocaleString()}</td>`;
+        tbodyMediosPago.appendChild(tr);
+      });
+    }
+
+    function imprimirIngresos(datosventa:{subtotalventa:string, base:string, valorimpuestototal:string, totalventa:string, ELECTRONICAS:string, POS:string, total_ELECTRONICAS:string, total_POS:string}){
+      base.textContent = '$'+Number(datosventa.base).toLocaleString();
+      valorImpuestoTotal.textContent = '$'+Number(datosventa.valorimpuestototal).toLocaleString();
+      ingresoVentas.textContent = '$'+Number(datosventa.subtotalventa).toLocaleString();
+      totalDescuentos.textContent = '$'+(Number(datosventa.subtotalventa)-Number(datosventa.totalventa)).toLocaleString();
+      realVentas.textContent = '$'+Number(datosventa.totalventa).toLocaleString();
+      cantidadElectronicas.textContent = datosventa.ELECTRONICAS;
+      cantidadPOS.textContent = datosventa.POS;
+      valorElectronicas.textContent = '$'+Number(datosventa.total_ELECTRONICAS).toLocaleString();
+      valorPOS.textContent = '$'+Number(datosventa.total_POS).toLocaleString();
+    }
+
+    function reiniciarTablas(){
+      while(tbodyMediosPago.firstChild)tbodyMediosPago.removeChild(tbodyMediosPago.firstChild);
+      ingresoVentas.textContent = '';
+      totalDescuentos.textContent = "";
+      realVentas.textContent = "";
+      cantidadElectronicas.textContent = '';
+      cantidadPOS.textContent = '';
+      valorElectronicas.textContent = '';
+      valorPOS.textContent = '';
     }
 
   }
