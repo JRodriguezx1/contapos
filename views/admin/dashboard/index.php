@@ -141,7 +141,7 @@
             </div>
         </div>
 
-        <div class="basis-full tlg:flex-1 bg-white">
+        <div class="basis-full tlg:flex-1 bg-white pb-28">
             <div class="">
                 <div class="calendario"><div class="calendar p-4"  id="calendar"></div></div>
             </div>

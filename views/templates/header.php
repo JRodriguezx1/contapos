@@ -106,53 +106,57 @@
 
 </div>
 
-<dialog id="miDialogomenumovil" class="p-0 w-[73%] max-w-4xl h-[51%] bg-white rounded-lg" hidden>
+<!-- Menú movil barra inferior -->
+<dialog id="miDialogomenumovil" class="p-0 w-[90%] max-w-6xl h-[75%] bg-white rounded-lg" hidden>
   <!-- Fondo semi-transparente -->
   <div class="fixed inset-0 bg-black bg-opacity-40" onclick="document.getElementById('miDialogomenumovil').close()"></div>
   
   <!-- Contenedor del menú -->
-  <div class="relative w-auto h-full p-6 flex flex-col justify-between bg-white">
+  <div class="relative w-auto h-full py-8 px-10 flex flex-col justify-between bg-white">
+    <div class="flex justify-center">
+        <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2indigo.png" alt="logoj2">
+    </div>
     <!-- Encabezado con botón cerrar -->
-    <div class="flex items-center justify-between mb-6">
-      <h4 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">Menú</h4>
+    <div class="flex items-center justify-between mb-6 mt-4">
+      <h4 class="text-4xl font-semibold text-gray-700 dark:text-gray-200">Menú</h4>
       <button onclick="document.getElementById('miDialogomenumovil').close()" 
               class="w-10 h-10 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
-        <span class="material-symbols-outlined text-2xl">close</span>
+        <span class="material-symbols-outlined text-4xl">close</span>
       </button>
     </div>
 
     <nav class="flex flex-col space-y-3">
       <!-- Inicio -->
-      <a href="/admin/dashboard" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-indigo-500">home</span>
+      <a href="/admin/dashboard" class="flex items-center text-2xl gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-20 focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500 text-2xl">home</span>
         <span>Inicio</span>
       </a>
 
       <!-- Reportes -->
-      <a href="/admin/reportes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-indigo-500">format_list_bulleted</span>
+      <a href="/admin/reportes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-20 text-2xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500 text-2xl">format_list_bulleted</span>
         <span>Reportes</span>
       </a>
 
       <!-- Clientes -->
-      <a href="/admin/clientes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-indigo-500">support_agent</span>
+      <a href="/admin/clientes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-20 text-2xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500 text-2xl">support_agent</span>
         <span>Clientes</span>
       </a>
 
       <!-- Perfil -->
-      <a href="/admin/perfil" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-indigo-500">manage_accounts</span>
+      <a href="/admin/perfil" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-700   bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-20 text-2xl focus:outline-none focus:ring-0">
+        <span class="material-symbols-outlined text-indigo-500 text-2xl">manage_accounts</span>
         <span>Perfil</span>
       </a>
     </nav>
 
     <!-- Pie -->
     <div class="border-t mt-4 pt-4 text-base text-right">
-      <p class="text-gray-500">Bienvenido: 
-        <span class="text-indigo-600 font-bold text-right"><?php echo $_SESSION['nombre']; ?></span>
+      <p class="text-gray-500 text-xl">Bienvenido: 
+        <span class="text-indigo-600 font-bold text-right text-xl"><?php echo $_SESSION['nombre']; ?></span>
       </p>
-      <a class="cerrar-sesion mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout">Cerrar Sesión</a>
+      <a class="cerrar-sesion mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout text-xl">Cerrar Sesión</a>
     </div>
   </div>
 </dialog>

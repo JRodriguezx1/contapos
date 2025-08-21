@@ -1,4 +1,4 @@
-<div class="configuracion box">
+<div class="configuracion !pb-[5.5rem] box ">
     <!-- Menú horizontal fijo -->
     <div class="tabs sticky top-0 bg-white z-10 py-2" id="tabulacion">
         <div class="tabs-content">

@@ -97,8 +97,8 @@
         </div>
         
         <div class="text-right">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="salir">Salir</button>
-            <input id="btnEditarCrearSubProducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Crear">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
+            <input id="btnEditarCrearSubProducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar producto-->
