@@ -157,10 +157,6 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1]);
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            
-    }
-    
     $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -168,16 +164,18 @@ class cajacontrolador{
   public static function fechazetadiario(Router $router){
     session_start();
     isadmin();
-    $id = 7;
-    //$id = $_GET['id'];
+    $id = $_GET['id'];
     if(!is_numeric($id))return;
 
-
-
     $alertas = [];
+    $discriminarmediospagos = [];
     $cajas = caja::all();
     $consecutivos = consecutivos::all();
     
+    $cierreselected = cierrescajas::find('id', $id);
+    if($cierreselected != null)
+    $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
+    //debuguear($cierreselected);
     /*
     $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
     $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
@@ -205,7 +203,7 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }*/
-    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

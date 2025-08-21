@@ -9,7 +9,7 @@
 
     <div class="flex gap-4 mb-4">
         <button class="btn-command"><span class="material-symbols-outlined">subject</span>Zeta diario de hoy</button>
-        <a id="zcalendario" href="/admin/caja/fechazetadiario" class="btn-command text-center"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</a>
+        <a id="zcalendario" href="/admin/caja/fechazetadiario?id=0" class="btn-command text-center"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</a>
     </div>
     
     <div class="">

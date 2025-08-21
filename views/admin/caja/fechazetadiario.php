@@ -74,6 +74,12 @@
                     </thead>
                     <tbody>
                         <!-- se inserta datos desde fechazetadiario.ts -->
+                        <?php foreach($discriminarmediospagos as $value):  ?>
+                            <tr>
+                                <td class=""><?php echo $value['mediopago']; ?></td> 
+                                <td class="">$<?php echo number_format($value['valor'], '0', ',', '.'); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
 
@@ -86,12 +92,12 @@
                     </thead>
                     <tbody>
                         <tr>        
-                            <td class="">Base</td> 
-                            <td id="base" class=""> - $0</td>
+                            <td class="">Base</td>
+                            <td id="base" class=""> - $<?php echo $cierreselected?number_format($cierreselected->ingresoventas-$cierreselected->valorimpuestototal, '0', ',', '.'):'0'; ?></td>
                         </tr>
                         <tr>        
                             <td class="">Impuesto</td> 
-                            <td id="valorImpuestoTotal" class=""> - $0</td>
+                            <td id="valorImpuestoTotal" class=""> - $<?php echo number_format($cierreselected->valorimpuestototal??'0','0', ',', '.');?></td>
                         </tr>
                         
                     </tbody>
@@ -126,15 +132,15 @@
                     <tbody>
                         <tr>        
                             <td class="">Ingreso de ventas</td> 
-                            <td id="ingresoVentas" class=""> + $0</td>
+                            <td id="ingresoVentas" class=""> + $<?php echo number_format($cierreselected->ingresoventas??'0', '0', ',', '.');?></td>
                         </tr>
                         <tr>        
                             <td class="">Total descuentos</td> 
-                            <td id="totalDescuentos" class=""> - $0</td>
+                            <td id="totalDescuentos" class=""> - $<?php echo number_format($cierreselected->totaldescuentos??'0', '0', ',', '.');?></td>
                         </tr>
                         <tr>        
                             <td class="text-blue-400 font-medium">Real de ventas</td> 
-                            <td id="realVentas" class="text-blue-400 font-medium"> = $0</td>
+                            <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format($cierreselected->realventas??'0', '0', ',', '.');?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -149,11 +155,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td id="cantidadElectronicas" class="">0</td>
+                            <td id="cantidadElectronicas" class=""><?php echo $cierreselected->facturaselectronicas??'0';?></td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td id="cantidadPOS" class="">0</td>
+                            <td id="cantidadPOS" class=""><?php echo $cierreselected->facturaspos??'0';?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -168,7 +174,7 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td id="valorElectronicas" class="">5</td>
+                            <td id="valorElectronicas" class="">0</td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
