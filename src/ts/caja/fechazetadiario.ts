@@ -35,14 +35,20 @@
         if(btnmultiselect)btnmultiselect.classList.toggle('open');
       }
     });
-
-
-    selectedcajas.forEach(c=>{
-      c.addEventListener('click', cajas_seleccionadas);
-    });
+    // mostrar el nombre de las cajas,segun se selecciona
+    selectedcajas.forEach(c=>{c.addEventListener('click', cajas_seleccionadas);});
 
     function cajas_seleccionadas(){
-      const cajas = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+      const inputscaja = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+      const cajastext = document.querySelector('#cajastext') as HTMLElement;
+      cajastext.textContent = ". ";
+      inputscaja.forEach((inputcaja, i) =>{
+        if(i<inputscaja.length-1){
+          cajastext.textContent += inputcaja.nextElementSibling?.textContent!+' - ';
+        }else{
+          cajastext.textContent += inputcaja.nextElementSibling?.textContent!;
+        }
+      });
     }
 
 
@@ -63,9 +69,15 @@
         var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
         fechainicio = startDate;
         fechafin = endDate;
+        (document.querySelector('#fechainicio') as HTMLParagraphElement).textContent = fechainicio;
+        (document.querySelector('#fechafin') as HTMLParagraphElement).textContent = fechafin;
     });
 
     consultarZDiario.addEventListener('click', ()=>{
+      if(fechainicio == '' || fechafin == ''){
+         msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
+         return;
+      }
       const cajas = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
       const facturadores = document.querySelectorAll<HTMLInputElement>('input.facturador[type="checkbox"]:checked');
       

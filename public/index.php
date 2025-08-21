@@ -87,7 +87,7 @@ $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'do
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
 $router->get('/admin/caja/cerrarcaja', [cajacontrolador::class, 'cerrarcaja']);
 $router->get('/admin/caja/zetadiario', [cajacontrolador::class, 'zetadiario']);
-$router->get('/admin/caja/fechazetadiario', [cajacontrolador::class, 'fechazetadiario']);
+$router->get('/admin/caja/fechazetadiario', [cajacontrolador::class, 'fechazetadiario']); ////--------pasar a controlador de reportes
 $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscierres']);
 $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);

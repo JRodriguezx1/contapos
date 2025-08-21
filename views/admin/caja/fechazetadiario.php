@@ -59,9 +59,9 @@
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
                     </div>
                     <div>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->nombrecaja;?></p>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechainicio;?></p>
-                        <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechacierre;?></p>
+                        <p id="cajastext" class="m-0 text-slate-500 text-xl"> Cajas </p>
+                        <p id="fechainicio" class="m-0 text-slate-500 text-xl"></p>
+                        <p id="fechafin" class="m-0 text-slate-500 text-xl"></p>
                     </div>
                 </div>
 
@@ -126,15 +126,15 @@
                     <tbody>
                         <tr>        
                             <td class="">Ingreso de ventas</td> 
-                            <td id="ingresoVentas" class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                            <td id="ingresoVentas" class=""> + $0</td>
                         </tr>
                         <tr>        
                             <td class="">Total descuentos</td> 
-                            <td id="totalDescuentos" class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                            <td id="totalDescuentos" class=""> - $0</td>
                         </tr>
                         <tr>        
                             <td class="text-blue-400 font-medium">Real de ventas</td> 
-                            <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                            <td id="realVentas" class="text-blue-400 font-medium"> = $0</td>
                         </tr>
                     </tbody>
                 </table>
@@ -149,11 +149,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td id="cantidadElectronicas" class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                            <td id="cantidadElectronicas" class="">0</td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td id="cantidadPOS" class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                            <td id="cantidadPOS" class="">0</td>
                         </tr>
                     </tbody>
                 </table>
@@ -168,11 +168,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td id="valorElectronicas" class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                            <td id="valorElectronicas" class="">5</td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td id="valorPOS" class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                            <td id="valorPOS" class="">0</td>
                         </tr>
                     </tbody>
                 </table>
