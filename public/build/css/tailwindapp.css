@@ -985,8 +985,16 @@ video {
   width: 136px !important;
 }
 
+.\!w-\[137px\] {
+  width: 137px !important;
+}
+
 .\!w-\[140px\] {
   width: 140px !important;
+}
+
+.\!w-\[144px\] {
+  width: 144px !important;
 }
 
 .\!w-\[145px\] {
@@ -1123,10 +1131,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.\!w-\[137px\] {
-  width: 137px !important;
 }
 
 .min-w-0 {
