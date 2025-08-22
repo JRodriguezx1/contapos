@@ -181,7 +181,7 @@ class ventascontrolador{
               $obj->dato2 = '';
               $obj->idfactura = $r[1];
               if($obj->id<0){  //para productos "Otros"
-                $obj->id = 1;
+                $obj->id = 1;  //este es el id de Otros.
                 $obj->idproducto = 1;
                 $obj->idcategoria = 1;
               }
@@ -225,12 +225,12 @@ class ventascontrolador{
     $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
     $mediospago = json_decode($_POST['mediosPago']);
     $factura = facturas::find('id', $_POST['id']);
-    $factmediospago = new factmediospago();
+    $factmediospago = new factmediospago();  //CAMBIAR EL ID POR EL IDPRODUCTOS
     $productos = ventas::idregistros('idfactura', $factura->id);
     $tempfactura = clone $factura;
     $tempultimocierre = clone $ultimocierre;
    
-
+debuguear($productos);
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
       $resultArray = array_reduce($productos, function($acumulador, $objeto){
       //$objeto->id = $objeto->iditem;
@@ -295,7 +295,6 @@ class ventascontrolador{
             if($r1[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
-
                 //////// descontar del inventario los productos simples ////////
                 if(!empty($resultArray['productosSimples']))$invPro = productos::updatereduceinv($resultArray['productosSimples'], 'stock');
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
