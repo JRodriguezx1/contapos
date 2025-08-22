@@ -59,7 +59,7 @@
                         <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
                     </div>
                     <div>
-                        <p id="cajastext" class="m-0 text-slate-500 text-xl"> <?php echo $cajaselected; ?> </p>
+                        <p id="cajastext" class="m-0 text-slate-500 text-xl"> <?php echo $cajaselected;?><span class="text-transparent">.</span></p>
                         <p id="fechainicio" class="m-0 text-slate-500 text-xl"> <?php echo $cierreselected->fechainicio??''; ?> </p>
                         <p id="fechafin" class="m-0 text-slate-500 text-xl"> <?php echo $cierreselected->fechacierre??''; ?> </p>
                     </div>
@@ -153,13 +153,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>        
+                        <tr>      
                             <td class="">Facturas electronicas</td> 
                             <td id="cantidadElectronicas" class=""><?php echo $cierreselected->facturaselectronicas??'0';?></td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
                             <td id="cantidadPOS" class=""><?php echo $cierreselected->facturaspos??'0';?></td>
+                        </tr>
+                        <tr>        
+                            <td class="">Total facturas</td> 
+                            <td id="cantidadPOS" class=""><?php echo $cierreselected?number_format($cierreselected->facturaspos+$cierreselected->facturaselectronicas, '0', ',', '.'):'0';?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -174,11 +178,11 @@
                     <tbody>
                         <tr>        
                             <td class="">Facturas electronicas</td> 
-                            <td id="valorElectronicas" class="">0</td>
+                            <td id="valorElectronicas" class="">$<?php echo number_format($cierreselected->valorfe??0, '0', ',', '.');?></td>
                         </tr>
                         <tr>        
                             <td class="">Facturas POS</td> 
-                            <td id="valorPOS" class="">0</td>
+                            <td id="valorPOS" class="">$<?php echo number_format($cierreselected->valorpos??0, '0', ',', '.');?></td>
                         </tr>
                     </tbody>
                 </table>

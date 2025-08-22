@@ -96,8 +96,12 @@ class ventascontrolador{
             $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
             if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
               $ultimocierre->facturaselectronicas = $ultimocierre->facturaselectronicas + 1;  //total de facturas electronicas
+              $ultimocierre->valorfe += $factura->subtotal;
+              $ultimocierre->descuentofe += $factura->descuento;
             }else{
               $ultimocierre->facturaspos = $ultimocierre->facturaspos + 1;   //total de facturas pos
+              $ultimocierre->valorpos += $factura->subtotal;
+              $ultimocierre->descuentopos += $factura->descuento;
             }
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
             foreach($mediospago as $obj){
@@ -108,7 +112,7 @@ class ventascontrolador{
             }
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->subtotal;
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             //////////// Guardar los productos de la venta en tabla ventas //////////////
@@ -261,8 +265,12 @@ class ventascontrolador{
             $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
             if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
               $ultimocierre->facturaselectronicas = $ultimocierre->facturaselectronicas + 1;  //total de facturas electronicas
+              $ultimocierre->valorfe += $factura->subtotal;
+              $ultimocierre->descuentofe += $factura->descuento;
             }else{
               $ultimocierre->facturaspos = $ultimocierre->facturaspos + 1;   //total de facturas pos
+              $ultimocierre->valorpos += $factura->subtotal;
+              $ultimocierre->descuentopos += $factura->descuento;
             }
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
             foreach($mediospago as $obj){
@@ -273,7 +281,7 @@ class ventascontrolador{
             }
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->subtotal;
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             
             $r1 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago

@@ -3,7 +3,7 @@ namespace Model;
 
 class cierrescajas extends ActiveRecord {
     protected static $tabla = 'cierrescajas';
-    protected static $columnasDB = ['id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'totalbruto', 'estado', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'totalbruto', 'estado', 'dato1', 'dato2'];
 
     public function __construct($args = [])
     {
@@ -19,6 +19,10 @@ class cierrescajas extends ActiveRecord {
         $this->totalfacturas = $args['totalfacturas'] ?? 0;
         $this->facturaselectronicas = $args['facturaselectronicas'] ?? 0;
         $this->facturaspos = $args['facturaspos'] ?? 0;
+        $this->valorfe = $args['valorfe'] ?? 0;
+        $this->valorpos = $args['valorpos'] ?? 0;
+        $this->descuentofe = $args['descuentofe'] ?? 0;
+        $this->descuentopos = $args['descuentopos'] ?? 0;
         $this->basecaja = $args['basecaja'] ?? 0;
         $this->ventasenefectivo = $args['ventasenefectivo'] ?? 0;
         $this->gastoscaja = $args['gastoscaja'] ?? 0;
@@ -26,9 +30,9 @@ class cierrescajas extends ActiveRecord {
         $this->domicilios = $args['domicilios'] ?? 0;
         $this->ndomicilios = $args['ndomicilios'] ?? 0;
         $this->realencaja = $args['realencaja'] ?? 0;
-        $this->ingresoventas = $args['ingresoventas'] ?? 0;
-        $this->totaldescuentos = $args['totaldescuentos'] ?? 0;
-        $this->realventas = $args['realventas'] ?? 0;
+        $this->ingresoventas = $args['ingresoventas'] ?? 0;  //total ingreso de ventas
+        $this->totaldescuentos = $args['totaldescuentos'] ?? 0;  //descuentos
+        $this->realventas = $args['realventas'] ?? 0;  //ingreso real = total ingreso - descuentos
         $this->valorimpuestototal = $args['valorimpuestototal'] ?? 0;
         $this->totalbruto = $args['totalbruto'] ?? 0;
         $this->estado = $args['estado'] ?? 0;  // 0 = abierto, 1 = cerrado
