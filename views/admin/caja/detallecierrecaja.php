@@ -162,6 +162,25 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <table class="tabla2 mb-12" width="100%" id="">
+                            <thead>
+                                <tr>
+                                    <th>Ventas por usuario</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($ventasxusuarios as $index => $value): ?>
+                                <tr>        
+                                    <td class=""><?php echo $value['Nombre'];?></td> 
+                                    <td class=""><?php echo $value['N_ventas'];?></td>
+                                    <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], "0", ",", ".");?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     
                     </div>
                 </div>
@@ -192,7 +211,7 @@
                             <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                             <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
                             <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                                    <a class="btn-xs btn-turquoise" href="/admin/caja/detallepedido?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                    <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
                                 </div>
                             </td>
                         </tr>

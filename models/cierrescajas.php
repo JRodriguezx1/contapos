@@ -63,4 +63,17 @@ class cierrescajas extends ActiveRecord {
         $resultado->free();
         return $array;
     }
+
+    public static function ventasXusuario(string $id): array{
+        $sql = "SELECT CONCAT(usuarios.nombre, ' ', usuarios.apellido) as Nombre, COUNT(facturas.idvendedor) as N_ventas, SUM(facturas.subtotal) as ventas FROM usuarios 
+        JOIN facturas ON usuarios.id = facturas.idvendedor
+        WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY facturas.idvendedor;";
+
+        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;  
+    }
 }
