@@ -59,7 +59,7 @@ class productos_sub extends ActiveRecord{
         $query = "SELECT *, CASE ";
         $in = "";
         foreach($array as $index => $value){
-            $query .= "WHEN id_producto = $value->id THEN cantidadsubproducto*{$value->cantidad} ";
+            $query .= "WHEN id_producto = $value->id THEN cantidadsubproducto*{$value->porcion} ";
             if(array_key_last($array) === $index){
                 $in .= "$value->id";
             }else{

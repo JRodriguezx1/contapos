@@ -242,7 +242,7 @@
                 datos.append('cantidad', AmountItemProduccion.toString());
                 datos.append('construccion', '1');  //se indica al backend que es construccion y se debe descontar sus insumos
                 try{
-                    const url = "/admin/api/"+endponit;  //asocia el producto con el sub producto en la tabla productos_sub
+                    const url = "/admin/api/"+endponit;  //endpoint = aumentarstock para produccion, asocia el producto con el sub producto en la tabla productos_sub
                     const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                     const resultado = await respuesta.json();
                     if(resultado.exito !== undefined){
@@ -288,9 +288,9 @@
                         const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;
                         if(Number(element.stock) <= Number(element.stockminimo)){
                             td.classList.remove('bg-cyan-50', 'text-cyan-600');
-                            td.classList.add('bg-red-300', 'text-white');
+                            td.classList.add('bg-red-50', 'text-red-800');
                         }else{
-                            td.classList.remove('bg-red-300', 'text-white');
+                            td.classList.remove('bg-red-50', 'text-red-800');
                             td.classList.add('bg-cyan-50', 'text-cyan-600');
                         }
                     } 

@@ -53,7 +53,8 @@ $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta'])
 //area publica
 //$router->get('/', [paginacontrolador::class, 'index']);
 $router->get('/', [logincontrolador::class, 'login']);
-$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen 
+$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen
+$router->get('/printdetallecierre', [cajacontrolador::class, 'printdetallecierre']); //llamado desde cerrarcaja
 
 
 /////area dashboard/////
@@ -89,6 +90,7 @@ $router->get('/admin/caja/cerrarcaja', [cajacontrolador::class, 'cerrarcaja']);
 $router->get('/admin/caja/zetadiario', [cajacontrolador::class, 'zetadiario']);
 $router->get('/admin/caja/fechazetadiario', [cajacontrolador::class, 'fechazetadiario']); ////--------pasar a controlador de reportes
 $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscierres']);
+$router->get('/admin/caja/pedidosguardados', [cajacontrolador::class, 'pedidosguardados']);
 $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
 $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen']);  //resumen de la orden
@@ -146,8 +148,10 @@ $router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOr
 $router->post('/admin/api/declaracionDinero', [cajacontrolador::class, 'declaracionDinero']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/arqueocaja', [cajacontrolador::class, 'arqueocaja']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierrecajaconfirmado']);  //aip llamada desde cerrarcaja.ts
+$router->post('/admin/api/datoscajaseleccionada', [cajacontrolador::class, 'datoscajaseleccionada']);  //aip llamada desde cerrarcaja.ts
 $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospagoXfactura']); //obtener los medios de pago segun factura elegido en caja.ts
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
+$router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eliminarPedidoGuardado']);  //api llamada desde pedidosguardados.ts
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 

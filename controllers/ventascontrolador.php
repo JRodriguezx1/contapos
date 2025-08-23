@@ -63,7 +63,7 @@ class ventascontrolador{
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
         $acumulador['productosSimples'][] = $objeto;
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
-        $objeto->cantidad = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
+        $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
         $acumulador['productosCompuestos'][] = $objeto;
       }
       return $acumulador;
@@ -173,7 +173,7 @@ class ventascontrolador{
             }
 
           }else{  
-    ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
+      ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
             $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
             //////////// Guardar los productos de la venta en tabla ventas //////////////
             foreach($carrito as $obj){
@@ -181,7 +181,7 @@ class ventascontrolador{
               $obj->dato2 = '';
               $obj->idfactura = $r[1];
               if($obj->id<0){  //para productos "Otros"
-                $obj->id = 1;
+                $obj->id = 1;  //este es el id de Otros.
                 $obj->idproducto = 1;
                 $obj->idcategoria = 1;
               }
@@ -230,6 +230,9 @@ class ventascontrolador{
     $tempfactura = clone $factura;
     $tempultimocierre = clone $ultimocierre;
    
+    //CAMBIA EL id POR EL idproducto
+    foreach($productos as $value)$value->id = $value->idproducto;
+    //debuguear($productos);
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
       $resultArray = array_reduce($productos, function($acumulador, $objeto){
@@ -238,7 +241,7 @@ class ventascontrolador{
         if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){
           $acumulador['productosSimples'][] = $objeto;
         }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){
-          $objeto->cantidad = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
+          $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
           $acumulador['productosCompuestos'][] = $objeto;
         }
         return $acumulador;
@@ -295,7 +298,6 @@ class ventascontrolador{
             if($r1[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
-
                 //////// descontar del inventario los productos simples ////////
                 if(!empty($resultArray['productosSimples']))$invPro = productos::updatereduceinv($resultArray['productosSimples'], 'stock');
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar

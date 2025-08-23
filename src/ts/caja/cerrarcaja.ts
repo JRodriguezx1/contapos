@@ -3,10 +3,14 @@
   if(document.querySelector('.cerrarcaja')){
     const modalArqueocaja:any = document.querySelector("#modalArqueocaja");
     const Modalcerrarcaja:any = document.querySelector("#Modalcerrarcaja");
+    const modalCambiarCaja:any = document.querySelector("#modalCambiarCaja");
     const btnArqueocaja = document.querySelector<HTMLButtonElement>("#btnArqueocaja");
     const btnCerrarcaja = document.querySelector<HTMLButtonElement>("#btnCerrarcaja");
+    const btnImprimirDetalleCaja = document.querySelector('#btnImprimirDetalleCaja') as HTMLButtonElement;
+    const btnCambiarCaja = document.querySelector<HTMLButtonElement>("#btnCambiarCaja");
     const inputsmediospago = document.querySelectorAll<HTMLInputElement>('.inputmediopago');
     const formArqueocaja = document.querySelector('#formArqueocaja') as HTMLFormElement;
+    const formCambiarCaja = document.querySelector('#formCambiarCaja') as HTMLFormElement;
 
     btnArqueocaja?.addEventListener('click', ():void=>{
       modalArqueocaja.showModal();
@@ -15,6 +19,11 @@
 
     btnCerrarcaja?.addEventListener('click', ():void=>{
       Modalcerrarcaja.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    btnCambiarCaja?.addEventListener('click', ():void=>{
+      modalCambiarCaja.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
     
@@ -129,10 +138,43 @@
       })();
     }
 
+    ///////// imprimir detalle cierre
+    btnImprimirDetalleCaja?.addEventListener('click', ()=>{
+        const ventana = window.open('/printdetallecierre?id=1', '_blank');
+        ventana?.focus();
+        ventana?.print();
+        setTimeout(() => { ventana?.close(); }, 90); // Cerrar la ventana después de unos segundos
+      });
+
+    //////////////////     Cambio de caja      //////////////////////
+    formCambiarCaja?.addEventListener('submit', (e:Event)=>{
+      e.preventDefault();
+      const datos = new FormData();
+      datos.append('id', $('#CambiarCaja').val()as string);
+      (async ()=>{
+        try {
+            const url = "/admin/api/datoscajaseleccionada";  //api llamada en cajacontrolador.php para traer datos de venta de la caja seleccionada 
+            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+            const resultado = await respuesta.json();
+            if(resultado.exito !== undefined){
+              modalCambiarCaja.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
+              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            }else{
+              msjalertToast('error', '¡Error!', resultado.error[0]);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+      
+    });
+
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === modalArqueocaja || event.target === Modalcerrarcaja || (event.target as HTMLInputElement).value === 'cancelar' || (event.target as HTMLElement).closest('.salircerrarcaja') || (event.target as HTMLElement).closest('.finCerrarcaja')) {
+      if (event.target === modalArqueocaja || event.target === Modalcerrarcaja || event.target === modalCambiarCaja || (event.target as HTMLInputElement).value === 'Cancelar' || (event.target as HTMLElement).closest('.salircerrarcaja') || (event.target as HTMLElement).closest('.finCerrarcaja')) {
           modalArqueocaja.close();
           Modalcerrarcaja.close();
+          modalCambiarCaja.close();
           document.removeEventListener("click", cerrarDialogoExterno);
 
           if((event.target as HTMLElement).closest('.finCerrarcaja')){  //Cuando se hace el cierre de caja
