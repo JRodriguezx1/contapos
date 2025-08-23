@@ -387,8 +387,8 @@
                     <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
                 </div>
                 <div>
-                    <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo $factura->subtotal??'';?></p>
-                    <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo $factura->impuesto??'';?></p>
+                    <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->subtotal??0, '0', ',', '.');?></p>
+                    <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valorimpuestototal??0, '0', ',', '.');?></p>
                     <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal"><?php echo $factura->dctox100.'%  $'.$factura->descuento;?></p>
                     <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo $factura->valortarifa??'';?></p>
                     <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ <?php echo number_format($factura->total??0, "0", ",", ".");?></p>

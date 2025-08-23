@@ -37,11 +37,11 @@
               <td class=""><?php echo $value->unidadmedida;?></td>
               <td class="">$<?php echo number_format($value->precio_compra, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                <button class="btn-md btn-turquoise editarSubProductos"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="btn-md btn-turquoise editarSubProductos"><i class="fa-solid fa-pen-to-square" title="Actualizar o modificar el sub producto"></i></button>
                 <?php if($value->insumoprocesado == '1'): //0=comprado,   1=creado ?> 
                     <a class="btn-md btn-blue" href="/admin/almacen/componer?id=frabricado<?php echo $value->id;?>"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 <?php endif; ?>
-                <button class="btn-md btn-red eliminarSubProductos"><i class="fa-solid fa-trash-can"></i></button>
+                <button class="btn-md btn-red eliminarSubProductos" title="Eliminar sub producto"><i class="fa-solid fa-trash-can"></i></button>
             </div></td>
           </tr>
           <?php endforeach; ?>

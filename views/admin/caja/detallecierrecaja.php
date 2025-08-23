@@ -1,4 +1,4 @@
-<div>
+<div class="bg-white p-6 rounded-lg shadow">
     <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -7,7 +7,7 @@
     </a>
     <h4 class="text-gray-600 my-2">Detalle del cierre de caja</h4>
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
-        <button class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
+        <button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
     <div class="accordion">
@@ -22,16 +22,16 @@
 
                     <div class="flex gap-4 mb-4">
                         <div>
-                            <p class="m-0 text-slate-500 text-xl font-semibold">Caja: </p>
-                            <p class="m-0 text-slate-500 text-xl font-semibold">Cajero: </p>
-                            <p class="m-0 text-slate-500 text-xl font-semibold">Fecha inicio: </p>
-                            <p class="m-0 text-slate-500 text-xl font-semibold">Fecha cierre: </p>
+                            <p class="m-0 text-slate-500 text-xl font-semibold leading-loose">Caja: </p>
+                            <p class="m-0 text-slate-500 text-xl font-semibold leading-loose">Cajero: </p>
+                            <p class="m-0 text-slate-500 text-xl font-semibold leading-loose">Fecha inicio: </p>
+                            <p class="m-0 text-slate-500 text-xl font-semibold leading-loose">Fecha cierre: </p>
                         </div>
                         <div>
-                            <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->nombrecaja;?></p>
-                            <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
-                            <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechainicio;?></p>
-                            <p class="m-0 text-slate-500 text-xl"><?php echo $ultimocierre->fechacierre;?></p>
+                            <p class="m-0 text-slate-500 text-xl leading-loose"><?php echo $ultimocierre->nombrecaja;?></p>
+                            <p class="m-0 text-slate-500 text-xl leading-loose"><?php echo $user['nombre'];?></p>
+                            <p class="m-0 text-slate-500 text-xl leading-loose"><?php echo $ultimocierre->fechainicio;?></p>
+                            <p class="m-0 text-slate-500 text-xl leading-loose"><?php echo $ultimocierre->fechacierre;?></p>
                         </div>
                     </div>
 
@@ -162,6 +162,25 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <table class="tabla2 mb-12" width="100%" id="">
+                            <thead>
+                                <tr>
+                                    <th>Ventas por usuario</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($ventasxusuarios as $index => $value): ?>
+                                <tr>        
+                                    <td class=""><?php echo $value['Nombre'];?></td> 
+                                    <td class=""><?php echo $value['N_ventas'];?></td>
+                                    <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], "0", ",", ".");?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     
                     </div>
                 </div>
@@ -192,7 +211,7 @@
                             <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                             <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
                             <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                                    <a class="btn-xs btn-turquoise" href="/admin/caja/detallepedido?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                    <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
                                 </div>
                             </td>
                         </tr>

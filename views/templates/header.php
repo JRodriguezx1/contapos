@@ -82,10 +82,10 @@
 </div>
 
 <div class="barra">
-    <div class="toggleanduser"><span class="sidebartoggle material-symbols-outlined">menu</span><p>hola: <span> <?php echo $_SESSION['nombre']; ?></span></p></div>
+    <div class="toggleanduser"><span class="sidebartoggle material-symbols-outlined">menu</span><p>Hola: <span> <?php echo $_SESSION['nombre']; ?></span></p></div>
 
     <div class="flex items-center gap-4 mr-4">
-        <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">Cerrar Sesion</a>
+        <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">Cerrar Sesión</a>
 
         <button type="button" data-dropdown-toggle="notification-dropdown" class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300">
             <i class="text-4xl fa-solid fa-bell"></i>
@@ -101,9 +101,7 @@
                 <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/logout">Sign out</a>
             </div>
         </button>
-
     </div>
-
 </div>
 
 <!-- Menú movil barra inferior -->
