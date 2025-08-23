@@ -378,7 +378,8 @@
         }
        
         
-        carrito[index].total = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        carrito[index].total = carrito[index].subtotal;
         //calculo del impuesto y base por producto en el carrito deventas
         carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto]).toFixed(3));
         carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
@@ -387,7 +388,7 @@
         if(stateinput)
         (tablaventa?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
         (tablaventa?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
-      }else{  //agregar a carrito si el producto no esta agregado en carrito
+      }else{  //agregar a carrito si el producto no esta agregado en carrito, cuando se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
         const productovalorimp = (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto];

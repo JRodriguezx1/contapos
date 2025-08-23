@@ -63,7 +63,7 @@ class ventascontrolador{
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
         $acumulador['productosSimples'][] = $objeto;
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
-        $objeto->cantidad = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
+        $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
         $acumulador['productosCompuestos'][] = $objeto;
       }
       return $acumulador;
@@ -173,7 +173,7 @@ class ventascontrolador{
             }
 
           }else{  
-    ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
+      ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
             $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
             //////////// Guardar los productos de la venta en tabla ventas //////////////
             foreach($carrito as $obj){
@@ -225,12 +225,15 @@ class ventascontrolador{
     $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
     $mediospago = json_decode($_POST['mediosPago']);
     $factura = facturas::find('id', $_POST['id']);
-    $factmediospago = new factmediospago();  //CAMBIAR EL ID POR EL IDPRODUCTOS
+    $factmediospago = new factmediospago();
     $productos = ventas::idregistros('idfactura', $factura->id);
     $tempfactura = clone $factura;
     $tempultimocierre = clone $ultimocierre;
    
-debuguear($productos);
+    //CAMBIA EL id POR EL idproducto
+    foreach($productos as $value)$value->id = $value->idproducto;
+    //debuguear($productos);
+
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
       $resultArray = array_reduce($productos, function($acumulador, $objeto){
       //$objeto->id = $objeto->iditem;
@@ -238,7 +241,7 @@ debuguear($productos);
         if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){
           $acumulador['productosSimples'][] = $objeto;
         }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){
-          $objeto->cantidad = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
+          $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
           $acumulador['productosCompuestos'][] = $objeto;
         }
         return $acumulador;

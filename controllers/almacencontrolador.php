@@ -135,7 +135,8 @@ class almacencontrolador{
     }
     $categorias = categorias::all();
     $productos = productos::all();
-    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'producto'=>$producto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -949,7 +950,7 @@ class almacencontrolador{
         //validar si el producto compuesto tiene insumos asociados y si es de tipo construccion
         if(isset($_POST['construccion']) && $_POST['construccion'] == 1){
           //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
-          $producto->cantidad = $cantidad/$producto->rendimientoestandar;
+          $producto->porcion = $cantidad/$producto->rendimientoestandar;
           $descontarSubproductos = productos_sub::cantidadSubproductosXventa([$producto]);
           $soloIdSubProduct = [];
           foreach($descontarSubproductos as $index => $value){
