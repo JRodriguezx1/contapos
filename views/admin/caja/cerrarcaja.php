@@ -71,8 +71,8 @@
         </div>
         <div class="flex flex-wrap gap-4 max-w-96">
             <button class="btn-command" id="btnCerrarcaja"><span class="material-symbols-outlined">keyboard_lock</span>Cerrar caja</button>
-            <button class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
-            <button class="btn-command"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
+            <button class="btn-command" id="btnImprimirDetalleCaja"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
+            <button class="btn-command" id="btnCambiarCaja"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
         </div>
     </div> <!-- Fin col 2 -->
   </div>
@@ -323,14 +323,14 @@
         </div>
         
         <div class="flex justify-end space-x-4">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="cancelar">cancelar</button>
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="Cancelar">Cancelar</button>
             <input id="btnAPlicararqueocaja" class="btn-md btn-indigo !py-4 !px-6 !w-[140px]" type="submit" value="Aplicar">
         </div>
     </form>
   </dialog>
   
   <!-- MODAL ventana para cerrar caja-->
-  <dialog class="midialog-xs p-5" id="Modalcerrarcaja">
+  <dialog id="Modalcerrarcaja" class="midialog-xs p-5">
     <div>
         <h4 class="font-semibold text-gray-700 mb-4">Caja principal</h4>
         <p class="text-gray-600">Desea cerrar la caja? Ya no se podra modificar.</p>
@@ -339,6 +339,27 @@
         <div class="finCerrarcaja flex cursor-pointer transition-transform duration-300 hover:scale-110 text-blue-600 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-4">Confirmar</p></div>
         <div class="salircerrarcaja flex cursor-pointer transition-transform duration-300 hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-4">Salir</p></div>
     </div>
+  </dialog>
+
+  <!-- MODAL cambiar caja-->
+  <dialog id="modalCambiarCaja" class="midialog-sm p-5">
+    <h4 class="font-semibold text-gray-700 mb-4">Cambiar caja</h4>
+    <div id="divmsjalertaCambiarCaja"></div>
+    <form id="formCambiarCaja" class="formulario" action="/admin/caja" method="POST">
+        <div class="formulario__campo">
+            <label class="formulario__label" for="CambiarCaja">Seleccionar caja</label>
+            <select id="CambiarCaja" class="formulario__select" name="CambiarCaja" required>
+                <option value="" disabled selected>-Seleccionar-</option>
+                <?php foreach($cajas as $index => $value): ?>
+                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="text-right">
+            <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
+            <input id="btnEnviarCambiarCaja" class="btn-md btn-blue" type="submit" value="Aplicar">
+        </div>
+    </form>
   </dialog>
 
   <div><p class="text-gray-500 text-center">Innovatech</p></div>

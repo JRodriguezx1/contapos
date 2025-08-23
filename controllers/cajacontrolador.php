@@ -83,7 +83,8 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
-    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $cajas = caja::all();
+    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'cajas'=>$cajas, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   
@@ -231,6 +232,13 @@ class cajacontrolador{
     $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
+  public static function pedidosguardados(Router $router){
+    session_start();
+    isadmin();
+    $alertas = [];
+    $pedidosguardados = facturas::whereArray(['cotizacion'=>1, 'estado'=>'guardado']);
+    $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
 
   public static function ordenresumen(Router $router){
     session_start();
@@ -268,6 +276,17 @@ class cajacontrolador{
   }
 
   public static function printfacturacarta(Router $router){
+    session_start();
+    isadmin();
+    $alertas = [];
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    //$alertas = usuarios::getAlertas();
+    
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+  }
+
+  public static function printdetallecierre(Router $router){
     session_start();
     isadmin();
     $alertas = [];
@@ -376,6 +395,21 @@ class cajacontrolador{
   }
 
 
+  public static function datoscajaseleccionada(){
+    /*$fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $idcajas = json_decode($_POST['cajas']);
+    $idconsecutivos = json_decode($_POST['facturadores']);
+    $cajas = join(", ", array_values($idcajas));
+    $consecutivos = join(", ", array_values($idconsecutivos));
+    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, $fechainicio, $fechafin);
+    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, $fechainicio, $fechafin);
+    $datos['datosventa'] = $datosventa;
+    $datos['datosmediospago'] = $datosmediospago;*/
+    $datos = "lupe";
+    echo json_encode($datos);
+  }
+
   public static function mediospagoXfactura(){  //api llamado desde caja.js me trae los medios de pago segun factura
     $id = $_GET['id'];
     $factmediospago = factmediospago::idregistros('id_factura', $id);
@@ -471,6 +505,26 @@ class cajacontrolador{
     } //fin SERVER == $_POS
 
     echo json_encode($alertas);
+  }
+
+  public static function eliminarPedidoGuardado(){
+    session_start();
+      $pedidoguardado = facturas::find('id', $_POST['id']);
+      if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+          if(!empty($pedidoguardado)){
+            $pedidoguardado->estado = "Eliminada";
+              $r = $pedidoguardado->actualizar();
+              if($r){
+                  ActiveRecord::setAlerta('exito', 'Cotizacion eliminada correctamente');
+              }else{
+                  ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+              }
+          }else{
+              ActiveRecord::setAlerta('error', 'Cotizacion no encontrado');
+          }
+      }
+      $alertas = ActiveRecord::getAlertas();
+      echo json_encode($alertas); 
   }
 
 }
