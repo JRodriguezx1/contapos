@@ -22,7 +22,7 @@
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-96 whitespace-normal"><?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria;?></td>
-                <td class="flex items-center justify-center text-xl px-3 !p-[1.2rem] tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></td>
+                <td class=""><div class="flex items-center justify-center text-xl px-3 !p-[1.2rem] tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
@@ -41,7 +41,7 @@
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-96 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria??'';?></td> 
-                <td class="flex items-center justify-center px-3 py-1.5 tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></td>
+                <td class=""><div class="flex items-center justify-center px-3 py-1.5 tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">

@@ -153,8 +153,8 @@
                         ////// reset form ///////
                         (document.querySelector('#formStock') as HTMLFormElement)?.reset();
                         //actualizar fila
-                        (tablaStockRapido as any).cell(indiceFila, 3).data(cantidadactual).draw();
-                        (tablaStockRapido as any).page(info.page).draw('page'); //me mantiene la pagina actual
+                        //(tablaStockRapido as any).cell(indiceFila, 3).data(cantidadactual).draw();
+                        //(tablaStockRapido as any).page(info.page).draw('page'); //me mantiene la pagina actual
                         //actualiza tabla stock rapido
                         actualizarStockRapido([resultado.item[0]], tipoelemento);
                     }else{
@@ -282,16 +282,16 @@
                     let idAttr = rowNode.getAttribute('data-idsubproducto');
                     if(tipoItem == '0')idAttr = rowNode.getAttribute('data-idproducto');
                     if (idAttr && idAttr === element.id){
-                        this.cell(this.index(), 3).data(element.stock);
+                        this.cell(this.index(), 3).data(`<div class="flex items-center justify-center">${element.stock}</div>`);
 
                         // Obtén el <td> real
                         const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;
                         if(Number(element.stock) <= Number(element.stockminimo)){
-                            td.classList.remove('bg-cyan-50', 'text-cyan-600');
-                            td.classList.add('bg-red-50', 'text-red-800');
+                            td.firstElementChild?.classList.remove('bg-cyan-50', 'text-cyan-600');
+                            td.firstElementChild?.classList.add('bg-red-50', 'text-red-800');
                         }else{
-                            td.classList.remove('bg-red-50', 'text-red-800');
-                            td.classList.add('bg-cyan-50', 'text-cyan-600');
+                            td.firstElementChild?.classList.remove('bg-red-50', 'text-red-800');
+                            td.firstElementChild?.classList.add('bg-cyan-50', 'text-cyan-600');
                         }
                     } 
                 });
