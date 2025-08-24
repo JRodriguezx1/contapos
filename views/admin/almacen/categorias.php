@@ -28,7 +28,7 @@
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->nombre; ?></td> 
               <td class=""><?php echo $value->totalproductos;?></td>
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-categoria="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarCategoria"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarCategoria"><i class="fa-solid fa-trash-can"></i></button></div></td>
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-categoria="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarCategoria" title="Actualizar categoria"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarCategoria" title="Eliminar categoria"><i class="fa-solid fa-trash-can"></i></button></div></td>
           </tr>
           <?php endif; endforeach; ?>
       </tbody>

@@ -46,54 +46,74 @@
                 </div>
             </div>
         </fieldset>
-        <fieldset class="formulario__fieldset">
-            <legend class="formulario-legend">Redes Sociales</legend>
-            <div class="formulario__campo">
-                <div class="formulario__contenedor-icono">
-                    <div class="formulario__icono"><i class="fa-brands fa-whatsapp"></i></div>
-                    <input id="negocio" class="formulario__input--sociales bg-gray-50 border-t border-r border-b border-gray-300 text-gray-900 rounded-tr-lg rounded-br-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1
-                    " type="number"  min="3000000000" max="3777777777" name="ws" placeholder="whatsapp" value="<?php echo $negocio->ws ?? '';?>" required>
-                </div>
-            </div>
-            <div class="formulario__campo">
-                <div class="formulario__contenedor-icono">
-                    <div class="formulario__icono"><i class="fa-brands fa-facebook"></i></div>
-                    <input id="negocio" class="formulario__input--sociales bg-gray-50 border-t border-r border-b border-gray-300 text-gray-900 rounded-tr-lg rounded-br-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1
-                    " type="text" name="facebook" placeholder="Facebook" value="<?php echo $negocio->facebook ?? ''; ?>">
-                </div>
-            </div>
-            <div class="formulario__campo">
-                <div class="formulario__contenedor-icono">
-                    <div class="formulario__icono"><i class="fa-brands fa-instagram"></i></div>
-                    <input id="negocio" class="formulario__input--sociales bg-gray-50 border-t border-r border-b border-gray-300 text-gray-900 rounded-tr-lg rounded-br-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1
-                    " type="text" name="instagram" placeholder="Instagram" value="<?php echo $negocio->instagram ?? ''; ?>">
-                </div>
-            </div>
-            <!--<div class="formulario__campo">
-                <div class="formulario__contenedor-icono">
-                    <div class="formulario__icono"><i class="fa-brands fa-tiktok"></i></div>
-                    <input id="negocio" class="formulario__input--sociales" type="text" name="tiktok" placeholder="tiktok" value="<?php //echo $negocio->tiktok ?? ''; ?>">
-                </div>
-            </div>-->
-            <div class="formulario__campo">
-                <div class="formulario__contenedor-icono">
-                    <div class="formulario__icono"><i class="fa-brands fa-youtube"></i></div>
-                    <input id="negocio" class="formulario__input--sociales bg-gray-50 border-t border-r border-b border-gray-300 text-gray-900 rounded-tr-lg rounded-br-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1
-                    " type="text" name="youtube" placeholder="Youtube" value="<?php echo $negocio->youtube ?? ''; ?>">
-                </div>
-            </div>
-            <!--<div class="formulario__campo">
-                <div class="formulario__contenedor-icono">
-                    <div class="formulario__icono"><i class="fa-brands fa-twitter"></i></div>
-                    <input id="negocio" class="formulario__input--sociales" type="text" name="twitter" placeholder="twitter" value="<?php //echo $negocio->twitter ?? ''; ?>">
-                </div>
-            </div>-->
-            <div class="formulario__campo">
-                <label class="formulario__label" for="logo">Logo</label>
-                <input class="formulario__input--file " type="file" id="logo" name="logo">
-                <label><?php echo $negocio->logo??'';?></label>
-            </div>
-        </fieldset>
+
+<fieldset class="w-full max-w-full">
+  <legend class="text-lg font-semibold mb-2">Redes Sociales</legend>
+
+  <!-- WhatsApp -->
+  <div class="flex items-center w-full mb-3">
+    <div class="flex items-center justify-center h-14 w-14 bg-green-500 text-white rounded-l-lg">
+      <i class="fa-brands fa-whatsapp text-2xl"></i>
+    </div>
+    <input 
+      class="flex-1 min-w-0 h-14 px-3 text-base sm:text-lg border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+      type="number"  
+      min="3000000000" 
+      max="3777777777" 
+      name="ws" 
+      placeholder="Whatsapp" 
+      value="<?php echo $negocio->ws ?? '';?>" 
+      required
+    >
+  </div>
+
+  <!-- Facebook -->
+  <div class="flex items-center w-full mb-3">
+    <div class="flex items-center justify-center h-14 w-14 bg-blue-600 text-white rounded-l-lg">
+      <i class="fa-brands fa-facebook text-2xl"></i>
+    </div>
+    <input 
+      class="flex-1 min-w-0 h-14 px-3 text-base sm:text-lg border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+      type="text" 
+      name="facebook" 
+      placeholder="Facebook" 
+      value="<?php echo $negocio->facebook ?? ''; ?>">
+  </div>
+
+  <!-- Instagram -->
+  <div class="flex items-center w-full mb-3">
+    <div class="flex items-center justify-center h-14 w-14 bg-pink-500 text-white rounded-l-lg">
+      <i class="fa-brands fa-instagram text-2xl"></i>
+    </div>
+    <input 
+      class="flex-1 min-w-0 h-14 px-3 text-base sm:text-lg border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+      type="text" 
+      name="instagram" 
+      placeholder="Instagram" 
+      value="<?php echo $negocio->instagram ?? ''; ?>">
+  </div>
+
+  <!-- YouTube -->
+  <div class="flex items-center w-full mb-3">
+    <div class="flex items-center justify-center h-14 w-14 bg-red-600 text-white rounded-l-lg">
+      <i class="fa-brands fa-youtube text-2xl"></i>
+    </div>
+    <input 
+      class="flex-1 min-w-0 h-14 px-3 text-base sm:text-lg border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+      type="text" 
+      name="youtube" 
+      placeholder="Youtube" 
+      value="<?php echo $negocio->youtube ?? ''; ?>">
+  </div>
+
+  <!-- Logo -->
+  <div class="w-full mt-4">
+    <label for="logo" class="block text-sm font-medium mb-1">Logo</label>
+    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="file" id="logo" name="logo">
+    <label class="text-sm text-gray-600 mt-1 block"><?php echo $negocio->logo??'';?></label>
+  </div>
+</fieldset>
+
         <input class="btn-lg self-end btn-indigo !mb-4 !py-4 px-6 !w-[125px]" type="submit" value="Actualizar">
     </form>
 </div>

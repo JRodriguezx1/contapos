@@ -25,11 +25,11 @@
               <td class=""><?php echo $value->fechacreacion??'';?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-unidadmedida="<?php echo $value->nombre;?>">
                 <?php if($value->editable == '1'){ ?>
-                <button class="btn-md btn-turquoise editarUnidadMedida"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="btn-md btn-turquoise editarUnidadMedida" title="Actualizar unidad de medida"><i class="fa-solid fa-pen-to-square"></i></button>
                 <!--<button class="btn-md btn-red eliminarUnidadMedida"><i class="fa-solid fa-trash-can"></i></button></div>-->
                 <form method="POST" class="formEliminarUnidadMedida" action="/admin/almacen/unidadesmedida">
                     <input type="hidden" name="id" value="<?php echo $value->id;?>"> 
-                    <button class="btn-md btn-red eliminarUnidadMedida" type="button">
+                    <button class="btn-md btn-red eliminarUnidadMedida" title="Eliminar unidad de medida" type="button">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </form>

@@ -53,18 +53,18 @@
           </h1>
           <form action="/login" method="post" class="space-y-4">
             <div>
-              <label for="email" class="mb-2  dark:text-gray-400 text-xl">Movil</label>
+              <label for="email" class="mb-2  dark:text-gray-400 text-xl">Celular</label>
               <input
                 id="email"
                 class="border p-3 dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 shadow-md placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
                 type="number"
-                placeholder="Tu movil"
+                placeholder="Ingresa tu número celular"
                 name="movil"
                 required
               />
             </div>
             <div>
-              <label for="password" class="mb-2 dark:text-gray-400 text-xl">Password</label>
+              <label for="password" class="mb-2 dark:text-gray-400 text-xl">Contraseña</label>
               <input
                 id="password"
                 class="border p-3 shadow-md dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
@@ -81,19 +81,19 @@
               <span
                 class="bg-left-bottom bg-gradient-to-r text-lg from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out"
               >
-                Forget your password?
+                ¿Olvidaste tu contraseña?
               </span>
             </a>
             <button
               class="bg-gradient-to-r dark:text-gray-300 from-blue-500 to-purple-500 shadow-lg mt-6 p-2 text-white rounded-lg w-full hover:scale-105 hover:from-purple-500 hover:to-blue-500 transition duration-300 ease-in-out"
               type="submit"
             >
-              LOG IN
+              INICIAR SESIÓN
             </button>
           </form>
           <div class="flex flex-col mt-4 items-center justify-center text-lg">
             <h3 class="dark:text-gray-300">
-              No tienes una cuenta?
+              ¿No tienes una cuenta?
               <a
                 class="group text-blue-400 transition-all duration-100 ease-in-out"
                 href="#"
@@ -101,7 +101,7 @@
                 <span
                   class="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out"
                 >
-                  Sign Up
+                  Regístrate
                 </span>
               </a>
             </h3>

@@ -42,7 +42,7 @@
               <td class=""><strong>$ </strong><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                      <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                      <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light" title="Imprimir pedido"><i class="fa-solid fa-print"></i></button>
                   </div>
               </td>
             </tr>
@@ -62,7 +62,7 @@
       </tfoot>
   </table>
 
-  <dialog id="gastosIngresos" class="midialog-sm p-5">
+  <dialog id="gastosIngresos" class="midialog-sm p-12">
     <h4 class="font-semibold text-gray-700 mb-4">Gastos e ingresos</h4>
     <div id="divmsjalerta1"></div>
     <form id="formGastosingresos" class="formulario" action="/admin/caja/ingresoGastoCaja" method="POST">
@@ -111,8 +111,8 @@
         </div>
         
         <div class="text-right">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="cancelar">cancelar</button>
-            <input id="btnEnviargastosingresos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Aplicar">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[137px]" type="button" value="cancelar">cancelar</button>
+            <input id="btnEnviargastosingresos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[137px]" type="submit" value="Aplicar">
         </div>
     </form>
   </dialog>

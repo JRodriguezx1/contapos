@@ -1,7 +1,7 @@
 <div class="gestionDian">
     <h4 class="text-gray-600 mb-12 mt-4">Gestionar Dian</h4>
     <div class="flex flex-wrap gap-2 mt-4 mb-4 pb-4">
-        <button id="crearCompañia" class="btn-command"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
+        <button id="crearCompañia" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
         <button id="obtenerresolucion" class="btn-command"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
         <button id="setpruebas" class="btn-command text-center"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>  
     </div>
@@ -32,14 +32,14 @@
       </tbody>
     </table>
 
-    <dialog id="miDialogoCompañia" class="midialog-sm p-6 rounded-lg shadow-lg">
+    <dialog id="miDialogoCompañia" class="midialog-sm p-12 rounded-lg shadow-lg">
         <h4 id="modalCompañia" class="font-semibold text-gray-700 mb-4 mt-10">Crear compañia</h4>
         <div id="divmsjalertaCompañia"></div>
         <form id="formCrearUpdateCompañia" class="formulario" action="/admin/config/crear_compañia" method="POST">
 
             <div class="formulario__campo">
                 <label class="formulario__label" for="tipo_documento">Tipo Documento</label>
-                <select class="formulario__select" id="tipo_documento" name="tipo_documento" required>
+                <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipo_documento" name="tipo_documento" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <option value="1">Registro civil</option>
                     <option value="2">Tarjeta de identidad</option>
@@ -56,45 +56,45 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="numero_documento">Numero de Documento</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="number" placeholder="Numerodel documento" id="numero_documento" name="numero_documento" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numerodel documento" id="numero_documento" name="numero_documento" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="certificadoDigital">Certificado Digital .p12</label>
-                <input type="file" id="certificadoDigital" name="certificadoDigital" accept=".p12" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />      
+                <input type="file" id="certificadoDigital" name="certificadoDigital" accept=".p12" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required />      
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="Password">Password</label>
+                <label class="formulario__label" for="Password">Contraseña</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="text" placeholder="Contraseña del certificaod digital" id="Password" name="Password" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Contraseña del certificaod digital" id="Password" name="Password" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="idsoftware">ID Software</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="text" placeholder="ID del Software" id="idsoftware" name="idsoftware" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ID del Software" id="idsoftware" name="idsoftware" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="pinsoftware">Pin Software</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="number" placeholder="Pin del Software" id="pinsoftware" name="pinsoftware" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Pin del Software" id="pinsoftware" name="pinsoftware" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="nombrerazonsocial">Nombre/Razon Social</label>
+                <label class="formulario__label" for="nombrerazonsocial">Nombre/Razón Social</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="text" placeholder="Nombre/Razon Social" id="nombrerazonsocial" name="nombrerazonsocial" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre/Razon Social" id="nombrerazonsocial" name="nombrerazonsocial" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="tipoorganizacion">Tipo Organizacion</label>
-                <select class="formulario__select" id="tipoorganizacion" name="tipoorganizacion" required>
+                <label class="formulario__label" for="tipoorganizacion">Tipo Organización</label>
+                <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="tipoorganizacion" name="tipoorganizacion" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <option value="1">Persona Juridica</option>
                     <option value="2">Persona Natural</option>
@@ -102,7 +102,7 @@
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="obligaciones">Obligaciones</label>
-                <select class="formulario__select" id="obligaciones" name="obligaciones" required>
+                <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="obligaciones" name="obligaciones" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <option value="7">Gran contribuyente</option>
                     <option value="9">Autorretenedor</option>
@@ -113,7 +113,7 @@
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="impuesto">Impuesto</label>
-                <select class="formulario__select" id="impuesto" name="impuesto" required>
+                <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="impuesto" name="impuesto" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <option value="1">Ninguno</option>
                     <option value="1">IVA</option>
@@ -121,98 +121,96 @@
                 </select>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="regimen">Regimen</label>
-                <select class="formulario__select" id="regimen" name="regimen" required>
+                <label class="formulario__label" for="regimen">Régimen</label>
+                <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="regimen" name="regimen" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <option value="1">Responsable de IVA</option>
                     <option value="2">No Responsable de IVA</option>
                 </select>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="email">Correo electronico</label>
+                <label class="formulario__label" for="email">Correo electrónico</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="email" placeholder="Email que aparece en el RUT" id="email" name="email" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Email que aparece en el RUT" id="email" name="email" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="telefono">Telefono</label>
+                <label class="formulario__label" for="telefono">Teléfono</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="number" placeholder="Telefono de contacto" id="telefono" name="telefono" value="" required>
-                    <label data-num="16" class="count-charts" for="">16</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Telefono de contacto" id="telefono" name="telefono" value="" required>
+                    <!-- <label data-num="16" class="count-charts" for="">16</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="departamento">Departamento</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="text" placeholder="Departamento o region" id="departamento" name="departamento" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Departamento o region" id="departamento" name="departamento" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="ciudad">Ciudad</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="text" placeholder="Ciudad" id="ciudad" name="ciudad" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad" id="ciudad" name="ciudad" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="direccion">Direccion</label>
+                <label class="formulario__label" for="direccion">Dirección</label>
                 <div class="formulario__dato">
-                    <input class="formulario__input" type="text" placeholder="Direccion comercial o de residencia" id="direccion" name="direccion" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion comercial o de residencia" id="direccion" name="direccion" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
         
             <div class="text-right">
-                <button class="btn-md btn-red" type="button" value="Salir">Salir</button>
-                <input id="btnEditarCrearCompañia" class="btn-md btn-blue" type="submit" value="Crear">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>
+                <input id="btnEditarCrearCompañia" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
             </div>
         </form>
     </dialog><!--fin crear/editar compañia-->
 
-    <dialog id="miDialogoGetResolucion" class="midialog-sm p-5">
-        <h4 class="font-semibold text-gray-700 mb-4">Obtener resolucion</h4>
+    <dialog id="miDialogoGetResolucion" class="midialog-sm p-12">
+        <h4 class="font-semibold text-gray-700 mb-4">Obtener resolución</h4>
         <div id="divmsjalertaGetResolucion"></div>
         <form id="formGetResolucion" class="formulario" action="/admin/config/GetResolucion" method="POST">
             <div class="formulario__campo">
                 <label class="formulario__label" for="getresolucioncompañia">Seleccionar compañia</label>
-                <select id="getResolucioncompañia" class="formulario__select" name="getresolucioncompañia" required>
-                    <option value="" disabled selected>-Seleccionar-</option>
-                    
+                <select id="getResolucioncompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="getresolucioncompañia" required>
+                    <option value="" disabled selected>-Seleccionar-</option>                   
                 </select>
             </div>
             <div>
                 <!--lista de resoluciones-->
             </div>
             <div class="text-right">
-                <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEnviarGetResolucion" class="btn-md btn-blue" type="submit" value="Descargar">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEnviarGetResolucion" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Descargar">
             </div>
         </form>
     </dialog><!--fin obtener resolucion-->
 
-    <dialog id="miDialogosetpruebas" class="midialog-sm p-5">
+    <dialog id="miDialogosetpruebas" class="midialog-sm p-12">
         <h4 class="font-semibold text-gray-700 mb-4">Set de pruebas</h4>
         <div id="divmsjalertasetpruebas"></div>
         <form id="formSetPruebas" class="formulario" action="/admin/config/setpruebas" method="POST">
             <div class="formulario__campo">
                 <label class="formulario__label" for="setcompañia">Seleccionar compañia</label>
-                <select id="setcompañia" class="formulario__select" name="setcompañia" required>
-                    <option value="" disabled selected>-Seleccionar-</option>
-                    
+                <select id="setcompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="setcompañia" required>
+                    <option value="" disabled selected>-Seleccionar-</option>          
                 </select>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="idsetpruebas">ID set de pruebas</label>
                 <div class="formulario__dato">
-                    <input id="idsetpruebas" class="formulario__input" type="text" placeholder="ID del set de pruebas" name="idsetpruebas" value="" required>
-                    <label data-num="42" class="count-charts" for="">42</label>
+                    <input id="idsetpruebas" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ID del set de pruebas" name="idsetpruebas" value="" required>
+                    <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="text-right">
-                <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEnviarSetPruebas" class="btn-md btn-blue" type="submit" value="Enviar">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEnviarSetPruebas" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Enviar">
             </div>
         </form>
     </dialog><!--fin set pruebas-->
