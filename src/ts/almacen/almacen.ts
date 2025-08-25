@@ -68,6 +68,11 @@
 
 
         /////////////////////////////////////  SOTCK RAPIDO ////////////////////////////////////////
+        /*document.querySelector('#stockproducto')?.addEventListener('click', (e)=>{
+            if((e.target as HTMLInputElement).checked){
+                 tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatables);
+            }
+        })*/
         tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatables);
 
         document.querySelector('#tablaStockRapido')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
@@ -282,7 +287,7 @@
                     let idAttr = rowNode.getAttribute('data-idsubproducto');
                     if(tipoItem == '0')idAttr = rowNode.getAttribute('data-idproducto');
                     if (idAttr && idAttr === element.id){
-                        this.cell(this.index(), 3).data(`<div class="flex items-center justify-center">${element.stock}</div>`);
+                        this.cell(this.index(), 3).data(`<div class="text-center px-3 py-4 rounded-lg">${element.stock}</div>`);
 
                         // Obtén el <td> real
                         const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;

@@ -4,6 +4,7 @@
     const modalcambioMedioPago:any = document.querySelector("#cambioMedioPago");
     const btnGastosingresos = document.querySelector<HTMLButtonElement>("#btnGastosingresos");
     const operacion = document.querySelector('#operacion') as HTMLSelectElement;
+    const origengasto = document.querySelectorAll<HTMLInputElement>('input[name="origengasto"]');
     const mediosPago = document.querySelectorAll<HTMLInputElement>('.mediopago');
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numfactura = document.querySelector('#numfactura') as HTMLLabelElement;
@@ -31,13 +32,34 @@
       if(targetDom.value == 'gasto'){
         tipodegasto.style.display = 'flex';
         document.querySelector('#tipodegasto')?.setAttribute("required", "");
+        document.querySelector('#origengasto')?.classList.remove('hidden');
+        document.querySelector('#origengasto')?.classList.add('flex');
+        showCajasBancos();
       }
-      else{
+      else{ // ingreso a caja
         tipodegasto.style.display = 'none';
         document.querySelector('#tipodegasto')?.removeAttribute("required");
+        document.querySelector('#origengasto')?.classList.add('hidden');
+        document.querySelector('#origengasto')?.classList.remove('flex');
+         document.querySelector('#showcajas')?.classList.remove('hidden'); //mostar caja
+        document.querySelector('#showbancos')?.classList.add('hidden'); //oculta banco
       }
     });
 
+    /// evento a los inputs type radio para elegir origne del gasto = caja o bancos
+    origengasto.forEach(element =>element.addEventListener('click', showCajasBancos));
+
+
+    function showCajasBancos(){
+      const selectorigen = document.querySelector('input[name="origengasto"]:checked');
+      if(selectorigen?.id == 'gastocaja'){
+        document.querySelector('#showcajas')?.classList.remove('hidden');
+        document.querySelector('#showbancos')?.classList.add('hidden');
+      }else{
+        document.querySelector('#showcajas')?.classList.add('hidden');
+        document.querySelector('#showbancos')?.classList.remove('hidden');
+      }
+    }
 
     ////////////// Evento a la tabla lista de pedidos ///////////////
     document.querySelector('#tablaListaPedidos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla

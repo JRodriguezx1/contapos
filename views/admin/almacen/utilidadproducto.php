@@ -1,4 +1,5 @@
 <p class="text-xl mt-0 text-gray-600">Utilidad de los productos</p>
+    <div class=" overflow-x-auto">   
         <table class="display responsive nowrap tabla" width="100%" id="">
             <thead>
                 <tr>
@@ -28,3 +29,4 @@
                 <?php endif; endforeach; ?>
             </tbody>
         </table>
+    </div> 

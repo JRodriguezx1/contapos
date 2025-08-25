@@ -10,7 +10,7 @@
             <div class="mt-2 grid grid-cols-1">
                 <select id="itemAproducir" name="itemAproducir" autocomplete="itemAproducir-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                     <?php foreach($productos as $value):
-                        if($value->tipoproducto == 1):?>
+                        if($value->tipoproducto == 1 && $value->tipoproduccion):?>
                             <option 
                                 data-idund="<?php echo $value->idunidadmedida;?>"
                                 data-nombreund="<?php echo $value->unidadmedida;?>"

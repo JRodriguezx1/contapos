@@ -3,7 +3,8 @@
     <i class="fas fa-sync-alt text-2xl text-gray-600"></i>
     <button id="reinciarinv" class="text-2xl text-gray-600">Reiniciar Inventario</button>
 </div>
-<table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%" id="">
+<div class="overflow-x-auto">
+<table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%">
     <thead>
         <tr>
             <th>Nº</th>
@@ -20,9 +21,9 @@
             <?php if($value->tipoproducto == '0'): ?>  <!-- productos simple -->
             <tr class="fila producto" data-idproducto="<?php echo $value->id;?>"> 
                 <td class=""><?php echo $index+1;?></td>
-                <td class=""><div class="w-96 whitespace-normal"><?php echo $value->nombre;?></div></td> 
+                <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria;?></td>
-                <td class=""><div class="flex items-center justify-center text-xl px-3 !p-[1.2rem] tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
+                <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
@@ -39,9 +40,9 @@
         <?php foreach($subproductos as $index => $value): ?>  
             <tr class="fila subproducto" data-idsubproducto="<?php echo $value->id;?>"> 
                 <td class=""><?php echo $index+1;?></td>
-                <td class=""><div class="w-96 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
+                <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria??'';?></td> 
-                <td class=""><div class="flex items-center justify-center px-3 py-1.5 tracking-wide rounded-lg <?php echo $value->stock<=$value->stockminimo?'p-4 mb-4 text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
+                <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
@@ -54,6 +55,7 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 
 <!-- MODAL PARA AJUSTAR SUMAR, PRODUCIR O DESCONTAR UNUDADES-->
   <dialog class="midialog-sm !p-12" id="miDialogoStock">

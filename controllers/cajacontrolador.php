@@ -94,6 +94,7 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
     $mediospago = mediospago::all();
+    debuguear($_POST);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
       if($ultimocierre->estado == 0){  // si es igual a cero esta abierto el cierre de caja
@@ -174,13 +175,20 @@ class cajacontrolador{
     $discriminarmediospagos = [];
     $cajas = caja::all();
     $consecutivos = consecutivos::all();
+    $cajaselected = '';
     
     $cierreselected = cierrescajas::find('id', $id);
     if($cierreselected != null){
       $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
       $cajaselected = caja::find('id', $cierreselected->idcaja)->nombre; 
     }else{
-      $cajaselected = '';
+      foreach($cajas as $index => $value){
+        if(array_key_last($cajas) == $index){
+          $cajaselected .= $value->nombre;
+        }else{
+          $cajaselected .= $value->nombre.' - ';
+        }
+      }
     }
     $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
@@ -395,6 +403,7 @@ class cajacontrolador{
   }
 
 
+  // cuando se cambia la caja para ver y cerrar la caja
   public static function datoscajaseleccionada(){
     /*$fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
