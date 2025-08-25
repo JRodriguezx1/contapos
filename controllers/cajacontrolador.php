@@ -15,6 +15,7 @@ use Model\declaracionesdineros;
 use Model\mediospago;
 use Model\factmediospago;
 use Model\arqueoscajas;
+use Model\bancos;
 use Model\clientes;
 use Model\direcciones;
 use Model\tarifas;
@@ -37,13 +38,14 @@ class cajacontrolador{
     //$alertas = usuarios::getAlertas();
     $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+    $bancos = bancos::all();
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     
     
 
     $cajas = caja::all();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'ultimocierre'=>$ultimocierre, 'cajas'=>$cajas, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'ultimocierre'=>$ultimocierre, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

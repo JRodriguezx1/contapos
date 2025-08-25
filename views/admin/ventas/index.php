@@ -459,18 +459,15 @@
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
-              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" id="caja" required>
-                  <!--<option value="" disabled selected>-Seleccionar-</option>
-                  <option value="1">Caja principal</option>
-                  <option value="2">Caja bodega</option>-->
+              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
                   <?php foreach($cajas as $index => $value):?>
-                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                    <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
                   <?php endforeach; ?>
               </select>
             </div>
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" id="facturador" required>
+              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -497,15 +494,15 @@
           <div class="mx-auto">
             <div class="formulario__campo w-80 mx-auto">
                 <label class="formulario__label leading-relaxed text-center" for="recibio">Efectivo Recibido</label>
-                <input class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" id="recibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                <input id="recibio" class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
             </div>
             <div class="flex flex-col items-center">
-                <p class="text-center formulario__label">Devolver: <span id="cambio" class="text-gray-700 font-semibold text-2xl">$0</span></p>
+                <p id="cambio" class="text-center formulario__label">Devolver: <span class="text-gray-700 font-semibold text-2xl">$0</span></p>
             </div>
           </div>
           
           <div class="formulario__campo md:px-12">
-              <textarea class="formulario__textarea" id="observacion" name="observacion" placeholder="Observacion" rows="4"></textarea>
+              <textarea id="observacion" class="formulario__textarea" name="observacion" placeholder="Observacion" rows="4"></textarea>
           </div>
 
           <div class="self-end">
@@ -529,7 +526,7 @@
       </div>
     </div>
 
-      <!-- <h4 class="text-gray-700 font-semibold">Facturar A:</h4> -->
+    <!-- <h4 class="text-gray-700 font-semibold">Facturar A:</h4> -->
     <form id="formFacturarA" class="formulario">
       <div class="border-b border-gray-900/10 pb-10 mb-3">
         <!-- <p class="mt-2 text-xl text-gray-600">Información del adquiriente.</p> -->
@@ -539,7 +536,7 @@
           <div>
             <label for="dato1" class="block text-2xl font-medium text-gray-600">Tipo Documento</label>
             <div class="mt-2">
-              <select name="dato1" id="dato1" required
+              <select id="dato1" name="dato1" required
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                 <option value="">Seleccione tipo de documento</option>
                 <option value="11">Registro civil</option>
@@ -561,11 +558,11 @@
           <div>
             <label for="documento" class="block text-2xl font-medium text-gray-600">Número de Documento</label>
             <div class="mt-2 flex flex-wrap gap-2 items-center">
-              <input type="text" name="documento" id="documento" required
+              <input id="documento" type="text" name="documento" required
                 class="flex-1 min-w-[200px] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 placeholder="Número sin dígito de verificación">
 
-              <button type="button" id="btnBuscarAdquiriente"
+              <button id="btnBuscarAdquiriente" type="button"
                 class="flex items-center gap-2 text-indigo-600 border border-indigo-600 hover:bg-indigo-50 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg px-4 py-2.5 h-14 text-xl dark:text-indigo-400 dark:border-indigo-400 dark:hover:bg-indigo-800 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -581,7 +578,7 @@
           <div>
             <label for="dato2" class="block text-2xl font-medium text-gray-600">Nombre o Razón Social</label>
             <div class="mt-2">
-              <input type="text" name="dato2" id="dato2" required
+              <input id="dato2" type="text" name="dato2" required
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 placeholder="Nombre del cliente o empresa">
             </div>
@@ -591,7 +588,7 @@
           <div>
             <label for="correo" class="block text-2xl font-medium text-gray-600">Correo Electrónico</label>
             <div class="mt-2">
-              <input type="email" name="correo" id="correo"
+              <input id="correo" type="email" name="correo"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 placeholder="correo@ejemplo.com">
             </div>
@@ -608,7 +605,7 @@
       <!-- Botón para mostrar/ocultar -->
       <div class="accordion md:px-12 !mt-4">
         <!-- ID ÚNICO -->
-        <input type="checkbox" id="toggleOpcionesAdq" class="peer sr-only">
+        <input id="toggleOpcionesAdq" type="checkbox" class="peer sr-only">
 
       <label for="toggleOpcionesAdq"
             class="flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none">
@@ -624,7 +621,7 @@
           <!-- Dirección -->
           <div>
             <label for="direccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
-            <input type="text" name="direccion" id="direccion"
+            <input id="direccion" type="text" name="direccion"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
               placeholder="Dirección del adquiriente">
           </div>
@@ -632,7 +629,7 @@
           <!-- Ciudad o Municipio -->
           <div>
             <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad / Municipio</label>
-            <input type="text" name="ciudad" id="ciudad"
+            <input id="ciudad" type="text" name="ciudad"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
               placeholder="Ciudad o municipio">
           </div>
@@ -640,7 +637,7 @@
           <!-- Tipo Régimen -->
           <div>
             <label for="tipo_regimen" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
-            <select name="tipo_regimen" id="tipo_regimen"
+            <select id="tipo_regimen" name="tipo_regimen"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
               <option value="">Seleccione tipo de régimen</option>
               <option value="responsable_iva">Responsable de IVA</option>
@@ -651,7 +648,7 @@
           <!-- Tipo de Organización -->
           <div>
             <label for="tipo_organizacion" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
-            <select name="tipo_organizacion" id="tipo_organizacion"
+            <select id="tipo_organizacion" name="tipo_organizacion"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
               <option value="">Seleccione tipo de organización</option>
               <option value="persona_natural">Persona natural</option>
@@ -662,7 +659,7 @@
           <!-- Teléfono -->
           <div>
             <label for="telefono" class="block text-2xl font-medium text-gray-600">Teléfono</label>
-            <input type="tel" name="telefono" id="telefono"
+            <input id="telefono" type="tel" name="telefono"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
               placeholder="Teléfono de contacto">
           </div>
@@ -685,7 +682,7 @@
           <div class="sm:col-span-6">
             <label for="nombreotros" class="block text-2xl font-medium text-gray-600">Nombre</label>
             <div class="mt-2">
-              <input type="text" name="nombreotros" id="nombreotros" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del producto/servicio" required>
+              <input id="nombreotros" type="text" name="nombreotros" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del producto/servicio" required>
             </div> 
           </div>
 
@@ -694,14 +691,14 @@
             <div class="flex gap-4">
               <div class="w-1/2">
                 <label for="cantidadotros" class="block text-2xl font-medium text-gray-600">Cantidad</label>
-                <input type="number" name="cantidadotros" id="cantidadotros" min="1" step="0.01"
+                <input id="cantidadotros" type="number" name="cantidadotros" min="1" step="0.01"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                   placeholder="Cantidad" required>
               </div>
 
               <div class="w-1/2">
                 <label for="preciootros" class="block text-2xl font-medium text-gray-600">Precio total</label>
-                <input type="number" name="preciootros" id="preciootros" min="0"
+                <input id="preciootros" type="number" name="preciootros" min="0"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                   placeholder="Valor" required>
               </div>

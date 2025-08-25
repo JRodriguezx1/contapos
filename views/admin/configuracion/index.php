@@ -20,11 +20,15 @@
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina5">Dian</span>
+                <span id="pagina5">Bancos</span>
+            </label>
+            <label>
+                <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
+                <span id="pagina6">Dian</span>
             </label>
             <label>
                 <input type="radio" name="radio">
-                <span id="pagina6">Configuración</span>
+                <span id="pagina7">Configuración</span>
             </label>
         </div>
     </div>
@@ -41,10 +45,12 @@
     <div class="hidden paginas pagina3"><?php include __DIR__. "/gestioncajas.php";?></div>
     <!-- gestion facturadores -->
     <div class="hidden paginas pagina4"><?php include __DIR__. "/gestionfacturadores.php";?></div>
+    <!-- gestion bancos -->
+    <div class="hidden paginas pagina5"><?php include __DIR__. "/gestionbancos.php";?></div>
     <!-- gestion dian -->
-    <div class="hidden paginas pagina5"><?php include __DIR__. "/dian.php";?></div>
+    <div class="hidden paginas pagina6"><?php include __DIR__. "/dian.php";?></div>
     <!-- configuración -->
-    <div class="hidden mt-6 paginas pagina6">
+    <div class="hidden mt-6 paginas pagina7">
         <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
             <!-- Inputs de control de pestañas verticales -->
             <input type="radio" name="config" id="btn1" checked>

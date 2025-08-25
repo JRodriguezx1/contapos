@@ -24,8 +24,8 @@
     const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
-    const btnCaja = document.querySelector('#caja') as HTMLSelectElement;
-    const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement;
+    const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
+    const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const mediospago = document.querySelectorAll('.mediopago');
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
@@ -106,6 +106,15 @@
     /////select 2 a btn selectCliente
     //selectCliente.select2  multiple="multiple" maximumSelectionLength: 1,
     ($('#selectCliente') as any).select2();
+
+
+    selectFacturadorSegunCaja(btnCaja);
+    
+    btnCaja.addEventListener('change', (e:Event)=>selectFacturadorSegunCaja(e.target as HTMLSelectElement));
+    
+    function selectFacturadorSegunCaja(z:HTMLSelectElement){
+      $('#facturador').val(z.options[z.selectedIndex].dataset.idfacturador??'1');
+    }
 
     //////////// evento al boton añadir cliente nuevo //////////////
     btnAddCliente?.addEventListener('click', (e)=>{

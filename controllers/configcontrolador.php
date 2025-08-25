@@ -9,6 +9,7 @@ use Model\usuarios; //namespace\clase hija
 use Model\negocio;
 use Model\mediospago;
 use Model\ActiveRecord;
+use Model\bancos;
 use Model\tipofacturador;
 use MVC\Router;  //namespace\clase
  
@@ -27,6 +28,7 @@ class configcontrolador{
     $cajas = caja::all();
     $consecutivos = consecutivos::all();
     $tipofacturadores = tipofacturador::all();
+    $bancos = bancos::all();
     $compañias = [];
     $empleado = new \stdClass();
     $empleado->perfil = '';
@@ -38,7 +40,7 @@ class configcontrolador{
     foreach($cajas as $caja)$caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
         
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -73,7 +75,6 @@ class configcontrolador{
         echo json_encode($alertas);
     }
 
-
     public static function actualizarCaja(){
         session_start();
         $alertas = []; 
@@ -94,7 +95,6 @@ class configcontrolador{
         }
         echo json_encode($alertas);  
     }
-
 
     public static function eliminarCaja(){
         session_start();
@@ -123,7 +123,7 @@ class configcontrolador{
       echo json_encode($consecutivos);
     }
   
-    public static function crearFacturador(){ //api llamada desde el modulo de gestioncajas.ts cuando se crea un cliente
+    public static function crearFacturador(){ //api llamada desde el modulo de gestionfacturadoes.ts cuando se crea un cliente
         session_start();
         isadmin();
         $alertas = [];
@@ -147,7 +147,6 @@ class configcontrolador{
         echo json_encode($alertas);
     }
 
-
     public static function actualizarFacturador(){
         session_start();
         $alertas = []; 
@@ -170,7 +169,6 @@ class configcontrolador{
         echo json_encode($alertas);  
     }
 
-
     public static function eliminarFacturador(){
         session_start();
         $consecutivo = consecutivos::find('id', $_POST['id']);
@@ -185,6 +183,74 @@ class configcontrolador{
                 }
             }else{
                 ActiveRecord::setAlerta('error', 'Caja no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
+    }
+
+
+    ///////////// procesando la gestion de los bancos ////////////////
+    public static function allbancos(){  //api llamado desde citas.js
+      $bancos = bancos::all();
+      echo json_encode($bancos);
+    }
+
+    public static function crearBanco(){ //api llamada desde el modulo de gestionbancos.ts cuando se crea un cliente
+        session_start();
+        isadmin();
+        $alertas = [];
+        $banco = new bancos($_POST);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $banco->validar();
+            if(empty($alertas)){ //si los campos cumplen los criterios  
+                $r = $banco->crear_guardar();
+                if($r[0]){
+                    $banco->id = $r[1];
+                    $banco->created_at = date('Y-m-d H:i:s');
+                    $alertas['exito'][] = 'banco creada correctamente';
+                    $alertas['banco'] = $banco;
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+    public static function actualizarBanco(){
+        session_start();
+        $alertas = []; 
+        $banco = bancos::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $banco->compara_objetobd_post($_POST);
+            $alertas = $banco->validar();
+            if(empty($alertas)){
+                $r = $banco->actualizar();
+                if($r){
+                    $alertas['exito'][] = "Datos del banco actualizados";
+                    $alertas['banco'][] = $banco;
+                }else{
+                    $alertas['error'][] = "Error al actualizar banco";
+                }
+            }
+        }
+        echo json_encode($alertas);  
+    }
+
+    public static function eliminarBanco(){
+        session_start();
+        $banco = bancos::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($banco)){
+                $r = $banco->eliminar_registro();
+                if($r){
+                    ActiveRecord::setAlerta('exito', 'banco eliminado correctamente');
+                }else{
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'banco no encontrada');
             }
         }
         $alertas = ActiveRecord::getAlertas();

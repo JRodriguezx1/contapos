@@ -170,6 +170,10 @@ $router->get('/admin/api/allfacturadores', [configcontrolador::class, 'allfactur
 $router->post('/admin/api/crearFacturador', [configcontrolador::class, 'crearFacturador']); //api llamada desde gestioncajas.js para crear cajas
 $router->post('/admin/api/actualizarFacturador', [configcontrolador::class, 'actualizarFacturador']); //api llamada desde gestioncajas.js para actualizar cajas
 $router->post('/admin/api/eliminarFacturador', [configcontrolador::class, 'eliminarFacturador']); //api llamada desde gestioncajas.js para eliminar cajas
+$router->get('/admin/api/allbancos', [configcontrolador::class, 'allbancos']); // me trae todos las cajas desde gestionbancos.js
+$router->post('/admin/api/crearBanco', [configcontrolador::class, 'crearBanco']); //api llamada desde gestionbancos.js para crear bancos
+$router->post('/admin/api/actualizarBanco', [configcontrolador::class, 'actualizarBanco']); //api llamada desde gestionbancos.js para actualizar bancos
+$router->post('/admin/api/eliminarBanco', [configcontrolador::class, 'eliminarBanco']); //api llamada desde gestionbancos.js para eliminar bancos
 
 
 
