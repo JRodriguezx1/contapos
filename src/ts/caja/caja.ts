@@ -31,8 +31,8 @@
 
       if(targetDom.value == 'gasto'){
         tipodegasto.style.display = 'flex';
-        document.querySelector('#tipodegasto')?.setAttribute("required", "");
-        document.querySelector('#origengasto')?.classList.remove('hidden');
+        document.querySelector('#tipodegasto')?.setAttribute("required", ""); //categoria de los gastos
+        document.querySelector('#origengasto')?.classList.remove('hidden');  //origen del gasto ya sea por caja o banco
         document.querySelector('#origengasto')?.classList.add('flex');
         showCajasBancos();
       }
@@ -54,10 +54,14 @@
       const selectorigen = document.querySelector('input[name="origengasto"]:checked');
       if(selectorigen?.id == 'gastocaja'){
         document.querySelector('#showcajas')?.classList.remove('hidden');
+        document.querySelector('#showcajas')?.setAttribute("required", "");
         document.querySelector('#showbancos')?.classList.add('hidden');
+        document.querySelector('#showbancos')?.removeAttribute("required");
       }else{
-        document.querySelector('#showcajas')?.classList.add('hidden');
+        //document.querySelector('#showcajas')?.classList.add('hidden');
+        //document.querySelector('#showcajas')?.removeAttribute("required");
         document.querySelector('#showbancos')?.classList.remove('hidden');
+        document.querySelector('#showbancos')?.setAttribute("required", "");
       }
     }
 

@@ -57,7 +57,8 @@ class cajacontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){  ///if se puede eliminar
             
     }
-    $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+    //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
@@ -90,15 +91,23 @@ class cajacontrolador{
   }
 
   
-//////// ingreso de base o gasto de caja /////////
+//////// ingreso de base o gasto de caja tambien como apertura /////////
   public static function ingresoGastoCaja(Router $router){
     session_start();
     isadmin();
     $alertas = [];
     $mediospago = mediospago::all();
-    debuguear($_POST);
+    
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+      //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['id_caja']]); //ultimo cierre por caja
+      if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura
+        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['id_caja'], 'nombrecaja'=>caja::find('id', $_POST['id_caja'])->nombre, 'estado'=>0]);
+        $r = $ultimocierre->crear_guardar();
+        if(!$r[0])$ultimocierre->estado = 1;
+        $ultimocierre->id = $r[1];
+      }
+
       if($ultimocierre->estado == 0){  // si es igual a cero esta abierto el cierre de caja
         if($_POST['operacion']=="ingreso"){
           $ingresocaja = new ingresoscajas($_POST);
@@ -124,24 +133,31 @@ class cajacontrolador{
         }else{ // si la operacion es un gasto
           $ingresoGasto = new gastos($_POST);
           $ingresoGasto->idg_usuario = $_SESSION['id'];
-          $ingresoGasto->idg_caja = $_POST['id_caja'];
           $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
-          $ultimocierre->gastoscaja = $ultimocierre->gastoscaja + $ingresoGasto->valor;
-          ///// validar gastos de la caja en el modelo
+          if($_POST['origengasto'] == 'gastocaja'){
+            $ingresoGasto->idg_caja = $_POST['id_caja'];
+            $ultimocierre->gastoscaja = $ultimocierre->gastoscaja + $ingresoGasto->valor;
+          }else{ //si el gasto sale de un banco
+            $ingresoGasto->idg_caja = $_POST['id_caja'];
+            $ingresoGasto->id_banco = $_POST['id_banco'];
+            $ultimocierre->gastosbanco = $ultimocierre->gastosbanco + $ingresoGasto->valor;
+            $ingresoGasto->tipo_origen = 1; //1 = banco. origen del gasto es banco
+          }
+          ///// validar gastos en el modelo
           $alertas = $ingresoGasto->validar();
           if(empty($alertas)){
             $r = $ingresoGasto->crear_guardar();
             if($r[0]){
               $r1 = $ultimocierre->actualizar();
               if($r1){
-                $alertas['exito'][] = "El gasto de la caja fue registrado correctamente";
+                $alertas['exito'][] = "El gasto fue registrado correctamente";
               }else{
                 $alertas['error'][] = "error al actualizar los gastos en el cierre de caja actual";
                 /// borrar ultimo registro guardado de $ingresocaja
                 $ingresoGasto->eliminar_idregistros('id', [$r[1]]);
               }
             }else{
-              $alertas['error'][] = "Error al guardar el gasto de dinero de la caja";
+              $alertas['error'][] = "Error al guardar el gasto de dinero";
             }
           }
         }
@@ -153,7 +169,8 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     $cajas = caja::all();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'cajas'=>$cajas, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $bancos = bancos::all();
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

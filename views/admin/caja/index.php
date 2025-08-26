@@ -78,18 +78,28 @@
         <div id="origengasto" class="hidden gap-2 mb-6">
             <!--<label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Tipo costo inventario</label>-->
             <label for="gastocaja" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1">
-                <input id="gastocaja" type="radio" name="origengasto" class="hidden peer" checked>
+                <input id="gastocaja" type="radio" name="origengasto" class="hidden peer" value="gastocaja" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Gastos de la caja</span>
             </label>
 
             <label for="gastobanco" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1">
-                <input id="gastobanco" type="radio" name="origengasto" class="hidden peer">
+                <input id="gastobanco" type="radio" name="origengasto" class="hidden peer" value="gastobanco">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Gastos transaccionales</span>
             </label>
         </div>  
 
+        <div id="showbancos" class="mb-6 hidden">
+            <label class="formulario__label" for="banco">Bancos</label>
+            <select id="banco" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_banco">
+                <option value="" disabled selected>-Seleccionar-</option>
+                <?php foreach($bancos as $value): ?>
+                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        
         <div id="showcajas" class="mb-6 hidden">
             <label class="formulario__label" for="caja">Caja</label>
             <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" required>
@@ -100,15 +110,6 @@
             </select>
         </div>
 
-        <div id="showbancos" class="mb-6 hidden">
-            <label class="formulario__label" for="banco">Bancos</label>
-            <select id="banco" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_banco" required>
-                <option value="" disabled selected>-Seleccionar-</option>
-                <?php foreach($bancos as $value): ?>
-                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
         <div class="formulario__campo tipodegasto" style="display: none;"> <!-- solo aplica para gastos -->
             <label class="formulario__label" for="tipodegasto">Tipo de gasto</label>
             <select id="tipodegasto" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos">

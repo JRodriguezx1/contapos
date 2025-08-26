@@ -84,7 +84,15 @@ class ventascontrolador{
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //////////validar datos de factura, de ventas y medios de pago
-      $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+      //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+      if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con la venta
+        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
+        $r = $ultimocierre->crear_guardar();
+        if(!$r[0])$ultimocierre->estado = 1;
+        $ultimocierre->id = $r[1];
+      }
+
       $tempultimocierre = clone $ultimocierre;
       if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
         $factura->idcierrecaja = $ultimocierre->id;
