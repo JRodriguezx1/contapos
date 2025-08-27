@@ -230,9 +230,22 @@ class ventascontrolador{
     session_start();
     isadmin();
     $alertas = [];
-    $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
-    $mediospago = json_decode($_POST['mediosPago']);
+
     $factura = facturas::find('id', $_POST['id']);
+    $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
+    if($ultimocierre->estado){ //1 = cerrado, 0 = abierto
+      //validar si la caja seleccionada a facturar esta abierta.
+      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+      if(!isset($ultimocierre)){ // si la caja esta cerrada, y se hace apertura con la venta
+        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
+        $r = $ultimocierre->crear_guardar();
+        if(!$r[0])$ultimocierre->estado = 1;
+        $ultimocierre->id = $r[1];
+      }
+    }
+
+    debuguear($_POST);
+    $mediospago = json_decode($_POST['mediosPago']);
     $factmediospago = new factmediospago();
     $productos = ventas::idregistros('idfactura', $factura->id);
     $tempfactura = clone $factura;
@@ -273,8 +286,15 @@ class ventascontrolador{
       if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
 
         if($factura && $factura->estado == "Guardado"){  // si la factura guardada existe
-          $factura->compara_objetobd_post($_POST);
-          $r = $factura->actualizar();
+          if($factura->idcierrecaja == $ultimocierre->id){ //si la factura aun se va a pagar bajo la misma apertura de cacja
+            $factura->compara_objetobd_post($_POST);
+            $r = $factura->actualizar();
+          }else{ //crear nuevo registro en factura y detalle de la venta.
+            
+            $r = $factura->crear_guardar();
+            //$venta->crear_varios_reg_arrayobj($carrito);
+          }
+          
           if($r){
             /////////// calcular cantidad de cotizaciones a ventas, facturas y discriminar por tipo
             $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
