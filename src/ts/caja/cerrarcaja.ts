@@ -33,6 +33,7 @@
       e.preventDefault();
       sumatoriaDenominaciones();
       const datos = new FormData(formArqueocaja);
+      datos.append('idcierrecaja', document.querySelector('#idCierrecaja')?.textContent!);
       (async ()=>{
         try {
             const url = "/admin/api/arqueocaja";  //api llamada en cajacontrolador.php
@@ -58,7 +59,7 @@
       const sum = inputsDenominaciones.reduce((total, denominaicon)=>(Number(denominaicon.dataset.moneda)*Number(denominaicon.value))+total, 0);
       ef.value = sum+'';
       const eventInput = new Event('input');  //crea un evento
-      ef.dispatchEvent(eventInput); // se dispara el evento de manera manual, abajo.
+      ef.dispatchEvent(eventInput); // se dispara el evento de manera manual, --->abajo<--, es decir cuando se introduce un valor en el campo efectivo se dispara el evento.
     }
 
     ///////////  eventos a los inputs medios de pago de declarar valores /////////////
@@ -70,6 +71,7 @@
           datos.append('id_mediopago', inputmediopago.dataset.idmediopago+'');
           datos.append('nombremediopago', inputmediopago.name);
           datos.append('valordeclarado', inputmediopago.value);
+          datos.append('idcierrecaja', document.querySelector('#idCierrecaja')?.textContent!);
           try {
               const url = "/admin/api/declaracionDinero";  //api llamada en cajacontrolador.php
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -159,6 +161,7 @@
             if(resultado.exito !== undefined){
               modalCambiarCaja.close();
               document.removeEventListener("click", cerrarDialogoExterno);
+              //cambiar el id de la caja en id="#idCierrecaja"
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);

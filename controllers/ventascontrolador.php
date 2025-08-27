@@ -233,7 +233,8 @@ class ventascontrolador{
 
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
-    if($ultimocierre->estado){ //1 = cerrado, 0 = abierto
+    
+    if($ultimocierre->estado || $factura->idcaja != $_POST['idcaja']){ //1 = cerrado, 0 = abierto
       //validar si la caja seleccionada a facturar esta abierta.
       $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
       if(!isset($ultimocierre)){ // si la caja esta cerrada, y se hace apertura con la venta
@@ -244,7 +245,7 @@ class ventascontrolador{
       }
     }
 
-    debuguear($_POST);
+    
     $mediospago = json_decode($_POST['mediosPago']);
     $factmediospago = new factmediospago();
     $productos = ventas::idregistros('idfactura', $factura->id);
@@ -290,9 +291,15 @@ class ventascontrolador{
             $factura->compara_objetobd_post($_POST);
             $r = $factura->actualizar();
           }else{ //crear nuevo registro en factura y detalle de la venta.
-            
+            $factura->cambioaventa = 1;
+            $factura->actualizar();
+            $factura->compara_objetobd_post($_POST);
             $r = $factura->crear_guardar();
-            //$venta->crear_varios_reg_arrayobj($carrito);
+            $factura->id = $r[1];
+            //CAMBIA al nuevo idfactura
+            foreach($productos as $value)$value->idfactura = $r[1];
+            $venta = new ventas();
+            $venta->crear_varios_reg_arrayobj($productos);
           }
           
           if($r){

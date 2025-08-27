@@ -15,6 +15,7 @@
           <tr>
               <th>N.</th>
               <th>Fecha</th>
+              <th>Caja</th>
               <th>Orden</th>
               <th>Factura</th>
               <th>Medio Pago</th>
@@ -29,6 +30,7 @@
             <tr> 
               <td class=""><?php echo $index+1;?></td>
               <td class=""><?php echo $value->fechapago;?></td> 
+              <td class=""><?php echo $value->caja;?></td>
               <td class=""><?php echo $value->id;?></td>
               <td class=""><?php echo $value->id;?></td>
               <td>
@@ -57,7 +59,7 @@
             <td></td>
             <td></td>
             <th class="px-6 py-3">Total Dia:</th>
-            <td class="px-6 py-3">$<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+            <td class="px-6 py-3">$<?php echo number_format($datacierrescajas??0, "0", ",", ".");?></td>
         </tr>
       </tfoot>
   </table>

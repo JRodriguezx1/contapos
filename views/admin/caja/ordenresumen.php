@@ -6,7 +6,7 @@
     <span class="sr-only">Atrás</span>
     </a>
     <div class="flex flex-wrap gap-2 mt-4 mb-6 pb-4 border-b-2 border-blue-600">
-        <?php if($factura->estado=='Guardado'):?>
+        <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
         <button id="btnfacturar" class="btn-command"><span class="material-symbols-outlined">attach_money</span>Procesar pago</button>
         <?php endif; ?>
         <?php if($factura->estado!='Eliminada'):?>

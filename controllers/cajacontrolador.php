@@ -35,9 +35,16 @@ class cajacontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
     }
-    //$alertas = usuarios::getAlertas();
-    $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
-    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+
+    $ultimoscierres = cierrescajas::whereArray(['estado'=>0]);
+    $datacierrescajas['ingresoventas'][] = 0;
+    foreach($ultimoscierres as $value){
+      $datacierrescajas['ids'][] = $value->id;
+      $datacierrescajas['ingresoventas'][0] += $value->ingresoventas; 
+    }
+
+    $facturas = facturas::paginarwhere(' ', ' ', 'idcierrecaja', $datacierrescajas['ids']);
+    //debuguear($facturas);
     $bancos = bancos::all();
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
@@ -45,7 +52,7 @@ class cajacontrolador{
     
 
     $cajas = caja::all();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'ultimocierre'=>$ultimocierre, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -62,7 +69,7 @@ class cajacontrolador{
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
-    $mediospagos = mediospago::all();
+    $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
     $sobrantefaltante = $declaracion;
@@ -333,10 +340,11 @@ class cajacontrolador{
     $ax = false;
     $bx = false;
     $declaraciondinero = new declaracionesdineros($_POST);
-    $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+    $ultimocierre = cierrescajas::find('id', $_POST['idcierrecaja']); ////// ultimo registro de cierrescajas validar si esta abierto
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $declaraciondinero->idcierrecajaid = $ultimocierre->id;
       $alertas = $declaraciondinero->validar();
+      if($ultimocierre->estado == 1)$alertas['error'][] = "Error!, ingresa nuevamente al modulo de caja para validar que la caja este ya cerrada.";
       if(empty($alertas)){
         $existevalor = $declaraciondinero::uniquewhereArray(['id_mediopago'=>$declaraciondinero->id_mediopago, 'idcierrecajaid'=>$ultimocierre->id]);
         if($existevalor){  //se actualiza el registro
@@ -361,23 +369,27 @@ class cajacontrolador{
   public static function arqueocaja(){   
     $alertas = [];
     $arqueocaja = new arqueoscajas($_POST);
-    $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+    $ultimocierre = cierrescajas::find('id', $_POST['idcierrecaja']); ////// ultimo registro de cierrescajas validar si esta abierto
     $arqueocaja->id_cierrecajaid = $ultimocierre->id;
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $existe = arqueoscajas::uniquewhereArray(['id_cierrecajaid'=>$ultimocierre->id]);
-      if(!$existe){ //si no existe arqueo
-        $r = $arqueocaja->crear_guardar();
-        if($r[0]){
-          $alertas['exito'][] = "Arqueo de caja aplicado";
-        }else{
-          $alertas['error'][] = "Error intenta nuevamente";
-        }
-      }else{  //si ya existe arqueo actualizar
-        $r1 = $existe->actualizar();
-        if($r1){
-          $alertas['exito'][] = "Arqueo de caja aplicado";
-        }else{
-          $alertas['error'][] = "Error intenta nuevamente";
+      if($ultimocierre->estado == 1){
+        $alertas['error'][] = "Error!, ingresa nuevamente al modulo de caja para validar que la caja este ya cerrada.";
+      }else{
+        $existe = arqueoscajas::uniquewhereArray(['id_cierrecajaid'=>$ultimocierre->id]);
+        if(!$existe){ //si no existe arqueo
+          $r = $arqueocaja->crear_guardar();
+          if($r[0]){
+            $alertas['exito'][] = "Arqueo de caja aplicado";
+          }else{
+            $alertas['error'][] = "Error intenta nuevamente";
+          }
+        }else{  //si ya existe arqueo actualizar
+          $r1 = $existe->actualizar();
+          if($r1){
+            $alertas['exito'][] = "Arqueo de caja aplicado";
+          }else{
+            $alertas['error'][] = "Error intenta nuevamente";
+          }
         }
       }
     }
@@ -389,9 +401,9 @@ class cajacontrolador{
     session_start();
     isauth();
     $idcierrecaja = $_POST['idcierrecaja'];
-    $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+    $ultimocierre = cierrescajas::find('id', $idcierrecaja);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      if($idcierrecaja == $ultimocierre->id && $ultimocierre->estado == 0){
+      if($ultimocierre->estado == 0){
         $ultimocierre->id_usuario = $_SESSION['id'];
         $ultimocierre->nombreusuario = $_SESSION['nombre'];
         $ultimocierre->fechacierre = date('Y-m-d H:i:s');
@@ -424,18 +436,43 @@ class cajacontrolador{
 
   // cuando se cambia la caja para ver y cerrar la caja
   public static function datoscajaseleccionada(){
-    /*$fechainicio = $_POST['fechainicio'];
-    $fechafin = $_POST['fechafin'];
-    $idcajas = json_decode($_POST['cajas']);
-    $idconsecutivos = json_decode($_POST['facturadores']);
-    $cajas = join(", ", array_values($idcajas));
-    $consecutivos = join(", ", array_values($idconsecutivos));
-    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, $fechainicio, $fechafin);
-    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, $fechainicio, $fechafin);
-    $datos['datosventa'] = $datosventa;
-    $datos['datosmediospago'] = $datosmediospago;*/
-    $datos = "lupe";
-    echo json_encode($datos);
+    $alertas = [];
+
+    $ultimocierre = cierrescajas::find('id', $_POST['id']); //ultimo cierre por caja
+    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+    $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
+    $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
+    //$mediospagos = mediospago::all();
+    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);  //lo que el usuario declara de forma manual.
+    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+    $sobrantefaltante = $declaracion;
+    foreach($discriminarmediospagos as $i => $dis){
+      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+      $aux = 0;
+      foreach($declaracion as $j => $dec){
+        if($dis['idmediopago'] == $dec->id_mediopago){
+          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
+          $aux = 1;
+          break;
+        }
+      }
+      if($aux == 0){
+        $newobj = new stdClass();
+        $newobj->id_mediopago = $dis['idmediopago'];
+        $newobj->idcierrecajaid = $ultimocierre->id;
+        $newobj->nombremediopago = $dis['mediopago'];
+        $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
+        $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
+        $sobrantefaltante[] = $newobj;
+      }
+    }
+    $cajas = caja::all();
+    $alertas['ultimocierre'] = $ultimocierre;
+    $alertas['facturas'] = $facturas;
+    $alertas['ventasxusuarios'] = $ventasxusuarios;
+    //$alertas['mediospagos'] = $mediospagos;
+    $alertas['sobrantefaltante'] = $sobrantefaltante;
+    echo json_encode($alertas);
   }
 
   public static function mediospagoXfactura(){  //api llamado desde caja.js me trae los medios de pago segun factura
