@@ -435,16 +435,17 @@ class cajacontrolador{
 
 
   // cuando se cambia la caja para ver y cerrar la caja
-  public static function datoscajaseleccionada(){
+  public static function datoscajaseleccionada(){ //llamado desde cerrarcaja.ts
     $alertas = [];
 
-    $ultimocierre = cierrescajas::find('id', $_POST['id']); //ultimo cierre por caja
+    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     //$mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);  //lo que el usuario declara de forma manual.
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+    
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
       if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
@@ -466,7 +467,8 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
-    $cajas = caja::all();
+    //$cajas = caja::all();
+    $alertas['exito'][] = "Cambio de caja.";
     $alertas['ultimocierre'] = $ultimocierre;
     $alertas['facturas'] = $facturas;
     $alertas['ventasxusuarios'] = $ventasxusuarios;

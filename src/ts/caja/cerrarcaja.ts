@@ -152,7 +152,7 @@
     formCambiarCaja?.addEventListener('submit', (e:Event)=>{
       e.preventDefault();
       const datos = new FormData();
-      datos.append('id', $('#CambiarCaja').val()as string);
+      datos.append('idcaja', $('#CambiarCaja').val()as string); //select del modal de cambio de caja
       (async ()=>{
         try {
             const url = "/admin/api/datoscajaseleccionada";  //api llamada en cajacontrolador.php para traer datos de venta de la caja seleccionada 
@@ -161,7 +161,11 @@
             if(resultado.exito !== undefined){
               modalCambiarCaja.close();
               document.removeEventListener("click", cerrarDialogoExterno);
+              console.log(resultado);
               //cambiar el id de la caja en id="#idCierrecaja"
+              document.querySelector('#idCierrecaja')!.textContent = $('#CambiarCaja').val()+'';
+              //mostar datos de la caja seleccionada
+              printventas();
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -172,6 +176,12 @@
       })();
       
     });
+
+    function printventas(){
+      const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
+      while(tbodyMediosPago.firstChild)tbodyMediosPago.removeChild(tbodyMediosPago.firstChild);
+    
+    }
 
     function cerrarDialogoExterno(event:Event) {
       if (event.target === modalArqueocaja || event.target === Modalcerrarcaja || event.target === modalCambiarCaja || (event.target as HTMLInputElement).value === 'Cancelar' || (event.target as HTMLElement).closest('.salircerrarcaja') || (event.target as HTMLElement).closest('.finCerrarcaja')) {

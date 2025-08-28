@@ -95,34 +95,34 @@
                             <tbody>
                                 <tr>        
                                     <td class="">Base + ingresos de caja</td> 
-                                    <td class="">+ $<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></td>
+                                    <td id="baseIngresoCaja" class="">+ $<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Ventas en efectivo</td> 
-                                    <td class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
+                                    <td id="ventasEfectivo" class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Gastos de la caja</td> 
-                                    <td class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
+                                    <td id="gastosCaja" class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Dinero en caja</td> 
-                                    <td class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
+                                    <td id="dineroCaja" class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Domicilios</td> 
-                                    <td class="">- $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="domicilios" class="">- $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Real en caja</td> 
-                                    <td class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="realCaja" class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div class="tlg:basis-1/2">
-                        <table class="tabla2 mb-12" width="100%" id="">
+                        <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                             <thead>
                                 <tr>
                                     <th>Medios de pago</th>
@@ -205,7 +205,7 @@
                                         <th> Diferencia </th>
                                     </tr>
                                 </thead>
-                                <tbody class="cuerpoanalisis">
+                                <tbody id="sobranteFaltante" class="cuerpoanalisis">
                                     <?php foreach($sobrantefaltante as $index => $value): ?>
                                     <tr class="<?php echo $value->nombremediopago=='Efectivo'?'!border-2 !border-indigo-600':'';?>">        
                                         <td class=""><?php echo $value->nombremediopago;?></td> 
@@ -218,7 +218,7 @@
                             </table>
                         </div>
 
-                        <table class="tabla2 mb-12" width="100%" id="">
+                        <table class="tabla2 mb-12" width="100%" id="ventasXUsuario">
                             <thead>
                                 <tr>
                                     <th>Ventas por usuario</th>
@@ -242,7 +242,7 @@
 
                 <h5 class="text-gray-500 border border-gray-300 px-4 py-3 mb-4">Ventas del dia</h5>
                 <!-- Facturas del dia -->
-                <table class="display responsive nowrap tabla" width="100%" id="">
+                <table class="display responsive nowrap tabla" width="100%" id="tablaVentas">
                     <thead>
                         <tr>
                             <th>N.</th>
