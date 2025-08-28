@@ -21,7 +21,18 @@
         <?php endif; ?>
     </div>
     
-    <div class="flex justify-between p-4 border border-gray-300 rounded mb-8">
+    <div class="flex gap-4 mb-4">
+        <div>
+            <span class="m-0 text-slate-500 text-xl font-semibold">Orden: </span>
+            <span id="numOrden" class="m-0 text-slate-500 text-xl"><?php echo $factura->id??'';?></span>
+        </div>
+        <div>
+            <span class="m-0 text-slate-500 text-xl font-semibold">Referencia: </span>
+            <span id="referenciaFactura" class="m-0 text-slate-500 text-xl">POS182</span>
+        </div>
+    </div>
+
+    <div class="flex justify-between p-4 border border-gray-300 rounded mb-6">
         <div class="flex-1 text-center">
             <p>Fecha Orden</p>
             <p><?php echo $factura->fechapago??'';?></p>
@@ -376,8 +387,7 @@
     </div>
 
     <div>
-        <div class="mt-8 flex justify-between items-start border-solid border border-gray-300 py-4 px-8 rounded">
-            <button id="btndescuento" class="btn-xs btn-light">Descuento</button>
+        <div class="mt-6 flex justify-end items-start border-solid border border-gray-300 py-4 px-8 rounded">
             <div class="flex justify-end gap-4 sm:gap-60">
                 <div class="text-end">
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>
@@ -399,7 +409,7 @@
     </div>
 
 
-    <dialog class="midialog-md !p-12" id="miDialogoFacturar">
+    <dialog id="miDialogoFacturar" class="midialog-md !p-12">
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
       <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
@@ -408,18 +418,18 @@
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
-              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" id="caja" required>
+              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
                   <!--<option value="" disabled selected>-Seleccionar-</option>
                   <option value="1">Caja principal</option>
                   <option value="2">Caja bodega</option>-->
                   <?php foreach($cajas as $index => $value):?>
-                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                    <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
                   <?php endforeach; ?>
               </select>
             </div>
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" id="facturador" required>
+              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -447,15 +457,15 @@
           <div class="mx-auto">
             <div class="formulario__campo w-80 mx-auto">
                 <label class="formulario__label leading-relaxed text-center" for="recibio">Efectivo Recibido</label>
-                <input class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" id="recibio" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                <input id="recibio" class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
             </div>
             <div class="flex flex-col items-center">
-                <p class="text-center formulario__label">Devolver: <span id="cambio" class="text-gray-700 font-semibold text-2xl">$0</span></p>
+                <p id="cambio" class="text-center formulario__label">Devolver: <span class="text-gray-700 font-semibold text-2xl">$0</span></p>
             </div>
           </div>
           
           <div class="formulario__campo md:px-12">
-              <textarea class="formulario__textarea" id="observacion" name="observacion" placeholder="Observacion" rows="4"></textarea>
+              <textarea id="observacion" class="formulario__textarea" name="observacion" placeholder="Observacion" rows="4"></textarea>
           </div>
 
           <div class="self-end">

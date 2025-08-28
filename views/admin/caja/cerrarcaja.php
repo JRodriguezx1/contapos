@@ -16,7 +16,7 @@
       <p class="m-0 text-slate-500 text-xl font-semibold">Cajero: </p>
     </div>
     <div>
-      <p class="m-0 text-slate-500 text-xl">Caja principal</p>
+      <p id="nombreCaja" class="m-0 text-slate-500 text-xl">Caja principal</p>
       <p class="m-0 text-slate-500 text-xl"><?php echo date('Y-m-d');?></p>
       <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
     </div>
@@ -60,13 +60,13 @@
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Cotizaciones:</p>
           </div>
           <div>
-          <p class="m-0 mb-2 text-slate-600 text-2xl font-normal" id="idCierrecaja"><?php echo $ultimocierre->id;?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalfacturas??0;?></p>
-            <p class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalcotizaciones??0;?></p>
+          <p id="idCierrecaja" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->id;?></p>
+            <p id="basecajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></p>
+            <p id="gastoscajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></p>
+            <p id="domiciliosResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></p>
+            <p id="ingresoventasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></p>
+            <p id="totalfacturasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalfacturas??0;?></p>
+            <p id="totalcotizacionesResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalcotizaciones??0;?></p>
           </div>
         </div>
         <div class="flex flex-wrap gap-4 max-w-96">
@@ -95,34 +95,34 @@
                             <tbody>
                                 <tr>        
                                     <td class="">Base + ingresos de caja</td> 
-                                    <td class="">+ $<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></td>
+                                    <td id="baseIngresoCaja" class="">+ $<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Ventas en efectivo</td> 
-                                    <td class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
+                                    <td id="ventasEfectivo" class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Gastos de la caja</td> 
-                                    <td class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
+                                    <td id="gastosCaja" class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Dinero en caja</td> 
-                                    <td class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
+                                    <td id="dineroCaja" class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Domicilios</td> 
-                                    <td class="">- $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="domicilios" class="">- $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Real en caja</td> 
-                                    <td class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="realCaja" class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <div class="tlg:basis-1/2">
-                        <table class="tabla2 mb-12" width="100%" id="">
+                        <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                             <thead>
                                 <tr>
                                     <th>Medios de pago</th>
@@ -150,27 +150,27 @@
                             <tbody>
                                 <tr>        
                                     <td class="">Ingreso de ventas total</td> 
-                                    <td class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                    <td id="ingresoVentasTotal" class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Total descuentos</td> 
-                                    <td class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                                    <td id="totalDescuentos" class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Real de ventas</td> 
-                                    <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                                    <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Real de ventas sin domicilio</td> 
-                                    <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="realVentasSinDomicilios" class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
-                                    <td class="">Impuesto</td> 
-                                    <td class=""> - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "2", ",", ".");?></td>
+                                    <td class="">Impuesto Total</td> 
+                                    <td id="mpuestoTotal" class=""> - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "2", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Total bruto</td> 
-                                    <td class="text-blue-600 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                    <td id="totalBruto" class="text-blue-600 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -196,7 +196,7 @@
                         
                         <div>
                             <p class="text-sky-400 font-medium">Analisis Sobrantes y Faltantes</p>
-                            <table class="tabla2 mb-12" width="100%" id="">
+                            <table class="tabla2 mb-12" width="100%" id="sobranteFaltante">
                                 <thead>
                                     <tr>
                                         <th>Medios de pago</th>
@@ -218,7 +218,7 @@
                             </table>
                         </div>
 
-                        <table class="tabla2 mb-12" width="100%" id="">
+                        <table class="tabla2 mb-12" width="100%" id="ventasXUsuario">
                             <thead>
                                 <tr>
                                     <th>Ventas por usuario</th>
@@ -242,7 +242,7 @@
 
                 <h5 class="text-gray-500 border border-gray-300 px-4 py-3 mb-4">Ventas del dia</h5>
                 <!-- Facturas del dia -->
-                <table class="display responsive nowrap tabla" width="100%" id="">
+                <table class="display responsive nowrap tabla" width="100%" id="tablaVentas">
                     <thead>
                         <tr>
                             <th>N.</th>
