@@ -317,7 +317,7 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
     
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion', 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
