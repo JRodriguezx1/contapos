@@ -93,10 +93,10 @@
                         <p class="text-lg text-gray-800"><?php echo $value->cantidad??'';?></p>
                     </div>
                     <div>
-                        <p class="text-lg text-gray-800"><?php echo $value->valorunidad??'';?></p>
+                        <p class="text-lg text-gray-800"><?php echo number_format($value->valorunidad??'', '0', ',', '.');?></p>
                     </div>
                     <div>
-                        <p class="text-lg sm:text-end text-gray-800">$<?php echo $value->total??'';?></p>
+                        <p class="text-lg sm:text-end text-gray-800">$<?php echo number_format($value->total??'', '0', ',', '.');?></p>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -140,22 +140,22 @@
             <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2">
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Subotal:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->subtotal??'';?></dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->subtotal??'', '0', ',', '.');?></dd>
                 </dl>
 
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Descuento:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->descuento??'';?></dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->descuento??'', '0', ',', '.');?></dd>
                 </dl>
 
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Impuesto:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->valorimpuestototal??'';?></dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->valorimpuestototal??'', '0', ',', '.');?></dd>
                 </dl>
 
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Total:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->total??'';?></dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->total??'','0', ',', '.');?></dd>
                 </dl>
             </div>
             <!-- End Grid -->

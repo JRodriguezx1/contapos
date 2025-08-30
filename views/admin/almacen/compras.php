@@ -39,7 +39,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-1 md:col-span-2 tlg:col-span-2">
+                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="factura" class="block text-2xl font-medium text-gray-600">N° Factura</label>
                         <div class="mt-2">
                             <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-1 md:col-span-2 tlg:col-span-1">
+                    <div class="sm:col-span-2 md:col-span-2 tlg:col-span-1">
                         <label for="origen" class="block text-2xl font-medium text-gray-600">Origen</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
+                    <div class="sm:col-span-3 md:col-span-4 tlg:col-span-2">
                         <label for="origen" class="block text-2xl font-medium text-gray-600">Caja/Banco</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenCaja" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -82,7 +82,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
+                    <div class="sm:col-span-3 md:col-span-3 tlg:col-span-2">
                         <label for="formapago" class="block text-2xl font-medium text-gray-600">Forma de pago</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-3 md:col-span-7 tlg:col-span-3">
+                    <div class="sm:col-span-8 md:col-span-5 tlg:col-span-3">
                         <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
                         <div class="mt-2">
                         <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
