@@ -31,10 +31,17 @@
 
       printcarta?.addEventListener('click', ()=>{
         //leer parametros de url
-        const ventana = window.open('/printfacturacarta?id=1', '_blank');
-        ventana?.focus();
-        ventana?.print();
-        setTimeout(() => { ventana?.close(); }, 90); // Cerrar la ventana después de unos segundos
+        const parametrosURL = new URLSearchParams(window.location.search);
+        const id = parametrosURL.get('id');
+        const ventana = window.open('/printfacturacarta?id='+id, '_blank');
+        if(ventana){
+          ventana.onload = ()=>{
+            ventana?.focus();
+            ventana?.print();
+            setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+          };
+        }
+        
       });
 
       btnfacturar?.addEventListener('click', ()=>{
