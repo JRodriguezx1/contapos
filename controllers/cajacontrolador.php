@@ -316,8 +316,14 @@ class cajacontrolador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
-    
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $factura = facturas::find('id', $id);
+     $productos = ventas::idregistros('idfactura', $id);
+    $cliente = clientes::find('id', $factura->idcliente);
+    $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+    $tarifa = tarifas::find('id', $direccion->idtarifa);
+    $vendedor = usuarios::find('id', $factura->idvendedor);
+
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
@@ -327,8 +333,36 @@ class cajacontrolador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
+    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1]); //ultimo cierre por caja
+    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+    $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
+    $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
+    $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
+    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
+    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+    $sobrantefaltante = $declaracion;
+    foreach($discriminarmediospagos as $i => $dis){
+      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+      $aux = 0;
+      foreach($declaracion as $j => $dec){
+        if($dis['idmediopago'] == $dec->id_mediopago){
+          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
+          $aux = 1;
+          break;
+        }
+      }
+      if($aux == 0){
+        $newobj = new stdClass();
+        $newobj->id_mediopago = $dis['idmediopago'];
+        $newobj->idcierrecajaid = $ultimocierre->id;
+        $newobj->nombremediopago = $dis['mediopago'];
+        $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
+        $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
+        $sobrantefaltante[] = $newobj;
+      }
+    }
     
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printdetallecierre', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 

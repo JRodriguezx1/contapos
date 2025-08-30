@@ -45,9 +45,10 @@
 
             <div>
                 <div class="grid space-y-3">
+                    
                     <div class="text-sm">
                         <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">FACTURA #:</p>
-                        <span class="text-gray-500">3682303</span>
+                        <span class="text-gray-500"><?php echo $factura->id??'';?></span>
                     </div>
 
                     <div class="font-medium text-gray-800 text-sm">
@@ -60,10 +61,10 @@
 
                     <dl class="flex flex-col gap-x-1 text-sm pt-8">
                         <p class="font-medium min-w-36 max-w-[200px] text-gray-800">
-                            Fecha de factura: <span class=" font-normal text-gray-400">10 Jan 2025</span>
+                            Fecha de factura: <span class=" font-normal text-gray-400"><?php echo $factura->fechapago??'';?></span>
                         </p>
                         <p class="font-medium text-gray-800">
-                            Metodo de pago: <span class="font-normal text-gray-400">Efectivo</span>
+                            Metodo de pago: <span class="font-normal text-gray-400">Contado</span>
                         </p>
                     </dl>
 
@@ -83,21 +84,23 @@
             </div>
             <div class="hidden sm:block border-b border-gray-200 dark:border-neutral-700"></div>
 
-            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                <div class="col-span-full sm:col-span-2">
-                    <p class="text-lg font-medium text-gray-800">Design UX and UI</p>
+            <?php foreach($productos as $index=>$value): ?>
+                <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                    <div class="col-span-full sm:col-span-2">
+                        <p class="text-lg font-medium text-gray-800"><?php echo $value->nombreproducto??'';?></p>
+                    </div>
+                    <div>
+                        <p class="text-lg text-gray-800"><?php echo $value->cantidad??'';?></p>
+                    </div>
+                    <div>
+                        <p class="text-lg text-gray-800"><?php echo $value->valorunidad??'';?></p>
+                    </div>
+                    <div>
+                        <p class="text-lg sm:text-end text-gray-800">$<?php echo $value->total??'';?></p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-lg text-gray-800">1</p>
-                </div>
-                <div>
-                    <p class="text-lg text-gray-800">5</p>
-                </div>
-                <div>
-                    <p class="text-lg sm:text-end text-gray-800">$500</p>
-                </div>
-            </div>
-
+            <?php endforeach; ?>
+            <!--
             <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 <div class="col-span-full sm:col-span-2">
                     <p class="text-lg font-medium text-gray-800">Web project</p>
@@ -126,7 +129,7 @@
                 <div>
                     <p class="text-lg sm:text-end text-gray-800">$2000</p>
                 </div>
-            </div>
+            </div>-->
         </div>
         <!-- End Table -->
 
@@ -137,22 +140,22 @@
             <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2">
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Subotal:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$2750.00</dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->subtotal??'';?></dd>
                 </dl>
 
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Descuento:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$2750.00</dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->descuento??'';?></dd>
                 </dl>
 
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Impuesto:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$39.00</dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->valorimpuestototal??'';?></dd>
                 </dl>
 
                 <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                     <dt class="col-span-3 text-gray-400">Total:</dt>
-                    <dd class="col-span-2 font-medium text-gray-800">$2789.00</dd>
+                    <dd class="col-span-2 font-medium text-gray-800">$<?php echo $factura->total??'';?></dd>
                 </dl>
             </div>
             <!-- End Grid -->
