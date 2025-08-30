@@ -3,7 +3,7 @@ namespace Model;
 
 class cierrescajas extends ActiveRecord {
     protected static $tabla = 'cierrescajas';
-    protected static $columnasDB = ['id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'totalbruto', 'estado', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'totalbruto', 'estado', 'dato1', 'dato2'];
 
     public function __construct($args = [])
     {
@@ -26,6 +26,7 @@ class cierrescajas extends ActiveRecord {
         $this->basecaja = $args['basecaja'] ?? 0;
         $this->ventasenefectivo = $args['ventasenefectivo'] ?? 0;
         $this->gastoscaja = $args['gastoscaja'] ?? 0;
+        $this->gastosbanco = $args['gastosbanco']??0;
         $this->dineroencaja = $args['dineroencaja'] ?? 0; 
         $this->domicilios = $args['domicilios'] ?? 0;
         $this->ndomicilios = $args['ndomicilios'] ?? 0;

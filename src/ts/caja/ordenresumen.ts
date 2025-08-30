@@ -11,6 +11,8 @@
       const btnsdevolverinv = document.querySelectorAll<HTMLInputElement>('input[name="devolverinventario"]'); //radio buttom
       const inputsInv = document.querySelectorAll<HTMLInputElement>('.inputInv');
       const printcarta = document.querySelector('#printcarta');
+      const numOrden = document.querySelector('#numOrden');
+      const referenciaFactura = document.querySelector('#referenciaFactura');
 
       const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
       const mapMediospago = new Map();
@@ -19,8 +21,16 @@
       valorTotal.total = Number(document.querySelector('#total')?.textContent?.replace(/[^\d]/g, ''));
       
       
+      selectFacturadorSegunCaja(btnCaja);
+    
+      btnCaja.addEventListener('change', (e:Event)=>selectFacturadorSegunCaja(e.target as HTMLSelectElement));
+    
+      function selectFacturadorSegunCaja(z:HTMLSelectElement){
+        $('#facturador').val(z.options[z.selectedIndex].dataset.idfacturador??'1');
+      }
 
       printcarta?.addEventListener('click', ()=>{
+        //leer parametros de url
         const ventana = window.open('/printfacturacarta?id=1', '_blank');
         ventana?.focus();
         ventana?.print();

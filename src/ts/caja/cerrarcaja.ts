@@ -33,6 +33,7 @@
       e.preventDefault();
       sumatoriaDenominaciones();
       const datos = new FormData(formArqueocaja);
+      datos.append('idcierrecaja', document.querySelector('#idCierrecaja')?.textContent!);
       (async ()=>{
         try {
             const url = "/admin/api/arqueocaja";  //api llamada en cajacontrolador.php
@@ -58,7 +59,7 @@
       const sum = inputsDenominaciones.reduce((total, denominaicon)=>(Number(denominaicon.dataset.moneda)*Number(denominaicon.value))+total, 0);
       ef.value = sum+'';
       const eventInput = new Event('input');  //crea un evento
-      ef.dispatchEvent(eventInput); // se dispara el evento de manera manual, abajo.
+      ef.dispatchEvent(eventInput); // se dispara el evento de manera manual, --->abajo<--, es decir cuando se introduce un valor en el campo efectivo se dispara el evento.
     }
 
     ///////////  eventos a los inputs medios de pago de declarar valores /////////////
@@ -70,6 +71,7 @@
           datos.append('id_mediopago', inputmediopago.dataset.idmediopago+'');
           datos.append('nombremediopago', inputmediopago.name);
           datos.append('valordeclarado', inputmediopago.value);
+          datos.append('idcierrecaja', document.querySelector('#idCierrecaja')?.textContent!);
           try {
               const url = "/admin/api/declaracionDinero";  //api llamada en cajacontrolador.php
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -150,7 +152,7 @@
     formCambiarCaja?.addEventListener('submit', (e:Event)=>{
       e.preventDefault();
       const datos = new FormData();
-      datos.append('id', $('#CambiarCaja').val()as string);
+      datos.append('idcaja', $('#CambiarCaja').val()as string); //select del modal de cambio de caja
       (async ()=>{
         try {
             const url = "/admin/api/datoscajaseleccionada";  //api llamada en cajacontrolador.php para traer datos de venta de la caja seleccionada 
@@ -159,6 +161,16 @@
             if(resultado.exito !== undefined){
               modalCambiarCaja.close();
               document.removeEventListener("click", cerrarDialogoExterno);
+              console.log(resultado);
+              //cambiar el id del cierre de caja en id="#idCierrecaja"
+              document.querySelector('#nombreCaja')!.textContent = $('#CambiarCaja option:selected').text();
+              document.querySelector('#idCierrecaja')!.textContent = resultado.ultimocierre.id;
+              //mostar datos de la caja seleccionada
+              printdiscriminarmediospago(resultado.discriminarmediospagos);
+              printindicadores(resultado.ultimocierre);
+              printsobrantesfaltantes(resultado.sobrantefaltante);
+              printventasxusuarios(resultado.ventasxusuarios);
+              printventas(resultado.facturas);
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -169,6 +181,97 @@
       })();
       
     });
+
+    function printdiscriminarmediospago(array: {idmediopago:string, mediopago:string, valor:string}[]){
+      const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
+      while(tbodyMediosPago.firstChild)tbodyMediosPago.removeChild(tbodyMediosPago.firstChild);
+      array.forEach(row=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="">${row.mediopago}</td> 
+                        <td class=""><strong>$ </strong>${row.valor}</td>
+                      `;
+        tbodyMediosPago.appendChild(tr);
+      });
+    }
+
+    function printindicadores(obj:{id:string, idcaja:string, id_usuario:string, nombrecaja:string, nombreusuario:string, fechainicio:string, fechacierre:string, ncambiosaventa:string, totalcotizaciones:string, totalfacturas:string, facturaselectronicas:string, facturaspos:string, valorfe:string, descuentofe:string, valorpos:string, descuentopos:string, basecaja:string, ventasenefectivo:string, gastoscaja:string, gastosbanco:string, dineroencaja:string, domicilios:string, ndomicilios:string, realencaja:string, ingresoventas:string, totaldescuentos:string, realventas:string, valorimpuestototal:string, totalbruto:string, estado:string}){
+      const basecaja = Number(obj.basecaja);
+      const ventasenefectivo = Number(obj.ventasenefectivo);
+      const gastoscaja = Number(obj.gastoscaja);
+      const domicilios = Number(obj.domicilios);
+      const ingresoventas = Number(obj.ingresoventas);
+      const totaldescuentos = Number(obj.totaldescuentos);
+
+      document.querySelector('#basecajaResumen')!.textContent = '$'+basecaja.toLocaleString();
+      document.querySelector('#gastoscajaResumen')!.textContent = '$'+gastoscaja.toLocaleString();
+      document.querySelector('#domiciliosResumen')!.textContent = '$'+domicilios.toLocaleString();
+      document.querySelector('#ingresoventasResumen')!.textContent = '$'+(ingresoventas).toLocaleString();
+      document.querySelector('#totalfacturasResumen')!.textContent = obj.totalfacturas;
+      document.querySelector('#totalcotizacionesResumen')!.textContent = obj.totalcotizaciones;
+
+      document.querySelector('#baseIngresoCaja')!.textContent = '+ $'+basecaja.toLocaleString();
+      document.querySelector('#ventasEfectivo')!.textContent = '+ $'+ventasenefectivo.toLocaleString();
+      document.querySelector('#gastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
+      document.querySelector('#dineroCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja).toLocaleString();
+      document.querySelector('#domicilios')!.textContent = '- $'+domicilios.toLocaleString();
+      document.querySelector('#realCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja-domicilios).toLocaleString();
+      document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+ingresoventas.toLocaleString();
+      document.querySelector('#totalDescuentos')!.textContent = '- $'+totaldescuentos.toLocaleString();
+      document.querySelector('#realVentas')!.textContent = '= $'+(ingresoventas-totaldescuentos).toLocaleString();
+      document.querySelector('#realVentasSinDomicilios')!.textContent = '= $'+(ingresoventas-totaldescuentos-domicilios).toLocaleString();
+      document.querySelector('#mpuestoTotal')!.textContent = '+ $'+Number(obj.valorimpuestototal).toLocaleString();
+      document.querySelector('#totalBruto')!.textContent = '+ $'+Number(obj.totalbruto).toLocaleString();
+    }
+
+    function printsobrantesfaltantes(array: {id_mediopago:string, idcierrecajaid:string, nombremediopago:string, valordeclarado:number, valorsistema:number}[]){
+      const sobranteFaltante = document.querySelector('#sobranteFaltante tbody') as HTMLTableElement;
+      while(sobranteFaltante.firstChild)sobranteFaltante.removeChild(sobranteFaltante.firstChild);
+      array.forEach(row=>{
+        const tr = document.createElement('tr');
+        if(row.nombremediopago=='Efectivo')tr.classList.add('!border-2', '!border-indigo-600');
+        tr.innerHTML = `<td class="">${row.nombremediopago}</td> 
+                        <td class="colsistem">${row.valorsistema.toLocaleString()}</td>
+                        <td class="coldeclarado" data-mediopagoid="${row.id_mediopago}">${row.valordeclarado.toLocaleString()}</td>
+                        <td class="coldif">${(row.valordeclarado - row.valorsistema).toLocaleString()}</td>
+                      `;
+        sobranteFaltante.appendChild(tr);
+      });
+    }
+
+    function printventasxusuarios(array: {Nombre:string, N_ventas:string, ventas:string}[]){
+      const ventasxusuarios = document.querySelector('#ventasXUsuario tbody') as HTMLTableElement;
+      while(ventasxusuarios.firstChild)ventasxusuarios.removeChild(ventasxusuarios.firstChild);
+      array.forEach(row=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="">${row.Nombre}</td>
+                        <td class="">${row.N_ventas}</td>
+                        <td class=""><strong>$ </strong>${row.ventas}</td>
+                      `;
+        ventasxusuarios.appendChild(tr);
+      });
+    }
+
+    function printventas(array: {id:string, idcliente:string, idvendedor:string, idcaja:string, idconsecutivo:string, iddireccion:string, idtarifazona:string, idcierrecaja:string, cliente:string, vendedor:string, caja:string, tipofacturador:string, direccion:string, tarifazona:string, totalunidades:string, recibido:string, transaccion:string, tipoventa:string, cotizacion:string, estado:string, cambioaventa:string, subtotal:string, base:string, valorimpuestototal:string, dctox100:string, descuento:string, total:string, observacion:string, departamento:string, ciudad:string, entrega:string, valortarifa:string, fechacreacion:string, fechapago:string}[]){
+      const tablaVentas = document.querySelector('#tablaVentas tbody') as HTMLTableElement;
+      while(tablaVentas.firstChild)tablaVentas.removeChild(tablaVentas.firstChild);
+      array.forEach((row, i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="">${i}</td>        
+                        <td class="">${row.fechapago}</td> 
+                        <td class="">${row.cliente}</td> 
+                        <td class="">${row.id}</td>
+                        <td class="${row.estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense'}">${row.estado}</td>
+                        <td class="">$ ${Number(row.subtotal).toLocaleString()}</td>
+                        <td class="">$ ${Number(row.total).toLocaleString()}</td>
+                        <td class="accionestd"><div class="acciones-btns" id="${row.id}">
+                                <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=${row.id}">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                            </div>
+                        </td>
+                      `;
+        tablaVentas.appendChild(tr);
+      });
+    }
+
 
     function cerrarDialogoExterno(event:Event) {
       if (event.target === modalArqueocaja || event.target === Modalcerrarcaja || event.target === modalCambiarCaja || (event.target as HTMLInputElement).value === 'Cancelar' || (event.target as HTMLElement).closest('.salircerrarcaja') || (event.target as HTMLElement).closest('.finCerrarcaja')) {
