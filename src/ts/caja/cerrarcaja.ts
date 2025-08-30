@@ -188,7 +188,7 @@
       array.forEach(row=>{
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="">${row.mediopago}</td> 
-                        <td class=""><strong>$ </strong>${row.valor}</td>
+                        <td class=""><strong>$ </strong>${Number(row.valor).toLocaleString()}</td>
                       `;
         tbodyMediosPago.appendChild(tr);
       });
@@ -251,7 +251,7 @@
       });
     }
 
-    function printventas(array: {id:string, idcliente:string, idvendedor:string, idcaja:string, idconsecutivo:string, iddireccion:string, idtarifazona:string, idcierrecaja:string, cliente:string, vendedor:string, caja:string, tipofacturador:string, direccion:string, tarifazona:string, totalunidades:string, recibido:string, transaccion:string, tipoventa:string, cotizacion:string, estado:string, cambioaventa:string, subtotal:string, base:string, valorimpuestototal:string, dctox100:string, descuento:string, total:string, observacion:string, departamento:string, ciudad:string, entrega:string, valortarifa:string, fechacreacion:string, fechapago:string}[]){
+    function printventas(array: {id:string, idcliente:string, idvendedor:string, idcaja:string, idconsecutivo:string, iddireccion:string, idtarifazona:string, idcierrecaja:string, cliente:string, vendedor:string, caja:string, tipofacturador:string, mediosdepago:{id:string, id_factura:string, mediopago:string, valor:string}[], direccion:string, tarifazona:string, totalunidades:string, recibido:string, transaccion:string, tipoventa:string, cotizacion:string, estado:string, cambioaventa:string, subtotal:string, base:string, valorimpuestototal:string, dctox100:string, descuento:string, total:string, observacion:string, departamento:string, ciudad:string, entrega:string, valortarifa:string, fechacreacion:string, fechapago:string}[]){
       const tablaVentas = document.querySelector('#tablaVentas tbody') as HTMLTableElement;
       while(tablaVentas.firstChild)tablaVentas.removeChild(tablaVentas.firstChild);
       array.forEach((row, i)=>{
@@ -260,6 +260,11 @@
                         <td class="">${row.fechapago}</td> 
                         <td class="">${row.cliente}</td> 
                         <td class="">${row.id}</td>
+                        <td>
+                            <div data-estado="${row.estado}" data-totalpagado="${row.total}" id="${row.id}" class="mediosdepago max-w-full flex flex-wrap gap-2">
+                                ${row.mediosdepago.map(mp=>`<button class="btn-xs btn-light">${mp.mediopago}</button>`).join(' ')}
+                            </div>
+                        </td>
                         <td class="${row.estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense'}">${row.estado}</td>
                         <td class="">$ ${Number(row.subtotal).toLocaleString()}</td>
                         <td class="">$ ${Number(row.total).toLocaleString()}</td>
