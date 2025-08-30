@@ -333,6 +333,7 @@ class cajacontrolador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
+    
     $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
@@ -362,7 +363,8 @@ class cajacontrolador{
       }
     }
     
-    $router->render('admin/caja/printdetallecierre', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    
+    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 

@@ -48,7 +48,7 @@
                     
                     <div class="text-sm">
                         <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">FACTURA #:</p>
-                        <span class="text-gray-500"><?php echo $factura->id??'';?></span>
+                        <span class="text-gray-500">POS-<?php echo $factura->id??'';?></span>
                     </div>
 
                     <div class="font-medium text-gray-800 text-sm">
