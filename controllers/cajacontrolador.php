@@ -49,7 +49,6 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     
-    
 
     $cajas = caja::all();
     $router->render('admin/caja/index', ['titulo'=>'Caja', 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
@@ -64,7 +63,7 @@ class cajacontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){  ///if se puede eliminar
             
     }
-    //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
+  
     $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
@@ -93,6 +92,8 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
+    foreach($facturas as $value)
+      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
     $cajas = caja::all();
     $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'cajas'=>$cajas, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
@@ -503,6 +504,10 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
+
+    foreach($facturas as $value)
+      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
+    
     //$cajas = caja::all();
     $alertas['exito'][] = "Cambio de caja.";
     $alertas['ultimocierre'] = $ultimocierre;

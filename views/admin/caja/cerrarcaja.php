@@ -249,6 +249,7 @@
                             <th>Fecha</th>
                             <th>Cliente</th>
                             <th>Factura</th>
+                            <th>Medio pago</th>
                             <th>Estado</th>
                             <th>Valor Bruto</th>
                             <th>Total</th>
@@ -262,6 +263,13 @@
                             <td class=""><?php echo $value->fechapago;?></td> 
                             <td class=""><?php echo $value->cliente;?></td> 
                             <td class=""><?php echo $value->id;?></td>
+                            <td>
+                                <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
+                                    <?php foreach($value->mediosdepago as $idx => $element): ?>
+                                    <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                                    <?php endforeach; ?>
+                                </div>
+                            </td>
                             <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense';?>"><?php echo $value->estado;?></td>
                             <td class="">$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                             <td class="">$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
