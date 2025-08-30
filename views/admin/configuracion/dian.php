@@ -26,7 +26,7 @@
               <td class="" ><?php echo $value->nombre; ?></td> 
               <td class=""><?php echo $value->documento;?></td>
               <td class="" ><?php echo $value->software; ?></td> 
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-compañia="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarCompañia"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarCompañia"><i class="fa-solid fa-trash-can"></i></button></div></td>
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-compañia="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarCompañia"><i class="fa-solid fa-pen-to-square" title="Actualizar facturador"></i></button><button class="btn-md btn-red eliminarCompañia"><i class="fa-solid fa-trash-can" title="Eliminar facturador"></i></button></div></td>
           </tr>
           <?php endforeach; ?>
       </tbody>

@@ -1,4 +1,4 @@
-<div class="box reportes">
+<div class="box reportes mb-20">
     <h4 class="text-gray-600 mb-8">Reportes</h4>
     <div class="w-full min-h-80 grid grid-cols-2 tlg:grid-cols-3 gap-4 ">
         <div class="col-span-2 tlg:col-span-2">

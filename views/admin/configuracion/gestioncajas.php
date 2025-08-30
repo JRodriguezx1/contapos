@@ -21,9 +21,9 @@
               <td class=""><?php echo $value->negocio;?></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-caja="<?php echo $value->nombre;?>">
-                    <button class="btn-md btn-turquoise editarCaja"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="btn-md btn-turquoise editarCaja"><i class="fa-solid fa-pen-to-square" title="Actualizar datos de caja"></i></button>
                     <?php if($value->id>1){ ?>
-                    <button class="btn-md btn-red eliminarCaja"><i class="fa-solid fa-trash-can"></i></button>
+                    <button class="btn-md btn-red eliminarCaja" title="Eliminar caja"><i class="fa-solid fa-trash-can"></i></button>
                     <?php } ?>
                 </div>
               </td>

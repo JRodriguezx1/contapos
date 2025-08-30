@@ -1,6 +1,6 @@
 
-<div class="box clientes pb-20">
-    
+<div class="box clientes !pb-20"> 
+
         <?php include __DIR__. "/../../templates/alertas.php"; ?>
         <h4 class="text-gray-600 mb-12 mt-4">Gestiòn de clientes</h4>
         <button id="crearCliente" class="btn-md btn-indigo !py-4 !px-6 !w-[168px]"> + Crear Cliente</button>
@@ -28,11 +28,11 @@
                         <td class=""><?php echo $cliente->email; ?></td>        
                         <td class="accionestd">
                             <div class="acciones-btns" id="<?php echo $cliente->id;?>">
-                                <button class="btn-md btn-turquoise editarClientes"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button class="btn-md btn-light editarEliminarDireccion"><i class="fa-solid fa-location-dot"></i></button>
-                                <a class="btn-md btn-bluedark" href="/admin/clientes/detalle?id=<?php echo $cliente->id;?>"><i class="fa-solid fa-chart-simple"></i></a>
+                                <button class="btn-md btn-turquoise editarClientes" title="Actualizar datos del cliente"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn-md btn-light editarEliminarDireccion" title="Actualizar dirección del cliente"><i class="fa-solid fa-location-dot"></i></button>
+                                <a class="btn-md btn-bluedark" href="/admin/clientes/detalle?id=<?php echo $cliente->id;?>" title="Ver detalles del cliente"><i class="fa-solid fa-chart-simple"></i></a>
                                 
-                                <button class="btn-md btn-red eliminarClientes"><i class="fa-solid fa-trash-can"></i></button>
+                                <button class="btn-md btn-red eliminarClientes" title="Eliminar cliente"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </td>
                     </tr>

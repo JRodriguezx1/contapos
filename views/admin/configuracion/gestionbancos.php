@@ -21,8 +21,8 @@
               <td class=""><?php echo $value->created_at;?></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-banco="<?php echo $value->nombre;?>">
-                    <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="btn-md btn-red eliminarBanco"><i class="fa-solid fa-trash-can"></i></button>
+                    <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square" title="Actualizar datos del banco"></i></button>
+                    <button class="btn-md btn-red eliminarBanco" title="Eliminar banco"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
               </td>
           </tr>

@@ -24,7 +24,7 @@
             <td class=""><?php echo $value->cedula;?></td>
             <td class=""><?php echo $value->perfil==1?'Empleado':($value->perfil==2?'Admin':'Propietario');?></td>
             <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                    <button class="btn-md btn-turquoise editarEmpleado"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-lima empleadoSkills"><i class="fa-solid fa-grip-vertical"></i></button> <button class="btn-md btn-red eliminarEmpleado"><i class="fa-solid fa-trash-can"></i></button>
+                    <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-lima empleadoSkills" title="Por definir descripción de botón"><i class="fa-solid fa-grip-vertical"></i></button> <button class="btn-md btn-red eliminarEmpleado" title="Eliminar empleado"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
             </td>
         </tr>

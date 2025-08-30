@@ -1,4 +1,4 @@
-<div class="box categorias">
+<div class="box categorias mb-20">
   <!-- <a class="btn-xs btn-dark" href="/admin/almacen">Atras</a> -->
 
   <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -34,7 +34,7 @@
       </tbody>
   </table>
 
-  <dialog id="miDialogoCategoria" class="w-[500px] h-[195px] p-6 rounded-lg shadow-lg">
+  <dialog id="miDialogoCategoria" class="w-[500px] h-[205px] p-12 rounded-lg shadow-lg">
     <h4 id="modalCategoria" class="font-semibold text-gray-700 mb-4 mt-10">Crear categoria</h4>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateCategoria" class="formulario" action="/admin/almacen/crear_categoria" method="POST">

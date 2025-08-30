@@ -49,7 +49,7 @@
       <img  src="/build/img/logoj2blanco.png" class="w-80" alt="logoj2">  
       <div class="border-[20px] border-transparent rounded-[24px] dark:bg-gray-900 bg-white shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-2 m-2">
           <h1 class="pt-8 pb-6 font-bold dark:text-gray-400 text-5xl text-center cursor-default">
-            Iniciar Session
+            Iniciar Sesión
           </h1>
           <form action="/login" method="post" class="space-y-4">
             <div>
@@ -113,7 +113,7 @@
             class="text-gray-500 flex text-center flex-col mt-4 items-center text-lg"
           >
             <p class="cursor-default">
-              By signing in, you agree to our
+              Al iniciar sesión, acepta
               <a
                 class="group text-blue-400 transition-all duration-100 ease-in-out"
                 href="#"
@@ -121,10 +121,10 @@
                 <span
                   class="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out"
                 >
-                  Terms
+                   nuestros
                 </span>
               </a>
-              and
+              Términos y <br/>Política
               <a
                 class="group text-blue-400 transition-all duration-100 ease-in-out"
                 href="#"
@@ -132,7 +132,7 @@
                 <span
                   class="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out"
                 >
-                  Privacy Policy
+                  de privacidad.
                 </span>
               </a>
             </p>
