@@ -69,6 +69,12 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
 
+    if(!empty($_POST['id'])){
+      //validar si se genera la cotizacion en otro cierre de caja
+      //si es otro cierre de caja, generar otro registro
+      //si esta en el mismo cierre de caja, cambiar el estado. 
+    }
+    
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
       //$objeto->id = $objeto->iditem;

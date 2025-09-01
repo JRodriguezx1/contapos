@@ -679,6 +679,7 @@
 
     async function procesarpedido(estado:string, ctz:string){
       const datos = new FormData();
+      datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
       datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
       datos.append('idcaja', btnCaja.value);
@@ -736,19 +737,20 @@
     /////////////////////////obtener datos de cotizacion /////////////////////
     const parametrosURL = new URLSearchParams(window.location.search);
     const id = parametrosURL.get('id');
-    let datosfactura;
+    let datosfactura:{id:string, idcliente: string, idvendedor:string, idcaja:string, idconsecutivo:string, iddireccion:string, idtarifazona:string, idcierrecaja:string, cliente:string, vendedor:string, caja:string, tipofacturador:string, direccion:string, tarifazona:string, totalunidades:string, recibido:string, transaccion:string, tipoventa:string,
+                      cotizacion:string, estado:string, cambioaventa:string, subtotal:string, base:string, valorimpuestototal:string, dctox100:string, descuento:string, total:string, observacion:string, departamento:string, ciudad:string, entrega:string, valortarifa:string, fechacreacion:string, fechapago:string, opc1:string, opc2:string};
     if(id){
       (async ()=>{
         try {
             const url = "/admin/api/getcotizacion_venta?id="+id; //llamado a la API REST
             const respuesta = await fetch(url); 
-            datosfactura = await respuesta.json();
-            carrito = datosfactura.productos;
+            const resultado = await respuesta.json();
+            datosfactura = resultado.factura;
+            carrito = resultado.productos;
             carrito.forEach(item =>printProduct(item.idproducto));
             valorCarritoTotal();
-            console.log(carrito);
-            (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.factura.id;
-            $('#selectCliente').val(datosfactura.factura.idcliente).trigger('change');
+            (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.id;
+            $('#selectCliente').val(datosfactura.idcliente).trigger('change');
         } catch (error) {
             console.log(error);
         }
