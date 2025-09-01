@@ -153,6 +153,8 @@
     <form id="formCambioMedioPago" class="formulario" action="/admin/caja/cambioMedioPago" method="POST">
         <label id="numfactura" class="text-gray-700 text-2xl text-center mb-2">Factura N° : </label>
         <p class="text-gray-600 text-3xl text-center font-light m-0 mb-8">Total Pagado: $<span id="totalPagado" class="text-gray-700 font-semibold">0</span></p>
+        <span class="m-0 text-slate-500 text-xl font-semibold">Diferencia: </span>
+        <span id="diferencia" class="m-0 text-slate-500 text-xl">0</span>
         <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto mb-8">
             <?php foreach($mediospago as $index => $value):?>
             <div class="mb-4 mx-auto">
