@@ -127,12 +127,12 @@
 
         if(totalmediospago<=parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))){
           mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
+          document.querySelector('#diferencia')!.textContent = (parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))-totalmediospago).toLocaleString();
         }else{
           if(mapMediospago.has((e.target as HTMLInputElement).id)){
             (e.target as HTMLInputElement).value = mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
           }else{ (e.target as HTMLInputElement).value = '0'; }
         }
-        
       });
     });
 
