@@ -10,6 +10,7 @@ use Model\negocio;
 use Model\mediospago;
 use Model\ActiveRecord;
 use Model\bancos;
+use Model\cierrescajas;
 use Model\tipofacturador;
 use MVC\Router;  //namespace\clase
  
@@ -45,6 +46,7 @@ class configcontrolador{
 
 
   ///////////////////////////////////  Apis ////////////////////////////////////
+  
   ///////////// procesando la gestion de la caja ////////////////
     public static function allcajas(){  //api llamado desde citas.js
       $cajas = caja::all();
@@ -63,10 +65,19 @@ class configcontrolador{
             if(empty($alertas)){ //si los campos cumplen los criterios  
                 $r = $caja->crear_guardar();
                 if($r[0]){
-                    $caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
-                    $caja->id = $r[1];
-                    $alertas['exito'][] = 'Caja creada correctamente';
-                    $alertas['caja'] = $caja;
+                    //crear cierre de caja para la caja recien creada
+                    $crearcierrecaja = new cierrescajas(['idcaja'=>$r[1], 'nombrecaja'=>$caja->nombre]);
+                    $rcc = $crearcierrecaja->crear_guardar();
+                    if($rcc[0]){
+                        $caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
+                        $caja->id = $r[1];
+                        $alertas['exito'][] = 'Caja creada correctamente';
+                        $alertas['caja'] = $caja;
+                    }else{
+                        $ultimacaja = caja::find('id', $r[1]);
+                        $ultimacaja->eliminar_registro();
+                        $alertas['error'][] = "Error durante la creacion de la caja.";
+                    }
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
                 }

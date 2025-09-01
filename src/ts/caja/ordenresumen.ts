@@ -102,7 +102,7 @@
           mapMediospago.clear();
           $('.mediopago').val(0);
         }
-        (document.querySelector('.Efectivo')! as HTMLInputElement).value =  `${valorTotal.total-totalotrosmedios}`;
+        (document.querySelector('.Efectivo')! as HTMLInputElement).value =  `${(valorTotal.total-totalotrosmedios).toLocaleString()}`;
         mapMediospago.set('1', valorTotal.total-totalotrosmedios);
         if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1');
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
@@ -128,7 +128,7 @@
             (e.target as HTMLInputElement).value = '0';
           }
         }
-        (mediospago[0] as HTMLInputElement).value = mapMediospago.get('1')??0;
+        (mediospago[0] as HTMLInputElement).value = (mapMediospago.get('1')??0).toLocaleString();
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
       }
 

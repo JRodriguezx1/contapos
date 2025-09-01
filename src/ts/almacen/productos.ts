@@ -112,9 +112,12 @@
       $('#idunidadmedida').val(unproducto?.idunidadmedida??'1');
       (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
       (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
+      (document.querySelector('.habtipoproduccion') as HTMLElement).style.display = "none";
       if(unproducto?.tipoproducto == '1'){
         (document.querySelector('.stock')as HTMLInputElement).style.display = "none";
         (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "none";
+        (document.querySelector('.habtipoproduccion') as HTMLElement).style.display = "block";
+        $('#tipoproduccion').val(unproducto.tipoproduccion);
       }
       (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';

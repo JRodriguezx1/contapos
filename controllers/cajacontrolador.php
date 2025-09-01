@@ -109,7 +109,7 @@ class cajacontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
       $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['id_caja']]); //ultimo cierre por caja
-      if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura
+      if(!isset($ultimocierre)){ // si la caja esta cerrada y luego aqui se hace apertura
         $ultimocierre = new cierrescajas(['idcaja'=>$_POST['id_caja'], 'nombrecaja'=>caja::find('id', $_POST['id_caja'])->nombre, 'estado'=>0]);
         $r = $ultimocierre->crear_guardar();
         if(!$r[0])$ultimocierre->estado = 1;

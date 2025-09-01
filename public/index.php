@@ -144,6 +144,7 @@ $router->post('/admin/api/cambiarestadoproducto', [almacencontrolador::class, 'c
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
 $router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
+$router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
 
 $router->post('/admin/api/declaracionDinero', [cajacontrolador::class, 'declaracionDinero']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/arqueocaja', [cajacontrolador::class, 'arqueocaja']);  //aip llamada desde cerrarcaja.ts

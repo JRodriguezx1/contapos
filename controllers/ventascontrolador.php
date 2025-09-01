@@ -28,6 +28,19 @@ class ventascontrolador{
     isadmin();
     $alertas = [];
 
+    $facturacotz = [];
+    $productoscotz = [];
+
+    if(isset($_GET['id'])){
+      $id = $_GET['id'];
+      if(!is_numeric($id))return;
+      //obtener datos de la factura guardada o cotizacion
+      $facturacotz = facturas::find('id', $id);
+      if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0){
+        $productoscotz = ventas::idregistros('idfactura', $id);
+      }else{ return;}
+    }
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
     }
@@ -39,7 +52,7 @@ class ventascontrolador{
     $tarifas = tarifas::all();
     $cajas  = caja::all();
     $consecutivos = consecutivos::all();
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -531,6 +544,38 @@ class ventascontrolador{
       }
     }
 
+    echo json_encode($alertas);
+  }
+
+
+  public static function getcotizacion_venta(){
+    session_start();
+    isadmin();
+    $alertas = [];
+    if(isset($_GET['id'])){
+      $id = $_GET['id'];
+      if(!is_numeric($id))return;
+      //obtener datos de la factura guardada o cotizacion
+      $facturacotz = facturas::find('id', $id);
+      if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0){
+        $productoscotz = ventas::idregistros('idfactura', $id);
+        foreach($productoscotz as $value){ //convertir a tipo de dato numero
+          $value->valorunidad = (int)$value->valorunidad;
+          $value->cantidad = (float)$value->cantidad;
+          $value->subtotal = (float)$value->subtotal;
+          $value->base = (float)$value->base;
+          $value->impuesto = (int)$value->impuesto;
+          $value->valorimp = (float)$value->valorimp;
+          $value->descuento = (int)$value->descuento;
+          $value->total = (float)$value->total;
+        }
+        $alertas['exito'][] = "Cotizacion cargada con exito";
+        $alertas['factura'] = $facturacotz;
+        $alertas['productos'] = $productoscotz;
+      }else{ 
+        $alertas['error'][] = "No es posible obtener datos de factura";
+      }
+    }
     echo json_encode($alertas);
   }
 

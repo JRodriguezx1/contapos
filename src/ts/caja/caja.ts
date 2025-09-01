@@ -5,7 +5,7 @@
     const btnGastosingresos = document.querySelector<HTMLButtonElement>("#btnGastosingresos");
     const operacion = document.querySelector('#operacion') as HTMLSelectElement;
     const origengasto = document.querySelectorAll<HTMLInputElement>('input[name="origengasto"]');
-    const mediosPago = document.querySelectorAll<HTMLInputElement>('.mediopago');
+    const mediosPago = document.querySelectorAll<HTMLInputElement>('.mediopago'); //todos los medios de pago del modal
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numfactura = document.querySelector('#numfactura') as HTMLLabelElement;
 
@@ -14,6 +14,7 @@
     let mediospagoDB:{id:string, idmediopago:string, id_factura:string, valor:string}[];
     let nuevosMediosPago:{idmediopago:string, valor: string}[]=[];  // guardar los medios de pago a enviar a backend
     const setMediosPagoDB = new Set();
+    const mapMediospago = new Map();
 
     tablaListaPedidos = ($('#tablaListaPedidos') as any).DataTable(configdatatables);
 
@@ -84,14 +85,14 @@
         estadofactura = target.parentElement?.dataset.estado??'';
         totalPagado.textContent = Number(target.parentElement!.dataset.totalpagado??'0').toLocaleString();
       }
-      facturamediospago();     //muetra los valores de los medios de pago de cada factura
+      facturamediospago();     //muestra los valores de los medios de pago de cada factura
       if(estadofactura == "Eliminada")document.querySelector('#btnEnviarCambioMedioPago')?.classList.add('!hidden');
       if(estadofactura == "Paga")document.querySelector('#btnEnviarCambioMedioPago')?.classList.remove('!hidden');
       modalcambioMedioPago.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
-    function facturamediospago(){  //muetra los valores de los medios de pago de cada factura
+    function facturamediospago(){  //muestra los valores de los medios de pago de cada factura
       numfactura.textContent = 'Factura N° : '+idfactura;
       (async ()=>{
         try {
@@ -106,7 +107,8 @@
             mediopago.value = '0';
             for(let i=0; i<mediospagoDB.length; i++)
               if(mediopago.id == mediospagoDB[i].idmediopago){
-                mediopago.value =  mediospagoDB[i].valor;
+                mediopago.value =  Number(mediospagoDB[i].valor).toLocaleString();
+                mapMediospago.set(mediopago.id, Number(mediospagoDB[i].valor));
                 break;
               }
           });
@@ -115,6 +117,24 @@
         }
       })();
     }
+
+    mediosPago.forEach(mp =>{
+      mp.addEventListener('input', (e)=>{
+        let totalmediospago = 0;
+        mediosPago.forEach((item, index)=>{ //sumar todos los medios de pago
+          totalmediospago += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
+        });
+
+        if(totalmediospago<=parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))){
+          mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
+        }else{
+          if(mapMediospago.has((e.target as HTMLInputElement).id)){
+            (e.target as HTMLInputElement).value = mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
+          }else{ (e.target as HTMLInputElement).value = '0'; }
+        }
+        
+      });
+    });
 
     ////////////////// evento al bton pagar del modal facturar //////////////////////
     document.querySelector('#formCambioMedioPago')?.addEventListener('submit', e=>{

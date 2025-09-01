@@ -4,20 +4,24 @@ namespace Model;
 
 class compras extends ActiveRecord{
     protected static $tabla = 'compras';
-    protected static $columnasDB = ['id', 'idusuario', 'idproveedor', 'idorigenpago', 'idformapago', 'nombreusuario', 'nombreproveedor', 'nombreorigenpago', 'formapago', 'nfactura', 'impuesto', 'cantidaditems', 'observacion', 'subtotal', 'valortotal', 'estado', 'fechacompra'];
+    protected static $columnasDB = ['id', 'idusuario', 'idproveedor', 'idformapago', 'idorigencaja', 'idorigenbanco', 'nombreorigencaja', 'nombreorigenbanco', 'nombreusuario', 'nombreproveedor', 'formapago', 'nfactura', 'impuesto', 'origenpago', 'nombreorigenpago', 'cantidaditems', 'observacion', 'subtotal', 'valortotal', 'estado', 'fechacompra'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->idusuario = $args['idusuario']??'';
         $this->idproveedor = $args['idproveedor']??1;
-        $this->idorigenpago = $args['idorigenpago']??1;
         $this->idformapago = $args['idformapago']??1;
+        $this->idorigencaja = $args['idorigencaja']??'';
+        $this->idorigenbanco = $args['idorigenbanco']??'';
+        $this->nombreorigencaja = $args['nombreorigencaja']??'';
+        $this->nombreorigenbanco = $args['nombreorigenbanco']??'';
         $this->nombreusuario = $args['nombreusuario']??'';
         $this->nombreproveedor = $args['nombreproveedor']??'';
-        $this->nombreorigenpago = $args['nombreorigenpago']??'';
         $this->formapago = $args['formapago']??'';
         $this->nfactura = $args['nfactura']??'';
         $this->impuesto = $args['impuesto']??0;
+        $this->origenpago = $args['origenpago']??0;  //0 = caja,  1 = banco
+        $this->nombreorigenpago = $args['nombreorigenpago']??'';
         $this->cantidaditems = $args['cantidaditems']??'';
         $this->observacion = $args['observacion']??'';
         $this->subtotal = $args['subtotal']??0;
@@ -38,6 +42,7 @@ class compras extends ActiveRecord{
         if(is_numeric($this->valortotal)){
             if((int)$this->valortotal==0)self::$alertas['error'][] = 'Error en el valor total de la compra.';
         }
+        if(strlen($this->observacion)>225)self::$alertas['error'][] = 'El campo observaciones no debe superar los 225 caracteres.';
         return self::$alertas;
     }
 
