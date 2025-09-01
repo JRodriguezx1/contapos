@@ -34,19 +34,19 @@
 
     <div class="flex justify-between p-4 border border-gray-300 rounded mb-6">
         <div class="flex-1 text-center">
-            <p>Fecha Orden</p>
+            <p class="font-bold">Fecha Orden</p>
             <p><?php echo $factura->fechapago??'';?></p>
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
-            <p>Fecha Entrega</p>
+            <p class="font-bold">Fecha Entrega</p>
             <p>Noviembre 28, 2023</p>
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
-            <p>Vendedor</p>
+            <p class="font-bold">Vendedor</p>
             <p><?php echo $factura->vendedor??'';?></p>
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
-            <p>Estado Orden</p>
+            <p class="font-bold">Estado Orden</p>
             <p id="estadoOrden"><?php echo $factura->estado??'';?></p>
         </div>
     </div>

@@ -41,11 +41,11 @@
     </div>
 </main>-->
 
-<div class="h-screen w-screen flex justify-center items-center dark:bg-gray-900">
+<div class="h-screen w-screen flex justify-center items-center dark:bg-gray-900 bg-gray-100">
   
     <div class="grid gap-8">
       <?php include __DIR__. "/../templates/alertas.php"; ?>
-      <div id="back-div" class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-[30px] rounded-tl-[34px] m-4">
+      <div id="back-div" class="md:w-[421px] bg-gradient-to-r from-blue-500 to-purple-500 rounded-[30px] rounded-tl-[34px] m-4">
       <img  src="/build/img/logoj2blanco.png" class="w-80" alt="logoj2">  
       <div class="border-[20px] border-transparent rounded-[24px] dark:bg-gray-900 bg-white shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-2 m-2">
           <h1 class="pt-8 pb-6 font-bold dark:text-gray-400 text-5xl text-center cursor-default">
@@ -56,7 +56,9 @@
               <label for="email" class="mb-2  dark:text-gray-400 text-xl">Celular</label>
               <input
                 id="email"
-                class="border p-3 dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 shadow-md placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
+                class="w-full h-14 p-2.5 text-xl text-gray-900 bg-white placeholder:text-base border border-gray-300 rounded-lg shadow-md dark:bg-indigo-700 dark:text-gray-300 dark:border-gray-700 dark:placeholder-gray-400
+                focus:outline-none focus:ring-1 focus:border-indigo-600 
+                ease-in-out duration-300 focus:scale-105"
                 type="number"
                 placeholder="Ingresa tu número celular"
                 name="movil"
@@ -67,7 +69,9 @@
               <label for="password" class="mb-2 dark:text-gray-400 text-xl">Contraseña</label>
               <input
                 id="password"
-                class="border p-3 shadow-md dark:bg-indigo-700 dark:text-gray-300  dark:border-gray-700 placeholder:text-base focus:scale-105 ease-in-out duration-300 border-gray-300 rounded-lg w-full"
+                class="w-full h-14 p-2.5 text-xl text-gray-900 bg-white placeholder:text-base border border-gray-300 rounded-lg shadow-md dark:bg-indigo-700 dark:text-gray-300 dark:border-gray-700 dark:placeholder-gray-400
+                focus:outline-none focus:ring-1 focus:border-indigo-600 
+                ease-in-out duration-300 focus:scale-105"
                 type="password"
                 placeholder="Ingresa tu contraseña"
                 name="password"

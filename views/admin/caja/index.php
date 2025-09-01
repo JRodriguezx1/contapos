@@ -147,18 +147,18 @@
   </dialog>
 
 
-  <dialog id="cambioMedioPago" class="midialog-sm p-5">
+  <dialog id="cambioMedioPago" class="midialog-sm p-12">
     <h4 class="font-semibold text-gray-700 mb-4">Cambio medio de pago</h4>
     <div id="divmsjalerta2"></div>
     <form id="formCambioMedioPago" class="formulario" action="/admin/caja/cambioMedioPago" method="POST">
         <label id="numfactura" class="text-gray-700 text-2xl text-center mb-2">Factura N° : </label>
         <p class="text-gray-600 text-3xl text-center font-light m-0 mb-8">Total Pagado: $<span id="totalPagado" class="text-gray-700 font-semibold">0</span></p>
-        <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto">
+        <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto mb-8">
             <?php foreach($mediospago as $index => $value):?>
-            <div class="mb-4">
+            <div class="mb-4 mx-auto">
                 <label class="text-gray-700 text-xl"><?php echo $value->mediopago??'';?>: </label>
                 <input id="<?php echo $value->id??'';?>" 
-                    class="w-44 py-1 px-3 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500 text-xl mediopago <?php echo $value->mediopago??'';?>"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mediopago <?php echo $value->mediopago??'';?>"
                     type="text" 
                     value="0" 
                     <?php //echo $value->mediopago=='Efectivo'?'readonly':'';?> 
@@ -168,9 +168,9 @@
             <?php endforeach; ?>
         </div>
         
-        <div class="text-right">
-            <button class="btn-md btn-red" type="button" value="cancelar">cancelar</button>
-            <input id="btnEnviarCambioMedioPago" class="btn-md btn-blue" type="submit" value="Aplicar">
+        <div class="text-right space-x-4">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="cancelar">cancelar</button>
+            <input id="btnEnviarCambioMedioPago" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Aplicar">
         </div>
     </form>
   </dialog>

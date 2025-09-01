@@ -1,5 +1,5 @@
 
-<div class="relative">
+<div class="relative pb-20">
     <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
 <div class="box cerrarcaja">
   <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -350,22 +350,22 @@
   </dialog>
 
   <!-- MODAL cambiar caja-->
-  <dialog id="modalCambiarCaja" class="midialog-sm p-5">
+  <dialog id="modalCambiarCaja" class="midialog-sm p-12">
     <h4 class="font-semibold text-gray-700 mb-4">Cambiar caja</h4>
     <div id="divmsjalertaCambiarCaja"></div>
     <form id="formCambiarCaja" class="formulario" action="/admin/caja" method="POST">
         <div class="formulario__campo">
             <label class="formulario__label" for="CambiarCaja">Seleccionar caja</label>
-            <select id="CambiarCaja" class="formulario__select" name="CambiarCaja" required>
+            <select id="CambiarCaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="CambiarCaja" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($cajas as $index => $value): ?>
                     <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="text-right">
-            <button class="btn-md btn-red" type="button" value="Cancelar">Cancelar</button>
-            <input id="btnEnviarCambiarCaja" class="btn-md btn-blue" type="submit" value="Aplicar">
+        <div class="text-right space-x-4">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
+            <input id="btnEnviarCambiarCaja" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Aplicar">
         </div>
     </form>
   </dialog>

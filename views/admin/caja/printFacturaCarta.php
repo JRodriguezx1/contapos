@@ -6,19 +6,19 @@
         <div class="flex justify-between">
             <div>
                 <div class="grid space-y-3">
-                    <img class=" w-48 h-24" src="/build/img/Logoj2indigo.png" alt="user">
+                    <img class=" w-auto h-24" src="/build/img/Logoj2indigo.png" alt="user">
                     <dl class="flex flex-col gap-y-3 text-sm pt-20">
-                        <div class="font-medium text-gray-800">
-                            <span class="block font-semibold">Facturado a:</span>
-                            <span class="block font-semibold">Carlos Antonio</span>
+                        <div class="font-medium text-gray-800 text-lg leading-normal">
+                            <span class="block font-semibold uppercase">Facturado a</span>
+                            <span class="not-italic font-normal text-gray-400">Carlos Antonio</span>
                             <address class="not-italic font-normal text-gray-400">
-                            NIT/CC: 1095223618,<br>
-                            Email: lupelulu@gmail.com,<br>
-                            Contacto: 3156982231<br>
+                            <span class="font-semibold">NIT/CC:</span> 1095223618,<br>
+                            <span class="font-semibold uppercase">Email:</span> lupelulu@gmail.com,<br>
+                            <span class="font-semibold uppercase">Teléfono:</span> 3156982231<br>
                             </address>
                         </div>
-                        <div class="font-medium text-gray-800">
-                            <span class="block font-semibold"> Detalle de entrega:</span>
+                        <div class="font-medium text-gray-800 text-lg leading-normal mt-6">
+                            <span class="block font-semibold uppercase">Dirección de entrega</span>
                             <address class="not-italic font-normal text-gray-400">
                             280 Suzanne Throughway,<br>
                             Armenia - Quindo<br>
@@ -29,8 +29,8 @@
             </div>
             <!-- Col -->
 
-            <div>
-                <div class="grid font-medium text-gray-800 text-center text-sm">
+            <div class="text-lg leading-normal">
+                <div class="grid font-medium text-gray-800 text-center text-lg leading-normal">
                     <span class="block font-semibold text-lg uppercase">Innova Tech SAS</span>
                     <address class="not-italic font-light">
                     Cr 14 #18-31 Edificion SUr,<br>
@@ -45,13 +45,12 @@
 
             <div>
                 <div class="grid space-y-3">
-                    
-                    <div class="text-sm">
+                    <div class="text-lg leading-normal">
                         <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">FACTURA #:</p>
                         <span class="text-gray-500">POS-<?php echo $factura->id??'';?></span>
                     </div>
 
-                    <div class="font-medium text-gray-800 text-sm">
+                    <div class="font-medium text-gray-800 text-lg leading-normal">
                         <address class="not-italic font-normal">
                         280 Suzanne Throughway,<br>
                         Breannabury, OR 45801,<br>
@@ -59,14 +58,14 @@
                         </address>
                     </div>
 
-                    <dl class="flex flex-col gap-x-1 text-sm pt-8">
+                    <div class="flex flex-col gap-x-1 pt-8 text-lg leading-normal">
                         <p class="font-medium min-w-36 max-w-[200px] text-gray-800">
-                            Fecha de factura: <span class=" font-normal text-gray-400"><?php echo $factura->fechapago??'';?></span>
+                            <span class="uppercase"> Fecha y Hora de Factura</span> <br/><span class=" font-normal text-gray-400"><?php echo $factura->fechapago??'';?></span>
                         </p>
-                        <p class="font-medium text-gray-800">
-                            Metodo de pago: <span class="font-normal text-gray-400">Contado</span>
+                        <p class="font-medium text-gray-800 mt-5">
+                            <span class="uppercase"> Metodo de Pago</span> <br/><span class="font-normal text-gray-400">Contado</span>
                         </p>
-                    </dl>
+                    </div>
 
                 </div>
             </div>
@@ -75,7 +74,7 @@
         <!-- End Grid -->
 
         <!-- Table -->
-        <div class="mt-6 border border-gray-200 p-4 rounded-lg space-y-4 dark:border-neutral-700">
+        <div class="mt-6 border border-gray-200 p-4 rounded-lg space-y-4 dark:border-neutral-700 text-lg leading-normal">
             <div class="hidden sm:grid sm:grid-cols-5">
                 <div class="sm:col-span-2 text-base font-nomal text-gray-400 uppercase">Item</div>
                 <div class="text-start text-base font-nomal text-gray-400 uppercase">Cantidad</div>
