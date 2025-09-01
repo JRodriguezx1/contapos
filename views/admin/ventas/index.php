@@ -114,14 +114,14 @@
             <label class="formulario__label" for="vendedor">vendedor</label>
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">person</span>
-              <input data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" id="vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
+              <input id="vendedor" data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
             </div>
         </div>
         <div class="formulario__campo">
-            <label class="formulario__label" for="pedido">N. Ultima Factura/Pedido</label>
+            <label class="formulario__label" for="npedido">N. Orden/Pedido</label>
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">arrow_right</span>
-              <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de pedido" id="pedido" name="pedido" value="1" readonly>
+              <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="1" readonly>
             </div>
         </div>
 

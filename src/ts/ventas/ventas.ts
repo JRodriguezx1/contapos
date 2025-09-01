@@ -349,8 +349,8 @@
         actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
     });
 
-    function printProduct(id:string){
-      const uncarrito = carrito.find(x=>x.id==id)!;
+    function printProduct(id:string){ //recibe el id del producto
+      const uncarrito = carrito.find(x=>x.idproducto==id)!;
       const tr = document.createElement('TR');
       tr.classList.add('productselect');
       tr.dataset.id = `${id}`;
@@ -740,10 +740,15 @@
     if(id){
       (async ()=>{
         try {
-            const url = "/admin/api/getcotizacion_venta"; //llamado a la API REST
+            const url = "/admin/api/getcotizacion_venta?id="+id; //llamado a la API REST
             const respuesta = await fetch(url); 
-            datosfactura = await respuesta.json(); 
-            console.log(datosfactura);
+            datosfactura = await respuesta.json();
+            carrito = datosfactura.productos;
+            carrito.forEach(item =>printProduct(item.idproducto));
+            valorCarritoTotal();
+            console.log(carrito);
+            (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.factura.id;
+            $('#selectCliente').val(datosfactura.factura.idcliente).trigger('change');
         } catch (error) {
             console.log(error);
         }
