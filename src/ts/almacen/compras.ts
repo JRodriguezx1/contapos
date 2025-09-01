@@ -6,6 +6,8 @@
         const nfactura = document.querySelector('#nfactura') as HTMLInputElement;
         const fecha = document.querySelector('#fecha') as HTMLDataElement;
         const origenPago = document.querySelector('#origenPago') as HTMLSelectElement;
+        const origenCaja = document.querySelector('#origenCaja') as HTMLSelectElement;
+        const origenBanco = document.querySelector('#origenBanco') as HTMLSelectElement;
         const formapago = document.querySelector('#formapago') as HTMLSelectElement;
         const observacion = document.querySelector('#observacion') as HTMLInputElement;
         const btnvaciar = document.querySelector('#btnvaciar');
@@ -73,6 +75,18 @@
                 }*/
             });
         }
+
+
+        //////////  ELEGIR ORIGEN DEL PAGO DE LA COMPRA, CAJA O BANCO ///////////
+        origenPago.addEventListener('change', (e:Event)=>{
+            if((e.target as HTMLOptionElement).value == '0'){ //0 = origen caja
+                document.querySelector('#divBanco')?.classList.add('hidden');
+                document.querySelector('#divBanco')?.removeAttribute("required");
+            }else{  //1 = origen banco
+                document.querySelector('#divBanco')?.classList.remove('hidden');
+                document.querySelector('#divBanco')?.setAttribute("required", "");
+            }
+        });
 
 
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
@@ -217,13 +231,17 @@
         async function procesarpedido(estado:string){
             const datos = new FormData();
             datos.append('idproveedor', proveedor.options[proveedor.selectedIndex].value);
-            datos.append('idorigenpago', origenPago.options[origenPago.selectedIndex].value);
             datos.append('idformapago', formapago.options[formapago.selectedIndex].value);
+            datos.append('idorigencaja', origenCaja.options[origenCaja.selectedIndex].value);
+            datos.append('idorigenbanco', origenBanco.options[origenBanco.selectedIndex].value);
             datos.append('nombreproveedor', proveedor.options[proveedor.selectedIndex].textContent!);
-            datos.append('nombreorigenpago', origenPago.options[origenPago.selectedIndex].textContent+'');
             datos.append('formapago', formapago.options[formapago.selectedIndex].text);
             datos.append('nfactura', nfactura.value);
             datos.append('impuesto', impuesto.value);
+            datos.append('origenpago', origenPago.options[origenPago.selectedIndex].value); //0 = si el origen viene de la caja,  1 = banco
+            datos.append('nombreorigenpago', origenPago.options[origenPago.selectedIndex].textContent+''); //caja o banco
+            datos.append('nombreorigencaja', origenCaja.options[origenCaja.selectedIndex].textContent+'');
+            datos.append('nombreorigenbanco', origenBanco.options[origenBanco.selectedIndex].value?origenBanco.options[origenBanco.selectedIndex].textContent+'':'');
             datos.append('cantidaditems', carrito.reduce((total, item)=>item.cantidad+total, 0)+'');
             datos.append('observacion', observacion.value);
             datos.append('estado', estado);

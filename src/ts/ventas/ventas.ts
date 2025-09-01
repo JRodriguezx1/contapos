@@ -108,6 +108,13 @@
     ($('#selectCliente') as any).select2();
 
 
+    /******** Obtener datos de factura guardada o cotizacion***********/
+    
+    
+
+
+                       /******** *********/
+
     selectFacturadorSegunCaja(btnCaja);
     
     btnCaja.addEventListener('change', (e:Event)=>selectFacturadorSegunCaja(e.target as HTMLSelectElement));
@@ -600,7 +607,7 @@
       });
       if(totalotrosmedios<=valorTotal.total){
         mapMediospago.set('1', valorTotal.total-totalotrosmedios);
-        if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1');
+        if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1'); //se elimina medio de pago efectivo
         mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
         if((e.target as HTMLInputElement).value == '0' && mapMediospago.has((e.target as HTMLInputElement).id))mapMediospago.delete((e.target as HTMLInputElement).id);
       }else{ //si la suma de los medios de pago superan el valor total, toma el ultimo input digitado y lo reestablece a su ultimo valor
@@ -725,6 +732,23 @@
       document.removeEventListener("click", cerrarDialogoExterno);
     }
 
+
+    /////////////////////////obtener datos de cotizacion /////////////////////
+    const parametrosURL = new URLSearchParams(window.location.search);
+    const id = parametrosURL.get('id');
+    let datosfactura;
+    if(id){
+      (async ()=>{
+        try {
+            const url = "/admin/api/getcotizacion_venta"; //llamado a la API REST
+            const respuesta = await fetch(url); 
+            datosfactura = await respuesta.json(); 
+            console.log(datosfactura);
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+    }
 
     function limpiarformdialog(){
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();

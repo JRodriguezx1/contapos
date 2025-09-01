@@ -42,13 +42,13 @@
         <div class="formulario__campo">
             <!-- <label class="formulario__label" for="categoria">Categoria</label> -->
             <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
-                <input class="formulario__input !border-0" type="text" placeholder="Categoria" id="categoria" name="nombre"  required>
+                <input id="categoria" class="formulario__input !border-0" type="text" placeholder="Categoria" name="nombre"  required>
                 <!-- <label data-num="24" class="count-charts" for="">24</label> -->
             </div>
         </div>
         <div class="text-right">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[100px]" type="button" value="Salir">Salir</button>
-            <input  class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[100px]" type="submit" value="Crear" id="btnEditarCrearCategoria">
+            <input id="btnEditarCrearCategoria" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[100px]" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar categoria-->

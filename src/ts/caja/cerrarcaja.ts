@@ -245,7 +245,7 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="">${row.Nombre}</td>
                         <td class="">${row.N_ventas}</td>
-                        <td class=""><strong>$ </strong>${row.ventas}</td>
+                        <td class=""><strong>$ </strong>${Number(row.ventas).toLocaleString()}</td>
                       `;
         ventasxusuarios.appendChild(tr);
       });

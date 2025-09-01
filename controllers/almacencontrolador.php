@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\bancos;
 use Model\usuarios; //namespace\clase hija
 use Model\productos;
 use Model\subproductos;
@@ -245,10 +246,11 @@ class almacencontrolador{
     }
     //$alertas = usuarios::getAlertas();
     $cajas = caja::all();
+    $bancos = bancos::all();
     $productos = productos::all();
     $subproductos = subproductos::all();
     $totalitems = []; //array_merge($productos, $subproductos);
-    $router->render('admin/almacen/compras', ['titulo'=>'Almacen', 'totalitems'=>$totalitems, 'categorias'=>$categorias, 'cajas'=>$cajas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/compras', ['titulo'=>'Almacen', 'totalitems'=>$totalitems, 'categorias'=>$categorias, 'cajas'=>$cajas, 'bancos'=>$bancos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
   
 
@@ -743,12 +745,12 @@ class almacencontrolador{
         $r = $element->actualizar();   //se actualiza el precio de compra de subproducto o producto simple
         if($r){
           $alertas['exito'][] = 1;
-          if($tipoelemento == 1){
-            ///// actualizar costo en tabla emsanblaje productos_sub  //////
+          if($tipoelemento == 1){ //si el item es subproducto
+            ///// actualizar costo en tabla ensamblaje productos_sub  //////
             $ubcostoEnsambla = productos_sub::actualizarLibre("UPDATE productos_sub SET costo = cantidadsubproducto*$element->precio_compra WHERE id_subproducto = $element->id;");
             
             ////// Obtener la suma de los subproductos que pertenece a un producto  //////
-            $sql = "SELECT SUM(costo) AS precio_compra, id_producto AS id FROM productos_sub 
+            $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id
                     WHERE id_producto IN (SELECT id_producto FROM productos_sub WHERE id_subproducto = $element->id) 
                     GROUP BY id_producto;";
             $costos = productos_sub::camposJoinObj($sql); //costos = [{id:1, valor: 44}, {}]
@@ -790,36 +792,30 @@ class almacencontrolador{
       $objeto->id = $objeto->iditem;
       //unset($objeto->iditem);
       if($objeto->tipo == 0){
-        $acumulador['productos'][] = $objeto;
+        $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
       }
       else{
         $acumulador['subproductos'][] = $objeto;
       }
       return $acumulador;
     }, ['productos'=>[], 'subproductos'=>[]]);
-    ////// Obtengo los registros de la tabla productos_sub a actualizar su costo de compra segun id_subproducto
-    $itemsProSub = productos_sub::paginarwhere('', '', 'id_subproducto', json_decode($_POST['subID']));
+
+    
+    ////// Obtengo los registros de la tabla productos_sub a actualizar su costo de compra por su id_subproducto, si el subproducto se repite lo tae n veces
+    $itemsProSub = productos_sub::paginarwhere('', '', 'id_subproducto', json_decode($_POST['subID'])); 
+    
     ////////  mapeo Optimizado de tipo O(A+B)
     $mapCostoSub = array_column($resultArray['subproductos'], 'precio_compra', 'id');
+    
     foreach($itemsProSub as $index => $value){
       $value->costo = $mapCostoSub[$value->id_subproducto];
       if(array_key_last($itemsProSub) == $index){
-        $in .= $value->id_producto;
+        $in .= $value->id_producto; //in, voy obteniendo el id del producto que le pertenece a cada subproducto de la formula
       }else{
         $in .= $value->id_producto.', ';
       }
-    }
-    if(!empty($itemsProSub)){
-        ////// Actualizo el costo de compra de los subproductos en la tabla productos_sub
-        $costosprosub = productos_sub::actualizar_costos_de_prosub($itemsProSub, ['costo']);
-        ////// Obtener la suma de los subproductos que pertenece a un producto  //////
-        $sql = "SELECT SUM(costo) AS precio_compra, id_producto AS id FROM productos_sub 
-        WHERE id_producto IN ($in) GROUP BY id_producto;";
-        $costos = productos_sub::camposJoinObj($sql); //costos = [{id:1, valor: 44}, {}]
-        //////// actualizar costo (precio de compra) de productos compuestos  /////
-        if(!empty($costos))
-        $costoproduct = productos::updatemultiregobj($costos, ['precio_compra']);//  Actualizar el o precio de compra de los productos compuestos
-    }
+    } //hasta aqui itemsProSub son todos los registros de la tabla productos_sub en donde aparece un subproducto a comprar, y el costo es = al valor de la unidad del subproducto comprado
+
 
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -827,6 +823,19 @@ class almacencontrolador{
       $compra->nombreusuario = $_SESSION['nombre'];
       $alertas = $compra->validar();
       if(empty($alertas)){
+        
+        if(!empty($itemsProSub)){
+          ////// Actualizo el costo de compra de los subproductos en la tabla productos_sub, costo segung su formula, y equivalente a una unidad del producto compuesto
+          $costosprosub = productos_sub::actualizar_costos_de_prosub($itemsProSub, ['costo']);
+          ////// Obtener la suma de los subproductos que pertenece a un producto compuesto y se divide por su rendimiento estandar para obtener el valor individual //////
+          $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id 
+          WHERE id_producto IN ($in) GROUP BY id_producto;";
+          $costos = productos_sub::camposJoinObj($sql); //costos = [{id:2, valor: 35044}, {}]
+          //////// actualizar costo (precio de compra) de productos compuestos  /////
+          if(!empty($costos))
+          $costoproduct = productos::updatemultiregobj($costos, ['precio_compra']);//  Actualizar el o precio de compra de los productos compuestos
+        }
+
         $r = $compra->crear_guardar();
         if($r[0]){
           foreach($carrito as $obj){
@@ -840,40 +849,53 @@ class almacencontrolador{
               if(!empty($resultArray['productos']))$invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
               if(!empty($resultArray['subproductos']) && $invpx)$invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
             
-              if($invpx){  
-                if($invsx){
+              if($invpx){  //productos
+                if($invsx){  //subproductos
                   $alertas['exito'][] = "Compra realizada con exito.";
 
+                  //*****/////////// registrarlo en tabla gastos, operacion compra /////////////
 
-        //*****/////////// registrarlo en tabla gastos, operacion compra /////////////
-                  $ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1);
-                  if($ultimocierre->estado == 0){
+                  //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1);
+                  $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idorigencaja']]); //ultimo cierre por caja
+                  if(isset($ultimocierre)){ //si el cierre de caja de la caja seleccionada existe y esta abierta
                     $ingresoGasto = new gastos();
                     $ingresoGasto->idg_usuario = $compra->idusuario;
                     $ingresoGasto->id_compra = $r[1];
-                    $ingresoGasto->idg_caja =  $compra->idorigenpago;
+                    $ingresoGasto->valor = $compra->valortotal;
+                    if($compra->origenpago == 0){ // 0 = caja
+                      $ingresoGasto->idg_caja = $compra->idorigencaja;
+                      $ultimocierre->gastoscaja = $ultimocierre->gastoscaja + $ingresoGasto->valor;
+                    }else{ //si el gasto de la compra sale de un banco
+                      $ingresoGasto->idg_caja = $compra->idorigencaja;
+                      $ingresoGasto->id_banco = $compra->idorigenbanco;
+                      $ultimocierre->gastosbanco = $ultimocierre->gastosbanco + $ingresoGasto->valor;
+                      $ingresoGasto->tipo_origen = 1; //1 = banco. origen del gasto es banco
+                    }
                     $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
                     $ingresoGasto->idcategoriagastos = 1;
                     $ingresoGasto->operacion = "compra";
-                    $ingresoGasto->valor = $compra->valortotal;
-                    $ultimocierre->gastoscaja = $ultimocierre->gastoscaja + $ingresoGasto->valor;
                     ///// validar gastos de la caja en el modelo
                     $alertas = $ingresoGasto->validar();
                     if(empty($alertas)){
-                      $r = $ingresoGasto->crear_guardar();
-                      if($r[0]){
-                        $r1 = $ultimocierre->actualizar();
-                        if($r1){
+                      $rig = $ingresoGasto->crear_guardar();
+                      if($rig[0]){
+                        $ruc = $ultimocierre->actualizar();
+                        if($ruc){
                           $alertas['exito'][] = "Gasto de compra registrado correctamente";
                         }else{
                           $alertas['error'][] = "error al actualizar los gastos de compra en el cierre de caja actual";
                           /// borrar ultimo registro guardado de $ingresocaja
                           $ingresoGasto->eliminar_idregistros('id', [$r[1]]);
+                          //eliminar lo de invpx y invsx
                         }
                       }else{
                         $alertas['error'][] = "Error al guardar el gasto de compra";
                       }
+                    }else{
+                      //eliminar lo de costosprosub, costoproduct, compras, invpx y invsx
                     }
+                  }else{
+                    //si el cierre de la caja no esta disponible revertir: invpx y invsx
                   }
       /*****////////////////////////*****************///////////////////////////
 
@@ -898,8 +920,8 @@ class almacencontrolador{
         }else{
           $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
-      }
-    }
+      } //fin validar compra
+    } //fin POST[]
     echo json_encode($alertas);
   }
 
