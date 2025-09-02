@@ -69,11 +69,6 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
 
-    if(!empty($_POST['id'])){
-      //validar si se genera la cotizacion en otro cierre de caja
-      //si es otro cierre de caja, generar otro registro
-      //si esta en el mismo cierre de caja, cambiar el estado. 
-    }
     
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
@@ -103,8 +98,24 @@ class ventascontrolador{
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //////////validar datos de factura, de ventas y medios de pago
-      //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
-      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+      //$ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+      
+      //si viene id, es cotizacion cargada en modulo de venta
+      if(!empty($_POST['id'])){
+        //validar si se genera la cotizacion en otro cierre de caja
+        //si es otro cierre de caja, generar otro registro
+        //si esta en el mismo cierre de caja, cambiar el estado. 
+        $factura = facturas::find('id', $_POST['id']);
+        $productos = ventas::idregistros('idfactura', $factura->id);
+        $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
+        if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja']){
+          $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
+        }
+      }else{
+        $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
+      }
+
+      
       if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con la venta
         $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
         $r = $ultimocierre->crear_guardar();
@@ -112,10 +123,14 @@ class ventascontrolador{
         $ultimocierre->id = $r[1];
       }
 
+
       $tempultimocierre = clone $ultimocierre;
       if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
+
+        /////algoritmo para actualizar la tabla de detalleventa
         $factura->idcierrecaja = $ultimocierre->id;
         $r = $factura->crear_guardar();  //crear factura
+        
         if($r[0]){
           /////////   si se pago   ////////////////
           if($factura->estado == "Paga"){
@@ -242,7 +257,7 @@ class ventascontrolador{
   }
 
 
- //////////////// cuando de cotizacion o guardada pasa a orden pagada /////////////////
+ //////////////// cuando de cotizacion o guardada pasa a orden pagada sin modificar la factura o sus productos /////////////////
   public static function facturarCotizacion(){
     $invPro = true;
     $invSub = true;
@@ -253,7 +268,7 @@ class ventascontrolador{
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
     
-    if($ultimocierre->estado || $factura->idcaja != $_POST['idcaja']){ //1 = cerrado, 0 = abierto
+    if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja']){ //1 = cerrado, 0 = abierto
       //validar si la caja seleccionada a facturar esta abierta.
       $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
       if(!isset($ultimocierre)){ // si la caja esta cerrada, y se hace apertura con la venta
