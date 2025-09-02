@@ -69,6 +69,7 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
 
+    debuguear($carrito);
     
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
@@ -103,14 +104,19 @@ class ventascontrolador{
       if(!empty($_POST['id'])){
         if(!is_numeric($_POST['id']))return;  //validar que el id de la cotizacion sea numero
         $factura = facturas::find('id', $_POST['id']);
+        $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
         if($factura->cotizacion == 1 && $factura->cambioaventa == 0){ //validar que la cotizacion aun se encuentre en estado de cotizacion
-          $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
-          if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja']){ //si se cambio de caja o si cierre caja esta cerrado
+          if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si se cambio de caja o si cierre caja esta cerrado
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
           }
-          $factura->cambioaventa = 1;
-          $factura->estado = 'aceptada';
-          $factura->actualizar();
+          if($_POST['estado']=='Paga'){
+            $factura->cambioaventa = 1;
+            $factura->estado = 'aceptada';
+          }else{
+            $factura->compara_objetobd_post($_POST);
+          }
+        
+          $Ctz = $factura->actualizar();
         }else{
           return;
         }
@@ -118,7 +124,7 @@ class ventascontrolador{
         $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
       }
       
-      if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con la venta
+      if(!isset($ultimocierre) && $_POST['estado']=='Paga'){ // si la caja esta cerrada y se hace apertura con la venta
         $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
         $ruc = $ultimocierre->crear_guardar();
         if(!$ruc[0])$ultimocierre->estado = 1;
@@ -127,18 +133,21 @@ class ventascontrolador{
 
 
       $tempultimocierre = clone $ultimocierre;
-      if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
+      if($ultimocierre->estado == 0 || ($factura->cotizacion == 1 && $factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id']) && $_POST['estado']=='Guardado')){ //si cierre de caja esta abierto
         
-        if(!empty($_POST['id'])){
+        if(!empty($_POST['id'])&&$_POST['estado']=='Paga'){ //crear nuevo registro para cotizacion que se va a facturar
           $factura->compara_objetobd_post($_POST);
           $factura->cotizacion = 1;
           $factura->cambioaventa = 1;
           $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
         }
-        $factura->idcierrecaja = $ultimocierre->id;
-        $r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
 
-        if($r[0]){
+        if($_POST['estado']=='Paga'){
+          $factura->idcierrecaja = $ultimocierre->id;
+          $r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
+        }
+
+        if($r[0] || $Ctz){
           /////////   si se pago   ////////////////
           if($factura->estado == "Paga"){
             /////////// calcular cantidad de facturas y discriminar por tipo
@@ -235,6 +244,7 @@ class ventascontrolador{
                 $obj->idcategoria = 1;
               }
             }
+
             //algoritmo si se cambia la cotizacion.
             
             $rc = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura guardada o cotizacion en tabla venta
@@ -330,14 +340,10 @@ class ventascontrolador{
       if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
 
         if($factura && $factura->estado == "Guardado"){  // si la factura guardada existe
-          //if($factura->idcierrecaja == $ultimocierre->id){ //si la factura aun se va a pagar bajo la misma apertura de cacja
             $factura->compara_objetobd_post($_POST);
             $factura->estado = 'aceptada';
             $r = $factura->actualizar();
-          //}else{ //crear nuevo registro en factura y detalle de la venta.
-            //$factura->cambioaventa = 1;
-            //$factura->actualizar();
-            //$factura->compara_objetobd_post($_POST);
+          
             $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
             $r = $factura->crear_guardar();
@@ -346,7 +352,6 @@ class ventascontrolador{
             foreach($productos as $value)$value->idfactura = $r[1];
             $venta = new ventas();
             $venta->crear_varios_reg_arrayobj($productos);
-          //}
           
           if($r){
             /////////// calcular cantidad de cotizaciones a ventas, facturas y discriminar por tipo
