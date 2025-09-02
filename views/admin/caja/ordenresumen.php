@@ -16,7 +16,7 @@
         <button id="printcarta" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
         <?php endif; ?>
         <a class="btn-command text-center" href="/admin/caja/detalleorden?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle orden</a>
-        <?php if($factura->estado=='Guardado'):?>
+        <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
         <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
     </div>

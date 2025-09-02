@@ -411,7 +411,7 @@
         const productototal = Number(producto.precio_venta)*cantidad;
         
         var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
-          id: producto?.id!,
+          id: '',
           idproducto: producto?.id!,
           tipoproducto: producto.tipoproducto,
           tipoproduccion: producto.tipoproduccion,
