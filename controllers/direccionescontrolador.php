@@ -74,8 +74,10 @@ class direccionescontrolador{
             if(empty($alertas)){ 
                 $resultado = $direccion->crear_guardar();
                 if($resultado){
-                        $alertas['direcciones'] = direcciones::idregistros('idcliente', $_POST['idcliente']);
-                        $alertas['exito'][] = 'Direccion Registrada correctamente';
+                    $direcciones = direcciones::idregistros('idcliente', $_POST['idcliente']);
+                    foreach($direcciones as $direccion)$direccion->tarifa = tarifas::find('id', $direccion->idtarifa);
+                    $alertas['direcciones'] = $direcciones;
+                    $alertas['exito'][] = 'Direccion Registrada correctamente';
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
                 }

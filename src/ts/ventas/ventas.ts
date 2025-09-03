@@ -198,6 +198,7 @@
       while(dirEntrega?.firstChild)dirEntrega.removeChild(dirEntrega?.firstChild);
       const setTarifas = new Set();
       tarifas.length = 0;
+      console.log(addrs);
       addrs.forEach(dir =>{
         const option = document.createElement('option');
         option.textContent = dir.direccion;
@@ -215,7 +216,7 @@
       setTarifas.clear();
       printTarifaEnvio();
       valorCarritoTotal();
-      (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = addrs[0].ciudad;
+      (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = addrs[0]?.ciudad??'No especificado';
     }
     ///////// Evento al select de direcciones ////////////
     dirEntrega?.addEventListener('change', (e)=>{

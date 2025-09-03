@@ -40,8 +40,8 @@
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
-          title: 'Desea eliminar el pedido guardado?',
-          text: "El pedido guardado sera eliminado definitivamente.",
+          title: `Desea eliminar la orden guardado #${idpedidoguardado}?`,
+          text: "La orden/cotizacion guardado sera eliminado definitivamente del sistema.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -55,7 +55,7 @@
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        (tablaPedidosGuardados as any).row(indiceFila+info.start).remove().draw(); 
+                        (tablaPedidosGuardados as any).row(indiceFila).remove().draw(); 
                         (tablaPedidosGuardados as any).page(info.page).draw('page'); 
                         Swal.fire(resultado.exito[0], '', 'success')
                       }else{
