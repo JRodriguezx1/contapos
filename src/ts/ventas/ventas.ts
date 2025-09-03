@@ -315,7 +315,7 @@
         impuesto: '0', //impuesto en %
         marca: 'na',
         tipoproducto: '-1', // 0 = simple,  1 = compuesto
-        tipoproduccion: '', //0 = inmediato, 1 = construccion
+        tipoproduccion: '-1', //0 = inmediato, 1 = construccion
         codigo: '-1',
         unidadmedida: 'Unidad',
         descripcion: 'na',
