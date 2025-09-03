@@ -143,10 +143,14 @@
     ///////// imprimir detalle cierre
     btnImprimirDetalleCaja?.addEventListener('click', ()=>{
         const ventana = window.open('/printdetallecierre?id=1', '_blank');
-        ventana?.focus();
-        ventana?.print();
-        setTimeout(() => { ventana?.close(); }, 90); // Cerrar la ventana después de unos segundos
-      });
+        if(ventana){
+          ventana.onload = ()=>{
+            ventana?.focus();
+            ventana?.print();
+            setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+          };
+        }
+    });
 
     //////////////////     Cambio de caja      //////////////////////
     formCambiarCaja?.addEventListener('submit', (e:Event)=>{

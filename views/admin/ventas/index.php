@@ -34,7 +34,7 @@
         </div>
         <div class="formulario__campo flex-1">
             <label class="formulario__label" for="ciudad">Ciudad</label>
-            <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" name="ciudadEntrega" readonly>
+            <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" name="ciudadEntrega" value="" readonly>
         </div>
       </div>
 
