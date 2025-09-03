@@ -138,7 +138,7 @@ class ventascontrolador{
         $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
       }
       
-      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado'){ // si la caja esta cerrada y se hace apertura con la venta
+      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || !isset($ultimocierre)&&empty($_POST['id'])&&$_POST['estado']=='Guardado'){ // si la caja esta cerrada y se hace apertura con la venta
         $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
         $ruc = $ultimocierre->crear_guardar();
         if(!$ruc[0])$ultimocierre->estado = 1;
