@@ -8,7 +8,7 @@
       btnCambiarEmail?.addEventListener('click', (e):void=>{
         miDialogoUpEmail.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
-      });
+      }); 
 
       //btnCerrarUpDireccion.addEventListener('click', ()=>miDialogoUpDireccion.close());
 

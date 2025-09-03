@@ -501,6 +501,23 @@
             </div>
           </div>
           
+         <!-- Opción imprimir factura -->
+        <div class="formulario__campo md:px-12 mb-6">
+          <label class="formulario__label block text-center mb-2">¿Desea imprimir factura?</label>
+          <div class="flex justify-center gap-8">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="imprimir" value="si" class="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-500" required>
+              <span class="text-gray-700 text-lg">Sí</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="imprimir" value="no" class="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+              <span class="text-gray-700 text-lg">No</span>
+            </label>
+          </div>
+        </div>
+        <!-- Fin opción imprimir factura -->
+
+
           <div class="formulario__campo md:px-12">
               <textarea id="observacion" class="formulario__textarea" name="observacion" placeholder="Observacion" rows="4"></textarea>
           </div>

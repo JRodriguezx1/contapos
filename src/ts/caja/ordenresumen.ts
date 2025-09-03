@@ -149,10 +149,10 @@
       ////////////////// evento al bton pagar del modal facturar //////////////////////
       document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
         e.preventDefault();
-        procesarpedido('Paga');
+        procesarpedido('Guardado');
       });
 
-      async function procesarpedido(estado:string){ //////PROCESAR PAGO DE COTIZACION//////
+      async function procesarpedido(estado:string){ //////PROCESAR PAGO DE COTIZACION SiN CAMBIAR DATOS DE LOS PRODUCTOS//////
         const datos = new FormData();
         datos.append('id', (document.querySelector('#idorden') as HTMLElement).dataset.idorden!);
         //datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);

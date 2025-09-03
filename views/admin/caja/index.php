@@ -7,7 +7,7 @@
     <a class="btn-command" href="/admin/caja/zetadiario"><span class="material-symbols-outlined">document_search</span>Zeta Diario</a>
     <a class="btn-command text-center" href="/admin/caja/ultimoscierres"><span class="material-symbols-outlined">list_alt</span>Ultimos Cierres</a>
     <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
-    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Guardados</a>
+    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
   </div>
   <h5 class="text-gray-600 mb-3">Lista de Facturas</h5>
   <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
@@ -153,8 +153,8 @@
     <form id="formCambioMedioPago" class="formulario" action="/admin/caja/cambioMedioPago" method="POST">
         <label id="numfactura" class="text-gray-700 text-2xl text-center mb-2">Factura N° : </label>
         <p class="text-gray-600 text-3xl text-center font-light m-0 mb-8">Total Pagado: $<span id="totalPagado" class="text-gray-700 font-semibold">0</span></p>
-        <span class="m-0 text-slate-500 text-xl font-semibold">Diferencia: </span>
-        <span id="diferencia" class="m-0 text-slate-500 text-xl">0</span>
+        <span class="m-0 block text-center text-2xl uppercase">Diferencia</span>
+        <span id="diferencia" class="m-0 text-indigo-500 block text-center text-3xl font-bold mb-10">0</span>
         <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto mb-8">
             <?php foreach($mediospago as $index => $value):?>
             <div class="mb-4 mx-auto">

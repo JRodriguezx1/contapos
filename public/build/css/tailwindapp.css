@@ -986,6 +986,10 @@ video {
   min-height: 20rem;
 }
 
+.min-h-screen {
+  min-height: 100vh;
+}
+
 .\!w-\[100px\] {
   width: 100px !important;
 }
@@ -2536,6 +2540,15 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-indigo-800 {
+  --tw-text-opacity: 1;
+  color: rgb(55 48 163 / var(--tw-text-opacity));
+}
+
+.text-\[40E0D0\] {
+  color: 40E0D0;
 }
 
 .underline {
