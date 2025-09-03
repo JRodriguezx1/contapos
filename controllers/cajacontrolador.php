@@ -287,7 +287,11 @@ class cajacontrolador{
     $factura = facturas::find('id', $id);
     $productos = ventas::idregistros('idfactura', $id);
     $cliente = clientes::find('id', $factura->idcliente);
-    $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+    if($factura->iddireccion){
+      $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+    }else{
+      $direccion = direcciones::find('id', 1);
+    }
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
 

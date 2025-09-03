@@ -346,6 +346,12 @@
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.producto');
+      //elementProduct?.querySelector('.popup')?.classList.remove('hidden');
+      elementProduct?.querySelector('.popup')?.classList.toggle('translate-y-[-10px]');
+      elementProduct?.querySelector('.popup')?.classList.toggle('translate-y-0');
+      setTimeout(() => {
+        //elementProduct?.querySelector('.popup')?.classList.add('hidden');
+      }, 2000);
       if(elementProduct)
         actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
     });
@@ -691,7 +697,7 @@
       datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
-      datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex].text);
+      datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
       datos.append('tarifazona', nombretarifa||'');
       datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
       datos.append('totalunidades', totalunidades.textContent!);
