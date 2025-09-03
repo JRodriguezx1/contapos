@@ -69,11 +69,24 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
 
-    debuguear($carrito);
-    
+
+    //////// EXTRATER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
+    $carritoupdate=[];
+    $carritoinsert=[];
+    $idsProductsupdate=[];
+    foreach($carrito as $value){
+      if(!empty($value->id)){
+        $carritoupdate[] = clone $value;
+        $idsProductsupdate[] = $value->id;
+      }else{
+        $carritoinsert[] = $value;
+      }
+    }
+
+
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
-      //$objeto->id = $objeto->iditem;
+      $objeto->id = $objeto->idproducto;
       //unset($objeto->iditem);
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
         $acumulador['productosSimples'][] = $objeto;
@@ -117,6 +130,7 @@ class ventascontrolador{
           }
         
           $Ctz = $factura->actualizar();
+          $r[0] = 1;
         }else{
           return;
         }
@@ -124,7 +138,7 @@ class ventascontrolador{
         $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
       }
       
-      if(!isset($ultimocierre) && $_POST['estado']=='Paga'){ // si la caja esta cerrada y se hace apertura con la venta
+      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado'){ // si la caja esta cerrada y se hace apertura con la venta
         $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
         $ruc = $ultimocierre->crear_guardar();
         if(!$ruc[0])$ultimocierre->estado = 1;
@@ -142,7 +156,7 @@ class ventascontrolador{
           $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
         }
 
-        if($_POST['estado']=='Paga'){
+        if($_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado'){
           $factura->idcierrecaja = $ultimocierre->id;
           $r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
         }
@@ -232,26 +246,61 @@ class ventascontrolador{
 
           }else{  
       ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
-            $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
-            //////////// Guardar los productos de la venta en tabla ventas //////////////
-            foreach($carrito as $obj){
-              $obj->dato1 = '';
-              $obj->dato2 = '';
-              $obj->idfactura = $r[1];
-              if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
-                $obj->id = 1;  //este es el id de Otros.
-                $obj->idproducto = 1;
-                $obj->idcategoria = 1;
+            if($factura->cotizacion == 1 && $factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id']) && $_POST['estado']=='Guardado'){
+              //algoritmo si se cambia la cotizacion como productos, cantidades valores etc.
+              $idsExistentes = ventas::multicampos('idfactura', $factura->id, 'id');
+              /*$carritoupdate=[];
+              $carritoinsert=[];
+              $idsProductsupdate=[];
+              foreach($carrito as $value){
+                if(!empty($value->id)){
+                  $carritoupdate[] = $value;
+                  $idsProductsupdate[] = $value->id;
+                }else{
+                  $carritoinsert[] = $value;
+                }
+              }*/
+              foreach($carritoinsert as $obj){
+                $obj->dato1 = '';
+                $obj->dato2 = '';
+                $obj->idfactura = $factura->id;
+                if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
+                  $obj->id = 1;  //este es el id de Otros.
+                  $obj->idproducto = 1;
+                  $obj->idcategoria = 1;
+                }
+              }  
+              $idseliminar = array_diff($idsExistentes, $idsProductsupdate);
+
+              ventas::updatemultiregobj($carritoupdate, ['valorunidad', 'cantidad', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total']);
+              if(!empty($carritoinsert))$venta->crear_varios_reg_arrayobj($carritoinsert);
+               if(!empty($idseliminar))ventas::eliminar_idregistros('id', $idseliminar);
+
+              $alertas['exito'][] = "Cotizacion actualizada con exito";
+              echo json_encode($alertas);
+              return;
+
+            }else{
+              $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
+              //////////// Guardar los productos de la venta en tabla ventas //////////////
+              foreach($carrito as $obj){
+                $obj->dato1 = '';
+                $obj->dato2 = '';
+                $obj->idfactura = $r[1];
+                if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
+                  $obj->id = 1;  //este es el id de Otros.
+                  $obj->idproducto = 1;
+                  $obj->idcategoria = 1;
+                }
               }
+              
+              $rc = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura guardada o cotizacion en tabla venta
             }
 
-            //algoritmo si se cambia la cotizacion.
-            
-            $rc = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura guardada o cotizacion en tabla venta
             if($rc[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
-                $alertas['exito'][] = "Pedido guardado con exito";
+                $alertas['exito'][] = "Cotizacion guardada con exito";
               }else{
                 $alertas['error'][] = "Error en sistema intentalo nuevamente";
                 //borrar la factura automaticamente tambien se borra los productos en la tabla venta
