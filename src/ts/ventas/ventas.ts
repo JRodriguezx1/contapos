@@ -354,7 +354,7 @@
       if(window.innerWidth < 992){
         // Crear popup
         const popup = document.createElement('div');
-        popup.className = `popup bg-white absolute z-40 right-8 top-1/3 opacity-0 translate-x-0 translate-y-0 transition-all duration-500 w-8 h-8 rounded-full text-center grid place-items-center bg-teal-400 text-white font-semibold text-lg`;
+        popup.className = `popup absolute z-40 right-8 top-1/3 opacity-0 translate-x-0 translate-y-0 transition-all duration-500 w-8 h-8 rounded-full text-center grid place-items-center bg-teal-400 text-white font-semibold text-lg`;
         popup.innerHTML = `${(count?.cantidad??0)+1}`;
         elementProduct!.appendChild(popup);
         // Forzar reflow para activar transición
