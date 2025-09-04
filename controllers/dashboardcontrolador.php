@@ -5,8 +5,10 @@ namespace Controllers;
 //require __DIR__ . '/../classes/dompdf/autoload.inc.php';
 //require __DIR__ . '/../classes/twilio-php-main/src/Twilio/autoload.php';
 //require __DIR__ . '/../classes/aws/aws-autoloader.php';
+require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 use MVC\Router;
 use Model\usuarios;
+use ticketPOS;
 
 
 //use Dompdf\Dompdf;
@@ -28,6 +30,8 @@ class dashboardcontrolador{
         ...
         ...
         */
+        $pos = new ticketPOS();
+        $pos->generar();
 
 
         //$totalempleados = empleados::numregistros();
