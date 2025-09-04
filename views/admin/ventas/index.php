@@ -48,7 +48,7 @@
         
         <div class="mt-4">
           <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
-            <div class="absolute bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
+            <div class="absolute z-10 bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
               <a data-categoria="Todos" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
               <?php foreach($categorias as $categoria): 
                 if($categoria->visible > 0):?>
@@ -85,7 +85,7 @@
                     <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
                     <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div>
-                <div class="popup absolute right-0 bottom-full bg-white translate-y-[-10px] transition-all duration-300 ease-out"><i class="fa-solid fa-square-check text-teal-400 text-3xl"></i></div>
+                <!--<div class="popup absolute right-8 top-1/3 -translate-y-0 translate-x-0 opacity-100 transition-all duration-800 ease-out w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white">2</div>-->
             </div>
             <?php endif; endforeach; ?>
         </div> <!-- fin contenedor de productos -->
@@ -102,7 +102,7 @@
       <!-- Botón dle carrito de ventas solo en móvil -->
       </style>
       <button id="btnCarritoMovil" style="top:52rem; right:2rem;" 
-        class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden fixed z-50 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
+        class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden fixed z-30 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
         <span class="material-symbols-outlined">leak_add</span>
       </button> 
 

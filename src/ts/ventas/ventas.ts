@@ -346,12 +346,26 @@
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.producto');
-      //elementProduct?.querySelector('.popup')?.classList.remove('hidden');
-      elementProduct?.querySelector('.popup')?.classList.toggle('translate-y-[-10px]');
-      elementProduct?.querySelector('.popup')?.classList.toggle('translate-y-0');
-      setTimeout(() => {
-        //elementProduct?.querySelector('.popup')?.classList.add('hidden');
-      }, 2000);
+      /*elementProduct!.insertAdjacentHTML('beforeend', `<div class="popup bg-white absolute left-3/4 top-1/2 -translate-y-0 translate-x-0 opacity-100 transition-all duration-800 ease-out"><i class="fa-solid fa-square-check text-teal-400 text-3xl"></i></div>`);
+      const popup = document.querySelectorAll('.popup');
+      setTimeout(() => {popup.forEach(t=>{t.remove();});}, 2000);*/
+      const count = carrito.find(x=>x.idproducto == (elementProduct as HTMLElement).dataset.id);
+
+      if(window.innerWidth < 992){
+        // Crear popup
+        const popup = document.createElement('div');
+        popup.className = `popup bg-white absolute z-40 right-8 top-1/3 opacity-0 translate-x-0 translate-y-0 transition-all duration-500 w-8 h-8 rounded-full text-center grid place-items-center bg-teal-400 text-white font-semibold text-lg`;
+        popup.innerHTML = `${(count?.cantidad??0)+1}`;
+        elementProduct!.appendChild(popup);
+        // Forzar reflow para activar transición
+        requestAnimationFrame(() => {
+          popup.classList.remove("opacity-0", "translate-y-0", "translate-x-0");
+          popup.classList.add("opacity-100", "-translate-y-14", "translate-x-10");
+        });
+        const popupx = document.querySelectorAll('.popup');
+        setTimeout(() => {popupx.forEach(t=>{t.remove();});}, 2500);
+      }
+
       if(elementProduct)
         actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
     });
