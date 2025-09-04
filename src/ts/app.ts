@@ -6,7 +6,7 @@ const nametop:HTMLElement|null = document.querySelector('.nametop');
 declare let Chart:any; //declare le indica a typescript que la variable chart viene de manera externa
 declare const Swal: any;
 declare var moment: any;
-declare let List: any;
+declare let List: any; 
 
 if(mobilemenu){
     mobilemenu.addEventListener('click', function(){

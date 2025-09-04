@@ -98,13 +98,12 @@
         </div>
       </div>
 
-      <!-- Botón dle carrito de ventas solo en móvil -->
+      <!-- Botón del carrito de ventas solo en móvil -->
       </style>
-      <button id="btnCarritoMovil" style="top:52rem; right:2rem;" 
-        class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden fixed z-50 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
+      <button id="btnCarritoMovil" 
+        class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 bottom-[82px] right-6 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden fixed z-51 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
         <span class="material-symbols-outlined">leak_add</span>
       </button> 
-
     </div> <!-- fin primera columna -->
 
 

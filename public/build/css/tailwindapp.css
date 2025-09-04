@@ -602,6 +602,10 @@ video {
   bottom: 1rem;
 }
 
+.bottom-\[82px\] {
+  bottom: 82px;
+}
+
 .left-0 {
   left: 0px;
 }
@@ -612,6 +616,10 @@ video {
 
 .right-0 {
   right: 0px;
+}
+
+.right-6 {
+  right: 1.5rem;
 }
 
 .top-0 {
@@ -2540,15 +2548,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-indigo-800 {
-  --tw-text-opacity: 1;
-  color: rgb(55 48 163 / var(--tw-text-opacity));
-}
-
-.text-\[40E0D0\] {
-  color: 40E0D0;
 }
 
 .underline {
