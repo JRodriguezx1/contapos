@@ -56,6 +56,31 @@ const configdatatables = {
   }
 }
 
+///////////////////// CONFIGURACION DEL PLUGIN DATATABLES PARA CAJA/////////////////////
+const configdatatablescaja = {
+  "paging": false,
+  "order": [[ 0, 'desc' ]],
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+  "deferRender": true,
+  "retrieve": true,
+  "processing": true,
+  language: {
+      search: 'Busqueda',
+      emptyTable: 'No Hay datos disponibles',
+      zeroRecords:    "No se encontraron registros coincidentes",
+      lengthMenu: '_MENU_ Entradas por pagina',
+      info: 'Mostrando pagina _PAGE_ de _PAGES_',
+      infoEmpty: 'No hay entradas a mostrar',
+      infoFiltered: ' (filtrado desde _MAX_ registros)',
+      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+  }
+}
+
 ///////////////////// FUNCION QUE IMPRIME MENSAJE TIPO ALERTA /////////////////////
 function msjAlert(tipo:string, msj:string, divmsjalerta:HTMLElement):void{
   divmsjalerta.insertAdjacentHTML('beforeend', `<div class="alerta alerta__${tipo}">

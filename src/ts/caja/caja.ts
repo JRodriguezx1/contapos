@@ -16,7 +16,7 @@
     const setMediosPagoDB = new Set();
     const mapMediospago = new Map();
 
-    tablaListaPedidos = ($('#tablaListaPedidos') as any).DataTable(configdatatables);
+    tablaListaPedidos = ($('#tablaListaPedidos') as any).DataTable(configdatatablescaja);
 
     //////// clic al btn gastos/ingresos
     btnGastosingresos?.addEventListener('click', ():void=>{
@@ -70,6 +70,7 @@
     document.querySelector('#tablaListaPedidos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
       if(target?.classList.contains("mediosdepago")||target.parentElement?.classList.contains("mediosdepago"))cambiomediopago(target);
+      if(target?.classList.contains("printPOS")||target.parentElement?.classList.contains("printPOS"))printPOS(target);
     });
 
 
@@ -135,6 +136,13 @@
         }
       });
     });
+
+
+    function printPOS(target: HTMLElement){
+      let idfactura = target.parentElement!.id;
+      if(target.tagName === 'I')idfactura = target.parentElement!.parentElement!.id;
+      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+    }
 
     ////////////////// evento al bton pagar del modal facturar //////////////////////
     document.querySelector('#formCambioMedioPago')?.addEventListener('submit', e=>{

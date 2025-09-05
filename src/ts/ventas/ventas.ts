@@ -757,7 +757,9 @@
 
 
     function printTicketPOS(idfactura:string){
-      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      setTimeout(() => {
+        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      }, 1200);
     }
 
     /////////////////////////obtener datos de cotizacion /////////////////////

@@ -44,7 +44,7 @@
               <td class=""><strong>$ </strong><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                      <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light" title="Imprimir pedido"><i class="fa-solid fa-print"></i></button>
+                      <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light printPOS" title="Imprimir pedido"><i class="fa-solid fa-print"></i></button>
                   </div>
               </td>
             </tr>
