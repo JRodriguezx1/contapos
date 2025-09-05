@@ -704,7 +704,7 @@
       datos.append('idconsecutivo', btnTipoFacturador.value);
       datos.append('iddireccion', dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
-      datos.append('cliente', selectCliente.options[selectCliente.selectedIndex].textContent!);
+      datos.append('cliente', selectCliente.value=='1'?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
       datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
@@ -740,6 +740,7 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
+            printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
@@ -751,6 +752,10 @@
       document.removeEventListener("click", cerrarDialogoExterno);
     }
 
+
+    function printTicketPOS(idfactura:string){
+      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+    }
 
     /////////////////////////obtener datos de cotizacion /////////////////////
     const parametrosURL = new URLSearchParams(window.location.search);

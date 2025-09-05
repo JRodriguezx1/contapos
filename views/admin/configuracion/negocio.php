@@ -10,6 +10,12 @@
                 </div>
             </div>
             <div class="formulario__campo">
+                <label class="formulario__label" for="datosencabezado">Datos del Rut</label>
+                <div class="formulario__dato">
+                    <textarea id="datosencabezado" class="formulario__textarea w-full" name="datosencabezado" placeholder="datos de encabezado de la factura" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="formulario__campo">
                 <label class="formulario__label" for="ciudadnegocio">Ciudad</label>
                 <div class="formulario__dato">
                     <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad del negocio" id="ciudadnegocio" name="ciudad" value="<?php echo $negocio->ciudad ?? '';?>" required>

@@ -17,7 +17,7 @@ use Controllers\clientescontrolador;
 use Controllers\direccionescontrolador;
 use Controllers\configcontrolador;
 use Controllers\paginacontrolador;
-
+use Controllers\printcontrolador;
 // me importa la clase router
 use MVC\Router;
 
@@ -98,6 +98,8 @@ $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen'
 $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
+///// print ticket //////
+$router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
 $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 'ventasgenerales']);
