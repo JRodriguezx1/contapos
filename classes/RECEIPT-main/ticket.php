@@ -2,7 +2,7 @@
 
 	# Incluyendo librerias necesarias #
     require __DIR__ ."/code128.php";
-    require __DIR__ ."/../public/build/img/logoj2blanco.png";
+    //require __DIR__ ."/../../public/build/img/logoj2blanco.png";
 
     class ticketPOS{
         
@@ -16,7 +16,7 @@
 
 
         public function generar(){
-            $this->pdf->Image(__DIR__ . '/../public/build/img/logoj2blanco.png', 20, 5, 40); // (ruta, x, y, ancho)
+            $this->pdf->Image(__DIR__ . '/../../public/build/img/logoj2negro.png', 20, 5, 40); // (ruta, x, y, ancho)
             $this->pdf->Ln(20);
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);

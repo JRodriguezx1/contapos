@@ -1,6 +1,7 @@
 <?php
 
 namespace Controllers;
+require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 
 use Classes\Email;
 use Model\ActiveRecord;
@@ -20,6 +21,7 @@ use Model\productos_sub;
 use Model\subproductos;
 //use Model\negocio;
 use MVC\Router;  //namespace\clase
+use ticketPOS;
  
 class ventascontrolador{
 
