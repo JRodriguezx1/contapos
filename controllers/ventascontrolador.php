@@ -1,7 +1,6 @@
 <?php
 
 namespace Controllers;
-require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 
 use Classes\Email;
 use Model\ActiveRecord;
@@ -21,8 +20,7 @@ use Model\productos_sub;
 use Model\subproductos;
 //use Model\negocio;
 use MVC\Router;  //namespace\clase
-use ticketPOS;
- 
+
 class ventascontrolador{
 
   public static function index(Router $router):void{
@@ -216,6 +214,7 @@ class ventascontrolador{
                 if($invPro){
                   if($invSub){
                     $alertas['exito'][] = "Pago procesado con exito";
+                    $alertas['idfactura'] = $r[1];
                   }else{
                     $alertas['error'][] = "Error en sistema intentalo nuevamente";
                     //ELIMINAR FACTURA por error en actualizar inventario
@@ -442,6 +441,7 @@ class ventascontrolador{
 
                 if($invPro){
                   if($invSub){
+                    $alertas['idfactura'] = $factura->id;
                     $alertas['exito'][] = "Pago procesado con exito";
                   }else{
                     $alertas['error'][] = "Error en sistema intentalo nuevamente";

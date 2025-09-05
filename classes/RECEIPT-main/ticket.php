@@ -15,38 +15,38 @@
         }
 
 
-        public function generar(){
+        public function generar($factura, $cliente, $direccion, $productos=[], $negocio=[]){
             $this->pdf->Image(__DIR__ . '/../../public/build/img/logoj2negro.png', 20, 5, 40); // (ruta, x, y, ancho)
             $this->pdf->Ln(20);
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Nombre de empresa")),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($negocio[0]->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","RUC: 0000000000"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion San Salvador, El Salvador"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: 00000000"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: correo@ejemplo.com"),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$negocio[0]->nit),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$negocio[0]->direccion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$negocio[0]->movil),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$negocio[0]->email),0,'C',false);
 
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(5);
 
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Fecha: ".date("d/m/Y", strtotime("13-09-2022"))." ".date("h:s A")),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja Nro: 1"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: Carlos Alfaro"),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Fecha: ".$factura->fechapago),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$factura->vendedor),0,'C',false);
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Ticket Nro: 1")),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Orden Nro: ".$factura->id)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(5);
 
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: Carlos Alfaro"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: DNI 00000000"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: 00000000"),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Dirección: San Salvador, El Salvador, Centro America"),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: ".$cliente->nombre),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".$cliente->identificacion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$cliente->telefono),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Dirección: ".$direccion->direccion.': '.$direccion->ciudad.' - '.$direccion->departamento),0,'C',false);
 
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
@@ -65,13 +65,15 @@
 
 
             /*----------  Detalles de la tabla  ----------*/
-            $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Nombre de producto a vender"),0,'C',false);
-            $this->pdf->Cell(10,4,iconv("UTF-8", "ISO-8859-1","7"),0,0,'C');
-            $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1","$10 USD"),0,0,'C');
-            $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1","$0.00 USD"),0,0,'C');
-            $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1","$70.00 USD"),0,0,'C');
-            $this->pdf->Ln(4);
-            $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Garantía de fábrica: 2 Meses"),0,'C',false);
+            foreach($productos as $value){
+                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false);
+                $this->pdf->Cell(10,4,iconv("UTF-8", "ISO-8859-1","7"),0,0,'C');
+                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1","$10 USD"),0,0,'C');
+                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1","$0.00 USD"),0,0,'C');
+                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1","$70.00 USD"),0,0,'C');
+                $this->pdf->Ln(4);
+            }
+            //$this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Garantía de fábrica: 2 Meses"),0,'C',false);
             $this->pdf->Ln(7);
             /*----------  Fin Detalles de la tabla  ----------*/
 
