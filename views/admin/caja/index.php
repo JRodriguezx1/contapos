@@ -1,4 +1,4 @@
-<div class="box caja">
+<div class="box caja !pb-20">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
   <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Gestion de Caja</h4>
   <div class="flex flex-wrap gap-4 mb-6">

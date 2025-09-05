@@ -1,4 +1,4 @@
-<div class="box ventas pb-20">
+<div class="box ventas !pb-28">
   <div class="flex flex-col tlg:flex-row">
     <div class="basis-2/3 p-4">
       <div id="divmsjalerta1"></div>
@@ -74,11 +74,11 @@
         <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
             <?php foreach($productos as $producto): 
               if($producto->visible==1&&$producto->estado==1):?>
-            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4" data-id="<?php echo $producto->id;?>">
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
-                    class="inline h-24 min-w-24 w-24 object-contain rounded-md" 
+                    class="hidden md:block object-contain h-24 min-w-24 w-24 rounded-md" 
                     alt="Imagen de <?php echo $producto->nombre; ?>">
                 
                 <div class="flex flex-col justify-between grow overflow-hidden">
@@ -136,8 +136,8 @@
           </div>
         </div>
         <!-- Apilamiento de productos -->
-        <div class="border-solid border-t-2 border-blue-600 pt-4">
-          <table class=" tabla" width="100%" id="tablaventa">
+        <div class="border-solid border-t-2 border-blue-600 pt-4 overflow-x-auto md:overflow-x-visible">
+          <table class=" tabla w-full border-collapse" width="100%" id="tablaventa">
               <thead>
                   <tr>
                       <th>Producto</th>
@@ -218,14 +218,18 @@
   </div>
 
   <!-- MODAL DEL CARRITO MOVIL-->
-  <dialog id="miDialogoCarritoMovil" class="midialog-sm p-5">
-    <div class="flex justify-between items-center">
-        <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
-        <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
-      <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
-    </div>
-    
-  </dialog>
+  <dialog id="miDialogoCarritoMovil" class="midialog-sm p-5 w-full max-w-sm overflow-x-hidden">
+  <div class="flex justify-between items-center">
+    <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">
+      Lista de productos
+    </h4>
+    <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
+  </div>
+</dialog>
+
 
   <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
   <dialog id="miDialogoAddCliente" class="midialog-sm p-5">

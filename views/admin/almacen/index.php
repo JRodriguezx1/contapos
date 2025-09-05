@@ -1,4 +1,4 @@
-<div class="box tlg:h-full flex flex-col almacen pb-12">
+<div class="box tlg:h-full flex flex-col almacen !pb-20">
   <h4 class="text-gray-600 mb-12">Almacen</h4>
   <div class="flex flex-wrap gap-4 mb-4">
         <a class="btn-command" href="/admin/almacen/categorias"><span class="material-symbols-outlined">tv_options_edit_channels</span>Categorias</a>
