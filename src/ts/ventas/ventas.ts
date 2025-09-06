@@ -743,7 +743,7 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
-            printTicketPOS(resultado.idfactura);
+            if(resultado.idfactura)printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }

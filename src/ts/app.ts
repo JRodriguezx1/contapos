@@ -34,6 +34,12 @@ document.querySelector('.sidebartoggle')!.addEventListener('click', (e)=>{
 //------------------------------------------------------------------------------------------------------------------//
 ///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES /////////////////////
 const configdatatables = {
+  layout: {
+        topStart: {
+            buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5', 'print'],
+            pageLength: 'pageLength'
+        }
+    },
   "paging": true,
   "lengthChange": true,
   "searching": true,
