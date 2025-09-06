@@ -40,7 +40,7 @@
         <?php include __DIR__. "/negocio.php";?>
     </div>
     <!-- gestion empleado -->
-    <div class="hidden mt-6 paginas pagina2"><?php include __DIR__. "/empleado.php";?></div>  
+    <div class="hidden mt-6 paginas pagina2"><?php include __DIR__. "/empleados.php";?></div>  
     <!-- gestion cajas -->
     <div class="hidden paginas pagina3"><?php include __DIR__. "/gestioncajas.php";?></div>
     <!-- gestion facturadores -->

@@ -21,7 +21,7 @@
                 allConversionUnidades = await respuesta.json();
                 console.log(allConversionUnidades);
                 pirntUnidades();
-                tablaAjustarCostos = ($('#tablaAjustarCostos') as any).DataTable(configdatatables);
+                tablaAjustarCostos = ($('#tablaAjustarCostos') as any).DataTable(configdatatablesajustarcostos);
             } catch (error) {
                 console.log(error);
             }
