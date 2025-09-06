@@ -66,11 +66,11 @@
 
             /*----------  Detalles de la tabla  ----------*/
             foreach($productos as $value){
-                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false);
-                $this->pdf->Cell(10,4,iconv("UTF-8", "ISO-8859-1","7"),0,0,'C');
-                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1","$10 USD"),0,0,'C');
-                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1","$0.00 USD"),0,0,'C');
-                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1","$70.00 USD"),0,0,'C');
+                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false); //nombre producto
+                $this->pdf->Cell(10,4,iconv("UTF-8", "ISO-8859-1", $value->cantidad),0,0,'C');  //cantidad
+                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->valorunidad, '0', ',', '.')),0,0,'C');  //precio unidad
+                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",$value->descuento),0,0,'C'); //descuento
+                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->total, '0', ',', '.')),0,0,'C'); //precio total
                 $this->pdf->Ln(4);
             }
             //$this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Garantía de fábrica: 2 Meses"),0,'C',false);
@@ -81,18 +81,24 @@
 
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
 
-                $this->pdf->Ln(5);
+            $this->pdf->Ln(5);
 
-            # Impuestos & totales #
+            # Impuestos, descuentos & totales #
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","SUBTOTAL"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $70.00 USD"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->subtotal, '0', ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","IVA (13%)"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $0.00 USD"),0,0,'C');
+            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Impuesto"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->valorimpuestototal, '0', ',', '.')." COP"),0,0,'C');
+
+            $this->pdf->Ln(5);
+
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Descuento"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($factura->descuento, '0', ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
@@ -102,25 +108,25 @@
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL A PAGAR"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$70.00 USD"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
             
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL PAGADO"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$100.00 USD"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","CAMBIO"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$30.00 USD"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","USTED AHORRA"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 USD"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
 
             $this->pdf->Ln(10);
 
