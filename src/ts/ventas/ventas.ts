@@ -740,7 +740,7 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
-            printTicketPOS(resultado.idfactura);
+            if(resultado.idfactura)printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
@@ -754,7 +754,9 @@
 
 
     function printTicketPOS(idfactura:string){
-      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      setTimeout(() => {
+        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      }, 1200);
     }
 
     /////////////////////////obtener datos de cotizacion /////////////////////

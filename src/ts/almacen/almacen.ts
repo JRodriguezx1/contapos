@@ -73,7 +73,7 @@
                  tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatables);
             }
         })*/
-        tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatables);
+        tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatablesstockrapido);
 
         document.querySelector('#tablaStockRapido')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
             let options:string = '';

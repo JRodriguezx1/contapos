@@ -11,6 +11,7 @@
       const btnsdevolverinv = document.querySelectorAll<HTMLInputElement>('input[name="devolverinventario"]'); //radio buttom
       const inputsInv = document.querySelectorAll<HTMLInputElement>('.inputInv');
       const printcarta = document.querySelector('#printcarta');
+      const printcotizacion = document.querySelector('#printcotizacion');
       const numOrden = document.querySelector('#numOrden');
       const referenciaFactura = document.querySelector('#referenciaFactura');
 
@@ -41,7 +42,20 @@
             setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
           };
         }
-        
+      });
+
+      printcotizacion?.addEventListener('click', ()=>{
+        //leer parametros de url
+        const parametrosURL = new URLSearchParams(window.location.search);
+        const id = parametrosURL.get('id');
+        const ventana = window.open('/printcotizacion?id='+id, '_blank');
+        if(ventana){
+          ventana.onload = ()=>{
+            ventana?.focus();
+            ventana?.print();
+            setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+          };
+        }
       });
 
       btnfacturar?.addEventListener('click', ()=>{

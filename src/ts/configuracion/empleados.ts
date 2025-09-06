@@ -1,8 +1,9 @@
 (function(){
-  if(document.querySelector('.empleado')){
+  if(document.querySelector('.empleados')){
+    console.log(123);
     const crearempleado = document.querySelector('#crearempleado') as HTMLElement;
     const dialogo:any = document.getElementById("miDialogoEmpleado");
-    const dialogoSkills = document.getElementById("miDialogoSkills");
+    const dialogoContraseña = document.getElementById("miDialogoContraseña");
     const btnupImage = document.querySelector('#upImage') as HTMLInputElement;
     const btncustomUpImage = document.querySelector('#customUpImage') as HTMLButtonElement;
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
@@ -124,11 +125,11 @@
           imgFile = ((e.target as HTMLFormElement).elements.namedItem("upImage") as HTMLInputElement).files?.[0]!; //obtengo el archivo
           if(imgFile){
             if(imgFile.type!=="image/png"&&imgFile.type!=="image/jpeg"){
-              msjAlert('error', 'No es un formato valido para la foto', (document.querySelector('#divmsjalerta1') as HTMLElement));
+              msjAlert('error', 'No es un formato valido para la foto', (document.querySelector('#divmsjalertaempleado1') as HTMLElement));
               return;
             }
             if(imgFile.size>550000){ //si es mayor a 550KB
-              msjAlert('error', 'La imagen no debe superar los 500KB', document.querySelector('#divmsjalerta1')!);
+              msjAlert('error', 'La imagen no debe superar los 500KB', document.querySelector('#divmsjalertaempleado1')!);
               return;
             }
           }
@@ -176,22 +177,23 @@
     });
 
 
-    ////////////////////  Actualizar skills del empleado  //////////////////////
+    ////////////////////  Actualizar contraseña del empleado  //////////////////////
     function empleadoSkills(e:Event){
       let idempleado = (e.target as HTMLElement).parentElement?.id;
       if((e.target as HTMLElement).tagName === 'I')idempleado = (e.target as HTMLElement).parentElement?.parentElement?.id;
-      document.querySelectorAll<HTMLInputElement>('.inputskills input[type="checkbox"]').forEach(checkbox=>{checkbox.checked=false}); //limpia los checkbox
+      //document.querySelectorAll<HTMLInputElement>('.inputskills input[type="checkbox"]').forEach(checkbox=>{checkbox.checked=false}); //limpia los checkbox
       unempleado = empleadosapi.find(x => x.id==idempleado);
-      var idservicios = unempleado?.idservicios; //servicios es el arreglo con solo los skills
+      (document.querySelector('#nombreEmpleado') as HTMLElement).textContent = unempleado?.nombre+" "+unempleado?.apellido;
+      /*var idservicios = unempleado?.idservicios; //servicios es el arreglo con solo los skills
       idservicios?.forEach(s =>{
         const inputskill:HTMLInputElement = document.querySelector(`input[data-skillid="${s.idservicio}"]`)!;
         inputskill.checked = true;
-      });
-      (dialogoSkills as any)?.showModal();
+      });*/
+      (dialogoContraseña as any)?.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
-    document.querySelector('#formSkills')?.addEventListener('submit', e=>{
+    document.querySelector('#formContraseña')?.addEventListener('submit', e=>{
       e.preventDefault();
       var arrayservicios:string[]=[];
       document.querySelectorAll<HTMLInputElement>('.inputskills input[type="checkbox"]').forEach(x=>{if(x.checked)arrayservicios = [...arrayservicios, x.value];});
@@ -261,9 +263,9 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === dialogo || event.target === dialogoSkills || (event.target as HTMLInputElement).value === 'cancelar' || (event.target as HTMLInputElement).value === 'Actualizar') {
+      if (event.target === dialogo || event.target === dialogoContraseña || (event.target as HTMLInputElement).value === 'cancelar' || (event.target as HTMLInputElement).value === 'Actualizar') {
           dialogo.close();
-          (dialogoSkills as any)?.close();
+          (dialogoContraseña as any)?.close();
           document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

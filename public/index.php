@@ -54,6 +54,7 @@ $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta'])
 //$router->get('/', [paginacontrolador::class, 'index']);
 $router->get('/', [logincontrolador::class, 'login']);
 $router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen
+$router->get('/printcotizacion', [cajacontrolador::class, 'printcotizacion']); //llamado desde ordenresumen
 $router->get('/printdetallecierre', [cajacontrolador::class, 'printdetallecierre']); //llamado desde cerrarcaja
 
 

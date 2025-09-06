@@ -328,7 +328,24 @@ class cajacontrolador{
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
 
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+  }
+
+  public static function printcotizacion(Router $router){
+    session_start();
+    isadmin();
+    $alertas = [];
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    //$alertas = usuarios::getAlertas();
+    $factura = facturas::find('id', $id);
+     $productos = ventas::idregistros('idfactura', $id);
+    $cliente = clientes::find('id', $factura->idcliente);
+    $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+    $tarifa = tarifas::find('id', $direccion->idtarifa);
+    $vendedor = usuarios::find('id', $factura->idvendedor);
+
+    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
