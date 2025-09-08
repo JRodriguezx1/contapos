@@ -190,24 +190,24 @@
         </div>
         <!-- Simbolo móneda -->
         <div>
-        <label for="simbolo_moneda" class="block text-xl font-medium text-gray-700 mb-1">
-            Símbolo moneda
-        </label>
-        <span class="block mb-1 text-sm text-gray-500">
-            Seleccione el símbolo de la moneda que usará el sistema
-        </span>
-        <select 
-            id="simbolo_moneda" 
-            name="simbolo_moneda"
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-        >
-            <option value="$">Peso colombiano (COP) – $</option>
-            <option value="USD">$ – Dólar estadounidense</option>
-            <option value="€">€ – Euro</option>
-            <!-- <option value="£">£ – Libra esterlina</option>
-            <option value="¥">¥ – Yen japonés</option>
-            <option value="₿">₿ – Bitcoin</option> -->
-        </select>
+            <label for="simbolo_moneda" class="block text-xl font-medium text-gray-700 mb-1">
+                Símbolo moneda
+            </label>
+            <span class="block mb-1 text-sm text-gray-500">
+                Seleccione el símbolo de la moneda que usará el sistema
+            </span>
+            <select 
+                id="simbolo_moneda" 
+                name="simbolo_moneda"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+            >
+                <option value="$">Peso colombiano (COP) – $</option>
+                <option value="USD">$ – Dólar estadounidense</option>
+                <option value="€">€ – Euro</option>
+                <!-- <option value="£">£ – Libra esterlina</option>
+                <option value="¥">¥ – Yen japonés</option>
+                <option value="₿">₿ – Bitcoin</option> -->
+            </select>
         </div>
 
     </div>
