@@ -1,6 +1,6 @@
 <div class="negocio__contenedor">
     <h4 class="text-center text-gray-600">Informacion Del Negocio</h4>
-    <form class="formulario" action="/admin/adminconfig/actualizar" enctype="multipart/form-data" method="POST">
+    <form class="formulario" action="/admin/configuracion/editarnegocio" enctype="multipart/form-data" method="POST">
         <fieldset class="formulario__fieldset"> 
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombrenegocio">Nombre</label>
@@ -10,9 +10,9 @@
                 </div>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="datosencabezado">Datos del Rut</label>
+                <label class="formulario__label" for="datosencabezados">Datos del Rut</label>
                 <div class="formulario__dato">
-                    <textarea id="datosencabezado" class="formulario__textarea w-full bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white text-xl focus:outline-none focus:ring-1 h-32" name="datosencabezado" placeholder="datos de encabezado de la factura" rows="4"></textarea>
+                    <textarea id="datosencabezados" class="formulario__textarea w-full bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white text-xl focus:outline-none focus:ring-1 h-32" name="datosencabezados" placeholder="datos de encabezado de la factura" rows="4"><?php echo $negocio->datosencabezados ?? '';?></textarea>
                 </div>
             </div>
             <div class="formulario__campo">

@@ -28,6 +28,7 @@ class logincontrolador{
                         //autenticar usuario         
                         session_start();
                         $_SESSION['id'] = $usuario->id;
+                        $_SESSION['idsucursal'] = $usuario->idsucursal;
                         $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
                         $_SESSION['email'] = $usuario->email;
                         $_SESSION['login'] = true;
@@ -47,7 +48,7 @@ class logincontrolador{
             } 
         }
         $alertas = usuarios::getAlertas();
-    $router->render('auth/loginauth', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+        $router->render('auth/loginauth', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
     }
 
     public static function login(Router $router){
@@ -68,6 +69,7 @@ class logincontrolador{
                         //autenticar usuario         
                         session_start();
                         $_SESSION['id'] = $usuario->id;
+                        $_SESSION['idsucursal'] = $usuario->idsucursal;
                         $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
                         $_SESSION['email'] = $usuario->email;
                         $_SESSION['login'] = true;
@@ -88,7 +90,7 @@ class logincontrolador{
         } //cierre de $_SERVER['REQUEST_METHOD'] === 'POST'
 
         $alertas = usuarios::getAlertas();
-    $router->render('auth/login', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+        $router->render('auth/login', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
     }
 
 
