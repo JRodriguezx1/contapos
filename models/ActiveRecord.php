@@ -103,7 +103,7 @@ class ActiveRecord {
         }
         $string1 = join(', ', array_keys($atributos));
         $sql = "INSERT INTO ".static::$tabla."(".$string1.") VALUES".$string2;
-        $resultado = self::$db->query($sql); 
+        $resultado = self::$db->query($sql);
         //INSERT INTO empserv(idempleado, idservicio) VALUES('3', '3'), ('3', '1');
         return [$resultado, self::$db->insert_id];
     }

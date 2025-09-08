@@ -16,6 +16,8 @@ use Model\gastos;
 use Model\cierrescajas;
 use Model\compras;
 use Model\detallecompra;
+use Model\stockproductossucursal;
+use Model\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -106,6 +108,9 @@ class almacencontrolador{
     $alertas = [];
     $conversion = new conversionunidades;
     $categoria = categorias::find('id', $_POST['idcategoria']);
+    $sucursales = sucursales::all();
+    $stockProductoSucursales = new stockproductossucursal;
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $producto = new productos($_POST);
       $alertas = $producto->validarimgproducto($_FILES);
@@ -124,9 +129,19 @@ class almacencontrolador{
           $arrayequivalencias = $producto->equivalencias($r[1], $producto->idunidadmedida);
           $rc = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
           if($rc){
+            //crear el inventario para todas las sucursales...
+            $stocksucursal = [];
+            foreach($sucursales as $index => $value){
+              $stocksucursal[$index]['productoid'] = 6;
+              $stocksucursal[$index]['sucursalid'] = $value->id;
+              $stocksucursal[$index]['stock'] = 8;
+              $stocksucursal[$index]['stockminimo'] = 3;
+              $stocksucursal[$index]['habilitarventa'] = 1;
+            }
+            $stockProductoSucursales->crear_varios_reg($stocksucursal);
             $alertas['exito'][] = "Producto creado correctamente";
           }else{
-            //**** eliminar subproducto
+            //**** eliminar producto
             $productodelete = productos::find('id', $r[1]);
             $productodelete->eliminar_registro();
             $alertas['error'][] = "Error, intentalo nuevamente";

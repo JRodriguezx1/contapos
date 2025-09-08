@@ -35,6 +35,11 @@ function isadmin():void
     }
 }
 
+function nombreSucursal():string
+{
+    return $_SESSION['sucursal']->nombre;
+}
+
 function id_sucursal():int
 {
     return $_SESSION['idsucursal'];
