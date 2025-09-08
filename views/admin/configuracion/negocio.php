@@ -12,7 +12,7 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="datosencabezado">Datos del Rut</label>
                 <div class="formulario__dato">
-                    <textarea id="datosencabezado" class="formulario__textarea w-full" name="datosencabezado" placeholder="datos de encabezado de la factura" rows="4"></textarea>
+                    <textarea id="datosencabezado" class="formulario__textarea w-full bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white text-xl focus:outline-none focus:ring-1 h-32" name="datosencabezado" placeholder="datos de encabezado de la factura" rows="4"></textarea>
                 </div>
             </div>
             <div class="formulario__campo">

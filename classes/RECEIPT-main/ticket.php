@@ -36,7 +36,7 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$factura->vendedor),0,'C',false);
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Orden Nro: ".$factura->id)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Comprobante N°: ".$factura->id)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->Ln(1);
@@ -53,13 +53,15 @@
             $this->pdf->Ln(3);
 
             # Tabla de productos #
+            $this->pdf->SetFont('Arial','B',10);
             $this->pdf->Cell(10,5,iconv("UTF-8", "ISO-8859-1","Cant."),0,0,'C');
             $this->pdf->Cell(19,5,iconv("UTF-8", "ISO-8859-1","Precio"),0,0,'C');
             $this->pdf->Cell(15,5,iconv("UTF-8", "ISO-8859-1","Desc."),0,0,'C');
             $this->pdf->Cell(28,5,iconv("UTF-8", "ISO-8859-1","Total"),0,0,'C');
+            $this->pdf->SetFont('Arial','',10);
 
             $this->pdf->Ln(3);
-            $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+            $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(3);
 
 
@@ -79,7 +81,7 @@
 
 
 
-            $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+            $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
 
             $this->pdf->Ln(5);
 
@@ -102,13 +104,15 @@
 
             $this->pdf->Ln(5);
 
-            $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+            $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+            $this->pdf->SetFont('Arial','B',10);
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL A PAGAR"),0,0,'C');
             $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->SetFont('Arial','',10);
 
             $this->pdf->Ln(5);
             

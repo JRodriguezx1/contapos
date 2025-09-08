@@ -53,18 +53,38 @@
           </h1>
           <form action="/login" method="post" class="space-y-4">
             <div>
-              <label for="email" class="mb-2  dark:text-gray-400 text-xl">Celular</label>
+              <label for="email" class="mb-2  dark:text-gray-400 text-xl">Usuario</label>
               <input
                 id="email"
                 class="w-full h-14 p-2.5 text-xl text-gray-900 bg-white placeholder:text-base border border-gray-300 rounded-lg shadow-md dark:bg-indigo-700 dark:text-gray-300 dark:border-gray-700 dark:placeholder-gray-400
                 focus:outline-none focus:ring-1 focus:border-indigo-600 
                 ease-in-out duration-300 focus:scale-105"
                 type="number"
-                placeholder="Ingresa tu número celular"
+                placeholder="Ingresa tu usuario"
                 name="movil"
                 required
               />
             </div>
+            <div>
+              <label for="simbolo_moneda" class="block text-xl font-medium text-gray-700 mb-1">
+                  Sede
+              </label>
+              <span class="block mb-1 text-sm text-gray-500">
+                  Seleccione una sede
+              </span>
+              <select 
+                  id="simbolo_moneda" 
+                  name="simbolo_moneda"
+                  class="bg-white border border-gray-300 text-gray-900 shadow-md rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+              >
+                  <option value="$">Sede Norte</option>
+                  <option value="USD">Sede Centro</option>
+                  <option value="€">Sede Sur</option>
+                  <!-- <option value="£">£ – Libra esterlina</option>
+                  <option value="¥">¥ – Yen japonés</option>
+                  <option value="₿">₿ – Bitcoin</option> -->
+              </select>
+            </div>      
             <div>
               <label for="password" class="mb-2 dark:text-gray-400 text-xl">Contraseña</label>
               <input
