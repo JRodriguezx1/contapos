@@ -119,6 +119,7 @@ $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear
 
 ///// area de configuracion /////
 $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
+$router->post('/admin/configuracion/editarnegocio', [configcontrolador::class, 'editarnegocio']);
 
 
 

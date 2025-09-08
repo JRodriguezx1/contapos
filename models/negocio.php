@@ -4,7 +4,7 @@ namespace Model;
 
 class negocio extends ActiveRecord {
     protected static $tabla = 'negocio';
-    protected static $columnasDB = ['id', 'nombre', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'nit', 'ws', 'facebook', 'instagram', /*'tiktok',*/ 'youtube', /*'twitter',*/ 'logo', 'colorprincipal', 'colorsecundario', 'timeservice'];
+    protected static $columnasDB = ['id', 'nombre', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'nit', 'datosencabezados', 'ws', 'facebook', 'instagram', /*'tiktok',*/ 'youtube', /*'twitter',*/ 'logo', 'colorprincipal', 'colorsecundario', 'timeservice'];
     
     public function __construct($args = [])
     {
@@ -16,6 +16,7 @@ class negocio extends ActiveRecord {
         $this->movil = $args['movil'] ?? '';
         $this->email = $args['email'] ?? '';
         $this->nit = $args['nit'] ?? '';
+        $this->datosencabezados = $args['datosencabezados'] ?? '';
         $this->ws = $args['ws'] ?? '';
         $this->facebook = $args['facebook'] ?? '';
         $this->instagram = $args['instagram'] ?? '';

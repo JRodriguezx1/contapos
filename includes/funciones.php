@@ -34,3 +34,8 @@ function isadmin():void
         header('Location: /');
     }
 }
+
+function id_sucursal():int
+{
+    return $_SESSION['idsucursal'];
+}
