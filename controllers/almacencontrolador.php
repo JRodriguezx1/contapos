@@ -831,7 +831,7 @@ class almacencontrolador{
     }, ['productos'=>[], 'subproductos'=>[]]);
 
     
-    ////// Obtengo los registros de la tabla productos_sub a actualizar su costo de compra por su id_subproducto, si el subproducto se repite lo tae n veces
+    ////// Obtengo los registros de la tabla productos_sub a actualizar su costo de compra por su id_subproducto, si el subproducto se repite lo trae n veces
     $itemsProSub = productos_sub::paginarwhere('', '', 'id_subproducto', json_decode($_POST['subID'])); 
     
     ////////  mapeo Optimizado de tipo O(A+B)
@@ -855,7 +855,7 @@ class almacencontrolador{
       if(empty($alertas)){
         
         if(!empty($itemsProSub)){
-          ////// Actualizo el costo de compra de los subproductos en la tabla productos_sub, costo segung su formula, y equivalente a una unidad del producto compuesto
+          ////// Actualizo el costo de compra de los subproductos en la tabla productos_sub, costo segun su formula, y equivalente a una unidad del producto compuesto
           $costosprosub = productos_sub::actualizar_costos_de_prosub($itemsProSub, ['costo']);
           ////// Obtener la suma de los subproductos que pertenece a un producto compuesto y se divide por su rendimiento estandar para obtener el valor individual //////
           $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id 
@@ -876,7 +876,10 @@ class almacencontrolador{
             /// ACTUALIZAR EL STOCK Y PRECIO DE COMPRA (COSTO) DE LOS PRODUCTOS Y/O SUBPRODUCTOS DEL INVENTARIO ////
               //UPDATE nombretabla SET stock = CASE WHEN id = 1 THEN stock + 2 WHEN id = 3 THEN stock + 1 ELSE stock END, valor = CASE WHEN id = 1 THEN '800' WHEN id = 3 THEN '100' ELSE valor END WHERE id IN (1, 3, 5);
               
-              if(!empty($resultArray['productos']))$invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
+              if(!empty($resultArray['productos'])){
+                $invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
+                $invpx = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = 1'); //actualizando stock del inventario centralizado
+              }
               if(!empty($resultArray['subproductos']) && $invpx)$invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
             
               if($invpx){  //productos

@@ -289,6 +289,24 @@ class ActiveRecord {
     }
 
 
+    public static function addinv1condicion($array, $col, $id, $stringCondicion){  //$array = [{idproducto: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}], $col = 'stock'
+        $query = "UPDATE ".static::$tabla." SET $col = CASE ";
+        $in = "";
+        foreach($array as $index => $value){
+            $query .= "WHEN $id = $value->id THEN $col + $value->cantidad ";
+            if(array_key_last($array) === $index){
+                $in .= "$value->id";
+                $query .= "ELSE {$col} END WHERE $id IN ($in) AND $stringCondicion;";
+            }else{
+                $in .= "$value->id, ";
+            }
+        }
+        //UPDATE productos SET stock = CASE WHEN id = 2 THEN stock + 2 WHEN id = 3 THEN stock + 1 WHEN id = 4 THEN stock + 3 ELSE stock END WHERE id IN (2, 3, 4);
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }
+
+
     public static function camposaddinv($array, $colums){  //$array = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
         $query = "UPDATE ".static::$tabla." SET ";          //$coums = ['stock', 'precio_compra',..]
         $in = "";
