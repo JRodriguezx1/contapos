@@ -16,6 +16,9 @@ use Model\gastos;
 use Model\cierrescajas;
 use Model\compras;
 use Model\detallecompra;
+use Model\stockinsumossucursal;
+use Model\stockproductossucursal;
+use Model\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -25,11 +28,13 @@ class almacencontrolador{
     session_start();
     isadmin();
     $alertas = [];
-    $productosqw = productos::all();
-    $subproductosqw = subproductos::all();
-    $productos = productos::indicadoresAllProducts();
-    $subproductos = subproductos::indicadoresAllSubProducts();
+    //$productosqw = productos::all();
+    //$subproductosqw = subproductos::all();
+    //$productos = productos::indicadoresAllProducts();
+    //$subproductos = subproductos::indicadoresAllSubProducts();
     $cantidadCategorias = categorias::numreg_where('visible', 1);
+    $productos = stockproductossucursal::indicadoresAllProductsXSucursal(id_sucursal());
+    $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
 
     $valorInv = $productos[0]->valorinv + $subproductos[0]->valorinv; //valor total del inventario
     $cantidadProductos = $productos[0]->cantidadproductos; //
@@ -37,8 +42,8 @@ class almacencontrolador{
     $bajoStock = $productos[0]->bajostock + $subproductos[0]->bajostock; //
     $productosAgotados = $productos[0]->productosagotados + $subproductos[0]->productosagotados; //
 
-    if((int)$valorInv >= 1000000 && (int)$valorInv < 1000000000)$valorInv = round((int)$valorInv / 1000000, 1) . 'M';
-    if((int)$valorInv >= 1000000000 && (int)$valorInv < 1000000000000)$valorInv = round((int)$valorInv / 1000000000, 1) . 'MM';
+    if((int)$valorInv >= 1000000 && (int)$valorInv < 1000000000)$valorInv = round((int)$valorInv / 1000000, 2) . 'M';
+    if((int)$valorInv >= 1000000000 && (int)$valorInv < 1000000000000)$valorInv = round((int)$valorInv / 1000000000, 2) . 'MM';
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
@@ -106,6 +111,9 @@ class almacencontrolador{
     $alertas = [];
     $conversion = new conversionunidades;
     $categoria = categorias::find('id', $_POST['idcategoria']);
+    $sucursales = sucursales::all();
+    $stockProductoSucursales = new stockproductossucursal;
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $producto = new productos($_POST);
       $alertas = $producto->validarimgproducto($_FILES);
@@ -124,9 +132,19 @@ class almacencontrolador{
           $arrayequivalencias = $producto->equivalencias($r[1], $producto->idunidadmedida);
           $rc = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
           if($rc){
+            //crear el inventario para todas las sucursales...
+            $stocksucursal = [];
+            foreach($sucursales as $index => $value){
+              $stocksucursal[$index]['productoid'] = $r[1];
+              $stocksucursal[$index]['sucursalid'] = $value->id;
+              $stocksucursal[$index]['stock'] = $producto->stock;
+              $stocksucursal[$index]['stockminimo'] = $producto->stockminimo;
+              $stocksucursal[$index]['habilitarventa'] = 1;
+            }
+            $stockProductoSucursales->crear_varios_reg($stocksucursal);
             $alertas['exito'][] = "Producto creado correctamente";
           }else{
-            //**** eliminar subproducto
+            //**** eliminar producto
             $productodelete = productos::find('id', $r[1]);
             $productodelete->eliminar_registro();
             $alertas['error'][] = "Error, intentalo nuevamente";
@@ -162,6 +180,9 @@ class almacencontrolador{
     $alertas = [];
     $conversion = new conversionunidades;
     $unidadmedida = unidadesmedida::find('id', $_POST['id_unidadmedida']); //unidad de medida base indicada para el subproducto
+    $sucursales = sucursales::all();
+    $stockinsumossucursales = new stockinsumossucursal();
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $subproducto = new subproductos($_POST);
       $subproducto->unidadmedida = $unidadmedida->nombre;
@@ -172,6 +193,15 @@ class almacencontrolador{
           $arrayequivalencias = $subproducto->equivalencias($r[1], $unidadmedida->id);
           $r1 = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
           if($r1){
+            //crear el inventario para todas las sucursales...
+            $stocksucursal = [];
+            foreach($sucursales as $index => $value){
+              $stocksucursal[$index]['subproductoid'] = $r[1];
+              $stocksucursal[$index]['sucursalid'] = $value->id;
+              $stocksucursal[$index]['stock'] = $subproducto->stock;
+              $stocksucursal[$index]['stockminimo'] = $subproducto->stockminimo;
+            }
+            $stockinsumossucursales->crear_varios_reg($stocksucursal);
             $alertas['exito'][] = "Producto creado correctamente";
           }else{
             //**** eliminar subproducto
@@ -801,7 +831,7 @@ class almacencontrolador{
     }, ['productos'=>[], 'subproductos'=>[]]);
 
     
-    ////// Obtengo los registros de la tabla productos_sub a actualizar su costo de compra por su id_subproducto, si el subproducto se repite lo tae n veces
+    ////// Obtengo los registros de la tabla productos_sub a actualizar su costo de compra por su id_subproducto, si el subproducto se repite lo trae n veces
     $itemsProSub = productos_sub::paginarwhere('', '', 'id_subproducto', json_decode($_POST['subID'])); 
     
     ////////  mapeo Optimizado de tipo O(A+B)
@@ -825,7 +855,7 @@ class almacencontrolador{
       if(empty($alertas)){
         
         if(!empty($itemsProSub)){
-          ////// Actualizo el costo de compra de los subproductos en la tabla productos_sub, costo segung su formula, y equivalente a una unidad del producto compuesto
+          ////// Actualizo el costo de compra de los subproductos en la tabla productos_sub, costo segun su formula, y equivalente a una unidad del producto compuesto
           $costosprosub = productos_sub::actualizar_costos_de_prosub($itemsProSub, ['costo']);
           ////// Obtener la suma de los subproductos que pertenece a un producto compuesto y se divide por su rendimiento estandar para obtener el valor individual //////
           $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id 
@@ -846,7 +876,10 @@ class almacencontrolador{
             /// ACTUALIZAR EL STOCK Y PRECIO DE COMPRA (COSTO) DE LOS PRODUCTOS Y/O SUBPRODUCTOS DEL INVENTARIO ////
               //UPDATE nombretabla SET stock = CASE WHEN id = 1 THEN stock + 2 WHEN id = 3 THEN stock + 1 ELSE stock END, valor = CASE WHEN id = 1 THEN '800' WHEN id = 3 THEN '100' ELSE valor END WHERE id IN (1, 3, 5);
               
-              if(!empty($resultArray['productos']))$invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
+              if(!empty($resultArray['productos'])){
+                $invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
+                $invpx = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = 1'); //actualizando stock del inventario centralizado
+              }
               if(!empty($resultArray['subproductos']) && $invpx)$invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
             
               if($invpx){  //productos
@@ -934,6 +967,7 @@ class almacencontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
         $producto = productos::find('id', $iditem);
+        $producto = stockproductossucursal::find('id', 1);
         $producto->stock =$producto->stock-$cantidad;
         $ra = $producto->actualizar();
         if($ra){

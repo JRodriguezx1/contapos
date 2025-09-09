@@ -26,7 +26,7 @@ class printcontrolador{
     $negocio = negocio::get(1);
     $factura = facturas::find('id', $id);
     $cliente = clientes::find('id', $factura->idcliente);
-    $direccion = direcciones::find('id', $cliente->id);
+    $direccion = direcciones::find('id', $factura->iddireccion);
     $productos = ventas::idregistros('idfactura', $factura->id);
     $print = new ticketPOS();
     $print->generar($factura, $cliente, $direccion, $productos, $negocio);

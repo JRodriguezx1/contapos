@@ -4,6 +4,7 @@
 
         type conversionunidadesapi = {
             id:string,
+            idproducto: string,
             idsubproducto: string,
             idunidadmedidabase: string,
             idunidadmedidadestino: string,
@@ -32,7 +33,8 @@
 
         function pirntUnidades():void{
             allConversionUnidades.forEach(subUnd =>{
-                const select = document.querySelector(`tr[data-idsubproducto="${subUnd.idsubproducto}"]`)?.children[5].children[0];
+                let select = document.querySelector(`tr[data-idsubproducto="${subUnd.idsubproducto}"]`)?.children[5].children[0];
+                if(select == undefined)select = document.querySelector(`tr[data-idproducto="${subUnd.idproducto}"]`)?.children[5].children[0];
                 const option = document.createElement('option');
                 option.textContent = subUnd.nombreunidaddestino;
                 option.dataset.factor = subUnd.factorconversion;

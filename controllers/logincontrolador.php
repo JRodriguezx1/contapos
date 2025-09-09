@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\sucursales;
 use Model\usuarios; //namespace\clase hija
 //use Model\negocio;
 use MVC\Router;  //namespace\clase
@@ -29,6 +30,7 @@ class logincontrolador{
                         session_start();
                         $_SESSION['id'] = $usuario->id;
                         $_SESSION['idsucursal'] = $usuario->idsucursal;
+                        $_SESSION['sucursal'] = sucursales::find('id', $usuario->idsucursal);
                         $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
                         $_SESSION['email'] = $usuario->email;
                         $_SESSION['login'] = true;
@@ -70,6 +72,7 @@ class logincontrolador{
                         session_start();
                         $_SESSION['id'] = $usuario->id;
                         $_SESSION['idsucursal'] = $usuario->idsucursal;
+                        $_SESSION['sucursal'] = sucursales::find('id', $usuario->idsucursal);
                         $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
                         $_SESSION['email'] = $usuario->email;
                         $_SESSION['login'] = true;

@@ -135,8 +135,7 @@ const configdatatablesajustarcostos = {
 ///////////////////// CONFIGURACION DEL PLUGIN DATATABLES PARA CAJA/////////////////////
 const configdatatablescaja = {
   "paging": false,
-  "order": [[ 0, 'desc' ]],
-  "lengthChange": true,
+  "order": [[ 3, 'desc' ]],
   "searching": true,
   "ordering": true,
   "info": true,
@@ -150,7 +149,7 @@ const configdatatablescaja = {
       emptyTable: 'No Hay datos disponibles',
       zeroRecords:    "No se encontraron registros coincidentes",
       lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
+      info: 'Mostrando 1 de _MAX_ registros',
       infoEmpty: 'No hay entradas a mostrar',
       infoFiltered: ' (filtrado desde _MAX_ registros)',
       paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}

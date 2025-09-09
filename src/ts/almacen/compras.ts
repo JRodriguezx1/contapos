@@ -17,6 +17,7 @@
 
         type conversionunidadesapi = {
             id:string,
+            idproducto: string,
             idsubproducto: string,
             idunidadmedidabase: string,
             idunidadmedidadestino: string,
@@ -126,6 +127,11 @@
                 options = "";
                 const subproductounidades = allConversionUnidades.filter(x => x.idsubproducto == id); 
                 subproductounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idsubproducto}" >${u.nombreunidaddestino}</option>`);
+            }
+            if(tipo=='0'){
+                options = "";
+                const productounidades = allConversionUnidades.filter(x => x.idproducto == id); 
+                productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
             }
             const tr = document.createElement('TR');
             tr.classList.add('itemselect');
