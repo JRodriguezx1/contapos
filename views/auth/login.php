@@ -66,23 +66,16 @@
               />
             </div>
             <div>
-              <label for="simbolo_moneda" class="block text-xl font-medium text-gray-700 mb-1">
-                  Sede
-              </label>
-              <span class="block mb-1 text-sm text-gray-500">
-                  Seleccione una sede
-              </span>
+              <label for="sucursal" class="block text-xl font-medium text-gray-700 mb-1">Sede</label>
+              <span class="block mb-1 text-base text-gray-500">Seleccione una sede</span>
               <select 
-                  id="simbolo_moneda" 
-                  name="simbolo_moneda"
+                  id="sucursal" 
+                  name="sucursal"
                   class="bg-white border border-gray-300 text-gray-900 shadow-md rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
               >
-                  <option value="$">Sede Norte</option>
-                  <option value="USD">Sede Centro</option>
-                  <option value="€">Sede Sur</option>
-                  <!-- <option value="£">£ – Libra esterlina</option>
-                  <option value="¥">¥ – Yen japonés</option>
-                  <option value="₿">₿ – Bitcoin</option> -->
+                <?php foreach($sucursales as $value): ?>
+                  <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
               </select>
             </div>      
             <div>

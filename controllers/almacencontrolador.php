@@ -813,7 +813,9 @@ class almacencontrolador{
     $in = '';
     $alertas = [];
     $invpx = true;
+    $invpxs = true;
     $invsx = true;
+    $invsxs = true;
     $compra = new compras($_POST);
     $detallecompra = new detallecompra();
     $carrito = json_decode($_POST['carrito']);
@@ -878,12 +880,15 @@ class almacencontrolador{
               
               if(!empty($resultArray['productos'])){
                 $invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
-                $invpx = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = 1'); //actualizando stock del inventario centralizado
+                $invpxs = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', "sucursalid = ".id_sucursal()); //actualizando stock del inventario centralizado
               }
-              if(!empty($resultArray['subproductos']) && $invpx)$invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
+              if(!empty($resultArray['subproductos']) && $invpx && $invpxs){
+                $invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
+                $invsxs = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+              }
             
-              if($invpx){  //productos
-                if($invsx){  //subproductos
+              if($invpx && $invpxs){  //productos
+                if($invsx && $invsxs){  //subproductos
                   $alertas['exito'][] = "Compra realizada con exito.";
 
                   //*****/////////// registrarlo en tabla gastos, operacion compra /////////////
@@ -966,10 +971,11 @@ class almacencontrolador{
     $cantidad = $_POST['cantidad'];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
-        $producto = productos::find('id', $iditem);
-        $producto = stockproductossucursal::find('id', 1);
+        //$producto = productos::find('id', $iditem);
+        $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $producto->stock =$producto->stock-$cantidad;
         $ra = $producto->actualizar();
+        //$producto->id = $producto->productoid;
         if($ra){
             $alertas['exito'][] = "Stock del producto actualizado con exito";
             $alertas['item'][] = $producto;
@@ -977,9 +983,11 @@ class almacencontrolador{
             $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
       }else{  // si es insumo subproducto
-        $insumo = subproductos::find('id', $iditem);
+        //$insumo = subproductos::find('id', $iditem);
+        $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $insumo->stock =  $insumo->stock-$cantidad;
-         $ra = $insumo->actualizar();
+        $ra = $insumo->actualizar();
+        //$producto->id = $producto->subproductoid;
         if($ra){
             $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
             $alertas['item'][] = $insumo;
@@ -998,11 +1006,13 @@ class almacencontrolador{
     $cantidad = $_POST['cantidad'];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
-        $producto = productos::find('id', $iditem);
-        $producto->stock =  $producto->stock+$cantidad;
-        $ra = $producto->actualizar();
+        $productostock = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
+        $productostock->stock =  $productostock->stock+$cantidad;
+        $ra = $productostock->actualizar();
         
-        //procesar el descuento de los insumos del produco compuesto y de produccion tipo contruccion
+        $producto = productos::find('id', $iditem);
+        $producto->stock = $productostock->stock;
+        //procesar el descuento de los insumos del producto compuesto y de produccion tipo contruccion
         //validar si el producto compuesto tiene insumos asociados y si es de tipo construccion
         if(isset($_POST['construccion']) && $_POST['construccion'] == 1){
           //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
@@ -1013,11 +1023,12 @@ class almacencontrolador{
             $value->id = $value->id_subproducto;
             $soloIdSubProduct[] = $value->id;
           }
-
           
           if(!empty($descontarSubproductos)){
-            $invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
-            $returnInsumos = subproductos::paginarwhere('', '', 'id', $soloIdSubProduct);
+            //$invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
+            $invSub = stockinsumossucursal::reduceinv1condicion($descontarSubproductos, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdSubProduct).") AND sucursalid = 1;";
+            $returnInsumos = stockinsumossucursal::camposJoinObj($query);
             if($invSub){
                 $alertas['exito'][] = "Se realizo produccion con exito";
                 $alertas['item'][] = $producto;
@@ -1033,13 +1044,14 @@ class almacencontrolador{
           }
         }elseif($ra){
           $alertas['exito'][] = "Stock del producto actualizado con exito";
-          $alertas['item'][] = $producto;
+          $alertas['item'][] = $productostock;
         }else{
           $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
 
       }else{  // si es insumo subproducto
-        $insumo = subproductos::find('id', $iditem);
+        //$insumo = subproductos::find('id', $iditem);
+        $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $insumo->stock = $insumo->stock+$cantidad;
          $ra = $insumo->actualizar();
         if($ra){
@@ -1061,7 +1073,8 @@ class almacencontrolador{
     $cantidad = $_POST['cantidad'];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
-        $producto = productos::find('id', $iditem);
+        //$producto = productos::find('id', $iditem);
+        $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $producto->stock = $cantidad;
         $ra = $producto->actualizar();
         if($ra){
@@ -1071,7 +1084,8 @@ class almacencontrolador{
             $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
       }else{  // si es insumo subproducto
-        $insumo = subproductos::find('id', $iditem);
+        //$insumo = subproductos::find('id', $iditem);
+        $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $insumo->stock = $cantidad;
          $ra = $insumo->actualizar();
         if($ra){

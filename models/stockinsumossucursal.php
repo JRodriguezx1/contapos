@@ -16,7 +16,7 @@ class stockinsumossucursal extends ActiveRecord{
     }
 
     public static function indicadoresAllSubproductsXSucursal(int $idsucursal = 1):array|NULL{
-      $query="SELECT sp.nombre, sis.stock, sis.stockminimo, sp.precio_compra, sp.unidadmedida, sp.fecha_ingreso, 
+      $query="SELECT sp.nombre, sis.subproductoid, sis.stock, sis.stockminimo, sp.precio_compra, sp.unidadmedida, sp.fecha_ingreso, 
       SUM(sis.stock*sp.precio_compra) OVER () AS valorinv, 
       COUNT(sp.id) OVER () AS cantidadreferencias, 
       SUM(sis.stock) OVER () AS cantidadproductos,

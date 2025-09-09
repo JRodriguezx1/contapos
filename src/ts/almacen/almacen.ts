@@ -255,9 +255,9 @@
                         ////// reset form ///////
                         (document.querySelector('#formIngresarProduccion') as HTMLFormElement)?.reset();
                         //mostrar contaidad actual
-                        mostrarInfoItem(resultado.item[0]);
+                        mostrarInfoItem(resultado.item[0]); //producto
                         //actualizar tabla stock rapido
-                        if(resultado.insumos !== undefined)actualizarStockRapido(resultado.insumos[0], '1');
+                        if(resultado.insumos !== undefined)actualizarStockRapido(resultado.insumos[0], '1'); //subproductos
                         //actualizar el selecto de los productos/insumos a producir
                         $("#itemAproducir option:selected").data('stock', resultado.item[0].stock);
                         
@@ -280,13 +280,16 @@
         }
 
 
-        function actualizarStockRapido(insumosProductos:{id:string, stock:string, stockminimo:string}[], tipoItem:string){
+        function actualizarStockRapido(insumosProductos:{id:string, productoid:string, subproductoid:string, sucursalid:string, stock:string, stockminimo:string}[], tipoItem:string){
             insumosProductos.forEach(element => {
                 (tablaStockRapido as any).rows().every(function (this: any){
                     const rowNode = this.node() as HTMLTableRowElement;
-                    let idAttr = rowNode.getAttribute('data-idsubproducto');
-                    if(tipoItem == '0')idAttr = rowNode.getAttribute('data-idproducto');
-                    if (idAttr && idAttr === element.id){
+                    let id_element = element.subproductoid, idAttr = rowNode.getAttribute('data-idsubproducto');
+                    if(tipoItem == '0'){
+                        idAttr = rowNode.getAttribute('data-idproducto');
+                        id_element = element.productoid;
+                    }
+                    if (idAttr && idAttr === id_element){
                         this.cell(this.index(), 3).data(`<div class="text-center px-3 py-4 rounded-lg">${element.stock}</div>`);
 
                         // Obtén el <td> real

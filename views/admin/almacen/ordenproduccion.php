@@ -17,7 +17,7 @@
                                 data-stock="<?php echo $value->stock;?>"
                                 data-precio_compra="<?php echo $value->precio_compra;?>"
                                 data-precio_venta="<?php echo $value->precio_venta;?>"
-                                value="<?php echo $value->id;?>">
+                                value="<?php echo $value->productoid;?>">
                                 <?php echo $value->nombre;?>
                             </option>
                     <?php endif; endforeach; ?>

@@ -19,7 +19,7 @@
     <tbody>
         <?php foreach($productos as $index => $value): ?>
             <?php if($value->tipoproducto == '0'): ?>  <!-- productos simple -->
-            <tr class="fila producto" data-idproducto="<?php echo $value->id;?>"> 
+            <tr class="fila producto" data-idproducto="<?php echo $value->productoid;?>"> 
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria;?></td>
@@ -27,7 +27,7 @@
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
-                <div class="acciones-btns btnsproducto" id="<?php echo $value->id;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
+                <div class="acciones-btns btnsproducto" id="<?php echo $value->productoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
                     <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
                     <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
                     <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
@@ -38,7 +38,7 @@
 
         <!-- subproductos -->
         <?php foreach($subproductos as $index => $value): ?>  
-            <tr class="fila subproducto" data-idsubproducto="<?php echo $value->id;?>"> 
+            <tr class="fila subproducto" data-idsubproducto="<?php echo $value->subproductoid;?>"> 
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria??'';?></td> 
@@ -46,7 +46,7 @@
                 <td class=""><?php echo $value->unidadmedida;?></td>
                 <td class=""><?php echo $value->fecha_ingreso;?></td>
                 <td class="accionestd">
-                <div class="acciones-btns btnssubproducto" id="<?php echo $value->id;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
+                <div class="acciones-btns btnssubproducto" id="<?php echo $value->subproductoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
                     <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
                     <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
                     <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
@@ -68,7 +68,7 @@
 
           <div class="formulario__campo">
               <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida</label>
-              <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="selectStockRapidoUndmedida" name="selectStockRapidoUndmedida" required>
+              <select id="selectStockRapidoUndmedida" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="selectStockRapidoUndmedida" required>
                   <option value="" disabled selected>-Seleccionar-</option>
                     <!-- se inserta por ts en almacen.ts -->
               </select>
@@ -77,7 +77,7 @@
           <div class="formulario__campo">
               <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
               <div class="formulario__dato">
-                  <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" id="cantidadStockRapido" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
+                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
               </div>
           </div>
 

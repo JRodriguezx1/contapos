@@ -93,7 +93,7 @@ class logincontrolador{
         } //cierre de $_SERVER['REQUEST_METHOD'] === 'POST'
 
         $alertas = usuarios::getAlertas();
-        $router->render('auth/login', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+        $router->render('auth/login', ['alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
     }
 
 
@@ -213,13 +213,13 @@ class logincontrolador{
             }
         } //cierre del if $_SERVER[REQUEST_METHOD]
        
-        $router->render('auth/registro', ['usuario'=>$usuario, 'alertas'=>$alertas, 'titulo'=>'crear cuenta', 'negocio'=>negocio::get(1)]);
+        $router->render('auth/registro', ['usuario'=>$usuario, 'alertas'=>$alertas, 'titulo'=>'crear cuenta']);
     } //cierre del metodo
 
 
 
     public static function mensaje(Router $router){
-        $router->render('auth/mensaje', ['titulo'=>'mensaje', 'negocio'=>negocio::get(1)]);
+        $router->render('auth/mensaje', ['titulo'=>'mensaje']);
     } 
 
 
