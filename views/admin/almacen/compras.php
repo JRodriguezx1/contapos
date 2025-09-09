@@ -32,11 +32,34 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-1 md:col-span-2 tlg:col-span-1">
-                        <label for="impuesto" class="block text-2xl font-medium text-gray-600">Impuesto</label>
-                        <div class="mt-2">
-                        <input id="inputimpuesto" name="impuesto" type="text" autocomplete="impuesto ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
-                        </div>
+                    <!-- Porcentaje de impuesto -->
+                    <div class="sm:col-span-3"> 
+                        <label for="porcentaje_impuesto" class="block text-2xl font-medium text-gray-600">
+                            Impuesto
+                        </label>
+                        <!-- <span class="block mb-1 text-sm text-gray-500">
+                            Seleccione el impuesto y tarifa correspondiente al negocio
+                        </span> -->
+                        <select 
+                            id="porcentaje_impuesto_compra" 
+                            name="porcentaje_impuesto_compra"
+                            class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                        >
+                            <span class="text-indigo-600 font-bold">
+                                <optgroup label="IVA">
+                            </span>
+                            <option value="0">Exento – 0%</option>
+                            <option value="5">Bienes / Servicios al 5%</option>
+                            <option value="16">Contratos antes Ley 1819 – 16%</option>
+                            <option value="19">Tarifa general – 19%</option>
+                            <option value="excluido">Excluido</option>
+                            </optgroup>
+                            <span class="text-indigo-600 font-bold">
+                                <optgroup class="text-indigo-60" label="INC">
+                            </span>
+                            <option value="8">Impuesto Nacional al Consumo – 8%</option>
+                            </optgroup>
+                        </select>
                     </div>
 
                     <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
@@ -52,7 +75,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-2 tlg:col-span-1">
+                    <div class="sm:col-span-2 md:col-span-2 tlg:col-span-3">
                         <label for="origenPago" class="block text-2xl font-medium text-gray-600">Origen</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -63,7 +86,7 @@
                         </div>
                     </div>
 
-                    <div id="divCaja" class="sm:col-span-3 md:col-span-4 tlg:col-span-2">
+                    <div id="divCaja" class="sm:col-span-3 md:col-span-4 tlg:col-span-3">
                         <label for="origenCaja" class="block text-2xl font-medium text-gray-600">Caja</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenCaja" name="origencaja" autocomplete="origencaja-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -74,6 +97,27 @@
                             </select>
                         </div>
                     </div>
+            
+                    <div class="sm:col-span-3 md:col-span-4 tlg:col-span-2">
+                        <label for="simbolo_moneda" class="block text-2xl font-medium text-gray-600">
+                            Sede
+                        </label>
+                        <!-- <span class="block mb-1 text-sm text-gray-500">
+                            Seleccione una sede
+                        </span> -->
+                        <select 
+                            id="simbolo_moneda" 
+                            name="simbolo_moneda"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                        >
+                            <option value="$">Sede Norte</option>
+                            <option value="USD">Sede Centro</option>
+                            <option value="€">Sede Sur</option>
+                            <!-- <option value="£">£ – Libra esterlina</option>
+                            <option value="¥">¥ – Yen japonés</option>
+                            <option value="₿">₿ – Bitcoin</option> -->
+                        </select>
+                    </div>  
 
                     <div id="divBanco" class="sm:col-span-3 md:col-span-4 tlg:col-span-2 hidden">
                         <label for="origenBanco" class="block text-2xl font-medium text-gray-600">Banco</label>
@@ -126,7 +170,7 @@
             <div class="mb-4 md:w-1/2">
                 <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
                 <div class="mt-2 grid grid-cols-1">
-                    <select id="articulo" name="articulo" autocomplete="articulo-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-2xl text-gray-500 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" multiple="multiple" required>
+                    <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                         <?php foreach($totalitems as $value): ?>
                             <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                         <?php endforeach; ?>

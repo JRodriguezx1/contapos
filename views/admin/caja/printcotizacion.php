@@ -11,7 +11,7 @@
                         <img class="w-auto h-24" src="/build/img/Logoj2indigo.png" alt="user">
                         <dl class="flex flex-col gap-y-3 text-sm pt-20">
                             <div class="font-medium text-gray-800 text-lg leading-normal">
-                                <span class="block font-semibold uppercase">Facturado a</span>
+                                <span class="block font-semibold uppercase">Cotizado a</span>
                                 <span class="not-italic font-normal text-gray-400">Carlos Antonio</span>
                                 <address class="not-italic font-normal text-gray-400">
                                     <span class="font-semibold">NIT/CC:</span> 1095223618,<br>
@@ -48,7 +48,7 @@
                 <div>
                     <div class="grid space-y-3">
                         <div class="text-lg leading-normal">
-                            <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">FACTURA #:</p>
+                            <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">COTIZACIÓN N°:</p>
                             <span class="text-gray-500">POS-<?php echo $factura->id??'';?></span>
                         </div>
 
@@ -62,12 +62,12 @@
 
                         <div class="flex flex-col gap-x-1 pt-8 text-lg leading-normal">
                             <p class="font-medium min-w-36 max-w-[200px] text-gray-800">
-                                <span class="uppercase"> Fecha y Hora de Factura</span> <br>
+                                <span class="uppercase"> Fecha y Hora de Cotización</span> <br>
                                 <span class=" font-normal text-gray-400"><?php echo $factura->fechapago??'';?></span>
                             </p>
                             <p class="font-medium text-gray-800 mt-5">
-                                <span class="uppercase"> Metodo de Pago</span> <br>
-                                <span class="font-normal text-gray-400">Contado</span>
+                                <!-- <span class="uppercase"> Metodo de Pago</span> <br>
+                                <span class="font-normal text-gray-400">Contado</span> -->
                             </p>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
             <!-- Totales -->
             <div class="mt-8 flex sm:justify-end">
                 <div class="w-full max-w-2xl sm:text-end space-y-2">
-                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2">
+                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2 border border-gray-200 pl-3 pr-4 py-3 rounded-lg space-y-4 dark:border-neutral-700 text-lg leading-normal">
                         <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                             <dt class="col-span-3 text-gray-400">Subotal:</dt>
                             <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->subtotal??'', '0', ',', '.');?></dd>
