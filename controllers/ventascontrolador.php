@@ -17,6 +17,7 @@ use Model\cierrescajas;
 use Model\consecutivos;
 use Model\caja;
 use Model\productos_sub;
+use Model\stockproductossucursal;
 use Model\subproductos;
 //use Model\negocio;
 use MVC\Router;  //namespace\clase
@@ -63,6 +64,7 @@ class ventascontrolador{
     $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
     $factura = new facturas($_POST);
+    $factura->id_sucursal = id_sucursal();
     $venta = new ventas();
     $factmediospago = new factmediospago();
     $alertas = [];
@@ -120,7 +122,7 @@ class ventascontrolador{
         $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
         if($factura->cotizacion == 1 && $factura->cambioaventa == 0){ //validar que la cotizacion aun se encuentre en estado de cotizacion
           if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si se cambio de caja o si cierre caja esta cerrado
-            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
+            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
           if($_POST['estado']=='Paga'){
             $factura->cambioaventa = 1;
@@ -135,11 +137,11 @@ class ventascontrolador{
           return;
         }
       }else{
-        $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]);
+        $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
       }
       
-      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || !isset($ultimocierre)&&empty($_POST['id'])&&$_POST['estado']=='Guardado'){ // si la caja esta cerrada y se hace apertura con la venta
-        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
+      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || !isset($ultimocierre)&&empty($_POST['id'])&&$_POST['estado']=='Guardado'){ // si la caja esta cerrada y se hace apertura con la venta o cotizacion
+        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
         $ruc = $ultimocierre->crear_guardar();
         if(!$ruc[0])$ultimocierre->estado = 1;
         $ultimocierre->id = $ruc[1];
@@ -207,7 +209,7 @@ class ventascontrolador{
               if($ru){
 
                 //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples']))$invPro = productos::updatereduceinv($resultArray['productosSimples'], 'stock');
+                if(!empty($resultArray['productosSimples']))$invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
                 if($invPro && !empty($reduceSub))$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
 

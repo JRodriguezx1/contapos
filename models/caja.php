@@ -4,10 +4,11 @@ namespace Model;
 
 class caja extends ActiveRecord{
     protected static $tabla = 'caja';
-    protected static $columnasDB = ['id', 'idtipoconsecutivo', 'nombre', 'negocio'];
+    protected static $columnasDB = ['id', 'idsucursalid', 'idtipoconsecutivo', 'nombre', 'negocio'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->idsucursalid = $args['idsucursalid']??'';
         $this->idtipoconsecutivo = $args['idtipoconsecutivo']??'';
         $this->nombre = $args['nombre']??'';
         $this->negocio = $args['negocio']??'';

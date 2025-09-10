@@ -13,6 +13,8 @@
         const amountProduccion = document.querySelector('#stockIngresarProduccion') as HTMLInputElement;  //input cantidad cuando se ingresa orden de produccion
         let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement, tablaInventarioSedes:HTMLTableElement;
     
+        const sedes = document.querySelector('#sedes');
+
         interface datosProducto { stock: string, precio_compra: string, precio_venta: string }
 
         type conversionunidadesapi = {
@@ -28,6 +30,7 @@
 
           type productosXsucursal = {
             productoid:string,
+            subproductoid: string,
             nombreproducto:string,
             sucursalid: string,
             sucursal: string,
@@ -75,18 +78,23 @@
         });
 
 
-        (async ()=>{
-            try {
-                const url = "/admin/api/getStockproductosXsucursal"; //llamado a la API REST en el controlador almacencontrolador para treaer todos los productos con su respectiva sucursal y stock
-                const respuesta = await fetch(url); 
-                allproductsXsucursal = await respuesta.json();
-                console.log(allproductsXsucursal);
-                printstockXsucursal();
-            } catch (error) {
-                console.log(error);
+        sedes?.addEventListener('change', (e:Event)=>{
+            if((e.target as HTMLInputElement).checked){
+                (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
+                (async ()=>{
+                    try {
+                        const url = "/admin/api/getStockproductosXsucursal"; //llamado a la API REST en el controlador almacencontrolador para treaer todos los productos con su respectiva sucursal y stock
+                        const respuesta = await fetch(url); 
+                        allproductsXsucursal = await respuesta.json();
+                        console.log(allproductsXsucursal);
+                        printstockXsucursal();
+                        (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+                    } catch (error) {
+                        console.log(error);
+                    }
+                })();
             }
-        })();
-
+        });
 
 
         /////////////////////////////////////  SOTCK RAPIDO ////////////////////////////////////////
@@ -203,10 +211,18 @@
         // 2. Reorganizar por producto
         const productos: Record<string, { nombreproducto: string; stocks: Record<string, string> }> = {};
         allproductsXsucursal.forEach(d => {
-            if (!productos[d.productoid]) { //si el obj no es creado se crea con el nombre del producto pero el stock vacio
-                productos[d.productoid] = { nombreproducto: d.nombreproducto, stocks: {} };
+            if(d.productoid){
+                if (!productos['p'+d.productoid]) { //si el obj no es creado se crea con el nombre del producto pero el stock vacio
+                    productos['p'+d.productoid] = { nombreproducto: d.nombreproducto, stocks: {} };
+                }
+                productos['p'+d.productoid].stocks[d.sucursal] = d.stock; //aqui se llena el stock, que es un obj y sus propiedades son las sedes
             }
-            productos[d.productoid].stocks[d.sucursal] = d.stock; //aqui se llena el stock, que es un obj y sus propiedades son las sedes
+            if(d.subproductoid){
+                if (!productos['s'+d.subproductoid]) { //si el obj no es creado se crea con el nombre del producto pero el stock vacio
+                    productos['s'+d.subproductoid] = { nombreproducto: 'S-'+d.nombreproducto, stocks: {} };
+                }
+                productos['s'+d.subproductoid].stocks[d.sucursal] = d.stock; //aqui se llena el stock, que es un obj y sus propiedades son las sedes
+            }
         });
 
         // 3. Columnas dinámicas

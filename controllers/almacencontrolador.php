@@ -371,6 +371,16 @@ class almacencontrolador{
     $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
+
+  public static function trasladoinventario(Router $router){
+    session_start();
+    isadmin();
+    $alertas = [];
+    
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/trasladoinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
   public static function downexcelproducts(Router $router){
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
       $excelproductos = productos::all();
@@ -402,23 +412,23 @@ class almacencontrolador{
       $excelproductos = subproductos::all();
       if(isset($_POST['downexcel'])){
         //debuguear(isset($_POST['downexcel']));
-                if(!empty($excelproductos)){
-                    $filename = "excelinsumos.xls";
-                    header("Content-Type: application/vnd.ms-excel");
-                    header("Content-Disposition: attachment; filename=".$filename);
+          if(!empty($excelproductos)){
+              $filename = "excelinsumos.xls";
+              header("Content-Type: application/vnd.ms-excel");
+              header("Content-Disposition: attachment; filename=".$filename);
 
-                    $mostrar_columnas = false;
+              $mostrar_columnas = false;
 
-                    foreach($excelproductos as $value){
-                        if(!$mostrar_columnas){
-                            echo implode("\t", array_keys((array)$value)) . "\n";
-                            $mostrar_columnas = true;
-                        }
-                        echo implode("\t", array_values((array)$value)) . "\n";
-                    }
-                }else{ echo 'No hay datos a exportar'; }
-                exit;
-            } 
+              foreach($excelproductos as $value){
+                  if(!$mostrar_columnas){
+                      echo implode("\t", array_keys((array)$value)) . "\n";
+                      $mostrar_columnas = true;
+                  }
+                  echo implode("\t", array_values((array)$value)) . "\n";
+              }
+          }else{ echo 'No hay datos a exportar'; }
+          exit;
+        } 
     }
   }
 
@@ -1125,6 +1135,10 @@ class almacencontrolador{
 
 
   public static function getStockproductosXsucursal(){
-    echo json_encode(stockproductossucursal::getStockproductosXsucursal());
+    $insumos = stockinsumossucursal::getStockinsumosXsucursal();
+    $productos = stockproductossucursal::getStockproductosXsucursal();
+    $newarray = array_merge($insumos, $productos);
+    //debuguear($newarray);
+    echo json_encode($newarray);
   }
 }

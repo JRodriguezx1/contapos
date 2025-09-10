@@ -10,7 +10,7 @@
         <!--<a class="btn-command" href="/admin/almacen/distribucion"><span class="material-symbols-outlined">linked_services</span>Distribucion</a>-->
         <a class="btn-command" href="/admin/almacen/inventariar"><span class="material-symbols-outlined">inventory</span>Inventariar</a>
         <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/unidadesmedida"><span class="material-symbols-outlined">square_foot</span>Unidades de Medida</a>
-        <a class="btn-command text-center" href="/admin/almacen/unidadesmedida"><span class="material-symbols-outlined">location_on</span>Cambiar de Sede</a>
+        <a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>
   </div>
 
   <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
@@ -48,7 +48,8 @@
       </div> <!-- fin tablautilidad-->
 
       <!-- sedes -->
-      <div class="sedes accordion_tab_content">
+      <div class="sedes accordion_tab_content relative h-full">
+        <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
         <?php include __DIR__. "/sedes.php"; ?>
       </div> <!-- fin sedes-->
 
