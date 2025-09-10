@@ -17,6 +17,7 @@ use Model\cierrescajas;
 use Model\consecutivos;
 use Model\caja;
 use Model\productos_sub;
+use Model\stockinsumossucursal;
 use Model\stockproductossucursal;
 use Model\subproductos;
 //use Model\negocio;
@@ -72,7 +73,7 @@ class ventascontrolador{
     $invPro = true;
 
 
-    //////// EXTRATER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
+    //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
     $carritoinsert=[];
     $idsProductsupdate=[];
@@ -121,7 +122,7 @@ class ventascontrolador{
         $factura = facturas::find('id', $_POST['id']);
         $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
         if($factura->cotizacion == 1 && $factura->cambioaventa == 0){ //validar que la cotizacion aun se encuentre en estado de cotizacion
-          if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si se cambio de caja o si cierre caja esta cerrado
+          if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si la cotizacion que se va a pagar, cambio de caja o si su cierre caja esta cerrado
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
           if($_POST['estado']=='Paga'){
@@ -211,8 +212,8 @@ class ventascontrolador{
                 //////// descontar del inventario los productos simples ////////
                 if(!empty($resultArray['productosSimples']))$invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub))$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
-
+                if($invPro && !empty($reduceSub))//$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
+                  $invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
                 if($invPro){
                   if($invSub){
                     $alertas['exito'][] = "Pago procesado con exito";
@@ -341,9 +342,9 @@ class ventascontrolador{
     
     if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja']){ //1 = cerrado, 0 = abierto
       //validar si la caja seleccionada a facturar esta abierta.
-      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
       if(!isset($ultimocierre)){ // si la caja esta cerrada, y se hace apertura con la venta
-        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0]);
+        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
         $r = $ultimocierre->crear_guardar();
         if(!$r[0])$ultimocierre->estado = 1;
         $ultimocierre->id = $r[1];
@@ -437,9 +438,9 @@ class ventascontrolador{
               $ru = $ultimocierre->actualizar();
               if($ru){
                 //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples']))$invPro = productos::updatereduceinv($resultArray['productosSimples'], 'stock');
+                if(!empty($resultArray['productosSimples']))$invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub))$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
+                if($invPro && !empty($reduceSub))$invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
 
                 if($invPro){
                   if($invSub){
@@ -581,9 +582,11 @@ class ventascontrolador{
 
 
                 //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples']))$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
+                if(!empty($resultArray['productosSimples']))//$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
+                  $invPro = stockproductossucursal::addinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub))$invSub = subproductos::addinv($reduceSub, 'stock');
+                if($invPro && !empty($reduceSub))//$invSub = subproductos::addinv($reduceSub, 'stock');
+                  $invSub = stockinsumossucursal::addinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
 
                 if($invPro){
                   if($invSub){
@@ -647,7 +650,7 @@ class ventascontrolador{
       $id = $_GET['id'];
       if(!is_numeric($id))return;
       //obtener datos de la factura guardada o cotizacion
-      $facturacotz = facturas::find('id', $id);
+      $facturacotz = facturas::uniquewhereArray(['id'=>$id, 'id_sucursal'=>id_sucursal()]);
       if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0){
         $productoscotz = ventas::idregistros('idfactura', $id);
         foreach($productoscotz as $value){ //convertir a tipo de dato numero

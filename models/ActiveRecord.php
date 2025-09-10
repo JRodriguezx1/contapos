@@ -15,6 +15,10 @@ class ActiveRecord {
         self::$db = $database; //self hace referencia a atributos y metodos estatic de la clase padre o clase actual, es decir a la propiedad $db de la clase padre activerecord
     }
 
+    public static function getDB(){
+        return self::$db;
+    }
+
     public static function setAlerta($tipo, $mensaje) {
         static::$alertas[$tipo][] = $mensaje;
     }
@@ -554,6 +558,20 @@ class ActiveRecord {
                 $sql.= "'{$value}', ";
             }
         }//SELECT *FROM productos_sub WHERE id_subproducto IN(3, 1);
+        $resultado = [];
+        if(!empty($array))$resultado = self::consultar_sql($sql);
+        return $resultado;  
+    }
+
+    public static function IN_Where($colum, $array = [], $filter=[]){
+        $sql = "SELECT *FROM ".static::$tabla." WHERE $colum IN(";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= "'{$value}') AND $filter[0] = $filter[1];";
+            }else{
+                $sql.= "'{$value}', ";
+            }
+        }//SELECT *FROM productos_sub WHERE id_subproducto IN(3, 1) AND idsucursal = 1;
         $resultado = [];
         if(!empty($array))$resultado = self::consultar_sql($sql);
         return $resultado;  

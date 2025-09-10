@@ -36,14 +36,14 @@ class cajacontrolador{
             
     }
 
-    $ultimoscierres = cierrescajas::whereArray(['estado'=>0]);
+    $ultimoscierres = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0]);
     $datacierrescajas['ingresoventas'][] = 0;
     foreach($ultimoscierres as $value){
       $datacierrescajas['ids'][] = $value->id;
       $datacierrescajas['ingresoventas'][0] += $value->ingresoventas; 
     }
 
-    $facturas = facturas::paginarwhere(' ', ' ', 'idcierrecaja', $datacierrescajas['ids']);
+    $facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
     //debuguear($facturas);
     $bancos = bancos::all();
     foreach($facturas as $value)
@@ -51,7 +51,7 @@ class cajacontrolador{
     
 
     $cajas = caja::all();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

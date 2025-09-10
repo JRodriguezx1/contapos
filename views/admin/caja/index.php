@@ -9,7 +9,7 @@
     <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
   </div>
-  <h5 class="text-gray-600 mb-3">Lista de Facturas</h5>
+  <h5 class="text-gray-600 mb-3">Lista de Facturas - <?php echo $sucursal; ?></h5>
   <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
       <thead>
           <tr>
