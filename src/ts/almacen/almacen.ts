@@ -11,7 +11,7 @@
         const btnsproduccion = document.querySelectorAll<HTMLButtonElement>('.btnproduccion');  //btns ingresar descontar ajustar produccion
         const selectIngresarProduccionUnidadmedida = document.querySelector('#selectIngresarProduccionUnidadmedida') as HTMLSelectElement;
         const amountProduccion = document.querySelector('#stockIngresarProduccion') as HTMLInputElement;  //input cantidad cuando se ingresa orden de produccion
-        let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement;
+        let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement, tablaInventarioSedes:HTMLTableElement;
     
         interface datosProducto { stock: string, precio_compra: string, precio_venta: string }
 
@@ -26,7 +26,15 @@
             factorconversion: string,
           };
 
-        let allConversionUnidades:conversionunidadesapi[] = [];
+          type productosXsucursal = {
+            productoid:string,
+            nombreproducto:string,
+            sucursalid: string,
+            sucursal: string,
+            stock: string,
+          };
+
+        let allproductsXsucursal:productosXsucursal[]=[], allConversionUnidades:conversionunidadesapi[] = [];
         (async ()=>{
             try {
                 const url = "/admin/api/allConversionesUnidades"; //llamado a la API REST en el controlador almacencontrolador para treaer todas las conversiones de unidades
@@ -65,6 +73,20 @@
                 }
             });
         });
+
+
+        (async ()=>{
+            try {
+                const url = "/admin/api/getStockproductosXsucursal"; //llamado a la API REST en el controlador almacencontrolador para treaer todos los productos con su respectiva sucursal y stock
+                const respuesta = await fetch(url); 
+                allproductsXsucursal = await respuesta.json();
+                console.log(allproductsXsucursal);
+                printstockXsucursal();
+            } catch (error) {
+                console.log(error);
+            }
+        })();
+
 
 
         /////////////////////////////////////  SOTCK RAPIDO ////////////////////////////////////////
@@ -174,6 +196,43 @@
         });
 
 
+    //////////////////////////// SOTCK POR SUCURSAL //////////////////////
+    function printstockXsucursal(){
+        const sucursales = [...new Set(allproductsXsucursal.map(d => d.sucursal))]; //lista unica de sucursales
+        
+        // 2. Reorganizar por producto
+        const productos: Record<string, { nombreproducto: string; stocks: Record<string, string> }> = {};
+        allproductsXsucursal.forEach(d => {
+        if (!productos[d.productoid]) { //si el obj no es creado se crea con el nombre del producto pero el stock vacio
+            productos[d.productoid] = { nombreproducto: d.nombreproducto, stocks: {} };
+        }
+        productos[d.productoid].stocks[d.sucursal] = d.stock; //aqui se llena el stock, que es un obj y sus propiedades son las sedes
+        });
+
+        // 3. Columnas dinámicas
+        const columnas = [{ title: "Producto", data: "nombreproducto" }];
+        sucursales.forEach(s => {
+        columnas.push({ title: s, data: s });
+
+        // 4. Dataset
+        const dataset = Object.values(productos).map(prod => {
+            const fila: any = { nombreproducto: prod.nombreproducto };
+            sucursales.forEach(s => {
+                fila[s] = prod.stocks[s] ?? 0; //fila es un obj, se crea la propieadad con el nombre de la sucursal y se iguala al objeto stock copn propiedad sucursal.
+            });
+            return fila;
+        });
+
+        tablaStockRapido = ($('#tablaInventarioSedes') as any).DataTable({
+                data: dataset,
+                columns: columnas,
+                pageLength: 10,
+                destroy: true, // importante si recargas la tabla
+            });
+
+        });
+
+    }
 
 
     ///////////////////////////// INGRESAR ORDEN DE PRODUCCION /////////////////////////////////

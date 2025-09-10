@@ -27,4 +27,14 @@ class stockproductossucursal extends ActiveRecord{
       $array = self::camposJoinObj($query);
       return $array;
     }
+
+    public static function getStockproductosXsucursal():array|NULL{
+      $sql = "SELECT p.id AS productoid, p.nombre AS nombreproducto, s.id AS sucursalid, s.nombre AS sucursal, sps.stock
+              FROM stockproductossucursal sps
+              INNER JOIN productos p ON sps.productoid = p.id
+              INNER JOIN sucursales s ON sps.sucursalid = s.id
+              ORDER BY p.id, s.id;";
+      $array = self::camposJoinObj($sql);
+      return $array;
+    }
 }

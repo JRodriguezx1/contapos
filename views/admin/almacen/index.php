@@ -17,6 +17,7 @@
     <input type="radio" name="radio" id="infoalmacen" checked>
     <input type="radio" name="radio" id="stockproducto">
     <input type="radio" name="radio" id="utilidadproducto">
+    <input type="radio" name="radio" id="sedes">
     <input type="radio" name="radio" id="ordenproduccion">
 
     <div class="text-center border border-gray-300 p-3 tlg:w-40 btn_inv_info_rapido">
@@ -45,6 +46,11 @@
       <div class="tablautilidad accordion_tab_content">
         <?php include __DIR__. "/utilidadproducto.php"; ?>
       </div> <!-- fin tablautilidad-->
+
+      <!-- sedes -->
+      <div class="sedes accordion_tab_content">
+        <?php include __DIR__. "/sedes.php"; ?>
+      </div> <!-- fin sedes-->
 
       <div class="ordenproduccion accordion_tab_content pt-12 bg-gray-50 dark:bg-gray-900 sm:pt-20 pb-12 sm:pb-16">
         <?php include __DIR__. "/ordenproduccion.php"; ?>

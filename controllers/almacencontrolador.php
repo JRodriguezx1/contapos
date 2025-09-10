@@ -32,6 +32,7 @@ class almacencontrolador{
     //$subproductosqw = subproductos::all();
     //$productos = productos::indicadoresAllProducts();
     //$subproductos = subproductos::indicadoresAllSubProducts();
+
     $cantidadCategorias = categorias::numreg_where('visible', 1);
     $productos = stockproductossucursal::indicadoresAllProductsXSucursal(id_sucursal());
     $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
@@ -1123,4 +1124,7 @@ class almacencontrolador{
   }
 
 
+  public static function getStockproductosXsucursal(){
+    echo json_encode(stockproductossucursal::getStockproductosXsucursal());
+  }
 }

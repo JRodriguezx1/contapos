@@ -4,57 +4,59 @@
     <button id="reinciarinv" class="text-2xl text-gray-600">Reiniciar Inventario</button>
 </div>
 <div class="overflow-x-auto">
-<table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%">
-    <thead>
-        <tr>
-            <th>Nº</th>
-            <th>Producto</th>
-            <th>Categoria</th>
-            <th>Stock</th>
-            <th>Unidad</th>
-            <th>Agregado</th>
-            <th class="accionesth">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($productos as $index => $value): ?>
-            <?php if($value->tipoproducto == '0'): ?>  <!-- productos simple -->
-            <tr class="fila producto" data-idproducto="<?php echo $value->productoid;?>"> 
-                <td class=""><?php echo $index+1;?></td>
-                <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
-                <td class="" ><?php echo $value->categoria;?></td>
-                <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
-                <td class=""><?php echo $value->unidadmedida;?></td>
-                <td class=""><?php echo $value->fecha_ingreso;?></td>
-                <td class="accionestd">
-                <div class="acciones-btns btnsproducto" id="<?php echo $value->productoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
-                    <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
-                    <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
-                    <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
-                </div></td>
+    <table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%">
+        <thead>
+            <tr>
+                <th>Nº</th>
+                <th>Producto</th>
+                <th>Categoria</th>
+                <th>Stock</th>
+                <th>Unidad</th>
+                <th>Agregado</th>
+                <th class="accionesth">Acciones</th>
             </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
+        </thead>
+        <tbody>
+            <?php foreach($productos as $index => $value): ?>
+                <?php if($value->tipoproducto == '0'): ?>  <!-- productos simple -->
+                <tr class="fila producto" data-idproducto="<?php echo $value->productoid;?>"> 
+                    <td class=""><?php echo $index+1;?></td>
+                    <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
+                    <td class="" ><?php echo $value->categoria;?></td>
+                    <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
+                    <td class=""><?php echo $value->unidadmedida;?></td>
+                    <td class=""><?php echo $value->fecha_ingreso;?></td>
+                    <td class="accionestd">
+                        <div class="acciones-btns btnsproducto" id="<?php echo $value->productoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
+                            <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
+                            <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
 
-        <!-- subproductos -->
-        <?php foreach($subproductos as $index => $value): ?>  
-            <tr class="fila subproducto" data-idsubproducto="<?php echo $value->subproductoid;?>"> 
-                <td class=""><?php echo $index+1;?></td>
-                <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
-                <td class="" ><?php echo $value->categoria??'';?></td> 
-                <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
-                <td class=""><?php echo $value->unidadmedida;?></td>
-                <td class=""><?php echo $value->fecha_ingreso;?></td>
-                <td class="accionestd">
-                <div class="acciones-btns btnssubproducto" id="<?php echo $value->subproductoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
-                    <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
-                    <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
-                    <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
-                </div></td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+            <!-- subproductos -->
+            <?php foreach($subproductos as $index => $value): ?>  
+                <tr class="fila subproducto" data-idsubproducto="<?php echo $value->subproductoid;?>"> 
+                    <td class=""><?php echo $index+1;?></td>
+                    <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
+                    <td class="" ><?php echo $value->categoria??'';?></td> 
+                    <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
+                    <td class=""><?php echo $value->unidadmedida;?></td>
+                    <td class=""><?php echo $value->fecha_ingreso;?></td>
+                    <td class="accionestd">
+                        <div class="acciones-btns btnssubproducto" id="<?php echo $value->subproductoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
+                            <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
+                            <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 
 <!-- MODAL PARA AJUSTAR SUMAR, PRODUCIR O DESCONTAR UNUDADES-->
