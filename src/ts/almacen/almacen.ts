@@ -203,16 +203,17 @@
         // 2. Reorganizar por producto
         const productos: Record<string, { nombreproducto: string; stocks: Record<string, string> }> = {};
         allproductsXsucursal.forEach(d => {
-        if (!productos[d.productoid]) { //si el obj no es creado se crea con el nombre del producto pero el stock vacio
-            productos[d.productoid] = { nombreproducto: d.nombreproducto, stocks: {} };
-        }
-        productos[d.productoid].stocks[d.sucursal] = d.stock; //aqui se llena el stock, que es un obj y sus propiedades son las sedes
+            if (!productos[d.productoid]) { //si el obj no es creado se crea con el nombre del producto pero el stock vacio
+                productos[d.productoid] = { nombreproducto: d.nombreproducto, stocks: {} };
+            }
+            productos[d.productoid].stocks[d.sucursal] = d.stock; //aqui se llena el stock, que es un obj y sus propiedades son las sedes
         });
 
         // 3. Columnas dinámicas
         const columnas = [{ title: "Producto", data: "nombreproducto" }];
         sucursales.forEach(s => {
-        columnas.push({ title: s, data: s });
+            columnas.push({ title: s, data: s });
+        });
 
         // 4. Dataset
         const dataset = Object.values(productos).map(prod => {
@@ -223,13 +224,11 @@
             return fila;
         });
 
-        tablaStockRapido = ($('#tablaInventarioSedes') as any).DataTable({
-                data: dataset,
-                columns: columnas,
-                pageLength: 10,
-                destroy: true, // importante si recargas la tabla
-            });
-
+        tablaInventarioSedes = ($('#tablaInventarioSedes') as any).DataTable({
+            data: dataset,
+            columns: columnas,
+            pageLength: 10,
+            destroy: true, // importante si recargas la tabla
         });
 
     }
