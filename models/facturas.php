@@ -3,7 +3,7 @@ namespace Model;
 
 class facturas extends ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'referencia', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'num_orden', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'referencia', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -17,6 +17,7 @@ class facturas extends ActiveRecord {
         $this->iddireccion = $args['iddireccion'] ?? 1;
         $this->idtarifazona = $args['idtarifazona'] ?? 1;
         $this->idcierrecaja = $args['idtarifazona'] ?? '';
+        $this->num_orden = $args['num_orden'] ?? '';
         $this->cliente = $args['cliente'] ?? '';  //nombre del cliente
         $this->vendedor = $args['vendedor'] ?? '';  //nombre del vendedor
         $this->caja = $args['caja'] ?? '';   //nombre de la caja

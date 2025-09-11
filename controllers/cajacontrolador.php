@@ -43,7 +43,8 @@ class cajacontrolador{
       $datacierrescajas['ingresoventas'][0] += $value->ingresoventas; 
     }
 
-    $facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    $facturas = [];
+    if(!empty($ultimoscierres))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
     //debuguear($facturas);
     $bancos = bancos::all();
     foreach($facturas as $value)
@@ -59,42 +60,45 @@ class cajacontrolador{
     session_start();
     isadmin();
     $alertas = [];
-
+    $idsucursal = id_sucursal();
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){  ///if se puede eliminar
             
     }
   
-    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1]); //ultimo cierre por caja
-    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-    $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
-    $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
-    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
-    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    $sobrantefaltante = $declaracion;
-    foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
-      $aux = 0;
-      foreach($declaracion as $j => $dec){
-        if($dis['idmediopago'] == $dec->id_mediopago){
-          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
-          $aux = 1;
-          break;
+    $facturas = []; $discriminarmediospagos=[]; $ventasxusuarios=[]; $sobrantefaltante=[];
+    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1, 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
+    if(isset($ultimocierre)){
+      $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+      $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
+      $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
+      $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
+      //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+      $sobrantefaltante = $declaracion;
+      foreach($discriminarmediospagos as $i => $dis){
+        if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+        $aux = 0;
+        foreach($declaracion as $j => $dec){
+          if($dis['idmediopago'] == $dec->id_mediopago){
+            $sobrantefaltante[$j]->valorsistema = $dis['valor'];
+            $aux = 1;
+            break;
+          }
+        }
+        if($aux == 0){
+          $newobj = new stdClass();
+          $newobj->id_mediopago = $dis['idmediopago'];
+          $newobj->idcierrecajaid = $ultimocierre->id;
+          $newobj->nombremediopago = $dis['mediopago'];
+          $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
+          $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
+          $sobrantefaltante[] = $newobj;
         }
       }
-      if($aux == 0){
-        $newobj = new stdClass();
-        $newobj->id_mediopago = $dis['idmediopago'];
-        $newobj->idcierrecajaid = $ultimocierre->id;
-        $newobj->nombremediopago = $dis['mediopago'];
-        $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
-        $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
-        $sobrantefaltante[] = $newobj;
-      }
+      foreach($facturas as $value)
+        $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
     }
-    foreach($facturas as $value)
-      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
-    $cajas = caja::all();
+    $cajas = caja::idregistros('idsucursalid', $idsucursal);
     $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'cajas'=>$cajas, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 

@@ -60,7 +60,7 @@
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Cotizaciones:</p>
           </div>
           <div>
-          <p id="idCierrecaja" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->id;?></p>
+          <p id="idCierrecaja" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->id??'id';?></p>
             <p id="basecajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></p>
             <p id="gastoscajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></p>
             <p id="domiciliosResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></p>
@@ -107,7 +107,7 @@
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Dinero en caja</td> 
-                                    <td id="dineroCaja" class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
+                                    <td id="dineroCaja" class="text-blue-400 font-medium">= $<?php echo number_format(($ultimocierre->basecaja??0)+($ultimocierre->ventasenefectivo??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Domicilios</td> 
@@ -115,7 +115,7 @@
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Real en caja</td> 
-                                    <td id="realCaja" class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="realCaja" class="text-blue-600 font-medium">= $<?php echo number_format(($ultimocierre->basecaja??0)+($ultimocierre->ventasenefectivo??0)-($ultimocierre->gastoscaja??0)-($ultimocierre->domicilios??0), "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -158,11 +158,11 @@
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Real de ventas</td> 
-                                    <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                                    <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)-($ultimocierre->totaldescuentos??0), "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Real de ventas sin domicilio</td> 
-                                    <td id="realVentasSinDomicilios" class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td id="realVentasSinDomicilios" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0), "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Impuesto Total</td> 

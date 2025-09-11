@@ -4,10 +4,11 @@ namespace Model;
 
 class compras extends ActiveRecord{
     protected static $tabla = 'compras';
-    protected static $columnasDB = ['id', 'idusuario', 'idproveedor', 'idformapago', 'idorigencaja', 'idorigenbanco', 'nombreorigencaja', 'nombreorigenbanco', 'nombreusuario', 'nombreproveedor', 'formapago', 'nfactura', 'impuesto', 'origenpago', 'nombreorigenpago', 'cantidaditems', 'observacion', 'subtotal', 'valortotal', 'estado', 'fechacompra'];
+    protected static $columnasDB = ['id', 'id_sucursal_id', 'idusuario', 'idproveedor', 'idformapago', 'idorigencaja', 'idorigenbanco', 'nombreorigencaja', 'nombreorigenbanco', 'nombreusuario', 'nombreproveedor', 'formapago', 'nfactura', 'impuesto', 'origenpago', 'nombreorigenpago', 'cantidaditems', 'observacion', 'subtotal', 'valortotal', 'estado', 'fechacompra'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->id_sucursal_id = $args['id_sucursal_id']??'';
         $this->idusuario = $args['idusuario']??'';
         $this->idproveedor = $args['idproveedor']??1;
         $this->idformapago = $args['idformapago']??1;

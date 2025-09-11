@@ -4,11 +4,12 @@ namespace Model;
 
 class gastos extends ActiveRecord {
     protected static $tabla = 'gastos';
-    protected static $columnasDB = ['id', 'idg_usuario', 'id_compra', 'id_banco', 'idg_caja', 'idg_cierrecaja', 'idcategoriagastos', 'tipo_origen', 'operacion', 'valor', 'descripcion', 'fecha'];
+    protected static $columnasDB = ['id', 'id_sucursalfk', 'idg_usuario', 'id_compra', 'id_banco', 'idg_caja', 'idg_cierrecaja', 'idcategoriagastos', 'tipo_origen', 'operacion', 'valor', 'descripcion', 'fecha'];
     
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
+        $this->id_sucursalfk = $args['id_sucursalfk'] ?? '';
         $this->idg_usuario = $args['idg_usuario'] ?? 1;
         $this->id_compra = $args['id_compra']??NULL;
         $this->id_banco = $args['id_banco'] ??'';

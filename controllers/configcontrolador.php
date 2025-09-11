@@ -21,14 +21,15 @@ class configcontrolador{
     session_start();
     isadmin();
     $alertas = [];
+    $idsucursal = id_sucursal();
     $negocio = negocio::find('id', 1);
     $negocios[] = $negocio;
     $empleados = usuarios::all();
     //$servicios = servicios::all();
     //$empleados = empleados::all();
     $mediospago = mediospago::all();
-    $cajas = caja::all();
-    $consecutivos = consecutivos::all();
+    $cajas = caja::idregistros('idsucursalid', $idsucursal);
+    $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
     $compañias = [];
@@ -49,6 +50,7 @@ class configcontrolador{
   public static function editarnegocio(Router $router){ //metodo para el llenado y actualizacion de los datos del negocio
         session_start();
         $alertas = [];
+        $idsucursal = id_sucursal();
         $negocio = negocio::find('id', 1);
 
         if($negocio){ //actualizar
@@ -96,8 +98,8 @@ class configcontrolador{
         }
         $mediospago = mediospago::all();
         $empleados = usuarios::all();
-        $cajas = caja::all();
-        $consecutivos = consecutivos::all();
+        $cajas = caja::idregistros('idsucursalid', $idsucursal);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
         $compañias = [];
@@ -109,6 +111,7 @@ class configcontrolador{
   
   ///////////// procesando la gestion de la caja ////////////////
     public static function allcajas(){  //api llamado desde citas.js
+      session_start();
       $cajas = caja::all();
       foreach($cajas as $caja)$caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
       echo json_encode($cajas);
@@ -189,6 +192,7 @@ class configcontrolador{
     
     ///////////////////procesando la gestion de los facturadores //////////////////////
     public static function allfacturadores(){  //api llamado desde citas.js
+      session_start();
       $consecutivos = consecutivos::all();
       foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
       echo json_encode($consecutivos);
