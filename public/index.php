@@ -121,6 +121,7 @@ $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear
 ///// area de configuracion /////
 $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
 $router->post('/admin/configuracion/editarnegocio', [configcontrolador::class, 'editarnegocio']);
+$router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 'crear_empleado']);
 
 
 
@@ -181,7 +182,8 @@ $router->get('/admin/api/allbancos', [configcontrolador::class, 'allbancos']); /
 $router->post('/admin/api/crearBanco', [configcontrolador::class, 'crearBanco']); //api llamada desde gestionbancos.js para crear bancos
 $router->post('/admin/api/actualizarBanco', [configcontrolador::class, 'actualizarBanco']); //api llamada desde gestionbancos.js para actualizar bancos
 $router->post('/admin/api/eliminarBanco', [configcontrolador::class, 'eliminarBanco']); //api llamada desde gestionbancos.js para eliminar bancos
-
+$router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.js
+$router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
 
 
 //////***************************/***NO**************************//////
@@ -195,8 +197,8 @@ $router->get('/admin/api/getservices', [servicioscontrolador::class, 'getservice
 
 
 ////// api de configuracion //////
-$router->get('/admin/api/getAllemployee', [adminconfigcontrolador::class, 'getAllemployee']); //fetch en empleados.js
-$router->post('/admin/api/actualizarEmpleado', [adminconfigcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
+//$router->get('/admin/api/getAllemployee', [adminconfigcontrolador::class, 'getAllemployee']); //fetch en empleados.js
+//$router->post('/admin/api/actualizarEmpleado', [adminconfigcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
 $router->post('/admin/api/actualizarSkillsEmpleado', [adminconfigcontrolador::class, 'actualizarSkillsEmpleado']); //fetch llamado en empleados.js
 $router->post('/admin/api/eliminarEmpleado', [adminconfigcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
 $router->get('/admin/api/getmalla', [adminconfigcontrolador::class, 'getmalla']); //fetch en malla.js y en

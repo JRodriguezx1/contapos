@@ -1,27 +1,32 @@
 (function(){
   if(document.querySelector('.empleados')){
-    console.log(123);
     const crearempleado = document.querySelector('#crearempleado') as HTMLElement;
-    const dialogo:any = document.getElementById("miDialogoEmpleado");
+    const dialogoEmpleado:any = document.getElementById("miDialogoEmpleado");
     const dialogoContraseña = document.getElementById("miDialogoContraseña");
     const btnupImage = document.querySelector('#upImage') as HTMLInputElement;
     const btncustomUpImage = document.querySelector('#customUpImage') as HTMLButtonElement;
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
 
-    const inputNombre = document.querySelector('#nombre') as HTMLInputElement;
-    const inputApellido = document.querySelector('#apellido') as HTMLInputElement;
-    const inputMovil = document.querySelector('#movil ') as HTMLInputElement;
-    const inputEmail = document.querySelector('#email') as HTMLInputElement;
-    const inputDepartamento = document.querySelector('#departamento') as HTMLInputElement;
-    const inputCiudad = document.querySelector('#ciudad') as HTMLInputElement;
-    const inputDireccion = document.querySelector('#direccion') as HTMLInputElement;
-    const inputPerfil = document.querySelector('#perfil') as HTMLInputElement;
+    const inputNombre = document.querySelector('#nombreempleado') as HTMLInputElement;
+    const inputApellido = document.querySelector('#apellidoempleado') as HTMLInputElement;
+    const inputnickname = document.querySelector('#nicknameempleado') as HTMLInputElement;
+    const inputcedula = document.querySelector('#cedulaempleado') as HTMLInputElement;
+    const inputpassword = document.querySelector('#passwordempleado') as HTMLInputElement;
+    const inputpassword2 = document.querySelector('#passwordempleado2 ') as HTMLInputElement;
+    const inputMovil = document.querySelector('#movilempleado ') as HTMLInputElement;
+    const inputEmail = document.querySelector('#emailempleado') as HTMLInputElement;
+    const inputDepartamento = document.querySelector('#departamentoempleado') as HTMLInputElement;
+    const inputCiudad = document.querySelector('#ciudadempleado') as HTMLInputElement;
+    const inputDireccion = document.querySelector('#direccionempleado') as HTMLInputElement;
+    const inputPerfil = document.querySelector('#perfilempleado') as HTMLInputElement;
 
     let indiceFila=0, control=0, tablaempleados:HTMLElement;
     let empleadosapi: {
       id:string, 
       nombre: string,
       apellido: string,
+      nickname: string,
+      cedula: string,
       movil: string,
       email: string,
       departamento: string,
@@ -29,13 +34,16 @@
       direccion: string,
       perfil: string,
       img:string,
-      idservicios:{idempleado:string, idservicio:string}[]
+      idusuariospermisos:{id:string, usuarioid:string, permisoid:string}[]
+      permisos:{id:string, nombre:string}[]
     }[] =[];
       
     let unempleado:{
       id:string,
       nombre: string,
       apellido: string,
+      nickname: string,
+      cedula: string,
       movil: string,
       email: string,
       departamento: string,
@@ -43,20 +51,20 @@
       direccion: string,
       perfil: string, 
       img:string,
-      idservicios:{idempleado:string, idservicio:string}[]
+      idusuariospermisos:{id:string, usuarioid:string, permisoid:string}[]
+      permisos:{id:string, nombre:string}[]
     }|undefined;
 
     /////////////////  traer todos los empleados con sus skills  ///////////////////
-    /*(async ()=>{
+    (async ()=>{
       try {
           const url = "/admin/api/getAllemployee"; //llamado a la API REST
           const respuesta = await fetch(url); 
           empleadosapi = await respuesta.json(); 
-          console.log(empleadosapi);
       } catch (error) {
           console.log(error);
       }
-    })();*/
+    })();
 
     //////////////////  TABLA //////////////////////
     tablaempleados = ($('#tablaempleados') as any).DataTable(configdatatables);
@@ -67,7 +75,7 @@
       limpiarformdialog();
       document.querySelector('#modalEmpleado')!.textContent = "Crear empleado";
       (document.querySelector('#btnEditarCrearEmpleado') as HTMLInputElement).value = "Crear";
-      dialogo.showModal();
+      dialogoEmpleado.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
@@ -104,15 +112,26 @@
       imginputfile.src = "/build/img/"+unempleado?.img;
       inputNombre.value = unempleado?.nombre??'';
       inputApellido.value = unempleado?.apellido??'';
+      inputnickname.value = unempleado?.nickname??'';
+      inputcedula.value = unempleado?.cedula??'';
       inputMovil.value = unempleado?.movil??'';
       inputEmail.value = unempleado?.email??'';
       inputDepartamento.value = unempleado?.departamento??'';
       inputCiudad.value = unempleado?.ciudad??'';
       inputDireccion.value = unempleado?.direccion??'';
-      $('#perfil').val(unempleado?.perfil??'');
+      $('#perfilempleado').val(unempleado?.perfil??'');
+      printpermisos(unempleado?.permisos??[]);
       indiceFila = (tablaempleados as any).row((e.target as HTMLElement).closest('tr')).index();
-      dialogo.showModal();
+      dialogoEmpleado.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
+    }
+
+    function printpermisos(leave:{id:string, nombre:string}[]){
+      document.querySelectorAll<HTMLInputElement>('#contentpermisos input[type="checkbox"]').forEach(checkbox=>{checkbox.checked=false}); //limpia los checkbox
+      leave.forEach(s =>{
+        const inputpermiso = document.querySelector(`input[value="${s.id}"]`) as HTMLInputElement;
+        inputpermiso.checked = true;
+      });
     }
 
     ////////////////////  Actualizar/Editar empleado  //////////////////////
@@ -134,41 +153,50 @@
             }
           }
         }
+
+        var arraypermisos:{id:string, nombre:string}[] = [];
+        document.querySelectorAll<HTMLInputElement>('#contentpermisos input[type="checkbox"]').forEach(x=>{
+          if(x.checked)arraypermisos = [...arraypermisos, {id:x.value, nombre: x.nextElementSibling?.textContent??'permiso'}];
+        });
         
         (async ()=>{ 
           const datos = new FormData();
-          datos.append('idempleado', unempleado!.id);
+          datos.append('id', unempleado!.id);
           datos.append('img', imgFile); //en el backend no se lee con $_POST, se lee con $_FILES
           datos.append('nombre', inputNombre.value);
           datos.append('apellido', inputApellido.value);
+          datos.append('nickname', inputnickname.value);
+          datos.append('cedula', inputcedula.value);
+          datos.append('password', inputpassword.value);
+          datos.append('password2', inputpassword2.value);
           datos.append('movil', inputMovil.value);
           datos.append('email', inputEmail.value);
           datos.append('departamento', inputDepartamento.value);
           datos.append('ciudad', inputCiudad.value);
           datos.append('direccion', inputDireccion.value);
           datos.append('perfil', inputPerfil.value);
+          datos.append('idpermisos', JSON.stringify(arraypermisos.map(v=>v.id)));
           try {
               const url = "/admin/api/actualizarEmpleado";
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();  
               if(resultado.exito !== undefined){
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                /// actualizar el arregle del empleado ///
-                //
                 ///////// cambiar la fila completa, su contenido //////////
                 const datosActuales = (tablaempleados as any).row(indiceFila+=info.start).data();
                 /*NOMBRE*/datosActuales[1] = inputNombre.value +' '+inputApellido.value;
                 /*img*/datosActuales[2] = `<div class="text-center"><img style="width: 40px;" src="/build/img/${resultado.rutaimg[0]}" alt=""></div>`;
-                /*MOVIL*/datosActuales[3] = inputMovil.value;
-                /*EMAIL*/datosActuales[4] = inputEmail.value;
-                /*CEDULA*/datosActuales[5] = ' ';
+                /*USER*/datosActuales[3] = inputnickname.value;
                 /*PERFIL*/datosActuales[6] = inputPerfil.value==='1'?'Empleado':inputPerfil.value=='2'?'Admin':'Propietario';
-                
+                //actualizar arreglo de permisos
+                empleadosapi.forEach(a=>{if(a.id == unempleado?.id)a.permisos = arraypermisos;});
                 (tablaempleados as any).row(indiceFila).data(datosActuales).draw();
                 (tablaempleados as any).page(info.page).draw('page'); //me mantiene la pagina actual
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
+              dialogoEmpleado.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
           } catch (error) {
               console.log(error);
           }
@@ -193,7 +221,7 @@
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
-    document.querySelector('#formContraseña')?.addEventListener('submit', e=>{
+    /*document.querySelector('#formContraseña')?.addEventListener('submit', e=>{
       e.preventDefault();
       var arrayservicios:string[]=[];
       document.querySelectorAll<HTMLInputElement>('.inputskills input[type="checkbox"]').forEach(x=>{if(x.checked)arrayservicios = [...arrayservicios, x.value];});
@@ -221,7 +249,7 @@
             console.log(error);
         }
       })();
-    });
+    });*/
 
 
     ////////////////////  Eliminar el empleado  //////////////////////
@@ -263,9 +291,9 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === dialogo || event.target === dialogoContraseña || (event.target as HTMLInputElement).value === 'cancelar' || (event.target as HTMLInputElement).value === 'Actualizar') {
-          dialogo.close();
-          (dialogoContraseña as any)?.close();
+      if (event.target === dialogoEmpleado || event.target === dialogoContraseña || (event.target as HTMLInputElement).value === 'cancelar') {
+          dialogoEmpleado.close();
+          //(dialogoContraseña as any)?.close();
           document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

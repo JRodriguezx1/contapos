@@ -10,9 +10,10 @@ use Model\negocio;
 use Model\mediospago;
 use Model\ActiveRecord;
 use Model\bancos;
-use Model\empleados;
 use Model\cierrescajas;
+use Model\permisos;
 use Model\tipofacturador;
+use Model\usuarios_permisos;
 use MVC\Router;  //namespace\clase
  
 class configcontrolador{
@@ -24,9 +25,7 @@ class configcontrolador{
     $idsucursal = id_sucursal();
     $negocio = negocio::find('id', 1);
     $negocios[] = $negocio;
-    $empleados = usuarios::all();
-    //$servicios = servicios::all();
-    //$empleados = empleados::all();
+    $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
     $mediospago = mediospago::all();
     $cajas = caja::idregistros('idsucursalid', $idsucursal);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
@@ -97,7 +96,7 @@ class configcontrolador{
             }
         }
         $mediospago = mediospago::all();
-        $empleados = usuarios::all();
+        $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
         $cajas = caja::idregistros('idsucursalid', $idsucursal);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $tipofacturadores = tipofacturador::all();
@@ -107,7 +106,124 @@ class configcontrolador{
         $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
 
+
+    public static function crear_empleado(Router $router){ //metodo para crear empleado
+        session_start();
+        $alertas = [];
+        $usuarios_permisos = new usuarios_permisos;
+        $idsucursal = id_sucursal();
+        $negocio = negocio::find('id', 1);
+        $permisos = $_POST['permisos'];
+        //debuguear($permisos);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $empleado = new usuarios($_POST);
+            $alertas = $empleado->validarimgempleado($_FILES);
+            $alertas = $empleado->validarempleado();
+        
+            if(empty($alertas)){
+                if($_FILES['img']['name']){
+                    $empleado->img = 'cliente1/avatar/'.uniqid().$_FILES['img']['name'];
+                    $url_temp = $_FILES["img"]["tmp_name"];
+                    move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                }
+                $empleado->hashPassword();
+                $empleado->confirmado = 1;
+                $r = $empleado->crear_guardar();
+                if($r[0]){
+                    foreach($permisos as $index => $value)$crearpermisos[$index] = ['usuarioid' => $r[1], 'permisoid'=>$value];
+                    $r2 = $usuarios_permisos->crear_varios_reg($crearpermisos);
+                    if($r2)$alertas['exito'][] = "Usuario creado correctamente";
+                }
+                //unset($empleado);
+                $empleado = new \stdClass();
+                $empleado->perfil = '';
+            }
+        }
+        $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
+        $cajas = caja::idregistros('idsucursalid', $idsucursal);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+        $tipofacturadores = tipofacturador::all();
+        $bancos = bancos::all();
+        $compañias = [];
+        $mediospago = mediospago::all();
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    }
+
   ///////////////////////////////////  Apis ////////////////////////////////////
+    public static function getAllemployee(){ //api llamada desde empleados.ts entrega todos los empleados con sus permisos
+        session_start();
+        $empleados = usuarios::whereArray(['idsucursal'=>id_sucursal(), 'confirmado'=>1]);
+        foreach($empleados as $empleado){
+            $empleado->idusuariospermisos = usuarios_permisos::idregistros('usuarioid', $empleado->id);
+            foreach($empleado->idusuariospermisos as $value)$empleado->permisos[] = permisos::find('id', $value->permisoid);
+        }
+        echo json_encode($empleados);
+    }
+
+    public static function actualizarEmpleado(){ //actualizar editar empleado
+        session_start();
+        $alertas = []; 
+        $empleado = usuarios::find('id', $_POST['id']);
+       
+        $permisosactualesDB = usuarios_permisos::idregistros('usuarioid', $_POST['id']);  //permisos actuales en DB
+        $idpermisosFront = json_decode($_POST['idpermisos']);  //permisos que viene del front
+        
+        /////// valiadar que es una nueva imagen o distinta
+        if($empleado->img && isset($_FILES['img']['name'])) { //remplazar imagen existente
+            //obtener nombre de la imagen
+            $x = explode('avatar/', $empleado->img);     //cliente1/avatar/nombreimagen.png
+                                                         //avatar/avatar2.png
+            if($x[0]){ //si img es diferente a avatar
+                $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+            }
+        }
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $usuarios_permisos = new usuarios_permisos;
+            $empleado->compara_objetobd_post($_POST);
+            if(isset($_FILES['img']['name']))$alertas = $empleado->validarimgempleado($_FILES);
+            $alertas = $empleado->validarempleado();
+            if(empty($alertas)){
+                if(isset($_FILES['img']['name'])){
+                    $empleado->img = 'cliente1/avatar/'.uniqid().$_FILES['img']['name'];
+                    $url_temp = $_FILES["img"]["tmp_name"];
+                    move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                }
+                $r = $empleado->actualizar();
+                if($r){
+                    $arrayIdeliminar = []; $arrayIdnew = []; $r1=true; $r2[0]=true;
+                    
+                    foreach($permisosactualesDB as $key => $value) //calculo de los id de los permisos a eliminar
+                        if(!in_array($value->permisoid, $idpermisosFront))$arrayIdeliminar[] = $value->id;
+
+                    /////traerme los nuevos id de los permisos para agregarlo como nuevo////
+                    foreach($idpermisosFront as $index => $front){
+                        $x = true;
+                        foreach($permisosactualesDB as $key => $value)
+                            if($value->permisoid == $front){
+                                $x = false;
+                                break;
+                            }
+                        if($x)$arrayIdnew[$index] = ['usuarioid' => $_POST['id'], 'permisoid' => $front];
+                    }
+                    
+                    if($arrayIdeliminar)$r1 = usuarios_permisos::eliminar_idregistros('id', $arrayIdeliminar);
+                    if($arrayIdnew)$r2 = $usuarios_permisos->crear_varios_reg($arrayIdnew); 
+                    if($r1==false || $r2[0]==false || $r1==true&&$r2[0]==false || $r1==false&&$r2[0]==true){
+                        $alertas['error'][] = "Error en el proceso, intentalo nuevamente...";
+                    }else{
+                        $alertas['exito'][] = "permisos del empleado actualizadas";
+                    }
+                }else{
+                    $alertas['error'][] = "Error en el proceso, intentalo nuevamente...";
+                }
+            }
+        } //fin if(SERVER['REQUEST_METHOD])  
+        $alertas['rutaimg'][] = $empleado->img;
+        echo json_encode($alertas);  
+    }  //fin funcion public
+
   
   ///////////// procesando la gestion de la caja ////////////////
     public static function allcajas(){  //api llamado desde citas.js

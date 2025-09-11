@@ -9,7 +9,7 @@ class usuarios extends ActiveRecord {
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
-        $this->idsucursal = $args['idsucursal'] ?? 1;
+        $this->idsucursal = id_sucursal();
         $this->nombre = $args['nombre'] ?? '';
         $this->apellido = $args['apellido'] ?? '';
         $this->cedula = $args['cedula'] ?? '';
@@ -151,12 +151,33 @@ class usuarios extends ActiveRecord {
     }
 
 
+
+    ///////////////// metodos de validacion para usuarios empleados  //////////////////
     public function validarimgempleado($FILE) {
         if($FILE['img']['name'] && $FILE['img']['size']>550000) {
             self::$alertas['error'][] = 'La foto no puede pasar los 500KB';
         }
         if($FILE['img']['name'] && $FILE['img']['type']!="image/jpeg" && $FILE['img']['type']!="image/png") {
             self::$alertas['error'][] = 'Seleccione una imagen en formato jpeg o png';
+        }
+        return self::$alertas;
+    }
+
+    public function validarempleado() {
+        if(!$this->nombre || strlen($this->nombre)<3) {
+            self::$alertas['error'][] = 'Nombre no valido'; 
+        }  //como el arreglo alertas es heredada de la clase padre activerecord self hace referencia a este arreglo de la clase padre
+        if(!$this->nickname || strlen($this->nickname)<3) {
+            self::$alertas['error'][] = 'usuario no valido';  
+        }
+        if(!$this->password) {
+            self::$alertas['error'][] = 'El Password no puede ir vacio';
+        }
+        if(strlen($this->password) < 3) {
+            self::$alertas['error'][] = 'El password es muy corto';
+        }
+        if($this->password !== $this->password2) {
+            self::$alertas['error'][] = 'Los password son diferentes';
         }
         return self::$alertas;
     }
