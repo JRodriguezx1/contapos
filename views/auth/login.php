@@ -70,7 +70,7 @@
               <span class="block mb-1 text-base text-gray-500">Seleccione una sede</span>
               <select 
                   id="sucursal" 
-                  name="sucursal"
+                  name="idsucursal"
                   class="bg-white border border-gray-300 text-gray-900 shadow-md rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
               >
                 <?php foreach($sucursales as $value): ?>

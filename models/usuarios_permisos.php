@@ -10,6 +10,7 @@ class usuarios_permisos extends ActiveRecord{
         $this->id = $args['id']??null;
         $this->usuarioid = $args['usuarioid']??'';
         $this->permisoid = $args['permisoid']??'';
+        $this->created_at = $args['created_at']??'';
     }
 
 }

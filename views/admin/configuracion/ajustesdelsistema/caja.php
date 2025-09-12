@@ -1,4 +1,4 @@
-<div class="contenido1 accordion_tab_content bg-white p-6 rounded-lg shadow-md w-full space-y-6">
+<div class="configcaja contenido1 accordion_tab_content bg-white p-6 rounded-lg shadow-md w-full space-y-6">
     <div class="flex flex-wrap gap-10">
         <p class="text-indigo-600 font-bold">Caja</p>
     </div>
@@ -48,7 +48,7 @@
         <!-- Permitir cierre de caja con pedidos sin facturar -->
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5">
-                Permitir cierre de caja con pedidos sin facturar
+                Permitir cierre de caja con ordenes sin facturar
             </label>
 
             <!-- Opción Sí -->

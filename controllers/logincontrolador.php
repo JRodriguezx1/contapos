@@ -57,7 +57,6 @@ class logincontrolador{
         $alertas = [];
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            //$_POST = ['email'=>'correo@correo.com', 'password'=>123456]
             $auth = new usuarios($_POST);  //$auth es objeto de la clase usuarios de los datos que el usuario escribio
             $alertas = $auth->validarLogin();  //valida que los campos esten escritos
             if(empty($alertas)){
@@ -65,27 +64,30 @@ class logincontrolador{
                 //$usuario = $auth->validar_registro();  //valida si email existe? retorna 1 o 0 
                 $usuario = $auth->find('movil', $auth->movil); //busca en la columna 'movil' el telefono: $auth->movil y retorna el registro de la bd en un objeto
                 if($usuario){ //existe usuario o confirmado     //$usuario es objeto de la clase usuarios pero con los datos de la bd
-                    //debuguear($auth->password);
-                    $pass = $usuario->comprobar_password($auth->password);  //comprueba password y verifica si esta confirmado
-                    if($pass&&$usuario->confirmado){         //$auth->password = es lo que se escribe en el form
-                        //autenticar usuario         
-                        session_start();
-                        $_SESSION['id'] = $usuario->id;
-                        $_SESSION['idsucursal'] = $usuario->idsucursal;
-                        $_SESSION['sucursal'] = sucursales::find('id', $usuario->idsucursal);
-                        $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
-                        $_SESSION['email'] = $usuario->email;
-                        $_SESSION['login'] = true;
-                        $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
+                    if($usuario->idsucursal == $_POST['idsucursal']){
+                        $pass = $usuario->comprobar_password($auth->password);  //comprueba password y verifica si esta confirmado
+                        if($pass&&$usuario->confirmado){         //$auth->password = es lo que se escribe en el form
+                            //autenticar usuario         
+                            session_start();
+                            $_SESSION['id'] = $usuario->id;
+                            $_SESSION['idsucursal'] = $usuario->idsucursal;
+                            $_SESSION['sucursal'] = sucursales::find('id', $usuario->idsucursal);
+                            $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
+                            $_SESSION['email'] = $usuario->email;
+                            $_SESSION['login'] = true;
+                            $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
 
-                        //redireccion al dashboard del superior-admin-empleado o cliente
-                        if($usuario->perfil){
-                            header('Location: /admin/dashboard');
-                        }else{
-                            header('Location: /Cliente/app');
-                        }
+                            //redireccion al dashboard del superior-admin-empleado o cliente
+                            if($usuario->perfil){
+                                header('Location: /admin/dashboard');
+                            }else{
+                                header('Location: /Cliente/app');
+                            }
 
-                    }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado.');  }
+                        }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado.'); }
+                    }else{
+                        $alertas = usuarios::setAlerta('error', 'Usuario no corresponde a la sede indicada.');
+                    }
                 }else{
                     $alertas = usuarios::setAlerta('error', 'usuario no encontrado o no existe o deshailitado.');
                 }

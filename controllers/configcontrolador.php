@@ -113,7 +113,7 @@ class configcontrolador{
         $usuarios_permisos = new usuarios_permisos;
         $idsucursal = id_sucursal();
         $negocio = negocio::find('id', 1);
-        $permisos = $_POST['permisos'];
+        $permisos = $_POST['permisos']??[];
         //debuguear($permisos);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $empleado = new usuarios($_POST);
@@ -130,8 +130,9 @@ class configcontrolador{
                 $empleado->confirmado = 1;
                 $r = $empleado->crear_guardar();
                 if($r[0]){
+                    $r2 = true;
                     foreach($permisos as $index => $value)$crearpermisos[$index] = ['usuarioid' => $r[1], 'permisoid'=>$value];
-                    $r2 = $usuarios_permisos->crear_varios_reg($crearpermisos);
+                    if(isset($crearpermisos))$r2 = $usuarios_permisos->crear_varios_reg($crearpermisos);
                     if($r2)$alertas['exito'][] = "Usuario creado correctamente";
                 }
                 //unset($empleado);
@@ -168,17 +169,6 @@ class configcontrolador{
         $permisosactualesDB = usuarios_permisos::idregistros('usuarioid', $_POST['id']);  //permisos actuales en DB
         $idpermisosFront = json_decode($_POST['idpermisos']);  //permisos que viene del front
         
-        /////// valiadar que es una nueva imagen o distinta
-        if($empleado->img && isset($_FILES['img']['name'])) { //remplazar imagen existente
-            //obtener nombre de la imagen
-            $x = explode('avatar/', $empleado->img);     //cliente1/avatar/nombreimagen.png
-                                                         //avatar/avatar2.png
-            if($x[0]){ //si img es diferente a avatar
-                $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
-                if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
-            }
-        }
-        
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuarios_permisos = new usuarios_permisos;
             $empleado->compara_objetobd_post($_POST);
@@ -186,6 +176,10 @@ class configcontrolador{
             $alertas = $empleado->validarempleado();
             if(empty($alertas)){
                 if(isset($_FILES['img']['name'])){
+                    if($empleado->img){ //si la imagen ya existe DB, eliminarla
+                        $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                        if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                    }
                     $empleado->img = 'cliente1/avatar/'.uniqid().$_FILES['img']['name'];
                     $url_temp = $_FILES["img"]["tmp_name"];
                     move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
@@ -220,10 +214,55 @@ class configcontrolador{
                 }
             }
         } //fin if(SERVER['REQUEST_METHOD])  
-        $alertas['rutaimg'][] = $empleado->img;
+        $alertas['rutaimg'] = $empleado->img;
         echo json_encode($alertas);  
     }  //fin funcion public
 
+
+    public static function eliminarEmpleado(){ //api llamada desde empleados.ts 
+        session_start();
+        $alertas = [];
+        $empleado = usuarios::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($empleado)){
+                if($empleado->img){ //si la imagen ya existe DB, eliminarla
+                    $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                    if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$empleado->img);
+                }
+                $r = $empleado->eliminar_registro();
+                if($r){
+                    $alertas['exito'][] = "Empleado eliminado correctamente";
+                }else{
+                    $alertas['error'][] = "Error en el proceso, intentalo nuevamente...";
+                }
+            }else{
+                $alertas['error'][] = "Error en el proceso, intentalo nuevamente...";
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+
+    public static function updatepassword(){ //api llamada desde empleados.ts 
+        session_start();
+        $alertas = [];
+        $empleado = usuarios::find('id', $_POST['id']);
+        $empleado->password = $_POST['password'];
+        if(strlen($empleado->password)>60){
+            $alertas['error'][] = "El password no puede superar los 60 caracteres de longitud";
+        }elseif(strlen($empleado->password)<3){
+            $alertas['error'][] = 'El password es muy corto';
+        }else{
+            $empleado->hashPassword();
+            $r = $empleado->actualizar();
+            if($r){
+                $alertas['exito'][] = "Password cambiado correctamente";
+            }else{
+                $alertas['error'][] = 'Error durante el cambio de password, intentalo nuevamente';
+            }
+        }
+        echo json_encode($alertas);
+    }
   
   ///////////// procesando la gestion de la caja ////////////////
     public static function allcajas(){  //api llamado desde citas.js

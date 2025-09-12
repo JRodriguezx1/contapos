@@ -97,7 +97,7 @@
     document.querySelector('#tablaempleados')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
       if((e.target as HTMLElement)?.classList.contains("editarEmpleado")||(e.target as HTMLElement).parentElement?.classList.contains("editarEmpleado"))editarEmpleado(e);
-      if((e.target as HTMLElement)?.classList.contains("empleadoSkills")||(e.target as HTMLElement).parentElement?.classList.contains("empleadoSkills"))empleadoSkills(e);
+      if((e.target as HTMLElement)?.classList.contains("updatePassword")||(e.target as HTMLElement).parentElement?.classList.contains("updatePassword"))updatePassword(e);
       if(target?.classList.contains("eliminarEmpleado")||target.parentElement?.classList.contains("eliminarEmpleado"))eliminarEmpleado(e);
     });
 
@@ -185,11 +185,16 @@
                 ///////// cambiar la fila completa, su contenido //////////
                 const datosActuales = (tablaempleados as any).row(indiceFila+=info.start).data();
                 /*NOMBRE*/datosActuales[1] = inputNombre.value +' '+inputApellido.value;
-                /*img*/datosActuales[2] = `<div class="text-center"><img style="width: 40px;" src="/build/img/${resultado.rutaimg[0]}" alt=""></div>`;
+                /*img*/datosActuales[2] = `<div class="text-center"><img style="width: 40px;" src="/build/img/${resultado.rutaimg}" alt=""></div>`;
                 /*USER*/datosActuales[3] = inputnickname.value;
                 /*PERFIL*/datosActuales[6] = inputPerfil.value==='1'?'Empleado':inputPerfil.value=='2'?'Admin':'Propietario';
                 //actualizar arreglo de permisos
-                empleadosapi.forEach(a=>{if(a.id == unempleado?.id)a.permisos = arraypermisos;});
+                empleadosapi.forEach(a=>{
+                  if(a.id == unempleado?.id){
+                    a.permisos = arraypermisos;
+                    a.img = resultado.rutaimg;
+                  }
+                });
                 (tablaempleados as any).row(indiceFila).data(datosActuales).draw();
                 (tablaempleados as any).page(info.page).draw('page'); //me mantiene la pagina actual
               }else{
@@ -206,50 +211,37 @@
 
 
     ////////////////////  Actualizar contraseña del empleado  //////////////////////
-    function empleadoSkills(e:Event){
+    function updatePassword(e:Event){
       let idempleado = (e.target as HTMLElement).parentElement?.id;
       if((e.target as HTMLElement).tagName === 'I')idempleado = (e.target as HTMLElement).parentElement?.parentElement?.id;
-      //document.querySelectorAll<HTMLInputElement>('.inputskills input[type="checkbox"]').forEach(checkbox=>{checkbox.checked=false}); //limpia los checkbox
       unempleado = empleadosapi.find(x => x.id==idempleado);
-      (document.querySelector('#nombreEmpleado') as HTMLElement).textContent = unempleado?.nombre+" "+unempleado?.apellido;
-      /*var idservicios = unempleado?.idservicios; //servicios es el arreglo con solo los skills
-      idservicios?.forEach(s =>{
-        const inputskill:HTMLInputElement = document.querySelector(`input[data-skillid="${s.idservicio}"]`)!;
-        inputskill.checked = true;
-      });*/
+      (document.querySelector('#nombreEmpleadoPass') as HTMLElement).textContent = unempleado?.nombre+" "+(unempleado?.apellido??'');
       (dialogoContraseña as any)?.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
-    /*document.querySelector('#formContraseña')?.addEventListener('submit', e=>{
+    document.querySelector('#formContraseña')?.addEventListener('submit', e=>{
       e.preventDefault();
-      var arrayservicios:string[]=[];
-      document.querySelectorAll<HTMLInputElement>('.inputskills input[type="checkbox"]').forEach(x=>{if(x.checked)arrayservicios = [...arrayservicios, x.value];});
       (async ()=>{
         const datos = new FormData();
-        datos.append('idempleado', unempleado!.id);
-        datos.append('idservicio', arrayservicios.toString());
+        datos.append('id', unempleado!.id);
+        datos.append('password', (document.querySelector('#changePassword') as HTMLInputElement).value);
         try {
-            const url = "/admin/api/actualizarSkillsEmpleado";
+            const url = "/admin/api/updatepassword";
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              /// actualizar el arregle de los skills "empleadosapi" ///
-              empleadosapi.forEach(elemento => {
-                if(elemento.id == unempleado!.id)
-                  for(let a:number=0; a<arrayservicios.length; a++)
-                    elemento.idservicios = [...elemento.idservicios, {idempleado: unempleado!.id, idservicio: arrayservicios[a]}];
-              });
-
             }else{
               msjalertToast('error', '¡Error!', resultado.exito[0]);
             }
+            (dialogoContraseña as any)?.close();
+            document.removeEventListener("click", cerrarDialogoExterno);
         } catch (error) {
             console.log(error);
         }
       })();
-    });*/
+    });
 
 
     ////////////////////  Eliminar el empleado  //////////////////////
@@ -275,9 +267,10 @@
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        Swal.fire(resultado.exito[0], '', 'success')
                         (tablaempleados as any).row(indiceFila+info.start).remove().draw(); 
-                        (tablaempleados as any).page(info.page).draw('page'); 
+                        (tablaempleados as any).page(info.page).draw('page');
+                        empleadosapi = empleadosapi.filter(x=>x.id!=idempleado);
+                        Swal.fire(resultado.exito[0], '', 'success')
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
                       }
@@ -291,9 +284,9 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === dialogoEmpleado || event.target === dialogoContraseña || (event.target as HTMLInputElement).value === 'cancelar') {
+      if (event.target === dialogoEmpleado || event.target === dialogoContraseña || (event.target as HTMLInputElement).value === 'Cancelar') {
           dialogoEmpleado.close();
-          //(dialogoContraseña as any)?.close();
+          (dialogoContraseña as any)?.close();
           document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

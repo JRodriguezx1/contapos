@@ -42,5 +42,9 @@ function nombreSucursal():string
 
 function id_sucursal():int
 {
-    return $_SESSION['idsucursal'];
+    if(isset($_SESSION['idsucursal'])){
+        return $_SESSION['idsucursal'];
+    }else{
+        return 1;
+    }
 }

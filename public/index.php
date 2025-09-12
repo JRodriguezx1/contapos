@@ -184,6 +184,8 @@ $router->post('/admin/api/actualizarBanco', [configcontrolador::class, 'actualiz
 $router->post('/admin/api/eliminarBanco', [configcontrolador::class, 'eliminarBanco']); //api llamada desde gestionbancos.js para eliminar bancos
 $router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.js
 $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
+$router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
+$router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.js
 
 
 //////***************************/***NO**************************//////
@@ -199,8 +201,8 @@ $router->get('/admin/api/getservices', [servicioscontrolador::class, 'getservice
 ////// api de configuracion //////
 //$router->get('/admin/api/getAllemployee', [adminconfigcontrolador::class, 'getAllemployee']); //fetch en empleados.js
 //$router->post('/admin/api/actualizarEmpleado', [adminconfigcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
-$router->post('/admin/api/actualizarSkillsEmpleado', [adminconfigcontrolador::class, 'actualizarSkillsEmpleado']); //fetch llamado en empleados.js
-$router->post('/admin/api/eliminarEmpleado', [adminconfigcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
+//$router->post('/admin/api/actualizarSkillsEmpleado', [adminconfigcontrolador::class, 'actualizarSkillsEmpleado']); //fetch llamado en empleados.js
+//$router->post('/admin/api/eliminarEmpleado', [adminconfigcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
 $router->get('/admin/api/getmalla', [adminconfigcontrolador::class, 'getmalla']); //fetch en malla.js y en
 $router->get('/admin/api/malla', [adminconfigcontrolador::class, 'malla']);
 $router->get('/admin/api/getfechadesc', [adminconfigcontrolador::class, 'getfechadesc']);  //fetch en fechadesc.js y en 

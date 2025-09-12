@@ -24,7 +24,7 @@
                     <div class="acciones-btns" id="<?php echo $value->id;?>">
                         <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <button class="btn-md btn-lima empleadoSkills" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
+                        <button class="btn-md btn-lima updatePassword" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
                         </button>
                         <button class="btn-md btn-red eliminarEmpleado" title="Eliminar empleado"><i class="fa-solid fa-trash-can"></i>
                         </button>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <div class="formulario__campo sm:col-span-3">
-                    <label class="formulario__label" for="movil">*Movil</label>
+                    <label class="formulario__label" for="movil">Movil</label>
                     <div class="formulario__dato">
                         <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
                     </div>
@@ -198,21 +198,21 @@
             </div>
 
                 <div class="text-right">
-                    <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="cancelar">cancelar</button>
+                    <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
                     <input id="btnEditarCrearEmpleado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
                 </div>
         </form>
     </dialog><!--fin crear empleado-->
 
     <dialog class="midialog-md p-12" id="miDialogoContraseña">
-        <h4 class="dashboard__heading2">Cambiar contraseña</h4>
+        <h4 class="text-gray-600 font-semibold">Cambiar contraseña</h4>
         <div id="divmsjalertaempleado2"></div>
-        <form id="formContraseña" class="formulario" action="/admin/adminconfig/skills" method="POST">
-            <h5 id="nombreEmpleado">Julian Rodriguez</h5>
+        <form id="formContraseña" class="formulario" method="POST">
+            <h5 id="nombreEmpleadoPass" class="mt-2 text-xl text-gray-500">Julian Rodriguez</h5>
             <label for="cambiocontraseña"></label>
-            <input class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="text" value="">
+            <input id="changePassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="text" value="" required>
             <div class="text-right mt-6">
-                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="cancelar">Cancelar</button>
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
                 <input id="btnEnviarContrasela" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Actualizar">
             </div>
         </form>

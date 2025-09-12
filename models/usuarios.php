@@ -9,7 +9,7 @@ class usuarios extends ActiveRecord {
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
-        $this->idsucursal = id_sucursal();
+        $this->idsucursal = $args['idsucursal'] ??id_sucursal();
         $this->nombre = $args['nombre'] ?? '';
         $this->apellido = $args['apellido'] ?? '';
         $this->cedula = $args['cedula'] ?? '';
@@ -154,12 +154,13 @@ class usuarios extends ActiveRecord {
 
     ///////////////// metodos de validacion para usuarios empleados  //////////////////
     public function validarimgempleado($FILE) {
-        if($FILE['img']['name'] && $FILE['img']['size']>550000) {
-            self::$alertas['error'][] = 'La foto no puede pasar los 500KB';
+        if($FILE['img']['name'] && $FILE['img']['size']>350000) {
+            self::$alertas['error'][] = 'La foto no puede pasar los 320KB';
         }
         if($FILE['img']['name'] && $FILE['img']['type']!="image/jpeg" && $FILE['img']['type']!="image/png") {
             self::$alertas['error'][] = 'Seleccione una imagen en formato jpeg o png';
         }
+        if(strlen($_FILES['img']['name'])>43)self::$alertas['error'][] = 'El nombre de la imagen muy extenso, cambiar el nombre a uno mas corto';
         return self::$alertas;
     }
 
@@ -172,6 +173,9 @@ class usuarios extends ActiveRecord {
         }
         if(!$this->password) {
             self::$alertas['error'][] = 'El Password no puede ir vacio';
+        }
+        if(strlen($this->password) > 60) {
+            self::$alertas['error'][] = 'El password no debe superar los 60 caracteres de longitud';
         }
         if(strlen($this->password) < 3) {
             self::$alertas['error'][] = 'El password es muy corto';
