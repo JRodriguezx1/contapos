@@ -1,7 +1,7 @@
 <?php
-namespace Model;
+namespace Model\ventas;
 
-class ventas extends ActiveRecord {
+class ventas extends \Model\ActiveRecord {
     protected static $tabla = 'ventas';
     protected static $columnasDB = ['id', 'idfactura', 'idproducto', 'tipoproducto', 'tipoproduccion', 'rendimientoestandar', 'nombreproducto', 'foto', 'valorunidad', 'cantidad', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total', 'dato1', 'dato2'];
     

@@ -240,12 +240,12 @@
 
       function eliminarorden():void{
         ///////*** crear arreglo de obj de los productos y sus cantidades ***///////
-        type producto = {id:string, idproducto:string, tipoproducto:string, cantidad: string };
+        type producto = {id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string };
         var products:producto[] = [];
 
         inputsInv.forEach(inputinv =>{
           const v = inputinv as HTMLInputElement;
-          products = [...products, {id: v.id, idproducto: v.id, tipoproducto: v.dataset.tipoproducto!, cantidad: v.value}];
+          products = [...products, {id: v.id, idproducto: v.id, tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: v.value}];
         });
 
         (async ()=>{

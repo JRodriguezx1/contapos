@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\clientes;
 
-class direcciones extends ActiveRecord{
+class direcciones extends \Model\ActiveRecord{
     protected static $tabla = 'direcciones';
     protected static $columnasDB = ['id', 'idcliente', 'idtarifa', 'iddepartamento', 'idciudad', 'pais', 'departamento', 'ciudad', 'direccion', 'codigopostal', 'observacion'];
     

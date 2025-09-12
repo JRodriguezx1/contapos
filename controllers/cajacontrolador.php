@@ -6,7 +6,7 @@ use Classes\Email;
 use Model\ActiveRecord;
 use Model\usuarios; //namespace\clase hija
 //use Model\negocio;
-use Model\facturas;
+use Model\ventas\facturas;
 use Model\cierrescajas;
 use Model\ingresoscajas;
 use Model\gastos;
@@ -16,10 +16,10 @@ use Model\mediospago;
 use Model\factmediospago;
 use Model\arqueoscajas;
 use Model\bancos;
-use Model\clientes;
-use Model\direcciones;
+use Model\clientes\clientes;
+use Model\clientes\direcciones;
 use Model\tarifas;
-use Model\ventas;
+use Model\ventas\ventas;
 use Model\consecutivos;
 use MVC\Router;  //namespace\clase
 use stdClass;

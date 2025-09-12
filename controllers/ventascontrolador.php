@@ -9,9 +9,9 @@ use Model\productos;
 use Model\categorias;
 use Model\mediospago;
 use Model\factmediospago;
-use Model\clientes;
-use Model\facturas;
-use Model\ventas;
+use Model\clientes\clientes;
+use Model\ventas\facturas;
+use Model\ventas\ventas;
 use Model\tarifas;
 use Model\cierrescajas;
 use Model\consecutivos;
@@ -525,10 +525,10 @@ class ventascontrolador{
     $resultArray = array_reduce(json_decode($_POST['inv']), function($acumulador, $objeto){
       //$objeto->id = $objeto->iditem;
       //unset($objeto->iditem);
-        if($objeto->tipoproducto == 0){
+        if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){
           $acumulador['productosSimples'][] = $objeto;
-        }
-        else{
+        }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){
+          $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
           $acumulador['productosCompuestos'][] = $objeto;
         }
         return $acumulador;

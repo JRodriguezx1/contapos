@@ -7,11 +7,11 @@ use Classes\Email;
 use Model\ActiveRecord;
 use Model\mediospago;
 use Model\factmediospago;
-use Model\clientes;
-use Model\direcciones;
-use Model\facturas;
+use Model\clientes\clientes;
+use Model\clientes\direcciones;
+use Model\ventas\facturas;
 use Model\negocio;
-use Model\ventas;
+use Model\ventas\ventas;
 use Model\tarifas;
 use MVC\Router;  //namespace\clase
 use ticketPOS;

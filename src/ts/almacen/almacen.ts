@@ -243,8 +243,40 @@
         tablaInventarioSedes = ($('#tablaInventarioSedes') as any).DataTable({
             data: dataset,
             columns: columnas,
-            pageLength: 10,
+            layout: {
+                topStart: {
+                    buttons: [
+                    {extend: 'copyHtml5', text: 'Copia'}, 
+                    {extend: 'excelHtml5', title: 'InventarioXsede'}, 
+                    {extend: 'pdfHtml5', title: 'InventarioXsede'}, 
+                    {extend: 'print', title: 'InventarioXsede', text: 'Imprimir'},
+                    'colvis'
+                    ],
+                    pageLength: 'pageLength'
+                }
+            },
+            pageLength: 25,
+            paging: true,
+            lengthChange: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: true,
+            responsive: true,
+            deferRender: true,
+            retrieve: true,
+            processing: true,
             destroy: true, // importante si recargas la tabla
+            language: {
+                search: 'Busqueda',
+                emptyTable: 'No Hay datos disponibles',
+                zeroRecords:    "No se encontraron registros coincidentes",
+                lengthMenu: '_MENU_ Entradas por pagina',
+                info: 'Mostrando 1 de _MAX_ registros',
+                infoEmpty: 'No hay entradas a mostrar',
+                infoFiltered: ' (filtrado desde _MAX_ registros)',
+                paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+            }
         });
 
     }

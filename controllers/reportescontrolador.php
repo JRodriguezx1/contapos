@@ -2,7 +2,7 @@
 //$dias = facturacion::inner_join('SELECT COUNT(id) AS servicios, fecha_pago, SUM(total) AS totaldia FROM facturacion GROUP BY fecha_pago ORDER BY COUNT(id) DESC;');
 namespace Controllers;
 
-use Model\facturas;
+use Model\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{

@@ -94,7 +94,7 @@ const configdatatablesstockrapido = {
   }
 }
 
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK RAPIDO /////////////////////
+///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA AJUSTAR COSTOS /////////////////////
 const configdatatablesajustarcostos = {
   layout: {
         topStart: {
