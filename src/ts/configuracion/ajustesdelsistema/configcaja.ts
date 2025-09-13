@@ -17,7 +17,7 @@
 
     function cambiarparametro(clave:string, valor:string){
       const datos = new FormData();
-      datos.append('clave', valor);
+      datos.append(clave, valor);
       (async ()=>{
         try {
             const url = "/admin/api/parametrosSistemaCaja";  //api llamada en cajacontrolador.php

@@ -696,6 +696,7 @@
     });
 
     async function procesarpedido(estado:string, ctz:string){
+      const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
@@ -740,7 +741,7 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
-            if(resultado.idfactura)printTicketPOS(resultado.idfactura);
+            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
