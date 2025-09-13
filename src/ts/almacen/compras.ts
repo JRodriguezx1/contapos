@@ -56,7 +56,7 @@
         })();
 
 
-        impuesto.addEventListener('input', ()=>resumen());
+        impuesto?.addEventListener('input', ()=>resumen());
 
         function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string}[]){
             ($('#articulo') as any).select2({ 
