@@ -17,6 +17,7 @@ use Controllers\clientescontrolador;
 use Controllers\direccionescontrolador;
 use Controllers\configcontrolador;
 use Controllers\paginacontrolador;
+use Controllers\parametroscontrolador;
 use Controllers\printcontrolador;
 // me importa la clase router
 use MVC\Router;
@@ -186,6 +187,8 @@ $router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllempl
 $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
 $router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.js
+
+$router->post('/admin/api/parametrosSistemaCaja', [parametroscontrolador::class, 'parametrosSistemaCaja']); //fetch llamado en empleados.js
 
 
 //////***************************/***NO**************************//////

@@ -1,17 +1,39 @@
 (function(){
   if(document.querySelector('.configcaja')){
-    document.querySelector('.configcaja')?.addEventListener('click', (e)=>{
 
-      const grupos = ["imprimirfactura", "cierre-sin-facturar"];
+    const radios = document.querySelectorAll<HTMLInputElement>('.configcaja input[type="radio"]');
 
-      grupos.forEach(name => {
-        const seleccionado = document.querySelector(`input[name="${name}"]:checked`) as HTMLInputElement;
-        if (seleccionado) {
-          console.log(`Grupo ${name}: ${seleccionado.value}`);
-        } else {
-          console.log(`Grupo ${name}: no se seleccionó nada`);
-        }
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        // Obtenemos el grupo (name) del radio
+        const grupo:string = radio.name;
+        // Obtenemos la opción seleccionada de ese grupo
+        const seleccionado = document.querySelector(`input[name="${grupo}"]:checked`) as HTMLInputElement;
+
+        console.log(`${grupo}, Opción seleccionada: ${seleccionado.value}`);
+        cambiarparametro(grupo, seleccionado.value);
       });
     });
+
+    function cambiarparametro(clave:string, valor:string){
+      const datos = new FormData();
+      datos.append('clave', valor);
+      (async ()=>{
+        try {
+            const url = "/admin/api/parametrosSistemaCaja";  //api llamada en cajacontrolador.php
+            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+            const resultado = await respuesta.json();
+            if(resultado.exito !== undefined){
+              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            }else{
+              msjalertToast('error', '¡Error!', resultado.error[0]);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+    }
+
+
   }
 })();
