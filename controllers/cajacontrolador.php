@@ -51,7 +51,7 @@ class cajacontrolador{
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     
 
-    $cajas = caja::all();
+    $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $router->render('admin/caja/index', ['titulo'=>'Caja', 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -112,9 +112,9 @@ class cajacontrolador{
     
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1); ////// ultimo registro de cierrescajas validar si esta abierto
-      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['id_caja']]); //ultimo cierre por caja
+      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['id_caja'], 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
       if(!isset($ultimocierre)){ // si la caja esta cerrada y luego aqui se hace apertura
-        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['id_caja'], 'nombrecaja'=>caja::find('id', $_POST['id_caja'])->nombre, 'estado'=>0]);
+        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['id_caja'], 'nombrecaja'=>caja::find('id', $_POST['id_caja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
         $r = $ultimocierre->crear_guardar();
         if(!$r[0])$ultimocierre->estado = 1;
         $ultimocierre->id = $r[1];
@@ -180,7 +180,7 @@ class cajacontrolador{
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
-    $cajas = caja::all();
+    $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $bancos = bancos::all();
     $router->render('admin/caja/index', ['titulo'=>'Caja', 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
@@ -190,8 +190,14 @@ class cajacontrolador{
     session_start();
     isadmin();
     $alertas = [];
-    $ultimoscierres = cierrescajas::whereArray(['estado'=>1]);
-    $idultimocierreabierto = cierrescajas::uncampo('estado', 0, 'id');
+    $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
+    $idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+    if($idultimocierreabierto){
+      $idultimocierreabierto = $idultimocierreabierto->id;
+    }else{
+      $idultimocierreabierto = '1';
+    }
+    //Hay que sumar los ultimos cierres de caja abierto por sucursal = $idultimocierreabierto
     $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -204,8 +210,8 @@ class cajacontrolador{
 
     $alertas = [];
     $discriminarmediospagos = [];
-    $cajas = caja::all();
-    $consecutivos = consecutivos::all();
+    $cajas = caja::idregistros('idsucursalid', id_sucursal());
+    $consecutivos = consecutivos::whereArray(['id_sucursalid'=>id_sucursal(), 'estado'=>1]);
     $cajaselected = '';
     
     $cierreselected = cierrescajas::find('id', $id);
@@ -229,7 +235,7 @@ class cajacontrolador{
     session_start();
     isadmin();
     $alertas = [];
-    $ultimoscierres = cierrescajas::whereArray(['estado'=>1]);
+    $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
     $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -275,7 +281,7 @@ class cajacontrolador{
     session_start();
     isadmin();
     $alertas = [];
-    $pedidosguardados = facturas::whereArray(['cotizacion'=>1, 'estado'=>'guardado']);
+    $pedidosguardados = facturas::whereArray(['cotizacion'=>1, 'estado'=>'guardado', 'id_sucursal'=>id_sucursal()]);
     $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -402,7 +408,7 @@ class cajacontrolador{
     $ax = false;
     $bx = false;
     $declaraciondinero = new declaracionesdineros($_POST);
-    $ultimocierre = cierrescajas::find('id', $_POST['idcierrecaja']); ////// ultimo registro de cierrescajas validar si esta abierto
+    $ultimocierre = cierrescajas::uniquewhereArray(['id'=>$_POST['idcierrecaja'], 'idsucursal_id'=>id_sucursal()]); ////// ultimo registro de cierrescajas validar si esta abierto
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $declaraciondinero->idcierrecajaid = $ultimocierre->id;
       $alertas = $declaraciondinero->validar();
@@ -431,7 +437,7 @@ class cajacontrolador{
   public static function arqueocaja(){   
     $alertas = [];
     $arqueocaja = new arqueoscajas($_POST);
-    $ultimocierre = cierrescajas::find('id', $_POST['idcierrecaja']); ////// ultimo registro de cierrescajas validar si esta abierto
+    $ultimocierre = cierrescajas::uniquewhereArray(['id'=>$_POST['idcierrecaja'], 'idsucursal_id'=>id_sucursal()]); ////// ultimo registro de cierrescajas validar si esta abierto
     $arqueocaja->id_cierrecajaid = $ultimocierre->id;
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       if($ultimocierre->estado == 1){
@@ -475,15 +481,15 @@ class cajacontrolador{
         $ultimocierre->totalbruto = $ultimocierre->ingresoventas;
         $ultimocierre->estado = 1; //cerrar caja
         // crear el siguiente cierre de caja
-        $crearcierrecaja = new cierrescajas(['idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>$ultimocierre->nombrecaja, 'fechacierre'=>$ultimocierre->fechacierre]);
+        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>$ultimocierre->nombrecaja, 'fechacierre'=>$ultimocierre->fechacierre]);
         $r = $crearcierrecaja->crear_guardar();
         if($r[0]){
-          $r = $ultimocierre->actualizar();
-          if($r){
+          $ra = $ultimocierre->actualizar();
+          if($ra){
             $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
             $alertas['ultimocierre'][] = $ultimocierre->id;
           }else{
-            $ultimocierrecaja = cierrescajas::find('id', $crearcierrecaja[1]);
+            $ultimocierrecaja = cierrescajas::find('id', $r[1]);
             $ultimocierrecaja->eliminar_registro();
             $alertas['error'][] = "Error ingresa nuevamente al cierre de caja.";
           }
@@ -500,7 +506,7 @@ class cajacontrolador{
   public static function datoscajaseleccionada(){ //llamado desde cerrarcaja.ts
     $alertas = [];
 
-    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+    $ultimocierre = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);

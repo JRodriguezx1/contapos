@@ -510,11 +510,11 @@
           <label class="formulario__label block text-center mb-2">¿Desea imprimir factura?</label>
           <div class="flex justify-center gap-8">
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="imprimir" value="si" class="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-500" required>
+              <input type="radio" name="imprimir" value="1" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?> >
               <span class="text-gray-700 text-lg">Sí</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="imprimir" value="no" class="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+              <input type="radio" name="imprimir" value="0" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 0?'checked':'';?> >
               <span class="text-gray-700 text-lg">No</span>
             </label>
           </div>
@@ -533,6 +533,7 @@
           
       </form>
   </dialog>
+
 
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
 <dialog id="miDialogoFacturarA" class="midialog-sm !p-12">

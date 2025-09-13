@@ -11,6 +11,7 @@ use Model\mediospago;
 use Model\ActiveRecord;
 use Model\bancos;
 use Model\cierrescajas;
+use Model\parametrizacion\config_local;
 use Model\permisos;
 use Model\tipofacturador;
 use Model\usuarios_permisos;
@@ -41,8 +42,9 @@ class configcontrolador{
     //$alertas = usuarios::getAlertas();
     foreach($cajas as $caja)$caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
-        
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    
+    $conflocal = config_local::getParamGlobal();
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 

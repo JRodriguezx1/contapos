@@ -16,6 +16,7 @@ use Model\tarifas;
 use Model\cierrescajas;
 use Model\consecutivos;
 use Model\caja;
+use Model\parametrizacion\config_local;
 use Model\productos_sub;
 use Model\stockinsumossucursal;
 use Model\stockproductossucursal;
@@ -29,6 +30,7 @@ class ventascontrolador{
     session_start();
     isadmin();
     $alertas = [];
+    $idsucursal = id_sucursal();
 
     $facturacotz = [];
     $productoscotz = [];
@@ -52,9 +54,12 @@ class ventascontrolador{
     $mediospago = mediospago::all();
     $clientes = clientes::all();
     $tarifas = tarifas::all();
-    $cajas  = caja::all();
-    $consecutivos = consecutivos::all();
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    $cajas = caja::idregistros('idsucursalid', $idsucursal);
+    $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+
+    $conflocal = config_local::getParamCaja();
+
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

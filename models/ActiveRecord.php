@@ -453,6 +453,18 @@ class ActiveRecord {
         return $array;
     }
 
+    //metodo de consulta libre utilizando lenguaje sql donde cada posicion del arreglo asociativo es el valor de un campo de la tabla
+    public static function sqlLibreIndexKey($consulta, $colum):array|NULL{
+        $resultado = self::$db->query($consulta);
+        $array = [];
+        while($row = $resultado->fetch_object()){  
+            $array[$row->$colum] = $row;
+        }
+        $resultado->free();  //['columna'=>{'id':'1', 'costo':'23'}, 'columna'=>{}]  cada obj es una fila de la tabla
+        return $array;
+    }
+
+
     public static function tableAJoin2TablesWhereId(string $tablaB, string $columTableB, string $idTableB)
     {//me une 2 tablas con el id de la primera tabla, y se trae el registro de la primera tabla, cuando se cumple la condicion del id de la segunda tabla.
         $sql = "SELECT ".static::$tabla.".* FROM ".static::$tabla." JOIN $tablaB ON ".static::$tabla.".id = $tablaB.$columTableB WHERE $tablaB.id = $idTableB;";  //
