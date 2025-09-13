@@ -191,7 +191,12 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
-    $idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()])->id;
+    $idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+    if($idultimocierreabierto){
+      $idultimocierreabierto = $idultimocierreabierto->id;
+    }else{
+      $idultimocierreabierto = '1';
+    }
     //Hay que sumar los ultimos cierres de caja abierto por sucursal = $idultimocierreabierto
     $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
