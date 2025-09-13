@@ -86,7 +86,6 @@
                         const url = "/admin/api/getStockproductosXsucursal"; //llamado a la API REST en el controlador almacencontrolador para treaer todos los productos con su respectiva sucursal y stock
                         const respuesta = await fetch(url); 
                         allproductsXsucursal = await respuesta.json();
-                        console.log(allproductsXsucursal);
                         printstockXsucursal();
                         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
                     } catch (error) {
@@ -266,7 +265,6 @@
             deferRender: true,
             retrieve: true,
             processing: true,
-            destroy: true, // importante si recargas la tabla
             language: {
                 search: 'Busqueda',
                 emptyTable: 'No Hay datos disponibles',
@@ -276,7 +274,8 @@
                 infoEmpty: 'No hay entradas a mostrar',
                 infoFiltered: ' (filtrado desde _MAX_ registros)',
                 paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-            }
+            },
+            destroy: true, // importante si recargas la tabla
         });
 
     }

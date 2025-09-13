@@ -9,7 +9,7 @@ class gastos extends ActiveRecord {
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
-        $this->id_sucursalfk = $args['id_sucursalfk'] ?? '';
+        $this->id_sucursalfk = id_sucursal();
         $this->idg_usuario = $args['idg_usuario'] ?? 1;
         $this->id_compra = $args['id_compra']??NULL;
         $this->id_banco = $args['id_banco'] ??'';

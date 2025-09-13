@@ -54,8 +54,8 @@ class ventascontrolador{
     $mediospago = mediospago::all();
     $clientes = clientes::all();
     $tarifas = tarifas::all();
-    $cajas  = caja::all();
-    $consecutivos = consecutivos::all();
+    $cajas = caja::idregistros('idsucursalid', $idsucursal);
+    $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
 
     $conflocal = config_local::getParamCaja();
 
