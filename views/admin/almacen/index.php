@@ -10,7 +10,8 @@
         <!--<a class="btn-command" href="/admin/almacen/distribucion"><span class="material-symbols-outlined">linked_services</span>Distribucion</a>-->
         <a class="btn-command" href="/admin/almacen/inventariar"><span class="material-symbols-outlined">inventory</span>Inventariar</a>
         <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/unidadesmedida"><span class="material-symbols-outlined">square_foot</span>Unidades de Medida</a>
-        <a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>
+        <!--<a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>-->
+        <button id="btntrasladoinvnetario" class="btn-command text-center"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</button>
   </div>
 
   <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
@@ -58,5 +59,18 @@
       </div>
 
   </div> <!-- fin accordion_inv -->
+
+  <dialog id="miDialogoTrasladoInvnetario" class="midialog-sm p-5">
+    <div class="flex justify-between items-center">
+         <h4 id="modalTrasladoInvnetario" class="font-semibold text-gray-600 mb-4">Gestion de traslado de inventario</h4>
+        <button id="btnXCerrarTrasladoInvnetario" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="text-center">
+        <a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>
+        <a class="btn-command text-center" href="/admin/almacen/solicitarinventario"><span class="material-symbols-outlined">switch_right</span>Solicitar inventario</a>
+    </div>
+       
+  </dialog>
 
 </div>

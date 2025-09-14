@@ -1,5 +1,8 @@
 (()=>{
     if(document.querySelector('.almacen')){
+        const btntrasladoinvnetario = document.querySelector('#btntrasladoinvnetario') as HTMLInputElement;
+        const btnXCerrarTrasladoInvnetario = document.querySelector('#btnXCerrarTrasladoInvnetario') as HTMLButtonElement;
+        const miDialogoTrasladoInvnetario = document.querySelector('#miDialogoTrasladoInvnetario') as any;
         const reinciarinv = document.querySelector('#reinciarinv') as HTMLButtonElement;
         const miDialogoStock = document.querySelector('#miDialogoStock') as any;
         const modalStock = document.querySelector('#modalStock') as HTMLElement;
@@ -48,6 +51,16 @@
             }
         })();
 
+        //apertura de la venta modal para las opcionesde traslado de inventario
+        btntrasladoinvnetario.addEventListener('click', ()=>{
+            miDialogoTrasladoInvnetario.showModal();
+            document.addEventListener("click", cerrarDialogoExterno);
+        });
+
+        btnXCerrarTrasladoInvnetario.addEventListener('click', (e)=>{
+            miDialogoTrasladoInvnetario.close();
+            document.removeEventListener("click", cerrarDialogoExterno);
+        });
 
         reinciarinv.addEventListener('click', (e)=>{
             Swal.fire({
@@ -413,10 +426,12 @@
 
 
         function cerrarDialogoExterno(event:Event) {
-            if (event.target === miDialogoStock || event.target === miDialogoIngresarProduccion || (event.target as HTMLInputElement).value === 'salir') {
+            
+            if (event.target === miDialogoTrasladoInvnetario || event.target === btnXCerrarTrasladoInvnetario || event.target === miDialogoStock || event.target === miDialogoIngresarProduccion || (event.target as HTMLInputElement).value === 'salir') {
                 miDialogoStock.close();
                 miDialogoIngresarProduccion.close();
-            document.removeEventListener("click", cerrarDialogoExterno);
+                miDialogoTrasladoInvnetario.close();
+                document.removeEventListener("click", cerrarDialogoExterno);
             }
         }
 

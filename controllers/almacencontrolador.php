@@ -381,6 +381,15 @@ class almacencontrolador{
     $router->render('admin/almacen/trasladoinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
+  public static function solicitarinventario(Router $router){
+    session_start();
+    isadmin();
+    $alertas = [];
+    
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
   public static function downexcelproducts(Router $router){
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
       $excelproductos = productos::all();
