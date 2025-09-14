@@ -191,17 +191,18 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
-    $idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-    if($idultimocierreabierto){
-      $idultimocierreabierto = $idultimocierreabierto->id;
-    }else{
-      $idultimocierreabierto = '1';
-    }
+    //$idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+    //if($idultimocierreabierto){
+      //$idultimocierreabierto = $idultimocierreabierto->id;
+    //}else{
+      $idultimocierreabierto = -1;
+    //}
     //Hay que sumar los ultimos cierres de caja abierto por sucursal = $idultimocierreabierto
     $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
+  //cuando se da clic en el btn "zeta diario de hoy" o en el btn "zeta diario por fecha"
   public static function fechazetadiario(Router $router){
     session_start();
     isadmin();
@@ -213,17 +214,40 @@ class cajacontrolador{
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>id_sucursal(), 'estado'=>1]);
     $cajaselected = '';
-    
-    $cierreselected = cierrescajas::find('id', $id);
-    if($cierreselected != null){
-      $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
-      $cajaselected = caja::find('id', $cierreselected->idcaja)->nombre; 
-    }else{
-      foreach($cajas as $index => $value){
-        if(array_key_last($cajas) == $index){
-          $cajaselected .= $value->nombre;
-        }else{
-          $cajaselected .= $value->nombre.' - ';
+    $cierreselected = new stdClass();
+    $cierreselected->ingresoventas = 0;
+    $cierreselected->valorimpuestototal = 0;
+    $cierreselected->facturaselectronicas = 0;
+    $cierreselected->facturaspos = 0;
+
+    if($id == -1){
+      // sumar todos los valores de las cajas abiertas
+      $cierreselected = cierrescajas::whereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+      $cierreselected = array_reduce($cierreselected, function($acumulador, $obj){
+        $acumulador['ingresoventas'] += $obj->ingresoventas;
+        $acumulador['valorimpuestototal'] += $obj->valorimpuestototal;
+        $acumulador['totaldescuentos'] += $obj->totaldescuentos;
+        $acumulador['realventas'] += $obj->realventas;
+        $acumulador['facturaselectronicas'] += $obj->facturaselectronicas;
+        $acumulador['facturaspos'] += $obj->facturaspos;
+        $acumulador['valorfe'] += $obj->valorfe;
+        $acumulador['valorpos'] += $obj->valorpos;
+        $acumulador['id'][] = $obj->id;
+        $acumulador['nombrecaja'] .= $obj->nombrecaja.' ';
+        return $acumulador;
+      }, ['id'=>[], 'nombrecaja'=>'', 'ingresoventas'=>0, 'valorimpuestototal'=>0, 'totaldescuentos'=>0, 'realventas'=>0, 'facturaselectronicas'=>0, 'facturaspos'=>0, 'valorfe'=>0, 'valorpos'=>0]);
+      
+      $cierreselected = (object)$cierreselected;
+      if(!empty($cierreselected->id)){
+        $discriminarmediospagos = cierrescajas::discriminarmediospagoscajas($cierreselected->id);
+        $cajaselected = $cierreselected->nombrecaja;
+      }else{
+        foreach($cajas as $index => $value){
+          if(array_key_last($cajas) == $index){
+            $cajaselected .= $value->nombre;
+          }else{
+            $cajaselected .= $value->nombre.' - ';
+          }
         }
       }
     }
