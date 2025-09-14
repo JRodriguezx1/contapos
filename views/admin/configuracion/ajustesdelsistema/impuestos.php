@@ -36,13 +36,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar impuesto en factura</label>
             <label for="impuesto_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="impuesto_factura_si" type="radio" name="impuesto_factura" class="hidden peer">
+                <input id="impuesto_factura_si" type="radio" name="mostrar_impuesto_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="impuesto_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="impuesto_factura_no" type="radio" name="impuesto_factura" class="hidden peer" checked>
+                <input id="impuesto_factura_no" type="radio" name="mostrar_impuesto_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -51,13 +51,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Discriminar impuesto por producto</label>
             <label for="discriminar_imp_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="discriminar_imp_si" type="radio" name="discriminar_imp" class="hidden peer">
+                <input id="discriminar_imp_si" type="radio" name="discriminar_impuesto_por_producto" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="discriminar_imp_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="discriminar_imp_no" type="radio" name="discriminar_imp" class="hidden peer" checked>
+                <input id="discriminar_imp_no" type="radio" name="discriminar_impuesto_por_producto" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -66,13 +66,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar subtotales en factura sin impuesto</label>
             <label for="subtotal_sin_imp_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="subtotal_sin_imp_si" type="radio" name="subtotal_sin_imp" class="hidden peer">
+                <input id="subtotal_sin_imp_si" type="radio" name="mostrar_subtotales_en_factura_sin_impuesto" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="subtotal_sin_imp_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="subtotal_sin_imp_no" type="radio" name="subtotal_sin_imp" class="hidden peer" checked>
+                <input id="subtotal_sin_imp_no" type="radio" name="mostrar_subtotales_en_factura_sin_impuesto" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>

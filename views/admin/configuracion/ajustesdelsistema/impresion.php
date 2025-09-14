@@ -7,13 +7,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar nombre del negocio en factura</label>
             <label for="nombrenegociosi" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="nombrenegociosi" type="radio" name="nombrenegocio" class="hidden peer">
+                <input id="nombrenegociosi" type="radio" name="mostrar_nombre_del_negocio_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="nombrenegociono" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="nombrenegociono" type="radio" name="nombrenegocio" class="hidden peer" checked>
+                <input id="nombrenegociono" type="radio" name="mostrar_nombre_del_negocio_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -41,13 +41,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Habilitar subtotal en factura</label>
             <label for="subtotal_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="subtotal_factura_si" type="radio" name="subtotal_factura" class="hidden peer">
+                <input id="subtotal_factura_si" type="radio" name="habilitar_subtotal_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="subtotal_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="subtotal_factura_no" type="radio" name="subtotal_factura" class="hidden peer" checked>
+                <input id="subtotal_factura_no" type="radio" name="habilitar_subtotal_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -57,13 +57,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar número de factura</label>
             <label for="numero_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="numero_factura_si" type="radio" name="numero_factura" class="hidden peer">
+                <input id="numero_factura_si" type="radio" name="mostrar_numero_de_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="numero_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="numero_factura_no" type="radio" name="numero_factura" class="hidden peer" checked>
+                <input id="numero_factura_no" type="radio" name="mostrar_numero_de_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -73,13 +73,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar nombre del documento en factura</label>
             <label for="nom_doc_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="nom_doc_factura_si" type="radio" name="nom_doc_factura" class="hidden peer">
+                <input id="nom_doc_factura_si" type="radio" name="mostrar_nombre_del_documento_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="nom_doc_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="nom_doc_factura_no" type="radio" name="nom_doc_factura" class="hidden peer" checked>
+                <input id="nom_doc_factura_no" type="radio" name="mostrar_nombre_del_documento_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -89,13 +89,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar observación en factura</label>
             <label for="observacion_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="observacion_factura_si" type="radio" name="observacion_factura" class="hidden peer">
+                <input id="observacion_factura_si" type="radio" name="mostrar_observacion_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="observacion_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="observacion_factura_no" type="radio" name="observacion_factura" class="hidden peer" checked>
+                <input id="observacion_factura_no" type="radio" name="mostrar_observacion_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -105,13 +105,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar cambio de efectivo en factura</label>
             <label for="cambioefectivo_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="cambioefectivo_factura_si" type="radio" name="cambioefectivo_factura" class="hidden peer">
+                <input id="cambioefectivo_factura_si" type="radio" name="mostrar_cambio_de_efectivo_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="cambioefectivo_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="cambioefectivo_factura_no" type="radio" name="cambioefectivo_factura" class="hidden peer" checked>
+                <input id="cambioefectivo_factura_no" type="radio" name="mostrar_cambio_de_efectivo_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -136,13 +136,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar método de pago en factura</label>
             <label for="met_pago_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="met_pago_factura_si" type="radio" name="met_pago_factura" class="hidden peer">
+                <input id="met_pago_factura_si" type="radio" name="mostrar_metodo_de_pago_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="met_pago_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="met_pago_factura_no" type="radio" name="met_pago_factura" class="hidden peer" checked>
+                <input id="met_pago_factura_no" type="radio" name="mostrar_metodo_de_pago_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -151,13 +151,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar logo en factura</label>
             <label for="logo_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="logo_factura_si" type="radio" name="logo_factura" class="hidden peer">
+                <input id="logo_factura_si" type="radio" name="mostrar_logo_en_factura" value="1" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="logo_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="logo_factura_no" type="radio" name="logo_factura" class="hidden peer" checked>
+                <input id="logo_factura_no" type="radio" name="mostrar_logo_en_factura" value="0" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
