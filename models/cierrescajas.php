@@ -49,6 +49,7 @@ class cierrescajas extends ActiveRecord {
         return self::$alertas;
     }
 
+    //discriminar medios de pago de un solo cierre de caja
     public static function discriminarmediospagos(string $id)
     {
         static::all();
@@ -58,6 +59,21 @@ class cierrescajas extends ActiveRecord {
         JOIN facturas ON factmediospago.id_factura = facturas.id 
         WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY mediospago.mediopago;";
 
+        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
+     public static function discriminarmediospagoscajas(array $id): array
+    {
+        $id = join(', ', $id);
+        $sql = "SELECT mediospago.id AS idmediopago, mediospago.mediopago, SUM(factmediospago.valor) AS valor FROM mediospago 
+        JOIN factmediospago ON mediospago.id = factmediospago.idmediopago 
+        JOIN facturas ON factmediospago.id_factura = facturas.id 
+        WHERE facturas.idcierrecaja IN($id) AND facturas.estado = 'Paga' GROUP BY mediospago.mediopago;";
         $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
         $array = [];
         while($row = $resultado->fetch_assoc())
