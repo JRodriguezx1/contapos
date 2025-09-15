@@ -6,88 +6,160 @@
         </svg>
         <span class="sr-only">Atrás</span>
         </a>
-        <h4 class="text-gray-600 mb-12 mt-4">Traslado de inventario</h4>
-        <?php include __DIR__. "/../../templates/alertas.php"; ?>
-        <form id="formComprar" action="">
-            <div class="border-b border-gray-900/10 pb-10 mb-3">
-            
-                <p class="mt-2 text-xl text-gray-600">Traslado de inventario entre sucursales.</p>
-
-                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
-                
-                </div>
-            </div>
-
-            <div class="mb-4 md:w-1/2">
-                <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
-                <div class="mt-2 grid grid-cols-1">
-                    <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
-                        <?php foreach($totalitems as $value): ?>
-                            <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="border-solid border-t-2 border-blue-600 pt-4 mb-4">
-                <table class=" tabla" width="100%" id="tablaCompras">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Unidad</th>
-                            <th>Cantidad</th>
-                            <th>V. total</th>
-                            <th class="accionesth text-red-500"><i class="fa-solid fa-x"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
-            </div> <!-- FIn Apilamiento de productos -->
-
-            <div class="text-right">
-                <button id="btnvaciar" class="btn-md btn-turquoise !py-4 !px-6 !w-[136px] vaciar" type="button" value="vaciar">Vaciar</button>
-                <input id="btnRegistrarCompra" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px] registrarCompra" type="submit" value="Trasladar">
-            </div>
-        </form>
-
-        <!-- INFORMACION FINAL DE LA COMPRA-->
-        <div>
-            <div class="flex justify-start gap-4 mt-6">
-                <div class="text-end">
-                    <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
-                </div>
-                <div>
-                    <p id="total" class="m-0 mb-2 text-indigo-600 text-4xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
-                </div>
-            </div>
-        </div>
-
+        <h4 class="text-gray-600 mb-5 mt-6">Traslado de inventario</h4>
+        <?php include __DIR__."/../../templates/alertas.php"; ?>
     </div>
+    <div class="p-6 ">
+        <!-- Encabezado -->
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Solicitudes recibidas</h1>
+        <p class="text-gray-600 mb-6">Gestiona las solicitudes de productos y materia prima de otras sedes.</p>
 
-    <!-- MODAL PARA VACIAR EL CARRITO DE COMPRAS-->
-    <dialog class="midialog-xs px-8 pb-8" id="miDialogoVaciar">
-        <div>
-            <p class="text-2xl font-semibold text-gray-500">Desea vaciar la lista de compra?</p>
-        </div>
-        <div class="flex justify-around border-t-gray-300 pt-4">
-            <div class="sivaciar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
-            <div class="novaciar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
-        </div>
-    </dialog>
+        <!-- Indicadores rápidos -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+            <!-- Pendientes -->
+            <div class="grid grid-cols-2 items-center bg-indigo-50 rounded-2xl shadow-md p-6 flex-col justify-center hover:scale-105 hover:shadow-lg transition">
+                <!-- <div class="bg-indigo-200 text-indigo-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">⏳</div> -->
+                <div class="text-xl justify-self-start font-semibold text-indigo-600 uppercase tracking-wide">Pendientes</div>
+                <div class="justify-self-end text-4xl font-extrabold text-indigo-700">5</div>
+            </div>
 
-     <!-- MODAL PARA REGISTRAR LA COMPRA-->
-    <dialog class="midialog-xs px-8 pb-8" id="miDialogoRegistrarcompra">
-        <div>
-            <p class="text-3xl font-semibold text-gray-500">Desea registrar la compra?</p>
-            <p class="text-xl text-gray-500">El pedido de compra No: 34512 se guardara en sistema.</p>
-        </div>
-        <div id="" class="flex justify-around border-t-gray-300 pt-4">
-            <div class="sicomprar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
-            <div class="nocomprar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
-        </div>
-    </dialog>
+            <!-- Aprobadas -->
+            <div class="grid grid-cols-2 items-center bg-emerald-50 rounded-2xl shadow-md p-6 flex-col justify-center hover:scale-105 hover:shadow-lg transition">
+                <!-- <div class="bg-emerald-200 text-emerald-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">✅</div> -->
+                <div class="text-xl justify-self-start font-semibold text-emerald-600 uppercase tracking-wide">Aprobadas</div>
+                <div class="justify-self-end text-4xl font-extrabold text-emerald-700">2</div>
+            </div>
 
+            <!-- Rechazadas -->
+            <div class="grid grid-cols-2 items-center bg-rose-50 rounded-2xl shadow-md p-6 justify-center hover:scale-105 hover:shadow-lg transition">
+                <!-- <div class="bg-rose-200 text-rose-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">❌</div> -->
+                <div class="text-xl justify-self-start font-semibold text-rose-600 uppercase tracking-wide">Rechazadas</div>
+                <div class="justify-self-end text-4xl font-extrabold text-rose-700">1</div>
+            </div>
+
+            <!-- Entregadas -->
+            <div class="grid grid-cols-2 items-center bg-sky-50 rounded-2xl shadow-md p-6 justify-center hover:scale-105 hover:shadow-lg transition">
+                <!-- <div class="bg-sky-200 text-sky-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">📦</div> -->
+                <div class="text-xl justify-self-start font-semibold text-sky-600 uppercase tracking-wide">Entregadas</div>
+                <div class="justify-self-end text-4xl font-extrabold text-sky-700">3</div>
+            </div>
+        </div> <!-- End Indicadores rápidos -->
+
+        <!-- Filtros -->
+        <div class="flex gap-3 mb-6 w-full flex-col md:flex-row p-2">
+            <input type="text" placeholder="Buscar por # o producto..." class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            <option value="">Todas las sedes</option>
+            <option value="norte">Sede Norte</option>
+            <option value="centro">Sede Centro</option>
+            </select>
+
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="aprobado">Aprobado</option>
+            <option value="rechazado">Rechazado</option>
+            <option value="entregado">Entregado</option>
+            </select>
+        </div>
+
+        <!-- Tabla -->
+        <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 text-gray-600 text-base font-semibold uppercase tracking-wide">
+                    <tr>
+                    <th class="p-4"># Solicitud</th>
+                    <th class="p-4">Sede</th>
+                    <th class="p-4">Usuario</th>
+                    <th class="p-4">Fecha</th>
+                    <th class="p-4">Estado</th>
+                    <th class="p-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
+
+                    <!-- Pendiente -->
+                    <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-medium text-gray-900">00123</td>
+                    <td class="p-4">Sede Norte</td>
+                    <td class="p-4">Carlos Pérez</td>
+                    <td class="p-4">12/09/2025</td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 text-base font-semibold bg-indigo-100 text-indigo-600 rounded-full">
+                        Pendiente
+                        </span>
+                    </td>
+                    <td class="p-4 flex items-center justify-center gap-2">
+                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                            👁 Ver
+                        </button>
+                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
+                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                    </td>
+                    </tr>
+
+                    <!-- Aprobada -->
+                    <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-medium text-gray-900">00124</td>
+                    <td class="p-4">Sede Sur</td>
+                    <td class="p-4">Ana Gómez</td>
+                    <td class="p-4">11/09/2025</td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 text-base font-semibold bg-emerald-100 text-emerald-600 rounded-full">
+                        Aprobada
+                        </span>
+                    </td>
+                    <td class="p-4 flex items-center justify-center gap-2">
+                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                            👁 Ver
+                        </button>
+                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
+                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                    </td>
+                    </tr>
+
+                    <!-- Rechazada -->
+                    <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-medium text-gray-900">00125</td>
+                    <td class="p-4">Sede Centro</td>
+                    <td class="p-4">Luis Torres</td>
+                    <td class="p-4">10/09/2025</td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 text-base font-semibold bg-rose-100 text-rose-600 rounded-full">
+                        Rechazada
+                        </span>
+                    </td>
+                    <td class="p-4 flex items-center justify-center gap-2">
+                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                            👁 Ver
+                        </button>
+                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
+                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                    </td>
+                    </tr>
+
+                    <!-- Entregada -->
+                    <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-medium text-gray-900">00126</td>
+                    <td class="p-4">Sede Oeste</td>
+                    <td class="p-4">María López</td>
+                    <td class="p-4">09/09/2025</td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 text-base font-semibold bg-sky-100 text-sky-600 rounded-full">
+                        Entregada
+                        </span>
+                    </td>
+                    <td class="p-4 flex items-center justify-center gap-2">
+                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                            👁 Ver
+                        </button>
+                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
+                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

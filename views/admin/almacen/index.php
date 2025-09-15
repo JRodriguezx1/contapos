@@ -60,6 +60,7 @@
 
   </div> <!-- fin accordion_inv -->
 
+  <!-- MODAL DE OPCIONES DE TRASLADO DE INVENTARIOS -->
   <dialog id="miDialogoTrasladoInvnetario" class="midialog-sm p-5">
     <div class="flex justify-between items-center">
          <h4 id="modalTrasladoInvnetario" class="font-semibold text-gray-600 mb-4">Gestion de traslado de inventario</h4>
@@ -69,8 +70,7 @@
     <div class="text-center">
         <a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>
         <a class="btn-command text-center" href="/admin/almacen/solicitarinventario"><span class="material-symbols-outlined">switch_right</span>Solicitar inventario</a>
-    </div>
-       
+    </div> 
   </dialog>
 
 </div>
