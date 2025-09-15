@@ -16,6 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `almacenamiento`
+--
+
+DROP TABLE IF EXISTS `almacenamiento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `almacenamiento` (
+  `id` int NOT NULL,
+  `nombre` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `almacenamiento`
+--
+
+LOCK TABLES `almacenamiento` WRITE;
+/*!40000 ALTER TABLE `almacenamiento` DISABLE KEYS */;
+/*!40000 ALTER TABLE `almacenamiento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `arqueoscajas`
 --
 
@@ -450,6 +473,79 @@ INSERT INTO `conversionunidades` VALUES (13,NULL,4,7,7,'metros','metros',1.000),
 UNLOCK TABLES;
 
 --
+-- Table structure for table `creditos_compras`
+--
+
+DROP TABLE IF EXISTS `creditos_compras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `creditos_compras` (
+  `id` int NOT NULL,
+  `id_sucursal_fk` int NOT NULL,
+  `compra_id` int NOT NULL,
+  `id_proveedor` int DEFAULT NULL,
+  `nombreproveedor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
+  `montototal` decimal(12,2) NOT NULL,
+  `saldopendiente` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `cantidadcuotas` int NOT NULL DEFAULT '0',
+  `montocuota` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `frecuenciapago` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `fechainicio` date DEFAULT NULL,
+  `tasainteres` decimal(6,2) DEFAULT '0.00',
+  `estado` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_sucursal_fk_idx` (`id_sucursal_fk`),
+  KEY `compra_id_idx` (`compra_id`),
+  KEY `id_proveedor_idx` (`id_proveedor`),
+  CONSTRAINT `compra_id` FOREIGN KEY (`compra_id`) REFERENCES `compras` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id_proveedor` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `id_sucursal_fk` FOREIGN KEY (`id_sucursal_fk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `creditos_compras`
+--
+
+LOCK TABLES `creditos_compras` WRITE;
+/*!40000 ALTER TABLE `creditos_compras` DISABLE KEYS */;
+/*!40000 ALTER TABLE `creditos_compras` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cuotas_compras`
+--
+
+DROP TABLE IF EXISTS `cuotas_compras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cuotas_compras` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_creditocompra` int NOT NULL,
+  `numerocuota` int NOT NULL,
+  `montocuota` decimal(12,2) NOT NULL,
+  `fechavencimiento` date DEFAULT NULL,
+  `fechapagado` datetime DEFAULT NULL,
+  `estado` tinyint(1) NOT NULL,
+  `cuotas_comprascol` varchar(45) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_creditocompra_idx` (`id_creditocompra`),
+  CONSTRAINT `id_creditocompra` FOREIGN KEY (`id_creditocompra`) REFERENCES `creditos_compras` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cuotas_compras`
+--
+
+LOCK TABLES `cuotas_compras` WRITE;
+/*!40000 ALTER TABLE `cuotas_compras` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cuotas_compras` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `declaracionesdineros`
 --
 
@@ -770,6 +866,40 @@ LOCK TABLES `ingresoscajas` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `insumos_consumidos`
+--
+
+DROP TABLE IF EXISTS `insumos_consumidos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `insumos_consumidos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idordenproduccion` int NOT NULL,
+  `subproducto_id` int DEFAULT NULL,
+  `id_loteproduccion` int NOT NULL,
+  `nombresubproducto` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
+  `cantidadutilizada` decimal(11,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idordenproduccion_idx` (`idordenproduccion`),
+  KEY `subproducto_id_idx` (`subproducto_id`),
+  KEY `id_loteproduccion_idx` (`id_loteproduccion`),
+  CONSTRAINT `id_loteproduccion` FOREIGN KEY (`id_loteproduccion`) REFERENCES `lotes_produccion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idordenproduccion` FOREIGN KEY (`idordenproduccion`) REFERENCES `orden_produccion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `subproducto_id` FOREIGN KEY (`subproducto_id`) REFERENCES `subproductos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `insumos_consumidos`
+--
+
+LOCK TABLES `insumos_consumidos` WRITE;
+/*!40000 ALTER TABLE `insumos_consumidos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `insumos_consumidos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `insumos_fabricados`
 --
 
@@ -794,6 +924,39 @@ CREATE TABLE `insumos_fabricados` (
 LOCK TABLES `insumos_fabricados` WRITE;
 /*!40000 ALTER TABLE `insumos_fabricados` DISABLE KEYS */;
 /*!40000 ALTER TABLE `insumos_fabricados` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lotes_produccion`
+--
+
+DROP TABLE IF EXISTS `lotes_produccion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lotes_produccion` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_ordenproduccion` int NOT NULL,
+  `idsucursalfk` int NOT NULL,
+  `num_lote` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `cantidadproducida` decimal(11,2) NOT NULL,
+  `fechaproduccion` date DEFAULT NULL,
+  `fechavencimiento` date DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_ordenproduccion_idx` (`id_ordenproduccion`),
+  KEY `idsucursalfk_idx` (`idsucursalfk`),
+  CONSTRAINT `id_ordenproduccion` FOREIGN KEY (`id_ordenproduccion`) REFERENCES `orden_produccion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idsucursalfk` FOREIGN KEY (`idsucursalfk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lotes_produccion`
+--
+
+LOCK TABLES `lotes_produccion` WRITE;
+/*!40000 ALTER TABLE `lotes_produccion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lotes_produccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -862,6 +1025,38 @@ LOCK TABLES `negocio` WRITE;
 /*!40000 ALTER TABLE `negocio` DISABLE KEYS */;
 INSERT INTO `negocio` VALUES (1,'Negocios pos sa','Armenia','Cra 12#9-03 esquina','7358452','3183920532','sasha.spa@gmail.com','41936042-6','No responsable de IVA\r\nRegimen Simple','3183920532','https://www.facebook.com/profile.php?id=100007164136068',NULL,NULL,NULL,NULL,'65432f14b63a0logo.png','#051453','#ffffff',60);
 /*!40000 ALTER TABLE `negocio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orden_produccion`
+--
+
+DROP TABLE IF EXISTS `orden_produccion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orden_produccion` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idsucursal_fk` int NOT NULL,
+  `id_productoid` int DEFAULT NULL,
+  `nombreproducto` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
+  `cantidadsolicitada` decimal(12,2) NOT NULL,
+  `estado` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_productoid_idx` (`id_productoid`),
+  KEY `idsucursal_fk_idx` (`idsucursal_fk`),
+  CONSTRAINT `id_productoid` FOREIGN KEY (`id_productoid`) REFERENCES `productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `idsucursal_fk` FOREIGN KEY (`idsucursal_fk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orden_produccion`
+--
+
+LOCK TABLES `orden_produccion` WRITE;
+/*!40000 ALTER TABLE `orden_produccion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orden_produccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1349,4 +1544,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-14 19:41:44
+-- Dump completed on 2025-09-15  1:47:21
