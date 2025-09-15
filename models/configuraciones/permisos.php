@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\configuraciones;
 
-class permisos extends ActiveRecord{
+class permisos extends \Model\ActiveRecord{
     protected static $tabla = 'permisos';
     protected static $columnasDB = ['id', 'nombre', 'modulo', 'descripcion'];
     

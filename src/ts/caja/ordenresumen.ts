@@ -167,6 +167,7 @@
       });
 
       async function procesarpedido(estado:string){ //////PROCESAR PAGO DE COTIZACION SiN CAMBIAR DATOS DE LOS PRODUCTOS//////
+        const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
         const datos = new FormData();
         datos.append('id', (document.querySelector('#idorden') as HTMLElement).dataset.idorden!);
         //datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
@@ -209,6 +210,7 @@
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               /////// reinciar modulo de ventas
+              if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
               ordenpagada();
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -220,6 +222,11 @@
         document.removeEventListener("click", cerrarDialogoExterno);
       }
   
+      function printTicketPOS(idfactura:string){
+      setTimeout(() => {
+        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      }, 1200);
+    }
 
       function ordenpagada(){
         if(btnfacturar)btnfacturar.style.display = "none";

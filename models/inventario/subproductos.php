@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\inventario;
 
-class subproductos extends ActiveRecord {
+class subproductos extends \Model\ActiveRecord {
     protected static $tabla = 'subproductos';
     protected static $columnasDB = ['id', 'id_unidadmedida', 'unidadmedida', 'insumoprocesado', 'nombre', 'sku', 'proveedor', 'descripcion', 'medidas', 'color', 'uso', 'stock', 'stockminimo', 'precio_compra', 'fecha_ingreso'];
     

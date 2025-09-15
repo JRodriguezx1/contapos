@@ -4,11 +4,11 @@ namespace Controllers;
 
 use Classes\Email;
 use Model\ActiveRecord;
-use Model\negocio;
+use Model\configuraciones\negocio;
 use Model\parametrizacion\config_global;
 use Model\parametrizacion\config_local;
 use Model\ventas\ventas;
-use Model\tarifas;
+use Model\configuraciones\tarifas;
 use MVC\Router;  //namespace\clase
 
 class parametroscontrolador{

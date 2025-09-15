@@ -92,7 +92,7 @@
         datos.append('cajas', JSON.stringify(valuecajas));
         datos.append('facturadores', JSON.stringify(valuefacturadores));
         try {
-            const url = "/admin/api/consultafechazetadiario";
+            const url = "/admin/api/consultafechazetadiario"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             console.log(resultado);

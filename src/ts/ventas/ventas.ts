@@ -720,7 +720,7 @@
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('subtotal', valorTotal.subtotal+'');
-      datos.append('base', valorTotal.base+'');
+      datos.append('base', valorTotal.base.toFixed(3));
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
       datos.append('dctox100',valorTotal.dctox100+'');
       datos.append('descuento',valorTotal.descuento+'');

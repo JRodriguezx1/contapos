@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\caja;
 
-class declaracionesdineros extends ActiveRecord{
+class declaracionesdineros extends \Model\ActiveRecord{
     protected static $tabla = 'declaracionesdineros';
     protected static $columnasDB = ['id', 'id_mediopago', 'idcierrecajaid', 'nombremediopago', 'valordeclarado', 'valorsistema'];
     

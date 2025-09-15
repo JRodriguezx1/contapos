@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\inventario;
 
-class unidadesmedida extends ActiveRecord{
+class unidadesmedida extends \Model\ActiveRecord{
     protected static $tabla = 'unidadesmedida';
     protected static $columnasDB = ['id', 'nombre', 'simbolo', 'editable', 'fechacreacion', 'fechaupdate'];
     
