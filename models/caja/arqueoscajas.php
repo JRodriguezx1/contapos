@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\caja;
 
-class arqueoscajas extends ActiveRecord{
+class arqueoscajas extends \Model\ActiveRecord{
     protected static $tabla = 'arqueoscajas';
     protected static $columnasDB = ['id', 'id_cierrecajaid', 'cienmil', 'cincuentamil', 'veintemil', 'diezmil', 'cincomil', 'dosmil', 'mil', 'quinientos', 'docientos', 'cien', 'cincuenta', 'dato1', 'dato2'];
     

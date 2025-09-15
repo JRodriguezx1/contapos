@@ -3,18 +3,18 @@
 namespace Controllers;
 
 use Classes\Email;
-use Model\caja;
-use Model\consecutivos;
-use Model\usuarios; //namespace\clase hija
-use Model\negocio;
-use Model\mediospago;
+use Model\configuraciones\caja;
+use Model\configuraciones\consecutivos;
+use Model\configuraciones\usuarios; //namespace\clase hija
+use Model\configuraciones\negocio;
+use Model\configuraciones\mediospago;
 use Model\ActiveRecord;
-use Model\bancos;
-use Model\cierrescajas;
+use Model\configuraciones\bancos;
+use Model\caja\cierrescajas;
 use Model\parametrizacion\config_local;
-use Model\permisos;
-use Model\tipofacturador;
-use Model\usuarios_permisos;
+use Model\configuraciones\permisos;
+use Model\configuraciones\tipofacturador;
+use Model\configuraciones\usuarios_permisos;
 use MVC\Router;  //namespace\clase
  
 class configcontrolador{

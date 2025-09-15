@@ -5,15 +5,15 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Porcentaje de impuesto -->
         <div>
-            <label for="porcentaje_impuesto" class="block text-xl font-medium text-gray-700 mb-1">
+            <label for="porcentaje_de_impuesto" class="block text-xl font-medium text-gray-700 mb-1">
                 Porcentaje de impuesto
             </label>
             <span class="block mb-1 text-sm text-gray-500">
                 Seleccione el impuesto y tarifa correspondiente al negocio
             </span>
             <select 
-                id="porcentaje_impuesto" 
-                name="porcentaje_impuesto"
+                id="porcentaje_de_impuesto" 
+                name="porcentaje_de_impuesto"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
             >
                 <span class="text-indigo-600 font-bold">
@@ -36,13 +36,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar impuesto en factura</label>
             <label for="impuesto_factura_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="impuesto_factura_si" type="radio" name="mostrar_impuesto_en_factura" value="1" class="hidden peer">
+                <input id="impuesto_factura_si" type="radio" name="mostrar_impuesto_en_factura" value="1" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="impuesto_factura_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="impuesto_factura_no" type="radio" name="mostrar_impuesto_en_factura" value="0" class="hidden peer" checked>
+                <input id="impuesto_factura_no" type="radio" name="mostrar_impuesto_en_factura" value="0" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
@@ -51,13 +51,13 @@
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Discriminar impuesto por producto</label>
             <label for="discriminar_imp_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="discriminar_imp_si" type="radio" name="discriminar_impuesto_por_producto" value="1" class="hidden peer">
+                <input id="discriminar_imp_si" type="radio" name="discriminar_impuesto_por_producto" value="1" class="hidden peer" checked>
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
             </label>
 
             <label for="discriminar_imp_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                <input id="discriminar_imp_no" type="radio" name="discriminar_impuesto_por_producto" value="0" class="hidden peer" checked>
+                <input id="discriminar_imp_no" type="radio" name="discriminar_impuesto_por_producto" value="0" class="hidden peer">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>

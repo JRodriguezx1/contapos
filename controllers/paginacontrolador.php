@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Model\negocio;
+use Model\configuraciones\negocio;
 use Model\categoriaserv;
 use Model\servicios;
 use Model\empserv;

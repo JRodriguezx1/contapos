@@ -198,7 +198,7 @@
       });
     }
 
-    function printindicadores(obj:{id:string, idcaja:string, id_usuario:string, nombrecaja:string, nombreusuario:string, fechainicio:string, fechacierre:string, ncambiosaventa:string, totalcotizaciones:string, totalfacturas:string, facturaselectronicas:string, facturaspos:string, valorfe:string, descuentofe:string, valorpos:string, descuentopos:string, basecaja:string, ventasenefectivo:string, gastoscaja:string, gastosbanco:string, dineroencaja:string, domicilios:string, ndomicilios:string, realencaja:string, ingresoventas:string, totaldescuentos:string, realventas:string, valorimpuestototal:string, totalbruto:string, estado:string}){
+    function printindicadores(obj:{id:string, idcaja:string, id_usuario:string, nombrecaja:string, nombreusuario:string, fechainicio:string, fechacierre:string, ncambiosaventa:string, totalcotizaciones:string, totalfacturas:string, facturaselectronicas:string, facturaspos:string, valorfe:string, descuentofe:string, valorpos:string, descuentopos:string, basecaja:string, ventasenefectivo:string, gastoscaja:string, gastosbanco:string, dineroencaja:string, domicilios:string, ndomicilios:string, realencaja:string, ingresoventas:string, totaldescuentos:string, realventas:string, valorimpuestototal:string, basegravable:string, estado:string}){
       const basecaja = Number(obj.basecaja);
       const ventasenefectivo = Number(obj.ventasenefectivo);
       const gastoscaja = Number(obj.gastoscaja);
@@ -220,11 +220,13 @@
       document.querySelector('#domicilios')!.textContent = '- $'+domicilios.toLocaleString();
       document.querySelector('#realCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja-domicilios).toLocaleString();
       document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+ingresoventas.toLocaleString();
+      document.querySelector('#totalGastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
       document.querySelector('#totalDescuentos')!.textContent = '- $'+totaldescuentos.toLocaleString();
-      document.querySelector('#realVentas')!.textContent = '= $'+(ingresoventas-totaldescuentos).toLocaleString();
-      document.querySelector('#realVentasSinDomicilios')!.textContent = '= $'+(ingresoventas-totaldescuentos-domicilios).toLocaleString();
-      document.querySelector('#mpuestoTotal')!.textContent = '+ $'+Number(obj.valorimpuestototal).toLocaleString();
-      document.querySelector('#totalBruto')!.textContent = '+ $'+Number(obj.totalbruto).toLocaleString();
+      document.querySelector('#totalDomicilios')!.textContent = '= $'+(domicilios).toLocaleString();
+      document.querySelector('#realVentas')!.textContent = '= $'+(ingresoventas-totaldescuentos-domicilios-gastoscaja).toLocaleString();
+      document.querySelector('#totalBaseGravable')!.textContent = '+ $'+Number(obj.basegravable).toLocaleString();
+      document.querySelector('#impuestoTotal')!.textContent = '+ $'+Number(obj.valorimpuestototal).toLocaleString();
+      document.querySelector('#otrosGastosBancarios')!.textContent = '+ $'+Number(obj.gastosbanco).toLocaleString();
     }
 
     function printsobrantesfaltantes(array: {id_mediopago:string, idcierrecajaid:string, nombremediopago:string, valordeclarado:number, valorsistema:number}[]){

@@ -7,7 +7,7 @@ namespace Controllers;
 //require __DIR__ . '/../classes/aws/aws-autoloader.php';
 //require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 use MVC\Router;
-use Model\usuarios;
+use Model\configuraciones\usuarios;
 //use ticketPOS;
 
 

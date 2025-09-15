@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\configuraciones;
 
-class negocio extends ActiveRecord {
+class negocio extends \Model\ActiveRecord {
     protected static $tabla = 'negocio';
     protected static $columnasDB = ['id', 'nombre', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'nit', 'datosencabezados', 'ws', 'facebook', 'instagram', /*'tiktok',*/ 'youtube', /*'twitter',*/ 'logo', 'colorprincipal', 'colorsecundario', 'timeservice'];
     

@@ -3,21 +3,21 @@
 namespace Controllers;
 
 use Classes\Email;
-use Model\bancos;
-use Model\usuarios; //namespace\clase hija
-use Model\productos;
-use Model\subproductos;
-use Model\productos_sub;
-use Model\categorias;
-Use Model\unidadesmedida;
-use Model\conversionunidades;
-use Model\caja;
+use Model\configuraciones\bancos;
+use Model\configuraciones\usuarios; //namespace\clase hija
+use Model\inventario\productos;
+use Model\inventario\subproductos;
+use Model\inventario\productos_sub;
+use Model\inventario\categorias;
+Use Model\inventario\unidadesmedida;
+use Model\inventario\conversionunidades;
+use Model\configuraciones\caja;
 use Model\gastos;
-use Model\cierrescajas;
+use Model\caja\cierrescajas;
 use Model\compras;
 use Model\detallecompra;
-use Model\stockinsumossucursal;
-use Model\stockproductossucursal;
+use Model\inventario\stockinsumossucursal;
+use Model\inventario\stockproductossucursal;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;

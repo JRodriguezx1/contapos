@@ -276,7 +276,7 @@
             autoWidth: true,
             responsive: true,
             deferRender: true,
-            retrieve: true,
+            //retrieve: true,
             processing: true,
             language: {
                 search: 'Busqueda',

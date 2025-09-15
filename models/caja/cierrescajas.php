@@ -1,9 +1,9 @@
 <?php
-namespace Model;
+namespace Model\caja;
 
-class cierrescajas extends ActiveRecord {
+class cierrescajas extends \Model\ActiveRecord {
     protected static $tabla = 'cierrescajas';
-    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'totalbruto', 'estado', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
 
     public function __construct($args = [])
     {
@@ -36,7 +36,7 @@ class cierrescajas extends ActiveRecord {
         $this->totaldescuentos = $args['totaldescuentos'] ?? 0;  //descuentos
         $this->realventas = $args['realventas'] ?? 0;  //ingreso real = total ingreso - descuentos
         $this->valorimpuestototal = $args['valorimpuestototal'] ?? 0;
-        $this->totalbruto = $args['totalbruto'] ?? 0;
+        $this->basegravable = $args['basegravable'] ?? 0;
         $this->estado = $args['estado'] ?? 0;  // 0 = abierto, 1 = cerrado
         $this->dato1 = $args['dato1'] ?? '';
         $this->dato2 = $args['dato2'] ?? '';

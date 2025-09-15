@@ -4,24 +4,24 @@ namespace Controllers;
 
 use Classes\Email;
 use Model\ActiveRecord;
-use Model\usuarios; //namespace\clase hija
-use Model\productos;
-use Model\categorias;
-use Model\mediospago;
-use Model\factmediospago;
+use Model\configuraciones\usuarios; //namespace\clase hija
+use Model\inventario\productos;
+use Model\inventario\categorias;
+use Model\configuraciones\mediospago;
+use Model\caja\factmediospago;
 use Model\clientes\clientes;
 use Model\ventas\facturas;
 use Model\ventas\ventas;
-use Model\tarifas;
-use Model\cierrescajas;
-use Model\consecutivos;
-use Model\caja;
+use Model\configuraciones\tarifas;
+use Model\caja\cierrescajas;
+use Model\configuraciones\consecutivos;
+use Model\configuraciones\caja;
 use Model\parametrizacion\config_local;
-use Model\productos_sub;
-use Model\stockinsumossucursal;
-use Model\stockproductossucursal;
-use Model\subproductos;
-//use Model\negocio;
+use Model\inventario\productos_sub;
+use Model\inventario\stockinsumossucursal;
+use Model\inventario\stockproductossucursal;
+use Model\inventario\subproductos;
+//use Model\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
 
 class ventascontrolador{
@@ -40,7 +40,7 @@ class ventascontrolador{
       if(!is_numeric($id))return;
       //obtener datos de la factura guardada o cotizacion
       $facturacotz = facturas::find('id', $id);
-      if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0){
+      if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0 && $facturacotz->id_sucursal == $idsucursal){
         $productoscotz = ventas::idregistros('idfactura', $id);
       }else{ return;}
     }
@@ -76,7 +76,6 @@ class ventascontrolador{
     $alertas = [];
     $invSub = true;
     $invPro = true;
-
 
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
@@ -131,8 +130,9 @@ class ventascontrolador{
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
           if($_POST['estado']=='Paga'){
+            $factura->compara_objetobd_post($_POST);
             $factura->cambioaventa = 1;
-            $factura->estado = 'aceptada';
+            $factura->estado = 'Aceptada';
           }else{
             $factura->compara_objetobd_post($_POST);
           }
@@ -155,17 +155,20 @@ class ventascontrolador{
 
 
       $tempultimocierre = clone $ultimocierre;
-      if($ultimocierre->estado == 0 || ($factura->cotizacion == 1 && $factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id']) && $_POST['estado']=='Guardado')){ //si cierre de caja esta abierto
+      if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
         
         if(!empty($_POST['id'])&&$_POST['estado']=='Paga'){ //crear nuevo registro para cotizacion que se va a facturar
           $factura->compara_objetobd_post($_POST);
           $factura->cotizacion = 1;
           $factura->cambioaventa = 1;
+          $factura->estado =  'Paga';
           $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
         }
 
         if($_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado'){
           $factura->idcierrecaja = $ultimocierre->id;
+          //calcular ultimo num_orden
+          $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
           $r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
         }
 
@@ -176,11 +179,11 @@ class ventascontrolador{
             $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
             if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
               $ultimocierre->facturaselectronicas = $ultimocierre->facturaselectronicas + 1;  //total de facturas electronicas
-              $ultimocierre->valorfe += $factura->subtotal;
+              $ultimocierre->valorfe += $factura->total;
               $ultimocierre->descuentofe += $factura->descuento;
             }else{
               $ultimocierre->facturaspos = $ultimocierre->facturaspos + 1;   //total de facturas pos
-              $ultimocierre->valorpos += $factura->subtotal;
+              $ultimocierre->valorpos += $factura->total;
               $ultimocierre->descuentopos += $factura->descuento;
             }
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
@@ -192,9 +195,10 @@ class ventascontrolador{
             }
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->subtotal;
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
+            $ultimocierre->basegravable += $factura->base;
             //////////// Guardar los productos de la venta en tabla ventas //////////////
             foreach($carrito as $obj){
               $obj->dato1 = '';
@@ -399,11 +403,14 @@ class ventascontrolador{
 
         if($factura && $factura->estado == "Guardado"){  // si la factura guardada existe
             $factura->compara_objetobd_post($_POST);
-            $factura->estado = 'aceptada';
+            $factura->estado = 'Aceptada';
             $r = $factura->actualizar();
           
             $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
+            $factura->estado = 'Paga';
+            $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
+            //calcular ultimo num_orden
             $r = $factura->crear_guardar();
             $factura->id = $r[1];
             //CAMBIA al nuevo idfactura
@@ -417,11 +424,11 @@ class ventascontrolador{
             $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
             if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
               $ultimocierre->facturaselectronicas = $ultimocierre->facturaselectronicas + 1;  //total de facturas electronicas
-              $ultimocierre->valorfe += $factura->subtotal;
+              $ultimocierre->valorfe += $factura->total;
               $ultimocierre->descuentofe += $factura->descuento;
             }else{
               $ultimocierre->facturaspos = $ultimocierre->facturaspos + 1;   //total de facturas pos
-              $ultimocierre->valorpos += $factura->subtotal;
+              $ultimocierre->valorpos += $factura->total;
               $ultimocierre->descuentopos += $factura->descuento;
             }
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
@@ -433,9 +440,10 @@ class ventascontrolador{
             }
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->subtotal;
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
+            $ultimocierre->basegravable += $factura->base;
 
             /// productos ya estan en tabla ventas
             $r1 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago

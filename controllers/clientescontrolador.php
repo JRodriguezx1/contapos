@@ -5,11 +5,11 @@ namespace Controllers;
 use Classes\Email;
 use Model\ActiveRecord;
 use MVC\Router;  //namespace\clase
-use Model\usuarios;
+use Model\configuraciones\usuarios;
 use Model\clientes\clientes;
 use Model\empleados;
 use Model\clientes\direcciones;
-use Model\tarifas;
+use Model\configuraciones\tarifas;
 
  
 class clientescontrolador{

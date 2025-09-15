@@ -5,14 +5,14 @@ require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 
 use Classes\Email;
 use Model\ActiveRecord;
-use Model\mediospago;
-use Model\factmediospago;
+use Model\configuraciones\mediospago;
+use Model\caja\factmediospago;
 use Model\clientes\clientes;
 use Model\clientes\direcciones;
 use Model\ventas\facturas;
-use Model\negocio;
+use Model\configuraciones\negocio;
 use Model\ventas\ventas;
-use Model\tarifas;
+use Model\configuraciones\tarifas;
 use MVC\Router;  //namespace\clase
 use ticketPOS;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\configuraciones;
 
-class tipofacturador extends ActiveRecord{
+class tipofacturador extends \Model\ActiveRecord{
     protected static $tabla = 'tipofacturador';
     protected static $columnasDB = ['id', 'nombre'];
     

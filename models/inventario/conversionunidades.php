@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\inventario;
 
-class conversionunidades extends ActiveRecord{
+class conversionunidades extends \Model\ActiveRecord{
     protected static $tabla = 'conversionunidades';
     protected static $columnasDB = ['id', 'idproducto', 'idsubproducto', 'idunidadmedidabase', 'idunidadmedidadestino', 'nombreunidadbase', 'nombreunidaddestino', 'factorconversion'];
     

@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\caja;
 
-class factmediospago extends ActiveRecord{
+class factmediospago extends \Model\ActiveRecord{
     protected static $tabla = 'factmediospago';
     protected static $columnasDB = ['id', 'idmediopago', 'id_factura', 'valor'];
     

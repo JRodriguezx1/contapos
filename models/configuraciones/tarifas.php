@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Model\configuraciones;
 
-class tarifas extends ActiveRecord{
+class tarifas extends \Model\ActiveRecord{
     protected static $tabla = 'tarifas';
     protected static $columnasDB = ['id', 'nombre', 'valor'];
     
