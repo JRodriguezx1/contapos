@@ -61,16 +61,38 @@
   </div> <!-- fin accordion_inv -->
 
   <!-- MODAL DE OPCIONES DE TRASLADO DE INVENTARIOS -->
-  <dialog id="miDialogoTrasladoInvnetario" class="midialog-sm p-5">
-    <div class="flex justify-between items-center">
-         <h4 id="modalTrasladoInvnetario" class="font-semibold text-gray-600 mb-4">Gestion de traslado de inventario</h4>
-        <button id="btnXCerrarTrasladoInvnetario" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
-    </div>
+<dialog id="miDialogoTrasladoInvnetario" class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-2xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
+  <!-- Encabezado -->
+  <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
+    <h4 id="modalTrasladoInvnetario" class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+      Gestión de traslado de inventario
+    </h4>
+    <button id="btnXCerrarTrasladoInvnetario" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+      <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
+    </button>
+  </div>
 
-    <div class="text-center">
-        <a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>
-        <a class="btn-command text-center" href="/admin/almacen/solicitarinventario"><span class="material-symbols-outlined">switch_right</span>Solicitar inventario</a>
-    </div> 
-  </dialog>
+  <!-- Opciones -->
+  <div class="grid gap-4">
+    <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 dark:border-neutral-700 hover:bg-indigo-50 dark:hover:bg-neutral-800 transition"
+       href="/admin/almacen/trasladoinventario">
+       <span class="flex items-center gap-3 text-gray-900 dark:text-gray-100 text-lg font-medium">
+         <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+         Traslado de inventario
+       </span>
+       <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+    </a>
+    
+    <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 dark:border-neutral-700 hover:bg-indigo-50 dark:hover:bg-neutral-800 transition"
+       href="/admin/almacen/solicitarinventario">
+       <span class="flex items-center gap-3 text-gray-900 dark:text-gray-100 text-lg font-medium">
+         <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+         Solicitar inventario
+       </span>
+       <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+    </a>
+  </div>
+</dialog>
+
 
 </div>

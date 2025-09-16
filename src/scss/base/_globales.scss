@@ -43,3 +43,7 @@ img {
     padding: 1rem;
     background-color: v.$blanco;
 }
+
+input[type="number"]:focus {
+  outline: none !important;
+}

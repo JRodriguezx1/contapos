@@ -1,5 +1,11 @@
-<div class="box">
-    <div class="p-6 bg-white dark:bg-neutral-900 rounded-2xl shadow-md">
+<div class="box !pb-16">
+    <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+    <span class="sr-only">Atrás</span>
+  </a>
+    <div class="p-6 dark:bg-neutral-900 rounded-2xl">
     <!-- Barra de progreso -->
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-2">
@@ -54,8 +60,8 @@
         <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 pt-6">Productos</h2>
         <div class="flex flex-col md:flex-row gap-2">
             <input type="text" class="bg-gray-50 border md:w-2/3 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Buscar producto..." />
-            <input type="number" class="w-3/4 md:w-1/3 focus:border-indigo-600 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 border rounded-lg p-2.5 bg-gray-50 border-gray-300 text-gray-900" placeholder="Cant." />
-            <button class="px-4 py-2 w-3/4 md:w-1/3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Agregar</button>
+            <input type="number" class="w-full md:w-1/3 focus:border-indigo-600 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 border rounded-lg p-2.5 bg-gray-50 border-gray-300 text-gray-900" placeholder="Cant." />
+            <button class="px-4 h-14 py-2 w-full md:w-1/3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Agregar</button>
         </div>
 
         <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">  
