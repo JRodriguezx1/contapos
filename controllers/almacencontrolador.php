@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\ActiveRecord;
 use Model\configuraciones\bancos;
 use Model\configuraciones\usuarios; //namespace\clase hija
 use Model\inventario\productos;
@@ -16,6 +17,7 @@ use Model\gastos;
 use Model\caja\cierrescajas;
 use Model\compras;
 use Model\detallecompra;
+use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
 use Model\sucursales;
@@ -33,6 +35,7 @@ class almacencontrolador{
     //$productos = productos::indicadoresAllProducts();
     //$subproductos = subproductos::indicadoresAllSubProducts();
 
+    $proveedores = proveedores::all();
     $cantidadCategorias = categorias::numreg_where('visible', 1);
     $productos = stockproductossucursal::indicadoresAllProductsXSucursal(id_sucursal());
     $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
@@ -50,7 +53,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
@@ -275,13 +278,13 @@ class almacencontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
     }
-    //$alertas = usuarios::getAlertas();
-    $cajas = caja::all();
+    $proveedores = proveedores::all();
+    $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $bancos = bancos::all();
     $productos = productos::all();
     $subproductos = subproductos::all();
     $totalitems = []; //array_merge($productos, $subproductos);
-    $router->render('admin/almacen/compras', ['titulo'=>'Almacen', 'totalitems'=>$totalitems, 'categorias'=>$categorias, 'cajas'=>$cajas, 'bancos'=>$bancos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/compras', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'totalitems'=>$totalitems, 'categorias'=>$categorias, 'cajas'=>$cajas, 'bancos'=>$bancos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
   
 
@@ -873,6 +876,7 @@ class almacencontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $compra->idusuario = $_SESSION['id'];
       $compra->nombreusuario = $_SESSION['nombre'];
+      $compra->id_sucursal_id = id_sucursal();
       $alertas = $compra->validar();
       if(empty($alertas)){
         
@@ -914,8 +918,14 @@ class almacencontrolador{
                   //*****/////////// registrarlo en tabla gastos, operacion compra /////////////
 
                   //$ultimocierre = cierrescajas::ordenarlimite('id', 'DESC', 1);
-                  $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idorigencaja']]); //ultimo cierre por caja
-                  if(isset($ultimocierre)){ //si el cierre de caja de la caja seleccionada existe y esta abierta
+                  $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idorigencaja'], 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
+                  if(!isset($ultimocierre)){ // si la caja esta cerrada, y se hace apertura con la venta
+                    $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idorigencaja'], 'nombrecaja'=>caja::find('id', $_POST['idorigencaja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+                    $ruc = $ultimocierre->crear_guardar();
+                    if(!$ruc[0])$ultimocierre->estado = 1;
+                    $ultimocierre->id = $ruc[1];
+                  }
+                  if($ultimocierre->estado == 0){ //si el cierre de caja de la caja seleccionada existe y esta abierta
                     $ingresoGasto = new gastos();
                     $ingresoGasto->idg_usuario = $compra->idusuario;
                     $ingresoGasto->id_compra = $r[1];
@@ -1150,4 +1160,75 @@ class almacencontrolador{
     //debuguear($newarray);
     echo json_encode($newarray);
   }
+
+
+  //////////////    GESTION DE PROVEEDORES    //////////////////
+
+  ///////////// procesando la gestion de los proveedores ////////////////
+    public static function allproveedores(){  //api llamado desde gestionproveedores.js
+      $proveedores = proveedores::all();
+      echo json_encode($proveedores);
+    }
+
+    public static function crearProveedor(){ //api llamada desde el modulo de gestionproveedores.ts cuando se crea un cliente
+        session_start();
+        isadmin();
+        $alertas = [];
+        $proveedor = new proveedores($_POST);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $proveedor->validar();
+            if(empty($alertas)){ //si los campos cumplen los criterios  
+                $r = $proveedor->crear_guardar();
+                if($r[0]){
+                    $proveedor->id = $r[1];
+                    $proveedor->created_at = date('Y-m-d H:i:s');
+                    $alertas['exito'][] = 'proveedor creada correctamente';
+                    $alertas['proveedor'] = $proveedor;
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+    public static function actualizarProveedor(){
+        session_start();
+        $alertas = []; 
+        $proveedor = proveedores::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $proveedor->compara_objetobd_post($_POST);
+            $alertas = $proveedor->validar();
+            if(empty($alertas)){
+                $r = $proveedor->actualizar();
+                if($r){
+                    $alertas['exito'][] = "Datos del proveedor actualizados";
+                    $alertas['proveedor'][] = $proveedor;
+                }else{
+                    $alertas['error'][] = "Error al actualizar proveedor";
+                }
+            }
+        }
+        echo json_encode($alertas);  
+    }
+
+    public static function eliminarProveedor(){
+        session_start();
+        $proveedor = proveedores::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($proveedor)){
+                $r = $proveedor->eliminar_registro();
+                if($r){
+                    ActiveRecord::setAlerta('exito', 'proveedor eliminado correctamente');
+                }else{
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'proveedor no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
+    }
+
 }
