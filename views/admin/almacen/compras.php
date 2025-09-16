@@ -15,16 +15,14 @@
 
                 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
 
-                    <div class="sm:col-span-3">
+                    <div class="sm:col-span-3 tlg:col-span-2">
                         <label for="proveedor" class="block text-2xl font-medium text-gray-600">Proveedor</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
-                                <option value="1">Predeterminado</option>
-                                <option value="2">Makro tech</option>
-                                <option value="3">CelMax</option>
-                                <option value="4">Argos</option>
-                                <option value="5">Electro house</option>
+                                <?php foreach($proveedores as $value): ?>
+                                <option value="<?php echo $value->id; ?>"><?php echo $value->nombre;?></option>
+                                <?php endforeach; ?>
                             </select>
                             <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
@@ -33,7 +31,7 @@
                     </div>
 
                     <!-- Porcentaje de impuesto -->
-                    <div class="sm:col-span-3"> 
+                    <div class="sm:col-span-3 md:col-span-3 tlg:col-span-2"> 
                         <label for="porcentaje_impuesto" class="block text-2xl font-medium text-gray-600">
                             Impuesto
                         </label>
@@ -41,8 +39,8 @@
                             Seleccione el impuesto y tarifa correspondiente al negocio
                         </span> -->
                         <select 
-                            id="porcentaje_impuesto_compra" 
-                            name="porcentaje_impuesto_compra"
+                            id="inputimpuesto" 
+                            name="inputimpuestocompra"
                             class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                         >
                             <span class="text-indigo-600 font-bold">
@@ -62,20 +60,20 @@
                         </select>
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
+                    <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
                         <label for="factura" class="block text-2xl font-medium text-gray-600">N° Factura</label>
                         <div class="mt-2">
                             <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
-                    <div class="sm:col-span-2">
+                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="fecha" class="block text-2xl font-medium text-gray-600">Fecha</label>
                         <div class="mt-2">
                             <input type="date" name="fecha" id="fecha" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-2 tlg:col-span-3">
+                    <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
                         <label for="origenPago" class="block text-2xl font-medium text-gray-600">Origen</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -86,7 +84,7 @@
                         </div>
                     </div>
 
-                    <div id="divCaja" class="sm:col-span-3 md:col-span-4 tlg:col-span-3">
+                    <div id="divCaja" class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="origenCaja" class="block text-2xl font-medium text-gray-600">Caja</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenCaja" name="origencaja" autocomplete="origencaja-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -97,29 +95,8 @@
                             </select>
                         </div>
                     </div>
-            
-                    <div class="sm:col-span-3 md:col-span-4 tlg:col-span-2">
-                        <label for="simbolo_moneda" class="block text-2xl font-medium text-gray-600">
-                            Sede
-                        </label>
-                        <!-- <span class="block mb-1 text-sm text-gray-500">
-                            Seleccione una sede
-                        </span> -->
-                        <select 
-                            id="simbolo_moneda" 
-                            name="simbolo_moneda"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-2"
-                        >
-                            <option value="$">Sede Norte</option>
-                            <option value="USD">Sede Centro</option>
-                            <option value="€">Sede Sur</option>
-                            <!-- <option value="£">£ – Libra esterlina</option>
-                            <option value="¥">¥ – Yen japonés</option>
-                            <option value="₿">₿ – Bitcoin</option> -->
-                        </select>
-                    </div>  
 
-                    <div id="divBanco" class="sm:col-span-3 md:col-span-4 tlg:col-span-2 hidden">
+                    <div id="divBanco" class="sm:col-span-2 md:col-span-3 tlg:col-span-2 hidden">
                         <label for="origenBanco" class="block text-2xl font-medium text-gray-600">Banco</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="origenBanco" name="origenbanco" autocomplete="origenbanco-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
@@ -134,7 +111,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-3 md:col-span-3 tlg:col-span-2">
+                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="formapago" class="block text-2xl font-medium text-gray-600">Forma de pago</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -157,7 +134,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-8 md:col-span-5 tlg:col-span-3">
+                    <div class="sm:col-span-6 md:col-span-5 tlg:col-span-6">
                         <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
                         <div class="mt-2">
                         <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">

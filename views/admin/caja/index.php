@@ -43,15 +43,10 @@
               <td class=""><div class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':($value->estado=='Guardado'?'btn-xs btn-turquoise':'btn-xs btn-light');?>"><?php echo $value->estado;?></div></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                    <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">
-                        Ver
-                    </a>
-                    <button class="btn-xs btn-light printPOS" title="Imprimir en PDF POS"><i class="fa-solid fa-print"></i>
-                    </button>
-                    <button class="btn-xs btn-light printPDF" title="Imprimir en PDF carta">
-                        <i class="fa-solid fa-file-pdf text-red-600"></i>
-                    </button>
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-cotizacion="<?php echo $value->cotizacion;?>" >
+                    <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
+                    <button class="btn-xs btn-light printPOS" title="Imprimir en PDF POS"><i class="fa-solid fa-print"></i></button>
+                    <button class="btn-xs btn-light printPDF" title="Imprimir en PDF carta"><i class="fa-solid fa-file-pdf text-red-600"></i></button>
                   </div>
               </td>
             </tr>

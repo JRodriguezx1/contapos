@@ -12,18 +12,18 @@
                         <dl class="flex flex-col gap-y-3 text-sm pt-20">
                             <div class="font-medium text-gray-800 text-lg leading-normal">
                                 <span class="block font-semibold uppercase">Cotizado a</span>
-                                <span class="not-italic font-normal text-gray-400">Carlos Antonio</span>
+                                <span class="not-italic font-normal text-gray-400"><?php echo $cliente->nombre;?></span>
                                 <address class="not-italic font-normal text-gray-400">
-                                    <span class="font-semibold">NIT/CC:</span> 1095223618,<br>
-                                    <span class="font-semibold uppercase">Email:</span> lupelulu@gmail.com,<br>
-                                    <span class="font-semibold uppercase">Teléfono:</span> 3156982231<br>
+                                    <span class="font-semibold">NIT/CC:</span><?php echo $cliente->identificacion;?>,<br>
+                                    <span class="font-semibold uppercase">Email:</span><?php echo $cliente->email;?>,<br>
+                                    <span class="font-semibold uppercase">Teléfono:</span><?php echo $cliente->telefono;?><br>
                                 </address>
                             </div>
-                            <div class="font-medium text-gray-800 text-lg leading-normal mt-6">
+                            <div class="font-medium text-gray-800 text-lg leading-normal mt-5">
                                 <span class="block font-semibold uppercase">Dirección de entrega</span>
                                 <address class="not-italic font-normal text-gray-400">
-                                    280 Suzanne Throughway,<br>
-                                    Armenia - Quindo<br>
+                                    <?php echo $direccion->direccion;?>,<br>
+                                    <?php echo $direccion->ciudad.' - '.$direccion->departamento;?><br>
                                 </address>
                             </div>
                         </dl>
@@ -33,10 +33,10 @@
 
                 <div class="text-lg leading-normal">
                     <div class="grid font-medium text-gray-800 text-center text-lg leading-normal">
-                        <span class="block font-semibold text-lg uppercase">Innova Tech SAS</span>
+                        <span class="block font-semibold text-lg uppercase"><?php echo $sucursal->nombre;?></span>
                         <address class="not-italic font-light">
-                            Cr 14 #18-31 Edificion SUr,<br>
-                            Tel: 3183658250,<br>
+                            <?php echo $sucursal->direccion;?>,<br>
+                            Tel: <?php echo $sucursal->telefono;?>,<br>
                             Armenia - Quindio,<br>
                             contabilidad@innovatech.com,<br>
                             www.innovatech.com<br>
@@ -49,15 +49,11 @@
                     <div class="grid space-y-3">
                         <div class="text-lg leading-normal">
                             <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">COTIZACIÓN N°:</p>
-                            <span class="text-gray-500">POS-<?php echo $factura->id??'';?></span>
+                            <span class="text-gray-500">ORDEN-<?php echo $factura->num_orden??'';?></span>
                         </div>
-
-                        <div class="font-medium text-gray-800 text-lg leading-normal">
-                            <address class="not-italic font-normal">
-                                280 Suzanne Throughway,<br>
-                                Breannabury, OR 45801,<br>
-                                United States<br>
-                            </address>
+                        <div class="text-lg leading-normal">
+                            <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">Vendedor:</p>
+                            <span class="text-gray-500"><?php echo $vendedor->nombre.' '.($vendedor->apellido??'');?></span>
                         </div>
 
                         <div class="flex flex-col gap-x-1 pt-8 text-lg leading-normal">
@@ -65,9 +61,9 @@
                                 <span class="uppercase"> Fecha y Hora de Cotización</span> <br>
                                 <span class=" font-normal text-gray-400"><?php echo $factura->fechapago??'';?></span>
                             </p>
-                            <p class="font-medium text-gray-800 mt-5">
-                                <!-- <span class="uppercase"> Metodo de Pago</span> <br>
-                                <span class="font-normal text-gray-400">Contado</span> -->
+                            <p class="font-medium text-gray-800 mt-4">
+                                <span class="uppercase">Pago no procesado</span> <br>
+                                <!--<span class="font-normal text-gray-400">Contado</span> -->
                             </p>
                         </div>
                     </div>

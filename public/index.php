@@ -54,7 +54,7 @@ $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta'])
 //area publica
 //$router->get('/', [paginacontrolador::class, 'index']);
 $router->get('/', [logincontrolador::class, 'login']);
-$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen
+$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen y desde index caja
 $router->get('/printcotizacion', [cajacontrolador::class, 'printcotizacion']); //llamado desde ordenresumen
 $router->get('/printdetallecierre', [cajacontrolador::class, 'printdetallecierre']); //llamado desde cerrarcaja
 
@@ -149,6 +149,10 @@ $router->post('/admin/api/ajustarstock', [almacencontrolador::class, 'ajustarsto
 $router->get('/admin/api/reiniciarinv', [almacencontrolador::class, 'reiniciarinv']);  //reiniciar inv a cero, llamada desde almacen.ts
 $router->post('/admin/api/cambiarestadoproducto', [almacencontrolador::class, 'cambiarestadoproducto']);  //cambiar el estado del producto desde producto.ts
 $router->get('/admin/api/getStockproductosXsucursal', [almacencontrolador::class, 'getStockproductosXsucursal']);  //reiniciar inv a cero, llamada desde almacen.ts
+$router->get('/admin/api/allproveedores', [almacencontrolador::class, 'allproveedores']); // me trae todos los proveedores desde gestionproveedores.js
+$router->post('/admin/api/crearProveedor', [almacencontrolador::class, 'crearProveedor']); //api llamada desde gestionproveedores.js para crear proveedores
+$router->post('/admin/api/actualizarProveedor', [almacencontrolador::class, 'actualizarProveedor']); //api llamada desde gestionproveedores.js para actualizar proveedores
+$router->post('/admin/api/eliminarProveedor', [almacencontrolador::class, 'eliminarProveedor']); //api llamada desde gestionproveedores.js para eliminar proveedores
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
@@ -189,7 +193,7 @@ $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actua
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
 $router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.js
 
-$router->post('/admin/api/parametrosSistemaCaja', [parametroscontrolador::class, 'parametrosSistemaCaja']); //fetch llamado en empleados.js
+$router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en empleados.js
 
 
 //////***************************/***NO**************************//////

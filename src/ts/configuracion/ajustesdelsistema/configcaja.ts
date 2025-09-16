@@ -1,7 +1,7 @@
 (function(){
-  if(document.querySelector('.configcaja')){
+  if(document.querySelector('.contenedorsetup')){
 
-    const radios = document.querySelectorAll<HTMLInputElement>('.configcaja input[type="radio"]');
+    const radios = document.querySelectorAll<HTMLInputElement>('.contenedorsetup input[type="radio"]');
 
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
@@ -20,7 +20,7 @@
       datos.append(clave, valor);
       (async ()=>{
         try {
-            const url = "/admin/api/parametrosSistemaCaja";  //api llamada en cajacontrolador.php
+            const url = "/admin/api/parametrosSistema";  //api llamada en parametroscontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){

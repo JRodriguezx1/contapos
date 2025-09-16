@@ -86,6 +86,11 @@
       color: v.$gris80;
       border-color: lighten(v.$gris80, 10);
     }
+    #proveedores:checked ~ .btn_inv_info_rapido .btnproveedores{
+      background-color: darken(v.$gris20, 0);
+      color: v.$gris80;
+      border-color: lighten(v.$gris80, 10);
+    }
     #ordenproduccion:checked ~ .btn_inv_info_rapido .btnordenproduccion{
       background-color: darken(v.$gris20, 0);
       color: v.$gris80;
@@ -107,6 +112,9 @@
       display: block;
     }
     #sedes:checked ~ .tablas_inv_rapido .sedes{
+      display: block;
+    }
+    #proveedores:checked ~ .tablas_inv_rapido .proveedores{
       display: block;
     }
     #ordenproduccion:checked ~ .tablas_inv_rapido .ordenproduccion{

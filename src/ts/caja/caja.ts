@@ -71,6 +71,7 @@
       const target = e.target as HTMLElement;
       if(target?.classList.contains("mediosdepago")||target.parentElement?.classList.contains("mediosdepago"))cambiomediopago(target);
       if(target?.classList.contains("printPOS")||target.parentElement?.classList.contains("printPOS"))printPOS(target);
+      if(target?.classList.contains("printPDF")||target.parentElement?.classList.contains("printPDF"))printPDF(target);
     });
 
 
@@ -141,7 +142,26 @@
     function printPOS(target: HTMLElement){
       let idfactura = target.parentElement!.id;
       if(target.tagName === 'I')idfactura = target.parentElement!.parentElement!.id;
-      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
+    }
+
+    function printPDF(target: HTMLElement){
+      let idfactura = target.parentElement!.id;
+      let cotizacion:string = target.parentElement?.dataset.cotizacion!;
+      let urlprintPDF:string = "/printfacturacarta?id=";
+      if(target.tagName === 'I'){
+        idfactura = target.parentElement!.parentElement!.id;
+        cotizacion = target.parentElement!.parentElement?.dataset.cotizacion!;
+      }
+      if(cotizacion === '1')urlprintPDF = "/printcotizacion?id=";
+      const ventana = window.open(urlprintPDF + idfactura, "_blank");  //cajacontrolador
+      if(ventana){
+        ventana.onload = ()=>{
+          ventana?.focus();
+          ventana?.print();
+          setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+        };
+      }
     }
 
     ////////////////// evento al bton pagar del modal facturar //////////////////////
