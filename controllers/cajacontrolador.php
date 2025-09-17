@@ -46,8 +46,9 @@ class cajacontrolador{
       } 
     }
 
+    
     $facturas = [];
-    if(!empty($ultimoscierres))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
     //debuguear($facturas);
     $bancos = bancos::all();
     foreach($facturas as $value)

@@ -41,7 +41,8 @@
             id="<?php echo $value->nick??'';?>" 
             name="<?php echo $value->mediopago??'';?>" 
             value=""
-            data-idmediopago="<?php echo $value->id;?>" 
+            data-idmediopago="<?php echo $value->id;?>"
+            oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
             required
           >
 

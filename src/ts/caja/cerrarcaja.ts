@@ -66,11 +66,12 @@
     inputsmediospago.forEach(m=>{
       m.addEventListener('input', (e)=>{  
         const inputmediopago = (e.target as HTMLInputElement);
+        const valormediopagodeclarado:number =  parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, ''));
         (async ()=>{
           const datos = new FormData();
           datos.append('id_mediopago', inputmediopago.dataset.idmediopago+'');
           datos.append('nombremediopago', inputmediopago.name);
-          datos.append('valordeclarado', inputmediopago.value);
+          datos.append('valordeclarado', valormediopagodeclarado+'');
           datos.append('idcierrecaja', document.querySelector('#idCierrecaja')?.textContent!);
           try {
               const url = "/admin/api/declaracionDinero";  //api llamada en cajacontrolador.php
@@ -79,7 +80,7 @@
               if(resultado.exito !== undefined){
                 inputmediopago.style.color = "#02db02";
                 inputmediopago.style.fontWeight = "500";
-                actualizarAnalisis(inputmediopago.dataset.idmediopago!, inputmediopago.value, inputmediopago.name);
+                actualizarAnalisis(inputmediopago.dataset.idmediopago!, valormediopagodeclarado+'', inputmediopago.name);
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }

@@ -131,8 +131,10 @@ class ventascontrolador{
           }
           if($_POST['estado']=='Paga'){
             $factura->compara_objetobd_post($_POST);
+            $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
             $factura->estado = 'Aceptada';
+            $idctz = $factura->id;
           }else{
             $factura->compara_objetobd_post($_POST);
           }
@@ -161,6 +163,7 @@ class ventascontrolador{
           $factura->compara_objetobd_post($_POST);
           $factura->cotizacion = 1;
           $factura->cambioaventa = 1;
+          $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
           $factura->estado =  'Paga';
           $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
         }
@@ -175,6 +178,12 @@ class ventascontrolador{
         if($r[0] || $Ctz){
           /////////   si se pago   ////////////////
           if($factura->estado == "Paga"){
+            if(!empty($_POST['id'])){
+              //obtener la factura cotizacion para establecer la referencia con la factura
+              $facturacotizacion = facturas::find('id', $idctz);
+              $facturacotizacion->referencia = $factura->num_orden;
+              $rctz = $facturacotizacion->actualizar();
+            }
             /////////// calcular cantidad de facturas y discriminar por tipo
             $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
             if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
@@ -405,14 +414,20 @@ class ventascontrolador{
             $factura->compara_objetobd_post($_POST);
             $factura->estado = 'Aceptada';
             $r = $factura->actualizar();
+            $idctz = $factura->id;
           
             $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
+            $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
             $factura->estado = 'Paga';
             $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
             //calcular ultimo num_orden
             $r = $factura->crear_guardar();
             $factura->id = $r[1];
+            //obtener la factura cotizacion para establecer la referencia con la factura
+            $facturacotizacion = facturas::find('id', $idctz);
+            $facturacotizacion->referencia = $factura->num_orden;
+            $rctz = $facturacotizacion->actualizar();
             //CAMBIA al nuevo idfactura
             foreach($productos as $value)$value->idfactura = $r[1];
             $venta = new ventas();
