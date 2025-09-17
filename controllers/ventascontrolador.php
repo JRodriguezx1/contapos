@@ -77,11 +77,15 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
 
+
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
     $carritoinsert=[];
     $idsProductsupdate=[];
-    foreach($carrito as $value){
+    $idsProductos = [];
+    foreach($carrito as $value){ //si en carrito un id, viene vacio o null es porque desde el front se agrego y el front no save el id de la tabla venta
+      $idsProductos[] = $value->idproducto; //obtener los ids de los productos enviados desde el front
+      $mapCarrito[$value->idproducto] = $value->cantidad;
       if(!empty($value->id)){
         $carritoupdate[] = clone $value;
         $idsProductsupdate[] = $value->id;
@@ -90,6 +94,20 @@ class ventascontrolador{
       }
     }
 
+
+    $conflocal = config_local::getParamCaja();
+    //////// CALCULAR PRODUCTOS AGOTADOS /////////
+    if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){ //no permitir vender sin stock
+      $productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
+      foreach($productosDB as $item){
+        if(($item->stock - $mapCarrito[$item->productoid])<=0){
+          $alertas['error'][] = "Productos agotados, no es posible vender";
+          echo json_encode($alertas);
+          return;
+        }
+      }
+    }
+    
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
@@ -130,9 +148,11 @@ class ventascontrolador{
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
           if($_POST['estado']=='Paga'){
-            $factura->compara_objetobd_post($_POST);
+            //$factura->compara_objetobd_post($_POST);
+            $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
             $factura->estado = 'Aceptada';
+            $idctz = $factura->id;
           }else{
             $factura->compara_objetobd_post($_POST);
           }
@@ -159,8 +179,9 @@ class ventascontrolador{
         
         if(!empty($_POST['id'])&&$_POST['estado']=='Paga'){ //crear nuevo registro para cotizacion que se va a facturar
           $factura->compara_objetobd_post($_POST);
-          $factura->cotizacion = 1;
+          //$factura->cotizacion = 1;
           $factura->cambioaventa = 1;
+          $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
           $factura->estado =  'Paga';
           $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
         }
@@ -175,6 +196,12 @@ class ventascontrolador{
         if($r[0] || $Ctz){
           /////////   si se pago   ////////////////
           if($factura->estado == "Paga"){
+            if(!empty($_POST['id'])){
+              //obtener la factura cotizacion para establecer la referencia con la factura
+              $facturacotizacion = facturas::find('id', $idctz);
+              $facturacotizacion->referencia = $factura->num_orden;
+              $rctz = $facturacotizacion->actualizar();
+            }
             /////////// calcular cantidad de facturas y discriminar por tipo
             $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
             if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
@@ -405,14 +432,20 @@ class ventascontrolador{
             $factura->compara_objetobd_post($_POST);
             $factura->estado = 'Aceptada';
             $r = $factura->actualizar();
+            $idctz = $factura->id;
           
-            $factura->cotizacion = 1;
+            //$factura->cotizacion = 1;
             $factura->cambioaventa = 1;
+            $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
             $factura->estado = 'Paga';
             $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
             //calcular ultimo num_orden
             $r = $factura->crear_guardar();
             $factura->id = $r[1];
+            //obtener la factura cotizacion para establecer la referencia con la factura
+            $facturacotizacion = facturas::find('id', $idctz);
+            $facturacotizacion->referencia = $factura->num_orden;
+            $rctz = $facturacotizacion->actualizar();
             //CAMBIA al nuevo idfactura
             foreach($productos as $value)$value->idfactura = $r[1];
             $venta = new ventas();

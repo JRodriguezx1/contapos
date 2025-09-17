@@ -13,7 +13,7 @@ use MVC\Router;  //namespace\clase
 
 class parametroscontrolador{
     
-  public static function parametrosSistemaCaja():void{
+  public static function parametrosSistema():void{
     session_start();
     isadmin();
     $alertas = [];

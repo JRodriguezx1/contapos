@@ -27,11 +27,11 @@
     <div class="flex gap-4 mb-4">
         <div>
             <span class="m-0 text-slate-500 text-xl font-semibold">Orden: </span>
-            <span id="numOrden" class="m-0 text-slate-500 text-xl"><?php echo $factura->id??'';?></span>
+            <span id="numOrden" class="m-0 text-slate-500 text-xl">#: <?php echo $factura->num_orden??'';?></span>
         </div>
         <div>
             <span class="m-0 text-slate-500 text-xl font-semibold">Referencia: </span>
-            <span id="referenciaFactura" class="m-0 text-slate-500 text-xl">POS182</span>
+            <span id="referenciaFactura" class="m-0 text-slate-500 text-xl">Orden: <?php echo $factura->referencia??'';?></span>
         </div>
     </div>
 
