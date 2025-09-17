@@ -133,6 +133,7 @@
                 window.location.href = `/admin/caja/detallecierrecaja?id=${resultado.ultimocierre[0]}`;
               }, 1600);
             }else{
+              (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
         } catch (error) {

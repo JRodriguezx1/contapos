@@ -77,11 +77,15 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
 
+
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
     $carritoinsert=[];
     $idsProductsupdate=[];
-    foreach($carrito as $value){
+    $idsProductos = [];
+    foreach($carrito as $value){ //si en carrito un id, viene vacio o null es porque desde el front se agrego y el front no save el id de la tabla venta
+      $idsProductos[] = $value->idproducto; //obtener los ids de los productos enviados desde el front
+      $mapCarrito[$value->idproducto] = $value->cantidad;
       if(!empty($value->id)){
         $carritoupdate[] = clone $value;
         $idsProductsupdate[] = $value->id;
@@ -90,6 +94,20 @@ class ventascontrolador{
       }
     }
 
+
+    $conflocal = config_local::getParamCaja();
+    //////// CALCULAR PRODUCTOS AGOTADOS /////////
+    if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){ //no permitir vender sin stock
+      $productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
+      foreach($productosDB as $item){
+        if(($item->stock - $mapCarrito[$item->productoid])<=0){
+          $alertas['error'][] = "Productos agotados, no es posible vender";
+          echo json_encode($alertas);
+          return;
+        }
+      }
+    }
+    
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
@@ -130,7 +148,7 @@ class ventascontrolador{
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
           if($_POST['estado']=='Paga'){
-            $factura->compara_objetobd_post($_POST);
+            //$factura->compara_objetobd_post($_POST);
             $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
             $factura->estado = 'Aceptada';
@@ -161,7 +179,7 @@ class ventascontrolador{
         
         if(!empty($_POST['id'])&&$_POST['estado']=='Paga'){ //crear nuevo registro para cotizacion que se va a facturar
           $factura->compara_objetobd_post($_POST);
-          $factura->cotizacion = 1;
+          //$factura->cotizacion = 1;
           $factura->cambioaventa = 1;
           $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
           $factura->estado =  'Paga';
@@ -416,7 +434,7 @@ class ventascontrolador{
             $r = $factura->actualizar();
             $idctz = $factura->id;
           
-            $factura->cotizacion = 1;
+            //$factura->cotizacion = 1;
             $factura->cambioaventa = 1;
             $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
             $factura->estado = 'Paga';
