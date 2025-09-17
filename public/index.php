@@ -54,7 +54,7 @@ $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta'])
 //area publica
 //$router->get('/', [paginacontrolador::class, 'index']);
 $router->get('/', [logincontrolador::class, 'login']);
-$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen
+$router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen y desde index caja
 $router->get('/printcotizacion', [cajacontrolador::class, 'printcotizacion']); //llamado desde ordenresumen
 $router->get('/printdetallecierre', [cajacontrolador::class, 'printdetallecierre']); //llamado desde cerrarcaja
 
@@ -193,7 +193,7 @@ $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actua
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
 $router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.js
 
-$router->post('/admin/api/parametrosSistemaCaja', [parametroscontrolador::class, 'parametrosSistemaCaja']); //fetch llamado en empleados.js
+$router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en empleados.js
 
 
 //////***************************/***NO**************************//////

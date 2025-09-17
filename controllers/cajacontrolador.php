@@ -22,6 +22,8 @@ use Model\configuraciones\tarifas;
 use Model\ventas\ventas;
 use Model\configuraciones\consecutivos;
 use Model\parametrizacion\config_local;
+use Model\configuraciones\negocio;
+use Model\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -386,13 +388,17 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
     $factura = facturas::find('id', $id);
-     $productos = ventas::idregistros('idfactura', $id);
+    $productos = ventas::idregistros('idfactura', $id);
     $cliente = clientes::find('id', $factura->idcliente);
     $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
-
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $negocio = negocio::get(1);
+    $sucursal = sucursales::find('id', id_sucursal());
+    $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
+          JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$factura->id};";
+    $mediospago = ActiveRecord::camposJoinObj($sql);
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'negocio'=>$negocio, 'user'=>$_SESSION]);
   }
 
   public static function printcotizacion(Router $router){
@@ -408,8 +414,9 @@ class cajacontrolador{
     $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
-
-    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $negocio = negocio::get(1);
+    $sucursal = sucursales::find('id', id_sucursal());
+    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'negocio'=>$negocio, 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
