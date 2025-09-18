@@ -66,11 +66,12 @@
     inputsmediospago.forEach(m=>{
       m.addEventListener('input', (e)=>{  
         const inputmediopago = (e.target as HTMLInputElement);
+        const valormediopagodeclarado:number =  parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, ''));
         (async ()=>{
           const datos = new FormData();
           datos.append('id_mediopago', inputmediopago.dataset.idmediopago+'');
           datos.append('nombremediopago', inputmediopago.name);
-          datos.append('valordeclarado', inputmediopago.value);
+          datos.append('valordeclarado', valormediopagodeclarado+'');
           datos.append('idcierrecaja', document.querySelector('#idCierrecaja')?.textContent!);
           try {
               const url = "/admin/api/declaracionDinero";  //api llamada en cajacontrolador.php
@@ -79,7 +80,7 @@
               if(resultado.exito !== undefined){
                 inputmediopago.style.color = "#02db02";
                 inputmediopago.style.fontWeight = "500";
-                actualizarAnalisis(inputmediopago.dataset.idmediopago!, inputmediopago.value, inputmediopago.name);
+                actualizarAnalisis(inputmediopago.dataset.idmediopago!, valormediopagodeclarado+'', inputmediopago.name);
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
@@ -132,6 +133,7 @@
                 window.location.href = `/admin/caja/detallecierrecaja?id=${resultado.ultimocierre[0]}`;
               }, 1600);
             }else{
+              (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
         } catch (error) {
@@ -227,6 +229,8 @@
       document.querySelector('#totalBaseGravable')!.textContent = '+ $'+Number(obj.basegravable).toLocaleString();
       document.querySelector('#impuestoTotal')!.textContent = '+ $'+Number(obj.valorimpuestototal).toLocaleString();
       document.querySelector('#otrosGastosBancarios')!.textContent = '+ $'+Number(obj.gastosbanco).toLocaleString();
+      document.querySelector('#cantidadFacturasFE')!.textContent = obj.facturaselectronicas;
+      document.querySelector('#cantidadFacturasPOS')!.textContent = obj.facturaspos;
     }
 
     function printsobrantesfaltantes(array: {id_mediopago:string, idcierrecajaid:string, nombremediopago:string, valordeclarado:number, valorsistema:number}[]){

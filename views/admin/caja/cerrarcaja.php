@@ -41,7 +41,8 @@
             id="<?php echo $value->nick??'';?>" 
             name="<?php echo $value->mediopago??'';?>" 
             value=""
-            data-idmediopago="<?php echo $value->id;?>" 
+            data-idmediopago="<?php echo $value->id;?>"
+            oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
             required
           >
 
@@ -194,11 +195,11 @@
                             <tbody>
                                 <tr>        
                                     <td class="">Facturas electronicas</td> 
-                                    <td class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
+                                    <td id="cantidadFacturasFE" class=""><?php echo number_format($ultimocierre->facturaselectronicas??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Facturas POS</td> 
-                                    <td class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
+                                    <td id="cantidadFacturasPOS" class=""><?php echo number_format($ultimocierre->facturaspos??0, "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>

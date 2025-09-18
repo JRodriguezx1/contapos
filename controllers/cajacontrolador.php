@@ -42,14 +42,15 @@ class cajacontrolador{
     $ultimoscierres = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0]);
     $datacierrescajas['ingresoventas'][] = 0;
     foreach($ultimoscierres as $value){
-      if($value->ingresoventas>0){
+      if($value->ingresoventas>0 || $value->totalcotizaciones>0){
         $datacierrescajas['ids'][] = $value->id;
         $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
       } 
     }
 
+    
     $facturas = [];
-    if(!empty($ultimoscierres))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
     //debuguear($facturas);
     $bancos = bancos::all();
     foreach($facturas as $value)
@@ -57,7 +58,8 @@ class cajacontrolador{
     
 
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $conflocal = config_local::getParam();
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -198,7 +200,7 @@ class cajacontrolador{
     $ultimoscierres = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0]);
     $datacierrescajas['ingresoventas'][] = 0;
     foreach($ultimoscierres as $value){
-      if($value->ingresoventas>0){
+      if($value->ingresoventas>0 || $value->totalcotizaciones>0){
         $datacierrescajas['ids'][] = $value->id;
         $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
       }
@@ -532,10 +534,25 @@ class cajacontrolador{
   public static function cierrecajaconfirmado(){  //// Api llamada desde cerrarcaja.ts
     session_start();
     isauth();
+
+    $conflocal = config_local::getParamCaja();
     $idcierrecaja = $_POST['idcierrecaja'];
     $ultimocierre = cierrescajas::find('id', $idcierrecaja);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       if($ultimocierre->estado == 0){
+
+        //////// PERMISO DE CIERRE DE CAJA CON VENTAS PENDIENTES /////////
+        if($conflocal['permitir_cierre_de_caja_con_ordenes_sin_pagar']->valor_final == 0){
+          $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
+          foreach($facturas as $value){
+            if($value->cotizacion == 1 && $value->cambioaventa == 0){
+              $alertas['error'][] = "No se puede hacer cierre de caja con ventas pendientes.";
+              echo json_encode($alertas);
+              return;
+            }
+          }
+        }
+
         $ultimocierre->id_usuario = $_SESSION['id'];
         $ultimocierre->nombreusuario = $_SESSION['nombre'];
         $ultimocierre->fechacierre = date('Y-m-d H:i:s');
