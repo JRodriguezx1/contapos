@@ -58,7 +58,8 @@ class cajacontrolador{
     
 
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $conflocal = config_local::getParam();
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 

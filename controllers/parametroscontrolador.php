@@ -59,7 +59,7 @@ class parametroscontrolador{
         if($valorLocal != $valordeFault){  //registrar con parametros local por sucursal
             $x = config_local::find('clave', $clave);
             if($x){
-                $x->compara_objetobd_post($valorLocal);
+                $x->compara_objetobd_post(['clave'=>$clave, 'valor'=>$valorLocal]);
                 $ra = $x->actualizar();
                 if($ra){
                     $alertas['exito'][] = "Ajuste procesado";

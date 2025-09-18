@@ -229,6 +229,8 @@
       document.querySelector('#totalBaseGravable')!.textContent = '+ $'+Number(obj.basegravable).toLocaleString();
       document.querySelector('#impuestoTotal')!.textContent = '+ $'+Number(obj.valorimpuestototal).toLocaleString();
       document.querySelector('#otrosGastosBancarios')!.textContent = '+ $'+Number(obj.gastosbanco).toLocaleString();
+      document.querySelector('#cantidadFacturasFE')!.textContent = obj.facturaselectronicas;
+      document.querySelector('#cantidadFacturasPOS')!.textContent = obj.facturaspos;
     }
 
     function printsobrantesfaltantes(array: {id_mediopago:string, idcierrecajaid:string, nombremediopago:string, valordeclarado:number, valorsistema:number}[]){
