@@ -456,6 +456,7 @@
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
       //calcular el impuesto discriminado por tarifa
+      console.log(carrito);
       const mapImpuesto = new Map();
       carrito.forEach(x=>{
         if(mapImpuesto.has(x.impuesto)){
