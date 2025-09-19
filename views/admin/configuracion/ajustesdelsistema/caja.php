@@ -26,14 +26,14 @@
 
         <!-- Límite de descuento permitido -->
         <div class="flex flex-col gap-2">
-            <label for="limite-descuento" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
+            <label for="limite_de_descuento_permitido" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
                 Límite de descuento permitido
             </label>
             <div class="flex items-center gap-3">
                 <input 
                     type="number" 
-                    id="limite-descuento" 
-                    name="limite-descuento" 
+                    id="limite_de_descuento_permitido" 
+                    name="limite_de_descuento_permitido" 
                     min="0" max="100"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
                         block w-28 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 

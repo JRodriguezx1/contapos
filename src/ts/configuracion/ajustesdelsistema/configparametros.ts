@@ -3,6 +3,7 @@
 
     const radios = document.querySelectorAll<HTMLInputElement>('.contenedorsetup input[type="radio"]');
     const claves = document.querySelectorAll<HTMLInputElement>('.clave');
+    const limiteDescuento = document.querySelector('#limite_de_descuento_permitido') as HTMLInputElement;
 
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
@@ -61,5 +62,36 @@
       });
     });
 
+    //////////////////   campo limite de descuento   /////////////////////
+    limiteDescuento?.addEventListener('input', (e)=>{
+      const input = (e.target as HTMLInputElement);
+      var valorInput:number = Number(input.value);
+      if(valorInput > 100){
+        limiteDescuento.value = 100+'';
+        valorInput = 100; 
+      }
+
+      (async ()=>{
+          const datos = new FormData();
+          datos.append(input.name, valorInput+'');
+          try {
+              const url = "/admin/api/parametrosSistemalimiteDescuento";  //api llamada en parametroscontrolador.php
+              const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+              const resultado = await respuesta.json();
+              if(resultado.exito !== undefined){
+                input.style.color = "#02db02";
+                input.style.fontWeight = "500";
+              }else{
+                msjalertToast('error', '¡Error!', resultado.error[0]);
+              }
+          } catch (error) {
+              console.log(error);
+          }
+      })();
+
+    });
+
+    
   }
+
 })();
