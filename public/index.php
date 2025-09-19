@@ -195,7 +195,7 @@ $router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepas
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
-$router->post('/admin/api/parametrosSistemalimiteDescuento', [parametroscontrolador::class, 'parametrosSistemalimiteDescuento']); //fetch llamado en configparametros.js
+$router->post('/admin/api/parametrosSistemaPorcentajeImpuesto', [parametroscontrolador::class, 'parametrosSistemaPorcentajeImpuesto']); //fetch llamado en configparametros.js
 
 
 //////***************************/***NO**************************//////

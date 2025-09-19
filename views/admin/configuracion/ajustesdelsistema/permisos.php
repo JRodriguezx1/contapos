@@ -25,14 +25,16 @@
             </label>
             <div class="flex items-center gap-3">
                 <input 
-                    type="number" 
+                    type="text" 
                     id="cantidad_de_cierres_de_cajas_permitidos" 
                     name="cantidad_de_cierres_de_cajas_permitidos" 
                     min="0" max="100"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
+                    class=" keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
                         block w-28 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 
                         dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="0"
+                    value="<?php echo $conflocal['cantidad_de_cierres_de_cajas_permitidos']->valor_final; ?>"
+                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
                 >
             </div>
             <p class="mt-1 text-sm text-gray-500">Indica los cierres de cajas permitidos.</p>
@@ -73,15 +75,17 @@
                 Cantidad de zeta diarios permitidos
             </label>
             <div class="flex items-center gap-3">
-                <input 
-                    type="number" 
+                <input
+                    type="text" 
                     id="cantidad_de_zeta_diarios_permitidos" 
                     name="cantidad_de_zeta_diarios_permitidos" 
                     min="0" max="100"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
+                    class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
                         block w-28 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 
                         dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="0"
+                    value="<?php echo $conflocal['cantidad_de_zeta_diarios_permitidos']->valor_final; ?>"
+                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
                 >
             </div>
             <p class="mt-1 text-sm text-gray-500">Indica cantidad zeta diario permitidos.</p>

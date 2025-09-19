@@ -5,7 +5,11 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
             <label class="block text-xl font-medium text-gray-700 mb-1">Mensaje para factura</label>
-            <textarea class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 h-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white text-xl focus:outline-none focus:ring-1" rows="3" placeholder="Escribe el mensaje que aparecerá en la factura"></textarea>
+            <textarea 
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 h-40 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white text-xl focus:outline-none focus:ring-1" 
+                rows="3"
+                name="mensaje_para_factura"
+                placeholder="Escribe el mensaje que aparecerá en la factura"><?php echo $conflocal['mensaje_para_factura']->valor_final; ?></textarea>
         </div>
 
         <!-- Imprimir factura automaticamente-->
@@ -31,14 +35,16 @@
             </label>
             <div class="flex items-center gap-3">
                 <input 
-                    type="number" 
+                    type="text" 
                     id="limite_de_descuento_permitido" 
                     name="limite_de_descuento_permitido" 
                     min="0" max="100"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
+                    class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
                         block w-28 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 
                         dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="0"
+                    value="<?php echo $conflocal['limite_de_descuento_permitido']->valor_final; ?>"
+                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
                 >
                 <span class="text-lg font-medium text-gray-700">%</span>
             </div>

@@ -12,7 +12,7 @@
                 id="clave_para_eliminar_factura" 
                 name="clave_para_eliminar_factura" 
                 placeholder="Ingrese la clave eliminar factura"
-                class="clave bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
             >
         </div>
         <div>
@@ -24,7 +24,7 @@
                 id="clave_para_eliminar_un_gasto/base" 
                 name="clave_para_eliminar_un_gasto/base" 
                 placeholder="Ingrese la clave eliminar gasto/base"
-                class="clave bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
             >
         </div>
         <div>
@@ -36,7 +36,7 @@
                 id="clave_para_agregar_descuento" 
                 name="clave_para_agregar_descuento" 
                 placeholder="Ingrese la clave para descuento"
-                class="clave bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
             >
         </div>
         <div>
@@ -48,7 +48,7 @@
                 id="clave_para_abrir_cajón_monedero" 
                 name="clave_para_abrir_cajón_monedero" 
                 placeholder="Ingrese la clave abrir cajón"
-                class="clave bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
             >
         </div>
     </div> 

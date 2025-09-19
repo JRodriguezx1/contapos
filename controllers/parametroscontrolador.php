@@ -13,6 +13,7 @@ use MVC\Router;  //namespace\clase
 
 class parametroscontrolador{
     
+  //metodo para los inputs radio
   public static function parametrosSistema():void{
     session_start();
     isadmin();
@@ -90,15 +91,14 @@ class parametroscontrolador{
     }
   }
 
-
-  public static function parametrosSistemalimiteDescuento():void{
+  //metodo para el select del impuesto
+  public static function parametrosSistemaPorcentajeImpuesto():void{
     session_start();
     isadmin();
     $alertas = [];
     $clave = array_key_first($_POST);
     $valorLocal = $_POST[$clave];
 
-    //debuguear($valorLocal);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
         $valordeFault = config_global::uncampo('clave', $clave, 'valor_default');
         if($valorLocal != $valordeFault){  //registrar con parametros local por sucursal
@@ -133,7 +133,7 @@ class parametroscontrolador{
         }
         echo json_encode($alertas);
     }
-    
+
   }
 
 }
