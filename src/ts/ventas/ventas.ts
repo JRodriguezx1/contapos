@@ -42,6 +42,14 @@
     constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
     constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
+    interface Item {
+      id_impuesto: number,
+      facturaid: number,
+      basegravable: number,
+      valorimpuesto: number
+    }
+    let factimpuestos:Item[] = [];
+
     let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
       id: 0,
       nombre: '',
@@ -458,15 +466,7 @@
       //calcular el impuesto discriminado por tarifa
 
       const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
-      
-      interface Item {
-        id_impuesto: number,
-        facturaid: number,
-        basegravable: number,
-        valorImpuesto: number
-      }
-
-      let factimpuesto:Item[] = [];
+      const objbase:{'0':number, '5':number, '16':number, '19':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, '8': 0};
 
       const mapImpuesto = new Map();
       carrito.forEach(x=>{
@@ -476,32 +476,30 @@
         }else{
           mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
         }
-        
-        const impValor = mapImpuesto.get(x.impuesto);
-        const index = factimpuesto.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
-        if(index!=-1){
-          factimpuesto[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:1, basegravable:2, valorImpuesto: impValor};
-        }else{
-          factimpuesto = [...factimpuesto, {id_impuesto:idimpuesto[x.impuesto], facturaid:1, basegravable:2, valorImpuesto: impValor}];
-        }
 
+        objbase[x.impuesto as keyof typeof objbase] += x.base;
+        const impValor = mapImpuesto.get(x.impuesto);
+        const index = factimpuestos.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
+        if(index!=-1){
+          factimpuestos[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:1, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor};
+        }else{
+          factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:1, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
+        }
+        
       });
 
-      console.log(carrito);
-      console.log(mapImpuesto);
-      console.log(factimpuesto);
-
-     
-      //const nuevoArray:Item[] = Array.from(mapImpuesto.entries()).map(([k, v]) => ({id_impuesto: idimpuesto[k], facturaid:1, valor: v}));
-      //console.log(nuevoArray);   
+      //console.log(carrito);
+      //console.log(mapImpuesto);
+      //console.log(objbase);
+      console.log(factimpuestos);
 
       //Valor del impuesto total de todos los productos, es decir de la factura;
       let valorTotalImp:number = 0;
       for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp; 
-      valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));
+      valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total de todos los productos
 
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
-      valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;
+      valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base de todos los productos
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
        (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -744,6 +742,7 @@
       datos.append('totalunidades', totalunidades.textContent!);
       //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
       datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
+      datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
       datos.append('transaccion', '');
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.

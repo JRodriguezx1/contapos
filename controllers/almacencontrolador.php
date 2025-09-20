@@ -20,6 +20,7 @@ use Model\detallecompra;
 use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
+use Model\parametrizacion\config_local;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -491,6 +492,8 @@ class almacencontrolador{
     //echo $string."]";
    echo json_encode($string."]");*/ //se envia un string formateado asi: [["1", "nombre"], ["1", "nombre"]...]
 
+   ////////////// calcular el impuesto como global o como discriminado por producto /////////////////////
+   $conflocal = config_local::getParamCaja();
    /////////////////////////*****************///////////////****************///////////////////
    foreach($productos as $index=>$producto){
        //unset($productos[$index]->descripcion);
