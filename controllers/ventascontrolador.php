@@ -16,6 +16,8 @@ use Model\configuraciones\tarifas;
 use Model\caja\cierrescajas;
 use Model\configuraciones\consecutivos;
 use Model\configuraciones\caja;
+use Model\factimpuestos;
+use Model\impuestos;
 use Model\parametrizacion\config_local;
 use Model\inventario\productos_sub;
 use Model\inventario\stockinsumossucursal;
@@ -78,6 +80,7 @@ class ventascontrolador{
     $invPro = true;
 
 
+    
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
     $carritoinsert=[];

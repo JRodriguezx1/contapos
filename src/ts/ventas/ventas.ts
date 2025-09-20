@@ -456,7 +456,18 @@
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
       //calcular el impuesto discriminado por tarifa
-      console.log(carrito);
+
+      const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
+      
+      interface Item {
+        id_impuesto: number,
+        facturaid: number,
+        basegravable: number,
+        valorImpuesto: number
+      }
+
+      let factimpuesto:Item[] = [];
+
       const mapImpuesto = new Map();
       carrito.forEach(x=>{
         if(mapImpuesto.has(x.impuesto)){
@@ -465,7 +476,24 @@
         }else{
           mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
         }
+        
+        const impValor = mapImpuesto.get(x.impuesto);
+        const index = factimpuesto.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
+        if(index!=-1){
+          factimpuesto[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:1, basegravable:2, valorImpuesto: impValor};
+        }else{
+          factimpuesto = [...factimpuesto, {id_impuesto:idimpuesto[x.impuesto], facturaid:1, basegravable:2, valorImpuesto: impValor}];
+        }
+
       });
+
+      console.log(carrito);
+      console.log(mapImpuesto);
+      console.log(factimpuesto);
+
+     
+      //const nuevoArray:Item[] = Array.from(mapImpuesto.entries()).map(([k, v]) => ({id_impuesto: idimpuesto[k], facturaid:1, valor: v}));
+      //console.log(nuevoArray);   
 
       //Valor del impuesto total de todos los productos, es decir de la factura;
       let valorTotalImp:number = 0;
