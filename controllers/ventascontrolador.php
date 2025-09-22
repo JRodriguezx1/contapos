@@ -25,6 +25,7 @@ use Model\inventario\stockproductossucursal;
 use Model\inventario\subproductos;
 //use Model\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
+use stdClass;
 
 class ventascontrolador{
 
@@ -36,6 +37,7 @@ class ventascontrolador{
 
     $facturacotz = [];
     $productoscotz = [];
+    $num_orden = facturas::calcularNumOrden(id_sucursal());
 
     if(isset($_GET['id'])){
       $id = $_GET['id'];
@@ -44,6 +46,7 @@ class ventascontrolador{
       $facturacotz = facturas::find('id', $id);
       if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0 && $facturacotz->id_sucursal == $idsucursal){
         $productoscotz = ventas::idregistros('idfactura', $id);
+        $num_orden = $facturacotz->num_orden;
       }else{ return;}
     }
 
@@ -61,7 +64,7 @@ class ventascontrolador{
 
     $conflocal = config_local::getParamCaja();
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -76,10 +79,10 @@ class ventascontrolador{
     $factura->id_sucursal = id_sucursal();
     $venta = new ventas();
     $factmediospago = new factmediospago();
+    $detalleimpuestos = new factimpuestos();
     $alertas = [];
     $invSub = true;
     $invPro = true;
-
 
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
@@ -224,6 +227,9 @@ class ventascontrolador{
                 $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
               }
             }
+            //////// establecer el id de factura para factimpuestos ////////////
+            foreach($factimpuestos as $obj)$obj->facturaid = $r[1];
+
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
             $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
@@ -242,10 +248,12 @@ class ventascontrolador{
               }
             }
 
+            $r3[0] = true;
             $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta (detalle de los productos de la factura de venta)
             $r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
-        
-            if($r1[0] && $r2[0]){
+            if(!empty($factimpuestos))$r3 = $detalleimpuestos->crear_varios_reg_arrayobj($factimpuestos);
+
+            if($r1[0] && $r2[0] && $r3[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
 
@@ -369,13 +377,11 @@ class ventascontrolador{
   }
 
 
+
  //////////////// cuando de cotizacion o guardada pasa a orden pagada sin modificar la factura o sus productos /////////////////
   public static function facturarCotizacion(){
-    $invPro = true;
-    $invSub = true;
     session_start();
     isadmin();
-    $alertas = [];
 
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
@@ -391,16 +397,18 @@ class ventascontrolador{
       }
     }
 
-    
+    $productos = ventas::idregistros('idfactura', $factura->id);
     $mediospago = json_decode($_POST['mediosPago']);
     $factmediospago = new factmediospago();
-    $productos = ventas::idregistros('idfactura', $factura->id);
+    $detalleimpuestos = new factimpuestos();
+    $alertas = [];
+    $invPro = true;
+    $invSub = true;
     $tempfactura = clone $factura;
     $tempultimocierre = clone $ultimocierre;
    
     //CAMBIA EL id POR EL idproducto
     foreach($productos as $value)$value->id = $value->idproducto;
-    //debuguear($productos);
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
       $resultArray = array_reduce($productos, function($acumulador, $objeto){
@@ -482,9 +490,32 @@ class ventascontrolador{
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             $ultimocierre->basegravable += $factura->base;
 
+
+            
+            // calcular impuestos de la cotizacion que se paga directamente en ordenresumen.ts
+            $factimpuestos = [];
+            $arrayImp = ['0'=>1, '5'=>2, '16'=>3, '19'=>4, 'excluido'=>5, '8'=>6];
+            foreach($productos as $value){
+              $id_impuesto = $arrayImp[$value->impuesto];
+              if(!isset($factimpuestos[$value->impuesto])){
+                $factimpuestos[$value->impuesto] = (object)[
+                    "id_impuesto"   => $id_impuesto,
+                    "facturaid"     => $factura->id,
+                    "basegravable"  => 0,
+                    "valorimpuesto" => 0,
+                ];
+              }
+              $factimpuestos[$value->impuesto]->basegravable += $value->base;
+              $factimpuestos[$value->impuesto]->valorimpuesto += $value->valorimp;
+            }
+
+
             /// productos ya estan en tabla ventas
+             $r3[0] = true;
             $r1 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
-            if($r1[0]){
+            if(!empty($factimpuestos))$r3 = $detalleimpuestos->crear_varios_reg_arrayobj($factimpuestos);
+            
+            if($r1[0] && $r3[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
                 //////// descontar del inventario los productos simples ////////

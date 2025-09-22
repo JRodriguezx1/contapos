@@ -87,40 +87,49 @@
                     </tbody>
                 </table>
 
+                <!-- DETALLE DE IMPUESTOS-->
+                <div class="mt-16 mb-12">
+                    <p class="text-sky-400 font-medium">Detalle tributario</p>
+                    <table class="tabla2" width="100%" id="tablaMediosPago">
+                        <thead>
+                            <tr>
+                                <th>Tarifa</th>
+                                <th>Base Gravable</th>
+                                <th>Impuesto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($discriminarimpuestos as $index => $value): ?>
+                            <tr>
+                                <td class=""><?php echo $value['tarifa']!=null?$value['tarifa'].'%':'Excluido';?></td>     
+                                <td class=""><strong>$ </strong><?php echo number_format($value['basegravable'], '2', ',', '.');?></td>
+                                <td class=""><strong>$ </strong><?php echo number_format($value['valorimpuesto'], "2", ",", ".");?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
                 <table class="tabla2 mb-12" width="100%" id="">
                     <thead>
                         <tr>
-                            <th>Detalle de impuesto</th>
+                            <th>Consolidado de Impuesto</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>        
-                            <td class="">Base</td>
-                            <td id="base" class=""> - $<?php echo $cierreselected?number_format($cierreselected->ingresoventas-$cierreselected->valorimpuestototal, '0', ',', '.'):'0'; ?></td>
+                            <td class="">Base Total: </td>
+                            <td id="base" class=""> $<?php echo $cierreselected?number_format($cierreselected->ingresoventas-$cierreselected->valorimpuestototal, '0', ',', '.'):'0'; ?></td>
                         </tr>
                         <tr>        
-                            <td class="">Impuesto</td> 
-                            <td id="valorImpuestoTotal" class=""> - $<?php echo number_format($cierreselected->valorimpuestototal??'0','0', ',', '.');?></td>
+                            <td class="">Impuesto Total: </td> 
+                            <td id="valorImpuestoTotal" class=""> $<?php echo number_format($cierreselected->valorimpuestototal??'0','0', ',', '.');?></td>
                         </tr>
                         
                     </tbody>
                 </table>
 
-                <table class="tabla2 mb-12" width="100%" id="">
-                    <thead>
-                        <tr>
-                            <th>Detalle Bruto</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>        
-                            <td class="">Total Bruto</td> 
-                            <td class=""> - $0</td>
-                        </tr>
-                    </tbody>
-                </table>
                 
             </div>
 

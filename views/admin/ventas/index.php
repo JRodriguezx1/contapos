@@ -121,7 +121,7 @@
             <label class="formulario__label" for="npedido">N. Orden/Pedido</label>
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">arrow_right</span>
-              <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="1" readonly>
+              <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="<?php echo $num_orden;?>" readonly>
             </div>
         </div>
 
@@ -446,7 +446,7 @@
   <dialog id="miDialogoGuardar" class="bg-white rounded-xl shadow-lg p-8 relative z-50">
       <div class="text-center">
           <p class="text-2xl font-semibold text-gray-600 mb-6">Desea guardar el pedido?</p>
-          <p class="text-xl text-gray-500">El pedido de venta No: 34512 se guardara en sistema.</p>
+          <p class="text-xl text-gray-500">El pedido de venta No: <?php echo $num_orden;?> se guardara en sistema.</p>
       </div>
       <div id="" class="flex justify-around w-full border-t border-gray-300 pt-6">
           <div class="siguardar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>

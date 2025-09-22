@@ -35,8 +35,8 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><?php echo $value->fechapago;?></td> 
               <td class=""><?php echo $value->caja;?></td>
-              <td class=""><?php echo $value->id;?></td>
-              <td class=""><?php echo $value->id;?></td>
+              <td class=""><?php echo $value->num_orden;?></td>
+              <td class=""><?php echo $value->num_orden;?></td>
               <td>
                 <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
                     <?php foreach($value->mediosdepago as $idx => $element): ?>

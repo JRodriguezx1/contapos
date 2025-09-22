@@ -58,7 +58,7 @@ class cajacontrolador{
     
 
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
-    $conflocal = config_local::getParam();
+    $conflocal = config_local::getParamGlobal();
     $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -89,6 +89,7 @@ class cajacontrolador{
     if(isset($ultimocierre)){
       $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
       $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
+      $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
       $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
       $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
       //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
@@ -117,8 +118,8 @@ class cajacontrolador{
         $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
     }
     
-    $conflocal = config_local::getParam();
-    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $conflocal = config_local::getParamGlobal();
+    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   
@@ -241,6 +242,7 @@ class cajacontrolador{
     if(!is_numeric($id))return;
 
     $alertas = [];
+    $discriminarimpuestos = [];
     $discriminarmediospagos = [];
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>id_sucursal(), 'estado'=>1]);
@@ -251,7 +253,7 @@ class cajacontrolador{
     $cierreselected->facturaselectronicas = 0;
     $cierreselected->facturaspos = 0;
 
-    if($id == -1){
+    if($id == -1){ //-1 es para zeta diario de hoy
       // sumar todos los valores de las cajas abiertas
       $cierreselected = cierrescajas::whereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
       $cierreselected = array_reduce($cierreselected, function($acumulador, $obj){
@@ -271,6 +273,7 @@ class cajacontrolador{
       $cierreselected = (object)$cierreselected;
       if(!empty($cierreselected->id)){
         $discriminarmediospagos = cierrescajas::discriminarmediospagoscajas($cierreselected->id);
+        $discriminarimpuestos = cierrescajas::discriminarimpuestocaja($cierreselected->id);
         $cajaselected = $cierreselected->nombrecaja;
       }else{
         foreach($cajas as $index => $value){
@@ -282,7 +285,7 @@ class cajacontrolador{
         }
       }
     }
-    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'discriminarimpuestos'=>$discriminarimpuestos, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
@@ -305,6 +308,7 @@ class cajacontrolador{
     $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
     $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
+    $discriminarimpuesto = cierrescajas::discriminarimpuesto($cierreselected->id);
     $ventasxusuarios = cierrescajas::ventasXusuario($cierreselected->id);
     $mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
@@ -329,7 +333,7 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
-    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'discriminarimpuesto'=>$discriminarimpuesto, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function pedidosguardados(Router $router){
