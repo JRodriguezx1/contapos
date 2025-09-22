@@ -263,6 +263,14 @@
                     <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 px-6 py-3 rounded-lg transition duration-300 ease-in-out text-xl"> No </span>
                 </label>
             </div>
+
+            <div class="sm:col-start-2 col-span-4 mt-6">
+              <label for="descuento" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+              <div class="mt-2">
+                <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+              </div>
+            </div>
+
         </div>
 
         <table id="productsInv" class="w-full text-xl text-left rtl:text-right text-gray-500 dark:text-gray-400 hidden">

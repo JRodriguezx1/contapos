@@ -1,6 +1,6 @@
 <div class="box ventas !pb-28">
   <div class="flex flex-col tlg:flex-row">
-    <div class="basis-2/3 p-4">
+    <div class="basis-2/3 px-4 pb-4 pt-0">
       <div id="divmsjalerta1"></div>
       <div class="xs:flex xs:flex-wrap gap-4">
         <div class="formulario__campo flex-1">
@@ -395,33 +395,52 @@
   </dialog>
 
   <!-- MODAL PARA AGREGAR DESCUENTO -->
-  <dialog id="miDialogoDescuento" class="midialog-xs p-5">
+  <dialog id="miDialogoDescuento" class="midialog-xs p-8">
     <h4 class=" text-gray-700 font-semibold">Aplicar Descuento</h4>
+    
     <form id="formDescuento" class=" border-b border-gray-900/10 pb-6 text-center">
         <p class="mt-2 text-xl text-gray-600">Aplicar descuento al subtotal del pedido.</p>
+
         <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">   
-            <label class="flex  p-1 cursor-pointer">
-              <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked/>
-              <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Valor </span>
-            </label>
-            <label class="flex  p-1 cursor-pointer">
-              <input type="radio" name="tipodescuento" value="porcentaje" class="peer hidden"/>
-              <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Porcentaje </span>
-            </label>
+          <label class="flex  p-1 cursor-pointer">
+            <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked/>
+            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Valor </span>
+          </label>
+          <label class="flex  p-1 cursor-pointer">
+            <input type="radio" name="tipodescuento" value="porcentaje" class="peer hidden"/>
+            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Porcentaje </span>
+          </label>
         </div>
+
         <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div class="sm:col-start-2 col-span-4">
             <label for="descuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
             <div class="mt-2">
               <input id="inputDescuento" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
-          </div>
+            
+            <div class="sm:col-start-2 col-span-4 mt-6">
+              <label for="descuento" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+              <div class="mt-2">
+                <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+              </div>
+              <div class="grid grid-cols-2 gap-3 mt-6">
+                <button 
+                  type="button" 
+                  class="btn-md btn-turquoise !py-4 !px-6 w-full salir">
+                  Salir
+                </button>
+      
+                <button 
+                  id="btnCrearAddDir" 
+                  type="submit"
+                  class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">
+                  Aplicar
+                </button>
+              </div>
+            </div>
         </div>
-      <div class="text-right">
-          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddDir" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] crearAddDir" type="submit" value="Aplicar">
-      </div>
-    </form>
+      </form>
   </dialog>
   
   <!-- MODAL PARA VACIAR EL CARRITO-->
@@ -618,24 +637,18 @@
         </div>
       </div>
 
-      <!-- Botones -->
-      <div class="text-right">
-        <button class="btn-md btn-turquoise !py-4 !px-6 !w-[145px]" type="button" value="Cancelar">Cancelar</button>
-        <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[145px]" type="submit" value="Confirmar">
-      </div>
-
+      
       <!-- Botón para mostrar/ocultar -->
       <div class="accordion md:px-12 !mt-4">
         <!-- ID ÚNICO -->
         <input id="toggleOpcionesAdq" type="checkbox" class="peer sr-only">
-
-      <label for="toggleOpcionesAdq"
-            class="flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none">
+        
+        <label for="toggleOpcionesAdq"
+        class="flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none">
         <span>Mostrar/Ocultar más opciones</span>
         <span class="text-xl peer-checked:hidden">+</span>
         <span class="text-xl hidden peer-checked:inline">–</span>
       </label>
-
       <!-- Contenido oculto -->
       <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out peer-checked:max-h-[120rem]">
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8">
@@ -687,6 +700,12 @@
           </div>
         </div>
       </div>
+      <!-- Botones -->
+      <div class="text-right mt-6">
+        <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] md:!w-[145px] !mr-3" type="button" value="Cancelar">Cancelar</button>
+        <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] md:!w-[145px]" type="submit" value="Confirmar">
+      </div>
+
     </div>
   </form>
 </dialog> 
