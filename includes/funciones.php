@@ -48,3 +48,7 @@ function id_sucursal():int
         return 1;
     }
 }
+
+function tienePermiso(string $permiso): bool {
+    return in_array($permiso, $_SESSION['permisos'] ?? []);
+}
