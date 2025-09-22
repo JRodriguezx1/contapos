@@ -36,11 +36,20 @@
     let nombretarifa:string|undefined='', valorMax = 0;
     
     const constImp: {[key:string]: number} = {};
+    constImp['excluido'] = 0;
     constImp['0'] = 0;  //exento de iva, tarifa 0%
     constImp['5'] = 0.0476190476190476; //iva, tarifa al 5%,  Bienes/servicios al 5
     constImp['8'] = 0.0740740740740741; //inc, tarifa al 8%,  impuesto nacional al consumo
     constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
     constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
+
+    interface Item {
+      id_impuesto: number,
+      facturaid: number,
+      basegravable: number,
+      valorimpuesto: number
+    }
+    let factimpuestos:Item[] = [];
 
     let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
       id: 0,
@@ -415,7 +424,7 @@
         carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
         carrito[index].total = carrito[index].subtotal;
         //calculo del impuesto y base por producto en el carrito deventas
-        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto]).toFixed(3));
+        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
         carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
 
         valorCarritoTotal();
@@ -425,7 +434,7 @@
       }else{  //agregar a carrito si el producto no esta agregado en carrito, cuando se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-        const productovalorimp = (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto];
+        const productovalorimp = (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
         const productototal = Number(producto.precio_venta)*cantidad;
         
         var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
@@ -441,7 +450,7 @@
           cantidad: cantidad,
           subtotal: productototal, //este es el subtotal del producto
           base: productototal-productovalorimp,
-          impuesto: producto.impuesto, //porcentaje de impuesto
+          impuesto: producto.impuesto, //porcentaje de impuesto, es null si es excluido de iva
           valorimp: productovalorimp,
           descuento: 0,
           total: productototal //valorunidad x cantidad
@@ -456,23 +465,41 @@
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
       //calcular el impuesto discriminado por tarifa
+     
+      const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
+      const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
+
       const mapImpuesto = new Map();
       carrito.forEach(x=>{
-        if(mapImpuesto.has(x.impuesto)){
-          const valor = mapImpuesto.get(x.impuesto) + x.total*constImp[x.impuesto];
-          mapImpuesto.set(x.impuesto, valor);
-        }else{
-          mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
+        if(x.impuesto){
+          if(mapImpuesto.has(x.impuesto)){
+            const valor = mapImpuesto.get(x.impuesto) + x.total*constImp[x.impuesto];
+            mapImpuesto.set(x.impuesto, valor);
+          }else{
+            mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
+          }
         }
+        if(x.impuesto == null)x.impuesto = "excluido";
+          objbase[x.impuesto as keyof typeof objbase] += x.base;
+          const impValor = mapImpuesto.get(x.impuesto)??0;
+          const index = factimpuestos.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
+          if(index!=-1){ //si existe remplazar obj
+            factimpuestos[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor};
+          }else{
+            factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
+          }
+        
       });
 
+     
       //Valor del impuesto total de todos los productos, es decir de la factura;
       let valorTotalImp:number = 0;
-      for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp; 
-      valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));
+      for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp;
+      
+      valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
 
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
-      valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;
+      valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
        (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -673,15 +700,20 @@
 
     function vaciarventa():void
     {
+      if(datosfactura?.id)datosfactura.id = '';
       mapMediospago.clear();
       $('.mediopago').val(0);
       carrito.length = 0;
+      factimpuestos.length = 0;
+      history.replaceState({}, "", "/admin/ventas");
       while(tablaventa?.firstChild)tablaventa.removeChild(tablaventa?.firstChild);
+      (document.querySelector('#npedido') as HTMLInputElement).value = '';
       document.querySelector('#subTotal')!.textContent = '$'+0;
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+0;
       document.querySelector('#total')!.textContent = '$'+0;
       $('#selectCliente').val(1).trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
+      
     }
 
 
@@ -715,6 +747,7 @@
       datos.append('totalunidades', totalunidades.textContent!);
       //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
       datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
+      datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
       datos.append('transaccion', '');
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
@@ -760,10 +793,11 @@
       }, 1200);
     }
 
+    
     /////////////////////////obtener datos de cotizacion /////////////////////
     const parametrosURL = new URLSearchParams(window.location.search);
     const id = parametrosURL.get('id');
-    let datosfactura:{id:string, idcliente: string, idvendedor:string, idcaja:string, idconsecutivo:string, iddireccion:string, idtarifazona:string, idcierrecaja:string, cliente:string, vendedor:string, caja:string, tipofacturador:string, direccion:string, tarifazona:string, totalunidades:string, recibido:string, transaccion:string, tipoventa:string,
+    let datosfactura:{id:string, idcliente: string, idvendedor:string, idcaja:string, idconsecutivo:string, iddireccion:string, idtarifazona:string, idcierrecaja:string, num_orden:string, cliente:string, vendedor:string, caja:string, tipofacturador:string, direccion:string, tarifazona:string, totalunidades:string, recibido:string, transaccion:string, tipoventa:string,
                       cotizacion:string, estado:string, cambioaventa:string, referencia:string, subtotal:string, base:string, valorimpuestototal:string, dctox100:string, descuento:string, total:string, observacion:string, departamento:string, ciudad:string, entrega:string, valortarifa:string, fechacreacion:string, fechapago:string, opc1:string, opc2:string};
     if(id){
       (async ()=>{
@@ -775,8 +809,8 @@
             carrito = resultado.productos;
             console.log(carrito);
             carrito.forEach(item =>printProduct(item.idproducto));
-            valorCarritoTotal();
-            (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.id;
+            valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
+            (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.num_orden;
             $('#selectCliente').val(datosfactura.idcliente).trigger('change');
         } catch (error) {
             console.log(error);

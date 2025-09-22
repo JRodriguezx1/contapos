@@ -128,26 +128,30 @@
                     <label class="formulario__label" for="perfil">*Perfil</label>
                     <select id="perfilempleado" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="perfil" required>
                         <option value="" disabled selected>-Seleccionar-</option>
-                        <option value="1" <?php echo $empleado->perfil==1?'selected':'';?> >Supervisor</option>
-                        <option value="2" <?php echo $empleado->perfil==2?'selected':'';?>>Administrador</option>
-                        <option value="3" <?php echo $empleado->perfil==3?'selected':'';?>>Asesor</option>
-                    </select>           
+                        <option value="2" <?php echo $empleado->perfil==1?'selected':'';?> >Supervisor</option>
+                        <option value="3" <?php echo $empleado->perfil==2?'selected':'';?>>Administrador</option>
+                        <option value="4" <?php echo $empleado->perfil==3?'selected':'';?>>Asesor</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="contentpermisos">
+            <div id="contentpermisos" style="display: none;">
                 <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
                     <p class="text-slate-600 text-2xl mt-0">Modulo venta</p>
                     <div class="flex items-center">
-                        <input id="registrarventa" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="1">
+                        <input id="habilitarmoduloventa" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="1">
+                        <label for="habilitarmoduloventa" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Habilitar modulo de venta</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="registrarventa" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="2">
                         <label for="registrarventa" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Registrar nueva venta</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="anularventa" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="2">
+                        <input id="anularventa" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="3">
                         <label for="anularventa" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Anular una venta</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="aplicardescuentos" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="3">
+                        <input id="aplicardescuentos" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="4">
                         <label for="aplicardescuentos" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Aplicar descuentos</label>
                     </div>
                 </div>
@@ -155,15 +159,19 @@
                 <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
                     <p class="text-slate-600 text-2xl mt-0">Módulo de Inventario</p>
                     <div class="flex items-center">
-                        <input id="consultarstock" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="4">
+                        <input id="habilitarmoduloinventario" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="5">
+                        <label for="habilitarmoduloinventario" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Habilitar modulo de inventario</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="consultarstock" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="6">
                         <label for="consultarstock" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Consultar stock</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="ajustarinventario" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="5">
+                        <input id="ajustarinventario" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="7">
                         <label for="ajustarinventario" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Hacer ajustes de inventario</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="actualizarprecios" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="6">
+                        <input id="actualizarprecios" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="8">
                         <label for="actualizarprecios" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Actualizar precios o datos</label>
                     </div>
                 </div>
@@ -171,11 +179,15 @@
                 <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
                     <p class="text-slate-600 text-2xl mt-0">Módulo de Facturación</p>
                     <div class="flex items-center">
-                        <input id="emitirfacturaselectronicas" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="7">
+                        <input id="habilitarmodulofacturacion" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="9">
+                        <label for="habilitarmodulofacturacion" class="text-xl text-gray-500 ms-3 dark:text-neutral-400"> Habilitar modulo de facturacion</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="emitirfacturaselectronicas" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="10">
                         <label for="emitirfacturaselectronicas" class="text-xl text-gray-500 ms-3 dark:text-neutral-400"> Emitir facturas electrónicas</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="eliminarfacturas" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="8">
+                        <input id="eliminarfacturas" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="11">
                         <label for="eliminarfacturas" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Anular facturas y notas creditos</label>
                     </div>
                 </div>
@@ -183,24 +195,42 @@
                 <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
                     <p class="text-slate-600 text-2xl mt-0">Módulo de Caja</p>
                     <div class="flex items-center">
-                        <input id="abrircaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="9">
+                        <input id="habilitarmodulocaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="12">
+                        <label for="habilitarmodulocaja" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Habilitar modulo de caja</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="abrircaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="13">
                         <label for="abrircaja" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Abrir caja registradora</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="cerrarcaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="10">
+                        <input id="cerrarcaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="14">
                         <label for="cerrarcaja" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Cerrar caja y generar arqueo</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="verreportescaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="11">
+                        <input id="verreportescaja" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="15">
                         <label for="verreportescaja" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Ver reportes de caja</label>
                     </div>
                 </div>
             </div>
 
-                <div class="text-right">
-                    <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
-                    <input id="btnEditarCrearEmpleado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
-                </div>
+            <div id="contentpermisosadmin" style="display: none;">
+                <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
+                    <p class="text-slate-600 text-2xl mt-0">Modulos administraivos</p>
+                    <div class="flex items-center">
+                        <input id="habilitarreportes" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="16">
+                        <label for="habilitarreportes" class="text-xl text-gray-500 ms-3 dark:text-neutral-400"> Habilitar modulo de reportes</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="habilitarconfiguracion" name="permisos[]" type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 w-6 h-6 focus:ring-2" value="17">
+                        <label for="habilitarconfiguracion" class="text-xl text-gray-500 ms-3 dark:text-neutral-400">Habilitar modulo de configuracion</label>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="text-right">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEditarCrearEmpleado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
+            </div>
         </form>
     </dialog><!--fin crear empleado-->
 

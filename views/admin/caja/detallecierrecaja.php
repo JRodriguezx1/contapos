@@ -65,6 +65,29 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <!-- DETALLE DE IMPUESTOS-->
+                        <div class="mt-32 mb-12">
+                            <p class="text-sky-400 font-medium">Detalle de Impuestos</p>
+                            <table class="tabla2" width="100%" id="tablaMediosPago">
+                                <thead>
+                                    <tr>
+                                        <th>Tarifa</th>
+                                        <th>Base Gravable</th>
+                                        <th>Impuesto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($discriminarimpuesto as $index => $value): ?>
+                                    <tr>
+                                        <td class=""><?php echo $value['tarifa'];?>%</td>     
+                                        <td class=""><strong>$ </strong><?php echo number_format($value['basegravable'], '2', ',', '.');?></td>
+                                        <td class=""><strong>$ </strong><?php echo number_format($value['valorimpuesto'], "2", ",", ".");?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="tlg:basis-1/2">

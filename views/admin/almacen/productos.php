@@ -135,14 +135,34 @@
          <div class="formulario__campo">
             <label class="formulario__label" for="impuesto">Impuesto</label>
             <div class="formulario__dato">
-                <input 
+                <!--<input 
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text" placeholder="Impuesto del producto en %" 
                     id="impuesto" 
                     name="impuesto" 
                     value=""
                     oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                >-->
+                <select
+                id="impuesto"
+                name="porcentaje_de_impuesto"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 >
+                    <span class="text-indigo-600 font-bold">
+                        <optgroup label="IVA">
+                    </span>
+                    <option value="0" >Exento – 0%</option>
+                    <option value="5" >Bienes / Servicios al 5%</option>
+                    <option value="16" >Contratos antes Ley 1819 – 16%</option>
+                    <option value="19" >Tarifa general – 19%</option>
+                    <option value="" >Excluido de IVA</option> <!-- valor por defecto -->
+                    </optgroup>
+                    <span class="text-indigo-600 font-bold">
+                        <optgroup class="text-indigo-60" label="INC">
+                    </span>
+                    <option value="8">Impuesto Nacional al Consumo – 8%</option>
+                    </optgroup>
+                </select>
             </div>
         </div>
 

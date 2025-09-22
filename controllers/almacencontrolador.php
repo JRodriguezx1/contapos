@@ -20,6 +20,7 @@ use Model\detallecompra;
 use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
+use Model\parametrizacion\config_local;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -469,7 +470,7 @@ class almacencontrolador{
 
   public static function eliminarCategoria(){
     session_start();
-    $alertas = []; 
+    $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $categoria = categorias::find('id', $_POST['id']);
         $r = $categoria->eliminar_registro();
@@ -483,24 +484,19 @@ class almacencontrolador{
   }
 
   public static function allproducts(){
-    $productos = productos::all();  //arreglo de obj = [{},{},{}]
-    /*$array = json_decode(json_encode($productos), true); // se convierte a arreglo de arreglos: [["id"=>"1", "nombre"="2"], ["id"=>"1", "nombre"="2"]]
-    $string = "[".join(', ', array_map(function($subarray){
-        return '["'.implode('", "', $subarray).'"]';
-    }, $array));
-    //echo $string."]";
-   echo json_encode($string."]");*/ //se envia un string formateado asi: [["1", "nombre"], ["1", "nombre"]...]
-
-   /////////////////////////*****************///////////////****************///////////////////
-   foreach($productos as $index=>$producto){
-       //unset($productos[$index]->descripcion);
-       $producto->categoria = categorias::uncampo('id', $producto->idcategoria, 'nombre');
-       //unset($productos[$index]->idcategoria);
-       //unset($productos[$index]->fecha_ingreso);
-       //$producto->acciones = "<div class='btn-group btn-group-sm'><button id='' class='btn btn-light' data-toggle='modal' data-target='#EditarProducto'><i class='fa fa-pen'></i></button>
-       //                         <button id='' class='btneliminarproducto btn btn-danger' data-target='#EliminarProducto'><i class='fa fa-times'></i></button></div>";
-   }
-   echo json_encode($productos); 
+    session_start();
+    isadmin();
+    $productos = productos::all(); 
+    ////////////// calcular el impuesto como global o como discriminado por producto /////////////////////
+    $conflocal = config_local::getParamGlobal();
+    foreach($productos as $index=>$producto){
+      //unset($productos[$index]->descripcion);
+      if($conflocal['discriminar_impuesto_por_producto']->valor_final == 0){ //si es 0, es no, toma el impuesto global
+        $producto->impuesto = $conflocal['porcentaje_de_impuesto']->valor_final;
+      }
+      $producto->categoria = categorias::uncampo('id', $producto->idcategoria, 'nombre');
+    }
+   echo json_encode($productos);
   }
 
 

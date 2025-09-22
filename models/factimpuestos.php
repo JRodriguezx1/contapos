@@ -4,13 +4,14 @@ namespace Model;
 
 class factimpuestos extends ActiveRecord{
     protected static $tabla = 'factimpuestos';
-    protected static $columnasDB = ['id', 'id_impuesto', 'facturaid', 'valor'];
+    protected static $columnasDB = ['id', 'id_impuesto', 'facturaid', 'basegravable', 'valorimpuesto'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->id_impuesto = $args['id_impuesto']??'';
         $this->facturaid = $args['facturaid']??'';
-        $this->valor = $args['valor']??'';
+        $this->basegravable = $args['basegravable']??'';
+        $this->valorimpuesto = $args['valorimpuesto']??'';
     }
 
 

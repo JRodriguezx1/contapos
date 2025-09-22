@@ -94,4 +94,40 @@ class cierrescajas extends \Model\ActiveRecord {
         $resultado->free();
         return $array;  
     }
+
+
+    //discriminar impuesto de un solo cierre de caja
+    public static function discriminarimpuesto(string $id)
+    {
+        $sql = "SELECT impuestos.nombre AS impuestos, impuestos.porcentaje AS tarifa, 
+                SUM(factimpuestos.basegravable) AS basegravable, SUM(factimpuestos.valorimpuesto) AS valorimpuesto 
+                FROM impuestos JOIN factimpuestos ON factimpuestos.id_impuesto = impuestos.id
+                JOIN facturas ON facturas.id = factimpuestos.facturaid
+                WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY tarifa;";
+
+        $resultado = self::$db->query($sql);
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
+    public static function discriminarimpuestocaja(array $id): array
+    {
+        $id = join(', ', $id);
+        $sql = "SELECT impuestos.nombre AS impuestos, impuestos.porcentaje AS tarifa, 
+                SUM(factimpuestos.basegravable) AS basegravable, SUM(factimpuestos.valorimpuesto) AS valorimpuesto 
+                FROM impuestos JOIN factimpuestos ON factimpuestos.id_impuesto = impuestos.id
+                JOIN facturas ON facturas.id = factimpuestos.facturaid
+                WHERE facturas.idcierrecaja IN($id) AND facturas.estado = 'Paga' GROUP BY tarifa;";
+
+        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
 }

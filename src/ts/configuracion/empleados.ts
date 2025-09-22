@@ -66,6 +66,21 @@
       }
     })();
 
+    inputPerfil.addEventListener('change', (e)=>{
+      if((e.target as HTMLSelectElement).value == '2'){
+        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
+        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
+      }
+      if((e.target as HTMLSelectElement).value == '3'){
+        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
+        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "block";
+      }
+      if((e.target as HTMLSelectElement).value == '4'){
+        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "block";
+        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
+      }
+    });
+
     //////////////////  TABLA //////////////////////
     tablaempleados = ($('#tablaempleados') as any).DataTable(configdatatables);
 
@@ -120,6 +135,18 @@
       inputCiudad.value = unempleado?.ciudad??'';
       inputDireccion.value = unempleado?.direccion??'';
       $('#perfilempleado').val(unempleado?.perfil??'');
+      if(unempleado?.perfil == '2'){
+        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
+        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
+      }
+      if(unempleado?.perfil == '3'){
+        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
+        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "block";
+      }
+      if(unempleado?.perfil == '4'){
+        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "block";
+        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
+      }
       printpermisos(unempleado?.permisos??[]);
       indiceFila = (tablaempleados as any).row((e.target as HTMLElement).closest('tr')).index();
       dialogoEmpleado.showModal();
