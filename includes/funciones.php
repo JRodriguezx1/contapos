@@ -52,3 +52,7 @@ function id_sucursal():int
 function tienePermiso(string $permiso): bool {
     return in_array($permiso, $_SESSION['permisos'] ?? []);
 }
+
+function userPerfil(): string|bool {
+    return $_SESSION['perfil']??false;
+}

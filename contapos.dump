@@ -239,7 +239,7 @@ CREATE TABLE `cierrescajas` (
   CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idcaja` FOREIGN KEY (`idcaja`) REFERENCES `caja` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idsucursal_id` FOREIGN KEY (`idsucursal_id`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,6 +248,7 @@ CREATE TABLE `cierrescajas` (
 
 LOCK TABLES `cierrescajas` WRITE;
 /*!40000 ALTER TABLE `cierrescajas` DISABLE KEYS */;
+INSERT INTO `cierrescajas` VALUES (1,1,1,1,'Caja principal',NULL,'2025-09-22 02:08:52','2025-09-22 02:08:52',0,0,1,0,1,'0','0','0','0','427800','0','0','427800','0','0',0,'0','427800','0','0','0','427800',0,NULL,NULL);
 /*!40000 ALTER TABLE `cierrescajas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -776,7 +777,7 @@ CREATE TABLE `factimpuestos` (
   KEY `facturaid_idx` (`facturaid`),
   CONSTRAINT `facturaid` FOREIGN KEY (`facturaid`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_impuesto` FOREIGN KEY (`id_impuesto`) REFERENCES `impuestos` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -785,6 +786,7 @@ CREATE TABLE `factimpuestos` (
 
 LOCK TABLES `factimpuestos` WRITE;
 /*!40000 ALTER TABLE `factimpuestos` DISABLE KEYS */;
+INSERT INTO `factimpuestos` VALUES (1,5,1,427800.00,0.00);
 /*!40000 ALTER TABLE `factimpuestos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -805,7 +807,7 @@ CREATE TABLE `factmediospago` (
   KEY `id_factura_idx` (`id_factura`),
   CONSTRAINT `id_factura` FOREIGN KEY (`id_factura`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idmediopago` FOREIGN KEY (`idmediopago`) REFERENCES `mediospago` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -814,6 +816,7 @@ CREATE TABLE `factmediospago` (
 
 LOCK TABLES `factmediospago` WRITE;
 /*!40000 ALTER TABLE `factmediospago` DISABLE KEYS */;
+INSERT INTO `factmediospago` VALUES (1,1,1,'427800');
 /*!40000 ALTER TABLE `factmediospago` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -835,14 +838,17 @@ CREATE TABLE `facturas` (
   `idtarifazona` int DEFAULT NULL,
   `idcierrecaja` int DEFAULT NULL,
   `num_orden` int DEFAULT NULL,
+  `num_consecutivo` int DEFAULT NULL,
   `cliente` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `vendedor` varchar(55) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `caja` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `tipofacturador` varchar(33) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `propina` decimal(11,2) DEFAULT NULL,
   `direccion` varchar(77) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `tarifazona` varchar(55) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `totalunidades` int DEFAULT NULL,
-  `recibido` varchar(15) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `recibido` decimal(12,2) DEFAULT NULL,
+  `cambio` decimal(12,2) DEFAULT NULL,
   `transaccion` varchar(25) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `tipoventa` varchar(33) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `cotizacion` tinyint(1) DEFAULT NULL,
@@ -877,7 +883,7 @@ CREATE TABLE `facturas` (
   CONSTRAINT `idclientex` FOREIGN KEY (`idcliente`) REFERENCES `clientes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `iddireccionx` FOREIGN KEY (`iddireccion`) REFERENCES `direcciones` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idvendedorx` FOREIGN KEY (`idvendedor`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -886,6 +892,7 @@ CREATE TABLE `facturas` (
 
 LOCK TABLES `facturas` WRITE;
 /*!40000 ALTER TABLE `facturas` DISABLE KEYS */;
+INSERT INTO `facturas` VALUES (1,1,1,1,1,1,1,0,1,1,NULL,'N/A','Julian Rodriguez','Caja principal','Facturacion POS',NULL,'-Seleccionar-',NULL,2,NULL,NULL,NULL,'Contado',0,'Paga',0,NULL,'427800',427800.000,0.000,0,'0','427800',NULL,NULL,NULL,'Presencial','0','2025-09-22 02:08:52','2025-09-22 02:08:52',NULL,NULL);
 /*!40000 ALTER TABLE `facturas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1573,7 +1580,7 @@ CREATE TABLE `stockproductossucursal` (
 
 LOCK TABLES `stockproductossucursal` WRITE;
 /*!40000 ALTER TABLE `stockproductossucursal` DISABLE KEYS */;
-INSERT INTO `stockproductossucursal` VALUES (1,1,2,0.00,0.00,1,'2025-09-08 05:14:55'),(2,1,1,0.00,0.00,1,'2025-09-08 05:14:55'),(3,2,2,0.00,0.00,1,'2025-09-08 05:14:55'),(4,2,1,0.00,0.00,1,'2025-09-08 05:14:55'),(5,3,2,0.00,0.00,1,'2025-09-08 05:14:55'),(6,3,1,-8.00,0.00,1,'2025-09-08 05:14:55'),(7,4,2,0.00,0.00,1,'2025-09-08 05:14:55'),(8,4,1,-6.00,0.00,1,'2025-09-08 05:14:55'),(9,5,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(10,5,1,-13.00,0.00,1,'2025-09-08 05:14:55'),(11,6,2,3.00,0.00,1,'2025-09-08 05:14:55'),(12,6,1,3.00,0.00,1,'2025-09-08 05:14:55'),(13,7,2,0.00,0.00,1,'2025-09-08 05:14:55'),(14,7,1,15.00,0.00,1,'2025-09-08 05:14:55'),(15,8,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(16,8,1,-2.00,0.00,1,'2025-09-08 05:14:55'),(17,9,2,0.00,0.00,1,'2025-09-08 05:14:55'),(18,9,1,5.00,0.00,1,'2025-09-08 05:14:55'),(19,10,2,0.00,0.00,1,'2025-09-08 05:14:55'),(20,10,1,-10.00,0.00,1,'2025-09-08 05:14:55'),(21,11,2,0.00,0.00,1,'2025-09-08 05:14:55'),(22,11,1,3.00,0.00,1,'2025-09-08 05:14:55'),(23,12,2,0.00,0.00,1,'2025-09-08 05:14:55'),(24,12,1,-2.00,0.00,1,'2025-09-08 05:14:55'),(25,14,2,0.00,0.00,1,'2025-09-08 05:14:55'),(26,14,1,9.00,0.00,1,'2025-09-08 05:14:55'),(27,16,2,0.00,0.00,1,'2025-09-08 05:14:55'),(28,16,1,-9.00,0.00,1,'2025-09-08 05:14:55'),(29,17,2,0.00,0.00,1,'2025-09-08 05:14:55'),(30,17,1,0.00,0.00,1,'2025-09-08 05:14:55'),(31,18,2,0.00,0.00,1,'2025-09-08 05:14:55'),(32,18,1,6.00,0.00,1,'2025-09-08 05:14:55'),(33,19,2,0.00,0.00,1,'2025-09-08 05:14:55'),(34,19,1,-4.00,0.00,1,'2025-09-08 05:14:55'),(35,20,2,0.00,0.00,1,'2025-09-08 05:14:55'),(36,20,1,0.00,0.00,1,'2025-09-08 05:14:55'),(37,21,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(38,21,1,0.00,0.00,1,'2025-09-08 05:14:55'),(39,22,2,-4.00,0.00,1,'2025-09-08 05:14:55'),(40,22,1,2.00,0.00,1,'2025-09-08 05:14:55'),(41,23,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(42,23,1,-1.00,0.00,1,'2025-09-08 05:14:55'),(43,24,2,0.00,0.00,1,'2025-09-08 05:14:55'),(44,24,1,-1.00,0.00,1,'2025-09-08 05:14:55'),(45,25,2,-2.00,0.00,1,'2025-09-08 05:14:55'),(46,25,1,0.00,0.00,1,'2025-09-08 05:14:55'),(47,13,2,-3.00,0.00,1,'2025-09-08 05:14:55'),(48,13,1,-28.00,0.00,1,'2025-09-08 05:14:55'),(49,15,2,0.00,0.00,1,'2025-09-08 05:14:55'),(50,15,1,0.00,0.00,1,'2025-09-08 05:14:55'),(51,26,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(52,26,1,-3.00,0.00,1,'2025-09-08 05:14:55');
+INSERT INTO `stockproductossucursal` VALUES (1,1,2,0.00,0.00,1,'2025-09-08 05:14:55'),(2,1,1,0.00,0.00,1,'2025-09-08 05:14:55'),(3,2,2,0.00,0.00,1,'2025-09-08 05:14:55'),(4,2,1,0.00,0.00,1,'2025-09-08 05:14:55'),(5,3,2,0.00,0.00,1,'2025-09-08 05:14:55'),(6,3,1,-10.00,0.00,1,'2025-09-08 05:14:55'),(7,4,2,0.00,0.00,1,'2025-09-08 05:14:55'),(8,4,1,-6.00,0.00,1,'2025-09-08 05:14:55'),(9,5,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(10,5,1,-13.00,0.00,1,'2025-09-08 05:14:55'),(11,6,2,3.00,0.00,1,'2025-09-08 05:14:55'),(12,6,1,3.00,0.00,1,'2025-09-08 05:14:55'),(13,7,2,0.00,0.00,1,'2025-09-08 05:14:55'),(14,7,1,15.00,0.00,1,'2025-09-08 05:14:55'),(15,8,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(16,8,1,-2.00,0.00,1,'2025-09-08 05:14:55'),(17,9,2,0.00,0.00,1,'2025-09-08 05:14:55'),(18,9,1,5.00,0.00,1,'2025-09-08 05:14:55'),(19,10,2,0.00,0.00,1,'2025-09-08 05:14:55'),(20,10,1,-10.00,0.00,1,'2025-09-08 05:14:55'),(21,11,2,0.00,0.00,1,'2025-09-08 05:14:55'),(22,11,1,3.00,0.00,1,'2025-09-08 05:14:55'),(23,12,2,0.00,0.00,1,'2025-09-08 05:14:55'),(24,12,1,-2.00,0.00,1,'2025-09-08 05:14:55'),(25,14,2,0.00,0.00,1,'2025-09-08 05:14:55'),(26,14,1,9.00,0.00,1,'2025-09-08 05:14:55'),(27,16,2,0.00,0.00,1,'2025-09-08 05:14:55'),(28,16,1,-9.00,0.00,1,'2025-09-08 05:14:55'),(29,17,2,0.00,0.00,1,'2025-09-08 05:14:55'),(30,17,1,0.00,0.00,1,'2025-09-08 05:14:55'),(31,18,2,0.00,0.00,1,'2025-09-08 05:14:55'),(32,18,1,6.00,0.00,1,'2025-09-08 05:14:55'),(33,19,2,0.00,0.00,1,'2025-09-08 05:14:55'),(34,19,1,-4.00,0.00,1,'2025-09-08 05:14:55'),(35,20,2,0.00,0.00,1,'2025-09-08 05:14:55'),(36,20,1,0.00,0.00,1,'2025-09-08 05:14:55'),(37,21,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(38,21,1,0.00,0.00,1,'2025-09-08 05:14:55'),(39,22,2,-4.00,0.00,1,'2025-09-08 05:14:55'),(40,22,1,2.00,0.00,1,'2025-09-08 05:14:55'),(41,23,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(42,23,1,-1.00,0.00,1,'2025-09-08 05:14:55'),(43,24,2,0.00,0.00,1,'2025-09-08 05:14:55'),(44,24,1,-1.00,0.00,1,'2025-09-08 05:14:55'),(45,25,2,-2.00,0.00,1,'2025-09-08 05:14:55'),(46,25,1,0.00,0.00,1,'2025-09-08 05:14:55'),(47,13,2,-3.00,0.00,1,'2025-09-08 05:14:55'),(48,13,1,-28.00,0.00,1,'2025-09-08 05:14:55'),(49,15,2,0.00,0.00,1,'2025-09-08 05:14:55'),(50,15,1,0.00,0.00,1,'2025-09-08 05:14:55'),(51,26,2,-1.00,0.00,1,'2025-09-08 05:14:55'),(52,26,1,-3.00,0.00,1,'2025-09-08 05:14:55');
 /*!40000 ALTER TABLE `stockproductossucursal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1775,7 +1782,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,1,'Julian','Rodriguez','1094552023','julianx1','3042029683','julianlink123@hotmail.com',NULL,'$2y$10$TmSbBtfQLZZwrDZDNT9XN.l8MgkhGfkB2g89qocNSFew2Msb93era',1,NULL,'1','Armenia','Calle 26 # 50-21 Barrio primero',NULL,'avatar.png','2024-03-25','2024-03-25 15:03:02'),(2,2,'Christian Manuel','Ramirez Heano','43887625','usuario1','3223356020','chramirez80@gmail.com',NULL,'$2y$10$GmxqvuIoX9tx2hSgPjGzu.aapEe9kChA.CY3AsQnM6WRpgjUGBIu6',1,NULL,'2','4','1',NULL,'','2024-01-08','2024-01-08 13:36:48'),(3,1,'David',NULL,NULL,'davidd',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c372e2c39e7jdrrperfil2020.jpg',NULL,NULL),(4,1,'Erika S','Sandoval',NULL,'erica',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c39913171dbmodelperilshock.jpg',NULL,NULL),(5,2,'Alicia',NULL,NULL,'aliciaa',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'null',NULL,NULL);
+INSERT INTO `usuarios` VALUES (1,1,'Julian','Rodriguez','1094552023','julianx1','3042029683','julianlink123@hotmail.com',NULL,'$2y$10$TmSbBtfQLZZwrDZDNT9XN.l8MgkhGfkB2g89qocNSFew2Msb93era',1,NULL,'1','Armenia','Calle 26 # 50-21 Barrio primero',NULL,'avatar.png','2024-03-25','2024-03-25 15:03:02'),(2,2,'Christian Manuel','Ramirez Heano','43887625','usuario1','3223356020','chramirez80@gmail.com',NULL,'$2y$10$GmxqvuIoX9tx2hSgPjGzu.aapEe9kChA.CY3AsQnM6WRpgjUGBIu6',1,NULL,'2','4','1',NULL,'','2024-01-08','2024-01-08 13:36:48'),(3,1,'David',NULL,NULL,'davidd','3042029684',NULL,NULL,'$2y$10$DrgpIvO86ljunRO6tvuSje0rO/AxH7xdh1Vd8.uI9q8Ss5TQhaZC6',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c372e2c39e7jdrrperfil2020.jpg',NULL,NULL),(4,1,'Erika S','Sandoval',NULL,'erica',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c39913171dbmodelperilshock.jpg',NULL,NULL),(5,2,'Alicia',NULL,NULL,'aliciaa',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'null',NULL,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1840,7 +1847,7 @@ CREATE TABLE `ventas` (
   KEY `idfactura_idx` (`idfactura`),
   CONSTRAINT `idfactura` FOREIGN KEY (`idfactura`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idproducto` FOREIGN KEY (`idproducto`) REFERENCES `productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1849,6 +1856,7 @@ CREATE TABLE `ventas` (
 
 LOCK TABLES `ventas` WRITE;
 /*!40000 ALTER TABLE `ventas` DISABLE KEYS */;
+INSERT INTO `ventas` VALUES (1,1,3,1,1,1.00,'Taladro percutor BLACK AND DECKER 550W 1/2','undefined',213900,2.00,427800.00,427800.000,'excluido',0.000,0,427800.00,'','');
 /*!40000 ALTER TABLE `ventas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1865,4 +1873,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-21 20:48:24
+-- Dump completed on 2025-09-23  1:07:41

@@ -10,6 +10,7 @@ class reportescontrolador{
     public static function index(Router $router){
         session_start();
         isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
         $router->render('admin/reportes/index', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
@@ -19,6 +20,7 @@ class reportescontrolador{
     public static function ventasgenerales(Router $router){
         session_start();
         isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
         $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
@@ -26,6 +28,7 @@ class reportescontrolador{
     public static function cierrescaja(Router $router){
         session_start();
         isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
         $router->render('admin/reportes/cierrescaja', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
@@ -35,6 +38,7 @@ class reportescontrolador{
     public static function zdiario(Router $router){
         session_start();
         isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
         $router->render('admin/reportes/zdiario', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
@@ -43,6 +47,7 @@ class reportescontrolador{
     public static function ventasxtransaccion(Router $router){
         session_start();
         isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
         $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);

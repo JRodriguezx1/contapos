@@ -27,7 +27,7 @@ class facturas extends \Model\ActiveRecord {
         $this->totalunidades = $args['totalunidades'] ?? 0;
         $this->recibido = $args['recibido'] ?? 0;
         $this->transaccion = $args['transaccion'] ?? 0;
-        $this->tipoventa = $args['tipoventa'] ?? 'Contado';
+        $this->tipoventa = $args['tipoventa'] ?? 'Contado'; //si es de contado o credito
         $this->cotizacion = $args['cotizacion'] ?? 0; //1 = cotizacion
         $this->estado = $args['estado'] ?? 'paga';
         $this->cambioaventa = $args['cambioaventa']??0;  //1 = se pasa de cotizacion a venta

@@ -22,6 +22,7 @@ class configcontrolador{
   public static function index(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
     $alertas = [];
     $idsucursal = id_sucursal();
     $negocio = negocio::find('id', 1);
@@ -50,6 +51,8 @@ class configcontrolador{
 
   public static function editarnegocio(Router $router){ //metodo para el llenado y actualizacion de los datos del negocio
         session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
         $alertas = [];
         $idsucursal = id_sucursal();
         $negocio = negocio::find('id', 1);
@@ -111,6 +114,8 @@ class configcontrolador{
 
     public static function crear_empleado(Router $router){ //metodo para crear empleado
         session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
         $alertas = [];
         $usuarios_permisos = new usuarios_permisos;
         $idsucursal = id_sucursal();
@@ -174,8 +179,10 @@ class configcontrolador{
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuarios_permisos = new usuarios_permisos;
             $empleado->compara_objetobd_post($_POST);
+
             if(isset($_FILES['img']['name']))$alertas = $empleado->validarimgempleado($_FILES);
             $alertas = $empleado->validarempleado();
+            $empleado->hashPassword();
             if(empty($alertas)){
                 if(isset($_FILES['img']['name'])){
                     if($empleado->img){ //si la imagen ya existe DB, eliminarla

@@ -32,6 +32,7 @@ class cajacontrolador{
   public static function index(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
 
     $mediospago = mediospago::all();
@@ -66,6 +67,7 @@ class cajacontrolador{
   public static function cerrarcaja(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $idsucursal = id_sucursal();
     $cajas = caja::idregistros('idsucursalid', $idsucursal);
@@ -127,6 +129,7 @@ class cajacontrolador{
   public static function ingresoGastoCaja(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $mediospago = mediospago::all();
     
@@ -221,6 +224,7 @@ class cajacontrolador{
   public static function zetadiario(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
     //$idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
@@ -238,6 +242,7 @@ class cajacontrolador{
   public static function fechazetadiario(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
     if(!is_numeric($id))return;
 
@@ -292,6 +297,7 @@ class cajacontrolador{
   public static function ultimoscierres(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
     $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
@@ -301,6 +307,7 @@ class cajacontrolador{
   public static function detallecierrecaja(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
     if(!is_numeric($id))return;
 
@@ -339,6 +346,7 @@ class cajacontrolador{
   public static function pedidosguardados(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $pedidosguardados = facturas::whereArray(['cotizacion'=>1, 'estado'=>'guardado', 'id_sucursal'=>id_sucursal()]);
     $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
@@ -347,6 +355,7 @@ class cajacontrolador{
   public static function ordenresumen(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id']; //id de la cotizacion
     if(!is_numeric($id))return;
@@ -378,6 +387,7 @@ class cajacontrolador{
   public static function detalleorden(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
@@ -389,6 +399,7 @@ class cajacontrolador{
   public static function printfacturacarta(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
@@ -410,6 +421,7 @@ class cajacontrolador{
   public static function printcotizacion(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
@@ -428,6 +440,7 @@ class cajacontrolador{
   public static function printdetallecierre(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
