@@ -436,6 +436,13 @@ class ActiveRecord {
         return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
     }
 
+    //busca un solo registro por su id, con bloque FOR UPDATE
+    public static function findForUpdate($colum, $id){
+        $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' FOR UPDATE";
+        $resultado = self::consultar_Sql($sql);
+        return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
+    }
+
     //metodo de consulta libre utilizando lenguaje sql de inner_join
     public static function inner_join($consulta){
         $resultado = self::consultar_sql($consulta);

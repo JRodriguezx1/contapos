@@ -74,6 +74,7 @@ class ventascontrolador{
     session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
+    $getDB = facturas::getDB();
     $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
     $factimpuestos = json_decode($_POST['factimpuestos']);
@@ -199,6 +200,16 @@ class ventascontrolador{
           $factura->idcierrecaja = $ultimocierre->id;
           //calcular ultimo num_orden
           $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
+          //calcular siguiente consecutivo solo para facturas que se paguen
+          if($_POST['estado']=='Paga'){
+            $getDB->begin_transaction();
+            $getDB->commit();
+            try {
+              //code...
+            } catch (\Throwable $th) {
+              //throw $th;
+            }
+          }
           $r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
         }
 
