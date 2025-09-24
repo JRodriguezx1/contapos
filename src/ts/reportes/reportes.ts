@@ -39,7 +39,21 @@
     });*/
 
 
-    const idcli = 1;
+    graficaVentaMensual.addEventListener('click', ()=>{
+      console.log(569);
+      (async ()=>{
+        try {
+          const url = "https://apidian.wdc.dom.my.id/api/ping"; //llamado a la API REST y se trae las direcciones segun cliente elegido
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json();
+          console.log(resultado);
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+    });
+
+    /*const idcli = 1;
       (async ()=>{
         try {
           const url = "/admin/api/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae las direcciones segun cliente elegido
@@ -49,7 +63,7 @@
         } catch (error) {
             console.log(error);
         }
-      })();
+      })();*/
 
     new Chart(chartventas, {
       type: 'bar',
