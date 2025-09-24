@@ -438,7 +438,7 @@ class ActiveRecord {
 
     //busca un solo registro por su id, con bloque FOR UPDATE
     public static function findForUpdate($colum, $id){
-        $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' FOR UPDATE";
+        $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' LIMIT 1 FOR UPDATE";
         $resultado = self::consultar_Sql($sql);
         return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
     }

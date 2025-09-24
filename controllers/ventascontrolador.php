@@ -86,6 +86,7 @@ class ventascontrolador{
     $alertas = [];
     $invSub = true;
     $invPro = true;
+    $c = true;
 
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
@@ -157,7 +158,7 @@ class ventascontrolador{
           if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si la cotizacion que se va a pagar, cambio de caja o si su cierre caja esta cerrado
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
-          if($_POST['estado']=='Paga'){
+          if($_POST['estado']=='Paga'){  //si es una cotizacion que se va a pagar
             //$factura->compara_objetobd_post($_POST);
             $factura->cotizacion = 1;
             $factura->cambioaventa = 1;
@@ -203,17 +204,23 @@ class ventascontrolador{
           //calcular siguiente consecutivo solo para facturas que se paguen
           if($_POST['estado']=='Paga'){
             $getDB->begin_transaction();
-            $getDB->commit();
             try {
-              //code...
+              $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
+              $numConsecutivo = $consecutivo->siguientevalor;
+              $factura->num_consecutivo = $numConsecutivo;
+              $r = $factura->crear_guardar();
+              $consecutivo->siguientevalor = $numConsecutivo + 1;
+              $c = $consecutivo->actualizar();
+              $getDB->commit();
             } catch (\Throwable $th) {
               //throw $th;
+               $getDB->rollback();
             }
           }
-          $r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
+          if($_POST['estado']=='Guardado')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
         }
 
-        if($r[0] || $Ctz){
+        if($r[0]&&$c || $Ctz){
           /////////   si se pago   ////////////////
           if($factura->estado == "Paga"){
             if(!empty($_POST['id'])){
