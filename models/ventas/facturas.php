@@ -3,7 +3,7 @@ namespace Model\ventas;
 
 class facturas extends \Model\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'num_orden', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'referencia', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'num_orden', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'referencia', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -23,10 +23,12 @@ class facturas extends \Model\ActiveRecord {
         $this->vendedor = $args['vendedor'] ?? '';  //nombre del vendedor
         $this->caja = $args['caja'] ?? '';   //nombre de la caja
         $this->tipofacturador = $args['tipofacturador'] ?? '';  //nombre del tipo de facturador
+        $this->propina = $args['propina'] ?? 0;
         $this->direccion = $args['direccion'] ?? '';  //nombre de la direccion
         $this->tarifazona = $args['tarifazona'] ?? '';  //nombre de la tarifa
         $this->totalunidades = $args['totalunidades'] ?? 0;
         $this->recibido = $args['recibido'] ?? 0;
+        $this->cambio = $args['cambio'] ?? 0;
         $this->transaccion = $args['transaccion'] ?? 0;
         $this->tipoventa = $args['tipoventa'] ?? 'Contado'; //si es de contado o credito
         $this->cotizacion = $args['cotizacion'] ?? 0; //1 = cotizacion

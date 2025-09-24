@@ -211,10 +211,12 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
+              //....
               $getDB->commit();
             } catch (\Throwable $th) {
-              //throw $th;
-               $getDB->rollback();
+              $getDB->rollback();
+              $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
+              $alerta['error'][] = $th->getMessage();
             }
           }
           if($_POST['estado']=='Guardado')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
@@ -402,7 +404,7 @@ class ventascontrolador{
   public static function facturarCotizacion(){
     session_start();
     isadmin();
-
+    $getDB = facturas::getDB();
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
     
@@ -470,10 +472,28 @@ class ventascontrolador{
             $factura->cambioaventa = 1;
             $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
             $factura->estado = 'Paga';
-            $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
             //calcular ultimo num_orden
-            $r = $factura->crear_guardar();
+            $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
+            
+            //calcular siguiente consecutivo
+            $getDB->begin_transaction();
+            try {
+              $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
+              $numConsecutivo = $consecutivo->siguientevalor;
+              $factura->num_consecutivo = $numConsecutivo;
+              $r = $factura->crear_guardar();
+              $consecutivo->siguientevalor = $numConsecutivo + 1;
+              $c = $consecutivo->actualizar();
+              //....
+              $getDB->commit();
+            } catch (\Throwable $th) {
+              $getDB->rollback();
+              $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
+              $alerta['error'][] = $th->getMessage();
+            }
+          
             $factura->id = $r[1];
+            
             //obtener la factura cotizacion para establecer la referencia con la factura
             $facturacotizacion = facturas::find('id', $idctz);
             $facturacotizacion->referencia = $factura->num_orden;
