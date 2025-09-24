@@ -6,7 +6,7 @@
         <!-- Porcentaje de impuesto -->
         <div>
             <label for="porcentaje_de_impuesto" class="block text-xl font-medium text-gray-700 mb-1">
-                Porcentaje de impuesto
+                Tarifa del impuesto
             </label>
             <span class="block mb-1 text-sm text-gray-500">
                 Seleccione el impuesto y tarifa correspondiente al negocio

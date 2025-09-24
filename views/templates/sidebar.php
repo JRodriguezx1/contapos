@@ -43,10 +43,11 @@
     </nav>
 </aside>-->
 
-<aside class="sidebar">
-    <div class="uptask">
+<aside class="sidebar mp-6">
+    <div class="uptask flex flex-col items-center">
         <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2blanco.png" alt="logoj2">
-        <div class="menux">
+
+        <div class="menux mt-2">
             <img id="mobile-menux" src="/build/img/cerrar.svg" alt="cerrar menu">
         </div>
     </div>
