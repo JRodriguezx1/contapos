@@ -27,9 +27,10 @@ class consecutivos extends \Model\ActiveRecord {
     }
 
     // Validación para clientes nuevos
-    public function validar_nueva_consecutivo():array {
+    public function validar_nuevo_consecutivo():array {
         if(!$this->idtipofacturador)self::$alertas['error'][] = 'Id tipofacturador no encontrado';
         if(!$this->nombre)self::$alertas['error'][] = 'nombre del consecutivo no especificado';
+        if(!isset($this->siguientevalor) || !is_numeric($this->siguientevalor) || $this->siguientevalor<=0)self::$alertas['error'][] = 'Error en el consecutivo inicial';
         return self::$alertas;
     }
 }

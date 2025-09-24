@@ -35,6 +35,8 @@ class almacencontrolador{
     //$subproductosqw = subproductos::all();
     //$productos = productos::indicadoresAllProducts();
     //$subproductos = subproductos::indicadoresAllSubProducts();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    
 
     $proveedores = proveedores::all();
     $cantidadCategorias = categorias::numreg_where('visible', 1);
@@ -61,6 +63,7 @@ class almacencontrolador{
   public static function categorias(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $categorias = categorias::all();
@@ -74,6 +77,7 @@ class almacencontrolador{
   public static function crear_categoria(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -96,6 +100,7 @@ class almacencontrolador{
   public static function productos(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $productos = productos::all();
@@ -113,6 +118,7 @@ class almacencontrolador{
   public static function crear_producto(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     $conversion = new conversionunidades;
     $categoria = categorias::find('id', $_POST['idcategoria']);
@@ -167,6 +173,7 @@ class almacencontrolador{
   public static function subproductos(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $subproductos = subproductos::all();
@@ -182,6 +189,7 @@ class almacencontrolador{
   public static function crear_subproducto(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     $conversion = new conversionunidades;
     $unidadmedida = unidadesmedida::find('id', $_POST['id_unidadmedida']); //unidad de medida base indicada para el subproducto
@@ -228,6 +236,7 @@ class almacencontrolador{
   public static function componer(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     //$productos = productos::all();
     $producto = productos::find('id', $_GET['id']);
@@ -253,6 +262,7 @@ class almacencontrolador{
   public static function ajustarcostos(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $productos = [];
@@ -273,6 +283,7 @@ class almacencontrolador{
   public static function compras(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $categorias = categorias::all();
@@ -292,6 +303,7 @@ class almacencontrolador{
   public static function distribucion(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $categorias = categorias::all();
@@ -305,6 +317,7 @@ class almacencontrolador{
   public static function inventariar(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
     $categorias = categorias::all();
@@ -318,6 +331,7 @@ class almacencontrolador{
   public static function unidadesmedida(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $unidadmedida = unidadesmedida::find('id', $_POST['id']);
@@ -336,6 +350,7 @@ class almacencontrolador{
   public static function crear_unidadmedida(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     $unidadmedida = new unidadesmedida($_POST);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -357,6 +372,7 @@ class almacencontrolador{
   public static function editarunidademedida(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     $unidadmedida = unidadesmedida::find('id', $_POST['idunidad']);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -379,6 +395,7 @@ class almacencontrolador{
   public static function trasladoinventario(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     
     $unidadesmedida = unidadesmedida::all();
@@ -388,6 +405,7 @@ class almacencontrolador{
   public static function solicitarinventario(Router $router){
     session_start();
     isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     
     $unidadesmedida = unidadesmedida::all();

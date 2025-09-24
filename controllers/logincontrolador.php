@@ -3,8 +3,10 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\configuraciones\permisos;
 use Model\sucursales;
 use Model\configuraciones\usuarios; //namespace\clase hija
+use Model\configuraciones\usuarios_permisos;
 //use Model\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
  
@@ -53,6 +55,7 @@ class logincontrolador{
         $router->render('auth/loginauth', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
     }
 
+
     public static function login(Router $router){
         $alertas = [];
 
@@ -67,6 +70,12 @@ class logincontrolador{
                     if($usuario->idsucursal == $_POST['idsucursal']){
                         $pass = $usuario->comprobar_password($auth->password);  //comprueba password y verifica si esta confirmado
                         if($pass&&$usuario->confirmado){         //$auth->password = es lo que se escribe en el form
+                            
+                            $permisos = usuarios_permisos::idregistros('usuarioid', $usuario->id);
+                            $listapermisos = [];
+                            foreach($permisos as $value)
+                                $listapermisos[] = permisos::find('id', $value->permisoid)->nombre;
+                            
                             //autenticar usuario         
                             session_start();
                             $_SESSION['id'] = $usuario->id;
@@ -76,6 +85,7 @@ class logincontrolador{
                             $_SESSION['email'] = $usuario->email;
                             $_SESSION['login'] = true;
                             $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
+                            $_SESSION['permisos'] = $listapermisos;
 
                             //redireccion al dashboard del superior-admin-empleado o cliente
                             if($usuario->perfil){
