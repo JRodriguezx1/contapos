@@ -73,4 +73,8 @@ class reportescontrolador{
     echo json_encode($datos);
   }
 
+  public static function reporteventamensual(){
+    
+  }
+
 }

@@ -1,5 +1,8 @@
 (function(){
   if(document.querySelector('.reportes')){
+    const graficaVentaMensual = document.querySelector('#graficaVentaMensual') as HTMLButtonElement;
+    const graficaVentaSemanal = document.querySelector('#graficaVentaSemanal') as HTMLButtonElement;
+    const graficaVentaDiario = document.querySelector('#graficaVentaDiario') as HTMLButtonElement;
     const chartventas = (document.getElementById('chartventas') as HTMLCanvasElement)?.getContext('2d');
     const chartutilidad = (document.getElementById('chartutilidad') as HTMLCanvasElement)?.getContext('2d');
     const btnventasgenerales = document.querySelector<HTMLButtonElement>('#ventasgenerales')!;
@@ -35,6 +38,18 @@
       }
     });*/
 
+
+    const idcli = 1;
+      (async ()=>{
+        try {
+          const url = "/admin/api/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae las direcciones segun cliente elegido
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json(); 
+          
+        } catch (error) {
+            console.log(error);
+        }
+      })();
 
     new Chart(chartventas, {
       type: 'bar',

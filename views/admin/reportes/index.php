@@ -3,9 +3,9 @@
     <div class="w-full min-h-80 grid grid-cols-2 tlg:grid-cols-3 gap-4 ">
         <div class="col-span-2 tlg:col-span-2">
             <p class="text-gray-500 text-xl mt-0 mb-2">Representacion grafica de ventas</p>
-            <button class="btn-xs btn-light">Mensual</button>
-            <button class="btn-xs btn-light">Semanal</button>
-            <button class="btn-xs btn-light">Diario</button>
+            <button id="graficaVentaMensual" class="btn-xs btn-light">Mensual</button>
+            <button id="graficaVentaSemanal" class="btn-xs btn-light">Semanal</button>
+            <button id="graficaVentaDiario" class="btn-xs btn-light">Diario</button>
             <div class="max-h-96"><canvas class="max-h-96" id="chartventas"></canvas></div>
         </div>
         <div class="col-span-2 xxs:col-span-1">
