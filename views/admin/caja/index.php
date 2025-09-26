@@ -100,7 +100,7 @@
 
         <div id="showbancos" class="mb-6 hidden">
             <label class="formulario__label" for="banco">Bancos</label>
-            <select id="banco" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_banco">
+            <select id="banco" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_banco">
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($bancos as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -110,7 +110,7 @@
         
         <div id="showcajas" class="mb-6 hidden">
             <label class="formulario__label" for="caja">Caja</label>
-            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" required>
+            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($cajas as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -120,7 +120,7 @@
 
         <div class="formulario__campo tipodegasto" style="display: none;"> <!-- solo aplica para gastos -->
             <label class="formulario__label" for="tipodegasto">Tipo de gasto</label>
-            <select id="tipodegasto" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos">
+            <select id="tipodegasto" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos">
                 <option value="" disabled selected>-Seleccionar-</option>
                 <option value="1">Reabastecimiento</option>
                 <option value="2">Arriendo o alquiler de espacio</option>
@@ -137,7 +137,7 @@
         <div class="mb-6">
             <label class="formulario__label" for="dinero">Ingresar dinero</label>
             <div class="formulario__dato">
-                <input id="dinero" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="1" placeholder="Ingresa el dinero" name="valor" value="" required>
+                <input id="dinero" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="1" placeholder="Ingresa el dinero" name="valor" value="" required>
             </div>
         </div>
         <div class="mb-6">
