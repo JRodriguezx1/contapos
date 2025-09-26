@@ -3,10 +3,10 @@
     <div class="w-full min-h-80 grid grid-cols-2 tlg:grid-cols-3 gap-4 ">
         <div class="col-span-2 tlg:col-span-2">
             <p class="text-gray-500 text-xl mt-0 mb-2">Representacion grafica de ventas</p>
-            <button id="graficaVentaMensual" class="btn-xs btn-light">Mensual</button>
-            <button id="graficaVentaSemanal" class="btn-xs btn-light">Semanal</button>
-            <button id="graficaVentaDiario" class="btn-xs btn-light">Diario</button>
-            <div class="max-h-96"><canvas class="max-h-96" id="chartventas"></canvas></div>
+            <button id="graficaVentaMensual" class="graficaventa btn-xs btn-light">Mensual</button>
+            <!--<button id="graficaVentaSemanal" class="btn-xs btn-light">Semanal</button>-->
+            <button id="graficaVentaDiario" class="graficaventa btn-xs btn-light">Diario</button>
+            <div class="max-h-96"><canvas id="chartventas" class="max-h-96"></canvas></div>
         </div>
         <div class="col-span-2 xxs:col-span-1">
             <div class=" px-4">
@@ -20,11 +20,9 @@
             </div>
         </div>
         <div class="col-span-2 xxs:col-span-1 tlg:col-start-3 tlg:col-end-4">
-            <p class="text-gray-500 text-xl mt-0 mb-2">Representacion grafica de utilidad</p>
-            <button class="btn-xs btn-light">Mensual</button>
-            <button class="btn-xs btn-light">Semanal</button>
-            <button class="btn-xs btn-light">Diario</button>
-            <div class="max-h-96"><canvas class="max-h-96" id="chartutilidad"></canvas></div>
+            <p class="text-gray-500 text-xl mt-0 mb-2">Valor de los productos principales del inventario</p>
+            
+            <div class="max-h-[500px]"><canvas class="max-h-[500px]" id="chartutilidad"></canvas></div>
         </div>
         <div class="tlg:row-start-2 tlg:row-end-3 col-start-1 col-end-3">
             <h5 class="mb-5">Reportes de Ventas</h5>

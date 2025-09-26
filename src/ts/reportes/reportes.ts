@@ -1,8 +1,6 @@
 (function(){
   if(document.querySelector('.reportes')){
-    const graficaVentaMensual = document.querySelector('#graficaVentaMensual') as HTMLButtonElement;
-    const graficaVentaSemanal = document.querySelector('#graficaVentaSemanal') as HTMLButtonElement;
-    const graficaVentaDiario = document.querySelector('#graficaVentaDiario') as HTMLButtonElement;
+    const graficaventa = document.querySelectorAll<HTMLButtonElement>('.graficaventa');
     const chartventas = (document.getElementById('chartventas') as HTMLCanvasElement)?.getContext('2d');
     const chartutilidad = (document.getElementById('chartutilidad') as HTMLCanvasElement)?.getContext('2d');
     const btnventasgenerales = document.querySelector<HTMLButtonElement>('#ventasgenerales')!;
@@ -13,6 +11,8 @@
       inicio: '',
       fin: ''
     }
+
+    let chartVentasInstance: any | null = null;
 
     /*new Chart(ctx, {
       type: 'line',
@@ -39,74 +39,134 @@
     });*/
 
 
-    graficaVentaMensual.addEventListener('click', ()=>{
-      console.log(569);
-      (async ()=>{
+    //graficaVentaMensual.addEventListener('click', ()=>{
+      //console.log(777);
+      /*(async ()=>{
         try {
-          const url = "https://apidian.wdc.dom.my.id/api/ping"; //llamado a la API REST y se trae las direcciones segun cliente elegido
+          const url = "https://apidianj2.com/api/getconfigcompanies"; //llamado a la API REST Dianlaravel
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json();
           console.log(resultado);
         } catch (error) {
             console.log(error);
         }
-      })();
-    });
-
-    /*const idcli = 1;
+      })();*/
+      /*const idcli = 1;
       (async ()=>{
         try {
-          const url = "/admin/api/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae las direcciones segun cliente elegido
+          const url = "/admin/api/ventasGraficaMensual?id="+idcli; //llamado a la API REST en reportescontrolador.php
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json(); 
-          
+          console.log(resultado);
+          graficaVentas(resultado);
         } catch (error) {
             console.log(error);
         }
       })();*/
+    //});
 
-    new Chart(chartventas, {
-      type: 'bar',
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: 'Total Ventas',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {display: false} //ocultar regilla horizontal
-          },
-          x: {
-              grid: {display: false}, ////ocultar regilla vertical
-          }
-        },
-        responsive: true,
-      }
+    callapiventasgrafica("/admin/api/ventasGraficaMensual");
+
+    graficaventa.forEach((btngrafica, index) =>{
+      btngrafica.addEventListener('click', (e:Event)=>{
+        let url:string = "/admin/api/ventasGraficaMensual"; //llamado a la API REST en reportescontrolador.php
+        if(index == 1){  //grafico diario
+          url = "/admin/api/ventasGraficaDiario"; //llamado a la API REST en reportescontrolador.php
+        }
+        callapiventasgrafica(url);
+      })
     });
+
+    async function callapiventasgrafica(url:string){
+      try {
+        const respuesta = await fetch(url); 
+        const resultado = await respuesta.json(); 
+        graficaVentas(resultado);
+      } catch (error) {
+          console.log(error);
+      }
+    }
+
+    function graficaVentas(resultado:{label:String[], datos:string[]}){
+      if (chartVentasInstance)chartVentasInstance.destroy();
+      chartVentasInstance = new Chart(chartventas, {
+        type: 'bar',
+        data: {
+          labels: resultado.label,
+          datasets: [{
+            label: 'Total Ventas',
+            data: resultado.datos,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {display: false} //ocultar regilla horizontal
+            },
+            x: {
+                grid: {display: false}, ////ocultar regilla vertical
+            }
+          },
+          responsive: true,
+        }
+      });
+    }
+
 
 
     ////////////////////////////  chartutilidad - grafica costo/utlidad //////////////////////////////////
-    new Chart(chartutilidad, {
-      type: 'doughnut',
-      data: {
-        labels: ['Ventas total:', 'Costo:', 'Utilidad:'],
-        datasets: [{
-          label: 'Total Ventas',
-          data: [19, 7, 12],
-          backgroundColor: ['rgb(54, 162, 235)','rgb(255, 99, 132)', 'rgb(255, 205, 86)'],
-          //borderWidth: 1
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true,
-      }
-    });
+    (async ()=>{
+        try {
+          const url = "/admin/api/graficaValorInventario"; //llamado a la API REST en reportescontrolador.php
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json();
+          new Chart(chartutilidad, {
+            type: 'doughnut',
+            data: {
+              labels: ['Ventas total:', 'Costo:', 'Utilidad:'],
+              datasets: [{
+                label: 'Total Ventas',
+                data: [Number(resultado.valorventa), Number(resultado.costoinv), (Number(resultado.valorventa) - Number(resultado.costoinv))],
+                backgroundColor: ['rgb(54, 162, 235)','rgb(255, 99, 132)', 'rgb(255, 205, 86)'],
+                //borderWidth: 1
+                hoverOffset: 4
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                    labels: {
+                        generateLabels: (chart:any) => {
+                            const data = chart.data.datasets[0].data;
+                            const labels = chart.data.labels;
+                            return labels.map((label:any, i:any) => ({
+                                text: `${label}: ${data[i]}`,
+                                fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                index: i
+                            }));
+                        }
+                    }
+                }
+              }
+            }
+          });
+
+        } catch (error) {
+            console.log(error);
+        }
+    })();
+
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////
+
 
     ($('input[name="daterange"]') as any).daterangepicker({
       opens: 'right', // Posición deseada

@@ -194,6 +194,12 @@ $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'elimina
 $router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.js
 
 $router->get('/admin/api/reporteventamensual', [reportescontrolador::class, 'reporteventamensual']);
+$router->get('/admin/api/ventasGraficaMensual', [reportescontrolador::class, 'ventasGraficaMensual']);  //fetch llamado desde reportes.ts
+$router->get('/admin/api/ventasGraficaDiario', [reportescontrolador::class, 'ventasGraficaDiario']);  //fetch llamado desde reportes.ts
+$router->get('/admin/api/graficaValorInventario', [reportescontrolador::class, 'graficaValorInventario']);  //fetch llamado desde reportes.ts
+$router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 'ventasxtransaccionanual']);  //fetch llamado desde reportes.ts
+$router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
+
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js

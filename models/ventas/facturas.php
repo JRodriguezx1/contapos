@@ -83,8 +83,7 @@ class facturas extends \Model\ActiveRecord {
         $sql .= $cajas.") AND idconsecutivo IN(".$consecutivos.") AND facturas.estado = 'Paga' AND id_sucursal = $idsucursal AND fechapago BETWEEN '$fechaini' AND '$fechafin' GROUP BY mediospago.mediopago;";
         $resultado = self::$db->query($sql);
         $array = [];
-        while($row = $resultado->fetch_assoc())
-        $array[] = $row;
+        while($row = $resultado->fetch_assoc())$array[] = $row;
         $resultado->free();
         return $array;
     }
@@ -97,6 +96,35 @@ class facturas extends \Model\ActiveRecord {
         $resultado->free();
         return array_shift($r);
     }
+
+
+    public static function ventasGraficaMensual(){
+        $sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
+        WHERE fechapago >= CONCAT(YEAR(CURRENT_DATE()), '-01-01') AND fechapago < CONCAT(YEAR(CURRENT_DATE())+1, '-01-01')
+        GROUP BY MONTH(fechapago) ORDER BY mes;";
+        $resultado = self::$db->query($sql);
+        $array = [];
+        while($row = $resultado->fetch_object())$array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
+    public static function ventasGraficaDiario(){
+        $sql = "SELECT DAY(fechapago) AS dia, SUM(total) AS total_venta FROM facturas 
+                WHERE fechapago >= DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
+                AND fechapago <  DATE_ADD(DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01'), INTERVAL 1 MONTH)
+                GROUP BY DAY(fechapago) ORDER BY dia;";
+        $resultado = self::$db->query($sql);
+        $array = [];
+        while($row = $resultado->fetch_object())$array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
+
+
+
+
 
 
     /////////////////////////////////// NO //////////////////////////////////
