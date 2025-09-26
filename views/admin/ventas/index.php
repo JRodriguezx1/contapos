@@ -18,7 +18,7 @@
           </div> <!-- fin formulario dato-->
           <div class="formulario__campo flex-1 xs:flex-none">
             <label class="formulario__label" for="documento">N. Documento</label>
-            <input id="documento" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Documento del cliente" name="documento" readonly>
+            <input id="documento" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Documento del cliente" name="documento" readonly>
           </div>
         </div>
         <div class="formulario__campo flex-1">
@@ -34,7 +34,7 @@
         </div>
         <div class="formulario__campo flex-1">
             <label class="formulario__label" for="ciudad">Ciudad</label>
-            <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" name="ciudadEntrega" value="" readonly>
+            <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" name="ciudadEntrega" value="" readonly>
         </div>
       </div>
 
@@ -114,14 +114,14 @@
             <label class="formulario__label" for="vendedor">vendedor</label>
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">person</span>
-              <input id="vendedor" data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
+              <input id="vendedor" data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
             </div>
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="npedido">N. Orden/Pedido</label>
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">arrow_right</span>
-              <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="<?php echo $num_orden;?>" readonly>
+              <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="<?php echo $num_orden;?>" readonly>
             </div>
         </div>
 
@@ -546,8 +546,8 @@
           </div>
 
           <div class="self-end">
-              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px]" type="button" value="Cancelar">Cancelar</button>
-              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[180px]" type="submit" value="Pagar">
+              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="Cancelar">Cancelar</button>
+              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]" type="submit" value="Pagar">
           </div>
           
       </form>
@@ -711,7 +711,7 @@
 </dialog> 
 
 <!-- MODAL OTROS PRODUCTOS -->
-  <dialog id="miDialogoOtrosProductos" class="midialog-sm p-5">
+  <dialog id="miDialogoOtrosProductos" class="midialog-sm p-12">
     <h4 class=" text-gray-700 font-semibold">Otros:</h4>
     <form id="formOtrosProductos" class="formulario">  
       <div class="border-b border-gray-900/10 pb-10 mb-3">
