@@ -98,9 +98,9 @@ class facturas extends \Model\ActiveRecord {
     }
 
 
-    public static function ventasGraficaMensual(){
+    public static function ventasGraficaMensual(int $idsucursal){
         $sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
-        WHERE fechapago >= CONCAT(YEAR(CURRENT_DATE()), '-01-01') AND fechapago < CONCAT(YEAR(CURRENT_DATE())+1, '-01-01')
+        WHERE fechapago >= CONCAT(YEAR(CURRENT_DATE()), '-01-01') AND fechapago < CONCAT(YEAR(CURRENT_DATE())+1, '-01-01') AND id_sucursal = $idsucursal
         GROUP BY MONTH(fechapago) ORDER BY mes;";
         $resultado = self::$db->query($sql);
         $array = [];
@@ -109,10 +109,10 @@ class facturas extends \Model\ActiveRecord {
         return $array;
     }
 
-    public static function ventasGraficaDiario(){
+    public static function ventasGraficaDiario($idsucursal){
         $sql = "SELECT DAY(fechapago) AS dia, SUM(total) AS total_venta FROM facturas 
                 WHERE fechapago >= DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
-                AND fechapago <  DATE_ADD(DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01'), INTERVAL 1 MONTH)
+                AND fechapago <  DATE_ADD(DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01'), INTERVAL 1 MONTH) AND id_sucursal = $idsucursal
                 GROUP BY DAY(fechapago) ORDER BY dia;";
         $resultado = self::$db->query($sql);
         $array = [];

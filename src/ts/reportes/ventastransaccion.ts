@@ -5,7 +5,17 @@
     const btndiario = document.querySelector('#btndiario') as HTMLButtonElement;
     const miDialogoMes = document.querySelector('#miDialogoMes') as any;
     const miDialogoDiario = document.querySelector('#miDialogoDiario') as any;
-    let tablaTransaccioneXVenta:HTMLTableElement, datatransacciones:any = [];
+    let tablaTransaccioneXVenta:HTMLTableElement;
+
+    interface transacciones {
+      fecha:string,
+      total_venta:string,
+      num_transacciones:string,
+      promedio_transaccion:string,
+      transaccion_mas_alta:string,
+      transaccion_mas_baja:string
+    }
+    let datatransacciones:transacciones[] = [];
 
     btnmensual?.addEventListener('click', ()=>{
         miDialogoMes.showModal(); //seleccionar año
@@ -49,7 +59,6 @@
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json();
           datatransacciones = resultado;
-          console.log(resultado);
           printTableTranscciones()
         } catch (error) {
             console.log(error);

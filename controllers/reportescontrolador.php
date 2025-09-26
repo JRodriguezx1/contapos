@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\inventario\productos;
+use Model\inventario\subproductos;
 use Model\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
@@ -54,6 +55,33 @@ class reportescontrolador{
         $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+    public static function vistaVentasxcliente(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function inventarioxproducto(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $sql = "SELECT sps.stock, p.nombre, p.unidadmedida, p.categoria, p.tipoproducto, p.stockminimo, p.fecha_ingreso
+                FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id
+                WHERE p.estado = 1 AND p.visible = 1 AND sps.sucursalid = ".id_sucursal().";";
+        $productos = productos::camposJoinObj($sql);
+
+        $sql = "SELECT sis.stock, sp.nombre, sp.unidadmedida, sp.stockminimo, sp.fecha_ingreso
+                FROM stockinsumossucursal sis JOIN subproductos sp ON sis.subproductoid = sp.id
+                WHERE sis.sucursalid = ".id_sucursal().";";  
+        $subproductos = subproductos::camposJoinObj($sql);
+
+        $router->render('admin/reportes/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
 
     //////////////////////////----    API      ----////////////////////////////////
 
@@ -82,7 +110,7 @@ class reportescontrolador{
   public static function ventasGraficaMensual(){
     session_start();
     isadmin();
-    $data = facturas::ventasGraficaMensual();
+    $data = facturas::ventasGraficaMensual(id_sucursal());
     $label = [];
     $datos = [];
     foreach($data as $value){
@@ -97,7 +125,7 @@ class reportescontrolador{
   public static function ventasGraficaDiario(){
     session_start();
     isadmin();
-    $data = facturas::ventasGraficaDiario();
+    $data = facturas::ventasGraficaDiario(id_sucursal());
     $label = [];
     $datos = [];
     foreach($data as $value){
@@ -107,12 +135,12 @@ class reportescontrolador{
     echo json_encode(['label'=>$label, 'datos'=>$datos]);
   }
 
-    ///// grafica "Valor de los productos principales del inventario" vista principal de reportes index.php
+  ///// grafica "Valor de los productos principales del inventario" vista principal de reportes index.php
   public static function graficaValorInventario(){
     session_start();
     isadmin();
     $sql = "SELECT SUM(sps.stock*p.precio_compra) AS costoinv, SUM(sps.stock*p.precio_venta) AS valorventa
-    FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = 1;";
+    FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = ".id_sucursal().";";
     $datos = productos::camposJoinObj($sql);
     echo json_encode(array_shift($datos));
   }
@@ -122,11 +150,12 @@ class reportescontrolador{
   public static function ventasxtransaccionanual(){
     session_start();
     isadmin();
+    $idsucursal = id_sucursal();
     $sql = "SELECT DATE_FORMAT(fechapago, '%Y-%m') AS fecha, COUNT(*) AS num_transacciones,
-            AVG(total) AS promedio_transaccion, SUM(total) AS total_venta,
+            ROUND(AVG(total), 2) AS promedio_transaccion, SUM(total) AS total_venta,
             MAX(total) AS transaccion_mas_alta, MIN(total) AS transaccion_mas_baja
             FROM facturas WHERE fechapago >= CONCAT('2025', '-01-01')
-            AND fechapago < DATE_ADD(CONCAT('2025', '-01-01'), INTERVAL 1 YEAR)
+            AND fechapago < DATE_ADD(CONCAT('2025', '-01-01'), INTERVAL 1 YEAR) AND id_sucursal = $idsucursal
             GROUP BY DATE_FORMAT(fechapago, '%Y-%m') ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
@@ -136,13 +165,31 @@ class reportescontrolador{
   public static function ventasxtransaccionmes(){
     session_start();
     isadmin();
+    $idsucursal = id_sucursal();
     $sql = "SELECT DATE(fechapago) AS fecha, COUNT(*) AS num_transacciones,
             ROUND(AVG(total), 2) AS promedio_transaccion, SUM(total) AS total_venta,
             MAX(total) AS transaccion_mas_alta, MIN(total) AS transaccion_mas_baja
             FROM facturas WHERE fechapago >= CONCAT('2025-09', '-01')
-            AND fechapago < DATE_ADD(CONCAT('2025-09', '-01'), INTERVAL 1 MONTH)
+            AND fechapago < DATE_ADD(CONCAT('2025-09', '-01'), INTERVAL 1 MONTH) AND id_sucursal = $idsucursal
             GROUP BY DATE(fechapago) ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
+    echo json_encode($datos);
+  }
+
+  //Ventas acumuladas por cliente en un periodo determinado
+  public static function ventasxcliente(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
+              FROM facturas f JOIN clientes c ON f.idcliente = c.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.id_sucursal = $idsucursal
+              GROUP BY c.id, c.nombre;";
+      $datos = productos::camposJoinObj($sql);
+    }
     echo json_encode($datos);
   }
 

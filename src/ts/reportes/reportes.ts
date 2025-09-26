@@ -3,14 +3,6 @@
     const graficaventa = document.querySelectorAll<HTMLButtonElement>('.graficaventa');
     const chartventas = (document.getElementById('chartventas') as HTMLCanvasElement)?.getContext('2d');
     const chartutilidad = (document.getElementById('chartutilidad') as HTMLCanvasElement)?.getContext('2d');
-    const btnventasgenerales = document.querySelector<HTMLButtonElement>('#ventasgenerales')!;
-    const cierrescaja = document.querySelector<HTMLButtonElement>('#cierrescaja')!;
-    const modalFecha:any = document.querySelector("#modalFecha");
-
-    const objDateRange: {inicio:string, fin:string} = {
-      inicio: '',
-      fin: ''
-    }
 
     let chartVentasInstance: any | null = null;
 
@@ -162,71 +154,8 @@
 
 
 
-
-
-
-    ////////////////////////////////////////////////////////////////////
-
-
-    ($('input[name="daterange"]') as any).daterangepicker({
-      opens: 'right', // Posición deseada
-      alwaysShowCalendars: true, // Siempre visible
-    });
-
+    ////////////////////////////////////////////////////////////////////    
     
-    btnventasgenerales?.addEventListener('click', ():void=>{
-
-      objDateRange.inicio = '';
-      objDateRange.fin = '';
-      modalfechas('ventasgenerales');
-      ///////////////  calendario ////////////////
-      ($('input[name="daterange"]') as any).daterangepicker({
-        opens: 'right', // Posición deseada
-        alwaysShowCalendars: true, // Siempre visible
-      });
-      $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-        var startDate = picker.startDate.format('YYYY-MM-DD');
-        var endDate = picker.endDate.format('YYYY-MM-DD');
-        objDateRange.inicio = startDate;
-        objDateRange.fin = endDate;
-      });
-      //modalFecha.showModal();
-      //document.addEventListener("click", cerrarDialogoExterno);
-    });
-
-    cierrescaja.addEventListener('click', ():void=>{
-      objDateRange.inicio = '';
-      objDateRange.fin = '';
-      modalfechas('cierrescaja');
-      ///////////////  calendario ////////////////
-      ($('input[name="daterange"]') as any).daterangepicker();
-      $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-        objDateRange.inicio = picker.startDate.format('YYYY-MM-DD');
-        objDateRange.fin = picker.endDate.format('YYYY-MM-DD');
-      });
-    });
-
-
-    function modalfechas(rutaReporte:string){
-      Swal.fire({
-        title: "<strong>Seleccionar <u>Fecha</u></strong>",
-        //icon: "info",
-        html: `
-        <div class="campodaterange">
-          <label class="formulario__label" for="fechapersonalizada">Fecha personalizada</label>
-          <input type="text" name="daterange" class="formulario__input" id="fechapersonalizada" /></div>
-        `,
-        showCloseButton: true,
-        showCancelButton: true,
-        focusConfirm: false,
-        width: 'auto', //ancho del modal automatico
-      }).then((result:any) => {
-        if (result.isConfirmed) {
-          if(objDateRange.inicio != '' && objDateRange.fin != '')
-            window.location.href = `/admin/reportes/${rutaReporte}?inicio=${objDateRange.inicio}&fin=${objDateRange.fin}`;    
-        }
-      });
-    }
 
     /* cerrarDialogoExterno(event:Event) {
       if (event.target === modalFecha || (event.target as HTMLInputElement).value === 'cancelar' || (event.target as HTMLElement).closest('.finCerrarcaja')) {

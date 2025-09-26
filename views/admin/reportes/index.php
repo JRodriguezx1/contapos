@@ -22,16 +22,16 @@
         <div class="col-span-2 xxs:col-span-1 tlg:col-start-3 tlg:col-end-4">
             <p class="text-gray-500 text-xl mt-0 mb-2">Valor de los productos principales del inventario</p>
             
-            <div class="max-h-[500px]"><canvas class="max-h-[500px]" id="chartutilidad"></canvas></div>
+            <div class="max-h-[390px]"><canvas class="max-h-[390px]" id="chartutilidad"></canvas></div>
         </div>
         <div class="tlg:row-start-2 tlg:row-end-3 col-start-1 col-end-3">
             <h5 class="mb-5">Reportes de Ventas</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" id="ventasgenerales"><span class="material-symbols-outlined">payments</span>Ventas generales</button> 
-                <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" id="cierrescaja"><span class="material-symbols-outlined">attach_money</span>Cierres de caja</button>
-                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><i class="mb-1 text-3xl fa-solid fa-z"></i>Zeta diario</button>
+                <a id="ventasgenerales" href="" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"><span class="material-symbols-outlined">payments</span>Ventas generales</a>
+                <a href="/admin/caja/ultimoscierres" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"><span class="material-symbols-outlined">attach_money</span>Cierres de caja</a>
+                <a href="/admin/caja/zetadiario" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><i class="mb-1 text-3xl fa-solid fa-z"></i>Zeta diario</a>
                 <a href="/admin/reportes/ventasxtransaccion" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Ventas por transaccion</a>
-                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Ventas por cliente</button> 
+                <a href="/admin/reportes/ventasxcliente" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">speaker_notes</span>Ventas por cliente</a>
             </div>
             <h5 class="mb-5 mt-14">Reportes de Facturas</h5>
             <div class="flex flex-wrap gap-4 mb-4">
@@ -44,7 +44,7 @@
             </div>
             <h5 class="mb-5 mt-14">Reportes de Inventario</h5>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">category</span>Inventario por producto</button>
+                <a href="/admin/reportes/inventarioxproducto" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">category</span>Inventario por producto</a>
                 <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">splitscreen_bottom</span>Inventario por categoria</button>
                 <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">inventory</span>Inventario por sede</button>
                 <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600"><span class="material-symbols-outlined">inventory_2</span>Inventario general</button>

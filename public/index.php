@@ -110,6 +110,8 @@ $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 've
 $router->get('/admin/reportes/cierrescaja', [reportescontrolador::class, 'cierrescaja']);
 $router->get('/admin/reportes/zdiario', [reportescontrolador::class, 'zdiario']);
 $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 'ventasxtransaccion']);
+$router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
+$router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class, 'inventarioxproducto']);
 ///// area de clientes /////
 $router->get('/admin/clientes', [clientescontrolador::class, 'index']);
 $router->post('/admin/clientes', [clientescontrolador::class, 'index']); //filtro de busqueda
@@ -199,6 +201,7 @@ $router->get('/admin/api/ventasGraficaDiario', [reportescontrolador::class, 'ven
 $router->get('/admin/api/graficaValorInventario', [reportescontrolador::class, 'graficaValorInventario']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 'ventasxtransaccionanual']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
 
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
