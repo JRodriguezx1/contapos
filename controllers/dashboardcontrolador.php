@@ -6,6 +6,8 @@ namespace Controllers;
 //require __DIR__ . '/../classes/twilio-php-main/src/Twilio/autoload.php';
 //require __DIR__ . '/../classes/aws/aws-autoloader.php';
 //require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
+
+use Model\caja\cierrescajas;
 use MVC\Router;
 use Model\configuraciones\usuarios;
 //use ticketPOS;
@@ -23,7 +25,7 @@ class dashboardcontrolador{
         isadmin();
         date_default_timezone_set('America/Bogota');
         
-        
+        $idsucursal = id_sucursal();
         /*
         $dompdf = new Dompdf();
         ...
@@ -36,6 +38,18 @@ class dashboardcontrolador{
 
         //$totalempleados = empleados::numregistros();
         //$totalclientes = usuarios::numreg_multicolum(['confirmado'=>1, 'admin'=>0]);
+
+
+        $sql = "SELECT SUM(ventasenefectivo) AS efectivofacturado, SUM(ingresoventas) AS totalingreso, 
+                SUM(totalfacturas), SUM(gastoscaja), SUM(descuentofe+descuentopos)
+                FROM cierrescajas WHERE idsucursal_id = $idsucursal AND estado = 0;";
+
+        $sql = "SELECT SUM(v.cantidad) AS totalvendido, p.nombre, p.id AS idproducto, SUM(SUM(v.cantidad)) OVER () AS total_general
+                FROM ventas v
+                INNER JOIN facturas f ON f.id = v.idfactura
+                INNER JOIN productos p ON p.id = v.idproducto
+                WHERE f.id_sucursal = $idsucursal
+                GROUP BY p.id, p.nombre ORDER BY totalvendido DESC LIMIT 8;";
         
         $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'day'=>1, 'totalclientes'=>1, 'totalempleados'=>1, 'user'=>$_SESSION]);
     }
