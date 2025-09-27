@@ -211,7 +211,6 @@
             <span class="font-medium text-2xl">Facturar</span>
           </button>
         </div>
-      
 
       </div>
     </div> <!-- fin segunda columna -->
@@ -229,7 +228,6 @@
     <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
   </div>
 </dialog>
-
 
   <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
   <dialog id="miDialogoAddCliente" class="midialog-sm p-5">
@@ -425,18 +423,8 @@
                 <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
               </div>
               <div class="grid grid-cols-2 gap-3 mt-6">
-                <button 
-                  type="button" 
-                  class="btn-md btn-turquoise !py-4 !px-6 w-full salir">
-                  Salir
-                </button>
-      
-                <button 
-                  id="btnCrearAddDir" 
-                  type="submit"
-                  class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">
-                  Aplicar
-                </button>
+                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 w-full salir">Salir</button>
+                <button id="btnCrearAddDir" type="submit" class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">Aplicar</button>
               </div>
             </div>
         </div>
@@ -460,299 +448,12 @@
     </div>
   </dialog>
 
-
   <!-- MODAL PARA GUARDAR EL PEDIDO-->
-  <dialog id="miDialogoGuardar" class="bg-white rounded-xl shadow-lg p-8 relative z-50">
-      <div class="text-center">
-          <p class="text-2xl font-semibold text-gray-600 mb-6">Desea guardar el pedido?</p>
-          <p class="text-xl text-gray-500">El pedido de venta No: <?php echo $num_orden;?> se guardara en sistema.</p>
-      </div>
-      <div id="" class="flex justify-around w-full border-t border-gray-300 pt-6">
-          <div class="siguardar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
-          <div class="noguardar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
-      </div>
-  </dialog>
+  <?php include __DIR__. "/modalguardarpedido.php"; ?>
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
-  <dialog id="miDialogoFacturar" class="midialog-md !p-12">
-      <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
-      <hr class="my-4 border-t border-neutral-300">
-      <form id="formfacturar" class="formulario" method="POST">
-          <div id="divmsjalerta2"></div>
-          <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
-          <div class="flex justify-center gap-12 mt-8">
-            <div class="formulario__campo w-1/2">
-              <label class="formulario__label" for="caja">Caja</label>
-              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
-                  <?php foreach($cajas as $index => $value):?>
-                    <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
-                  <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="formulario__campo w-1/2">
-              <label class="formulario__label" for="facturador">Facturador</label>
-              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
-                <?php foreach($consecutivos as $index => $value):?>
-                  <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-          </div>
-          <div class="accordion md:px-12 !mt-4">
-            <input type="checkbox" id="first">
-            <label class="etiqueta text-indigo-700" for="first">Elegir método de pago</label>
-            <div class="wrapper">
-              <div class="wrapper-content">
-                <div id="mediospagos" class="content flex flex-col items-center w-1/2 mx-auto text-center">
-                  <?php foreach($mediospago as $index => $value):?>
-                    <div class="mb-4 text-center">
-                      <label class="text-gray-700 text-xl text-center leading-relaxed"><?php echo $value->mediopago??'';?>: </label>
-                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
-                    </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
-            </div>
-          </div> <!-- fin accordion  -->
-
-          <div class="mx-auto">
-            <div class="formulario__campo w-80 mx-auto">
-                <label class="formulario__label leading-relaxed text-center" for="recibio">Efectivo Recibido</label>
-                <input id="recibio" class="formulario__input !text-2xl !border-0 !border-b-2 !border-indigo-500 !rounded-none text-center" name="" type="text" placeholder="0" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
-            </div>
-            <div class="flex flex-col items-center">
-                <p id="cambio" class="text-center formulario__label">Devolver: <span class="text-gray-700 font-semibold text-2xl">$0</span></p>
-            </div>
-          </div>
-          
-         <!-- Opción imprimir factura -->
-        <div class="formulario__campo md:px-12 mb-6">
-          <label class="formulario__label block text-center mb-2">¿Desea imprimir factura?</label>
-          <div class="flex justify-center gap-8">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="imprimir" value="1" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?> >
-              <span class="text-gray-700 text-lg">Sí</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="imprimir" value="0" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 0?'checked':'';?> >
-              <span class="text-gray-700 text-lg">No</span>
-            </label>
-          </div>
-        </div>
-        <!-- Fin opción imprimir factura -->
-
-
-          <div class="formulario__campo md:px-12">
-              <textarea id="observacion" class="formulario__textarea" name="observacion" placeholder="Observacion" rows="4"></textarea>
-          </div>
-
-          <div class="self-end">
-              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="Cancelar">Cancelar</button>
-              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]" type="submit" value="Pagar">
-          </div>
-          
-      </form>
-  </dialog>
-
-
+  <?php include __DIR__. "/modalprocesarpago.php"; ?>
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
-<dialog id="miDialogoFacturarA" class="midialog-sm !p-12">
-
-    <div class="flex items-start gap-3 mb-4">
-      <div class="text-indigo-600 mt-1">
-        <i class="fas fa-user-circle text-[4rem] leading-[2.5rem]"></i> <!-- Ícono más grande -->
-      </div>
-      <div>
-        <h2 class="text-3xl font-semibold text-gray-900">Datos Factura Electrónica</h2>
-        <p class="text-lg text-gray-600">Ingresar datos del adquiriente</p>
-      </div>
-    </div>
-
-    <!-- <h4 class="text-gray-700 font-semibold">Facturar A:</h4> -->
-    <form id="formFacturarA" class="formulario">
-      <div class="border-b border-gray-900/10 pb-10 mb-3">
-        <!-- <p class="mt-2 text-xl text-gray-600">Información del adquiriente.</p> -->
-
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8">
-          <!-- Tipo de Documento -->
-          <div>
-            <label for="dato1" class="block text-2xl font-medium text-gray-600">Tipo Documento</label>
-            <div class="mt-2">
-              <select id="dato1" name="dato1" required
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-                <option value="">Seleccione tipo de documento</option>
-                <option value="11">Registro civil</option>
-                <option value="12">Tarjeta de identidad</option>
-                <option value="13">Cédula de ciudadanía</option>
-                <option value="21">Tarjeta de extranjería</option>
-                <option value="22">Cédula de extranjería</option>
-                <option value="31">NIT</option>
-                <option value="41">Pasaporte</option>
-                <option value="42">Documento de identificación extranjero</option>
-                <option value="50">NUIP</option>
-                <option value="91">Sin identificación del exterior</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Número de Documento + Botón Buscar -->
-          <!-- Número de Documento + Botón Buscar -->
-          <div>
-            <label for="documento" class="block text-2xl font-medium text-gray-600">Número de Documento</label>
-            <div class="mt-2 flex flex-wrap gap-2 items-center">
-              <input id="documento" type="text" name="documento" required
-                class="flex-1 min-w-[200px] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="Número sin dígito de verificación">
-
-              <button id="btnBuscarAdquiriente" type="button"
-                class="flex items-center gap-2 text-indigo-600 border border-indigo-600 hover:bg-indigo-50 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg px-4 py-2.5 h-14 text-xl dark:text-indigo-400 dark:border-indigo-400 dark:hover:bg-indigo-800 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                </svg>
-                Buscar
-              </button>
-            </div>
-          </div>
-
-          <!-- Nombre o Razón Social -->
-          <div>
-            <label for="dato2" class="block text-2xl font-medium text-gray-600">Nombre o Razón Social</label>
-            <div class="mt-2">
-              <input id="dato2" type="text" name="dato2" required
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="Nombre del cliente o empresa">
-            </div>
-          </div>
-
-          <!-- Correo Electrónico -->
-          <div>
-            <label for="correo" class="block text-2xl font-medium text-gray-600">Correo Electrónico</label>
-            <div class="mt-2">
-              <input id="correo" type="email" name="correo"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="correo@ejemplo.com">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      
-      <!-- Botón para mostrar/ocultar -->
-      <div class="accordion md:px-12 !mt-4">
-        <!-- ID ÚNICO -->
-        <input id="toggleOpcionesAdq" type="checkbox" class="peer sr-only">
-        
-        <label for="toggleOpcionesAdq"
-        class="flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none">
-        <span>Mostrar/Ocultar más opciones</span>
-        <span class="text-xl peer-checked:hidden">+</span>
-        <span class="text-xl hidden peer-checked:inline">–</span>
-      </label>
-      <!-- Contenido oculto -->
-      <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out peer-checked:max-h-[120rem]">
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8">
-          
-          <!-- Dirección -->
-          <div>
-            <label for="direccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
-            <input id="direccion" type="text" name="direccion"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-              placeholder="Dirección del adquiriente">
-          </div>
-
-          <!-- Ciudad o Municipio -->
-          <div>
-            <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad / Municipio</label>
-            <input id="ciudad" type="text" name="ciudad"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-              placeholder="Ciudad o municipio">
-          </div>
-
-          <!-- Tipo Régimen -->
-          <div>
-            <label for="tipo_regimen" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
-            <select id="tipo_regimen" name="tipo_regimen"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
-              <option value="">Seleccione tipo de régimen</option>
-              <option value="responsable_iva">Responsable de IVA</option>
-              <option value="no_responsable_iva">No responsable de IVA</option>
-            </select>
-          </div>
-
-          <!-- Tipo de Organización -->
-          <div>
-            <label for="tipo_organizacion" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
-            <select id="tipo_organizacion" name="tipo_organizacion"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
-              <option value="">Seleccione tipo de organización</option>
-              <option value="persona_natural">Persona natural</option>
-              <option value="persona_juridica">Persona jurídica</option>
-            </select>
-          </div>
-
-          <!-- Teléfono -->
-          <div>
-            <label for="telefono" class="block text-2xl font-medium text-gray-600">Teléfono</label>
-            <input id="telefono" type="tel" name="telefono"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-              placeholder="Teléfono de contacto">
-          </div>
-        </div>
-      </div>
-      <!-- Botones -->
-      <div class="text-right mt-6">
-        <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] md:!w-[145px] !mr-3" type="button" value="Cancelar">Cancelar</button>
-        <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] md:!w-[145px]" type="submit" value="Confirmar">
-      </div>
-
-    </div>
-  </form>
-</dialog> 
-
-<!-- MODAL OTROS PRODUCTOS -->
-  <dialog id="miDialogoOtrosProductos" class="midialog-sm p-12">
-    <h4 class=" text-gray-700 font-semibold">Otros:</h4>
-    <form id="formOtrosProductos" class="formulario">  
-      <div class="border-b border-gray-900/10 pb-10 mb-3">
-        
-        <p class="mt-2 text-xl text-gray-600">Agregar producto/servicio personalizado.</p>
-
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-          <div class="sm:col-span-6">
-            <label for="nombreotros" class="block text-2xl font-medium text-gray-600">Nombre</label>
-            <div class="mt-2">
-              <input id="nombreotros" type="text" name="nombreotros" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Nombre del producto/servicio" required>
-            </div> 
-          </div>
-
-
-          <div class="sm:col-span-6">
-            <div class="flex gap-4">
-              <div class="w-1/2">
-                <label for="cantidadotros" class="block text-2xl font-medium text-gray-600">Cantidad</label>
-                <input id="cantidadotros" type="number" name="cantidadotros" min="1" step="0.01"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                  placeholder="Cantidad" required>
-              </div>
-
-              <div class="w-1/2">
-                <label for="preciootros" class="block text-2xl font-medium text-gray-600">Precio total</label>
-                <input id="preciootros" type="number" name="preciootros" min="0"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                  placeholder="Valor" required>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-        
-      <div class="text-right">
-          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[145px]" type="button" value="Cancelar">Cancelar</button>
-          <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[145px]" type="submit" value="Agregar">
-      </div>
-    </form>
-  </dialog>
-  
+  <?php include __DIR__. "/modaladquiriente.php"; ?>
+  <!-- MODAL OTROS PRODUCTOS -->
+  <?php include __DIR__. "/modalotrosproductos.php"; ?>
 </div>
