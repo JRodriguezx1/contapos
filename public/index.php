@@ -118,6 +118,7 @@ $router->get('/admin/reportes/gastoseingresos', [reportescontrolador::class, 'ga
 ///// area de clientes /////
 $router->get('/admin/clientes', [clientescontrolador::class, 'index']);
 $router->post('/admin/clientes', [clientescontrolador::class, 'index']); //filtro de busqueda
+$router->get('/admin/clientes/marketing', [clientescontrolador::class, 'marketing']);
 $router->post('/admin/clientes/crear', [clientescontrolador::class, 'crear']);  //crear cliente en vista de clientes
 $router->post('/admin/clientes/actualizar', [clientescontrolador::class, 'actualizar']);
 $router->get('/admin/clientes/detalle', [clientescontrolador::class, 'detalle']);

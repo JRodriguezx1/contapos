@@ -10,9 +10,7 @@
     <!-- Header -->
     <header class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-2xl md:text-3xl font-extrabold">
-          <span id="usuarioNombre"></span>
-        </h1>
+        <h1 class="text-2xl md:text-3xl font-extrabold"><span id="usuarioNombre"></span></h1>
         <h1 class="text-xl text-gray-500">
           Resumen general del negocio • Última actualización: 
           <span id="ultimaActualizacion">--</span>
@@ -21,15 +19,13 @@
       <div class="flex items-center gap-4">
         <!-- Botón Exportar -->
         <button 
-          class="px-5 py-3 bg-white border rounded-lg shadow-sm text-base font-medium 
-                hover:bg-gray-100 hover:shadow-md transition duration-200">
+          class="px-5 py-3 bg-white border rounded-lg shadow-sm text-base font-medium hover:bg-gray-100 hover:shadow-md transition duration-200">
           Exportar
         </button>
         
         <!-- Botón Actualizar -->
         <button 
-          class="px-5 py-3 bg-indigo-600 text-white rounded-lg shadow-md text-base font-medium 
-                hover:bg-indigo-700 hover:shadow-lg transition duration-200">
+          class="px-5 py-3 bg-indigo-600 text-white rounded-lg shadow-md text-base font-medium hover:bg-indigo-700 hover:shadow-lg transition duration-200">
           Actualizar
         </button>
       </div>
@@ -41,10 +37,10 @@
         <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-green-600">
             <p class="text-lg leading-relaxed text-gray-500">Efectivo facturado (hoy)</p>
             <div class="flex items-center justify-between">
-            <h2 id="efectivoFacturado" class="text-5xl font-extrabold text-green-600 leading-tight">$0</h2>
-            <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M12 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm0 10c-4.418 0-8-1.79-8-4V8c0-2.21 3.582-4 8-4s8 1.79 8 4v6c0 2.21-3.582 4-8 4Z"/>
-            </svg>
+              <h2 id="efectivoFacturado" class="text-4xl font-extrabold text-green-600 leading-tight">$<?php echo number_format($indicadoreseconomicos[0]->efectivofacturado??'0', '0', ',', '.');?></h2>
+              <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm0 10c-4.418 0-8-1.79-8-4V8c0-2.21 3.582-4 8-4s8 1.79 8 4v6c0 2.21-3.582 4-8 4Z"/>
+              </svg>
             </div>
             <p id="metaEfectivo" class="text-sm text-gray-400 mt-1 leading-snug">Meta: --</p>
         </div>
@@ -53,24 +49,12 @@
         <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-indigo-600">
             <p class="text-lg leading-relaxed text-gray-500">Total ingreso facturado</p>
             <div class="flex items-center justify-between">
-            <h2 id="totalIngresosFacturados" class="text-5xl font-extrabold text-indigo-600 leading-tight">$0</h2>
-            <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M4 4h16v4H4zm0 6h16v10H4z"/>
-            </svg>
+              <h2 id="totalIngresosFacturados" class="text-4xl font-extrabold text-indigo-600 leading-tight">$<?php echo number_format($indicadoreseconomicos[0]->totalingreso??'0', '0', ',', '.');?></h2>
+              <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M4 4h16v4H4zm0 6h16v10H4z"/>
+              </svg>
             </div>
             <p id="metaFacturado" class="text-sm text-gray-400 mt-1 leading-snug">Periodo: --</p>
-        </div>
-
-        <!-- Productos vendidos -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-gray-600">
-            <p class="text-lg leading-relaxed text-gray-500">Productos vendidos</p>
-            <div class="flex items-center justify-between">
-            <h2 id="productosVendidos" class="text-5xl font-extrabold leading-tight">0</h2>
-            <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M3 3h18v4H3zm2 6h14v12H5z"/>
-            </svg>
-            </div>
-            <p id="metaProductos" class="text-sm text-gray-400 mt-1 leading-snug">Periodo: --</p>
         </div>
 
         <!-- Facturas emitidas / eliminadas -->
@@ -78,14 +62,27 @@
             <p class="text-lg leading-relaxed text-gray-500">Facturas (emitidas / eliminadas)</p>
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 id="facturasEmitidas" class="text-5xl font-extrabold leading-tight">0</h2>
-                    <p class="text-sm text-gray-400 leading-snug">emitidas</p>
+                    <h2 id="facturasEmitidas" class="text-4xl font-extrabold leading-tight"><?php echo number_format($indicadoreseconomicos[0]->totalfacturas??'0', '0', ',', '.');?></h2>
+                    <p class="text-sm text-gray-400 leading-snug mb-0">emitidas</p>
                 </div>
                 <div class="text-right">
-                    <h2 id="facturasEliminadas" class="text-5xl font-extrabold text-red-500 leading-tight">0</h2>
-                    <p class="text-sm text-gray-400 leading-snug">eliminadas</p>
+                    <h2 id="facturasEliminadas" class="text-4xl font-extrabold text-red-500 leading-tight"><?php echo number_format($indicadoreseconomicos[0]->totalfacturaseliminadas??'0', '0', ',', '.');?></h2>
+                    <p class="text-sm text-gray-400 leading-snug mb-0">eliminadas</p>
                 </div>
             </div>
+        </div>
+
+         <!-- Descuentos aplicados -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-yellow-600">
+            <p class="text-lg leading-relaxed text-gray-500">Descuentos aplicados</p>
+            <div class="flex items-center justify-between">
+                <h3 id="descuentosAplicados" class="text-4xl font-bold text-yellow-600 leading-tight">$<?php echo number_format($indicadoreseconomicos[0]->totaldescuentos??'0', '0', ',', '.');?></h3>
+                <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v10m-3-3h6" />
+                </svg>
+            </div>
+            <p class="text-sm text-gray-400 mt-1 leading-snug">Total descuentos</p>
         </div>
     </section>
 
@@ -95,37 +92,36 @@
         <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-red-600">
             <p class="text-lg leading-relaxed text-gray-500">Indicador de gastos (hoy)</p>
             <div class="flex items-center justify-between">
-            <h3 id="gastosHoy" class="text-5xl font-bold text-red-600 leading-tight">$0</h3>
-            <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M12 8c-1.1 0-2 .9-2 2h4c0-1.1-.9-2-2-2Zm0 8c-4.418 0-8-1.79-8-4V8c0-2.21 3.582-4 8-4s8 1.79 8 4v4c0 2.21-3.582 4-8 4Z"/>
-            </svg>
+              <h3 id="gastosHoy" class="text-4xl font-bold text-red-600 leading-tight">$<?php echo number_format($indicadoreseconomicos[0]->gastoscaja??'0', '0', ',', '.');?></h3>
+              <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 8c-1.1 0-2 .9-2 2h4c0-1.1-.9-2-2-2Zm0 8c-4.418 0-8-1.79-8-4V8c0-2.21 3.582-4 8-4s8 1.79 8 4v4c0 2.21-3.582 4-8 4Z"/>
+              </svg>
             </div>
             <p class="text-sm text-gray-400 mt-1 leading-snug">Gastos por transacción promedio: <span id="gastoPromedio">$0</span></p>
         </div>
 
-        <!-- Descuentos aplicados -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-yellow-600">
-            <p class="text-lg leading-relaxed text-gray-500">Descuentos aplicados</p>
+        <!-- Productos vendidos -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-gray-600">
+            <p class="text-lg leading-relaxed text-gray-500">Productos vendidos</p>
             <div class="flex items-center justify-between">
-                <h3 id="descuentosAplicados" class="text-5xl font-bold text-yellow-600 leading-tight">$0</h3>
-                <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v10m-3-3h6" />
-                </svg>
+              <h2 id="productosVendidos" class="text-4xl font-extrabold leading-tight"><?php echo $cantidadesproductos[0]->totalproductosvendidos;?></h2>
+              <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 3h18v4H3zm2 6h14v12H5z"/>
+              </svg>
             </div>
-            <p class="text-sm text-gray-400 mt-1 leading-snug">Total descuentos</p>
+            <p id="metaProductos" class="text-sm text-gray-400 mt-1 leading-snug">Periodo: ultimos 30 dias</p>
         </div>
 
         <!-- Producto más vendido -->
         <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-gray-600">
             <p class="text-lg leading-relaxed text-gray-500">Producto más vendido</p>
             <div class="flex items-center justify-between">
-                <h3 id="productoMasVendido" class="text-5xl font-bold leading-tight">-</h3>
+                <h3 id="productoMasVendido" class="text-3xl font-bold leading-tight"><?php echo $cantidadesproductos[0]->nombre;?></h3>
                 <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                 </svg>
             </div>
-            <p class="text-sm text-gray-400 mt-1 leading-snug">Unidades: <span id="unidadesPMV">0</span></p>
+            <p class="text-sm text-gray-400 mt-1 leading-snug">Ultimos 30 dias / Unidades: <?php echo $cantidadesproductos[0]->topunidadesvendidas;?></p>
         </div>
     </section>
 
@@ -200,7 +196,7 @@
             </thead>
             <tbody id="tablaTopProductos" class="text-lg">
               <!-- Placeholder rows -->
-              <tr class="border-b">
+              <!--<tr class="border-b">
                 <td class="py-4">Producto A</td>
                 <td class="py-4">120</td>
                 <td class="py-4">$1,200,000</td>
@@ -211,7 +207,15 @@
                 <td class="py-4">90</td>
                 <td class="py-4">$810,000</td>
                 <td class="py-4">17%</td>
-              </tr>
+              </tr>-->
+              <?php foreach($cantidadesproductos as $value): ?>
+                <tr class="border-b">
+                  <td class="py-4"><?php echo $value->nombre??'';?></td>
+                  <td class="py-4"><?php echo $value->topunidadesvendidas??0;?></td>
+                  <td class="py-4">0</td>
+                  <td class="py-4">0</td>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
         </div>

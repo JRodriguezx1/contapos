@@ -1,22 +1,7 @@
 (function():void{
   if(document.querySelector('.inicio')){
     
-    const resumen = {
-      usuarioNombre: "",
-      ultimaActualizacion: new Date().toLocaleString(),
-      efectivoFacturado: 450000,
-      totalIngresosFacturados: 8200000,
-      productosVendidos: 320,
-      facturasEmitidas: 58,
-      facturasEliminadas: 1,
-      gastosHoy: 120000,
-      gastoPromedio: 3500,
-      descuentosAplicados: 8000,
-      productoMasVendido: "Pollo broaster",
-      unidadesPMV: 120,
-      ventasHoySummary: "$450.000",
-      ingresos7diasTotal: "$8.200.000"
-    };
+    
 
     // Ventas por horas (hoy) - ejemplo 24 horas o por horas de apertura (aquí 10 valores)
     const ventasPorHoras = {
@@ -43,50 +28,12 @@
       gastos: [700000, 800000, 850000, 780000, 900000, 980000]
     };
 
-    // Top productos (tabla) - ejemplo
-    const topProductos = [
-      { nombre: "Taladro percutor BLACK AND DECKER 550W 1/2", unidades: 120, ingresos: 1200000, porcentaje: "25%" },
-      { nombre: "Aspiradorax", unidades: 90, ingresos: 810000, porcentaje: "17%" },
-      { nombre: "Bi-Pro Vainilla 5kg", unidades: 70, ingresos: 700000, porcentaje: "14%" }
-    ];
-
     // Stock minimo - ejemplo
     const stockMinimo = [
       { nombre: "Vitamina women Blend", actual: 2, minimo: 5 },
       { nombre: "Aspiradorax", actual: 3, minimo: 4 },
       { nombre: "Bi-Pro Vainilla 5kg", actual: 6, minimo: 8 }
     ];
-
-    // ---------- Rellenar valores en DOM ----------
-    document.getElementById('usuarioNombre')!.innerText = resumen.usuarioNombre;
-    document.getElementById('ultimaActualizacion')!.innerText = resumen.ultimaActualizacion;
-    document.getElementById('efectivoFacturado')!.innerText = `$${Number(resumen.efectivoFacturado).toLocaleString('es-CO')}`;
-    document.getElementById('totalIngresosFacturados')!.innerText = `$${Number(resumen.totalIngresosFacturados).toLocaleString('es-CO')}`;
-    document.getElementById('productosVendidos')!.innerText = resumen.productosVendidos+'';
-    document.getElementById('facturasEmitidas')!.innerText = resumen.facturasEmitidas+'';
-    document.getElementById('facturasEliminadas')!.innerText = resumen.facturasEliminadas+'';
-    document.getElementById('gastosHoy')!.innerText = `$${Number(resumen.gastosHoy).toLocaleString('es-CO')}`;
-    document.getElementById('gastoPromedio')!.innerText = `$${Number(resumen.gastoPromedio).toLocaleString('es-CO')}`;
-    document.getElementById('descuentosAplicados')!.innerText = `$${Number(resumen.descuentosAplicados).toLocaleString('es-CO')}`;
-    document.getElementById('productoMasVendido')!.innerText = resumen.productoMasVendido;
-    document.getElementById('unidadesPMV')!.innerText = resumen.unidadesPMV+'';
-    document.getElementById('ventasHoySummary')!.innerText = resumen.ventasHoySummary;
-    document.getElementById('ingresos7diasTotal')!.innerText = resumen.ingresos7diasTotal;
-
-    // Rellenar tabla top productos
-    const tbodyTop = document.getElementById('tablaTopProductos')!;
-    tbodyTop.innerHTML = ""; // limpiar
-    topProductos.forEach(p => {
-      const tr = document.createElement('tr');
-      tr.className = 'border-b';
-      tr.innerHTML = `
-        <td class="py-2">${p.nombre}</td>
-        <td class="py-2">${p.unidades}</td>
-        <td class="py-2">$${Number(p.ingresos).toLocaleString('es-CO')}</td>
-        <td class="py-2">${p.porcentaje}</td>
-      `;
-      tbodyTop.appendChild(tr);
-    });
 
     // Rellenar lista stock minimo
     const ulStock = document.getElementById('listaStockMinimo')!;
