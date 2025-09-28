@@ -3,7 +3,7 @@ namespace Model\caja;
 
 class cierrescajas extends \Model\ActiveRecord {
     protected static $tabla = 'cierrescajas';
-    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturaseliminadas', 'facturaselectronicaselimnadas', 'facturasposeliminadas', 'valorfeeliminado', 'valorposeliminado', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
 
     public function __construct($args = [])
     {
@@ -17,6 +17,11 @@ class cierrescajas extends \Model\ActiveRecord {
         $this->fechacierre = $args['fechacierre'] ?? date('Y-m-d H:i:s');
         $this->ncambiosaventa = $args['ncambiosaventa'] ?? 0;
         $this->totalcotizaciones = $args['totalcotizaciones'] ?? 0;
+        $this->totalfacturaseliminadas = $args['totalfacturaseliminadas'] ?? 0;
+        $this->facturaselectronicaselimnadas = $args['facturaselectronicaselimnadas'] ?? 0;
+        $this->facturasposeliminadas = $args['facturasposeliminadas'] ?? 0;
+        $this->valorfeeliminado = $args['valorfeeliminado'] ?? 0;
+        $this->valorposeliminado = $args['valorposeliminado'] ?? 0;
         $this->totalfacturas = $args['totalfacturas'] ?? 0;
         $this->facturaselectronicas = $args['facturaselectronicas'] ?? 0;
         $this->facturaspos = $args['facturaspos'] ?? 0;

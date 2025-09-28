@@ -8,6 +8,8 @@ declare const Swal: any;
 declare var moment: any;
 declare let List: any; 
 
+(window as any).POS = (window as any).POS || {};
+
 if(mobilemenu){
     mobilemenu.addEventListener('click', function(){
       if (sidebar && barra) {

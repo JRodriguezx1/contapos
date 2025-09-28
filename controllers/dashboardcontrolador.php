@@ -6,8 +6,11 @@ namespace Controllers;
 //require __DIR__ . '/../classes/twilio-php-main/src/Twilio/autoload.php';
 //require __DIR__ . '/../classes/aws/aws-autoloader.php';
 //require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
+
+use Model\caja\cierrescajas;
 use MVC\Router;
 use Model\configuraciones\usuarios;
+use Model\ventas\ventas;
 //use ticketPOS;
 
 
@@ -23,7 +26,7 @@ class dashboardcontrolador{
         isadmin();
         date_default_timezone_set('America/Bogota');
         
-        
+        $idsucursal = id_sucursal();
         /*
         $dompdf = new Dompdf();
         ...
@@ -36,8 +39,26 @@ class dashboardcontrolador{
 
         //$totalempleados = empleados::numregistros();
         //$totalclientes = usuarios::numreg_multicolum(['confirmado'=>1, 'admin'=>0]);
+
+
+        // calculo de los ingresos y gastos de las cajas abiertas
+        $sql = "SELECT SUM(ventasenefectivo) AS efectivofacturado, SUM(ingresoventas) AS totalingreso, SUM(totalfacturaseliminadas) AS totalfacturaseliminadas, 
+                SUM(totalfacturas) AS totalfacturas, SUM(gastoscaja) AS gastoscaja, SUM(descuentofe+descuentopos) AS totaldescuentos
+                FROM cierrescajas WHERE idsucursal_id = $idsucursal AND estado = 0;";
+        $indicadoreseconomicos = cierrescajas::camposJoinObj($sql);
+
+        //total productos vendids, el producto mas vendido y top de productos vendidos ultimos 30 dias
+        $sql = "SELECT SUM(v.cantidad) AS topunidadesvendidas, p.nombre, p.id AS idproducto, SUM(SUM(v.cantidad)) OVER () AS totalproductosvendidos
+                FROM ventas v
+                INNER JOIN facturas f ON f.id = v.idfactura
+                INNER JOIN productos p ON p.id = v.idproducto
+                WHERE f.fechapago >= CURDATE() - INTERVAL 30 DAY AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+                GROUP BY p.id, p.nombre ORDER BY topunidadesvendidas DESC LIMIT 8;";
+        $cantidadesproductos = ventas::camposJoinObj($sql);
         
-        $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'day'=>1, 'totalclientes'=>1, 'totalempleados'=>1, 'user'=>$_SESSION]);
+        
+        
+        $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'indicadoreseconomicos'=>$indicadoreseconomicos, 'cantidadesproductos'=>$cantidadesproductos,  'user'=>$_SESSION]);
     }
 
     public static function perfil(Router $router) {

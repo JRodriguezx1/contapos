@@ -104,6 +104,12 @@ class clientescontrolador{
         $router->render('admin/clientes/index', ['titulo'=>'clientes', 'clientes'=>$clientes, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
 
+    public static function marketing(Router $router){
+        session_start();
+        isadmin(); 
+        $alertas = [];
+        $router->render('admin/clientes/marketing', ['titulo'=>'clientes/marketing', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    }
 
     public static function detalle(Router $router){
         session_start();
