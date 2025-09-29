@@ -476,8 +476,8 @@ class cajacontrolador{
       }
     }
     
-    
-    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $negocio = negocio::get(1);
+    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION, 'negocio'=>$negocio]);
   }
 
 

@@ -18,7 +18,7 @@
         <p><span class="font-semibold">Caja:</span> Caja Principal</p>
         <p><span class="font-semibold">Cuadre de caja:</span> ID Pendiente</p>
         <p><span class="font-semibold">Usuario:</span> soporte</p>
-        <p><span class="font-semibold">Inicio:</span> 29 Ago 2025, 09:27:07 PM</p>
+        <p><span class="font-semibold">Inicio:</span> <?php echo 'fecha' ?></p>
         <p><span class="font-semibold">Fin:</span> 30 Ago 2025, 09:01:30 AM</p>
         <p><span class="font-semibold">Reporte:</span> 30 Ago 2025, 09:01:30 AM</p>
       </div>
