@@ -70,7 +70,7 @@
             <a class="<?php echo ($titulo === 'Reportes')?'activo':''; ?>" href="/admin/reportes"><span class="material-symbols-outlined">format_list_bulleted</span> <label class="btnav"> Reportes</label></a>
         <?php endif; ?>
         <?php //if(tienePermiso('Habilitar modulo de venta')): ?>
-            <a class="<?php echo ($titulo === 'Clientes')?'activo':''; ?>" href="/admin/clientes"><span class="material-symbols-outlined">support_agent</span> <label class="btnav"> Clientes</label></a>
+            <a class="<?php echo (str_contains($titulo, 'Clientes'))?'activo':''; ?>" href="/admin/clientes"><span class="material-symbols-outlined">support_agent</span> <label class="btnav"> Clientes</label></a>
         <?php //endif; ?>    
         <?php //if(tienePermiso('Habilitar modulo de venta')): ?>
             <a class="<?php echo ($titulo === 'Perfil')?'activo':''; ?>" href="/admin/perfil"><span class="material-symbols-outlined">manage_accounts</span> <label class="btnav"> Perfil</label></a>

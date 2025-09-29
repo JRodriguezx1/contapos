@@ -13,10 +13,9 @@ $campanias = [
     <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">Gestión de Campañas de Marketing</h3>
 
     <!-- Botón Crear Campaña (TYPE=button para evitar submit inesperado) -->
-    <button id="btnNuevaCampania" type="button"
-      class="text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-semibold rounded-lg text-lg px-6 py-3 text-center shadow-lg transition transform hover:scale-105">
+    <a id="btnNuevaCampania" href="/admin/clientes/marketing/crearcampania" class="text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-semibold rounded-lg text-lg px-6 py-3 text-center shadow-lg transition transform hover:scale-105">
       ➕ Crear Campaña
-    </button>
+    </a>
   </div>
 
   <!-- Tabla -->
@@ -53,9 +52,11 @@ $campanias = [
 </div>
 
 <!-- Modal Crear Campaña -->
+ <!--
 <div id="modalCampania" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-  <div class="bg-white rounded-2xl shadow-lg w-full max-w-2xl p-8 relative">
+  <div class="bg-white rounded-2xl shadow-lg w-full max-w-2xl p-8 relative">-->
     <!-- Botón cerrar (opcional) -->
+     <!--
     <button id="btnCerrarModal" type="button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
       ✕
     </button>
@@ -102,10 +103,11 @@ $campanias = [
       </div>
     </form>
   </div>
-</div>
+</div>-->
 
 <!-- JS para abrir/cerrar modal (seguro: se ejecuta cuando el DOM esté cargado) -->
 <script>
+  /*
   document.addEventListener('DOMContentLoaded', function () {
     const btnNueva = document.getElementById('btnNuevaCampania');
     const modal = document.getElementById('modalCampania');
@@ -150,5 +152,5 @@ $campanias = [
         closeModal();
       }
     });
-  });
+  });*/
 </script>
