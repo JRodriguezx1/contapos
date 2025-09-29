@@ -60,24 +60,24 @@
 
       <h5 class="mb-5 mt-14">Reportes de Facturas</h5>
       <div class="flex flex-wrap gap-4 mb-4">
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        <a href="/admin/reportes/facturaspagas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">request_quote</span>Facturas pagas
-        </button>
-        <a class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600" href="/admin/caja/pedidosguardados">
+        </a>
+        <a href="/admin/caja/pedidosguardados" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">speaker_notes</span>Facturas no pagas
         </a>
         <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">receipt_long</span>Cotizaciones
         </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        <a href="/admin/reportes/facturasanuladas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">contract_delete</span>Facturas anuladas
-        </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        </a>
+        <a href="/admin/reportes/facturaselectronicas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">speaker_notes</span>Electronicas generadas
-        </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        </a>
+        <a href="/admin/reportes/facturaselectronicaspendientes" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">speaker_notes</span>Electronicas Pendientes
-        </button>
+        </a>
       </div>
 
       <h5 class="mb-5 mt-14">Reportes de Inventario</h5>
@@ -97,9 +97,9 @@
         <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">speaker_notes</span>Movimientos inventario
         </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="/admin/reportes/compras" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <span class="material-symbols-outlined">speaker_notes</span>Compras
-        </button>
+        </a>
         <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <span class="material-symbols-outlined">move_up</span>Rotacion de inventario
         </button>
@@ -113,15 +113,15 @@
         <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">monitoring</span>Utilidad Rentabilidad
         </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        <a href="/admin/reportes/utilidadxproducto" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">chart_data</span>Utilidad por producto
-        </button>
+        </a>
         <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">chart_data</span>Utilidad por categoria
         </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        <a href="/admin/reportes/gastoseingresos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">fact_check</span>Gastos e ingresos
-        </button>
+        </a>
         <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">query_stats</span>Comparación interanual
         </button>
@@ -135,12 +135,12 @@
     <div class="col-span-2 tlg:col-span-1">
       <h5 class="mb-5 mt-14">Otros</h5>
       <div class="flex flex-wrap gap-4 mb-4">
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+        <a href="/admin/reportes/clientesnuevos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">person_add</span>Clientes nuevos
-        </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        </a>
+        <a href="/admin/reportes/clientesrecurrentes" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <span class="material-symbols-outlined">person_check</span>Clientes recurrentes
-        </button>
+        </a>
         <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <span class="material-symbols-outlined">vpn_key_alert</span>Registro de actividad
         </button>

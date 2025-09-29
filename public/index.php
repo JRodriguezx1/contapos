@@ -107,14 +107,18 @@ $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  /
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
 $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 'ventasgenerales']);
-$router->get('/admin/reportes/cierrescaja', [reportescontrolador::class, 'cierrescaja']);
-$router->get('/admin/reportes/zdiario', [reportescontrolador::class, 'zdiario']);
 $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 'ventasxtransaccion']);
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
+$router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
+$router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'facturasanuladas']);
+$router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
+$router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);
 $router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class, 'inventarioxproducto']);
 $router->get('/admin/reportes/compras', [reportescontrolador::class, 'compras']);
-$router->get('/admin/reportes/utilidadporproducto', [reportescontrolador::class, 'utilidadporproducto']);
+$router->get('/admin/reportes/utilidadxproducto', [reportescontrolador::class, 'utilidadxproducto']);
 $router->get('/admin/reportes/gastoseingresos', [reportescontrolador::class, 'gastoseingresos']);
+$router->get('/admin/reportes/clientesnuevos', [reportescontrolador::class, 'clientesnuevos']);
+$router->get('/admin/reportes/clientesrecurrentes', [reportescontrolador::class, 'clientesrecurrentes']);
 ///// area de clientes /////
 $router->get('/admin/clientes', [clientescontrolador::class, 'index']);
 $router->post('/admin/clientes', [clientescontrolador::class, 'index']); //filtro de busqueda
@@ -134,6 +138,9 @@ $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 
 
 
 /////////////////////////////////////--   API'S   --////////////////////////////////////////
+$router->get('/admin/api/ventasVsGastos', [dashboardcontrolador::class, 'ventasVsGastos']);
+$router->get('/admin/api/ultimos7dias', [dashboardcontrolador::class, 'ultimos7dias']);
+
 $router->post('/admin/api/actualizar_categoria', [almacencontrolador::class, 'actualizar_categoria']);
 $router->post('/admin/api/eliminarCategoria', [almacencontrolador::class, 'eliminarCategoria']);
 $router->get('/admin/api/allproducts', [almacencontrolador::class, 'allproducts']); //trae todos los productos
@@ -206,6 +213,12 @@ $router->get('/admin/api/graficaValorInventario', [reportescontrolador::class, '
 $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 'ventasxtransaccionanual']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifacturaspagas']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde reportes.ts
 
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js

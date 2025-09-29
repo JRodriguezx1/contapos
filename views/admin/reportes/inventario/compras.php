@@ -1,4 +1,4 @@
-<div class="box ventasxcliente relative">
+<div class="box reportescompras relative">
   <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
   <a href="/admin/reportes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -7,7 +7,7 @@
     <span class="sr-only">Atrás</span>
   </a>
   
-  <h4 class="text-gray-600 mb-8 mt-4">Ventas por cliente</h4>
+  <h4 class="text-gray-600 mb-8 mt-4">Compras</h4>
   
   <div class="flex flex-col gap-4">
     <!-- Grupo de botones -->
@@ -43,6 +43,22 @@
 
   <div class="mt-4">
     <p class="text-gray-500 text-xl">Septiembre 2025</p>
-    <table id="tablaVentasXCliente" class="display responsive nowrap tabla" width="100%"></table>
+    <table id="tablaReportesCompras" class="display responsive nowrap tabla" width="100%">
+        <thead>
+          <tr>
+              <th>Nº</th>
+              <th>Usuario</th>
+              <th>Origen</th>
+              <th>Proveedor</th>
+              <th>N° Factura</th>
+              <th>V. Total</th>
+              <th>Fecha</th>
+              <th class="accionesth">Acciones</th>
+          </tr>
+      </thead>
+      <tbody>
+          
+      </tbody>
+    </table>
   </div>
 </div>

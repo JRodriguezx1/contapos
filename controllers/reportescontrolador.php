@@ -27,24 +27,6 @@ class reportescontrolador{
 
         $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
-    public static function cierrescaja(Router $router){
-        session_start();
-        isadmin();
-        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
-        $alertas = [];
-
-        $router->render('admin/reportes/cierrescaja', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
-    }
-
-    
-    public static function zdiario(Router $router){
-        session_start();
-        isadmin();
-        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
-        $alertas = [];
-
-        $router->render('admin/reportes/zdiario', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
-    }
 
     public static function ventasxtransaccion(Router $router){
         session_start();
@@ -64,6 +46,44 @@ class reportescontrolador{
         $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+    public static function facturaspagas(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/facturas/facturaspagas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    
+    public static function facturasanuladas(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/facturas/facturasanuladas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function facturaselectronicas(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/facturas/facturaselectronicas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    
+    public static function facturaselectronicaspendientes(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
     public static function inventarioxproducto(Router $router){
         session_start();
         isadmin();
@@ -79,7 +99,7 @@ class reportescontrolador{
                 WHERE sis.sucursalid = ".id_sucursal().";";  
         $subproductos = subproductos::camposJoinObj($sql);
 
-        $router->render('admin/reportes/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function compras(Router $router){
@@ -88,16 +108,16 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/compras', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
-    public static function utilidadporproducto(Router $router){
+    public static function utilidadxproducto(Router $router){
         session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-
-        $router->render('admin/reportes/utilidadporproducto', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $productos = productos::whereArray(['visible'=>1]);
+        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function gastoseingresos(Router $router){
@@ -106,10 +126,32 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/gastoseingresos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/utilidadgastoscrecimiento/gastoseingresos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
-    //////////////////////////----    API      ----////////////////////////////////
+    public static function clientesnuevos(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/otros/clientesnuevos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function clientesrecurrentes(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/otros/clientesrecurrentes', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+
+
+
+
+  ////////////////////////////----    API      ----////////////////////////////////
 
   ///////////  API REST llamada desde reportes o fechazetadiario.ts  ////////////
   public static function consultafechazetadiario(){
@@ -181,7 +223,7 @@ class reportescontrolador{
             ROUND(AVG(total), 2) AS promedio_transaccion, SUM(total) AS total_venta,
             MAX(total) AS transaccion_mas_alta, MIN(total) AS transaccion_mas_baja
             FROM facturas WHERE fechapago >= CONCAT('2025', '-01-01')
-            AND fechapago < DATE_ADD(CONCAT('2025', '-01-01'), INTERVAL 1 YEAR) AND id_sucursal = $idsucursal
+            AND fechapago < DATE_ADD(CONCAT('2025', '-01-01'), INTERVAL 1 YEAR) AND estado = 'Paga' AND id_sucursal = $idsucursal
             GROUP BY DATE_FORMAT(fechapago, '%Y-%m') ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
@@ -196,7 +238,7 @@ class reportescontrolador{
             ROUND(AVG(total), 2) AS promedio_transaccion, SUM(total) AS total_venta,
             MAX(total) AS transaccion_mas_alta, MIN(total) AS transaccion_mas_baja
             FROM facturas WHERE fechapago >= CONCAT('2025-09', '-01')
-            AND fechapago < DATE_ADD(CONCAT('2025-09', '-01'), INTERVAL 1 MONTH) AND id_sucursal = $idsucursal
+            AND fechapago < DATE_ADD(CONCAT('2025-09', '-01'), INTERVAL 1 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
             GROUP BY DATE(fechapago) ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
@@ -212,7 +254,102 @@ class reportescontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
               FROM facturas f JOIN clientes c ON f.idcliente = c.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.id_sucursal = $idsucursal
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY c.id, c.nombre;";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+
+  //Facturas procesadas como pagas
+  public static function apifacturaspagas(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $facturas = facturas::whereArrayBETWEEN('fechapago', $fechainicio, $fechafin, ['estado'=>'Paga', 'id_sucursal'=>$idsucursal]);
+    }
+    echo json_encode($facturas);
+  }
+
+  //Facturas procesadas que luego fueron anuladas
+  public static function apifacturasanuladas(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $facturas = facturas::whereArrayBETWEEN('fechapago', $fechainicio, $fechafin, ['estado'=>'Eliminada', 'id_sucursal'=>$idsucursal]);
+    }
+    echo json_encode($facturas);
+  }
+
+  //Facturas electronicas aceptadas
+  public static function apifacturaselectronicas(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
+              FROM facturas f JOIN clientes c ON f.idcliente = c.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY c.id, c.nombre;";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+  //Facturas electronicas pendientes
+  public static function apielectronicaspendientes(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
+              FROM facturas f JOIN clientes c ON f.idcliente = c.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY c.id, c.nombre;";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+  //Reporte de compras
+  public static function reportecompras(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
+              FROM facturas f JOIN clientes c ON f.idcliente = c.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY c.id, c.nombre;";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+  //Reporte de gastos e ingresos
+  public static function apigastoseingresos(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
+              FROM facturas f JOIN clientes c ON f.idcliente = c.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
               GROUP BY c.id, c.nombre;";
       $datos = productos::camposJoinObj($sql);
     }

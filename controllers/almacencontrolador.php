@@ -148,8 +148,13 @@ class almacencontrolador{
             foreach($sucursales as $index => $value){
               $stocksucursal[$index]['productoid'] = $r[1];
               $stocksucursal[$index]['sucursalid'] = $value->id;
-              $stocksucursal[$index]['stock'] = $producto->stock;
-              $stocksucursal[$index]['stockminimo'] = $producto->stockminimo;
+              if($value->id == id_sucursal()){
+                $stocksucursal[$index]['stock'] = $producto->stock;
+                $stocksucursal[$index]['stockminimo'] = $producto->stockminimo;
+              }else{
+                $stocksucursal[$index]['stock'] = 0;
+                $stocksucursal[$index]['stockminimo'] = 0;
+              }
               $stocksucursal[$index]['habilitarventa'] = 1;
             }
             $stockProductoSucursales->crear_varios_reg($stocksucursal);
@@ -211,8 +216,13 @@ class almacencontrolador{
             foreach($sucursales as $index => $value){
               $stocksucursal[$index]['subproductoid'] = $r[1];
               $stocksucursal[$index]['sucursalid'] = $value->id;
-              $stocksucursal[$index]['stock'] = $subproducto->stock;
-              $stocksucursal[$index]['stockminimo'] = $subproducto->stockminimo;
+              if($value->id == id_sucursal()){
+                $stocksucursal[$index]['stock'] = $subproducto->stock;
+                $stocksucursal[$index]['stockminimo'] = $subproducto->stockminimo;
+              }else{
+                $stocksucursal[$index]['stock'] = 0;
+                $stocksucursal[$index]['stockminimo'] = 0;
+              }
             }
             $stockinsumossucursales->crear_varios_reg($stocksucursal);
             $alertas['exito'][] = "Producto creado correctamente";
@@ -526,16 +536,9 @@ class almacencontrolador{
     $idunidadmedidaDB = $producto->idunidadmedida;  //obtener el id de unidad de medida actual del subproducto
     
     /////// valiadar que es una nueva imagen o distinta
-    if(!$producto->foto && isset($_FILES['foto'])){
-        //imagen puesta por pirmera vez
-    }elseif($producto->foto && isset($_FILES['foto']['name'])) { //remplazar imagen existente
-        //obtener nombre de la imagen
-        //$x = explode('avatar/', $producto->foto);     //cliente1/productos/nombreimagen.png
-                                                     //avatar/avatar2.png
-        //if($x[0]){ //si img es diferente a avatar
-            $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
-            if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
-        //}
+    if($producto->foto && isset($_FILES['foto']['name'])) { //remplazar imagen existente
+        $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
+        if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);    
     }
     
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -560,7 +563,9 @@ class almacencontrolador{
                 $producto->precio_compra = 0;
               }
             }
-      
+
+            //$stockproducto = stockproductossucursal::uniquewhereArray(['productoid'=>$producto->id, 'sucursalid'=>id_sucursal()]);
+            //$stockproducto->stock = $_POST['stockminimo'];
             $r = $producto->actualizar();
             
             if($r){

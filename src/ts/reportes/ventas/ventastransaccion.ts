@@ -75,7 +75,7 @@
         tablaTransaccioneXVenta = ($('#tablaTransaccioneXVenta') as any).DataTable({
             destroy: true, // importante si recargas la tabla
             data: datatransacciones,
-            columns: [{title: 'Fecha', data: 'fecha'}, {title: 'Toal venta', data: 'total_venta', render: (data: number) => `$${data.toLocaleString()}`}, {title: 'Numero de transacciones', data: 'num_transacciones'}, {title: 'Promedio por transacción', data: 'promedio_transaccion'}, {title: 'Transacción mas alta', data: 'transaccion_mas_alta'}, {title: 'Transacción mas baja', data: 'transaccion_mas_baja'}],
+            columns: [{title: 'Fecha', data: 'fecha'}, {title: 'Toal venta', data: 'total_venta', render: (data: number) => `$${Number(data).toLocaleString()}`}, {title: 'Numero de transacciones', data: 'num_transacciones'}, {title: 'Promedio por transacción', data: 'promedio_transaccion'}, {title: 'Transacción mas alta', data: 'transaccion_mas_alta'}, {title: 'Transacción mas baja', data: 'transaccion_mas_baja'}],
         });
     }
 

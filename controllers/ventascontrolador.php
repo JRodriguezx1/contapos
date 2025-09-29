@@ -74,6 +74,7 @@ class ventascontrolador{
     session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
+    date_default_timezone_set('America/Bogota');
     $getDB = facturas::getDB();
     $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
@@ -680,11 +681,15 @@ class ventascontrolador{
         $factura->estado = "Eliminada";
 
         /////////// calcular cantidad de facturas y discriminar por tipo
-        $cierrecaja->totalfacturas = $cierrecaja->totalfacturas - 1;  //total de facturas
+        $cierrecaja->totalfacturaseliminadas += 1;
         if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
-          $cierrecaja->facturaselectronicas = $cierrecaja->facturaselectronicas - 1;  //total de facturas electronicas
+          $cierrecaja->facturaselectronicaselimnadas += -1;
+          $cierrecaja->valorfe -= $factura->total;
+          $cierrecaja->descuentofe -= $factura->descuento;
         }else{
-          $cierrecaja->facturaspos = $cierrecaja->facturaspos - 1;   //total de facturas pos
+          $cierrecaja->facturasposeliminadas += -1;
+          $cierrecaja->valorpos -= $factura->total;
+          $cierrecaja->descuentopos += $factura->descuento;
         }
         ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
         $cierrecaja->ventasenefectivo =  $cierrecaja->ventasenefectivo - $mediospago;

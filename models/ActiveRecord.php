@@ -611,6 +611,21 @@ class ActiveRecord {
     }
 
 
+    //// busqueda con where con multiples opciones
+    public static function whereArrayBETWEEN($coldate, $fechaini, $fechafin, $array = []){ //$array = ['confirmado'=>1, 'admin'=>0]
+        $sql = "SELECT *FROM ".static::$tabla." WHERE $coldate BETWEEN '$fechaini' AND '$fechafin' AND";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= " ${key} = '${value}'";
+            }else{
+                $sql.= " ${key} = '${value}' AND ";
+            }
+        }
+        $resultado = self::consultar_Sql($sql);
+        return $resultado;
+    }
+
+
     //// busqueda con where haciendo un join de 2 tablas con multiples opciones, 
     public static function unJoinWhereArray($Obj, $t1id, $t2id, $array = []):array{ //$array = ['confirmado'=>1, 'admin'=>0]
         $sql = "SELECT ".static::$tabla.".*, ".$Obj::$tabla.".*, ".static::$tabla.".id AS ID"." FROM ".static::$tabla." JOIN ".$Obj::$tabla." ON ".static::$tabla.".".$t1id." = ".$Obj::$tabla.".".$t2id." WHERE";

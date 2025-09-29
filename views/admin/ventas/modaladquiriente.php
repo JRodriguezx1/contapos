@@ -23,17 +23,19 @@
             <div class="mt-2">
               <select id="type_document_identification_id" name="type_document_identification_id" required
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-                <option value="">Seleccione tipo de documento</option>
-                <option value="11">Registro civil</option>
-                <option value="12">Tarjeta de identidad</option>
-                <option value="13">Cédula de ciudadanía</option>
-                <option value="21">Tarjeta de extranjería</option>
-                <option value="22">Cédula de extranjería</option>
-                <option value="31">NIT</option>
-                <option value="41">Pasaporte</option>
-                <option value="42">Documento de identificación extranjero</option>
-                <option value="50">NUIP</option>
-                <option value="91">Sin identificación del exterior</option>
+                <option value="" disabled selected>Seleccione tipo de documento</option>
+                <option value="1">Registro civil</option>
+                <option value="2">Tarjeta de identidad</option>
+                <option value="3">Cédula de ciudadanía</option>
+                <option value="4">Tarjeta de extranjería</option>
+                <option value="5">Cédula de extranjería</option>
+                <option value="6">NIT</option>
+                <option value="7">Pasaporte</option>
+                <option value="8">Documento de identificación extranjero</option>
+                <option value="9">NIT de otro país</option>
+                <option value="10">NUIP *</option>
+                <option value="11">PEP (Permiso Especial de Permanencia)</option>
+                <option value="12">PPT (Permiso Protección Temporal)</option>
               </select>
             </div>
           </div>
@@ -110,25 +112,25 @@
             </select>
           </div>
 
-          <!-- Tipo Régimen -->
-          <div>
-            <label for="type_regime_id" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
-            <select id="type_regime_id" name="type_regime_id"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
-              <option value="">Seleccione tipo de régimen</option>
-              <option value="responsable_iva">Responsable de IVA</option>
-              <option value="no_responsable_iva">No responsable de IVA</option>
-            </select>
-          </div>
-
           <!-- Tipo de Organización -->
           <div>
             <label for="type_organization_id" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
             <select id="type_organization_id" name="type_organization_id"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
-              <option value="">Seleccione tipo de organización</option>
-              <option value="persona_natural">Persona natural</option>
-              <option value="persona_juridica">Persona jurídica</option>
+              <option value="" disabled selected>Seleccione tipo de organización</option>
+              <option value="1">Persona Jurídica y asimiladas</option>
+              <option value="2">Persona Natural y asimiladas</option>
+            </select>
+          </div>
+
+          <!-- Tipo Régimen -->
+          <div>
+            <label for="type_regime_id" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
+            <select id="type_regime_id" name="type_regime_id"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+              <option value="" disabled selected>Seleccione tipo de régimen</option>
+              <option value="1">Responsable de IVA</option>
+              <option value="2">No responsable de IVA</option>
             </select>
           </div>
 
