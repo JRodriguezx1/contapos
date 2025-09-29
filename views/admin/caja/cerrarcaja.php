@@ -71,9 +71,9 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-4 max-w-96">
-            <button class="btn-command" id="btnCerrarcaja"><span class="material-symbols-outlined">keyboard_lock</span>Cerrar caja</button>
-            <button class="btn-command" id="btnImprimirDetalleCaja"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
-            <button class="btn-command" id="btnCambiarCaja"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
+            <button id="btnCerrarcaja" class="btn-command"><span class="material-symbols-outlined">keyboard_lock</span>Cerrar caja</button>
+            <button id="btnImprimirDetalleCaja" class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
+            <button id="btnCambiarCaja" class="btn-command"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
         </div>
     </div> <!-- Fin col 2 -->
   </div>

@@ -108,7 +108,7 @@ class cierrescajas extends \Model\ActiveRecord {
                 SUM(factimpuestos.basegravable) AS basegravable, SUM(factimpuestos.valorimpuesto) AS valorimpuesto 
                 FROM impuestos JOIN factimpuestos ON factimpuestos.id_impuesto = impuestos.id
                 JOIN facturas ON facturas.id = factimpuestos.facturaid
-                WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY tarifa;";
+                WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY impuestos, tarifa;";
 
         $resultado = self::$db->query($sql);
         $array = [];

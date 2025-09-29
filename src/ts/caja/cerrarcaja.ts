@@ -142,9 +142,10 @@
       })();
     }
 
+    const idimprimircierrecaja = document.querySelector('#idCierrecaja')?.textContent;
     ///////// imprimir detalle cierre
     btnImprimirDetalleCaja?.addEventListener('click', ()=>{
-        const ventana = window.open('/printdetallecierre?id=1', '_blank');
+        const ventana = window.open('/printdetallecierre?id='+idimprimircierrecaja, '_blank');
         if(ventana){
           ventana.onload = ()=>{
             ventana?.focus();

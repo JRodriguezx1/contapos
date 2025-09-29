@@ -446,9 +446,10 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
     
-    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>1]); //ultimo cierre por caja
+    $ultimocierre = cierrescajas::find('id', $id);
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
+    $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
@@ -476,7 +477,7 @@ class cajacontrolador{
     }
     
     
-    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
