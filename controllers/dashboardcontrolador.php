@@ -10,6 +10,8 @@ namespace Controllers;
 use Model\caja\cierrescajas;
 use MVC\Router;
 use Model\configuraciones\usuarios;
+use Model\inventario\stockproductossucursal;
+use Model\ventas\facturas;
 use Model\ventas\ventas;
 //use ticketPOS;
 
@@ -25,7 +27,6 @@ class dashboardcontrolador{
         session_start();
         isadmin();
         date_default_timezone_set('America/Bogota');
-        
         $idsucursal = id_sucursal();
         /*
         $dompdf = new Dompdf();
@@ -36,11 +37,6 @@ class dashboardcontrolador{
         //$pos = new ticketPOS();
         //$pos->generar();
 
-
-        //$totalempleados = empleados::numregistros();
-        //$totalclientes = usuarios::numreg_multicolum(['confirmado'=>1, 'admin'=>0]);
-
-
         // calculo de los ingresos y gastos de las cajas abiertas
         $sql = "SELECT SUM(ventasenefectivo) AS efectivofacturado, SUM(ingresoventas) AS totalingreso, SUM(totalfacturaseliminadas) AS totalfacturaseliminadas, 
                 SUM(totalfacturas) AS totalfacturas, SUM(gastoscaja) AS gastoscaja, SUM(descuentofe+descuentopos) AS totaldescuentos
@@ -48,7 +44,8 @@ class dashboardcontrolador{
         $indicadoreseconomicos = cierrescajas::camposJoinObj($sql);
 
         //total productos vendids, el producto mas vendido y top de productos vendidos ultimos 30 dias
-        $sql = "SELECT SUM(v.cantidad) AS topunidadesvendidas, p.nombre, p.id AS idproducto, SUM(SUM(v.cantidad)) OVER () AS totalproductosvendidos
+        $sql = "SELECT p.nombre, p.id AS idproducto, SUM(v.cantidad) AS topunidadesvendidas, SUM(SUM(v.cantidad)) OVER () AS totalproductosvendidos,
+                SUM(v.subtotal) AS totaldinero, ROUND((SUM(v.cantidad) / SUM(SUM(v.cantidad)) OVER ()) * 100, 2) AS porcentaje
                 FROM ventas v
                 INNER JOIN facturas f ON f.id = v.idfactura
                 INNER JOIN productos p ON p.id = v.idproducto
@@ -56,9 +53,14 @@ class dashboardcontrolador{
                 GROUP BY p.id, p.nombre ORDER BY topunidadesvendidas DESC LIMIT 8;";
         $cantidadesproductos = ventas::camposJoinObj($sql);
         
-        
-        
-        $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'indicadoreseconomicos'=>$indicadoreseconomicos, 'cantidadesproductos'=>$cantidadesproductos,  'user'=>$_SESSION]);
+        //calcular el stock minimo de los primeros 6 productos mas agotados
+        $sql = "SELECT p.nombre, p.unidadmedida, sps.stock, sps.stockminimo
+                FROM stockproductossucursal sps
+                INNER JOIN productos p ON p.id = sps.productoid
+                WHERE sps.stock <= sps.stockminimo AND sps.sucursalid = $idsucursal ORDER BY sps.stock ASC LIMIT 6;";
+        $productosSotckMin = stockproductossucursal::camposJoinObj($sql);
+
+        $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'indicadoreseconomicos'=>$indicadoreseconomicos, 'cantidadesproductos'=>$cantidadesproductos, 'productosSotckMin'=>$productosSotckMin,  'user'=>$_SESSION]);
     }
 
     public static function perfil(Router $router) {
@@ -110,6 +112,8 @@ class dashboardcontrolador{
     }
     
 
+    ////////////////////////------   API   -------//////////////////////////////
+
     public static function alldays(){  //api
         $alldays = pagosxdia::ordenarlimite('id', 'DESC', 8);
         echo json_encode($alldays);
@@ -126,6 +130,63 @@ class dashboardcontrolador{
         }
         echo json_encode($citasxdia);
     }
+
+    public static function ventasVsGastos(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        //COALESCE(v.ventas_totales, 0) - COALESCE(g.gastos_totales, 0) AS utilidad
+        $sql = "SELECT CONCAT(v.anio, '-', LPAD(v.mes, 2, '0')) AS periodo, COALESCE(v.ventas_totales, 0) AS ventas_totales, COALESCE(g.gastos_totales, 0) AS gastos_totales
+                FROM (
+                    SELECT YEAR(fechapago) AS anio, MONTH(fechapago) AS mes, SUM(total) AS ventas_totales
+                    FROM facturas
+                    WHERE fechapago >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
+                    GROUP BY YEAR(fechapago), MONTH(fechapago)
+                ) v
+                LEFT JOIN (
+                    SELECT YEAR(fecha) AS anio, MONTH(fecha) AS mes, SUM(valor) AS gastos_totales
+                    FROM gastos
+                    WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND id_sucursalfk = $idsucursal
+                    GROUP BY YEAR(fecha), MONTH(fecha)
+                ) g
+                ON v.anio = g.anio AND v.mes = g.mes ORDER BY periodo DESC;";
+        $ventasvsgastos = facturas::camposJoinObj($sql);
+        $periodo = [];
+        $ventastotales = [];
+        $gastostotales = [];
+        foreach($ventasvsgastos as $value){
+            $periodo[] = $value->periodo;
+            $ventastotales[] = $value->ventas_totales;
+            $gastostotales[] = $value->gastos_totales;
+        }
+        echo json_encode(['periodo'=>$periodo, 'ventastotales'=>$ventastotales, 'gastostotales'=>$gastostotales]);
+    }
+
+
+    public static function ultimos7dias(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        $sql = "SELECT d.dia, COALESCE(SUM(f.total), 0) AS ventas_totales
+                FROM (
+                    SELECT CURDATE() AS dia
+                    UNION ALL SELECT CURDATE() - INTERVAL 1 DAY
+                    UNION ALL SELECT CURDATE() - INTERVAL 2 DAY
+                    UNION ALL SELECT CURDATE() - INTERVAL 3 DAY
+                    UNION ALL SELECT CURDATE() - INTERVAL 4 DAY
+                    UNION ALL SELECT CURDATE() - INTERVAL 5 DAY
+                    UNION ALL SELECT CURDATE() - INTERVAL 6 DAY
+                ) d
+                LEFT JOIN facturas f ON DATE(f.fechapago) = d.dia
+                AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+                GROUP BY d.dia ORDER BY d.dia DESC;";
+        $ventasultimos7dias = facturas::camposJoinObj($sql);
+        echo json_encode($ventasultimos7dias);
+    }
+    
+    
 }
 
 ?>

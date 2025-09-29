@@ -59,6 +59,44 @@ const configdatatables = {
 }
 
 ///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK RAPIDO /////////////////////
+const configdatatablesgenerico = {
+  layout: {
+        topStart: {
+            buttons: [
+              {extend: 'copyHtml5', text: 'Copia'}, 
+              {extend: 'excelHtml5', title: 'informe'}, 
+              {extend: 'csvHtml5', title: 'informe'}, 
+              {extend: 'pdfHtml5', title: 'informe'}, 
+              {extend: 'print', title: 'informe', text: 'Imprimir'},
+              'colvis'
+            ],
+            pageLength: 'pageLength'
+        }
+  },
+  pageLength: 25,
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+  "deferRender": true,
+  "retrieve": true,
+  "processing": true,
+  language: {
+      search: 'Busqueda',
+      emptyTable: 'No Hay datos disponibles',
+      zeroRecords:    "No se encontraron registros coincidentes",
+      lengthMenu: '_MENU_ Entradas por pagina',
+      info: 'Mostrando pagina _PAGE_ de _PAGES_',
+      infoEmpty: 'No hay entradas a mostrar',
+      infoFiltered: ' (filtrado desde _MAX_ registros)',
+      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+  }
+}
+
+///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK RAPIDO /////////////////////
 const configdatatablesstockrapido = {
   layout: {
         topStart: {

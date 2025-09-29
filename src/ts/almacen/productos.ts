@@ -242,7 +242,7 @@
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
           title: 'Desea eliminar el prducto?',
-          text: "El prducto sera eliminado definitivamente.",
+          text: "El prducto sera eliminado definitivamente de todas las SEDES.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',

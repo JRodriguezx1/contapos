@@ -6,7 +6,7 @@
     @media (min-width: 1024px) { .card-canvas { height: 260px; } }
   </style>
   
-  <div class="w-full px-6 lg:px-10">
+  <div class="w-full px-4 lg:px-4">
     <!-- Header -->
     <header class="flex items-center justify-between mb-6">
       <div>
@@ -101,10 +101,10 @@
         </div>
 
         <!-- Productos vendidos -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-gray-600">
+        <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-gray-300">
             <p class="text-lg leading-relaxed text-gray-500">Productos vendidos</p>
             <div class="flex items-center justify-between">
-              <h2 id="productosVendidos" class="text-4xl font-extrabold leading-tight"><?php echo $cantidadesproductos[0]->totalproductosvendidos;?></h2>
+              <h2 id="productosVendidos" class="text-4xl font-extrabold leading-tight"><?php echo $cantidadesproductos[0]->totalproductosvendidos??'0';?></h2>
               <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M3 3h18v4H3zm2 6h14v12H5z"/>
               </svg>
@@ -116,19 +116,19 @@
         <div class="bg-white rounded-2xl p-5 shadow-sm space-y-3 border-b-4 border-gray-600">
             <p class="text-lg leading-relaxed text-gray-500">Producto más vendido</p>
             <div class="flex items-center justify-between">
-                <h3 id="productoMasVendido" class="text-3xl font-bold leading-tight"><?php echo $cantidadesproductos[0]->nombre;?></h3>
+                <h3 id="productoMasVendido" class="text-3xl font-bold leading-tight"><?php echo $cantidadesproductos[0]->nombre??'--';?></h3>
                 <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                 </svg>
             </div>
-            <p class="text-sm text-gray-400 mt-1 leading-snug">Ultimos 30 dias / Unidades: <?php echo $cantidadesproductos[0]->topunidadesvendidas;?></p>
+            <p class="text-sm text-gray-400 mt-1 leading-snug">Ultimos 30 dias / Unidades: <?php echo $cantidadesproductos[0]->topunidadesvendidas??'0';?></p>
         </div>
     </section>
 
     <!-- Main charts area -->
-    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <section class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
       <!-- Large sales by hours (main) -->
-      <div class="lg:col-span-2 bg-white rounded-2xl p-5 shadow-sm">
+      <!-- <div class="lg:col-span-2 bg-white rounded-2xl p-5 shadow-sm">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-2xl font-semibold">Ventas por horas (hoy)</h3>
           <p class="text-sm text-gray-400">Hoy: <span id="ventasHoySummary">$0</span></p>
@@ -136,13 +136,22 @@
         <div class="card-canvas">
           <canvas id="chartVentasHoras"></canvas>
         </div>
-      </div>
+      </div>-->
 
+      <div class="bg-white rounded-2xl p-5 shadow-sm lg:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-2xl font-semibold">Histórico: Ventas vs Gastos</h3>
+          <p class="text-base text-gray-400">Últimos 6 meses</p>
+        </div>
+        <div class="card-canvas">
+          <canvas id="chartVentasGastos"></canvas>
+        </div>
+      </div>
       <!-- Ingresos por día (últimos 7 días) -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm">
+      <div class="bg-white rounded-2xl p-5 shadow-sm lg:col-span-2">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-2xl font-semibold">Ingresos por día (últimos 7)</h3>
-          <p class="text-sm text-gray-400">Total: <span id="ingresos7diasTotal">$0</span></p>
+          <p class="text-sm text-gray-400">Total: <span id="ingresos7diasTotal">ventas</span></p>
         </div>
         <div class="card-canvas">
           <canvas id="chartIngresosDias"></canvas>
@@ -153,7 +162,7 @@
     <!-- Historical & small charts -->
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <!-- Ventas vs Gastos histórico (combinado) -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm">
+      <!--<div class="bg-white rounded-2xl p-5 shadow-sm">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-2xl font-semibold">Histórico: Ventas vs Gastos</h3>
           <p class="text-sm text-gray-400">Últimos 6 meses</p>
@@ -161,10 +170,10 @@
         <div class="card-canvas">
           <canvas id="chartVentasGastos"></canvas>
         </div>
-      </div>
+      </div>-->
 
       <!-- Gastos por transacción (doughnut) -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm">
+      <!--<div class="bg-white rounded-2xl p-5 shadow-sm">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-2xl font-semibold">Gastos por transacción</h3>
           <p class="text-sm text-gray-400">Distribución</p>
@@ -172,15 +181,15 @@
         <div class="card-canvas flex items-center justify-center">
           <canvas id="chartGastosTransaccion" style="max-width:260px;"></canvas>
         </div>
-      </div>
+      </div>-->
     </section>
 
     <!-- Bottom: Top products + Stock minimo -->
-    <section class="grid grid-cols-1 lg:grid-cols-3 gap-10 pb-28 md:pb-4">
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-28 md:pb-4">
       <!-- Top productos (tabla) -->
       <div class="lg:col-span-2 bg-white rounded-2xl p-7 shadow-sm">
         <div class="flex items-center justify-between mb-5">
-          <h3 class="text-2xl font-bold text-gray-700">Top productos más vendidos</h3>
+          <h3 class="text-2xl font-bold text-gray-700">Top 8 productos más vendidos</h3>
           <p class="text-lg text-gray-400">Periodo: <span id="periodoTop">Últimos 30 días</span></p>
         </div>
 
@@ -191,29 +200,16 @@
                 <th class="py-4">Producto</th>
                 <th class="py-4">Unidades</th>
                 <th class="py-4">Ingresos</th>
-                <th class="py-4">%</th>
+                <th class="py-4">Porcentaje</th>
               </tr>
             </thead>
             <tbody id="tablaTopProductos" class="text-lg">
-              <!-- Placeholder rows -->
-              <!--<tr class="border-b">
-                <td class="py-4">Producto A</td>
-                <td class="py-4">120</td>
-                <td class="py-4">$1,200,000</td>
-                <td class="py-4">25%</td>
-              </tr>
-              <tr class="border-b">
-                <td class="py-4">Producto B</td>
-                <td class="py-4">90</td>
-                <td class="py-4">$810,000</td>
-                <td class="py-4">17%</td>
-              </tr>-->
               <?php foreach($cantidadesproductos as $value): ?>
                 <tr class="border-b">
                   <td class="py-4"><?php echo $value->nombre??'';?></td>
                   <td class="py-4"><?php echo $value->topunidadesvendidas??0;?></td>
-                  <td class="py-4">0</td>
-                  <td class="py-4">0</td>
+                  <td class="py-4">$ <?php echo number_format($value->totaldinero??0, '2', ',', '.');?></td>
+                  <td class="py-4">% <?php echo $value->porcentaje??0;?></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
@@ -227,29 +223,19 @@
           <h3 class="text-2xl font-bold text-gray-700">Productos con stock mínimo</h3>
           <p class="text-lg text-gray-400">Alerta</p>
         </div>
-
-        <ul id="listaStockMinimo" class="space-y-5 text-lg">
-          <!-- Placeholder items -->
-          <li class="flex items-center justify-between">
-            <div>
-              <p class="font-semibold">Arroz 5kg</p>
-              <p class="text-sm text-gray-400">Min: 5</p>
-            </div>
-            <div class="text-right">
-              <p class="text-4xl font-extrabold text-red-500">2</p>
-              <p class="text-sm text-gray-400">uds</p>
-            </div>
-          </li>
-          <li class="flex items-center justify-between">
-            <div>
-              <p class="font-semibold">Harina</p>
-              <p class="text-4xl text-gray-400">Min: 4</p>
-            </div>
-            <div class="text-right">
-              <p class="text-4xl font-extrabold text-yellow-600">3</p>
-              <p class="text-sm text-gray-400">uds</p>
-            </div>
-          </li>
+        <ul id="listaStockMinimo" class="text-lg">
+          <?php foreach($productosSotckMin as $value): ?>
+            <li class="flex items-center justify-between">
+              <div>
+                <p class="font-medium mb-0"><?php echo $value->nombre??'';?></p>
+                <p class="text-base text-gray-400 mt-2">Min: <?php echo $value->stockminimo??'';?></p>
+              </div>
+              <div class="text-right">
+                <p class="text-red-500 font-bold text-xl mb-0"><?php echo $value->stock??'';?></p>
+                <p class="text-base text-gray-400 mt-2"><?php echo $value->unidadmedida??'';?></p>
+              </div>
+            </li>
+          <?php endforeach; ?>
         </ul>
       </div>
     </section>

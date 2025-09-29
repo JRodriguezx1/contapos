@@ -18,6 +18,7 @@ class direcciones extends \Model\ActiveRecord{
         $this->direccion = $args['direccion']??' ';
         $this->codigopostal = $args['codigopostal']??'';
         $this->observacion = $args['observacion']??'';
+        $this->created_at = $args['created_at']??'';
     }
 
 
