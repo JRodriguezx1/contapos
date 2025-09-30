@@ -15,7 +15,7 @@
         }
 
 
-        public function generar($factura, $cliente, $direccion, $productos=[], $negocio=[]){
+        public function generar($sucursal, $factura, $cliente, $direccion, $productos=[], $negocio=[]){
             $this->pdf->Image(__DIR__ . '/../../public/build/img/logoj2negro.png', 20, 5, 40); // (ruta, x, y, ancho)
             $this->pdf->Ln(20);
             # Encabezado y datos de la empresa #
@@ -36,7 +36,7 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$factura->vendedor),0,'C',false);
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Comprobante N°: ".$factura->id)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Comprobante N°: ".$factura->num_orden)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->Ln(1);

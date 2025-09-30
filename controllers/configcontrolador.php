@@ -367,17 +367,15 @@ class configcontrolador{
         isadmin();
         $alertas = [];
         $consecutivo = new consecutivos($_POST);
-        debuguear($consecutivo);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          $caja->negocio = negocio::find('id', $caja->negocio)->nombre;
-            $alertas = $caja->validar();
+            $alertas = $consecutivo->validar();
             if(empty($alertas)){ //si los campos cumplen los criterios  
-                $r = $caja->crear_guardar();
+                $r = $consecutivo->crear_guardar();
                 if($r[0]){
-                    $caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
-                    $caja->id = $r[1];
-                    $alertas['exito'][] = 'Caja creada correctamente';
-                    $alertas['caja'] = $caja;
+                    $consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador);
+                    $consecutivo->id = $r[1];
+                    $alertas['exito'][] = 'Facturador creado correctamente';
+                    $alertas['facturador'] = $consecutivo;
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
                 }
@@ -390,18 +388,18 @@ class configcontrolador{
         session_start();
         $alertas = []; 
         $consecutivo = consecutivos::find('id', $_POST['id']);
-        debuguear($consecutivo);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $caja->compara_objetobd_post($_POST);
-            $caja->negocio = negocio::find('id', $caja->negocio)->nombre;
-            $alertas = $caja->validar();
+            $consecutivo->compara_objetobd_post($_POST);
+            $consecutivo->negocio = negocio::find('id', $consecutivo->idnegocio)->nombre;
+            $consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
+            $alertas = $consecutivo->validar();
             if(empty($alertas)){
-                $r = $caja->actualizar();
+                $r = $consecutivo->actualizar();
                 if($r){
-                    $alertas['exito'][] = "Datos de la caja actualizados";
-                    $alertas['caja'][] = $caja;
+                    $alertas['exito'][] = "Datos del facturador actualizados";
+                    $alertas['facturador'][] = $consecutivo;
                 }else{
-                    $alertas['error'][] = "Error al actualizar caja";
+                    $alertas['error'][] = "Error al actualizar facturador";
                 }
             }
         }
@@ -410,8 +408,10 @@ class configcontrolador{
 
     public static function eliminarFacturador(){
         session_start();
+        $alertas['error'][] = "No es posible eliminar facturador";
+        echo json_encode($alertas); 
+        return;
         $consecutivo = consecutivos::find('id', $_POST['id']);
-        debuguear($consecutivo);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($caja)){
                 $r = $caja->eliminar_registro();
