@@ -95,7 +95,7 @@
             </select>  
         </div>
 
-        <div class="formulario__campo stock">
+        <!--<div class="formulario__campo stock">
             <label class="formulario__label" for="stock">Cantidad</label>
             <div class="formulario__dato">
                 <input id="stock" 
@@ -118,7 +118,7 @@
                        oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
                        value="">
             </div>
-        </div>
+        </div>-->
 
         <div class="formulario__campo">
             <label class="formulario__label" for="precioventa">Precio venta incluido impuesto</label>

@@ -57,21 +57,21 @@
     ///////// Habilita el select precio de compra, y deshabilita el select de tipo de produccion si es producto simple, si es compuesto lo deshabilita y habilita el select de tipo de produccion
     tipoproducto?.addEventListener('change', (e:Event)=>{
       const targetDom = e.target as HTMLSelectElement;
-      const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
-      const stock = document.querySelector('.stock') as HTMLElement;
+      //const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
+      //const stock = document.querySelector('.stock') as HTMLElement;
       const habtipoproduccion = document.querySelector('.habtipoproduccion') as HTMLElement;
       if(targetDom.value == '0'){  //  0 = simple
-        stock.style.display = 'flex';
-        preciocompra.style.display = 'flex';
+        //stock.style.display = 'flex';
+        //preciocompra.style.display = 'flex';
         habtipoproduccion.style.display = "none";
-        document.querySelector('#preciocompra')?.setAttribute("required", "");
+        //document.querySelector('#preciocompra')?.setAttribute("required", "");
         document.querySelector('#tipoproduccion')?.removeAttribute("required");
       }
       else{
-        stock.style.display = 'none';
-        preciocompra.style.display = 'none';
+        //stock.style.display = 'none';
+        //preciocompra.style.display = 'none';
         habtipoproduccion.style.display = "flex";
-        document.querySelector('#preciocompra')?.removeAttribute("required");
+        //document.querySelector('#preciocompra')?.removeAttribute("required");
         document.querySelector('#tipoproduccion')?.setAttribute("required", "");
       }
     });
@@ -85,8 +85,8 @@
       limpiarformdialog();
       document.querySelector('#modalProducto')!.textContent = "Crear producto";
       (document.querySelector('#btnEditarCrearProducto') as HTMLInputElement).value = "Crear";
-      (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
-      (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
+      //(document.querySelector('.stock')as HTMLInputElement).style.display = "block";
+      //(document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
       miDialogoProducto.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
@@ -110,17 +110,17 @@
       (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
       $('#tipoproducto').val(unproducto?.tipoproducto??'0');  //0 = simple,  1 = compuesto
       $('#idunidadmedida').val(unproducto?.idunidadmedida??'1');
-      (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
-      (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
+      //(document.querySelector('.stock')as HTMLInputElement).style.display = "block";
+      //(document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
       (document.querySelector('.habtipoproduccion') as HTMLElement).style.display = "none";
       if(unproducto?.tipoproducto == '1'){
-        (document.querySelector('.stock')as HTMLInputElement).style.display = "none";
-        (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "none";
+        //(document.querySelector('.stock')as HTMLInputElement).style.display = "none";
+        //(document.querySelector('.preciocompra')as HTMLInputElement).style.display = "none";
         (document.querySelector('.habtipoproduccion') as HTMLElement).style.display = "block";
         $('#tipoproduccion').val(unproducto.tipoproduccion);
       }
-      (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
-      (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
+      //(document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
+      //(document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
       (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
       (document.querySelector('#impuesto')as HTMLInputElement).value = unproducto?.impuesto??'';
@@ -159,8 +159,8 @@
           datos.append('tipoproducto', $('#tipoproducto').val()as string);  //0=simple o 1=compuesto
           datos.append('idunidadmedida', $('#idunidadmedida').val()as string);
           datos.append('unidadmedida', $('#idunidadmedida option:selected').text());
-          datos.append('stock', $('#stock').val()as string);
-          datos.append('precio_compra', $('#preciocompra').val()as string);
+          datos.append('stock', '0'/*$('#stock').val()as string*/);
+          datos.append('precio_compra', '0'/*$('#preciocompra').val()as string*/);
           datos.append('precio_venta', $('#precioventa').val()as string);
           datos.append('sku', $('#sku').val()as string);
           datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
