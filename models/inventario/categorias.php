@@ -21,7 +21,7 @@ class categorias extends \Model\ActiveRecord {
     public function validar_nueva_categoria() {
         if(!$this->nombre)self::$alertas['error'][] = 'El Nombre de la categoria es Obligatorio';
         
-        if(strlen($this->nombre)>25)self::$alertas['error'][] = 'El Nombre de la categoria no debe superar los 25 caracteres';
+        if(strlen($this->nombre)>32)self::$alertas['error'][] = 'El Nombre de la categoria no debe superar los 25 caracteres';
         
         if($this->codigo) {
             if(strlen($this->codigo)>15)self::$alertas['error'][] = 'El codigo no debe superar los 15 caracteres';

@@ -82,7 +82,7 @@
 </div>
 
 <div class="barra">
-    <div class="toggleanduser"><span class="sidebartoggle material-symbols-outlined">menu</span><p>Sede: <span>Colocar Nombre de Sede <?php echo $_SESSION['nombre']; ?></span></p></div>
+    <div class="toggleanduser"><span class="sidebartoggle material-symbols-outlined">menu</span><p><span><?php echo $_SESSION['nombre']; ?></span></p></div>
 
     <div class="flex items-center gap-4 mr-4">
         <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">Cerrar Sesión</a>

@@ -43,6 +43,19 @@ class almacencontrolador{
     $productos = stockproductossucursal::indicadoresAllProductsXSucursal(id_sucursal());
     $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
 
+    //debuguear($productos);
+    if(empty($productos)){
+      $producto[0] = new stdClass();
+      $producto[0]->valorinv = 0;
+    }
+    if(empty($subproductos)){
+      $subproductos[0] = new stdClass();
+      $subproductos[0]->valorinv = 0;
+      $subproductos[0]->cantidadreferencias = 0;
+      $subproductos[0]->bajostock = 0;
+      $subproductos[0]->productosagotados = 0; 
+    }
+
     $valorInv = $productos[0]->valorinv + $subproductos[0]->valorinv; //valor total del inventario
     $cantidadProductos = $productos[0]->cantidadproductos; //
     $cantidadReferencias = $productos[0]->cantidadreferencias + $subproductos[0]->cantidadreferencias; //
@@ -159,6 +172,8 @@ class almacencontrolador{
             }
             $stockProductoSucursales->crear_varios_reg($stocksucursal);
             $alertas['exito'][] = "Producto creado correctamente";
+            $producto = new stdClass();
+            $producto->idunidadmedida = 1;
           }else{
             //**** eliminar producto
             $productodelete = productos::find('id', $r[1]);

@@ -81,7 +81,6 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="tipoproducto">Tipo de producto</label>
             <select id="tipoproducto" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="tipoproducto" required>
-                <option value="" disabled selected>-Seleccionar-</option>
                 <option value="0">Simple</option>
                 <option value="1">Compuesto</option>
             </select>          
@@ -99,14 +98,25 @@
         <div class="formulario__campo stock">
             <label class="formulario__label" for="stock">Cantidad</label>
             <div class="formulario__dato">
-                <input id="stock" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta" name="stock" value="<?php echo $producto->stock??'';?>">
+                <input id="stock" 
+                       class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                       type="text" placeholder="Precio de venta" 
+                       name="stock" 
+                       oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                       value="">
             </div>
         </div>
 
         <div class="formulario__campo preciocompra">
             <label class="formulario__label" for="preciocompra">Precio compra</label>
             <div class="formulario__dato">
-                <input id="preciocompra" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta" name="precio_compra" value="<?php echo $producto->precio_compra??'';?>">
+                <input id="preciocompra" 
+                       class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                       type="text" 
+                       placeholder="Precio de venta" 
+                       name="precio_compra" 
+                       oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                       value="">
             </div>
         </div>
 

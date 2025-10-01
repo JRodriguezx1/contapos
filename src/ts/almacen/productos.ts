@@ -289,7 +289,7 @@
       imginputfile.src = '';
     }
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === miDialogoProducto || (event.target as HTMLInputElement).value === 'salir') {
+      if (/*event.target === miDialogoProducto ||*/ (event.target as HTMLInputElement).value === 'salir') {
         miDialogoProducto.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }
