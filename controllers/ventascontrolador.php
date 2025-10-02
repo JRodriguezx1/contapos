@@ -210,6 +210,7 @@ class ventascontrolador{
               $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
+              $factura->prefijo = $consecutivo->prefijo;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
@@ -483,6 +484,7 @@ class ventascontrolador{
               $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
+              $factura->prefijo = $consecutivo->prefijo;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();

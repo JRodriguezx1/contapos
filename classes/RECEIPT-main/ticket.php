@@ -37,6 +37,7 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$factura->vendedor),0,'C',false);
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Comprobante N°: ".$factura->num_orden)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("FACTURA: ".$factura->prefijo.''.$factura->num_consecutivo)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->Ln(1);

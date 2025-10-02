@@ -50,7 +50,7 @@
                     <div class="grid space-y-3">
                         <div class="text-lg leading-normal">
                             <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">FACTURA #:</p>
-                            <span class="text-gray-500">POS-<?php echo $factura->num_orden??'';?></span>
+                            <span class="text-gray-500"><?php echo $factura->prefijo.''.$factura->num_orden??'';?></span>
                         </div>
                         <div class="text-lg leading-normal">
                             <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">Vendedor:</p>
