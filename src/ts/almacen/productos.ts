@@ -2,6 +2,7 @@
   if(document.querySelector('.productos')){
     const crearProducto = document.querySelector('#crearProducto');
     const miDialogoProducto = document.querySelector('#miDialogoProducto') as any;
+    const btnXCerrarModalproducto = document.querySelector('#btnXCerrarModalproducto') as HTMLButtonElement;
     const inputupImage = document.querySelector('#upImage') as HTMLInputElement;  //input para cargar el archivo imagen
     const btncustomUpImage = document.querySelector('#customUpImage');
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
@@ -75,6 +76,13 @@
         document.querySelector('#tipoproduccion')?.setAttribute("required", "");
       }
     });
+
+
+    btnXCerrarModalproducto.addEventListener('click', (e)=>{
+        miDialogoProducto.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
+    });
+
 
     //////////////////  TABLA //////////////////////
     tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);

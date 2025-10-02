@@ -58,7 +58,12 @@
 
   <!-- MODAL PARA CREAR/ACTUALIZAR PRODUCTOS-->
   <dialog id="miDialogoProducto" class="midialog-sm p-12">
-    <h4 id="modalProducto" class="font-semibold text-gray-700 mb-4">Crear producto</h4>
+    <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
+        <h4 id="modalProducto" class="font-semibold text-gray-700 mb-4">Crear producto</h4>
+        <button id="btnXCerrarModalproducto" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+            <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-3xl"></i>
+        </button>
+    </div>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateProducto" class="formulario" action="/admin/almacen/crear_producto" enctype="multipart/form-data" method="POST">
         
@@ -66,9 +71,10 @@
             <label class="formulario__label" for="categoria">Categoria</label>
             <select id="categoria" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idcategoria" required>
                 <option value="" disabled selected>-Seleccionar-</option>
-                <?php foreach($categorias as $categoria): ?>
-                <option value="<?php echo $categoria->id;?>" ><?php echo $categoria->nombre;?></option>
-                <?php endforeach; ?>
+                <?php foreach($categorias as $categoria): 
+                    if($categoria->visible == 1):    ?>
+                        <option value="<?php echo $categoria->id;?>" ><?php echo $categoria->nombre;?></option>
+                <?php endif; endforeach; ?>
             </select>             
         </div>
         <div class="formulario__campo">
