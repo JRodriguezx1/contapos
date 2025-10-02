@@ -43,11 +43,12 @@ class almacencontrolador{
     $productos = stockproductossucursal::indicadoresAllProductsXSucursal(id_sucursal());
     $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
 
-    $valorInv = $productos[0]->valorinv + $subproductos[0]->valorinv; //valor total del inventario
+    
+    $valorInv = $productos[0]->valorinv??0 + $subproductos[0]->valorinv??0; //valor total del inventario
     $cantidadProductos = $productos[0]->cantidadproductos; //
-    $cantidadReferencias = $productos[0]->cantidadreferencias + $subproductos[0]->cantidadreferencias; //
-    $bajoStock = $productos[0]->bajostock + $subproductos[0]->bajostock; //
-    $productosAgotados = $productos[0]->productosagotados + $subproductos[0]->productosagotados; //
+    $cantidadReferencias = $productos[0]->cantidadreferencias??0 + $subproductos[0]->cantidadreferencias??0; //
+    $bajoStock = $productos[0]->bajostock??0 + $subproductos[0]->bajostock??0; //
+    $productosAgotados = $productos[0]->productosagotados??0 + $subproductos[0]->productosagotados??0; //
 
     if((int)$valorInv >= 1000000 && (int)$valorInv < 1000000000)$valorInv = round((int)$valorInv / 1000000, 2) . 'M';
     if((int)$valorInv >= 1000000000 && (int)$valorInv < 1000000000000)$valorInv = round((int)$valorInv / 1000000000, 2) . 'MM';
@@ -160,7 +161,7 @@ class almacencontrolador{
             $stockProductoSucursales->crear_varios_reg($stocksucursal);
             $alertas['exito'][] = "Producto creado correctamente";
             $producto = new stdClass();
-            $producto->idunidadmedida = 1;
+            //$producto->idunidadmedida = 1;
           }else{
             //**** eliminar producto
             $productodelete = productos::find('id', $r[1]);
@@ -611,6 +612,9 @@ class almacencontrolador{
             //eliminar la imagen asociada al prudcto
             $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
             if($existe_archivo && $producto->foto)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
+            $categoria = categorias::find('id', $producto->idcategoria);
+            $categoria->totalproductos -= 1;
+            $c = $categoria->actualizar();
             $alertas['exito'][] = "producto eliminado.";
         }else{
             $alertas['error'][] = "Error durante el proceso, intentalo nuevamnete.";

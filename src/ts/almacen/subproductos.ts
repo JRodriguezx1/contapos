@@ -137,7 +137,7 @@
                         const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                         const resultado = await respuesta.json();  
                         if(resultado.exito !== undefined){
-                          (tablaSubProductos as any).row(indiceFila+info.start).remove().draw(); 
+                          (tablaSubProductos as any).row(indiceFila).remove().draw(); 
                           (tablaSubProductos as any).page(info.page).draw('page');
                           Swal.fire(resultado.exito[0], '', 'success') 
                         }else{

@@ -67,7 +67,7 @@
             <select id="categoria" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idcategoria" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($categorias as $categoria): ?>
-                <option value="<?php echo $categoria->id;?>" <?php echo $categoria->id==$producto->idcategoria?'selected':'';?>><?php echo $categoria->nombre;?></option>
+                <option value="<?php echo $categoria->id;?>" ><?php echo $categoria->nombre;?></option>
                 <?php endforeach; ?>
             </select>             
         </div>
@@ -90,48 +90,16 @@
             <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
             <select id="idunidadmedida" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idunidadmedida" required>
                 <?php foreach($unidadesmedida as $unidadmedida): ?>
-                <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
+                <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==1?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
                 <?php endforeach; ?>
             </select>  
         </div>
-
-        <!--<div class="formulario__campo stock">
-            <label class="formulario__label" for="stock">Cantidad</label>
-            <div class="formulario__dato">
-                <input id="stock" 
-                       class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
-                       type="text" placeholder="Precio de venta" 
-                       name="stock" 
-                       oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
-                       value="">
-            </div>
-        </div>
-
-        <div class="formulario__campo preciocompra">
-            <label class="formulario__label" for="preciocompra">Precio compra</label>
-            <div class="formulario__dato">
-                <input id="preciocompra" 
-                       class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
-                       type="text" 
-                       placeholder="Precio de venta" 
-                       name="precio_compra" 
-                       oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
-                       value="">
-            </div>
-        </div>-->
 
         <div class="formulario__campo">
             <label class="formulario__label" for="precioventa">Precio venta incluido impuesto</label>
             <input id="precioventa" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta incluido el impuesto" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
         </div>
         
-        <div class="formulario__campo">
-            <label class="formulario__label" for="sku">SKU Producto</label>
-            <div class="formulario__dato">
-                <input id="sku" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Codigo del producto" name="sku" value="<?php echo $producto->sku??'';?>">
-                <!--<label data-num="36" class="count-charts" for="">36</label>-->
-            </div>
-        </div>
 
         <div class="formulario__campo habtipoproduccion" style="display: none;">
             <label class="formulario__label" for="tipoproduccion">Tipo de produccion</label>
@@ -142,39 +110,6 @@
             </select>          
         </div>
 
-         <div class="formulario__campo">
-            <label class="formulario__label" for="impuesto">Impuesto</label>
-            <div class="formulario__dato">
-                <!--<input 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
-                    type="text" placeholder="Impuesto del producto en %" 
-                    id="impuesto" 
-                    name="impuesto" 
-                    value=""
-                    oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
-                >-->
-                <select
-                id="impuesto"
-                name="porcentaje_de_impuesto"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-                >
-                    <span class="text-indigo-600 font-bold">
-                        <optgroup label="IVA">
-                    </span>
-                    <option value="0" >Exento – 0%</option>
-                    <option value="5" >Bienes / Servicios al 5%</option>
-                    <option value="16" >Contratos antes Ley 1819 – 16%</option>
-                    <option value="19" >Tarifa general – 19%</option>
-                    <option value="" >Excluido de IVA</option> <!-- valor por defecto -->
-                    </optgroup>
-                    <span class="text-indigo-600 font-bold">
-                        <optgroup class="text-indigo-60" label="INC">
-                    </span>
-                    <option value="8">Impuesto Nacional al Consumo – 8%</option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
 
         <div class="formulario__campo">
             <div class="formulario__contentinputfile formulario__contentinputfile--sm">
@@ -190,13 +125,82 @@
             <label class="etiqueta flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none" for="first">Mostrar/Ocultar mas opciones</label>
             <div class="wrapper">
               <div class="wrapper-content">
-                <div id="mediospagos" class="content flex flex-col w-full mx-auto">  
+                <div id="otrosopciones" class="content flex flex-col w-full mx-auto">  
+                    
+                    <div class="formulario__campo stock">
+                        <label class="formulario__label" for="stock">Cantidad</label>
+                        <div class="formulario__dato">
+                            <input id="stock" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                                type="text" placeholder="Precio de venta" 
+                                name="stock" 
+                                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                                value="">
+                        </div>
+                    </div>
+
+                    <div class="formulario__campo preciocompra">
+                        <label class="formulario__label" for="preciocompra">Precio compra</label>
+                        <div class="formulario__dato">
+                            <input id="preciocompra" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                                type="text" 
+                                placeholder="Precio de venta" 
+                                name="precio_compra" 
+                                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                                value="">
+                        </div>
+                    </div>
+                
                     <div class="mb-4">
                       <div class="formulario__campo">
                         <label class="formulario__label" for="stockminimo">Stock minimo</label>
                         <input id="stockminimo" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Establecer el stock minimo" name="stockminimo" value="<?php echo $producto->stockminimo??'';?>">      
                       </div>  
                     </div>
+
+                    <div class="formulario__campo">
+                        <label class="formulario__label" for="impuesto">Impuesto</label>
+                        <div class="formulario__dato">
+                            <!--<input 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                                type="text" placeholder="Impuesto del producto en %" 
+                                id="impuesto" 
+                                name="impuesto" 
+                                value=""
+                                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
+                            >-->
+                            <select
+                            id="impuesto"
+                            name="porcentaje_de_impuesto"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                            >
+                                <span class="text-indigo-600 font-bold">
+                                    <optgroup label="IVA">
+                                </span>
+                                <option value="0" >Exento – 0%</option>
+                                <option value="5" >Bienes / Servicios al 5%</option>
+                                <option value="16" >Contratos antes Ley 1819 – 16%</option>
+                                <option value="19" >Tarifa general – 19%</option>
+                                <option value="" >Excluido de IVA</option> <!-- valor por defecto -->
+                                </optgroup>
+                                <span class="text-indigo-600 font-bold">
+                                    <optgroup class="text-indigo-60" label="INC">
+                                </span>
+                                <option value="8">Impuesto Nacional al Consumo – 8%</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="formulario__campo">
+                        <label class="formulario__label" for="sku">SKU Producto</label>
+                        <div class="formulario__dato">
+                            <input id="sku" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Codigo del producto" name="sku" value="<?php echo $producto->sku??'';?>">
+                            <!--<label data-num="36" class="count-charts" for="">36</label>-->
+                        </div>
+                    </div>
+
                 </div>
               </div>
             </div>

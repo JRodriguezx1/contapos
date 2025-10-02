@@ -8,8 +8,8 @@
 
     <div class="h-8 bg-slate-100"></div>
 
-    <h5 class="text-gray-600 mt-8 mb-3">Lista de compañias configuradas</h5>
-    <table class="display responsive nowrap tabla" width="100%" id="tablaCompañias">
+    <h5 class="text-gray-600 mt-8 mb-3">Lista de n configuradas</h5>
+    <table class="display responsive nowrap tabla" width="100%" id="tablan">
       <thead>
           <tr>
               <th>Nº</th>
@@ -20,7 +20,7 @@
           </tr>
       </thead>
       <tbody>
-          <?php foreach($compañias as $index => $value): ?>
+          <?php foreach($companias as $index => $value): ?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->nombre; ?></td> 
