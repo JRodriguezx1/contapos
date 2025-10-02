@@ -16,6 +16,7 @@ use Model\configuraciones\tarifas;
 use Model\caja\cierrescajas;
 use Model\configuraciones\consecutivos;
 use Model\configuraciones\caja;
+use Model\configuraciones\tipofacturador;
 use Model\factimpuestos;
 use Model\impuestos;
 use Model\parametrizacion\config_local;
