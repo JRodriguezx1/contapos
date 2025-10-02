@@ -65,7 +65,7 @@ class logincontrolador{
             if(empty($alertas)){
 
                 //$usuario = $auth->validar_registro();  //valida si email existe? retorna 1 o 0 
-                $usuario = $auth->find('movil', $auth->movil); //busca en la columna 'movil' el telefono: $auth->movil y retorna el registro de la bd en un objeto
+                $usuario = $auth->find('nickname', $auth->nickname); //busca en la columna 'movil' el telefono: $auth->movil y retorna el registro de la bd en un objeto
                 if($usuario){ //existe usuario o confirmado     //$usuario es objeto de la clase usuarios pero con los datos de la bd
                     if($usuario->idsucursal == $_POST['idsucursal']){
                         $pass = $usuario->comprobar_password($auth->password);  //comprueba password y verifica si esta confirmado

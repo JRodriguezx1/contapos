@@ -52,11 +52,14 @@ class usuarios extends \Model\ActiveRecord {
         if(!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             self::$alertas['error'][] = 'Email no válido';
         }*/
-        if(!$this->movil || !is_numeric($this->movil) ) {
+        /*if(!$this->movil || !is_numeric($this->movil) ) {
             self::$alertas['error'][] = 'El Movil no es correcto';
         }
         if(strlen($this->movil)<10 || strlen($this->movil)>10){
             self::$alertas['error'][] = 'El Movil debe tener 10 digitos';
+        }*/
+        if(!$this->nickname){
+            self::$alertas['error'][] = 'El campo usuario no puede ir vacio';
         }
         if(!$this->password) {
             self::$alertas['error'][] = 'El Password no puede ir vacio';

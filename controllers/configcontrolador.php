@@ -108,6 +108,7 @@ class configcontrolador{
         $bancos = bancos::all();
         $companias = [];
         $empleado = new \stdClass();
+         $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
         $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }

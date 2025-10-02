@@ -44,11 +44,11 @@ class almacencontrolador{
     $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
 
     
-    $valorInv = $productos[0]->valorinv??0 + $subproductos[0]->valorinv??0; //valor total del inventario
-    $cantidadProductos = $productos[0]->cantidadproductos; //
-    $cantidadReferencias = $productos[0]->cantidadreferencias??0 + $subproductos[0]->cantidadreferencias??0; //
-    $bajoStock = $productos[0]->bajostock??0 + $subproductos[0]->bajostock??0; //
-    $productosAgotados = $productos[0]->productosagotados??0 + $subproductos[0]->productosagotados??0; //
+    $valorInv = (($productos[0]??null)?->valorinv??0) + (($subproductos[0]??null)->valorinv??0); //valor total del inventario
+    $cantidadProductos = $productos[0]->cantidadproductos??0; //
+    $cantidadReferencias = ($productos[0]->cantidadreferencias??0) + ($subproductos[0]->cantidadreferencias??0); //
+    $bajoStock = ($productos[0]->bajostock??0) + ($subproductos[0]->bajostock??0); //
+    $productosAgotados = ($productos[0]->productosagotados??0) + ($subproductos[0]->productosagotados??0); //
 
     if((int)$valorInv >= 1000000 && (int)$valorInv < 1000000000)$valorInv = round((int)$valorInv / 1000000, 2) . 'M';
     if((int)$valorInv >= 1000000000 && (int)$valorInv < 1000000000000)$valorInv = round((int)$valorInv / 1000000000, 2) . 'MM';
