@@ -38,7 +38,7 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class=" text-center "><img class="inline" style="width: 50px;" src="/build/img/<?php echo $value->foto;?>" alt=""></div></td>
               <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
-              <td class="" ><?php echo $value->categoria;?></td>
+              <td class="" ><?php echo $value->nombrecategoria;?></td>
               <td class=""><?php echo $value->marca;?></td>
               <td class=""><?php echo $value->sku;?></td>
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>

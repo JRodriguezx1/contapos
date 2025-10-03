@@ -43,6 +43,12 @@ class almacencontrolador{
     $productos = stockproductossucursal::indicadoresAllProductsXSucursal(id_sucursal());
     $subproductos = stockinsumossucursal::indicadoresAllSubproductsXSucursal(id_sucursal());
 
+    //el valor del inventario se calcula el costo * cantidad de los productos simples + productos compuestos, + costo de los insumos. 
+    //(los productos compuesto de tipo produccion: instantanea no se tienen en cuenta para calcular el valor del invnetario.)
+
+    //utlidad se calcula para los productos simples y compuestos tipo inmediato y construccion.
+
+    //el stock se calcula para los productos simples, compuestos tipo construccion y subproductos.
     
     $valorInv = (($productos[0]??null)?->valorinv??0) + (($subproductos[0]??null)->valorinv??0); //valor total del inventario
     $cantidadProductos = $productos[0]->cantidadproductos??0; //
@@ -108,6 +114,9 @@ class almacencontrolador{
     $categorias = categorias::all();
     $unidadesmedida = unidadesmedida::all();
     $producto = new productos;
+
+    foreach($productos as $value)$value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+
     
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             

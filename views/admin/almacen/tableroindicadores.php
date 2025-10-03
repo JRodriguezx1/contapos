@@ -24,7 +24,7 @@
                   </div>
                   <div class="flex flex-col p-6 text-center border-t border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l sm:border-r">
                     <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
-                      Cantidad de productos
+                      Stock total productos de venta
                     </dt>
                     <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
                       id="downloadsCount">
@@ -33,7 +33,7 @@
                   </div>
                   <div class="flex flex-col p-6 text-center border-t border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l">
                     <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
-                      Cantidad de referencias
+                      <p class="mb-0">Cantidad de referencias</p><span class="text-base text-gray-400">(productos e insumos)</span>
                     </dt>
                     <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
                       id="sponsorsCount">
