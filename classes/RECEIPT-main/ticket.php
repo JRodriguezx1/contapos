@@ -16,7 +16,7 @@
 
 
         public function generar($sucursal, $factura, $cliente, $direccion, $productos=[], $negocio=[]){
-            $this->pdf->Image(__DIR__ . '/../../public/build/img/logoj2negro.png', 20, 5, 40); // (ruta, x, y, ancho)
+            $this->pdf->Image(__DIR__ . '/../../public/build/img/'.$negocio[0]->logo, 20, 5, 40); // (ruta, x, y, ancho)
             $this->pdf->Ln(20);
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);

@@ -57,6 +57,11 @@ class configcontrolador{
         $idsucursal = id_sucursal();
         $negocio = negocio::find('id', 1);
 
+        $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
+        $dirlogo = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio;
+        if (!is_dir($dirlogo))mkdir($dirlogo, 0755, true);
+        
+
         if($negocio){ //actualizar
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $negocio->compara_objetobd_post($_POST);
@@ -67,7 +72,7 @@ class configcontrolador{
                         $url_temp = $_FILES["logo"]["tmp_name"];
                         $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
                         if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
-                        $negocio->logo = uniqid().$_FILES['logo']['name'];
+                        $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
                         move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
                     }
                     $r = $negocio->actualizar();
@@ -82,13 +87,13 @@ class configcontrolador{
                 if(!$alertas){
                     if($_FILES['logo']['name']){ //valida si se seleccion img en el form
                         $nombreimg = explode(".", $_FILES['logo']['name']);  // = "barberyeison.jpg"
-                        $negocio->logo = uniqid().$_FILES['logo']['name'];
-                        $existe_archivo1 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].webp");
-                        $existe_archivo2 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].png");
-                        $existe_archivo3 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].jpg");
-                        if($existe_archivo1)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].webp");
-                        if($existe_archivo2)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].png");
-                        if($existe_archivo3)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].jpg");
+                        $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+                        $existe_archivo1 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].webp");
+                        $existe_archivo2 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].png");
+                        $existe_archivo3 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
+                        if($existe_archivo1)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].webp");
+                        if($existe_archivo2)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].png");
+                        if($existe_archivo3)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
                         
                         $url_temp = $_FILES["logo"]["tmp_name"];
                         move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
