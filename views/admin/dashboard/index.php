@@ -220,7 +220,7 @@
       <!-- Stock mínimo -->
       <div class="bg-white rounded-2xl p-7 shadow-sm">
         <div class="flex items-center justify-between mb-5">
-          <h3 class="text-2xl font-bold text-gray-700">Productos con stock mínimo</h3>
+          <h3 class="text-2xl font-bold text-gray-700">6 productos con stock mínimo</h3>
           <p class="text-lg text-gray-400">Alerta</p>
         </div>
         <ul id="listaStockMinimo" class="text-lg">
