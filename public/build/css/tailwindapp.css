@@ -2114,6 +2114,7 @@ video {
   background-color: rgb(254 252 232 / var(--tw-bg-opacity));
 }
 
+<<<<<<< HEAD
 .bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity));
@@ -2139,6 +2140,8 @@ video {
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
 
+=======
+>>>>>>> 44a74167d075eb2f31bea62764a8a60997eba83d
 .bg-opacity-40 {
   --tw-bg-opacity: 0.4;
 }
@@ -2626,6 +2629,10 @@ video {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.normal-case {
+  text-transform: none;
 }
 
 .italic {

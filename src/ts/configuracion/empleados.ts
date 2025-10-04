@@ -10,14 +10,14 @@
     const inputNombre = document.querySelector('#nombreempleado') as HTMLInputElement;
     const inputApellido = document.querySelector('#apellidoempleado') as HTMLInputElement;
     const inputnickname = document.querySelector('#nicknameempleado') as HTMLInputElement;
-    const inputcedula = document.querySelector('#cedulaempleado') as HTMLInputElement;
+    //const inputcedula = document.querySelector('#cedulaempleado') as HTMLInputElement;
     const inputpassword = document.querySelector('#passwordempleado') as HTMLInputElement;
     const inputpassword2 = document.querySelector('#passwordempleado2 ') as HTMLInputElement;
     const inputMovil = document.querySelector('#movilempleado ') as HTMLInputElement;
-    const inputEmail = document.querySelector('#emailempleado') as HTMLInputElement;
-    const inputDepartamento = document.querySelector('#departamentoempleado') as HTMLInputElement;
-    const inputCiudad = document.querySelector('#ciudadempleado') as HTMLInputElement;
-    const inputDireccion = document.querySelector('#direccionempleado') as HTMLInputElement;
+    //const inputEmail = document.querySelector('#emailempleado') as HTMLInputElement;
+    //const inputDepartamento = document.querySelector('#departamentoempleado') as HTMLInputElement;
+    //const inputCiudad = document.querySelector('#ciudadempleado') as HTMLInputElement;
+    //const inputDireccion = document.querySelector('#direccionempleado') as HTMLInputElement;
     const inputPerfil = document.querySelector('#perfilempleado') as HTMLInputElement;
 
     let indiceFila=0, control=0, tablaempleados:HTMLElement;
@@ -128,12 +128,12 @@
       inputNombre.value = unempleado?.nombre??'';
       inputApellido.value = unempleado?.apellido??'';
       inputnickname.value = unempleado?.nickname??'';
-      inputcedula.value = unempleado?.cedula??'';
+      //inputcedula.value = unempleado?.cedula??'';
       inputMovil.value = unempleado?.movil??'';
-      inputEmail.value = unempleado?.email??'';
-      inputDepartamento.value = unempleado?.departamento??'';
-      inputCiudad.value = unempleado?.ciudad??'';
-      inputDireccion.value = unempleado?.direccion??'';
+      //inputEmail.value = unempleado?.email??'';
+      //inputDepartamento.value = unempleado?.departamento??'';
+      //inputCiudad.value = unempleado?.ciudad??'';
+      //inputDireccion.value = unempleado?.direccion??'';
       $('#perfilempleado').val(unempleado?.perfil??'');
       if(unempleado?.perfil == '2'){
         (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
@@ -193,14 +193,14 @@
           datos.append('nombre', inputNombre.value);
           datos.append('apellido', inputApellido.value);
           datos.append('nickname', inputnickname.value);
-          datos.append('cedula', inputcedula.value);
+          //datos.append('cedula', inputcedula.value);
           datos.append('password', inputpassword.value);
           datos.append('password2', inputpassword2.value);
           datos.append('movil', inputMovil.value);
-          datos.append('email', inputEmail.value);
-          datos.append('departamento', inputDepartamento.value);
-          datos.append('ciudad', inputCiudad.value);
-          datos.append('direccion', inputDireccion.value);
+          //datos.append('email', inputEmail.value);
+          //datos.append('departamento', inputDepartamento.value);
+          //datos.append('ciudad', inputCiudad.value);
+          //datos.append('direccion', inputDireccion.value);
           datos.append('perfil', inputPerfil.value);
           datos.append('idpermisos', JSON.stringify(arraypermisos.map(v=>v.id)));
           try {
@@ -214,7 +214,7 @@
                 /*NOMBRE*/datosActuales[1] = inputNombre.value +' '+inputApellido.value;
                 /*img*/datosActuales[2] = `<div class="text-center"><img style="width: 40px;" src="/build/img/${resultado.rutaimg}" alt=""></div>`;
                 /*USER*/datosActuales[3] = inputnickname.value;
-                /*PERFIL*/datosActuales[6] = inputPerfil.value==='1'?'Empleado':inputPerfil.value=='2'?'Admin':'Propietario';
+                /*PERFIL*/datosActuales[6] = inputPerfil.value==='1'?'root':inputPerfil.value=='2'?'Superior':inputPerfil.value == '3'?'Admin':'Asesor';
                 //actualizar arreglo de permisos
                 empleadosapi.forEach(a=>{
                   if(a.id == unempleado?.id){
@@ -294,7 +294,7 @@
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        (tablaempleados as any).row(indiceFila+info.start).remove().draw(); 
+                        (tablaempleados as any).row(indiceFila).remove().draw(); 
                         (tablaempleados as any).page(info.page).draw('page');
                         empleadosapi = empleadosapi.filter(x=>x.id!=idempleado);
                         Swal.fire(resultado.exito[0], '', 'success')

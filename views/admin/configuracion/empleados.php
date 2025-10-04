@@ -13,25 +13,26 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach($empleados as $index => $value): ?>
-            <tr> 
-                <td class=""><?php echo $index+1;?></td>        
-                <td class=""><?php echo $value->nombre.' '.$value->apellido;?></td> 
-                <td class="" ><div class="text-center"><img style="width: 40px;" src="/build/img/<?php echo $value->img;?>" alt=""></div></td> 
-                <td class=""><?php echo $value->nickname;?></td>
-                <td class=""><?php echo $value->perfil==1?'Empleado':($value->perfil==2?'Admin':'Propietario');?></td>
-                <td class="accionestd">
-                    <div class="acciones-btns" id="<?php echo $value->id;?>">
-                        <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button class="btn-md btn-lima updatePassword" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
-                        </button>
-                        <button class="btn-md btn-red eliminarEmpleado" title="Eliminar empleado"><i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            <?php endforeach; ?>
+            <?php foreach($empleados as $index => $value): 
+                if($value->perfil!=1): ?>
+                <tr> 
+                    <td class=""><?php echo $index+1;?></td>        
+                    <td class=""><?php echo $value->nombre.' '.$value->apellido;?></td> 
+                    <td class="" ><div class="text-center"><img style="width: 40px;" src="/build/img/<?php echo $value->img;?>" alt=""></div></td> 
+                    <td class=""><?php echo $value->nickname;?></td>
+                    <td class=""><?php echo $value->perfil==1?'root':($value->perfil==2?'Superior':($value->perfil==3?'Administrador':'Asesor'));?></td>
+                    <td class="accionestd">
+                        <div class="acciones-btns" id="<?php echo $value->id;?>">
+                            <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn-md btn-lima updatePassword" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
+                            </button>
+                            <button class="btn-md btn-red eliminarEmpleado" title="Eliminar empleado"><i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            <?php endif; endforeach; ?>
         </tbody>
     </table>
 
@@ -109,13 +110,13 @@
                     </div>
                 </div>
 
-                <div class="formulario__campo sm:col-span-3">
+                <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="cedula">Cédula</label>
                     <div class="formulario__dato">
-                        <input id="cedulaempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Cedula del empleado" name="cedula" value="<?php echo $empleado->cedula??'';?>">
+                        <input id="cedulaempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Cedula del empleado" name="cedula" value="<?php //echo $empleado->cedula??'';?>">-->
                         <!-- <label data-num="42" class="count-charts" for="">42</label> -->
-                    </div>
-                </div>
+                    <!--</div>
+                </div>-->
 
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label flex items-center gap-1 group relative" for="password">
@@ -175,33 +176,32 @@
                         <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
                     </div>
                 </div>
-                <div class="formulario__campo sm:col-span-3">
+                <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="email">Email</label>
                     <div class="formulario__dato">
-                        <input id="emailempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Tu Email" name="email" value="<?php echo $empleado->email??'';?>">
+                        <input id="emailempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Tu Email" name="email" value="<?php //echo $empleado->email??'';?>">
                     </div>
-                </div>
-                <div class="formulario__campo sm:col-span-3">
+                </div>-->
+                <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="direccion">Dirección</label>
                     <div class="formulario__dato">
-                        <input id="direccionempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion de  residencia" name="direccion" value="<?php echo $empleado->direccion??'';?>">
+                        <input id="direccionempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion de  residencia" name="direccion" value="<?php //echo $empleado->direccion??'';?>">-->
                         <!-- <label data-num="90" class="count-charts" for="">90</label> -->
-                    </div>
-                </div>
-                <div class="formulario__campo sm:col-span-3">
+                    <!--</div>
+                </div>-->
+                <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="departamento">Departamento</label>
                     <div class="formulario__dato">
-                        <input id="departamentoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="departamento" name="departamento" value="<?php echo $empleado->departamento??''; ?>">
-                        <!-- <label data-num="18" class="count-charts" for="">18</label> -->
+                        <input id="departamentoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="departamento" name="departamento" value="<?php //echo $empleado->departamento??''; ?>">
                     </div>
-                </div>
-                <div class="formulario__campo sm:col-span-3">
+                </div>-->
+                <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="ciudad">Ciudad</label>
                     <div class="formulario__dato">
-                        <input id="ciudadempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad" name="ciudad" value="<?php echo $empleado->ciudad??'';?>">
+                        <input id="ciudadempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad" name="ciudad" value="<?php //echo $empleado->ciudad??'';?>">-->
                         <!-- <label data-num="14" class="count-charts" for="">14</label> -->
-                    </div>
-                </div>
+                    <!--</div>
+                </div>-->
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label flex items-center gap-1 group relative" for="perfil">
                         Perfil

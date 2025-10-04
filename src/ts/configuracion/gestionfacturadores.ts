@@ -8,6 +8,7 @@
 
     type facturadoresapi = {
         id:string,
+        id_sucursalid: string,
         idtipofacturador: string,
         idnegocio: string,
         nombre: string
@@ -22,6 +23,7 @@
         mostrarresolucion:string,
         mostrarimpuestodiscriminado: string,
         tokenfacturaelectronica: string,
+        electronica: string,
         estado: string
       };
   
@@ -92,9 +94,22 @@
         (async ()=>{ 
           const datos = new FormData();
           datos.append('id', unfacturador?.id?unfacturador?.id:'');
-          datos.append('idtipoconsecutivo', $('#idtipoconsecutivo').val()as string);
-          datos.append('nombre', $('#nombrecaja').val()as string);
-          datos.append('negocio', $('#negociogestioncaja').val()as string);
+          datos.append('idtipofacturador', $('#idtipofacturador').val()as string);
+          datos.append('idnegocio', $('#negociofacturador').val()as string);
+          datos.append('nombre', $('#nombrefacturador').val()as string);
+          datos.append('rangoinicial', $('#rangoinicial').val()as string);
+          datos.append('rangofinal', $('#rangofinal').val()as string);
+          datos.append('siguientevalor', $('#siguientevalor').val()as string);
+          datos.append('fechainicio', $('#fechainicio').val()as string);
+          datos.append('fechafin', $('#fechafin').val()as string);
+          datos.append('resolucion', $('#resolucion').val()as string);
+          //datos.append('consecutivoremplazo', $('#negociofacturador').val()as string);
+          datos.append('prefijo', $('#prefijo').val()as string);
+          /*datos.append('mostrarresolucion', $('#negociofacturador').val()as string);
+          datos.append('mostrarimpuestodiscriminado', $('#nombrefacturador').val()as string);
+          datos.append('tokenfacturaelectronica', $('#negociofacturador').val()as string);
+          datos.append('electronica', $('#negociofacturador').val()as string);
+          datos.append('estado', $('#nombrefacturador').val()as string);*/
           try {
               const url = "/admin/api/"+urlApi;
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -109,8 +124,11 @@
                   (tablaFacturadores as any).row.add([
                       (tablaFacturadores as any).rows().count() + 1,
                       resultado.facturador.nombre,
-                      resultado.facturador.nombreconsecutivo.nombre,
-                      resultado.facturador.negocio,
+                      resultado.facturador.nombretipofacturador.nombre,
+                      resultado.facturador.rangoinicial,
+                      resultado.facturador.siguientevalor,
+                      resultado.facturador.fechafin,
+                      resultado.facturador.estado==1?'Activo':'Inactivo',
                       `<div class="acciones-btns" id="${resultado.facturador.id}" data-facturador="${resultado.facturador.nombre}">
                           <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>
@@ -118,15 +136,21 @@
                   ]).draw(false); // draw(false) evita recargar toda la tabla
                 }else{ //si es actualizar
                   /// actualizar el arregle de facturadores ///
+                  console.log(resultado);
                   facturadores.forEach(a=>{if(a.id == unfacturador?.id)a = Object.assign(a, resultado.facturador[0]);});
                   const datosActuales = (tablaFacturadores as any).row(indiceFila+=info.start).data();
-                  /*xx*/      datosActuales[1] = resultado.facturador[0].nombre;
-                  /*x*/ datosActuales[2] = $('#idtipoconsecutivo option:selected').text();
-                  /*x*/   datosActuales[3] = $('#negociogestioncaja option:selected').text();
+                  /*xx*/datosActuales[1] = resultado.facturador[0].nombre;
+                  /*x*/ datosActuales[2] = resultado.facturador[0].nombretipofacturador;
+                  /*x*/ datosActuales[3] = resultado.facturador[0].rangoinicial;
+                        datosActuales[4] = resultado.facturador[0].siguientevalor;
+                        datosActuales[5] = resultado.facturador[0].fechafin;
+                        datosActuales[6] =  resultado.facturador.estado==1?'Activo':'Inactivo';
                   (tablaFacturadores as any).row(indiceFila).data(datosActuales).draw();
                   (tablaFacturadores as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }
               }else{
+                miDialogoFacturador.close();
+                document.removeEventListener("click", cerrarDialogoExterno);
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
           } catch (error) {

@@ -8,11 +8,11 @@
             <div class="flex justify-between">
                 <div>
                     <div class="grid space-y-3">
-                        <img class="w-auto h-24" src="/build/img/Logoj2indigo.png" alt="user">
+                        <img class="w-auto h-24" src="/build/img/<?php echo $negocio[0]->logo;?>" alt="user">
                         <dl class="flex flex-col gap-y-3 text-sm pt-20">
                             <div class="font-medium text-gray-800 text-lg leading-normal">
                                 <span class="block font-semibold uppercase">Facturado a</span>
-                                <span class="not-italic font-normal text-gray-400"><?php echo $cliente->nombre;?></span>
+                                <span class="not-italic font-normal text-gray-400"><?php echo $cliente->nombre.' '.$cliente->apellido;?></span>
                                 <address class="not-italic font-normal text-gray-400">
                                     <span class="font-semibold">NIT/CC:</span><?php echo $cliente->identificacion;?>,<br>
                                     <span class="font-semibold uppercase">Email:</span><?php echo $cliente->email;?>,<br>
@@ -33,13 +33,14 @@
 
                 <div class="text-lg leading-normal">
                     <div class="grid font-medium text-gray-800 text-center text-lg leading-normal">
-                        <span class="block font-semibold text-lg uppercase"><?php echo $sucursal->nombre;?></span>
+                        <span class="block font-semibold text-lg uppercase"><?php echo $negocio[0]->nombre;?></span>
                         <address class="not-italic font-light">
-                            <?php echo $sucursal->direccion;?>,<br>
-                            Tel: <?php echo $sucursal->telefono;?>,<br>
-                            Armenia - Quindio,<br>
-                            contabilidad@innovatech.com,<br>
-                            www.innovatech.com<br>
+                            <?php echo $sucursal->nombre;?>,<br>
+                            <?php echo $negocio[0]->direccion;?>,<br>
+                            Tel: <?php echo $negocio[0]->telefono;?>,<br>
+                            <?php echo $negocio[0]->ciudad;?>,<br>
+                            <?php echo $negocio[0]->email;?><br>
+                            <?php //echo $negocio[0]->www;?><br>
                         </address>
                     </div>
                 </div>
@@ -49,7 +50,7 @@
                     <div class="grid space-y-3">
                         <div class="text-lg leading-normal">
                             <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">FACTURA #:</p>
-                            <span class="text-gray-500">POS-<?php echo $factura->num_orden??'';?></span>
+                            <span class="text-gray-500"><?php echo $factura->prefijo.''.$factura->num_orden??'';?></span>
                         </div>
                         <div class="text-lg leading-normal">
                             <p class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold">Vendedor:</p>
@@ -71,7 +72,9 @@
                 <!-- Col -->
             </div>
             <!-- End Grid -->
-
+            <?php if($factura->estado == 'Eliminada'): ?>
+                <div><p class="block font-semibold uppercase text-center">Factura eliminada. <span class="font-normal text-gray-400 text-base normal-case">Documento no valido</span></p></div>
+            <?php endif; ?>
             <!-- Table -->
             <div class="mt-6 border border-gray-200 p-4 rounded-lg space-y-4 dark:border-neutral-700 text-lg leading-normal">
                 <div class="hidden sm:grid sm:grid-cols-5">

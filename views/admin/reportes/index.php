@@ -64,11 +64,11 @@
           <span class="material-symbols-outlined">request_quote</span>Facturas pagas
         </a>
         <a href="/admin/caja/pedidosguardados" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Facturas no pagas
-        </a>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">receipt_long</span>Cotizaciones
-        </button>
+        </a>
+        <a href="/admin/reportes/creditos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
+          <span class="material-symbols-outlined">speaker_notes</span>Creditos
+        </a>
         <a href="/admin/reportes/facturasanuladas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 text-center text-slate-600">
           <span class="material-symbols-outlined">contract_delete</span>Facturas anuladas
         </a>

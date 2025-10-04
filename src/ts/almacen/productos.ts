@@ -2,6 +2,7 @@
   if(document.querySelector('.productos')){
     const crearProducto = document.querySelector('#crearProducto');
     const miDialogoProducto = document.querySelector('#miDialogoProducto') as any;
+    const btnXCerrarModalproducto = document.querySelector('#btnXCerrarModalproducto') as HTMLButtonElement;
     const inputupImage = document.querySelector('#upImage') as HTMLInputElement;  //input para cargar el archivo imagen
     const btncustomUpImage = document.querySelector('#customUpImage');
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
@@ -75,6 +76,13 @@
         document.querySelector('#tipoproduccion')?.setAttribute("required", "");
       }
     });
+
+
+    btnXCerrarModalproducto.addEventListener('click', (e)=>{
+        miDialogoProducto.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
+    });
+
 
     //////////////////  TABLA //////////////////////
     tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);
@@ -256,7 +264,7 @@
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        (tablaProductos as any).row(indiceFila+info.start).remove().draw(); 
+                        (tablaProductos as any).row(indiceFila).remove().draw(); 
                         (tablaProductos as any).page(info.page).draw('page');
                         Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
@@ -289,7 +297,7 @@
       imginputfile.src = '';
     }
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === miDialogoProducto || (event.target as HTMLInputElement).value === 'salir') {
+      if (/*event.target === miDialogoProducto ||*/ (event.target as HTMLInputElement).value === 'salir') {
         miDialogoProducto.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }

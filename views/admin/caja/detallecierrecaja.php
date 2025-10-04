@@ -118,24 +118,37 @@
                             </thead>
                             <tbody>
                                 <tr>        
-                                    <td class="">Ingreso de ventas</td> 
-                                    <td class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                    <td class="">Ingreso de ventas total</td> 
+                                    <td id="ingresoVentasTotal" class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                </tr>
+                                <tr>        
+                                    <td class="">Total gastos de caja</td> 
+                                    <td id="totalGastosCaja" class=""> - $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Total descuentos</td> 
-                                    <td class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                                    <td id="totalDescuentos" class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
-                                    <td class="text-blue-400 font-medium">Real de ventas</td> 
-                                    <td class="text-blue-400 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas-$ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                                    <td class="">Total domicilios</td> 
+                                    <td id="totalDomicilios" class=""> - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
-                                    <td class="">Impuesto</td> 
-                                    <td class=""> - $0</td>
+                                    <td class="text-blue-400 font-medium">Real ingreso de ventas</td> 
+                                    <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
+                                </tr>
+                                
+                                <tr>        
+                                    <td class="text-blue-600 font-medium">Base grabable</td> 
+                                    <td id="totalBaseGravable" class="text-blue-600 font-medium"> = $<?php echo number_format($ultimocierre->basegravable??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
-                                    <td class="text-blue-600 font-medium">Total bruto</td> 
-                                    <td class="text-blue-600 font-medium"> = $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                    <td class="">Impuesto Total</td> 
+                                    <td id="impuestoTotal" class=""> - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "2", ",", ".");?></td>
+                                </tr>
+                                <tr>     
+                                    <td class="text-gray-700 font-medium">Gastos otros/bancarios</td> 
+                                    <td id="otrosGastosBancarios" class="text-gray-700 font-medium"> - $<?php echo number_format($ultimocierre->gastosbanco??0, "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>

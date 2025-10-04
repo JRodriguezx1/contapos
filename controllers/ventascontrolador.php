@@ -16,6 +16,7 @@ use Model\configuraciones\tarifas;
 use Model\caja\cierrescajas;
 use Model\configuraciones\consecutivos;
 use Model\configuraciones\caja;
+use Model\configuraciones\tipofacturador;
 use Model\factimpuestos;
 use Model\impuestos;
 use Model\parametrizacion\config_local;
@@ -209,6 +210,7 @@ class ventascontrolador{
               $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
+              $factura->prefijo = $consecutivo->prefijo;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
@@ -482,6 +484,7 @@ class ventascontrolador{
               $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
+              $factura->prefijo = $consecutivo->prefijo;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();

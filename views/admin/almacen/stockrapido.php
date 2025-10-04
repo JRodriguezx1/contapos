@@ -18,7 +18,7 @@
         </thead>
         <tbody>
             <?php foreach($productos as $index => $value): ?>
-                <?php if($value->tipoproducto == '0'): ?>  <!-- productos simple -->
+                <?php if(($value->tipoproducto == '0' || ($value->tipoproducto == '1' && $value->tipoproduccion == '1'))&&$value->visible == 1): ?>  <!-- productos simple o compuesto tipo construccion -->
                 <tr class="fila producto" data-idproducto="<?php echo $value->productoid;?>"> 
                     <td class=""><?php echo $index+1;?></td>
                     <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
@@ -27,11 +27,13 @@
                     <td class=""><?php echo $value->unidadmedida;?></td>
                     <td class=""><?php echo $value->fecha_ingreso;?></td>
                     <td class="accionestd">
+                        <?php if($value->tipoproducto == '0'): ?>
                         <div class="acciones-btns btnsproducto" id="<?php echo $value->productoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
                             <button class="btn-xs btn-bluelight descontarStock"><i class="fa-solid fa-minus"></i></button>
                             <button class="btn-xs btn-blue aumentarStock"><i class="fa-solid fa-plus"></i></button>
                             <button class="btn-xs btn-turquoise ajustarStock"><i class="fa-solid fa-wrench"></i></button>
                         </div>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endif; ?>
@@ -41,7 +43,7 @@
             <?php foreach($subproductos as $index => $value): ?>  
                 <tr class="fila subproducto" data-idsubproducto="<?php echo $value->subproductoid;?>"> 
                     <td class=""><?php echo $index+1;?></td>
-                    <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
+                    <td class=""><div class="w-80 whitespace-normal">(I) <?php echo $value->nombre;?></div></td> 
                     <td class="" ><?php echo $value->categoria??'';?></td> 
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>

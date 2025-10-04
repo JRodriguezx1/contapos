@@ -42,7 +42,7 @@
               <td class=""><?php echo $value->fechapago;?></td> 
               <td class=""><?php echo $value->caja;?></td>
               <td class=""><?php echo $value->num_orden;?></td>
-              <td class=""><?php echo $value->num_orden;?></td>
+              <td class=""><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
               <td>
                 <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
                     <?php foreach($value->mediosdepago as $idx => $element): ?>
@@ -55,7 +55,9 @@
               <td class=""><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-cotizacion="<?php echo $value->cotizacion;?>" >
                     <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
-                    <button class="btn-xs btn-light printPOS" title="Imprimir en PDF POS"><i class="fa-solid fa-print"></i></button>
+                    <?php if($value->estado=='Paga'): ?>
+                        <button class="btn-xs btn-light printPOS" title="Imprimir en PDF POS"><i class="fa-solid fa-print"></i></button>
+                    <?php endif; ?>
                     <button class="btn-xs btn-light printPDF" title="Imprimir en PDF carta"><i class="fa-solid fa-file-pdf text-red-600"></i></button>
                   </div>
               </td>
@@ -143,7 +145,14 @@
         <div class="mb-6">
             <label class="formulario__label" for="dinero">Ingresar dinero</label>
             <div class="formulario__dato">
-                <input id="dinero" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="1" placeholder="Ingresa el dinero" name="valor" value="" required>
+                <input id="dinero" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" 
+                    type="text" 
+                    placeholder="Ingresa el dinero" 
+                    name="valor" 
+                    value=""
+                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
+                    required>
             </div>
         </div>
         <div class="mb-6">

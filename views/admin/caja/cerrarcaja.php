@@ -26,7 +26,15 @@
       <div class="formulario__campo">
           <label class="formulario__label" for="EF">Efectivo en caja</label>
           <div class="formulario__dato gap-x-[0.7rem]">
-              <input class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Dinero en caja" id="Efectivo" name="Efectivo" data-idmediopago="1" value="" required>
+              <input id="Efectivo" 
+                class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                type="text" 
+                placeholder="Dinero en caja" 
+                name="Efectivo" 
+                data-idmediopago="1" 
+                value=""
+                oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
+                required>
               <button class="btn-md btn-turquoise !py-auto !px-6" id="btnArqueocaja">Arqueo de caja</button>
           </div>
       </div>
@@ -406,7 +414,7 @@
     </form>
   </dialog>
 
-  <div><p class="text-gray-500 text-center">Innovatech</p></div>
+  <div><p class="text-gray-500 text-center text-lg">J2Software POS MultiSucursal</p></div>
 
 </div>
 </div>

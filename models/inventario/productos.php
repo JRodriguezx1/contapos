@@ -29,11 +29,11 @@ class productos extends \Model\ActiveRecord {
         $this->uso = $args['uso'] ?? '';
         $this->fabricante = $args['fabricante'] ?? '';
         $this->garantia = $args['garantia'] ?? '';
-        $this->stock = $args['stock'] ?? 0;
-        $this->stockminimo = $args['stockminimo']??1;
+        $this->stock = !empty($args['stock']) ? $args['stock']: 0;
+        $this->stockminimo = !empty($args['stockminimo']) ? $args['stockminimo'] : 1;
         $this->categoria = $args['categoria'] ?? '';
         $this->rendimientoestandar = $args['rendimientoestandar'] ?? 1;
-        $this->precio_compra = $args['precio_compra'] ?? 0;
+        $this->precio_compra = !empty($args['precio_compra']) ? $args['precio_compra']:  0;
         $this->precio_venta = $args['precio_venta'] ?? '';
         $this->fecha_ingreso = $args['fecha_ingreso'] ?? date('Y-m-d H:i:s');
         $this->estado = $args['estado']??1;  // 0 = inactivo,  1 = activo

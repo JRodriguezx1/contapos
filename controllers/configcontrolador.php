@@ -33,7 +33,7 @@ class configcontrolador{
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
-    $compañias = [];
+    $companias = [];
     $empleado = new \stdClass();
     $empleado->perfil = '';
 
@@ -45,7 +45,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -57,6 +57,11 @@ class configcontrolador{
         $idsucursal = id_sucursal();
         $negocio = negocio::find('id', 1);
 
+        $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
+        $dirlogo = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio;
+        if (!is_dir($dirlogo))mkdir($dirlogo, 0755, true);
+        
+
         if($negocio){ //actualizar
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $negocio->compara_objetobd_post($_POST);
@@ -67,7 +72,7 @@ class configcontrolador{
                         $url_temp = $_FILES["logo"]["tmp_name"];
                         $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
                         if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
-                        $negocio->logo = uniqid().$_FILES['logo']['name'];
+                        $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
                         move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
                     }
                     $r = $negocio->actualizar();
@@ -82,13 +87,13 @@ class configcontrolador{
                 if(!$alertas){
                     if($_FILES['logo']['name']){ //valida si se seleccion img en el form
                         $nombreimg = explode(".", $_FILES['logo']['name']);  // = "barberyeison.jpg"
-                        $negocio->logo = uniqid().$_FILES['logo']['name'];
-                        $existe_archivo1 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].webp");
-                        $existe_archivo2 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].png");
-                        $existe_archivo3 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].jpg");
-                        if($existe_archivo1)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].webp");
-                        if($existe_archivo2)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].png");
-                        if($existe_archivo3)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$nombreimg[0].jpg");
+                        $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+                        $existe_archivo1 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].webp");
+                        $existe_archivo2 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].png");
+                        $existe_archivo3 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
+                        if($existe_archivo1)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].webp");
+                        if($existe_archivo2)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].png");
+                        if($existe_archivo3)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
                         
                         $url_temp = $_FILES["logo"]["tmp_name"];
                         move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
@@ -106,9 +111,11 @@ class configcontrolador{
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
-        $compañias = [];
+        $companias = [];
         $empleado = new \stdClass();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+         $empleado->perfil = '';
+        $conflocal = config_local::getParamGlobal();
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
 
 
@@ -152,9 +159,10 @@ class configcontrolador{
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
-        $compañias = [];
+        $companias = [];
         $mediospago = mediospago::all();
-        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'compañias'=>$compañias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $conflocal = config_local::getParamGlobal();
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'user'=>$_SESSION]);
     }
 
   ///////////////////////////////////  Apis ////////////////////////////////////
@@ -367,17 +375,15 @@ class configcontrolador{
         isadmin();
         $alertas = [];
         $consecutivo = new consecutivos($_POST);
-        debuguear($consecutivo);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          $caja->negocio = negocio::find('id', $caja->negocio)->nombre;
-            $alertas = $caja->validar();
+            $alertas = $consecutivo->validar();
             if(empty($alertas)){ //si los campos cumplen los criterios  
-                $r = $caja->crear_guardar();
+                $r = $consecutivo->crear_guardar();
                 if($r[0]){
-                    $caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
-                    $caja->id = $r[1];
-                    $alertas['exito'][] = 'Caja creada correctamente';
-                    $alertas['caja'] = $caja;
+                    $consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador);
+                    $consecutivo->id = $r[1];
+                    $alertas['exito'][] = 'Facturador creado correctamente';
+                    $alertas['facturador'] = $consecutivo;
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
                 }
@@ -390,18 +396,18 @@ class configcontrolador{
         session_start();
         $alertas = []; 
         $consecutivo = consecutivos::find('id', $_POST['id']);
-        debuguear($consecutivo);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $caja->compara_objetobd_post($_POST);
-            $caja->negocio = negocio::find('id', $caja->negocio)->nombre;
-            $alertas = $caja->validar();
+            $consecutivo->compara_objetobd_post($_POST);
+            $consecutivo->negocio = negocio::find('id', $consecutivo->idnegocio)->nombre;
+            $consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
+            $alertas = $consecutivo->validar();
             if(empty($alertas)){
-                $r = $caja->actualizar();
+                $r = $consecutivo->actualizar();
                 if($r){
-                    $alertas['exito'][] = "Datos de la caja actualizados";
-                    $alertas['caja'][] = $caja;
+                    $alertas['exito'][] = "Datos del facturador actualizados";
+                    $alertas['facturador'][] = $consecutivo;
                 }else{
-                    $alertas['error'][] = "Error al actualizar caja";
+                    $alertas['error'][] = "Error al actualizar facturador";
                 }
             }
         }
@@ -410,8 +416,10 @@ class configcontrolador{
 
     public static function eliminarFacturador(){
         session_start();
+        $alertas['error'][] = "No es posible eliminar facturador";
+        echo json_encode($alertas); 
+        return;
         $consecutivo = consecutivos::find('id', $_POST['id']);
-        debuguear($consecutivo);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($caja)){
                 $r = $caja->eliminar_registro();

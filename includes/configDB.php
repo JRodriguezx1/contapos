@@ -5,9 +5,9 @@ $cliente = explode('.', $host); // $cliente['cliente1', 'app_barber', 'test']
 
 $configDB = [
     //'app_barber'=>['namedb'=>'intermix_limpio'],
-    'cliente'=>['namedb'=>'app_barber'],
-    'cliente1'=>['namedb'=>'app_barber1'],
-    'cliente2'=>['namedb'=>'app_barber2']
+    'cliente'=>['namedb'=>'contapos'],
+    'cliente1'=>['namedb'=>'j2a1'],
+    'cliente2'=>['namedb'=>'j2a2']
 ];
 
 $selectDB = $configDB[$cliente[0]]??'';
