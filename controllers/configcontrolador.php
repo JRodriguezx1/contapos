@@ -65,15 +65,17 @@ class configcontrolador{
         if($negocio){ //actualizar
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $negocio->compara_objetobd_post($_POST);
-                
+                $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+                $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo;
                 $alertas = $negocio->validarnegocio();
                 if(!$alertas){
                     if($_FILES['logo']['name']){
                         $url_temp = $_FILES["logo"]["tmp_name"];
-                        $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
-                        if($existe_archivo)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
-                        $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
-                        move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
+                        $existe_archivo = file_exists($rutaimg);
+                        if($existe_archivo)unlink($rutaimg);
+                        if(move_uploaded_file($url_temp, $rutaimg)){
+                            desactivarInterlacedPNG($rutaimg);
+                        }
                     }
                     $r = $negocio->actualizar();
                     if($r)$alertas['exito'][] = "Datos de negocio actualizado";
@@ -96,7 +98,9 @@ class configcontrolador{
                         if($existe_archivo3)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
                         
                         $url_temp = $_FILES["logo"]["tmp_name"];
-                        move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
+                        if(move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo)){
+                            desactivarInterlacedPNG($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
+                        }
                     }  
                     
                     $r = $negocio->crear_guardar();
