@@ -13,7 +13,7 @@
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
     const totalunidades = document.querySelector('#totalunidades') as HTMLElement;
     const tablaventa = document.querySelector('#tablaventa tbody');
-    const btnvaciar = document.querySelector('#btnvaciar');
+    //const btnvaciar = document.querySelector('#btnvaciar');
     const btnguardar = document.querySelector('#btnguardar');
     const btnfacturar = document.querySelector('#btnfacturar');
     const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
@@ -22,7 +22,8 @@
     const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
-    const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
+    //const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
+    const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
@@ -558,18 +559,24 @@
       }
     });
 
-    btnvaciar?.addEventListener('click', ()=>{
+    /*btnvaciar?.addEventListener('click', ()=>{
       if(carrito.length){
         miDialogoVaciar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
-    });
+    });*/
 
     btnguardar?.addEventListener('click', ()=>{
       if(carrito.length){
         miDialogoGuardar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
+    });
+
+    btnaplicarcredito?.addEventListener('click', ()=>{
+        miDialogoCredito.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+      
     });
 
     btnfacturar?.addEventListener('click', ()=>{
@@ -685,9 +692,9 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoVaciar || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
-        miDialogoVaciar.close();
+        miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
         miDialogoAddCliente.close();
@@ -696,11 +703,11 @@
         miDialogoOtrosProductos.close();
         document.removeEventListener("click", cerrarDialogoExterno);
         if((f as HTMLInputElement).closest('.siguardar'))procesarpedido('Guardado', '1');
-        if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
+        //if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
       }
     }
 
-    function vaciarventa():void
+    /*function vaciarventa():void
     {
       if(datosfactura?.id)datosfactura.id = '';
       mapMediospago.clear();
@@ -716,7 +723,7 @@
       $('#selectCliente').val(1).trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
       
-    }
+    }*/
 
 
     ////////////////// evento al bton pagar del modal facturar //////////////////////
@@ -775,7 +782,7 @@
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
-            vaciarventa();
+            //vaciarventa();
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
