@@ -114,6 +114,7 @@ $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 've
 $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 'ventasxtransaccion']);
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
+$router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
 $router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'facturasanuladas']);
 $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);

@@ -55,6 +55,14 @@ class reportescontrolador{
         $router->render('admin/reportes/facturas/facturaspagas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+
+    public static function creditos(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
     
     public static function facturasanuladas(Router $router){
         session_start();
