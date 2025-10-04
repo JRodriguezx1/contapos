@@ -16,6 +16,7 @@
     const btnvaciar = document.querySelector('#btnvaciar');
     const btnguardar = document.querySelector('#btnguardar');
     const btnfacturar = document.querySelector('#btnfacturar');
+    const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
     const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
     const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
     const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
