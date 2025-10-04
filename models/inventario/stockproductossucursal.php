@@ -18,7 +18,7 @@ class stockproductossucursal extends \Model\ActiveRecord{
 
     public static function indicadoresAllProductsXSucursal(int $idsucursal = 1):array|NULL{
       $query="SELECT p.nombre, p.impuesto, p.tipoproducto, p.tipoproduccion, p.categoria, sps.productoid, sps.stock, sps.stockminimo, p.precio_compra, p.precio_venta, p.idunidadmedida, p.unidadmedida, p.fecha_ingreso, p.visible, 
-      ROUND(SUM(sps.stock*p.precio_compra) OVER (), 2) AS valorinv, 
+      ROUND(SUM(CASE WHEN p.tipoproduccion = 1 THEN sps.stock * p.precio_compra ELSE 0 END) OVER (), 2) AS valorinv, 
       COUNT(p.id) OVER () AS cantidadreferencias, 
       SUM(sps.stock) OVER () AS cantidadproductos,
       SUM(CASE WHEN sps.stock < 10 THEN 1 ELSE 0 END) OVER () AS bajostock,
@@ -33,6 +33,7 @@ class stockproductossucursal extends \Model\ActiveRecord{
               FROM stockproductossucursal sps
               INNER JOIN productos p ON sps.productoid = p.id
               INNER JOIN sucursales s ON sps.sucursalid = s.id
+              WHERE p.tipoproducto = 0 OR (p.tipoproducto = 1 AND p.tipoproduccion = 1)
               ORDER BY p.id, s.id;";
       $array = self::camposJoinObj($sql);
       return $array;

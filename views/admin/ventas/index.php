@@ -196,19 +196,22 @@
 
         
         <div class="text-center p-4">
-          <button id="btnvaciar" class="btn-md btn-red !py-4 !px-6 !w-[140px]">
-            <span class="material-symbols-outlined text-2xl">delete</span>
-            <span class="font-medium text-2xl">Vaciar</span>
-          </button>
-
-          <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]">
+          
+          <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px] flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl">save</span>
-            <span class="font-medium text-2xl">Guardar</span>
+            <span class="font-medium text-2xl uppercase">Cotizar</span>
           </button>
-
-          <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3">
+          
+          <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3 flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl">receipt_long</span>
-            <span class="font-medium text-2xl">Facturar</span>
+            <span class="font-medium text-2xl uppercase">Facturar</span>
+          </button>
+          
+          <button id="btnaplicarcredito" 
+            class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto">
+            
+            <span class="material-symbols-outlined text-2xl">payments</span>
+            <span class="font-medium text-2xl uppercase">Crédito</span>
           </button>
         </div>
 

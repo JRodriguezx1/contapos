@@ -414,7 +414,7 @@
     </form>
   </dialog>
 
-  <div><p class="text-gray-500 text-center">Innovatech</p></div>
+  <div><p class="text-gray-500 text-center text-lg">J2Software POS MultiSucursal</p></div>
 
 </div>
 </div>

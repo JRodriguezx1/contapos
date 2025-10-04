@@ -38,7 +38,7 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class=" text-center "><img class="inline" style="width: 50px;" src="/build/img/<?php echo $value->foto;?>" alt=""></div></td>
               <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
-              <td class="" ><?php echo $value->categoria;?></td>
+              <td class="" ><?php echo $value->nombrecategoria;?></td>
               <td class=""><?php echo $value->marca;?></td>
               <td class=""><?php echo $value->sku;?></td>
               <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
@@ -106,7 +106,6 @@
             <input id="precioventa" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta incluido el impuesto" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
         </div>
         
-
         <div class="formulario__campo habtipoproduccion" style="display: none;">
             <label class="formulario__label" for="tipoproduccion">Tipo de produccion</label>
             <select id="tipoproduccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="tipoproduccion">
@@ -129,6 +128,18 @@
         <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">
             <label class="etiqueta flex items-center justify-center gap-2 cursor-pointer text-gray-500 hover:text-indigo-600 select-none" for="first">Mostrar/Ocultar mas opciones</label>
+
+            <!-- <div class="formulario__campo">
+                <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
+                <select id="idunidadmedida" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idunidadmedida" required>
+                    <?php foreach($unidadesmedida as $unidadmedida): ?>
+                    <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
+                    <?php endforeach; ?>
+                </select>  
+            </div> -->
+            
+            
+            
             <div class="wrapper">
               <div class="wrapper-content">
                 <div id="otrosopciones" class="content flex flex-col w-full mx-auto">  

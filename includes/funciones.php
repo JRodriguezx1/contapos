@@ -56,3 +56,25 @@ function tienePermiso(string $permiso): bool {
 function userPerfil(): string|bool {
     return $_SESSION['perfil']??false;
 }
+
+function desactivarInterlacedPNG(string $rutaimg):int{
+    // Detectar extensión
+    $ext = strtolower(pathinfo($rutaimg, PATHINFO_EXTENSION));
+    // Si es PNG, limpiarla con GD
+    if ($ext === 'png') {
+        $img = imagecreatefrompng($rutaimg);
+        if($img){
+            // Desactivar interlazado
+            imageinterlace($img, false);
+            // Sobrescribir el archivo limpio
+            imagepng($img, $rutaimg);
+            // Liberar memoria
+            imagedestroy($img);
+            return 1;
+        }else{
+            return 0;
+        }
+    }else{
+        return 0;
+    }
+}

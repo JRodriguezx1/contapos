@@ -14,8 +14,8 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($productos as $index => $value):
-                    if($value->visible == 1): ?>
+            <?php foreach($productos as $index => $value):
+                if($value->visible == 1&&($value->tipoproducto == '0' || ($value->tipoproducto == '1' && $value->tipoproduccion == '1'))): ?>
                 <tr> 
                     <td class=""><?php echo $index+1;?></td>        
                     <td class=""><?php echo $value->nombre;?></td> 

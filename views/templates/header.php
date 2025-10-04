@@ -4,7 +4,7 @@
 <!-- <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script> -->
 
 <div class="barra-mobile">
-    <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2blanco.png" alt="logoj2">
+    <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2blanco.png" alt="logoj2">
     <!-- <div class="menu">
         <img id="mobile-menu" src="/build/img/menu.svg" alt="imagen menu">
     </div> -->
@@ -113,7 +113,7 @@
   <!-- Contenedor del menú -->
   <div class="relative w-auto h-full py-8 px-10 flex flex-col justify-between bg-white">
     <div class="flex justify-center">
-        <img id="logoj2" class="w-80 h-28" src="/build/img/logoj2indigo.png" alt="logoj2">
+        <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2indigo.png" alt="logoj2">
     </div>
     <!-- Encabezado con botón cerrar -->
     <div class="flex items-center justify-between mb-6 mt-4">
