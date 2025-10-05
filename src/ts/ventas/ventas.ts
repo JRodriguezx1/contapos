@@ -35,7 +35,7 @@
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
-    let nombretarifa:string|undefined='', valorMax = 0;
+    let nombretarifa:string|undefined='', valorMax = 0, tipoventa:string="Contado";
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -574,17 +574,26 @@
     });
 
     btnaplicarcredito?.addEventListener('click', ()=>{
-        miDialogoCredito.showModal();
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value)){
+        msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
+        return;
+      }
+      if(carrito.length){
+        tipoventa = "Credito";
+        subirModalPagar();
+        //miDialogoCredito.showModal();
+        miDialogoFacturar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
-      
+      }
     });
 
     btnfacturar?.addEventListener('click', ()=>{
-        if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || selectCliente.value =='2' || !dirEntrega.value)){
-          msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
-          return;
-        }
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value)){
+        msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
+        return;
+      }
       if(carrito.length){
+        tipoventa = "Contado";
         subirModalPagar();
         miDialogoFacturar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
@@ -702,7 +711,10 @@
         miDialogoFacturarA.close();
         miDialogoOtrosProductos.close();
         document.removeEventListener("click", cerrarDialogoExterno);
-        if((f as HTMLInputElement).closest('.siguardar'))procesarpedido('Guardado', '1');
+        if((f as HTMLInputElement).closest('.siguardar')){
+          tipoventa = "";
+          procesarpedido('Guardado', '1');
+        }
         //if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
       }
     }
@@ -759,6 +771,7 @@
       datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
       datos.append('transaccion', '');
+      datos.append('tipoventa', tipoventa);
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('subtotal', valorTotal.subtotal+'');
