@@ -707,7 +707,7 @@
       }
     }
 
-    /*function vaciarventa():void
+    function vaciarventa():void
     {
       if(datosfactura?.id)datosfactura.id = '';
       mapMediospago.clear();
@@ -723,7 +723,7 @@
       $('#selectCliente').val(1).trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
       
-    }*/
+    }
 
 
     ////////////////// evento al bton pagar del modal facturar //////////////////////
@@ -782,7 +782,7 @@
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
-            //vaciarventa();
+            vaciarventa();
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);

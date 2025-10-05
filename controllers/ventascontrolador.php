@@ -633,7 +633,7 @@ class ventascontrolador{
 
 
 
-  public static function eliminarOrden(){
+  public static function eliminarOrden(){  //llamada dedse ordenresumen.ts
     session_start();
     isadmin();
     $alertas = [];
@@ -699,16 +699,19 @@ class ventascontrolador{
         //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
         $cierrecaja->ingresoventas =  $cierrecaja->ingresoventas - $factura->total;
         $cierrecaja->totaldescuentos = $cierrecaja->totaldescuentos - $factura->descuento;
-
+        $cierrecaja->valorimpuestototal -= $factura->valorimpuestototal;
+        $cierrecaja->basegravable -= $factura->base;
 
         $r = $factura->actualizar();
         if($r){
           if(!$factura->cotizacion){ //0 = factura,   1 = cotizacion
             $r1 = $cierrecaja->actualizar();
             if($r1){
+              //eliminar detalle impuesto
+              $detallefacturaimp = factimpuestos::find('facturaid', $factura->id);
+              $detallefacturaimp->eliminar_registro();
               if($_POST['devolverinv'] == '1'){  //si se desea devolver a inventario
                 
-
 
                 //////// descontar del inventario los productos simples ////////
                 if(!empty($resultArray['productosSimples']))//$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
@@ -755,8 +758,6 @@ class ventascontrolador{
               //revertir la actualizacion de la factura
               $tempfactura->actualizar();
             }
-          }else{  //si cotizacion es igual 1, es o fue una cotizacion
-            $alertas['exito'][] = "Cotizacion Eliminada";
           }
         }else{
           $alertas['error'][] = "Error, intenta nuevamente";

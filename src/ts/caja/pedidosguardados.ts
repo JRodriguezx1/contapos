@@ -32,7 +32,7 @@
     });
 
 
-    ////////////////////  Eliminar caja  //////////////////////
+    ////////////////////  Eliminar cotizacion por completo del sistema  //////////////////////
     function eliminarPedidoGuardado(e:Event){
       let idpedidoguardado = (e.target as HTMLElement).parentElement!.id, info = (tablaPedidosGuardados as any).page.info();
       if((e.target as HTMLElement).tagName === 'I')idpedidoguardado = (e.target as HTMLElement).parentElement!.parentElement!.id;
@@ -51,7 +51,7 @@
                   const datos = new FormData();
                   datos.append('id', idpedidoguardado);
                   try {
-                      const url = "/admin/api/eliminarPedidoGuardado";
+                      const url = "/admin/api/eliminarPedidoGuardado"; // llama controlador cajacontrolador.php
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){

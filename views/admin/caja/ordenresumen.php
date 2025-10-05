@@ -9,7 +9,7 @@
         <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
         <button id="btnfacturar" class="btn-command"><span class="material-symbols-outlined">attach_money</span>Procesar pago</button>
         <?php endif; ?>
-        <?php if($factura->estado!='Eliminada'):?>
+        <?php if($factura->estado=='Paga'):?>
         <button id="btneliminarorden" class="btn-command"><span class="material-symbols-outlined">delete</span>Eliminar orden</button>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>

@@ -757,7 +757,8 @@ class cajacontrolador{
     echo json_encode($alertas);
   }
 
-  public static function eliminarPedidoGuardado(){
+  //Eliminar cotizacion por completo del sistema
+  public static function eliminarPedidoGuardado(){ //llamada desde caja/pedidosguardados.ts
     session_start();
       $pedidoguardado = facturas::find('id', $_POST['id']);
       if($_SERVER['REQUEST_METHOD'] === 'POST' ){
