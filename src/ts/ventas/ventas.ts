@@ -574,7 +574,7 @@
     });
 
     btnaplicarcredito?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value)){
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value) || selectCliente.value =='1'){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }

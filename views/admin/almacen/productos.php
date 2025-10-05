@@ -103,7 +103,13 @@
 
         <div class="formulario__campo">
             <label class="formulario__label" for="precioventa">Precio venta incluido impuesto</label>
-            <input id="precioventa" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta incluido el impuesto" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+            <div class="flex gap-2">
+                <input id="precioventa" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta incluido el impuesto" name="precio_venta" value="<?php echo $producto->precio_venta??'';?>" required>
+                <button id="btnAddNewPrice" type="button" class="btn-md btn-blue !text-3xl">+</button>
+            </div>
+            <div id="contentnuevosprecios" class=" space-y-4">
+
+            </div>
         </div>
         
         <div class="formulario__campo habtipoproduccion" style="display: none;">

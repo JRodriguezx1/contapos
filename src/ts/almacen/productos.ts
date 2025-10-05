@@ -7,6 +7,7 @@
     const btncustomUpImage = document.querySelector('#customUpImage');
     const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
     const tipoproducto = document.querySelector('#tipoproducto') as HTMLSelectElement;
+    const contentnuevosprecios = document.querySelector('#contentnuevosprecios') as HTMLElement;
     let indiceFila=0, control=0, tablaProductos:HTMLElement;
     
 
@@ -36,6 +37,7 @@
       precio_compra: string,
       precio_venta: string,
       fecha_ingreso: string,
+      preciosadicionales: {id:string, idproductoid:string, precio:string, estado:string, created_at:string}[]
       //idservicios:{idempleado:string, idservicio:string}[]
     };
 
@@ -84,6 +86,22 @@
     });
 
 
+    const btnAddNewPrice = document.querySelector('#btnAddNewPrice') as HTMLButtonElement;
+    if(btnAddNewPrice){
+        let i=1;
+        btnAddNewPrice.addEventListener('click', (e:Event)=>{
+          let clone = (e.target as HTMLButtonElement).previousElementSibling?.cloneNode(true) as HTMLInputElement;  
+          //console.log(clone.children[1].name = `niveles[nombrenivel${++i}]`);
+          clone.removeAttribute('id');
+          clone.value='';
+          clone.name = `nuevosprecios[]`;
+          clone.classList.add('nuevosprecios');
+          contentnuevosprecios.appendChild(clone);
+          console.log(clone);
+        });
+    }
+
+
     //////////////////  TABLA //////////////////////
     tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);
 
@@ -91,6 +109,7 @@
     crearProducto?.addEventListener('click', (e):void=>{
       control = 0;
       limpiarformdialog();
+      while(contentnuevosprecios.firstChild)contentnuevosprecios.removeChild(contentnuevosprecios.firstChild);
       document.querySelector('#modalProducto')!.textContent = "Crear producto";
       (document.querySelector('#btnEditarCrearProducto') as HTMLInputElement).value = "Crear";
       (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
@@ -130,6 +149,7 @@
       (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
+      imprimirpreciosadicionales(unproducto.preciosadicionales);
       (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
       (document.querySelector('#impuesto')as HTMLInputElement).value = unproducto?.impuesto??'';
       (document.querySelector('#stockminimo')as HTMLInputElement).value = unproducto?.stockminimo??'';
@@ -139,8 +159,27 @@
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
+    function imprimirpreciosadicionales(preciosadicionales:{id:string, idproductoid:string, precio:string, estado:string, created_at:string}[]){
+      while(contentnuevosprecios.firstChild)contentnuevosprecios.removeChild(contentnuevosprecios.firstChild);
+      preciosadicionales.forEach(z =>{
+        contentnuevosprecios.insertAdjacentHTML('afterbegin', `<input 
+          data-id="${z.id}"
+          class="nuevosprecios bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+          type="number" 
+          min="0" 
+          step="0.01" 
+          placeholder="Precio de venta incluido el impuesto" 
+          name="nuevosprecios[]" 
+          value="${z.precio}" 
+          required>`);
+      });
+    }
+
     ////////////////////  Actualizar/Editar producto  //////////////////////
     document.querySelector('#formCrearUpdateProducto')?.addEventListener('submit', e=>{
+
+      let w = document.querySelectorAll<HTMLInputElement>('.nuevosprecios');
+      //console.log(Array.from(w).map(input=>({id: input.dataset.id, precio: parseFloat(input.value) })).filter(x=>x.precio>0));
       if(control){
         e.preventDefault();
         var imgFile:(string|File), info = (tablaProductos as any).page.info();
@@ -170,6 +209,8 @@
           datos.append('stock', $('#stock').val()as string);
           datos.append('precio_compra', $('#preciocompra').val()as string);
           datos.append('precio_venta', $('#precioventa').val()as string);
+          datos.append('nuevosprecios', JSON.stringify(Array.from(w).map(input=>({id: input.dataset.id, precio: parseFloat(input.value) })).filter(x=>x.precio>0)));
+          datos.append('idprecionsadicionales', JSON.stringify(Array.from(w).filter(input => input.dataset.id && parseFloat(input.value) > 0).map( input=>input.dataset.id )));
           datos.append('sku', $('#sku').val()as string);
           datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
           datos.append('impuesto', $('#impuesto').val()as string);

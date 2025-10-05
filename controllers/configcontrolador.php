@@ -45,7 +45,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
