@@ -4,7 +4,7 @@
       <hr class="my-4 border-t border-neutral-300">
       <form id="formcredito" class="formulario" method="POST">
           <div id="divmsjalerta2"></div>
-          <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
+          <p class="text-gray-600 text-3xl text-center font-light m-0">Total del crédito $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
@@ -23,6 +23,22 @@
               </select>
             </div>
           </div>
+
+          <div class="flex justify-center gap-12 mt-8">
+            <div class="formulario__campo md:w-1/2">
+              <label class="formulario__label" for="montoInicial">Abono inicial</label>
+              <input id="montoInicial" name="montoInicial" type="text" placeholder="0"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+            </div>
+
+            <div class="formulario__campo md:w-1/2">
+              <label class="formulario__label" for="saldoPendiente">Saldo pendiente</label>
+              <input id="saldoPendiente" name="saldoPendiente" type="text" readonly
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            </div>
+          </div>
+
           <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">
             <label class="etiqueta text-indigo-700" for="first">Elegir método de pago</label>
@@ -72,8 +88,8 @@
           </div>
 
           <div class="self-end">
-              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="Cancelar">Cancelar</button>
-              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]" type="submit" value="Pagar">
+              <button class="btn-md btn-turquoise !py-4 !px-6 !w-[150px]" type="button" value="Cancelar">Cancelar</button>
+              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[150px]" type="submit" value="Guardar crédito">
           </div>
           
       </form>
