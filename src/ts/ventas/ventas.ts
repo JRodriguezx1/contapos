@@ -579,6 +579,8 @@
         return;
       }
       if(carrito.length){
+        document.querySelector('#inputscreditos')?.classList.add('flex');
+        document.querySelector('#inputscreditos')?.classList.remove('hidden');
         tipoventa = "Credito";
         subirModalPagar();
         //miDialogoCredito.showModal();
@@ -593,6 +595,8 @@
         return;
       }
       if(carrito.length){
+        document.querySelector('#inputscreditos')?.classList.add('hidden');
+        document.querySelector('#inputscreditos')?.classList.remove('flex');
         tipoventa = "Contado";
         subirModalPagar();
         miDialogoFacturar.showModal();
