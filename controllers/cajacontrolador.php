@@ -398,6 +398,18 @@ class cajacontrolador{
     $router->render('admin/caja/detallepedidox', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
+  public static function detallecredito(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+    $alertas = [];
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    //$alertas = usuarios::getAlertas();
+    
+    $router->render('admin/caja/detallecredito', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
   public static function printfacturacarta(Router $router){
     session_start();
     isadmin();

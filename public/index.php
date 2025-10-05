@@ -103,6 +103,7 @@ $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallec
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
 $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen']);  //resumen de la orden
 //$router->get('/admin/caja/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']);  //imprimir factura tipo carta
+$router->get('/admin/caja/detallecredito', [cajacontrolador::class, 'detallecredito']); //detalle de la orden
 $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
