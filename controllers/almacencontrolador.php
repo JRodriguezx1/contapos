@@ -138,13 +138,17 @@ class almacencontrolador{
     $addnewprecios = new precios_personalizados;
     $preciospersonalizados = [];
 
+    $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
+    $dirfoto = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/productos";
+    if (!is_dir($dirfoto))mkdir($dirfoto, 0755, true);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $producto = new productos($_POST);
       $alertas = $producto->validarimgproducto($_FILES);
       $alertas = $producto->validar_nuevo_producto();
       if(empty($alertas)){
         if($_FILES['foto']['name']){
-          $producto->foto = 'cliente1/productos/'.uniqid().$_FILES['foto']['name'];
+          $producto->foto = $subdominio.'/productos/'.uniqid().$_FILES['foto']['name'];
           $url_temp = $_FILES["foto"]["tmp_name"];
           move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
         }
@@ -581,6 +585,9 @@ class almacencontrolador{
     $idprecionsadicionales = json_decode($_POST['idprecionsadicionales']);
     $nuevosPreciosFront = json_decode($_POST['nuevosprecios']);
 
+    $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
+    $dirfoto = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/productos";
+    if (!is_dir($dirfoto))mkdir($dirfoto, 0755, true);
 
     /////// valiadar que es una nueva imagen o distinta
     if($producto->foto && isset($_FILES['foto']['name'])) { //remplazar imagen existente
@@ -594,7 +601,7 @@ class almacencontrolador{
         $alertas = $producto->validar_nuevo_producto();
         if(empty($alertas)){
             if(isset($_FILES['foto']['name'])){
-                $producto->foto = 'cliente1/productos/'.uniqid().$_FILES['foto']['name'];
+                $producto->foto = $subdominio.'/productos/'.uniqid().$_FILES['foto']['name'];
                 $url_temp = $_FILES["foto"]["tmp_name"];
                 move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
             }

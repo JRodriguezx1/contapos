@@ -65,12 +65,19 @@
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
               <?php endforeach; ?>  
             </select>
-            <input type="number" class="w-full md:w-1/4 focus:border-indigo-600 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 border rounded-lg p-2.5 bg-gray-50 border-gray-300 text-gray-900" placeholder="Cant." />
-            <button id="addItem" class="px-4 h-14 py-2 w-full md:w-1/4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Agregar</button>
+            <input
+                id="cantidad"
+                type="text" 
+                class="w-full md:w-1/4 focus:border-indigo-600 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 border rounded-lg p-2.5 bg-gray-50 border-gray-300 text-gray-900"
+                placeholder="Cant."
+                value="1"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';"
+            />
+            <button id="btnAddItem" class="px-4 h-14 py-2 w-full md:w-1/4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Agregar</button>
         </div>
 
         <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">  
-        <table class="w-full text-left border-collapse">
+        <table id="tablaItems" class="w-full text-left border-collapse">
             <thead class="bg-gray-50 text-gray-600 text-base font-semibold uppercase tracking-wide">
             <tr>
                 <th class="text-left p-4">Producto</th>
@@ -79,7 +86,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="border-t dark:border-neutral-700">
+            <!--<tr class="border-t dark:border-neutral-700">
                 <td class="p-4">Producto A</td>
                 <td class="p-4">10</td>
                 <td class="p-4 flex items-center justify-center gap-2">
@@ -89,7 +96,7 @@
                     <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
                     <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
                 </td>
-            </tr>
+            </tr>-->
             </tbody>
         </table>
         </div>
