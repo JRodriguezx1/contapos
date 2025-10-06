@@ -467,6 +467,17 @@ class almacencontrolador{
     $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
+  public static function nuevotrasladoinv(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    $sucursalorigen = sucursales::find('id', id_sucursal());
+    $sucursales = sucursales::all();
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/nuevotrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+  }
+
   public static function downexcelproducts(Router $router){
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
       $excelproductos = productos::all();
