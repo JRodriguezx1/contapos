@@ -24,20 +24,37 @@
             </div>
           </div>
 
-          <div id="inputscreditos" class="flex justify-center gap-12 mt-8">
-            <div class="formulario__campo md:w-1/2">
+          <div id="inputscreditos" class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <!-- Abono inicial -->
+            <div class="formulario__campo">
               <label class="formulario__label" for="montoInicial">Abono inicial</label>
               <input id="montoInicial" name="montoInicial" type="text" placeholder="0"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
             </div>
 
-            <div class="formulario__campo md:w-1/2">
+            <!-- Saldo pendiente -->
+            <div class="formulario__campo">
               <label class="formulario__label" for="saldoPendiente">Saldo pendiente</label>
               <input id="saldoPendiente" name="saldoPendiente" type="text" readonly
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            </div>
+
+            <!-- Plazo (días) -->
+            <div class="formulario__campo">
+              <label class="formulario__label" for="plazo">Plazo (días)</label>
+              <input id="plazo" name="plazo" type="number" min="1" placeholder="Ingrese cantidad de días del palzo"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            </div>
+
+            <!-- Fecha de vencimiento -->
+            <div class="formulario__campo">
+              <label class="formulario__label" for="fechaVencimiento">Fecha de vencimiento</label>
+              <input id="fechaVencimiento" name="fechaVencimiento" type="date"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
+       
 
           <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">
