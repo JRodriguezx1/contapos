@@ -457,9 +457,10 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    
+    $sucursalorigen = sucursales::find('id', id_sucursal());
+    $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   public static function downexcelproducts(Router $router){
