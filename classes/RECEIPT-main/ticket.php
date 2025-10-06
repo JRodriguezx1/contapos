@@ -15,18 +15,20 @@
         }
 
 
-        public function generar($sucursal, $factura, $cliente, $direccion, $productos=[], $negocio=[]){
-            $this->pdf->Image(__DIR__ . '/../../public/build/img/'.$negocio[0]->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
+        public function generar($sucursal, $factura, $cliente, $direccion, $productos=[]){
+            $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
+            if(!$existe_archivo) $sucursal->logo = "Logoj2negro";
+            $this->pdf->Image(__DIR__ . '/../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
             $this->pdf->Ln(25);
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($negocio[0]->nombre)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$negocio[0]->nit),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$negocio[0]->direccion),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$negocio[0]->movil),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$negocio[0]->email),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$sucursal->email),0,'C',false);
 
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');

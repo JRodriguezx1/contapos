@@ -57,10 +57,6 @@
             document.addEventListener("click", cerrarDialogoExterno);
         });
 
-        btnXCerrarTrasladoInvnetario.addEventListener('click', (e)=>{
-            miDialogoTrasladoInvnetario.close();
-            document.removeEventListener("click", cerrarDialogoExterno);
-        });
 
         reinciarinv.addEventListener('click', (e)=>{
             Swal.fire({
@@ -426,8 +422,8 @@
 
 
         function cerrarDialogoExterno(event:Event) {
-            
-            if (event.target === miDialogoTrasladoInvnetario || event.target === btnXCerrarTrasladoInvnetario || event.target === miDialogoStock || event.target === miDialogoIngresarProduccion || (event.target as HTMLInputElement).value === 'salir') {
+            const btnxcerrartrasInv = (event.target as HTMLElement).parentElement?.id;
+            if (event.target === miDialogoTrasladoInvnetario || btnxcerrartrasInv == "btnXCerrarTrasladoInvnetario" || event.target === btnXCerrarTrasladoInvnetario || event.target === miDialogoStock || event.target === miDialogoIngresarProduccion || (event.target as HTMLInputElement).value === 'salir') {
                 miDialogoStock.close();
                 miDialogoIngresarProduccion.close();
                 miDialogoTrasladoInvnetario.close();

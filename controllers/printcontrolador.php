@@ -25,13 +25,12 @@ class printcontrolador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     $sucursal = sucursales::find('id', id_sucursal());
-    $negocio = negocio::get(1);
     $factura = facturas::find('id', $id);
     $cliente = clientes::find('id', $factura->idcliente);
     $direccion = direcciones::find('id', $factura->iddireccion);
     if(!$direccion)$direccion = direcciones::find('id', 1);
     $productos = ventas::idregistros('idfactura', $factura->id);
     $print = new ticketPOS();
-    $print->generar($sucursal, $factura, $cliente, $direccion, $productos, $negocio);
+    $print->generar($sucursal, $factura, $cliente, $direccion, $productos);
   }
 }

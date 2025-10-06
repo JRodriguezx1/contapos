@@ -8,7 +8,7 @@
             <div class="flex justify-between">
                 <div>
                     <div class="grid space-y-3">
-                        <img class="w-auto h-24" src="/build/img/<?php echo $negocio[0]->logo;?>" alt="user">
+                        <img class="w-auto h-24" src="/build/img/<?php echo $sucursal->logo;?>" alt="user">
                         <dl class="flex flex-col gap-y-3 text-sm pt-20">
                             <div class="font-medium text-gray-800 text-lg leading-normal">
                                 <span class="block font-semibold uppercase">Cotizado a</span>
@@ -33,14 +33,14 @@
 
                 <div class="text-lg leading-normal">
                     <div class="grid font-medium text-gray-800 text-center text-lg leading-normal">
-                        <span class="block font-semibold text-lg uppercase"><?php echo $negocio[0]->nombre;?></span>
+                        <span class="block font-semibold text-lg uppercase"><?php echo $sucursal->negocio;?></span>
                         <address class="not-italic font-light">
                             <?php echo $sucursal->nombre;?>,<br>
-                            <?php echo $negocio[0]->direccion;?>,<br>
-                            Tel: <?php echo $negocio[0]->telefono;?>,<br>
-                            <?php echo $negocio[0]->ciudad;?>,<br>
-                            <?php echo $negocio[0]->email;?>,<br>
-                            <?php //echo $negocio[0]->www;?><br>
+                            <?php echo $sucursal->direccion;?>,<br>
+                            Tel: <?php echo $sucursal->telefono;?>,<br>
+                            <?php echo $sucursal->ciudad.' - '.$sucursal->departamento;?>,<br>
+                            <?php echo $sucursal->email;?>,<br>
+                            <?php //echo $sucursal->www;?><br>
                         </address>
                     </div>
                 </div>

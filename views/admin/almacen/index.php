@@ -82,10 +82,19 @@
   <!-- Opciones -->
   <div class="grid gap-4">
     <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 dark:border-neutral-700 hover:bg-indigo-50 dark:hover:bg-neutral-800 transition"
-       href="/admin/almacen/trasladoinventario">
+       href="/admin/almacen/solicitudesrecibidas">
        <span class="flex items-center gap-3 text-gray-900 dark:text-gray-100 text-lg font-medium">
          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-         Traslado de inventario
+         Solicitudes recibidas
+       </span>
+       <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+    </a>
+
+    <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 dark:border-neutral-700 hover:bg-indigo-50 dark:hover:bg-neutral-800 transition"
+       href="/admin/almacen/trasladarinventario">
+       <span class="flex items-center gap-3 text-gray-900 dark:text-gray-100 text-lg font-medium">
+         <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+         Trasladar inventario
        </span>
        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
     </a>

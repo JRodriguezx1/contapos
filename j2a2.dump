@@ -804,6 +804,38 @@ LOCK TABLES `detallecompra` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `detalletrasladoinv`
+--
+
+DROP TABLE IF EXISTS `detalletrasladoinv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `detalletrasladoinv` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_trasladoinv` int NOT NULL,
+  `fkproducto` int DEFAULT NULL,
+  `idsubproducto_id` int DEFAULT NULL,
+  `cantidad` decimal(12,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_trasladoinv_idx` (`id_trasladoinv`),
+  KEY `fkproducto_idx` (`fkproducto`),
+  KEY `idsubproducto_id_idx` (`idsubproducto_id`),
+  CONSTRAINT `fkproducto` FOREIGN KEY (`fkproducto`) REFERENCES `contapos`.`productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `id_trasladoinv` FOREIGN KEY (`id_trasladoinv`) REFERENCES `contapos`.`traslado_inv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idsubproducto_id` FOREIGN KEY (`idsubproducto_id`) REFERENCES `contapos`.`subproductos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `detalletrasladoinv`
+--
+
+LOCK TABLES `detalletrasladoinv` WRITE;
+/*!40000 ALTER TABLE `detalletrasladoinv` DISABLE KEYS */;
+/*!40000 ALTER TABLE `detalletrasladoinv` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `direcciones`
 --
 
@@ -2150,6 +2182,40 @@ INSERT INTO `tipofacturador` VALUES (1,'ELECTRONICA'),(2,'POS');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `traslado_inv`
+--
+
+DROP TABLE IF EXISTS `traslado_inv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `traslado_inv` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_sucursalorigen` int NOT NULL,
+  `id_sucursaldestino` int NOT NULL,
+  `fkusuario` int DEFAULT NULL,
+  `observacion` varchar(512) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `estado` enum('pendiente','rechazada','aprobada','entregada','entransito') COLLATE utf8mb3_unicode_ci DEFAULT 'pendiente',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_sucursalorigen_idx` (`id_sucursalorigen`),
+  KEY `id_sucursaldestino_idx` (`id_sucursaldestino`),
+  KEY `fkusuario_idx` (`fkusuario`),
+  CONSTRAINT `fkusuario` FOREIGN KEY (`fkusuario`) REFERENCES `contapos`.`usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `id_sucursaldestino` FOREIGN KEY (`id_sucursaldestino`) REFERENCES `contapos`.`sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id_sucursalorigen` FOREIGN KEY (`id_sucursalorigen`) REFERENCES `contapos`.`sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `traslado_inv`
+--
+
+LOCK TABLES `traslado_inv` WRITE;
+/*!40000 ALTER TABLE `traslado_inv` DISABLE KEYS */;
+/*!40000 ALTER TABLE `traslado_inv` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `traslados`
 --
 
@@ -2354,4 +2420,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-02 23:59:20
+-- Dump completed on 2025-10-05 21:08:15

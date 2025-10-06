@@ -15,6 +15,7 @@ use Model\parametrizacion\config_local;
 use Model\configuraciones\permisos;
 use Model\configuraciones\tipofacturador;
 use Model\configuraciones\usuarios_permisos;
+use Model\sucursales;
 use MVC\Router;  //namespace\clase
  
 class configcontrolador{
@@ -25,8 +26,7 @@ class configcontrolador{
     if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
     $alertas = [];
     $idsucursal = id_sucursal();
-    $negocio = negocio::find('id', 1);
-    $negocios[] = $negocio;
+    $sucursal = sucursales::find('id', $idsucursal);
     $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
     $mediospago = mediospago::all();
     $cajas = caja::idregistros('idsucursalid', $idsucursal);
@@ -45,7 +45,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'negocios'=>$negocios, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -55,19 +55,19 @@ class configcontrolador{
         if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
         $alertas = [];
         $idsucursal = id_sucursal();
-        $negocio = negocio::find('id', 1);
+        $sucursal = sucursales::find('id', 1);
 
         $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
         $dirlogo = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio;
         if (!is_dir($dirlogo))mkdir($dirlogo, 0755, true);
         
 
-        if($negocio){ //actualizar
+        if($sucursal){ //actualizar
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-                $negocio->compara_objetobd_post($_POST);
-                $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
-                $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo;
-                $alertas = $negocio->validarnegocio();
+                $sucursal->compara_objetobd_post($_POST);
+                $sucursal->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+                $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
+                $alertas = $sucursal->validar();
                 if(!$alertas){
                     if($_FILES['logo']['name']){
                         $url_temp = $_FILES["logo"]["tmp_name"];
@@ -77,19 +77,19 @@ class configcontrolador{
                             desactivarInterlacedPNG($rutaimg);
                         }
                     }
-                    $r = $negocio->actualizar();
-                    if($r)$alertas['exito'][] = "Datos de negocio actualizado";
+                    $r = $sucursal->actualizar();
+                    if($r)$alertas['exito'][] = "Datos de la sucursal actualizado";
                 }
             }
         }else{  //crear
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-                $negocio = new negocio($_POST);
-                $negocio->logo = $_FILES['logo']['name']; //solo se utiliza para validar los datos del negocio
-                $alertas = $negocio->validarnegocio();
+                $sucursal = new sucursales($_POST);
+                $sucursal->logo = $_FILES['logo']['name']; //solo se utiliza para validar los datos del sucursal
+                $alertas = $sucursal->validar();
                 if(!$alertas){
                     if($_FILES['logo']['name']){ //valida si se seleccion img en el form
                         $nombreimg = explode(".", $_FILES['logo']['name']);  // = "barberyeison.jpg"
-                        $negocio->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+                        $sucursal->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
                         $existe_archivo1 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].webp");
                         $existe_archivo2 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].png");
                         $existe_archivo3 = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
@@ -98,13 +98,13 @@ class configcontrolador{
                         if($existe_archivo3)unlink($_SERVER['DOCUMENT_ROOT']."/build/img/$subdominio/$nombreimg[0].jpg");
                         
                         $url_temp = $_FILES["logo"]["tmp_name"];
-                        if(move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo)){
-                            desactivarInterlacedPNG($_SERVER['DOCUMENT_ROOT']."/build/img/".$negocio->logo);
+                        if(move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo)){
+                            desactivarInterlacedPNG($_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo);
                         }
                     }  
                     
-                    $r = $negocio->crear_guardar();
-                    if($r)$alertas['exito'][] = "Datos de negocio actualizado";
+                    $r = $sucursal->crear_guardar();
+                    if($r)$alertas['exito'][] = "Datos de la sucursal actualizado";
                     //if($r)header('Location: /admin/dashboard/entrada');
                 }
             }
@@ -119,7 +119,7 @@ class configcontrolador{
         $empleado = new \stdClass();
          $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
 
 

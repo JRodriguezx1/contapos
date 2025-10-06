@@ -89,7 +89,8 @@ $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, '
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
 $router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
-$router->get('/admin/almacen/trasladoinventario', [almacencontrolador::class, 'trasladoinventario']);
+$router->get('/admin/almacen/solicitudesrecibidas', [almacencontrolador::class, 'solicitudesrecibidas']);
+$router->get('/admin/almacen/trasladarinventario', [almacencontrolador::class, 'trasladarinventario']);
 $router->get('/admin/almacen/solicitarinventario', [almacencontrolador::class, 'solicitarinventario']);
 
 ///// area de caja /////

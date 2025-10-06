@@ -431,14 +431,25 @@ class almacencontrolador{
   }
 
 
-  public static function trasladoinventario(Router $router){
+  public static function solicitudesrecibidas(Router $router){
     session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/trasladoinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/solicitudesrecibidas', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
+
+  public static function trasladarinventario(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/trasladarinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function solicitarinventario(Router $router){
