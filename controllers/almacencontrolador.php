@@ -17,6 +17,7 @@ use Model\gastos;
 use Model\caja\cierrescajas;
 use Model\compras;
 use Model\detallecompra;
+use Model\inventario\precios_personalizados;
 use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
@@ -134,6 +135,8 @@ class almacencontrolador{
     $categoria = categorias::find('id', $_POST['idcategoria']);
     $sucursales = sucursales::all();
     $stockProductoSucursales = new stockproductossucursal;
+    $addnewprecios = new precios_personalizados;
+    $preciospersonalizados = [];
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $producto = new productos($_POST);
@@ -148,8 +151,21 @@ class almacencontrolador{
         $producto->categoria = $categoria->nombre;//categorias::uncampo('id', $producto->idcategoria, 'nombre');
         $r = $producto->crear_guardar();
         $categoria->totalproductos = $producto->numreg_where('idcategoria', $categoria->id);//productos::numreg_where('idcategoria', $categoria->id);
-        $r1 = $categoria->actualizar();
+        
         if($r[0]){
+          $r1 = $categoria->actualizar();
+          //precios personalizados
+          if(isset($_POST['nuevosprecios'])){
+            foreach($_POST['nuevosprecios'] as $index =>$value){
+              if($value>0){
+                $preciospersonalizados[$index]['idproductoid'] = $r[1];
+                $preciospersonalizados[$index]['precio'] = $value;
+                $preciospersonalizados[$index]['estado'] = 1;
+              }
+            }
+            $addnewprecios->crear_varios_reg($preciospersonalizados);
+          }
+
           $arrayequivalencias = $producto->equivalencias($r[1], $producto->idunidadmedida);
           $rc = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
           if($rc){
@@ -415,14 +431,25 @@ class almacencontrolador{
   }
 
 
-  public static function trasladoinventario(Router $router){
+  public static function solicitudesrecibidas(Router $router){
     session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/trasladoinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/solicitudesrecibidas', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
+
+  public static function trasladarinventario(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/trasladarinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function solicitarinventario(Router $router){
@@ -536,6 +563,7 @@ class almacencontrolador{
         $producto->impuesto = $conflocal['porcentaje_de_impuesto']->valor_final;
       }
       $producto->categoria = categorias::uncampo('id', $producto->idcategoria, 'nombre');
+      $producto->preciosadicionales = precios_personalizados::idregistros('idproductoid', $producto->id);
     }
    echo json_encode($productos);
   }
@@ -545,9 +573,14 @@ class almacencontrolador{
     session_start();
     $alertas = []; 
     $producto = productos::find('id', $_POST['id']);
+    $addnewprecios = new precios_personalizados;
     $tipo = $producto->tipoproducto;  //0 = simple,  1 = compuesto
     $idunidadmedidaDB = $producto->idunidadmedida;  //obtener el id de unidad de medida actual del subproducto
-    
+    $preciosAdicionalesDB = precios_personalizados::idregistros('idproductoid', $producto->id);
+    $idprecionsadicionales = json_decode($_POST['idprecionsadicionales']);
+    $nuevosPreciosFront = json_decode($_POST['nuevosprecios']);
+
+
     /////// valiadar que es una nueva imagen o distinta
     if($producto->foto && isset($_FILES['foto']['name'])) { //remplazar imagen existente
         $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
@@ -582,6 +615,19 @@ class almacencontrolador{
             $r = $producto->actualizar();
             
             if($r){
+
+              $arrayIdeliminar = []; $nuevosprecios = [];
+              ///IDs a eliminar de la DB
+              foreach($preciosAdicionalesDB as $key => $value)
+                if(!in_array($value->id, $idprecionsadicionales))$arrayIdeliminar[] = $value->id;
+              //registros a insertar
+              foreach ($nuevosPreciosFront as $value)
+                if (!isset($value->id)) $nuevosprecios[] = $value;
+              
+              if($arrayIdeliminar)$r1 = precios_personalizados::eliminar_idregistros('id', $arrayIdeliminar);
+              if($nuevosprecios)$r2 = $addnewprecios->crear_varios_reg_arrayobj($nuevosprecios);
+              if($nuevosPreciosFront) $r3 = precios_personalizados::updatemultiregobj($nuevosPreciosFront, ['precio']);
+
               if($idunidadmedidaDB != $_POST['idunidadmedida']){ //validar si hubo cambio de unidad de medida
                 $conversion = new conversionunidades;
                 
@@ -607,6 +653,7 @@ class almacencontrolador{
             }
         }
     } //fin if(SERVER['REQUEST_METHOD])
+    $producto->preciosadicionales = precios_personalizados::idregistros('idproductoid', $producto->id);
     $alertas['producto'][] = $producto;
     echo json_encode($alertas);  
   }

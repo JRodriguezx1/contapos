@@ -40,9 +40,7 @@
     <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
     <!-- negocio -->
-    <div class="hidden max-w-screen-md mx-auto mt-6 paginas pagina1">
-        <?php include __DIR__. "/negocio.php";?>
-    </div>
+    <div class="hidden max-w-screen-md mx-auto mt-6 paginas pagina1"><?php include __DIR__. "/negocio.php";?></div>
     <!-- gestion empleado -->
     <div class="hidden mt-6 paginas pagina2"><?php include __DIR__. "/empleados.php";?></div>  
     <!-- gestion cajas -->

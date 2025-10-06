@@ -425,13 +425,12 @@ class cajacontrolador{
     if(!$direccion)$direccion = direcciones::find('id', 1);
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
-    $negocio = negocio::get(1);
-    $lineasencabezado = explode("\n", $negocio[0]->datosencabezados);
     $sucursal = sucursales::find('id', id_sucursal());
+    $lineasencabezado = explode("\n", $sucursal->datosencabezados);
     $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
           JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$factura->id};";
     $mediospago = ActiveRecord::camposJoinObj($sql);
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'negocio'=>$negocio, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
   }
 
   public static function printcotizacion(Router $router){
@@ -449,10 +448,9 @@ class cajacontrolador{
     if(!$direccion)$direccion = direcciones::find('id', 1);
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
-    $negocio = negocio::get(1);
-    $lineasencabezado = explode("\n", $negocio[0]->datosencabezados);
     $sucursal = sucursales::find('id', id_sucursal());
-    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'negocio'=>$negocio, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
+    $lineasencabezado = explode("\n", $sucursal->datosencabezados);
+    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
