@@ -145,13 +145,13 @@
 
   <!-- Botón crear traslado -->
   <div class="flex justify-end mt-6">
-    <button
+    <a href="/admin/almacen/nuevotrasladoinv"
       class="flex items-center gap-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition px-4 h-14 py-2">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         class="w-5 h-5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
       </svg>
       Nuevo traslado
-    </button>
+    </a>
   </div>
 </section>

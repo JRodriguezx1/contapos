@@ -92,6 +92,7 @@ $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'do
 $router->get('/admin/almacen/solicitudesrecibidas', [almacencontrolador::class, 'solicitudesrecibidas']);
 $router->get('/admin/almacen/trasladarinventario', [almacencontrolador::class, 'trasladarinventario']);
 $router->get('/admin/almacen/solicitarinventario', [almacencontrolador::class, 'solicitarinventario']);
+$router->get('/admin/almacen/nuevotrasladoinv', [almacencontrolador::class, 'nuevotrasladoinv']);
 
 ///// area de caja /////
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
