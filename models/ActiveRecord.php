@@ -597,7 +597,7 @@ class ActiveRecord {
     }
 
     //// busqueda con where con multiples opciones
-    public static function whereArray($array = []){ //$array = ['confirmado'=>1, 'admin'=>0]
+    public static function whereArray($array = [], $orden = "ASC"){ //$array = ['confirmado'=>1, 'admin'=>0]
         $sql = "SELECT *FROM ".static::$tabla." WHERE ";
         foreach($array as $key => $value){
             if(array_key_last($array) == $key){
@@ -606,6 +606,7 @@ class ActiveRecord {
                 $sql.= " ${key} = '${value}' AND ";
             }
         }
+        $sql .= " ORDER BY id $orden;";
         $resultado = self::consultar_Sql($sql);
         return $resultado;
     }

@@ -658,8 +658,8 @@
         mapMediospago.clear();
         $('.mediopago').val(0);
       }
-      (document.querySelector('.Efectivo')! as HTMLInputElement).value =  `${(valorTotal.total-totalotrosmedios).toLocaleString()}`;
-      mapMediospago.set('1', valorTotal.total-totalotrosmedios); //inicialmente el valor total se establece para efectivo
+      /**///(document.querySelector('.Efectivo')! as HTMLInputElement).value =  `${(valorTotal.total-totalotrosmedios).toLocaleString()}`;
+      /**///mapMediospago.set('1', valorTotal.total-totalotrosmedios); //inicialmente el valor total se establece para efectivo
       if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1');
       calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
     }
@@ -673,8 +673,8 @@
         if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
       });
       if(totalotrosmedios<=valorTotal.total){
-        mapMediospago.set('1', valorTotal.total-totalotrosmedios);
-        if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1'); //se elimina medio de pago efectivo
+        /**///mapMediospago.set('1', valorTotal.total-totalotrosmedios);
+        /**///if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1'); //se elimina medio de pago efectivo
         mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
         if((e.target as HTMLInputElement).value == '0' && mapMediospago.has((e.target as HTMLInputElement).id))mapMediospago.delete((e.target as HTMLInputElement).id);
       }else{ //si la suma de los medios de pago superan el valor total, toma el ultimo input digitado y lo reestablece a su ultimo valor
@@ -684,7 +684,7 @@
           (e.target as HTMLInputElement).value = '0';
         }
       }
-      (mediospago[0] as HTMLInputElement).value = (mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
+      /**///(mediospago[0] as HTMLInputElement).value = (mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
       calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
     }
 

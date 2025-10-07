@@ -301,7 +301,7 @@ class cajacontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
+    $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()], 'DESC');
     $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -571,6 +571,7 @@ class cajacontrolador{
   public static function cierrecajaconfirmado(){  //// Api llamada desde cerrarcaja.ts
     session_start();
     isauth();
+    date_default_timezone_set('America/Bogota');
 
     $conflocal = config_local::getParamCaja();
     $idcierrecaja = $_POST['idcierrecaja'];
