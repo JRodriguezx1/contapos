@@ -106,8 +106,19 @@
     <section class="space-y-4 mt-8 step-section step-3">
         <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Resumen</h2>
         <div class="border rounded-lg p-4 dark:border-neutral-700 dark:bg-neutral-800">
-        <p class="text-gray-700 dark:text-gray-300">Aquí irá el resumen de los datos de la solicitud.</p>
-        </div>
+        <!--<p class="text-gray-700 dark:text-gray-300">Aquí irá el resumen de los datos de la solicitud.</p>-->
+        <table id="tablaproductosresumen" class="tabla2" width="100%" id="tablaMediosPago">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>UND</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
     </section>
 
     <!-- Navegación -->

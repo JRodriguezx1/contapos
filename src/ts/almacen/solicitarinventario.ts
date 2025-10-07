@@ -35,33 +35,33 @@
             inputFecha.value = `${yyyy}-${mm}-${dd}`;
 
         function actualizarProgreso() {
-        // Actualizar barra de progreso
-        steps.forEach((step, index) => {
-            const stepNumber = index + 1;
-            if (stepNumber < currentStep) {
-            step.className =
-                "step-circle w-10 h-10 rounded-full bg-green-500 text-white font-semibold flex items-center justify-center";
-            } else if (stepNumber === currentStep) {
-            step.className =
-                "step-circle w-10 h-10 rounded-full bg-indigo-600 text-white font-semibold flex items-center justify-center";
-            } else {
-            step.className =
-                "step-circle w-10 h-10 rounded-full border-2 border-gray-300 text-gray-400 font-semibold flex items-center justify-center";
-            }
-        });
+            // Actualizar barra de progreso
+            steps.forEach((step, index) => {
+                const stepNumber = index + 1;
+                if (stepNumber < currentStep) {
+                step.className =
+                    "step-circle w-10 h-10 rounded-full bg-green-500 text-white font-semibold flex items-center justify-center";
+                } else if (stepNumber === currentStep) {
+                step.className =
+                    "step-circle w-10 h-10 rounded-full bg-indigo-600 text-white font-semibold flex items-center justify-center";
+                } else {
+                step.className =
+                    "step-circle w-10 h-10 rounded-full border-2 border-gray-300 text-gray-400 font-semibold flex items-center justify-center";
+                }
+            });
 
-        // Mostrar solo la sección actual
-        stepSections.forEach((section, index) => {
-            if (index + 1 === currentStep) {
-            section.style.display = "block";
-            } else {
-            section.style.display = "none";
-            }
-        });
+            // Mostrar solo la sección actual
+            stepSections.forEach((section, index) => {
+                if (index + 1 === currentStep) {
+                section.style.display = "block";
+                } else {
+                section.style.display = "none";
+                }
+            });
 
-        // Deshabilitar/activar botones si es necesario
-        btnAnterior.disabled = currentStep === 1;
-        btnSiguiente.disabled = currentStep === totalSteps;
+            // Deshabilitar/activar botones si es necesario
+            btnAnterior.disabled = currentStep === 1;
+            btnSiguiente.disabled = currentStep === totalSteps;
         }
 
         // Inicializar vista
@@ -71,6 +71,11 @@
         btnSiguiente.addEventListener("click", () => {
         if (currentStep < totalSteps) {
             currentStep++;
+            if(currentStep===3 && carrito.length===0){
+                currentStep--;
+                return;
+            }
+            if(currentStep===3 && carrito.length>0)resumen();
             actualizarProgreso();
         }
         });
@@ -167,7 +172,7 @@
             const itemCarrito = carrito.find(x=>x.iditem==iditem&&x.tipo==tipoitem)!;
             
         
-            if((e.target as HTMLElement).classList.contains('eliminarItem') || (e.target as HTMLElement).tagName == "I"){
+            if((e.target as HTMLElement).classList.contains('eliminarItem')){
                 carrito = carrito.filter(x=> {
                     if(x.iditem==iditem){
                         if(x.tipo==tipoitem){
@@ -185,6 +190,24 @@
 
             //itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;
         });
+
+        function resumen(){
+            const tablaproductosresumen = document.querySelector('#tablaproductosresumen tbody');
+            while(tablaproductosresumen?.firstChild)tablaproductosresumen.removeChild(tablaproductosresumen.firstChild);
+            carrito.forEach(z=>{
+                const tr = document.createElement('tr');
+                const tdnombre = document.createElement('td');
+                tdnombre.textContent = z.nombreitem;
+                tr?.appendChild(tdnombre);
+                const tdcantidad = document.createElement('td');
+                tdcantidad.textContent = z.cantidad+'';
+                tr?.appendChild(tdcantidad);
+                const tdund = document.createElement('td');
+                tdund.textContent = z.unidad;
+                tr?.appendChild(tdund);
+                tablaproductosresumen?.appendChild(tr);
+            });
+        }
 
     }
 })();
