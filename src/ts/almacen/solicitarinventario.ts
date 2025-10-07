@@ -61,7 +61,7 @@
 
             // Deshabilitar/activar botones si es necesario
             btnAnterior.disabled = currentStep === 1;
-            btnSiguiente.disabled = currentStep === totalSteps;
+            //btnSiguiente.disabled = currentStep === totalSteps;
         }
 
         // Inicializar vista
@@ -69,22 +69,25 @@
 
         // Eventos de navegación
         btnSiguiente.addEventListener("click", () => {
-        if (currentStep < totalSteps) {
-            currentStep++;
-            if(currentStep===3 && carrito.length===0){
-                currentStep--;
-                return;
+            if (currentStep < totalSteps) {
+                currentStep++;
+                if(currentStep===3 && carrito.length===0){
+                    currentStep--;
+                    return;
+                }
+                if(currentStep===3 && carrito.length>0)resumen();
+                actualizarProgreso();
+            }else{
+                generarorden();
             }
-            if(currentStep===3 && carrito.length>0)resumen();
-            actualizarProgreso();
-        }
+            
         });
 
         btnAnterior.addEventListener("click", () => {
-        if (currentStep > 1) {
-            currentStep--;
-            actualizarProgreso();
-        }
+            if (currentStep > 1) {
+                currentStep--;
+                actualizarProgreso();
+            }
         });
 
 
@@ -98,6 +101,10 @@
            
         }
 
+        $("#articulo").on('change', (e)=>{
+            let datos = ($('#articulo') as any).select2('data')[0];
+            if(datos)(document.querySelector('#unidadmedida') as HTMLInputElement).value = datos.unidadmedida;
+        });
 
         btnAddItem.addEventListener('click', (e)=>{
             let cantidad = parseFloat((document.querySelector('#cantidad') as HTMLInputElement).value);
@@ -207,6 +214,39 @@
                 tr?.appendChild(tdund);
                 tablaproductosresumen?.appendChild(tr);
             });
+        }
+
+        function generarorden(){
+            Swal.fire({
+          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          icon: 'question',
+          title: 'Esta seguro de generar orden de solicitud?',
+          text: "Se procesara la orden con todos los productos en la sede destino",
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+      }).then((result:any) => {
+          if (result.isConfirmed) {
+              /*(async ()=>{ 
+                  const datos = new FormData();
+                  datos.append('id', idproducto);
+                  try {
+                      const url = "/admin/api/eliminarProducto";
+                      const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                      const resultado = await respuesta.json();  
+                      if(resultado.exito !== undefined){
+                        (tablaProductos as any).row(indiceFila).remove().draw(); 
+                        (tablaProductos as any).page(info.page).draw('page');
+                        Swal.fire(resultado.exito[0], '', 'success') 
+                      }else{
+                          Swal.fire(resultado.error[0], '', 'error')
+                      }
+                  } catch (error) {
+                      console.log(error);
+                  }
+              })();//cierre de async()*/
+          }
+      });
         }
 
     }

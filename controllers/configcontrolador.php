@@ -60,19 +60,19 @@ class configcontrolador{
         $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
         $dirlogo = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio;
         if (!is_dir($dirlogo))mkdir($dirlogo, 0755, true);
-        
 
         if($sucursal){ //actualizar
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $sucursal->compara_objetobd_post($_POST);
-                $sucursal->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
-                $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
                 $alertas = $sucursal->validar();
                 if(!$alertas){
                     if($_FILES['logo']['name']){
-                        $url_temp = $_FILES["logo"]["tmp_name"];
+                        $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
                         $existe_archivo = file_exists($rutaimg);
                         if($existe_archivo)unlink($rutaimg);
+                        $url_temp = $_FILES["logo"]["tmp_name"];
+                        $sucursal->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+                        $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
                         if(move_uploaded_file($url_temp, $rutaimg)){
                             desactivarInterlacedPNG($rutaimg);
                         }
