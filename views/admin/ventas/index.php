@@ -71,14 +71,14 @@
         </div>
 
 
-        <div id="productos" class="list grid gap-4 grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
+        <div id="productos" class="list grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
             <?php foreach($productos as $producto): 
               if($producto->visible==1&&$producto->estado==1):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
-                    class="hidden md:block object-contain h-24 min-w-24 w-24 rounded-md" 
+                    class="block object-contain h-24 min-w-24 w-24 rounded-md" 
                     alt="Imagen de <?php echo $producto->nombre; ?>">
                 
                 <div class="flex flex-col justify-between grow overflow-hidden">
