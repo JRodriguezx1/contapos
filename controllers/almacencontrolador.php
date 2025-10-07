@@ -17,10 +17,12 @@ use Model\gastos;
 use Model\caja\cierrescajas;
 use Model\compras;
 use Model\detallecompra;
+use Model\inventario\detalletrasladoinv;
 use Model\inventario\precios_personalizados;
 use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
+use Model\inventario\traslado_inv;
 use Model\parametrizacion\config_local;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
@@ -440,9 +442,15 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    
+
+    $solicitudesrecividas = traslado_inv::idregistros('id_sucursaldestino', id_sucursal());
+    foreach($solicitudesrecividas as $value){
+      $value->sucursalorigen = sucursales::uncampo('id', $value->id_sucursalorigen, 'nombre');
+      $nombreusuario = usuarios::find('id', $value->fkusuario);
+      $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
+    }
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/solicitudesrecibidas', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/solicitudesrecibidas', ['titulo'=>'Almacen', 'solicitudesrecividas'=>$solicitudesrecividas, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -451,20 +459,14 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    
+     $transferirinventario = traslado_inv::idregistros('id_sucursalorigen', id_sucursal());
+    foreach($transferirinventario as $value){
+      $value->sucursaldestino = sucursales::uncampo('id', $value->id_sucursaldestino, 'nombre');
+      $nombreusuario = usuarios::find('id', $value->fkusuario);
+      $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
+    }
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/trasladarinventario', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
-  }
-
-  public static function solicitarinventario(Router $router){
-    session_start();
-    isadmin();
-    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $alertas = [];
-    $sucursalorigen = sucursales::find('id', id_sucursal());
-    $sucursales = sucursales::all();
-    $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/trasladarinventario', ['titulo'=>'Almacen', 'transferirinventario'=>$transferirinventario, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function nuevotrasladoinv(Router $router){
@@ -476,6 +478,17 @@ class almacencontrolador{
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
     $router->render('admin/almacen/nuevotrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+  }
+
+  public static function solicitarinventario(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    $sucursalorigen = sucursales::find('id', id_sucursal());
+    $sucursales = sucursales::all();
+    $unidadesmedida = unidadesmedida::all();
+    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   public static function downexcelproducts(Router $router){
@@ -1330,6 +1343,92 @@ class almacencontrolador{
         }
         $alertas = ActiveRecord::getAlertas();
         echo json_encode($alertas); 
+    }
+
+
+    public static function apisolicitarinventario(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursalorigen = $_POST['idsucursalorigen'];
+        $idsucursaldestino = $_POST['idsucursaldestino'];
+        $carrito = json_decode($_POST['productos']);
+
+        $trasladoinv = new traslado_inv([
+          'id_sucursalorigen'=>$idsucursalorigen,
+          'id_sucursaldestino'=>$idsucursaldestino,
+          'fkusuario'=>$_SESSION['id'],
+          'estado'=>'pendiente'
+        ]);
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $rt = $trasladoinv->crear_guardar();
+            if($rt[0]){
+              //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
+              $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
+                $objeto->fkproducto = $objeto->iditem;
+                $objeto->idsubproducto_id = 
+                $objeto->id_trasladoinv = $rt[1];
+                if($objeto->tipo == 0){
+                  $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
+                }
+                else{
+                  $acumulador['subproductos'][] = $objeto;
+                }
+                return $acumulador;
+              }, ['productos'=>[], 'subproductos'=>[]]);
+
+              $detalletrasladoinv = new detalletrasladoinv;
+              if(!empty($resultArray['productos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['productos']);
+              if(!empty($resultArray['subproductos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['subproductos']);
+              $alertas['exito'][] = "Solicitud de mercancia enviada correctamente";
+            }
+        }
+        //$alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
+    }
+
+
+    public static function apinuevotrasladoinv(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursalorigen = $_POST['idsucursalorigen'];
+        $idsucursaldestino = $_POST['idsucursaldestino'];
+        $carrito = json_decode($_POST['productos']);
+
+        $trasladoinv = new traslado_inv([
+          'id_sucursalorigen'=>$idsucursalorigen,
+          'id_sucursaldestino'=>$idsucursaldestino,
+          'fkusuario'=>$_SESSION['id'],
+          'estado'=>'pendiente'
+        ]);
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $rt = $trasladoinv->crear_guardar();
+            if($rt[0]){
+              //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
+              $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
+                $objeto->fkproducto = $objeto->iditem;
+                $objeto->idsubproducto_id = 
+                $objeto->id_trasladoinv = $rt[1];
+                if($objeto->tipo == 0){
+                  $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
+                }
+                else{
+                  $acumulador['subproductos'][] = $objeto;
+                }
+                return $acumulador;
+              }, ['productos'=>[], 'subproductos'=>[]]);
+
+              $detalletrasladoinv = new detalletrasladoinv;
+              if(!empty($resultArray['productos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['productos']);
+              if(!empty($resultArray['subproductos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['subproductos']);
+              $alertas['exito'][] = "Solicitud de transferencia enviada correctamente";
+            }
+        }
+        //$alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas);
     }
 
 }

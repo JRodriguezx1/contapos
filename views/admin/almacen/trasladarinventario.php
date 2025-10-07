@@ -99,27 +99,29 @@
         </tr>
       </thead>
       <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
-        <tr class="hover:bg-gray-50 transition">
-          <td class="px-6 py-3">T001</td>
-          <td class="px-6 py-3">Sede Centro</td>
-          <td class="px-6 py-3">Carlos Pérez</td>
-          <td class="px-6 py-3 text-center">12/09/2025</td>
-          <td class="px-6 py-3 text-center">
-            <span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700">Pendiente</span>
-          </td>
-          <td class="px-6 py-3 text-center flex justify-center gap-2">
-            <button class="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
-              👁️
-            </button>
-            <button class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
-              ✏️
-            </button>
-            <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">
-              ❌
-            </button>
-          </td>
-        </tr>
-        <tr class="hover:bg-gray-50 transition">
+        <?php foreach($transferirinventario as $value): ?>
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-3"><?php echo $value->id;?></td>
+                <td class="px-6 py-3"><?php echo $value->sucursaldestino;?></td>
+                <td class="px-6 py-3"><?php echo $value->usuario;?></td>
+                <td class="px-6 py-3 text-center"><?php echo $value->created_at;?></td>
+                <td class="px-6 py-3 text-center">
+                  <span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700"><?php echo $value->estado;?></span>
+                </td>
+                <td class="px-6 py-3 text-center flex justify-center gap-2">
+                  <button class="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
+                    👁️
+                  </button>
+                  <button class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
+                    ✏️
+                  </button>
+                  <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">
+                    ❌
+                  </button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <!--<tr class="hover:bg-gray-50 transition">
           <td class="px-6 py-3">T002</td>
           <td class="px-6 py-3">Sede Norte</td>
           <td class="px-6 py-3">Ana Gómez</td>
@@ -138,7 +140,7 @@
               ❌
             </button>
           </td>
-        </tr>
+        </tr>-->
       </tbody>
     </table>
   </div>

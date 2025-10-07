@@ -1,10 +1,12 @@
 <div class="box solicitarinvnetario !pb-16">
+
     <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
     <span class="sr-only">Atrás</span>
   </a>
+
     <div class="p-6 dark:bg-neutral-900 rounded-2xl">
     <!-- Barra de progreso -->
     <div class="flex items-center justify-between mb-6">
@@ -29,11 +31,12 @@
      <p class="text-gray-600 mb-5 mt-5">Realiza el proceso para solicitar productos - materia prima a otra sede</p>
     <section class="space-y-4 step-section step-1">
         <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 pt-6">Datos iniciales</h2>
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
             <div>
                 <label class="block font-medium mb-1 text-gray-600 dark:text-gray-300 text-lg">Sede Origen</label>
                 <select id="sucursalorigen" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-                    <option><?php echo $sucursalorigen->nombre; ?></option>
+                    <option value="<?php echo $sucursalorigen->id;?>"><?php echo $sucursalorigen->nombre;?></option>
                 </select>
             </div>
             <div>
@@ -41,7 +44,7 @@
                 <select id="sucursaldestino" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
                     <?php foreach($sucursales as $value): 
                         if($value->id != id_sucursal()): ?>
-                        <option><?php echo $value->nombre; ?></option>
+                        <option value="<?php echo $value->id;?>"><?php echo $value->nombre; ?></option>
                     <?php endif; endforeach; ?>
                 </select>
             </div>

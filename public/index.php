@@ -175,6 +175,8 @@ $router->get('/admin/api/allproveedores', [almacencontrolador::class, 'allprovee
 $router->post('/admin/api/crearProveedor', [almacencontrolador::class, 'crearProveedor']); //api llamada desde gestionproveedores.js para crear proveedores
 $router->post('/admin/api/actualizarProveedor', [almacencontrolador::class, 'actualizarProveedor']); //api llamada desde gestionproveedores.js para actualizar proveedores
 $router->post('/admin/api/eliminarProveedor', [almacencontrolador::class, 'eliminarProveedor']); //api llamada desde gestionproveedores.js para eliminar proveedores
+$router->post('/admin/api/apisolicitarinventario', [almacencontrolador::class, 'apisolicitarinventario']); //api llamada desde solicitarinventario.js para solicitar productos a otras sedes
+$router->post('/admin/api/apinuevotrasladoinv', [almacencontrolador::class, 'apinuevotrasladoinv']); //api llamada desde apinuevotrasladoinv.js para enviar productos a otras sedes
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada

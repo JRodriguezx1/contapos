@@ -78,86 +78,26 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
-
-                    <!-- Pendiente -->
-                    <tr class="hover:bg-gray-50 transition">
-                    <td class="p-4 font-medium text-gray-900">00123</td>
-                    <td class="p-4">Sede Norte</td>
-                    <td class="p-4">Carlos Pérez</td>
-                    <td class="p-4">12/09/2025</td>
-                    <td class="p-4">
-                        <span class="px-3 py-1 text-base font-semibold bg-indigo-100 text-indigo-600 rounded-full">
-                        Pendiente
-                        </span>
-                    </td>
-                    <td class="p-4 flex items-center justify-center gap-2">
-                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
-                            👁 Ver
-                        </button>
-                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
-                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
-                    </td>
-                    </tr>
-
-                    <!-- Aprobada -->
-                    <tr class="hover:bg-gray-50 transition">
-                    <td class="p-4 font-medium text-gray-900">00124</td>
-                    <td class="p-4">Sede Sur</td>
-                    <td class="p-4">Ana Gómez</td>
-                    <td class="p-4">11/09/2025</td>
-                    <td class="p-4">
-                        <span class="px-3 py-1 text-base font-semibold bg-emerald-100 text-emerald-600 rounded-full">
-                        Aprobada
-                        </span>
-                    </td>
-                    <td class="p-4 flex items-center justify-center gap-2">
-                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
-                            👁 Ver
-                        </button>
-                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
-                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
-                    </td>
-                    </tr>
-
-                    <!-- Rechazada -->
-                    <tr class="hover:bg-gray-50 transition">
-                    <td class="p-4 font-medium text-gray-900">00125</td>
-                    <td class="p-4">Sede Centro</td>
-                    <td class="p-4">Luis Torres</td>
-                    <td class="p-4">10/09/2025</td>
-                    <td class="p-4">
-                        <span class="px-3 py-1 text-base font-semibold bg-rose-100 text-rose-600 rounded-full">
-                        Rechazada
-                        </span>
-                    </td>
-                    <td class="p-4 flex items-center justify-center gap-2">
-                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
-                            👁 Ver
-                        </button>
-                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
-                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
-                    </td>
-                    </tr>
-
-                    <!-- Entregada -->
-                    <tr class="hover:bg-gray-50 transition">
-                    <td class="p-4 font-medium text-gray-900">00126</td>
-                    <td class="p-4">Sede Oeste</td>
-                    <td class="p-4">María López</td>
-                    <td class="p-4">09/09/2025</td>
-                    <td class="p-4">
-                        <span class="px-3 py-1 text-base font-semibold bg-sky-100 text-sky-600 rounded-full">
-                        Entregada
-                        </span>
-                    </td>
-                    <td class="p-4 flex items-center justify-center gap-2">
-                        <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
-                            👁 Ver
-                        </button>
-                        <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
-                        <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
-                    </td>
-                    </tr>
+                    <?php foreach($solicitudesrecividas as $value): ?>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-medium text-gray-900"><?php echo $value->id;?></td>
+                            <td class="p-4"><?php echo $value->sucursalorigen;?></td>
+                            <td class="p-4"><?php echo $value->usuario;?></td>
+                            <td class="p-4"><?php echo $value->created_at;?></td>
+                            <td class="p-4">
+                                <span class="px-3 py-1 text-base font-semibold bg-indigo-100 text-indigo-600 rounded-full">
+                                    <?php echo $value->estado;?>
+                                </span>
+                            </td>
+                            <td class="p-4 flex items-center justify-center gap-2">
+                                <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                                    👁 Ver
+                                </button>
+                                <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
+                                <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?> 
                 </tbody>
             </table>
         </div>
