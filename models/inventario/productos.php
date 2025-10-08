@@ -56,7 +56,7 @@ class productos extends \Model\ActiveRecord {
     }
 
     public function validarimgproducto($FILE) {
-      if($FILE['foto']['name'] && $FILE['foto']['size']>530000) {
+      if($FILE['foto']['name'] && $FILE['foto']['size']>31000000) {
           self::$alertas['error'][] = 'La foto no puede pasar los 500KB';
       }
       if($FILE['foto']['name'] && $FILE['foto']['type']!="image/jpeg" && $FILE['foto']['type']!="image/png") {
