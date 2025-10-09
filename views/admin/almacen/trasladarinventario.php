@@ -94,6 +94,7 @@
           <th class="p-4">Sede destino</th>
           <th class="p-4">Usuario</th>
           <th class="p-4">Fecha envío</th>
+          <th class="p-4">Salida</th>
           <th class="p-4">Estado</th>
           <th class="p-4">Acciones</th>
         </tr>
@@ -105,6 +106,7 @@
                 <td class="px-6 py-3"><?php echo $value->sucursaldestino;?></td>
                 <td class="px-6 py-3"><?php echo $value->usuario;?></td>
                 <td class="px-6 py-3 text-center"><?php echo $value->created_at;?></td>
+                <td class="px-6 py-3"><?php echo 'Salida';?></td>
                 <td class="px-6 py-3 text-center">
                   <span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700"><?php echo $value->estado;?></span>
                 </td>

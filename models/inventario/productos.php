@@ -128,6 +128,17 @@ class productos extends \Model\ActiveRecord {
               'factorconversion' => $factorconversion
           ];
         }
+      }else{
+        $nuevaunidadmedida = unidadesmedida::find('id', $idunidadbase);
+        $equivalencias[] = (object) [
+            'idproducto' => $idproducto,
+            'idsubproducto' => 'NULL',
+            'idunidadmedidabase' => $idunidadbase,
+            'idunidadmedidadestino' => $idunidadbase,
+            'nombreunidadbase' => $nuevaunidadmedida->nombre,
+            'nombreunidaddestino' => $nuevaunidadmedida->nombre,
+            'factorconversion' => 1
+        ];
       }
       return $equivalencias;
     }

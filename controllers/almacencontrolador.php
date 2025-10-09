@@ -1346,7 +1346,7 @@ class almacencontrolador{
         echo json_encode($alertas); 
     }
 
-
+///////  generar orden de solicitar inventario  //////////
     public static function apisolicitarinventario(){
         session_start();
         isadmin();
@@ -1390,6 +1390,7 @@ class almacencontrolador{
     }
 
 
+    //////  generar orden de traslado de inventario /////////
     public static function apinuevotrasladoinv(){
         session_start();
         isadmin();

@@ -1,4 +1,4 @@
-<div class="box trasladoinventario p-10 !pb-20 rounded-lg mb-4">
+<div class="box solicitudesrecibidas p-10 !pb-20 rounded-lg mb-4">
     <div>
         <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -73,6 +73,7 @@
                     <th class="p-4">Sede</th>
                     <th class="p-4">Usuario</th>
                     <th class="p-4">Fecha</th>
+                    <th class="p-4">Tipo</th>
                     <th class="p-4">Estado</th>
                     <th class="p-4 text-center">Acciones</th>
                     </tr>
@@ -84,6 +85,7 @@
                             <td class="p-4"><?php echo $value->sucursalorigen;?></td>
                             <td class="p-4"><?php echo $value->usuario;?></td>
                             <td class="p-4"><?php echo $value->created_at;?></td>
+                            <td class="p-4"><?php echo "Ingreso";?></td>
                             <td class="p-4">
                                 <span class="px-3 py-1 text-base font-semibold bg-indigo-100 text-indigo-600 rounded-full">
                                     <?php echo $value->estado;?>

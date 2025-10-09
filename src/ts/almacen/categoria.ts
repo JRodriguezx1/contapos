@@ -103,7 +103,7 @@
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
           title: 'Desea eliminar la categoria?',
-          text: "La categoria sera eliminado definitivamente.",
+          text: "La categoria y sus productos asociados, seran eliminados definitivamente.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
