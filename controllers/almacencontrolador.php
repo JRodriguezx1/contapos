@@ -667,7 +667,8 @@ class almacencontrolador{
                 
                 if($cvdelete){
                   $arrayequivalencias = $producto->equivalencias($producto->id, $_POST['idunidadmedida']);
-                  $cv = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
+                  $cv = true;
+                  if(!empty($arrayequivalencias))$cv = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
                   if($cv){
                     $alertas['exito'][] = "Datos del producto actualizados";
                   }else{
