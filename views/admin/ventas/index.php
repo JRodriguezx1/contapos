@@ -85,7 +85,9 @@
                     <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
                     <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div>
-                <!--<div class="popup absolute right-8 top-1/3 -translate-y-14 translate-x-10 opacity-100 transition-all duration-800 ease-out w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white">2</div>-->
+                <button title="Precio personalizado" class="text-indigo-600 hover:text-indigo-800">
+                  <i class="fa-solid fa-pen-to-square fa-xl"></i>
+                </button>
             </div>
             <?php endif; endforeach; ?>
         </div> <!-- fin contenedor de productos -->

@@ -13,7 +13,7 @@
         <button id="btneliminarorden" class="btn-command"><span class="material-symbols-outlined">delete</span>Eliminar orden</button>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
-        <button id="printcarta" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
+        <button id="printcarta" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
         <?php endif; ?>
         <?php if($factura->estado=='Guardado'):?>
         <button id="printcotizacion" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir cotizacion</button>
@@ -21,6 +21,7 @@
         <?php if($factura->tipoventa=='Credito'):?>
         <a class="btn-command text-center" href="/admin/caja/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle credito</a>
         <?php endif; ?>
+        <a class="btn-command text-center" href="/admin/caja/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">mail</span>Enviar factura</a>
         <!--<a class="btn-command text-center" href="/admin/caja/detalleorden?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle orden</a>-->
         <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
         <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
