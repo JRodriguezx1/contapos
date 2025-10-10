@@ -56,7 +56,7 @@ class productos extends \Model\ActiveRecord {
     }
 
     public function validarimgproducto($FILE) {
-      if($FILE['foto']['name'] && $FILE['foto']['size']>530000) {
+      if($FILE['foto']['name'] && $FILE['foto']['size']>31000000) {
           self::$alertas['error'][] = 'La foto no puede pasar los 500KB';
       }
       if($FILE['foto']['name'] && $FILE['foto']['type']!="image/jpeg" && $FILE['foto']['type']!="image/png") {
@@ -128,6 +128,17 @@ class productos extends \Model\ActiveRecord {
               'factorconversion' => $factorconversion
           ];
         }
+      }else{
+        $nuevaunidadmedida = unidadesmedida::find('id', $idunidadbase);
+        $equivalencias[] = (object) [
+            'idproducto' => $idproducto,
+            'idsubproducto' => 'NULL',
+            'idunidadmedidabase' => $idunidadbase,
+            'idunidadmedidadestino' => $idunidadbase,
+            'nombreunidadbase' => $nuevaunidadmedida->nombre,
+            'nombreunidaddestino' => $nuevaunidadmedida->nombre,
+            'factorconversion' => 1
+        ];
       }
       return $equivalencias;
     }

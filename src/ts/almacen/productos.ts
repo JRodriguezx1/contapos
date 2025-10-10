@@ -191,7 +191,7 @@
               msjAlert('error', 'No es un formato valido para la foto', (document.querySelector('#divmsjalerta1') as HTMLElement));
               return;
             }
-            if(imgFile.size>550000){ //si es mayor a 550KB
+            if(imgFile.size>31000000){ //si es mayor a 31MB
               msjAlert('error', 'La imagen no debe superar los 500KB', document.querySelector('#divmsjalerta1')!);
               return;
             }

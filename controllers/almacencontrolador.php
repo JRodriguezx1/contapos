@@ -667,7 +667,8 @@ class almacencontrolador{
                 
                 if($cvdelete){
                   $arrayequivalencias = $producto->equivalencias($producto->id, $_POST['idunidadmedida']);
-                  $cv = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
+                  $cv = true;
+                  if(!empty($arrayequivalencias))$cv = $conversion->crear_varios_reg_arrayobj($arrayequivalencias);
                   if($cv){
                     $alertas['exito'][] = "Datos del producto actualizados";
                   }else{
@@ -1345,7 +1346,7 @@ class almacencontrolador{
         echo json_encode($alertas); 
     }
 
-
+///////  generar orden de solicitar inventario  //////////
     public static function apisolicitarinventario(){
         session_start();
         isadmin();
@@ -1366,13 +1367,15 @@ class almacencontrolador{
             if($rt[0]){
               //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
               $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
-                $objeto->fkproducto = $objeto->iditem;
-                $objeto->idsubproducto_id = 
                 $objeto->id_trasladoinv = $rt[1];
                 if($objeto->tipo == 0){
+                  $objeto->fkproducto = $objeto->iditem;
+                  $objeto->idsubproducto_id = 'NULL';
                   $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
                 }
                 else{
+                  $objeto->fkproducto = 'NULL';
+                  $objeto->idsubproducto_id = $objeto->iditem;
                   $acumulador['subproductos'][] = $objeto;
                 }
                 return $acumulador;
@@ -1389,6 +1392,7 @@ class almacencontrolador{
     }
 
 
+  //////  generar orden de traslado de inventario /////////
     public static function apinuevotrasladoinv(){
         session_start();
         isadmin();
@@ -1409,13 +1413,17 @@ class almacencontrolador{
             if($rt[0]){
               //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
               $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
-                $objeto->fkproducto = $objeto->iditem;
-                $objeto->idsubproducto_id = 
                 $objeto->id_trasladoinv = $rt[1];
+                $objeto->cantidadrecibida = 0;
+                $objeto->cantidadrechazada = 0;
                 if($objeto->tipo == 0){
+                  $objeto->fkproducto = $objeto->iditem;
+                  $objeto->idsubproducto_id = 'NULL';
                   $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
                 }
                 else{
+                  $objeto->fkproducto = 'NULL';
+                  $objeto->idsubproducto_id = $objeto->iditem;
                   $acumulador['subproductos'][] = $objeto;
                 }
                 return $acumulador;
