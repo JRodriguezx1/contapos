@@ -7,7 +7,7 @@
         <span class="sr-only">Atrás</span>
         </a>
         <h4 class="text-gray-600 mb-5 mt-6 font-bold uppercase">Traslado de inventario</h4>
-        <?php include __DIR__."/../../templates/alertas.php"; ?>
+        <?php include __DIR__."/../../../templates/alertas.php"; ?>
     </div>
     <div class="p-6 ">
         <!-- Encabezado -->

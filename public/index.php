@@ -95,6 +95,7 @@ $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::cl
 $router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);
 $router->get('/admin/almacen/solicitarinventario', [trasladosinvcontrolador::class, 'solicitarinventario']);
 $router->get('/admin/almacen/nuevotrasladoinv', [trasladosinvcontrolador::class, 'nuevotrasladoinv']);
+$router->get('/admin/almacen/editartrasladoinv', [trasladosinvcontrolador::class, 'editartrasladoinv']);
 ///// area de caja /////
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
 $router->get('/admin/caja/cerrarcaja', [cajacontrolador::class, 'cerrarcaja']);

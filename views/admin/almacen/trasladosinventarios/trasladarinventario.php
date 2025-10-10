@@ -111,14 +111,14 @@
                   <span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700"><?php echo $value->estado;?></span>
                 </td>
                 <td id="<?php echo $value->id;?>" class="px-6 py-3 text-center flex justify-center gap-2">
-                  <button class="w-11 h-11 flex items-center justify-center text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 text-xl">✅</button>
+                  <button class="enviar w-11 h-11 flex items-center justify-center text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 text-xl">✅</button>
                   <button class="detalle bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
                     👁️
                   </button>
-                  <button class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
+                  <a href="/admin/almacen/editartrasladoinv" class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
                     ✏️
-                  </button>
-                  <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">
+                  </a>
+                  <button class="cancelar w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">
                     ❌
                   </button>
                 </td>
@@ -141,7 +141,7 @@
   </div>
 
   <!-- MODAL DE DETALLE DE TRASLADO SALIDA O SOLICITUD -->
-<dialog id="miDialogoDetalleTrasladoSolicitud" class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-2xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
+<dialog id="miDialogoDetalleTrasladoSolicitud" class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-4xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
   <!-- Encabezado -->
   <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
     <h4 id="modalDetalleTrasladoSolicitud" class="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -153,6 +153,25 @@
   </div>
 
   <div id="contenidodetalle" class="">
+    <div>
+      <p id="sedeorigen"></p>
+      <p id="sededestino"></p>
+      <p id="tipo"></p>
+    </div>
+    <table id="tabladetalleorden" class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-2 border">Producto</th>
+          <th class="px-4 py-2 border">Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="px-4 py-2 border">Corte Cabello</td>
+          <td class="px-4 py-2 border">120</td>
+        </tr>
+      </tbody>
+    </table>
 
   </div>
   

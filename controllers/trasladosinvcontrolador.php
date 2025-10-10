@@ -11,9 +11,7 @@ use Model\inventario\productos_sub;
 use Model\inventario\categorias;
 Use Model\inventario\unidadesmedida;
 use Model\inventario\conversionunidades;
-use Model\configuraciones\caja;
 use Model\inventario\detalletrasladoinv;
-use Model\inventario\precios_personalizados;
 use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
@@ -40,7 +38,7 @@ class trasladosinvcontrolador{
       $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
     }
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/solicitudesrecibidas', ['titulo'=>'Almacen', 'solicitudesrecividas'=>$solicitudesrecividas, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/trasladosinventarios/solicitudesrecibidas', ['titulo'=>'Almacen', 'solicitudesrecividas'=>$solicitudesrecividas, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 //TABLA DONDE VEO LOS TRASLADOS O SALIDAS QUE HAGO O SOLICITUDES QUE HAGO A OTRAS SUCURSALES
@@ -56,7 +54,7 @@ class trasladosinvcontrolador{
       $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
     }
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/trasladarinventario', ['titulo'=>'Almacen', 'transferirinventario'=>$transferirinventario, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/trasladosinventarios/trasladarinventario', ['titulo'=>'Almacen', 'transferirinventario'=>$transferirinventario, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   //REALIZAR ORDEN TRASLADO DE MERCANCIA
@@ -69,7 +67,7 @@ class trasladosinvcontrolador{
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/almacen/nuevotrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/trasladosinventarios/nuevotrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   //REALIZAR ORDEN DE SOLICITUD A OTRA SEDE DE MERCANCIA PARA QUE ME DESPACHEN
@@ -82,10 +80,22 @@ class trasladosinvcontrolador{
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/trasladosinventarios/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
+  //EDITAR LOS PRODUCTOS A TRASLADAR A OTRA SEDE
+  public static function editartrasladoinv(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    $sucursalorigen = sucursales::find('id', id_sucursal());
+    $sucursales = sucursales::all();
+    $unidadesmedida = unidadesmedida::all();
+    $conflocal = config_local::getParamGlobal();
+    $router->render('admin/almacen/trasladosinventarios/editartrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+  }
 
 
   //---------------------  API  -----------------------//
@@ -108,14 +118,13 @@ class trasladosinvcontrolador{
             echo json_encode($alertas);
             return;
         }
-        $orden = traslado_inv::find('id', $id);
-
-        /*"SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
-FROM traslado_inv td 
-INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
-INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
-INNER JOIN usuarios u ON td.fkusuario = u.id
-WHERE td.id = 1;"*/
+        //$orden = traslado_inv::find('id', $id);
+        $sql = "SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
+                FROM traslado_inv td 
+                INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
+                INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
+                INNER JOIN usuarios u ON td.fkusuario = u.id WHERE td.id = 1;";
+        $orden = traslado_inv::camposJoinObj($sql);
         if($orden){
             $sql = "SELECT td.id, td.id_trasladoinv, td.fkproducto, td.idsubproducto_id,
                     COALESCE(p.nombre, sp.nombre) AS nombre, td.cantidad
@@ -123,11 +132,9 @@ WHERE td.id = 1;"*/
                     LEFT JOIN productos p ON td.fkproducto = p.id
                     LEFT JOIN subproductos sp ON td.idsubproducto_id = sp.id
                     WHERE td.id_trasladoinv = 1;";
-
-            $orden->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql);
-           
+            $orden[0]->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql); 
             $alertas['exito'][] = "Consulta procesada";
-            $alertas['orden'][] = $orden;
+            $alertas['orden'] = $orden;
         }else{
             $alertas['error'][] = "Orden no existe";
         }
