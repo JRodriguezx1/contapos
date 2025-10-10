@@ -85,7 +85,7 @@
                             <td class="p-4"><?php echo $value->sucursalorigen;?></td>
                             <td class="p-4"><?php echo $value->usuario;?></td>
                             <td class="p-4"><?php echo $value->created_at;?></td>
-                            <td class="p-4"><?php echo "Ingreso";?></td>
+                            <td class="p-4"><?php echo $value->tipo=='Salida'?'Ingreso':'Solicitud';?></td>
                             <td class="p-4">
                                 <span class="px-3 py-1 text-base font-semibold bg-indigo-100 text-indigo-600 rounded-full">
                                     <?php echo $value->estado;?>

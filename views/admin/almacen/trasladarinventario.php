@@ -87,14 +87,14 @@
 
   <!-- Tabla de traslados -->
   <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
-    <table class="w-full text-left border-collapse">
+    <table id="tablaTraslados" class="w-full text-left border-collapse">
       <thead class="bg-gray-50 text-gray-600 text-base font-semibold uppercase tracking-wide">
         <tr>
           <th class="p-4"># TRASLADO</th>
           <th class="p-4">Sede destino</th>
           <th class="p-4">Usuario</th>
           <th class="p-4">Fecha envío</th>
-          <th class="p-4">Salida</th>
+          <th class="p-4">Tipo</th>
           <th class="p-4">Estado</th>
           <th class="p-4">Acciones</th>
         </tr>
@@ -106,12 +106,13 @@
                 <td class="px-6 py-3"><?php echo $value->sucursaldestino;?></td>
                 <td class="px-6 py-3"><?php echo $value->usuario;?></td>
                 <td class="px-6 py-3 text-center"><?php echo $value->created_at;?></td>
-                <td class="px-6 py-3"><?php echo 'Salida';?></td>
+                <td class="px-6 py-3"><?php echo $value->tipo;?></td>
                 <td class="px-6 py-3 text-center">
                   <span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700"><?php echo $value->estado;?></span>
                 </td>
-                <td class="px-6 py-3 text-center flex justify-center gap-2">
-                  <button class="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
+                <td id="<?php echo $value->id;?>" class="px-6 py-3 text-center flex justify-center gap-2">
+                  <button class="w-11 h-11 flex items-center justify-center text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 text-xl">✅</button>
+                  <button class="detalle bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
                     👁️
                   </button>
                   <button class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
@@ -123,26 +124,6 @@
                 </td>
             </tr>
         <?php endforeach; ?>
-        <!--<tr class="hover:bg-gray-50 transition">
-          <td class="px-6 py-3">T002</td>
-          <td class="px-6 py-3">Sede Norte</td>
-          <td class="px-6 py-3">Ana Gómez</td>
-          <td class="px-6 py-3 text-center">11/09/2025</td>
-          <td class="px-6 py-3 text-center">
-            <span class="px-3 py-1 text-base font-semibold rounded-full bg-green-100 text-green-700">En tránsito</span>
-          </td>
-          <td class="px-6 py-3 text-center flex justify-center gap-2">
-            <button class="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
-              👁️
-            </button>
-            <button class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
-              ✏️
-            </button>
-            <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">
-              ❌
-            </button>
-          </td>
-        </tr>-->
       </tbody>
     </table>
   </div>
@@ -158,4 +139,23 @@
       Nuevo traslado
     </a>
   </div>
+
+  <!-- MODAL DE DETALLE DE TRASLADO SALIDA O SOLICITUD -->
+<dialog id="miDialogoDetalleTrasladoSolicitud" class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-2xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
+  <!-- Encabezado -->
+  <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
+    <h4 id="modalDetalleTrasladoSolicitud" class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+      Detalle Traslado/Solicutd de mercancia
+    </h4>
+    <button id="btnXCerrarDetalleTrasladoSolicitud" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+      <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
+    </button>
+  </div>
+
+  <div id="contenidodetalle" class="">
+
+  </div>
+  
+</dialog>
+
 </section>
