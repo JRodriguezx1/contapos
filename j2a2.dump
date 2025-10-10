@@ -816,13 +816,15 @@ CREATE TABLE `detalletrasladoinv` (
   `fkproducto` int DEFAULT NULL,
   `idsubproducto_id` int DEFAULT NULL,
   `cantidad` decimal(12,2) NOT NULL,
+  `cantidadrecibida` decimal(12,2) DEFAULT '0.00',
+  `cantidadrechazada` decimal(12,2) DEFAULT '0.00',
   PRIMARY KEY (`id`),
-  KEY `id_trasladoinv_idx` (`id_trasladoinv`),
   KEY `fkproducto_idx` (`fkproducto`),
+  KEY `id_trasladoinv_idx` (`id_trasladoinv`),
   KEY `idsubproducto_id_idx` (`idsubproducto_id`),
-  CONSTRAINT `fkproducto` FOREIGN KEY (`fkproducto`) REFERENCES `contapos`.`productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `id_trasladoinv` FOREIGN KEY (`id_trasladoinv`) REFERENCES `contapos`.`traslado_inv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `idsubproducto_id` FOREIGN KEY (`idsubproducto_id`) REFERENCES `contapos`.`subproductos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `fkproducto` FOREIGN KEY (`fkproducto`) REFERENCES `productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `id_trasladoinv` FOREIGN KEY (`id_trasladoinv`) REFERENCES `traslado_inv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idsubproducto_id` FOREIGN KEY (`idsubproducto_id`) REFERENCES `subproductos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1805,7 +1807,7 @@ CREATE TABLE `productos` (
   UNIQUE KEY `codigo_UNIQUE` (`sku`),
   KEY `idcategoria_idx` (`idcategoria`),
   KEY `idunidadmedida_idx` (`idunidadmedida`),
-  CONSTRAINT `idcategoria` FOREIGN KEY (`idcategoria`) REFERENCES `categorias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `idcategoria` FOREIGN KEY (`idcategoria`) REFERENCES `categorias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idunidadmedida` FOREIGN KEY (`idunidadmedida`) REFERENCES `unidadesmedida` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2193,16 +2195,17 @@ CREATE TABLE `traslado_inv` (
   `id_sucursalorigen` int NOT NULL,
   `id_sucursaldestino` int NOT NULL,
   `fkusuario` int DEFAULT NULL,
+  `tipo` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `observacion` varchar(512) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `estado` enum('pendiente','rechazada','aprobada','entregada','entransito') COLLATE utf8mb3_unicode_ci DEFAULT 'pendiente',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `id_sucursalorigen_idx` (`id_sucursalorigen`),
   KEY `id_sucursaldestino_idx` (`id_sucursaldestino`),
+  KEY `id_sucursalorigen_idx` (`id_sucursalorigen`),
   KEY `fkusuario_idx` (`fkusuario`),
-  CONSTRAINT `fkusuario` FOREIGN KEY (`fkusuario`) REFERENCES `contapos`.`usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `id_sucursaldestino` FOREIGN KEY (`id_sucursaldestino`) REFERENCES `contapos`.`sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `id_sucursalorigen` FOREIGN KEY (`id_sucursalorigen`) REFERENCES `contapos`.`sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fkusuario` FOREIGN KEY (`fkusuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `id_sucursaldestino` FOREIGN KEY (`id_sucursaldestino`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id_sucursalorigen` FOREIGN KEY (`id_sucursalorigen`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2420,4 +2423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-05 21:08:15
+-- Dump completed on 2025-10-09 21:02:48
