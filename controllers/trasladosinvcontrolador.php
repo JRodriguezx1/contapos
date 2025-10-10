@@ -89,10 +89,15 @@ class trasladosinvcontrolador{
     session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $id=$_GET['id'];
+    if(!is_numeric($id))return;
     $alertas = [];
     $sucursalorigen = sucursales::find('id', id_sucursal());
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
+
+    
+
     $conflocal = config_local::getParamGlobal();
     $router->render('admin/almacen/trasladosinventarios/editartrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
@@ -108,6 +113,7 @@ class trasladosinvcontrolador{
         echo json_encode();
     }*/
 
+    //metodo llamado desde trasladarinv.ts para el detalle de la orden trasnaldo/solicitud
     public static function idOrdenTrasladoSolicitudInv(){
         session_start();
         isadmin();

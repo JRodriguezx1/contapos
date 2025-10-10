@@ -1,9 +1,9 @@
 (()=>{
     if(document.querySelector('.editartrasladoinv')){
-        // PROCESO SOLICITUD DE INVENTARIO A OTRAS SEDES
+        // EDITAR LOS PRODUCTOS A TRASLADOR A OTRA SEDE
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
         const tablaItems = document.querySelector('#tablaItems tbody');
-        let carrito:{iditem:string, idpx:string, idsx:string, tipo: string, nombreitem:string, unidad:string, cantidad: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
+        let carrito:{iditem:string, nombreitem:string, tipo:string, unidadmedida:string, cantidad: number, factor: number}[]=[];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
         (async ()=>{
@@ -12,11 +12,37 @@
                 const respuesta = await fetch(url); 
                 const resultado:{id:string, nombre:string, tipoproducto:string, sku:string, unidadmedida:string}[] = await respuesta.json(); 
                 filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'1', sku: item.sku, unidadmedida: item.unidadmedida }));
+                //console.log(filteredData);
                 activarselect2(filteredData);
             } catch (error) {
                 console.log(error);
             }
         })();
+        
+        const parametrosURL = new URLSearchParams(window.location.search);
+        const id = parametrosURL.get('id');
+        if(id!=null && /^\d+$/.test(id) && Number(id) >= 1){
+            (async ()=>{
+                try {
+                    const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+id; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
+                    const respuesta = await fetch(url); 
+                    const resultado = await respuesta.json();
+                    const itemsorden:{id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string}[] = resultado.orden[0].detalletrasladoinv;
+                    carrito = itemsorden.map(item =>{
+                        const esProducto = item.fkproducto && !item.idsubproducto_id;
+                        return {
+                            iditem: esProducto?item.fkproducto:item.idsubproducto_id, 
+                            nombreitem:'', tipo:'', unidadmedida:'', cantidad: 1, factor: 1
+                        }
+                    });
+                    console.log(itemsorden);
+                    //carrito.forEach(item =>printProduct(item.idproducto));   
+                } catch (error) {
+                    console.log(error);
+                }
+            })();
+        }
+        
         
 
         function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string}[]){
@@ -25,8 +51,7 @@
                 data: filteredData,
                 placeholder: "Selecciona un item",
                 maximumSelectionLength: 1,
-            });
-           
+            });  
         }
 
         $("#articulo").on('change', (e)=>{
@@ -41,24 +66,17 @@
             if(datos){
                 const index = carrito.findIndex(x=>x.iditem==datos.id&&x.tipo==datos.tipo);
                 if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-                    const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; //products es el arreglo de todos los productos traido por api
-                    const item:{iditem: string, idpx: string, idsx: string, tipo: string, nombreitem: string, unidad: string, cantidad: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
+                    const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; 
+                    const item:{iditem: string, nombreitem: string, tipo: string, unidadmedida: string, cantidad: number, factor: number} = {
                         iditem: itemselected?.id!,
-                        idpx: itemselected.tipo=='0'?itemselected.id:'NULL',
-                        idsx: itemselected.tipo=='1'?itemselected.id:'NULL',
-                        tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
                         nombreitem: itemselected.text,
-                        unidad: itemselected.unidadmedida,
+                        tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
+                        unidadmedida: itemselected.unidadmedida,
                         cantidad: cantidad,
                         factor: 1,
-                        impuesto: 0,
-                        valorunidad: 0,
-                        subtotal: 0,
-                        precio_compra: 0,
-                        valorcompra: 0,
                     }
                     carrito = [...carrito, item];
-                    printItemTable(datos.id, datos.tipo, datos.unidadmedida, cantidad);
+                    printItemTable(itemselected.id, itemselected.tipo, itemselected.unidadmedida, cantidad, itemselected.text);
                 }else{
                     carrito[index].cantidad = cantidad;
                     const tr = document.querySelector(`[data-id="${carrito[index].iditem}"][data-tipo="${carrito[index].tipo}"]`)!;
@@ -67,9 +85,8 @@
             }
         });
 
-        function printItemTable(id:string, tipo:string, unidadmedida:string, cantidad:number){
+        function printItemTable(id:string, tipo:string, unidadmedida:string, cantidad:number, nombre:string){
             let options = `<option data-factor="1" value="" >${unidadmedida}</option>`;
-            const unItem = filteredData.find(x=>x.id==id&&x.tipo==tipo)!;
             /*if(tipo=='1'){   //si es un subproducto
                 options = "";
                 const subproductounidades = allConversionUnidades.filter(x => x.idsubproducto == id); 
@@ -85,7 +102,7 @@
             tr.dataset.id = `${id}`;
             tr.dataset.tipo = `${tipo}`;
             tr.insertAdjacentHTML('afterbegin', 
-                `<td class="p-4">${unItem?.text}</td>
+                `<td class="p-4">${nombre}</td>
                 <td class="p-4">${cantidad}</td>
                 <td class="p-4 flex items-center justify-center gap-2">
                     <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
@@ -103,9 +120,6 @@
             const elementItem = (e.target as HTMLElement)?.closest('.itemselect'); //seleccionamos el tr de la tabla
             const iditem = (elementItem as HTMLElement).dataset.id!;
             const tipoitem = (elementItem as HTMLElement).dataset.tipo!;
-
-            const itemCarrito = carrito.find(x=>x.iditem==iditem&&x.tipo==tipoitem)!;
-            
         
             if((e.target as HTMLElement).classList.contains('eliminarItem')){
                 carrito = carrito.filter(x=> {
@@ -121,7 +135,6 @@
                 });
                 tablaItems?.querySelector(`TR[data-id="${iditem}"][data-tipo="${tipoitem}"]`)?.remove();
             }
-
             //itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;
         });
 

@@ -115,7 +115,7 @@
                   <button class="detalle bg-indigo-100 text-indigo-600 hover:bg-indigo-200 p-2 rounded-full" title="Ver detalles">
                     👁️
                   </button>
-                  <a href="/admin/almacen/editartrasladoinv" class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
+                  <a href="/admin/almacen/editartrasladoinv?id=<?php echo $value->id;?>" class="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-full" title="Editar traslado">
                     ✏️
                   </a>
                   <button class="cancelar w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">

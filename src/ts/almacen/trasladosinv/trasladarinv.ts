@@ -93,7 +93,7 @@
       if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;  
       (async ()=>{
         try {
-          const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+idorden; //llamado a la API REST y trae la orden trasladar/solicitud trasladarinvcontrolador.php
+          const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+idorden; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json(); 
           imprimirdatos(resultado.orden[0]);
