@@ -594,6 +594,7 @@ class almacencontrolador{
             
             if($r){
 
+              //procesamiento de actualizaciones de precios personalizados
               $arrayIdeliminar = []; $nuevosprecios = [];
               ///IDs a eliminar de la DB
               foreach($preciosAdicionalesDB as $key => $value)

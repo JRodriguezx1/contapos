@@ -92,14 +92,16 @@ class trasladosinvcontrolador{
     $id=$_GET['id'];
     if(!is_numeric($id))return;
     $alertas = [];
-    $sucursalorigen = sucursales::find('id', id_sucursal());
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
-
-    
-
+    $sql = "SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
+                FROM traslado_inv td 
+                INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
+                INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
+                INNER JOIN usuarios u ON td.fkusuario = u.id WHERE td.id = $id;";
+    $ordentraslado = traslado_inv::camposJoinObj($sql);
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/almacen/trasladosinventarios/editartrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/trasladosinventarios/editartrasladoinv', ['titulo'=>'Almacen', 'ordentraslado'=>array_shift($ordentraslado), 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
@@ -129,7 +131,7 @@ class trasladosinvcontrolador{
                 FROM traslado_inv td 
                 INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
                 INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
-                INNER JOIN usuarios u ON td.fkusuario = u.id WHERE td.id = 1;";
+                INNER JOIN usuarios u ON td.fkusuario = u.id WHERE td.id = $id;";
         $orden = traslado_inv::camposJoinObj($sql);
         if($orden){
             $sql = "SELECT td.id, td.id_trasladoinv, td.fkproducto, td.idsubproducto_id,
@@ -137,7 +139,7 @@ class trasladosinvcontrolador{
                     FROM detalletrasladoinv td
                     LEFT JOIN productos p ON td.fkproducto = p.id
                     LEFT JOIN subproductos sp ON td.idsubproducto_id = sp.id
-                    WHERE td.id_trasladoinv = 1;";
+                    WHERE td.id_trasladoinv = $id;";
             $orden[0]->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql); 
             $alertas['exito'][] = "Consulta procesada";
             $alertas['orden'] = $orden;
@@ -249,6 +251,35 @@ class trasladosinvcontrolador{
         session_start();
         isadmin();
         $alertas = [];
+        $addproductos = new detalletrasladoinv;
+        $detalletrasladoDB = detalletrasladoinv::idregistros('id_trasladoinv', $_POST['id_trasladoinv']);
+        $idsdetalleproductos = json_decode($_POST['ids']);
+        $nuevosproductosFront = json_decode($_POST['nuevosproductos']);
+
+        $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = [];
+        ///IDs a eliminar de la DB
+        foreach($detalletrasladoDB as $key => $value)
+          if(!in_array($value->id, $idsdetalleproductos))$arrayIdeliminar[] = $value->id;
+        //registros a insertar
+        foreach ($nuevosproductosFront as $value){
+          $value->cantidadrecibida = 0;
+          $value->cantidadrechazada = 0;
+          if(is_numeric($value->id))$arrayactualizar[] = $value;
+          if($value->id=='') $nuevosproductos[] = $value;
+        }
+        
+        if($arrayIdeliminar)$r1 = detalletrasladoinv::eliminar_idregistros('id', $arrayIdeliminar);
+        if($nuevosproductos)$r2 = $addproductos->crear_varios_reg_arrayobj($nuevosproductos);
+        if($nuevosproductosFront) $r3 = detalletrasladoinv::updatemultiregobj($arrayactualizar, ['cantidad']);
+        
+        echo json_encode($alertas);
+    }
+
+
+    public static function confirmarnuevotrasladoinv(){
+        session_start();
+        isadmin();
+        $alertas = [];
         $id=$_GET['id'];
         if(!is_numeric($id)){
             $alertas['error'][] = "Error al procesar orden.";
@@ -256,7 +287,22 @@ class trasladosinvcontrolador{
             return;
         }
 
-        //logica de precios personalizados
+        
+        
+        echo json_encode($alertas);
+    }
+
+
+    public static function anularnuevotrasladoinv(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar orden.";
+            echo json_encode($alertas);
+            return;
+        }
         
         echo json_encode($alertas);
     }

@@ -7,10 +7,11 @@
     </a>
     <section class="space-y-4 mt-8">
       <div>
-        <p id="sedeorigen"></p>
-        <p id="sededestino"></p>
-        <p id="tipo"></p>
-        <p id="estado"></p>
+        <p id="sedeorigen"><span>Sede origen: </span><?php echo $ordentraslado->sucursal_origen;?></p>
+        <p id="sededestino"><span>Sede destino: </span><?php echo $ordentraslado->sucursal_destino;?></p>
+        <p id="tipo"><span>Tipo: </span><?php echo $ordentraslado->tipo;?></p>
+        <p id="estado"><span>Estado: </span><?php echo $ordentraslado->estado;?></p>
+        <p id="usuario"><span>usuario: </span><?php echo $ordentraslado->nombreusuario;?></p>
       </div>
       <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 pt-6">Productos a enviar</h2>
       <div class="flex flex-col md:flex-row gap-2">

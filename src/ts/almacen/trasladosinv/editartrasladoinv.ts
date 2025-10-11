@@ -4,7 +4,7 @@
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
         const tablaItems = document.querySelector('#tablaItems tbody');
         const btnUpdateTrasladoInv = document.querySelector('#btnUpdateTrasladoInv') as HTMLButtonElement;
-        let carrito:{iditem:string, nombreitem:string, tipo:string, unidadmedida:string, cantidad: number, factor: number}[]=[];
+        let carrito:{id: string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, iditem:string, nombreitem:string, tipo:string, unidadmedida:string, cantidad: number, factor: number}[]=[];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
         (async ()=>{
@@ -32,6 +32,10 @@
                     carrito = itemsorden.map(item =>{
                         const esProducto = item.fkproducto && !item.idsubproducto_id;
                         return {
+                            id: item.id,
+                            id_trasladoinv: item.id_trasladoinv,
+                            fkproducto: item.fkproducto,
+                            idsubproducto_id: item.idsubproducto_id,
                             iditem: esProducto?item.fkproducto:item.idsubproducto_id, 
                             nombreitem: item.nombre, 
                             tipo: esProducto?'0':'1', 
@@ -40,7 +44,7 @@
                             factor: 1
                         }
                     });
-                    printDetalleOrden(detalleOrden);
+                    //printDetalleOrden(detalleOrden);
                     carrito.forEach(c =>printItemTable(c.iditem, c.tipo, c.unidadmedida, c.cantidad, c.nombreitem));   
                 } catch (error) {
                     console.log(error);
@@ -72,7 +76,11 @@
                 const index = carrito.findIndex(x=>x.iditem==datos.id&&x.tipo==datos.tipo);
                 if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
                     const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; 
-                    const item:{iditem: string, nombreitem: string, tipo: string, unidadmedida: string, cantidad: number, factor: number} = {
+                    const item:{id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, iditem: string, nombreitem: string, tipo: string, unidadmedida: string, cantidad: number, factor: number} = {
+                        id: '',
+                        id_trasladoinv: id!,
+                        fkproducto: itemselected.tipo=='0'?itemselected.id:'NULL', 
+                        idsubproducto_id: itemselected.tipo=='1'?itemselected.id:'NULL',
                         iditem: itemselected?.id!,
                         nombreitem: itemselected.text,
                         tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
@@ -120,10 +128,10 @@
         }
 
 
-        function printDetalleOrden(detalleOrden:{id:string, sucursal_origen:string, sucursal_destino:string, tipo:string, fkusuario:string, nombreusuario:string, estado:string}){
+        /*function printDetalleOrden(detalleOrden:{id:string, sucursal_origen:string, sucursal_destino:string, tipo:string, fkusuario:string, nombreusuario:string, estado:string}){
             console.log(detalleOrden);
 
-        }
+        }*/
 
 
         //////////////////////////////////// evento a la tabla de los productos seleccionados  ///////////////////////////////////
@@ -161,13 +169,11 @@
                 cancelButtonText: 'No',
             }).then((result:any) => {
                 if (result.isConfirmed) {
-                    const idsucursalorigen = document.querySelector('#sucursalorigen') as HTMLSelectElement;
-                    const sucursaldestino = document.querySelector('#sucursaldestino') as HTMLSelectElement;
                     (async ()=>{ 
                         const datos = new FormData();
-                        datos.append('idsucursalorigen', idsucursalorigen.value);
-                        datos.append('idsucursaldestino', sucursaldestino.value);
-                        datos.append('productos', JSON.stringify(carrito));
+                        datos.append('id_trasladoinv', id!);
+                        datos.append('ids', JSON.stringify(carrito.map(x=>x.id)));
+                        datos.append('nuevosproductos', JSON.stringify(carrito));
                         try {
                             const url = "/admin/api/editarOrdenTransferencia";  //api llamada a trasladosinvcontrolador
                             const respuesta = await fetch(url, {method: 'POST', body: datos}); 

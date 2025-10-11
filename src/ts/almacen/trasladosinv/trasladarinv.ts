@@ -49,6 +49,8 @@
 
 
     function enviar(e:Event){
+      let idorden = (e.target as HTMLElement).parentElement?.id!;
+      if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -60,15 +62,11 @@
       }).then((result:any) => {
           if (result.isConfirmed) {
               Swal.fire('orden procesada', '', 'success') 
-              /*const idsucursalorigen = document.querySelector('#sucursalorigen') as HTMLSelectElement;
-              const sucursaldestino = document.querySelector('#sucursaldestino') as HTMLSelectElement;
               (async ()=>{ 
                   const datos = new FormData();
-                  datos.append('idsucursalorigen', idsucursalorigen.value);
-                  datos.append('idsucursaldestino', sucursaldestino.value);
-                  datos.append('productos', JSON.stringify(carrito));
+                  datos.append('idsucursalorigen', idorden);
                   try {
-                      const url = "/admin/api/apinuevotrasladoinv";  //api llamada a trasladosinvcontrolador
+                      const url = "/admin/api/confirmarnuevotrasladoinv";  //api llamada a trasladosinvcontrolador para confirmar envio, pasa a estado en transito
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
@@ -83,7 +81,6 @@
                       console.log(error);
                   }
               })();//cierre de async()
-              */
           }
       });
     }
@@ -109,6 +106,8 @@
 
 
     function cancelar(e:Event){
+      let idorden = (e.target as HTMLElement).parentElement?.id!;
+      if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -120,15 +119,11 @@
       }).then((result:any) => {
           if (result.isConfirmed) {
               Swal.fire('orden procesada', '', 'success') 
-              /*const idsucursalorigen = document.querySelector('#sucursalorigen') as HTMLSelectElement;
-              const sucursaldestino = document.querySelector('#sucursaldestino') as HTMLSelectElement;
               (async ()=>{ 
                   const datos = new FormData();
-                  datos.append('idsucursalorigen', idsucursalorigen.value);
-                  datos.append('idsucursaldestino', sucursaldestino.value);
-                  datos.append('productos', JSON.stringify(carrito));
+                  datos.append('idsucursalorigen', idorden);
                   try {
-                      const url = "/admin/api/apinuevotrasladoinv";  //api llamada a trasladosinvcontrolador
+                      const url = "/admin/api/anularnuevotrasladoinv";  //api llamada a trasladosinvcontrolador para anular envio, pasa a estado en transito
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
@@ -143,7 +138,6 @@
                       console.log(error);
                   }
               })();//cierre de async()
-              */
           }
       });
 
@@ -167,8 +161,6 @@
         tbodydetalleorden.appendChild(tr);
       });
     }
-
-    
 
     
     function cerrarDialogoExterno(event:Event) {
