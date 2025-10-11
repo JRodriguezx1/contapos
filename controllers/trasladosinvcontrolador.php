@@ -244,4 +244,21 @@ class trasladosinvcontrolador{
         echo json_encode($alertas);
     }
 
+
+    public static function editarOrdenTransferencia(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar orden.";
+            echo json_encode($alertas);
+            return;
+        }
+
+        //logica de precios personalizados
+        
+        echo json_encode($alertas);
+    }
+
 }

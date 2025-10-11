@@ -69,13 +69,13 @@
             <table class="w-full text-left border-collapse">
                 <thead class="bg-gray-50 text-gray-600 text-base font-semibold uppercase tracking-wide">
                     <tr>
-                    <th class="p-4"># Solicitud</th>
-                    <th class="p-4">Sede</th>
-                    <th class="p-4">Usuario</th>
-                    <th class="p-4">Fecha</th>
-                    <th class="p-4">Tipo</th>
-                    <th class="p-4">Estado</th>
-                    <th class="p-4 text-center">Acciones</th>
+                        <th class="p-4"># Solicitud</th>
+                        <th class="p-4">Sede</th>
+                        <th class="p-4">Usuario</th>
+                        <th class="p-4">Fecha</th>
+                        <th class="p-4">Tipo</th>
+                        <th class="p-4">Estado</th>
+                        <th class="p-4 text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-lg divide-y divide-gray-100">

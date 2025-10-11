@@ -3,6 +3,7 @@
         // EDITAR LOS PRODUCTOS A TRASLADOR A OTRA SEDE
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
         const tablaItems = document.querySelector('#tablaItems tbody');
+        const btnUpdateTrasladoInv = document.querySelector('#btnUpdateTrasladoInv') as HTMLButtonElement;
         let carrito:{iditem:string, nombreitem:string, tipo:string, unidadmedida:string, cantidad: number, factor: number}[]=[];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
@@ -12,7 +13,6 @@
                 const respuesta = await fetch(url); 
                 const resultado:{id:string, nombre:string, tipoproducto:string, sku:string, unidadmedida:string}[] = await respuesta.json(); 
                 filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'1', sku: item.sku, unidadmedida: item.unidadmedida }));
-                //console.log(filteredData);
                 activarselect2(filteredData);
             } catch (error) {
                 console.log(error);
@@ -27,16 +27,21 @@
                     const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+id; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
                     const respuesta = await fetch(url); 
                     const resultado = await respuesta.json();
-                    const itemsorden:{id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string}[] = resultado.orden[0].detalletrasladoinv;
+                    const detalleOrden = resultado.orden[0];
+                    const itemsorden:{id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:number}[] = detalleOrden.detalletrasladoinv;
                     carrito = itemsorden.map(item =>{
                         const esProducto = item.fkproducto && !item.idsubproducto_id;
                         return {
                             iditem: esProducto?item.fkproducto:item.idsubproducto_id, 
-                            nombreitem:'', tipo:'', unidadmedida:'', cantidad: 1, factor: 1
+                            nombreitem: item.nombre, 
+                            tipo: esProducto?'0':'1', 
+                            unidadmedida:'', 
+                            cantidad: item.cantidad, 
+                            factor: 1
                         }
                     });
-                    console.log(itemsorden);
-                    //carrito.forEach(item =>printProduct(item.idproducto));   
+                    printDetalleOrden(detalleOrden);
+                    carrito.forEach(c =>printItemTable(c.iditem, c.tipo, c.unidadmedida, c.cantidad, c.nombreitem));   
                 } catch (error) {
                     console.log(error);
                 }
@@ -115,6 +120,12 @@
         }
 
 
+        function printDetalleOrden(detalleOrden:{id:string, sucursal_origen:string, sucursal_destino:string, tipo:string, fkusuario:string, nombreusuario:string, estado:string}){
+            console.log(detalleOrden);
+
+        }
+
+
         //////////////////////////////////// evento a la tabla de los productos seleccionados  ///////////////////////////////////
         tablaItems?.addEventListener('click', (e:Event)=>{
             const elementItem = (e.target as HTMLElement)?.closest('.itemselect'); //seleccionamos el tr de la tabla
@@ -139,12 +150,12 @@
         });
 
 
-        function generarorden(){
+        btnUpdateTrasladoInv.addEventListener('click', ()=>{
             Swal.fire({
                 customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
                 icon: 'question',
-                title: 'Esta seguro de generar orden de transferencia?',
-                text: "Se procesara la orden con todos los productos en la sede destino",
+                title: 'Esta seguro de actualizar la orden de transferencia?',
+                text: "Se procesara la orden con todos los productos para la sede destino",
                 showCancelButton: true,
                 confirmButtonText: 'Si',
                 cancelButtonText: 'No',
@@ -158,7 +169,7 @@
                         datos.append('idsucursaldestino', sucursaldestino.value);
                         datos.append('productos', JSON.stringify(carrito));
                         try {
-                            const url = "/admin/api/apinuevotrasladoinv";  //api llamada a trasladosinvcontrolador
+                            const url = "/admin/api/editarOrdenTransferencia";  //api llamada a trasladosinvcontrolador
                             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                             const resultado = await respuesta.json();  
                             if(resultado.exito !== undefined){
@@ -175,7 +186,7 @@
                     })();//cierre de async()
                 }
             });
-        }
+        });
 
     }
 })();

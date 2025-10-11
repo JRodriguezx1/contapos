@@ -6,6 +6,12 @@
         <span class="sr-only">Atrás</span>
     </a>
     <section class="space-y-4 mt-8">
+      <div>
+        <p id="sedeorigen"></p>
+        <p id="sededestino"></p>
+        <p id="tipo"></p>
+        <p id="estado"></p>
+      </div>
       <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 pt-6">Productos a enviar</h2>
       <div class="flex flex-col md:flex-row gap-2">
         <select id="articulo" name="" class="w-full" multiple="multiple">
@@ -38,6 +44,11 @@
             
           </tbody>
         </table>
+      </div>
+
+      <div class="flex justify-end mt-6">
+        
+        <button id="btnUpdateTrasladoInv" class="px-6 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Actualizar</button>
       </div>
     </section>
     

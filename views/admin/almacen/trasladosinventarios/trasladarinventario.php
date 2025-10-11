@@ -166,10 +166,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="px-4 py-2 border">Corte Cabello</td>
-          <td class="px-4 py-2 border">120</td>
-        </tr>
+        
       </tbody>
     </table>
 
