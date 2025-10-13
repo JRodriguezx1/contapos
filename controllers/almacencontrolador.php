@@ -437,60 +437,6 @@ class almacencontrolador{
   }
 
 
-  public static function solicitudesrecibidas(Router $router){
-    session_start();
-    isadmin();
-    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $alertas = [];
-
-    $solicitudesrecividas = traslado_inv::idregistros('id_sucursaldestino', id_sucursal());
-    foreach($solicitudesrecividas as $value){
-      $value->sucursalorigen = sucursales::uncampo('id', $value->id_sucursalorigen, 'nombre');
-      $nombreusuario = usuarios::find('id', $value->fkusuario);
-      $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
-    }
-    $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/solicitudesrecibidas', ['titulo'=>'Almacen', 'solicitudesrecividas'=>$solicitudesrecividas, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
-  }
-
-
-  public static function trasladarinventario(Router $router){
-    session_start();
-    isadmin();
-    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $alertas = [];
-     $transferirinventario = traslado_inv::idregistros('id_sucursalorigen', id_sucursal());
-    foreach($transferirinventario as $value){
-      $value->sucursaldestino = sucursales::uncampo('id', $value->id_sucursaldestino, 'nombre');
-      $nombreusuario = usuarios::find('id', $value->fkusuario);
-      $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
-    }
-    $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/trasladarinventario', ['titulo'=>'Almacen', 'transferirinventario'=>$transferirinventario, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
-  }
-
-  public static function nuevotrasladoinv(Router $router){
-    session_start();
-    isadmin();
-    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $alertas = [];
-    $sucursalorigen = sucursales::find('id', id_sucursal());
-    $sucursales = sucursales::all();
-    $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/nuevotrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
-  }
-
-  public static function solicitarinventario(Router $router){
-    session_start();
-    isadmin();
-    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $alertas = [];
-    $sucursalorigen = sucursales::find('id', id_sucursal());
-    $sucursales = sucursales::all();
-    $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
-  }
-
   public static function downexcelproducts(Router $router){
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
       $excelproductos = productos::all();
@@ -648,6 +594,7 @@ class almacencontrolador{
             
             if($r){
 
+              //procesamiento de actualizaciones de precios personalizados
               $arrayIdeliminar = []; $nuevosprecios = [];
               ///IDs a eliminar de la DB
               foreach($preciosAdicionalesDB as $key => $value)
@@ -1346,97 +1293,5 @@ class almacencontrolador{
         echo json_encode($alertas); 
     }
 
-///////  generar orden de solicitar inventario  //////////
-    public static function apisolicitarinventario(){
-        session_start();
-        isadmin();
-        $alertas = [];
-        $idsucursalorigen = $_POST['idsucursalorigen'];
-        $idsucursaldestino = $_POST['idsucursaldestino'];
-        $carrito = json_decode($_POST['productos']);
-
-        $trasladoinv = new traslado_inv([
-          'id_sucursalorigen'=>$idsucursalorigen,
-          'id_sucursaldestino'=>$idsucursaldestino,
-          'fkusuario'=>$_SESSION['id'],
-          'estado'=>'pendiente'
-        ]);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $rt = $trasladoinv->crear_guardar();
-            if($rt[0]){
-              //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
-              $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
-                $objeto->id_trasladoinv = $rt[1];
-                if($objeto->tipo == 0){
-                  $objeto->fkproducto = $objeto->iditem;
-                  $objeto->idsubproducto_id = 'NULL';
-                  $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-                }
-                else{
-                  $objeto->fkproducto = 'NULL';
-                  $objeto->idsubproducto_id = $objeto->iditem;
-                  $acumulador['subproductos'][] = $objeto;
-                }
-                return $acumulador;
-              }, ['productos'=>[], 'subproductos'=>[]]);
-
-              $detalletrasladoinv = new detalletrasladoinv;
-              if(!empty($resultArray['productos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['productos']);
-              if(!empty($resultArray['subproductos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['subproductos']);
-              $alertas['exito'][] = "Solicitud de mercancia enviada correctamente";
-            }
-        }
-        //$alertas = ActiveRecord::getAlertas();
-        echo json_encode($alertas); 
-    }
-
-
-  //////  generar orden de traslado de inventario /////////
-    public static function apinuevotrasladoinv(){
-        session_start();
-        isadmin();
-        $alertas = [];
-        $idsucursalorigen = $_POST['idsucursalorigen'];
-        $idsucursaldestino = $_POST['idsucursaldestino'];
-        $carrito = json_decode($_POST['productos']);
-
-        $trasladoinv = new traslado_inv([
-          'id_sucursalorigen'=>$idsucursalorigen,
-          'id_sucursaldestino'=>$idsucursaldestino,
-          'fkusuario'=>$_SESSION['id'],
-          'estado'=>'pendiente'
-        ]);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $rt = $trasladoinv->crear_guardar();
-            if($rt[0]){
-              //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
-              $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
-                $objeto->id_trasladoinv = $rt[1];
-                $objeto->cantidadrecibida = 0;
-                $objeto->cantidadrechazada = 0;
-                if($objeto->tipo == 0){
-                  $objeto->fkproducto = $objeto->iditem;
-                  $objeto->idsubproducto_id = 'NULL';
-                  $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-                }
-                else{
-                  $objeto->fkproducto = 'NULL';
-                  $objeto->idsubproducto_id = $objeto->iditem;
-                  $acumulador['subproductos'][] = $objeto;
-                }
-                return $acumulador;
-              }, ['productos'=>[], 'subproductos'=>[]]);
-
-              $detalletrasladoinv = new detalletrasladoinv;
-              if(!empty($resultArray['productos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['productos']);
-              if(!empty($resultArray['subproductos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['subproductos']);
-              $alertas['exito'][] = "Solicitud de transferencia enviada correctamente";
-            }
-        }
-        //$alertas = ActiveRecord::getAlertas();
-        echo json_encode($alertas);
-    }
 
 }

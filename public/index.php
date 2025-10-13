@@ -23,6 +23,7 @@ use Controllers\configcontrolador;
 use Controllers\paginacontrolador;
 use Controllers\parametroscontrolador;
 use Controllers\printcontrolador;
+use Controllers\trasladosinvcontrolador;
 // me importa la clase router
 use MVC\Router;
 
@@ -89,11 +90,12 @@ $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, '
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
 $router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
-$router->get('/admin/almacen/solicitudesrecibidas', [almacencontrolador::class, 'solicitudesrecibidas']);
-$router->get('/admin/almacen/trasladarinventario', [almacencontrolador::class, 'trasladarinventario']);
-$router->get('/admin/almacen/solicitarinventario', [almacencontrolador::class, 'solicitarinventario']);
-$router->get('/admin/almacen/nuevotrasladoinv', [almacencontrolador::class, 'nuevotrasladoinv']);
-
+////// area de traslados de inventario  //////
+$router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
+$router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);
+$router->get('/admin/almacen/solicitarinventario', [trasladosinvcontrolador::class, 'solicitarinventario']);
+$router->get('/admin/almacen/nuevotrasladoinv', [trasladosinvcontrolador::class, 'nuevotrasladoinv']);
+$router->get('/admin/almacen/editartrasladoinv', [trasladosinvcontrolador::class, 'editartrasladoinv']);
 ///// area de caja /////
 $router->get('/admin/caja', [cajacontrolador::class, 'index']);
 $router->get('/admin/caja/cerrarcaja', [cajacontrolador::class, 'cerrarcaja']);
@@ -175,8 +177,15 @@ $router->get('/admin/api/allproveedores', [almacencontrolador::class, 'allprovee
 $router->post('/admin/api/crearProveedor', [almacencontrolador::class, 'crearProveedor']); //api llamada desde gestionproveedores.js para crear proveedores
 $router->post('/admin/api/actualizarProveedor', [almacencontrolador::class, 'actualizarProveedor']); //api llamada desde gestionproveedores.js para actualizar proveedores
 $router->post('/admin/api/eliminarProveedor', [almacencontrolador::class, 'eliminarProveedor']); //api llamada desde gestionproveedores.js para eliminar proveedores
-$router->post('/admin/api/apisolicitarinventario', [almacencontrolador::class, 'apisolicitarinventario']); //api llamada desde solicitarinventario.js para solicitar productos a otras sedes
-$router->post('/admin/api/apinuevotrasladoinv', [almacencontrolador::class, 'apinuevotrasladoinv']); //api llamada desde apinuevotrasladoinv.js para enviar productos a otras sedes
+
+//$router->get('/admin/api/allordenestrasladoinv', [trasladosinvcontrolador::class, 'allordenestrasladoinv']); //trae todos las ordenes de traslados
+$router->get('/admin/api/idOrdenTrasladoSolicitudInv', [trasladosinvcontrolador::class, 'idOrdenTrasladoSolicitudInv']); //trae todos las ordenes de traslados
+$router->post('/admin/api/apisolicitarinventario', [trasladosinvcontrolador::class, 'apisolicitarinventario']); //api llamada desde solicitarinventario.ts para solicitar productos a otras sedes
+$router->post('/admin/api/apinuevotrasladoinv', [trasladosinvcontrolador::class, 'apinuevotrasladoinv']); //api llamada desde nuevotrasladoinv.ts para enviar productos a otras sedes
+$router->post('/admin/api/editarOrdenTransferencia', [trasladosinvcontrolador::class, 'editarOrdenTransferencia']); //api llamada desde editartrasladoinv.ts para actualizar lista de productos a enviar
+$router->post('/admin/api/confirmarnuevotrasladoinv', [trasladosinvcontrolador::class, 'confirmarnuevotrasladoinv']); //api llamada desde trasladarinv.ts para confirmar lista de productos a enviar y descontar de inventario y pasar a estado en transito
+$router->post('/admin/api/confirmaringresoinv', [trasladosinvcontrolador::class, 'confirmaringresoinv']); //api llamada desde solicitudesrecibidasinv.ts para confirmar lista de productos a recibir y sumar de inventario y pasar a estado en entregado
+$router->post('/admin/api/anularnuevotrasladoinv', [trasladosinvcontrolador::class, 'anularnuevotrasladoinv']); //api llamada desde trasladarinv.ts y solicitudesrecibidasinv para cancelar orden de traslado o solicitud
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada

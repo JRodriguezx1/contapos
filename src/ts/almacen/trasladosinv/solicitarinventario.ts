@@ -1,9 +1,9 @@
 (()=>{
 
-    if(document.querySelector('.nuevotrasladoinv')){
+    if(document.querySelector('.solicitarinvnetario')){
         // PROCESO SOLICITUD DE INVENTARIO A OTRAS SEDES
-        const btnAnterior = document.getElementById("btnAnteriorTrasladoInv") as HTMLButtonElement;
-        const btnSiguiente = document.getElementById("btnSiguienteTrasladoInv") as HTMLButtonElement;
+        const btnAnterior = document.getElementById("btnAnteriorSolicitudInv") as HTMLButtonElement;
+        const btnSiguiente = document.getElementById("btnSiguienteSolicitudInv") as HTMLButtonElement;
         const steps = document.querySelectorAll<HTMLDivElement>(".step-circle");
         const stepSections = document.querySelectorAll<HTMLElement>(".step-section");
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
@@ -218,40 +218,40 @@
 
         function generarorden(){
             Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
-          icon: 'question',
-          title: 'Esta seguro de generar orden de transferencia?',
-          text: "Se procesara la orden con todos los productos en la sede destino",
-          showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
-      }).then((result:any) => {
-          if (result.isConfirmed) {
-            const idsucursalorigen = document.querySelector('#sucursalorigen') as HTMLSelectElement;
-            const sucursaldestino = document.querySelector('#sucursaldestino') as HTMLSelectElement;
-              (async ()=>{ 
-                  const datos = new FormData();
-                  datos.append('idsucursalorigen', idsucursalorigen.value);
-                  datos.append('idsucursaldestino', sucursaldestino.value);
-                  datos.append('productos', JSON.stringify(carrito));
-                  try {
-                      const url = "/admin/api/apinuevotrasladoinv";
-                      const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-                      const resultado = await respuesta.json();  
-                      if(resultado.exito !== undefined){
-                        setTimeout(() => {
-                            window.location.href = `/admin/almacen/trasladarinventario`;
-                        }, 1100);
-                        Swal.fire(resultado.exito[0], '', 'success') 
-                      }else{
-                          Swal.fire(resultado.error[0], '', 'error')
-                      }
-                  } catch (error) {
-                      console.log(error);
-                  }
-              })();//cierre de async()
-          }
-      });
+                customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+                icon: 'question',
+                title: 'Esta seguro de generar orden de solicitud?',
+                text: "Se procesara la orden con todos los productos en la sede destino",
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result:any) => {
+                if (result.isConfirmed) {
+                    const idsucursalorigen = document.querySelector('#sucursalorigen') as HTMLSelectElement;
+                    const sucursaldestino = document.querySelector('#sucursaldestino') as HTMLSelectElement;
+                    (async ()=>{ 
+                        const datos = new FormData();
+                        datos.append('idsucursalorigen', idsucursalorigen.value);
+                        datos.append('idsucursaldestino', sucursaldestino.value);
+                        datos.append('productos', JSON.stringify(carrito));
+                        try {
+                            const url = "/admin/api/apisolicitarinventario";  //api llamada a trasladosinvcontrolador.php
+                            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                            const resultado = await respuesta.json();  
+                            if(resultado.exito !== undefined){
+                                setTimeout(() => {
+                                    window.location.href = `/admin/almacen/solicitudesrecibidas`;
+                                }, 600);
+                                Swal.fire(resultado.exito[0], '', 'success') 
+                            }else{
+                                Swal.fire(resultado.error[0], '', 'error')
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })();//cierre de async()
+                }
+            });
         }
 
     }
