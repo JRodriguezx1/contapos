@@ -137,7 +137,7 @@
                     <div class="sm:col-span-6 md:col-span-5 tlg:col-span-6">
                         <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
                         <div class="mt-2">
-                        <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                        <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 h-32">
                         </div>
                     </div>
                 
@@ -156,7 +156,7 @@
             </div>
 
 
-            <div class="border-solid border-t-2 border-blue-600 pt-4 mb-4">
+            <div class="border-solid border-t-2 border-blue-600 pt-4 mb-4 overflow-x-auto">
                 <table class=" tabla" width="100%" id="tablaCompras">
                     <thead>
                         <tr>

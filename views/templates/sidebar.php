@@ -76,7 +76,7 @@
             <a class="<?php echo ($titulo === 'Perfil')?'activo':''; ?>" href="/admin/perfil"><span class="material-symbols-outlined">manage_accounts</span> <label class="btnav"> Perfil</label></a>
         <?php //endif; ?>
         <?php if(tienePermiso('Habilitar modulo de configuracion')&&userPerfil()==3 || userPerfil()<3): ?>
-        <a class="<?php echo ($titulo === 'Configuracion')?'activo':''; ?>" href="/admin/configuracion"><span class="material-symbols-outlined">settings</span> <label class="btnav"> Configuracion</label></a>
+        <a class="<?php echo ($titulo === 'Configuracion')?'activo':''; ?>" href="/admin/configuracion"><span class="material-symbols-outlined">settings</span> <label class="btnav">Ajustes</label></a>
         <?php endif; ?>
     </nav>
     <div class="cerrar-sesion-mobile">

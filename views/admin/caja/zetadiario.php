@@ -12,8 +12,8 @@
         <a id="zcalendario" href="/admin/caja/fechazetadiario?id=0" class="btn-command text-center"><span class="material-symbols-outlined">calendar_month</span>Zeta diario por fecha</a>
     </div>
     
-    <div class="">
-        <table class="display responsive nowrap tabla" width="100%" id="tablaempleados">
+    <div class="overflow-x-auto">
+        <table class="display responsive nowrap tabla min-w-[700px]" width="100%" id="tablaempleados">
             <thead>
                 <tr>
                     <th>Nº</th>
@@ -38,5 +38,4 @@
             </tbody>
         </table>
     </div>
-
 </div>

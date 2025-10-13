@@ -33,7 +33,7 @@
       if(screenWidth<992)miDialogoCarritoMovil.appendChild(contenidocarrito);
 
       window.addEventListener('resize', ()=>{
-        if (window.innerWidth >= 992) {
+        if (window.innerWidth >= 1280) {
           contenedorDesktop.appendChild(contenidocarrito);
           miDialogoCarritoMovil.close();
           document.removeEventListener("click", cerrarDialogoExterno);

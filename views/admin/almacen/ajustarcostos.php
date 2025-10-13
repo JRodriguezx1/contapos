@@ -5,7 +5,7 @@
     </svg>
     <span class="sr-only">Atrás</span>
     </a>
-  <h4 class="text-gray-600 mb-12 mt-4">Actualizar costos de inventario</h4>
+  <h4 class="text-gray-600 mb-4 mt-4">Actualizar costos de inventario</h4>
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
   
   

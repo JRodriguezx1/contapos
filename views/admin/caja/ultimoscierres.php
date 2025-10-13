@@ -7,8 +7,8 @@
     </a>
     <h4 class="text-gray-600 mb-12 mt-4">Ultimos cierres</h4>
 
-    <div class="">
-        <table class="display responsive nowrap tabla" width="100%" id="">
+    <div class="overflow-x-auto">
+        <table class="display responsive nowrap tabla min-w-[500px]" width="100%" id="">
             <thead>
                 <tr>
                     <th>N. Cierre</th>

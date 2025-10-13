@@ -161,8 +161,8 @@
         </div>
         
         <div class="text-right">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[137px]" type="button" value="cancelar">cancelar</button>
-            <input id="btnEnviargastosingresos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[137px]" type="submit" value="Aplicar">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[124px]" type="button" value="cancelar">cancelar</button>
+            <input id="btnEnviargastosingresos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[124px]" type="submit" value="Aplicar">
         </div>
     </form>
   </dialog>

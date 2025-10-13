@@ -89,7 +89,7 @@
               <th class="text-center p-4">Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="[&>tr]:border-b [&>tr]:border-gray-200 dark:[&>tr]:border-neutral-700 [&>tr:last-child]:border-none [&>tr>td]:p-5 [&>tr>td]:text-[0.95rem] [&>tr>td]:uppercase [&>tr>td]:text-gray-600 dark:[&>tr>td]:text-gray-300 [&>tr]:hover:bg-gray-100 dark:[&>tr]:hover:bg-neutral-800 [&>tr]:transition-all [&>tr]:duration-150 [&>tr]:ease-in-out [&>tr]:h-16">
             
           </tbody>
         </table>
@@ -99,22 +99,95 @@
     <!-- Paso 3 -->
     <section class="space-y-4 mt-8 step-section step-3 hidden">
       <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Resumen del traslado</h2>
-      <div class="border rounded-lg p-4 dark:border-neutral-700 dark:bg-neutral-800">
-        <!--<p class="text-gray-700 dark:text-gray-300">Aquí se mostrará el resumen final del traslado antes de enviarlo.</p>-->
-        <table id="tablaproductosresumen" class="tabla2" width="100%" id="tablaMediosPago">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>UND</th>
-                </tr>
+
+      <!-- Contenedor principal -->
+      <div class="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-3">
+          <i class="fa-solid fa-circle-info text-indigo-600"></i>
+          Detalles del traslado
+        </h3>
+
+        <!-- Información general -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Sede origen -->
+          <div class="flex items-center gap-4 p-5 rounded-xl border border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 hover:shadow transition">
+            <div class="w-12 h-12 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-full">
+              <i class="fa-solid fa-building text-xl"></i>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-medium">Sede origen</p>
+              <p id="resumen-sede-origen" class="text-xl font-bold text-indigo-600 dark:text-indigo-400">Centro Principal</p>
+            </div>
+          </div>
+
+          <!-- Sede destino -->
+          <div class="flex items-center gap-4 p-5 rounded-xl border border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 hover:shadow transition">
+            <div class="w-12 h-12 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-full">
+              <i class="fa-solid fa-truck text-xl"></i>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-medium">Sede destino</p>
+              <p id="resumen-sede-destino" class="text-xl font-bold text-indigo-600 dark:text-indigo-400">Sucursal Norte</p>
+            </div>
+          </div>
+
+          <!-- Fecha solicitud -->
+          <div class="flex items-center gap-4 p-5 rounded-xl border border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 hover:shadow transition">
+            <div class="w-12 h-12 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-full">
+              <i class="fa-solid fa-calendar-days text-xl"></i>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-medium">Fecha solicitud</p>
+              <p id="resumen-fecha" class="text-lg font-semibold text-gray-800 dark:text-gray-200">09/10/2025</p>
+            </div>
+          </div>
+
+          <!-- Observaciones -->
+          <div class="flex items-start gap-4 p-5 rounded-xl border border-gray-100 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 hover:shadow transition">
+            <div class="w-12 h-12 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-full">
+              <i class="fa-solid fa-pen-to-square text-xl"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-medium">Observaciones</p>
+              <p id="resumen-observaciones" class="text-base text-gray-800 dark:text-gray-200 mt-1 break-words leading-relaxed">
+                Envío prioritario. Verificar cantidades antes del despacho.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="mt-8 overflow-x-auto bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-xl shadow">
+          <table id="tablaproductosresumen" class="w-full text-left border-collapse">
+            <thead class="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300 text-base font-semibold uppercase tracking-wide">
+              <tr>
+                <th class="p-4">Producto</th>
+                <th class="p-4">Cantidad</th>
+                <th class="p-4">UND</th>
+              </tr>
             </thead>
-            <tbody>
-                
+            <tbody class="[&>tr]:border-b [&>tr]:border-gray-200 dark:[&>tr]:border-neutral-700 [&>tr:last-child]:border-none [&>tr>td]:p-5 [&>tr>td]:text-[0.95rem] [&>tr>td]:uppercase [&>tr>td]:text-gray-600 dark:[&>tr>td]:text-gray-300 [&>tr]:hover:bg-gray-100 dark:[&>tr]:hover:bg-neutral-800 [&>tr]:transition-all [&>tr]:duration-150 [&>tr]:ease-in-out [&>tr]:h-16">
+              <tr>
+                <td class="p-3 text-sm text-gray-600 dark:text-gray-300">Shampoo Profesional</td>
+                <td>25</td>
+                <td>UND</td>
+              </tr>
+              <tr>
+                <td>Aceite Capilar</td>
+                <td>10</td>
+                <td>UND</td>
+              </tr>
+              <tr>
+                <td>Cera para cabello</td>
+                <td>15</td>
+                <td>UND</td>
+              </tr>
             </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </section>
+
 
     <!-- Navegación -->
     <div class="flex justify-between mt-6">

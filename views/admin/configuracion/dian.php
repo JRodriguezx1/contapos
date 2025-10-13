@@ -1,9 +1,10 @@
 <div class="gestionDian">
     <h4 class="text-gray-600 mb-12 mt-4">Gestionar Dian</h4>
     <div class="flex flex-wrap gap-2 mt-4 mb-4 pb-4">
-        <button id="crearCompañia" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
-        <button id="obtenerresolucion" class="btn-command"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
+        <button id="crearCompañia" class="btn-command text-center"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
+        <button id="obtenerresolucion" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
         <button id="setpruebas" class="btn-command text-center"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>  
+        <button id="setpruebas" class="btn-command text-center"><span class="material-symbols-outlined">inbox</span>Recepción documentos</button>  
     </div>
 
     <div class="h-8 bg-slate-100"></div>

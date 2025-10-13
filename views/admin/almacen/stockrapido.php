@@ -4,7 +4,7 @@
     <button id="reinciarinv" class="text-2xl text-gray-600">Reiniciar Inventario</button>
 </div>
 <div class="overflow-x-auto">
-    <table id="tablaStockRapido" class="display responsive nowrap tabla" width="100%">
+    <table id="tablaStockRapido" class="display responsive nowrap tabla min-w-[500px]" width="100%">
         <thead>
             <tr>
                 <th>Nº</th>
