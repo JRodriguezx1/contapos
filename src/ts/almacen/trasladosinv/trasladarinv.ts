@@ -77,7 +77,7 @@
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        tr.children[5].textContent = 'entransito';
+                        tr.children[5].innerHTML = `<span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700">entransito</span>`;
                         Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
