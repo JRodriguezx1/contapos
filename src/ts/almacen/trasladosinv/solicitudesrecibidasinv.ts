@@ -1,297 +1,81 @@
 (()=>{
   if(document.querySelector('.solicitudesrecibidas')){
-    const crearProducto = document.querySelector('#crearProducto');
-    const miDialogoProducto = document.querySelector('#miDialogoProducto') as any;
-    const btnXCerrarModalproducto = document.querySelector('#btnXCerrarModalproducto') as HTMLButtonElement;
-    const inputupImage = document.querySelector('#upImage') as HTMLInputElement;  //input para cargar el archivo imagen
-    const btncustomUpImage = document.querySelector('#customUpImage');
-    const imginputfile = document.querySelector('#imginputfile') as HTMLImageElement;  //img
-    const tipoproducto = document.querySelector('#tipoproducto') as HTMLSelectElement;
-    const contentnuevosprecios = document.querySelector('#contentnuevosprecios') as HTMLElement;
-    let indiceFila=0, control=0, tablaProductos:HTMLElement;
+    const miDialogoDetalleTrasladoSolicitud = document.querySelector('#miDialogoDetalleTrasladoSolicitud') as any;
+    const btnXCerrarDetalleTrasladoSolicitud = document.querySelector('#btnXCerrarDetalleTrasladoSolicitud') as HTMLButtonElement;
+    const parrafoSedeorigen = document.querySelector('#sedeorigen') as HTMLParagraphElement;
+    const parrafoSededestino = document.querySelector('#sededestino') as HTMLParagraphElement;
+    const parrafotipo = document.querySelector('#tipo') as HTMLParagraphElement;
+    const tbodydetalleorden = document.querySelector('#tabladetalleorden tbody') as HTMLTableElement;
+    const filtroSucursal = document.getElementById('filtroSucursal') as HTMLSelectElement;
+    const filtroEstado = document.getElementById('filtroEstados') as HTMLSelectElement;
+    const filas = document.querySelectorAll<HTMLTableRowElement>('#tablaTraslados tbody tr');
     
-
-    type productsapi = {
+    type ordenestrasladosinv = {
       id:string,
-      idcategoria: string,
-      idunidadmedida: string,
-      nombre: string,
-      foto: string,
-      impuesto: string,
-      marca: string,
-      tipoproducto: string,
-      tipoproduccion: string,
-      sku: string,
-      unidadmedida: string;
-      descripcion: string,
-      peso: string,
-      medidas: string,
-      color: string,
-      funcion: string,
-      uso:string,
-      fabricante: string,
-      garantia: string,
-      stock: string,
-      stockminimo: string,
-      categoria: string,
-      precio_compra: string,
-      precio_venta: string,
-      fecha_ingreso: string,
-      preciosadicionales: {id:string, idproductoid:string, precio:string, estado:string, created_at:string}[]
-      //idservicios:{idempleado:string, idservicio:string}[]
+      id_sucursalorigen: string,
+      id_sucursaldestino: string,
+      fkusuario: string,
+      sucursal_origen:string,
+      sucursal_destino:string,
+      nombreusuario:string,
+      tipo: string,
+      observacion: string,
+      estado: string,
+      created_at: string,
+      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, cantidadrecibida:string, cantidadrechazada:string}[]
     };
 
-    let products:productsapi[]=[], unproducto:productsapi;
+    let ordenes:ordenestrasladosinv[]=[], unaorden:ordenestrasladosinv;
 
-    (async ()=>{
+    /*(async ()=>{
       try {
-          const url = "/admin/api/allproducts"; //llamado a la API REST y se trae todos los productos
+          const url = "/admin/api/allordenestrasladoinv"; //llamado a la API REST y se trae todos los productos
           const respuesta = await fetch(url); 
-          products = await respuesta.json(); 
-          console.log(products);
+          ordenes = await respuesta.json(); 
+          console.log(ordenes);
       } catch (error) {
           console.log(error);
       }
-    })();
+    })();*/
 
     const divAlert = document.querySelector('.divmsjalerta0') as HTMLElement;
     if(divAlert)borrarMsjAlert(divAlert);
 
-    ///////// Habilita el select precio de compra, y deshabilita el select de tipo de produccion si es producto simple, si es compuesto lo deshabilita y habilita el select de tipo de produccion
-    tipoproducto?.addEventListener('change', (e:Event)=>{
-      const targetDom = e.target as HTMLSelectElement;
-      const preciocompra = document.querySelector('.preciocompra') as HTMLElement;
-      const stock = document.querySelector('.stock') as HTMLElement;
-      const habtipoproduccion = document.querySelector('.habtipoproduccion') as HTMLElement;
-      if(targetDom.value == '0'){  //  0 = simple
-        stock.style.display = 'flex';
-        preciocompra.style.display = 'flex';
-        habtipoproduccion.style.display = "none";
-        document.querySelector('#preciocompra')?.setAttribute("required", "");
-        document.querySelector('#tipoproduccion')?.removeAttribute("required");
-      }
-      else{
-        stock.style.display = 'none';
-        preciocompra.style.display = 'none';
-        habtipoproduccion.style.display = "flex";
-        document.querySelector('#preciocompra')?.removeAttribute("required");
-        document.querySelector('#tipoproduccion')?.setAttribute("required", "");
-      }
-    });
-
-
-    btnXCerrarModalproducto.addEventListener('click', (e)=>{
-        miDialogoProducto.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
-    });
-
-
-    const btnAddNewPrice = document.querySelector('#btnAddNewPrice') as HTMLButtonElement;
-    if(btnAddNewPrice){
-        let i=1;
-        btnAddNewPrice.addEventListener('click', (e:Event)=>{
-          let clone = (e.target as HTMLButtonElement).previousElementSibling?.cloneNode(true) as HTMLInputElement;  
-          //console.log(clone.children[1].name = `niveles[nombrenivel${++i}]`);
-          clone.removeAttribute('id');
-          clone.value='';
-          clone.name = `nuevosprecios[]`;
-          clone.classList.add('nuevosprecios');
-          contentnuevosprecios.appendChild(clone);
-          console.log(clone);
-        });
-    }
-
-
-    //////////////////  TABLA //////////////////////
-    tablaProductos = ($('#tablaProductos') as any).DataTable(configdatatables);
-
-    //btn para crear producto
-    crearProducto?.addEventListener('click', (e):void=>{
-      control = 0;
-      limpiarformdialog();
-      while(contentnuevosprecios.firstChild)contentnuevosprecios.removeChild(contentnuevosprecios.firstChild);
-      document.querySelector('#modalProducto')!.textContent = "Crear producto";
-      (document.querySelector('#btnEditarCrearProducto') as HTMLInputElement).value = "Crear";
-      (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
-      (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
-      miDialogoProducto.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
-    });
 
     //evento a la tabla
-    document.querySelector('#tablaProductos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+    document.querySelector('#tablaTraslados')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
-      if((e.target as HTMLElement)?.classList.contains("editarProductos")||(e.target as HTMLElement).parentElement?.classList.contains("editarProductos"))editarProductos(e);
-      if(target?.classList.contains("bloquearProductos")||target.parentElement?.classList.contains("bloquearProductos"))bloquearProductos(e);
-      if(target?.classList.contains("eliminarProductos")||target.parentElement?.classList.contains("eliminarProductos"))eliminarProductos(e);
+      if(target?.classList.contains("enviar")||target.parentElement?.classList.contains("enviar"))enviar(e);
+      if(target?.classList.contains("detalle")||target.parentElement?.classList.contains("detalle"))detalle(e);
+      if(target?.classList.contains("cancelar")||target.parentElement?.classList.contains("cancelar"))cancelar(e);
     });
 
-    function editarProductos(e:Event){
-      let idproducto = (e.target as HTMLElement).parentElement?.id!;
-      if((e.target as HTMLElement)?.tagName === 'I')idproducto = (e.target as HTMLElement).parentElement?.parentElement?.id!;
-      control = 1;
-      document.querySelector('#modalProducto')!.textContent = "Actualizar producto";
-      (document.querySelector('#btnEditarCrearProducto') as HTMLInputElement)!.value = "Actualizar";
-      unproducto = products.find(x=>x.id === idproducto)!; //obtengo el producto.
-      $('#categoria').val(unproducto?.idcategoria??'');
-      (document.querySelector('#nombre')as HTMLInputElement).value = unproducto?.nombre!;
-      $('#tipoproducto').val(unproducto?.tipoproducto??'0');  //0 = simple,  1 = compuesto
-      $('#idunidadmedida').val(unproducto?.idunidadmedida??'1');
-      (document.querySelector('.stock')as HTMLInputElement).style.display = "block";
-      (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "block";
-      (document.querySelector('.habtipoproduccion') as HTMLElement).style.display = "none";
-      if(unproducto?.tipoproducto == '1'){
-        (document.querySelector('.stock')as HTMLInputElement).style.display = "none";
-        (document.querySelector('.preciocompra')as HTMLInputElement).style.display = "none";
-        (document.querySelector('.habtipoproduccion') as HTMLElement).style.display = "block";
-        $('#tipoproduccion').val(unproducto.tipoproduccion);
+
+    ////// cuando se envia o recibir mercancia, pasa a estado en transito o entregada
+    function enviar(e:Event){
+      let idorden = (e.target as HTMLElement).parentElement?.id!;
+      if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
+      
+      let title:String = '', text:string = '', urlapi:string = '', estado:string = '';
+      const tr = (e.target as HTMLElement).closest('tr') as HTMLTableRowElement;
+      if(tr.children[4].textContent === 'Ingreso'){
+        title = 'Desea confirmar la recepcion de mercancia?';
+        text = "La marcancia ingresara al inventario de la sucursal y no se podra modificar.";
+        urlapi = 'confirmaringresoinv';
+        estado = 'entregada';
       }
-      (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
-      (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
-      (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
-      imprimirpreciosadicionales(unproducto.preciosadicionales);
-      (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
-      (document.querySelector('#impuesto')as HTMLInputElement).value = unproducto?.impuesto??'';
-      (document.querySelector('#stockminimo')as HTMLInputElement).value = unproducto?.stockminimo??'';
-      imginputfile.src = "/build/img/"+unproducto?.foto;
-      indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
-      miDialogoProducto.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
-    }
-
-    function imprimirpreciosadicionales(preciosadicionales:{id:string, idproductoid:string, precio:string, estado:string, created_at:string}[]){
-      while(contentnuevosprecios.firstChild)contentnuevosprecios.removeChild(contentnuevosprecios.firstChild);
-      preciosadicionales.forEach(z =>{
-        contentnuevosprecios.insertAdjacentHTML('afterbegin', `<input 
-          data-id="${z.id}"
-          class="nuevosprecios bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
-          type="number" 
-          min="0" 
-          step="0.01" 
-          placeholder="Precio de venta incluido el impuesto" 
-          name="nuevosprecios[]" 
-          value="${z.precio}" 
-          required>`);
-      });
-    }
-
-    ////////////////////  Actualizar/Editar producto  //////////////////////
-    document.querySelector('#formCrearUpdateProducto')?.addEventListener('submit', e=>{
-
-      let w = document.querySelectorAll<HTMLInputElement>('.nuevosprecios');
-      //console.log(Array.from(w).map(input=>({id: input.dataset.id, precio: parseFloat(input.value) })).filter(x=>x.precio>0));
-      if(control){
-        e.preventDefault();
-        var imgFile:(string|File), info = (tablaProductos as any).page.info();
-        imgFile=unproducto.foto;
-        if(!imginputfile.src.includes(unproducto.foto)){ //se lee la etiqueta img para cambio de imagen
-          imgFile = ((e.target as HTMLFormElement).elements.namedItem("upImage") as HTMLInputElement).files?.[0]!; //obtengo el archivo
-          if(imgFile){
-            if(imgFile.type!=="image/png"&&imgFile.type!=="image/jpeg"){
-              msjAlert('error', 'No es un formato valido para la foto', (document.querySelector('#divmsjalerta1') as HTMLElement));
-              return;
-            }
-            if(imgFile.size>31000000){ //si es mayor a 31MB
-              msjAlert('error', 'La imagen no debe superar los 500KB', document.querySelector('#divmsjalerta1')!);
-              return;
-            }
-          }
-        }
-        (async ()=>{ 
-          const datos = new FormData();
-          datos.append('id', unproducto!.id);
-          datos.append('idcategoria', $('#categoria').val()as string);
-          datos.append('nombre', $('#nombre').val()as string);
-          datos.append('foto', imgFile); //en el backend no se lee con $_POST, se lee con $_FILES
-          datos.append('tipoproducto', $('#tipoproducto').val()as string);  //0=simple o 1=compuesto
-          datos.append('idunidadmedida', $('#idunidadmedida').val()as string);
-          datos.append('unidadmedida', $('#idunidadmedida option:selected').text());
-          datos.append('stock', $('#stock').val()as string);
-          datos.append('precio_compra', $('#preciocompra').val()as string);
-          datos.append('precio_venta', $('#precioventa').val()as string);
-          datos.append('nuevosprecios', JSON.stringify(Array.from(w).map(input=>({id: input.dataset.id, precio: parseFloat(input.value) })).filter(x=>x.precio>0)));
-          datos.append('idprecionsadicionales', JSON.stringify(Array.from(w).filter(input => input.dataset.id && parseFloat(input.value) > 0).map( input=>input.dataset.id )));
-          datos.append('sku', $('#sku').val()as string);
-          datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
-          datos.append('impuesto', $('#impuesto').val()as string);
-          datos.append('stockminimo', $('#stockminimo').val()as string);
-          try {
-              const url = "/admin/api/actualizarproducto";
-              const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-              const resultado = await respuesta.json(); 
-              console.log(resultado); 
-              if(resultado.exito !== undefined){
-                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                /// actualizar el arregle del producto ///
-                products.forEach(a=>{if(a.id == unproducto.id)a = Object.assign(a, resultado.producto[0]);});
-                ///////// cambiar la fila completa, su contenido //////////
-                const datosActuales = (tablaProductos as any).row(indiceFila).data();
-                /*img*/datosActuales[1] = `<div class="text-center"><img class="inline" style="width: 50px;" src="/build/img/${resultado.producto[0].foto}" alt=""></div>`;
-                /*NOMBRE*/datosActuales[2] ='<div class="w-80 whitespace-normal">'+$('#nombre').val()+'</div>';
-                /*CATEGORIA*/datosActuales[3] = $('#categoria option:selected').text();
-                /*MARCA*/datosActuales[4] = '';
-                /*CODIGO*/datosActuales[5] = $('#sku').val();
-                /*PRECIOVENTA*/datosActuales[6] = $('#precioventa').val();
-                
-                (tablaProductos as any).row(indiceFila).data(datosActuales).draw();
-                (tablaProductos as any).page(info.page).draw('page'); //me mantiene la pagina actual
-              }else{
-                msjalertToast('error', '¡Error!', resultado.error[0]);
-              }
-              miDialogoProducto.close();
-              document.removeEventListener("click", cerrarDialogoExterno);
-          } catch (error) {
-              console.log(error);
-          }
-        })();//cierre de async()
-      } //fin if(control)
-    });
-
-
-    function bloquearProductos(e:Event){
-      let reg = (e.target as HTMLElement).parentElement, info = (tablaProductos as any).page.info();
-      if((e.target as HTMLElement).tagName === 'SPAN')reg = (e.target as HTMLElement).parentElement!.parentElement;
-      indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
-      (async ()=>{
-
-          const datos = new FormData();
-          datos.append('id', reg!.id);
-          try {
-              const url = "/admin/api/cambiarestadoproducto";
-              const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-              const resultado = await respuesta.json();  
-              if(resultado.exito !== undefined){
-                
-                const s1 = `<div class="acciones-btns my-[0.7rem]" id="${reg!.id}">
-                              ${resultado.tipoproducto[0] == 1?`<a class="btn-xs btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=${reg!.id}"><i class="fa-solid fa-subscript text-[17px] leading-none"></i></a>`:''}
-                              <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[17px] leading-none"></i></button>
-                              <button class="btn-xs btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[17px] leading-none"></i></button>
-                              <button class="btn-xs ${resultado.estado[0]==1?'btn-light':'btn-orange'} bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
-                              <button class="btn-xs btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[17px] leading-none"></i></button>
-                            </div>`;
-                            
-                (tablaProductos as any).cell((tablaProductos as any).row(indiceFila+=info.start), 7).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
-                (tablaProductos as any).page(info.page).draw('page'); //me mantiene la pagina actual
-
-                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              }else{
-                  Swal.fire(resultado.error[0], '', 'error')
-              }
-          } catch (error) {
-              console.log(error);
-          }
-      })();//cierre de async()
-    }
-
-    function eliminarProductos(e:Event){
-      let idproducto = (e.target as HTMLElement).parentElement!.id, info = (tablaProductos as any).page.info();
-      if((e.target as HTMLElement).tagName === 'I')idproducto = (e.target as HTMLElement).parentElement!.parentElement!.id;
-      indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
+      if(tr.children[4].textContent === 'Solicitud'){
+        title = 'Desea confirmar el envio de mercancia?';
+        text = "La orden entrara en estado: 'EN TRANSITO' y sera aceptada o rechazda por la sede de destino.";
+        urlapi = 'confirmarnuevotrasladoinv';
+        estado = 'entransito';
+      }
+      
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
-          title: 'Desea eliminar el prducto?',
-          text: "El prducto sera eliminado definitivamente de todas las SEDES.",
+          title: title,
+          text: text,
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -299,14 +83,13 @@
           if (result.isConfirmed) {
               (async ()=>{ 
                   const datos = new FormData();
-                  datos.append('id', idproducto);
+                  datos.append('id', idorden);
                   try {
-                      const url = "/admin/api/eliminarProducto";
+                      const url = "/admin/api/"+urlapi;  //api llamada a trasladosinvcontrolador para confirmar envio, pasa a estado en transito
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        (tablaProductos as any).row(indiceFila).remove().draw(); 
-                        (tablaProductos as any).page(info.page).draw('page');
+                        tr.children[5].innerHTML = `<span class="px-3 py-1 text-base font-semibold rounded-full ${estado=='entregada'?'bg-sky-50 text-sky-600':estado=='entransito'?'bg-yellow-100 text-yellow-700':'bg-rose-50 text-rose-600'}">${estado}</span>`;
                         Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
@@ -319,27 +102,104 @@
       });
     }
 
-    //////////////////// Cargar imagen como preview  //////////////////////
-    btncustomUpImage?.addEventListener('click', ()=>inputupImage?.click());
-    inputupImage?.addEventListener('change', function(){
-      const file = this.files?.[0];
-      if(file){
-        const reader = new FileReader();
-        reader.onload = function(){
-          const resrult = reader.result;
-          if(typeof resrult == "string")imginputfile.src = resrult;
-        } 
-        reader.readAsDataURL(file);
-      }
-    });
+    function detalle(e:Event){
+      let idorden = (e.target as HTMLElement).parentElement?.id!;
+      if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;  
+      (async ()=>{
+        try {
+          const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+idorden; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json(); 
+          imprimirdatos(resultado.orden[0]);
+        } catch (error) {
+            console.log(error);
+        }
+      })();
 
-    function limpiarformdialog():void{
-      (document.querySelector('#formCrearUpdateProducto') as HTMLFormElement)?.reset();
-      imginputfile.src = '';
+      //unaorden = ordenes.find(x=>x.id === idorden)!; //obtengo el producto.
+      miDialogoDetalleTrasladoSolicitud.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
     }
+
+
+    function cancelar(e:Event){
+      let idorden = (e.target as HTMLElement).parentElement?.id!;
+      if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
+      const tr = (e.target as HTMLElement).closest('tr') as HTMLTableRowElement;
+      Swal.fire({
+          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          icon: 'question',
+          title: 'Desea anular la orden de envio de mercancia?',
+          text: "La orden y sus productos seran cancelados por completo y no se enviara.",
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+      }).then((result:any) => {
+          if (result.isConfirmed) {
+              (async ()=>{ 
+                  const datos = new FormData();
+                  datos.append('id', idorden);
+                  try {
+                      const url = "/admin/api/anularnuevotrasladoinv";  //api llamada a trasladosinvcontrolador para anular envio, pasa a estado en transito
+                      const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                      const resultado = await respuesta.json();  
+                      if(resultado.exito !== undefined){
+                          tr.remove();
+                          Swal.fire(resultado.exito[0], '', 'success') 
+                      }else{
+                          Swal.fire(resultado.error[0], '', 'error')
+                      }
+                  } catch (error) {
+                      console.log(error);
+                  }
+              })();//cierre de async()
+          }
+      });
+
+    }
+
+    function imprimirdatos(detalleorden:ordenestrasladosinv){
+      parrafoSedeorigen.textContent = detalleorden.sucursal_origen;
+      parrafoSededestino.textContent = detalleorden.sucursal_destino;
+      parrafotipo.textContent = detalleorden.tipo;
+      while(tbodydetalleorden.firstChild)tbodydetalleorden.removeChild(tbodydetalleorden.firstChild);
+      detalleorden.detalletrasladoinv.forEach(x=>{
+        const tr = document.createElement('tr');
+        const tdproducto = document.createElement('td');
+        tdproducto.classList.add('px-4', 'py-2', 'border');
+        tdproducto.textContent = x.nombre;
+        const tdcantidad = document.createElement('td');
+        tdcantidad.classList.add('px-4', 'py-2', 'border');
+        tdcantidad.textContent = x.cantidad;
+        tr.appendChild(tdproducto);
+        tr.appendChild(tdcantidad);
+        tbodydetalleorden.appendChild(tr);
+      });
+    }
+
+
+    filtroSucursal.addEventListener('change', filtrarTabla);
+    filtroEstado.addEventListener('change', filtrarTabla);
+
+    function filtrarTabla() {
+      const sucursal:string = filtroSucursal.value.trim().toLowerCase();
+      const estado:string = filtroEstado.value.trim().toLowerCase();
+      
+      filas.forEach(fila => {
+        const textoSucursal:string = fila.cells[1].textContent!.trim().toLowerCase();
+        const textoEstado:string = fila.cells[5].textContent!.trim().toLowerCase();
+        const coincideSucursal = !sucursal || textoSucursal === sucursal;
+        const coincideEstado = !estado || textoEstado === estado;
+        fila.style.display = (coincideSucursal && coincideEstado) ? '' : 'none';
+      });
+    }
+
+    
     function cerrarDialogoExterno(event:Event) {
-      if (/*event.target === miDialogoProducto ||*/ (event.target as HTMLInputElement).value === 'salir') {
-        miDialogoProducto.close();
+      const target = event.target;
+       const btnxcerrardetalleorden = (target as HTMLElement).parentElement?.id;
+      if (target === miDialogoDetalleTrasladoSolicitud || (target as HTMLInputElement).value === 'salir' || btnxcerrardetalleorden == 'btnXCerrarDetalleTrasladoSolicitud' || target == btnXCerrarDetalleTrasladoSolicitud) {
+        miDialogoDetalleTrasladoSolicitud.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

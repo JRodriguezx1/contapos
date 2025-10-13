@@ -6,6 +6,9 @@
     const parrafoSededestino = document.querySelector('#sededestino') as HTMLParagraphElement;
     const parrafotipo = document.querySelector('#tipo') as HTMLParagraphElement;
     const tbodydetalleorden = document.querySelector('#tabladetalleorden tbody') as HTMLTableElement;
+    const filtroSucursal = document.getElementById('filtroSucursal') as HTMLSelectElement;
+    const filtroEstado = document.getElementById('filtroEstados') as HTMLSelectElement;
+    const filas = document.querySelectorAll<HTMLTableRowElement>('#tablaTraslados tbody tr');
 
     type ordenestrasladosinv = {
       id:string,
@@ -48,9 +51,13 @@
     });
 
 
+    ////// cuando se envia a pasa a estado en transito
     function enviar(e:Event){
       let idorden = (e.target as HTMLElement).parentElement?.id!;
       if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
+      
+      const tr = (e.target as HTMLElement).closest('tr') as HTMLTableRowElement;
+      
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -61,19 +68,17 @@
           cancelButtonText: 'No',
       }).then((result:any) => {
           if (result.isConfirmed) {
-              Swal.fire('orden procesada', '', 'success') 
+              //Swal.fire('orden procesada', '', 'success') 
               (async ()=>{ 
                   const datos = new FormData();
-                  datos.append('idsucursalorigen', idorden);
+                  datos.append('id', idorden);
                   try {
                       const url = "/admin/api/confirmarnuevotrasladoinv";  //api llamada a trasladosinvcontrolador para confirmar envio, pasa a estado en transito
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                          setTimeout(() => {
-                              window.location.href = `/admin/almacen/trasladarinventario`;
-                          }, 1100);
-                          Swal.fire(resultado.exito[0], '', 'success') 
+                        tr.children[5].textContent = 'entransito';
+                        Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
                       }
@@ -108,6 +113,7 @@
     function cancelar(e:Event){
       let idorden = (e.target as HTMLElement).parentElement?.id!;
       if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
+      const tr = (e.target as HTMLElement).closest('tr') as HTMLTableRowElement;
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -118,18 +124,15 @@
           cancelButtonText: 'No',
       }).then((result:any) => {
           if (result.isConfirmed) {
-              Swal.fire('orden procesada', '', 'success') 
               (async ()=>{ 
                   const datos = new FormData();
-                  datos.append('idsucursalorigen', idorden);
+                  datos.append('id', idorden);
                   try {
                       const url = "/admin/api/anularnuevotrasladoinv";  //api llamada a trasladosinvcontrolador para anular envio, pasa a estado en transito
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                          setTimeout(() => {
-                              window.location.href = `/admin/almacen/trasladarinventario`;
-                          }, 1100);
+                          tr.remove();
                           Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
@@ -159,6 +162,22 @@
         tr.appendChild(tdproducto);
         tr.appendChild(tdcantidad);
         tbodydetalleorden.appendChild(tr);
+      });
+    }
+
+    filtroSucursal.addEventListener('change', filtrarTabla);
+    filtroEstado.addEventListener('change', filtrarTabla);
+
+    function filtrarTabla() {
+      const sucursal:string = filtroSucursal.value.trim().toLowerCase();
+      const estado:string = filtroEstado.value.trim().toLowerCase();
+      
+      filas.forEach(fila => {
+        const textoSucursal:string = fila.cells[1].textContent!.trim().toLowerCase();
+        const textoEstado:string = fila.cells[5].textContent!.trim().toLowerCase();
+        const coincideSucursal = !sucursal || textoSucursal === sucursal;
+        const coincideEstado = !estado || textoEstado === estado;
+        fila.style.display = (coincideSucursal && coincideEstado) ? '' : 'none';
       });
     }
 

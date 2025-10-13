@@ -184,7 +184,8 @@ $router->post('/admin/api/apisolicitarinventario', [trasladosinvcontrolador::cla
 $router->post('/admin/api/apinuevotrasladoinv', [trasladosinvcontrolador::class, 'apinuevotrasladoinv']); //api llamada desde nuevotrasladoinv.ts para enviar productos a otras sedes
 $router->post('/admin/api/editarOrdenTransferencia', [trasladosinvcontrolador::class, 'editarOrdenTransferencia']); //api llamada desde editartrasladoinv.ts para actualizar lista de productos a enviar
 $router->post('/admin/api/confirmarnuevotrasladoinv', [trasladosinvcontrolador::class, 'confirmarnuevotrasladoinv']); //api llamada desde trasladarinv.ts para confirmar lista de productos a enviar y descontar de inventario y pasar a estado en transito
-$router->post('/admin/api/anularnuevotrasladoinv', [trasladosinvcontrolador::class, 'anularnuevotrasladoinv']); //api llamada desde trasladarinv.ts para confirmar lista de productos a enviar y descontar de inventario y pasar a estado en transito
+$router->post('/admin/api/confirmaringresoinv', [trasladosinvcontrolador::class, 'confirmaringresoinv']); //api llamada desde solicitudesrecibidasinv.ts para confirmar lista de productos a recibir y sumar de inventario y pasar a estado en entregado
+$router->post('/admin/api/anularnuevotrasladoinv', [trasladosinvcontrolador::class, 'anularnuevotrasladoinv']); //api llamada desde trasladarinv.ts y solicitudesrecibidasinv para cancelar orden de traslado o solicitud
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada

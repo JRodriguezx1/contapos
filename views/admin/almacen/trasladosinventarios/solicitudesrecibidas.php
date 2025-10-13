@@ -20,28 +20,28 @@
             <div class="grid grid-cols-2 items-center bg-indigo-50 rounded-2xl shadow-md p-6 flex-col justify-center hover:scale-105 hover:shadow-lg transition">
                 <!-- <div class="bg-indigo-200 text-indigo-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">⏳</div> -->
                 <div class="text-xl justify-self-start font-semibold text-indigo-600 uppercase tracking-wide">Pendientes</div>
-                <div class="justify-self-end text-4xl font-extrabold text-indigo-700">5</div>
+                <div class="justify-self-end text-4xl font-extrabold text-indigo-700"><?php echo $pendientes??0;?></div>
             </div>
 
             <!-- Aprobadas -->
             <div class="grid grid-cols-2 items-center bg-emerald-50 rounded-2xl shadow-md p-6 flex-col justify-center hover:scale-105 hover:shadow-lg transition">
                 <!-- <div class="bg-emerald-200 text-emerald-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">✅</div> -->
-                <div class="text-xl justify-self-start font-semibold text-emerald-600 uppercase tracking-wide">Aprobadas</div>
-                <div class="justify-self-end text-4xl font-extrabold text-emerald-700">2</div>
+                <div class="text-xl justify-self-start font-semibold text-emerald-600 uppercase tracking-wide">En transito</div>
+                <div class="justify-self-end text-4xl font-extrabold text-emerald-700"><?php echo $entransito??0;?></div>
             </div>
 
             <!-- Rechazadas -->
             <div class="grid grid-cols-2 items-center bg-rose-50 rounded-2xl shadow-md p-6 justify-center hover:scale-105 hover:shadow-lg transition">
                 <!-- <div class="bg-rose-200 text-rose-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">❌</div> -->
                 <div class="text-xl justify-self-start font-semibold text-rose-600 uppercase tracking-wide">Rechazadas</div>
-                <div class="justify-self-end text-4xl font-extrabold text-rose-700">1</div>
+                <div class="justify-self-end text-4xl font-extrabold text-rose-700"><?php echo $rechazadas??0;?></div>
             </div>
 
             <!-- Entregadas -->
             <div class="grid grid-cols-2 items-center bg-sky-50 rounded-2xl shadow-md p-6 justify-center hover:scale-105 hover:shadow-lg transition">
                 <!-- <div class="bg-sky-200 text-sky-700 rounded-full w-12 h-12 flex items-center justify-center text-2xl mb-3">📦</div> -->
                 <div class="text-xl justify-self-start font-semibold text-sky-600 uppercase tracking-wide">Entregadas</div>
-                <div class="justify-self-end text-4xl font-extrabold text-sky-700">3</div>
+                <div class="justify-self-end text-4xl font-extrabold text-sky-700"><?php echo $entregadas??0;?></div>
             </div>
         </div> <!-- End Indicadores rápidos -->
 
@@ -49,28 +49,29 @@
         <div class="flex gap-3 mb-6 w-full flex-col md:flex-row p-2">
             <input type="text" placeholder="Buscar por # o producto..." class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
             
-            <select class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-            <option value="">Todas las sedes</option>
-            <option value="norte">Sede Norte</option>
-            <option value="centro">Sede Centro</option>
+            <select id="filtroSucursal" class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                <option value="">Todas las sedes</option>
+                <?php foreach($sucursales as $value): ?>
+                    <option value="<?php echo $value->nombre;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
             </select>
 
-            <select class="bg-gray-50 border w-full border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
-            <option value="">Todos los estados</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="aprobado">Aprobado</option>
-            <option value="rechazado">Rechazado</option>
-            <option value="entregado">Entregado</option>
+            <select id="filtroEstados" class="bg-gray-50 border w-full border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                <option value="">Todos los estados</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="entransito">En transito</option>
+                <option value="rechazado">Rechazado</option>
+                <option value="entregada">Entregado</option>
             </select>
         </div>
 
         <!-- Tabla -->
         <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
-            <table class="w-full text-left border-collapse">
+            <table id="tablaTraslados" class="w-full text-left border-collapse">
                 <thead class="bg-gray-50 text-gray-600 text-base font-semibold uppercase tracking-wide">
                     <tr>
                         <th class="p-4"># Solicitud</th>
-                        <th class="p-4">Sede</th>
+                        <th class="p-4">Sede origen</th>
                         <th class="p-4">Usuario</th>
                         <th class="p-4">Fecha</th>
                         <th class="p-4">Tipo</th>
@@ -80,23 +81,23 @@
                 </thead>
                 <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
                     <?php foreach($solicitudesrecividas as $value): ?>
-                        <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-gray-50 transition trasladosolicitudinv">
                             <td class="p-4 font-medium text-gray-900"><?php echo $value->id;?></td>
                             <td class="p-4"><?php echo $value->sucursalorigen;?></td>
                             <td class="p-4"><?php echo $value->usuario;?></td>
                             <td class="p-4"><?php echo $value->created_at;?></td>
                             <td class="p-4"><?php echo $value->tipo=='Salida'?'Ingreso':'Solicitud';?></td>
                             <td class="p-4">
-                                <span class="px-3 py-1 text-base font-semibold bg-indigo-100 text-indigo-600 rounded-full">
+                                <span class="px-3 py-1 text-base font-semibold bg-indigo-100 rounded-full <?php echo $value->estado=='pendiente'?'bg-indigo-100 text-indigo-600':($value->estado=='entransito'?'bg-yellow-100 text-yellow-700':($value->estado=='entregada'?'bg-sky-50 text-sky-600':'bg-rose-50 text-rose-600'));?>">
                                     <?php echo $value->estado;?>
                                 </span>
                             </td>
-                            <td class="p-4 flex items-center justify-center gap-2">
-                                <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                            <td id="<?php echo $value->id;?>" class="p-4 flex items-center justify-center gap-2">
+                                <button class="detalle flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
                                     👁 Ver
                                 </button>
-                                <button class="w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
-                                <button class="w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                                <button class="enviar w-11 h-11 flex items-center justify-center text-green-600 border border-green-200 rounded-full hover:bg-green-50 text-xl">✅</button>
+                                <button class="cancelar w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
                             </td>
                         </tr>
                     <?php endforeach; ?> 
@@ -104,4 +105,39 @@
             </table>
         </div>
     </div>
+
+    <!-- MODAL DE DETALLE DE TRASLADO SALIDA O SOLICITUD -->
+    <dialog id="miDialogoDetalleTrasladoSolicitud" class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-4xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
+      <!-- Encabezado -->
+      <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
+        <h4 id="modalDetalleTrasladoSolicitud" class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Detalle Traslado/Solicutd de mercancia
+        </h4>
+        <button id="btnXCerrarDetalleTrasladoSolicitud" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+          <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
+        </button>
+      </div>
+
+      <div id="contenidodetalle" class="">
+        <div>
+          <p>Origen: <span id="sedeorigen"></span></p>
+          <p>Destino: <span id="sededestino"></span></p>
+          <p>Tipo: <span id="tipo"></span></p>
+        </div>
+        <table id="tabladetalleorden" class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-gray-100 text-gray-700">
+            <tr>
+              <th class="px-4 py-2 border">Producto</th>
+              <th class="px-4 py-2 border">Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+
+      </div>
+      
+    </dialog>
+
 </div>
