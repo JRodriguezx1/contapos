@@ -10,7 +10,7 @@
     </div> -->
 
     <!-- Menú flotante en la parte inferior -->
-    <div class="fixed z-50 w-full h-[7rem] max-w-[33rem] -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
+    <div class="fixed z-50 w-full h-[7rem] max-w-[33rem] -translate-x-1/2 bg-white dark:bg-gray-800 border border-gray-200 rounded-full bottom-4 left-1/2 dark:border-gray-600 shadow-lg">
         <div class="grid h-full max-w-[33rem] grid-cols-5 mx-auto group">
             <a href="/admin/configuracion" data-tooltip-target="tooltip-home" class="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 dark:hover:bg-gray-800">
                 <svg class="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">

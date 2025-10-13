@@ -90,8 +90,8 @@
   <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1): ?>
     <div class="accordion">
         <input type="checkbox" id="first">
-        <label class="etiqueta text-gray-500" for="first">Resumen</label>
-        <div class="wrapper">
+        <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>
+        <div class="wrapper flex flex-col lg:flex-row gap-8">
             <div class="wrapper-content">
                 <div class="content">
 
@@ -100,7 +100,7 @@
                             <table class="tabla2" width="100%" id="">
                                 <thead>
                                     <tr>
-                                        <th>Cuadre de caja</th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Cuadre de caja</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,10 +133,10 @@
 
                             <!-- DETALLE DE IMPUESTOS-->
                             <div class="mt-32 mb-12">
-                                <p class="text-sky-400 font-medium">Detalle de Impuestos</p>
+                                <p class="text-sky-400 text-center  font-bold">Detalle de Impuestos</p>
                                 <table class="tabla2" width="100%" id="tablaMediosPago">
                                     <thead>
-                                        <tr>
+                                        <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Tarifa</th>
                                             <th>Base Gravable</th>
                                             <th>Impuesto</th>
@@ -159,8 +159,7 @@
                             <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                                 <thead>
                                     <tr>
-                                        <th>Medios de pago</th>
-                                        <th></th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pago</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -177,8 +176,7 @@
                             <table class="tabla2" width="100%" id="">
                                 <thead>
                                     <tr>
-                                        <th>Datos de venta</th>
-                                        <th></th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Datos de venta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -221,8 +219,7 @@
                             <table class="tabla2 mb-12" width="100%" id="">
                                 <thead>
                                     <tr>
-                                        <th>Tipo de facturas</th>
-                                        <th></th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Tipo de facturas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -237,24 +234,24 @@
                                 </tbody>
                             </table>
                             
-                            <div>
-                                <p class="text-sky-400 font-medium">Analisis Sobrantes y Faltantes</p>
-                                <table class="tabla2 mb-12" width="100%" id="sobranteFaltante">
+                            <div class="overflow-x-auto">
+                                <p class="text-sky-400 font-bold text-center">Analisis Sobrantes y Faltantes</p>
+                                <table class="tabla2 w-full min-w-[500px] mb-12" width="100%" id="sobranteFaltante">
                                     <thead>
-                                        <tr>
-                                            <th>Medios de pago</th>
-                                            <th> Sisitema </th>
-                                            <th> Valor declarado </th>
-                                            <th> Diferencia </th>
+                                        <tr class="bg-gray-100 text-gray-700 p-3 text-center">
+                                            <th class="p-2">Medios de pago</th>
+                                            <th class="p-2"> Sisitema </th>
+                                            <th class="p-2"> Valor declarado </th>
+                                            <th class="p-2"> Diferencia </th>
                                         </tr>
                                     </thead>
                                     <tbody class="cuerpoanalisis">
                                         <?php foreach($sobrantefaltante as $index => $value): ?>
                                         <tr class="<?php echo $value->nombremediopago=='Efectivo'?'!border-2 !border-indigo-600':'';?>">        
-                                            <td class=""><?php echo $value->nombremediopago;?></td> 
-                                            <td class="colsistem"><?php echo number_format($value->valorsistema, "0", ",", ".");?></td>
-                                            <td class="coldeclarado" data-mediopagoid="<?php echo $value->id_mediopago;?>"><?php echo number_format($value->valordeclarado, "0", ",", ".");?></td>
-                                            <td class="coldif"><?php echo number_format($value->valordeclarado-$value->valorsistema, "0", ",", ".");?></td>
+                                            <td class="p-2"><?php echo $value->nombremediopago;?></td> 
+                                            <td class="p-2 colsistem"><?php echo number_format($value->valorsistema, "0", ",", ".");?></td>
+                                            <td class="p-2 coldeclarado" data-mediopagoid="<?php echo $value->id_mediopago;?>"><?php echo number_format($value->valordeclarado, "0", ",", ".");?></td>
+                                            <td class="p-2 coldif"><?php echo number_format($value->valordeclarado-$value->valorsistema, "0", ",", ".");?></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -263,10 +260,10 @@
 
                             <table class="tabla2 mb-12" width="100%" id="ventasXUsuario">
                                 <thead>
-                                    <tr>
+                                    <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                         <th>Ventas por usuario</th>
-                                        <th></th>
-                                        <th></th>
+                                        <th>N°</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -283,48 +280,51 @@
                         </div>
                     </div>
 
-                    <h5 class="text-gray-500 border border-gray-300 px-4 py-3 mb-4">Ventas del dia</h5>
+                    <h5 class="text-sky-400 font-bold uppercase text-center mb-3">Ventas del dia</h5>
                     <!-- Facturas del dia -->
-                    <table class="display responsive nowrap tabla" width="100%" id="tablaVentas">
-                        <thead>
-                            <tr>
-                                <th>N.</th>
-                                <th>Fecha</th>
-                                <th>Cliente</th>
-                                <th>Factura</th>
-                                <th>Medio pago</th>
-                                <th>Estado</th>
-                                <th>Valor Bruto</th>
-                                <th>Total</th>
-                                <th class="accionesth">Acciones</th>
+                    <div class="overflow-x-auto">
+                        <table class="display responsive nowrap tabla w-full min-w-[700px]" id="tablaVentas">
+                            <thead>
+                            <tr class="bg-gray-100 text-gray-700 text-center">
+                                <th class="p-2">N.</th>
+                                <th class="p-2">Fecha</th>
+                                <th class="p-2">Cliente</th>
+                                <th class="p-2">Factura</th>
+                                <th class="p-2">Medio pago</th>
+                                <th class="p-2">Estado</th>
+                                <th class="p-2">Valor Bruto</th>
+                                <th class="p-2">Total</th>
+                                <th class="p-2 accionesth">Acciones</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <?php foreach($facturas as $index => $value): ?>
-                            <tr> 
-                                <td class=""><?php echo $index+1;?></td>        
-                                <td class=""><?php echo $value->fechapago;?></td> 
-                                <td class=""><?php echo $value->cliente;?></td> 
-                                <td class=""><?php echo $value->id;?></td>
+                            <tr>
+                                <td><?php echo $index+1;?></td>
+                                <td><?php echo $value->fechapago;?></td>
+                                <td><?php echo $value->cliente;?></td>
+                                <td><?php echo $value->id;?></td>
                                 <td>
-                                    <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
-                                        <?php foreach($value->mediosdepago as $idx => $element): ?>
-                                        <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
-                                        <?php endforeach; ?>
-                                    </div>
+                                <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
+                                    <?php foreach($value->mediosdepago as $idx => $element): ?>
+                                    <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                                    <?php endforeach; ?>
+                                </div>
                                 </td>
                                 <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense';?>"><?php echo $value->estado;?></td>
-                                <td class="">$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
-                                <td class="">$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
-                                <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                                        <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
-                                    </div>
+                                <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
+                                <td>$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
+                                <td class="accionestd">
+                                <div class="acciones-btns" id="<?php echo $value->id;?>">
+                                    <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
+                                    <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                    
+                            </tbody>
+                        </table>
+                    </div>    
                 </div> <!--fin content -->
             </div> <!--fin wrpper-content-->
         </div> <!--fin wrapper -->
@@ -382,7 +382,7 @@
   </dialog>
   
   <!-- MODAL ventana para cerrar caja-->
-  <dialog id="Modalcerrarcaja" class="midialog-xs p-5">
+  <dialog id="Modalcerrarcaja" class="midialog-xs p-12">
     <div>
         <h4 class="font-semibold text-gray-700 mb-4">Caja principal</h4>
         <p class="text-gray-600">Desea cerrar la caja? Ya no se podra modificar.</p>
@@ -414,7 +414,7 @@
     </form>
   </dialog>
 
-  <div><p class="text-gray-500 text-center text-lg">J2Software POS MultiSucursal</p></div>
+  <div><a href="www.j2softwarepos.com" class="text-gray-500 text-center block text-lg">J2 Software POS MultiSucursal</a></div>
 
 </div>
 </div>

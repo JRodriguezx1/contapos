@@ -147,12 +147,25 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-200 py-6 text-center text-sm text-gray-400 leading-relaxed">
-        <p class="mb-2">Esta factura es un documento válido generado por <span class="font-semibold text-gray-600">Innova Tech SAS</span>.</p>
-        <p class="mb-1">Gracias por confiar en nosotros.</p>
-        <p class="mb-1">Contáctanos: <a href="mailto:contabilidad@innovatech.com" class="text-indigo-600 hover:underline">contabilidad@innovatech.com</a> | Tel: 3183658250</p>
-        <p class="mb-1">Dirección: Cr 14 #18-31 Edificio Sur, Armenia - Quindío</p>
-        <p class="mt-4 text-xs text-gray-400">© <?php echo date("Y"); ?> Innova Tech SAS. Todos los derechos reservados.</p>
+    <footer class="border-t border-gray-200 py-5 text-center text-sm text-gray-500 leading-snug">
+        <p class="mb-1.5">
+            Esta factura es un documento válido generado electrónicamente por 
+            <span class="font-semibold text-gray-700">Nombre de la Empresa S.A.S</span> - NIT 000000000-0.
+        </p>
+        <p class="mb-1">Gracias por su compra.</p>
+        <p class="mb-1">
+            Contáctanos: 
+            <a href="mailto:correo@empresa.com" class="text-indigo-600 hover:underline">correo@empresa.com</a> 
+            | Tel: 000 000 0000
+        </p>
+        <p class="mb-1">Dirección: Calle 00 #00-00, Ciudad - Departamento</p>
+        <p class="mt-3 text-xs text-gray-400">
+            © <?php echo date("Y"); ?> Nombre de la Empresa. Todos los derechos reservados.
+        </p>
+        <p class="mt-1 text-xs text-gray-400">
+            Generado con <span class="text-indigo-500 font-semibold">J2 Software POS Multisucursal</span>
+        </p>
     </footer>
     <!-- End Footer -->
+
 </div>

@@ -10,9 +10,9 @@
         <button id="btnImprimirDetalleCaja" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
-    <div class="accordion">
+    <div class="accordion pb-20">
       <input type="checkbox" id="first">
-      <label class="etiqueta text-gray-500 mb-4" for="first">Resumen</label>  
+      <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>  
 
                 <div class="flex flex-col tlg:flex-row gap-12 mb-8">
                     <div class="tlg:basis-1/2">
@@ -35,7 +35,7 @@
                         <table class="tabla2" width="100%" id="">
                             <thead>
                                 <tr>
-                                    <th>Cuadre de caja</th>
+                                    <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Cuadre de caja</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,10 +68,10 @@
 
                         <!-- DETALLE DE IMPUESTOS-->
                         <div class="mt-32 mb-12">
-                            <p class="text-sky-400 font-medium">Detalle de Impuestos</p>
+                            <p class="text-sky-400 text-center  font-bold">Detalle de Impuestos</p>
                             <table class="tabla2" width="100%" id="tablaMediosPago">
                                 <thead>
-                                    <tr>
+                                    <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                         <th>Tarifa</th>
                                         <th>Base Gravable</th>
                                         <th>Impuesto</th>
@@ -94,8 +94,7 @@
                         <table class="tabla2 mb-12" width="100%" id="">
                             <thead>
                                 <tr>
-                                    <th>Medios de pago</th>
-                                    <th></th>
+                                    <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pago</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,8 +111,7 @@
                         <table class="tabla2" width="100%" id="">
                             <thead>
                                 <tr>
-                                    <th>Datos de venta</th>
-                                    <th></th>
+                                    <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Datos de venta</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -156,8 +154,7 @@
                         <table class="tabla2 mb-12" width="100%" id="">
                             <thead>
                                 <tr>
-                                    <th>Tipo de facturas</th>
-                                    <th></th>
+                                    <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Tipo de facturas</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -172,11 +169,11 @@
                             </tbody>
                         </table>
                         
-                        <div>
-                            <p class="text-sky-400 font-medium">Analisis Sobrantes y Faltantes</p>
-                            <table class="tabla2 mb-12" width="100%" id="">
+                        <div class="overflow-x-auto">
+                            <p class="text-sky-400 font-bold text-center">Analisis Sobrantes y Faltantes</p>
+                            <table class="tabla2 mb-12 min-w-[500px]" width="100%" id="">
                                 <thead>
-                                    <tr>
+                                    <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                         <th>Medios de pago</th>
                                         <th> Sisitema </th>
                                         <th> Valor declarado </th>
@@ -198,10 +195,10 @@
 
                         <table class="tabla2 mb-12" width="100%" id="">
                             <thead>
-                                <tr>
+                                <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                     <th>Ventas por usuario</th>
-                                    <th></th>
-                                    <th></th>
+                                    <th>N°</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -218,39 +215,41 @@
                     </div>
                 </div>
 
-                <h5 class="text-gray-500 border border-gray-300 px-4 py-3 mb-4">Ventas del dia</h5>
+                <h5 class="text-sky-400 font-bold uppercase text-center mb-3">Ventas del dia</h5>
                 <!-- Facturas del dia -->
-                <table class="display responsive nowrap tabla" width="100%" id="">
-                    <thead>
-                        <tr>
-                            <th>N.</th>
-                            <th>Fecha</th>
-                            <th>Cliente</th>
-                            <th>Factura</th>
-                            <th>Estado</th>
-                            <th>Valor Bruto</th>
-                            <th>Total</th>
-                            <th class="accionesth">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($facturas as $index => $value): ?>
-                        <tr> 
-                            <td class=""><?php echo $index+1;?></td>        
-                            <td class=""><?php echo $value->fechapago;?></td> 
-                            <td class=""><?php echo $value->cliente;?></td> 
-                            <td class=""><?php echo $value->id;?></td>
-                            <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense';?>"><?php echo $value->estado;?></td>
-                            <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
-                            <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
-                            <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                                    <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                 <div class="overflow-x-auto">
+                     <table class="display responsive nowrap tabla w-full min-w-[700px]" width="100%" id="">
+                         <thead>
+                             <tr class="bg-gray-100 text-gray-700 text-center">
+                                 <th class="p-2">N.</th>
+                                 <th class="p-2">Fecha</th>
+                                 <th class="p-2">Cliente</th>
+                                 <th class="p-2">Factura</th>
+                                 <th class="p-2">Estado</th>
+                                 <th class="p-2">Valor Bruto</th>
+                                 <th class="p-2">Total</th>
+                                 <th class="p-2 accionesth">Acciones</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <?php foreach($facturas as $index => $value): ?>
+                             <tr> 
+                                 <td class=""><?php echo $index+1;?></td>        
+                                 <td class=""><?php echo $value->fechapago;?></td> 
+                                 <td class=""><?php echo $value->cliente;?></td> 
+                                 <td class=""><?php echo $value->id;?></td>
+                                 <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense';?>"><?php echo $value->estado;?></td>
+                                 <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
+                                 <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
+                                 <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
+                                         <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                     </div>
+                                 </td>
+                             </tr>
+                             <?php endforeach; ?>
+                         </tbody>
+                     </table>
+                 </div>
       
     </div> <!-- fin accordion-->
 </div>
