@@ -44,8 +44,8 @@
   <div class="mt-4">
     <p class="text-gray-500 text-xl">Gastos</p>
     <table id="tablaGastos" class="display responsive nowrap tabla" width="100%"></table>
-    
   </div>
+  
   <div class="mt-4">
     <p class="text-gray-500 text-xl">Ingresos</p>
     <table id="tablaIngresos" class="display responsive nowrap tabla" width="100%">

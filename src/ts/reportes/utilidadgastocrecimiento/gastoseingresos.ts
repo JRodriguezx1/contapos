@@ -113,7 +113,7 @@
         datos.append('fechainicio', dateinicio);
         datos.append('fechafin', datefin);
         try {
-            const url = "/admin/api/ventasxcliente"; //llama a la api que esta en reportescontrolador.php
+            const url = "/admin/api/gastoseingresos"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             datosVentaXCliente = resultado;

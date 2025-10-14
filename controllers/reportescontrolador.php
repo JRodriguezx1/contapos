@@ -347,7 +347,7 @@ class reportescontrolador{
     echo json_encode($datos);
   }
 
-  //Reporte de gastos e ingresos
+  //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
   public static function apigastoseingresos(){
     session_start();
     isadmin();
