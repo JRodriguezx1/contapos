@@ -9,14 +9,20 @@
     const btnayer = document.querySelector('#btnayer') as HTMLButtonElement;
     let fechainicio:string = "", fechafin:string = "", tablaGastos:HTMLElement;
 
-    interface ventaxcliente {
-        id:string,
+    interface apigastos {
+        Id:string,
+        id_compra:string,
+        idg_cierrecaja:string,
+        nombrecaja:string,
+        nombrebanco:string,
         nombre:string,
-        cantidad_facturas:string,
-        total_ventas:string
+        operacion:string,
+        categoriagasto:string,
+        valor:string,
+        fecha:string
     } 
 
-    let datosVentaXCliente:ventaxcliente[] = [];
+    let datosGastos:apigastos[] = [];
 
 
     // SELECTOR DE FECHAS DEL CALENDARIO
@@ -116,9 +122,9 @@
             const url = "/admin/api/gastoseingresos"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            datosVentaXCliente = resultado;
-            console.log(datosVentaXCliente);
-            printTableVentasXCliente();
+            datosGastos = resultado;
+            console.log(datosGastos);
+            printTableGastos();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
             console.log(error);
@@ -126,28 +132,52 @@
     }
 
 
-    printTableVentasXCliente();
-    function printTableVentasXCliente(){
+    printTableGastos();
+    function printTableGastos(){
         tablaGastos = ($('#tablaGastos') as any).DataTable({
             destroy: true, // importante si recargas la tabla
-            data: datosVentaXCliente,
+            data: datosGastos,
             columns: [
-                        {title: 'Nombre', data: 'nombre'}, 
-                        {title: 'Cantidad_facturas', data: 'cantidad_facturas'}, 
-                        {title: 'Total ventas', data: 'total_ventas', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'id', data: 'Id'}, 
+                        {title: 'Caja', data: 'nombrecaja'},
+                        {title: 'Banco', data: 'nombrebanco'},
+                        {title: 'Usuario', data: 'nombre'},
+                        {title: 'Operacion', data: 'operacion'},
+                        {title: 'Tipo Gasto', data: 'categoriagasto'},
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Fecha', data: 'fecha'},
                         { 
                             title: 'Acciones', 
                             data: null, 
                             orderable: false, 
                             searchable: false, 
                             render: (data: any, type: any, row: any) => { 
-                                    return `<button class="btn-ver" data-id="${row.id}">✳️​</button>
-                                            <button class="btn-editar" data-id="${row.id}">🖊️​</button>
-                                            <button class="btn-eliminar" data-id="${row.id}">⛔​</button>`}
+                                    return `<button class="btn-ver" data-id="${row.Id}">✳️​</button>
+                                            <button class="btn-editar" data-id="${row.Id}">🖊️​</button>
+                                            <button class="btn-eliminar" data-id="${row.Id}">⛔​</button>`}
                         }
                     ],
         });
     }
+
+    document.querySelector('#tablaGastos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+      const target = e.target as HTMLButtonElement;
+      if((e.target as HTMLButtonElement)?.classList.contains("btn-editar"))editarGasto(e);
+      if(target?.classList.contains("btn-eliminar"))eliminarGasto(e);
+    });
+
+
+    function editarGasto(e:Event){
+        let idgasto = (e.target as HTMLButtonElement)?.dataset.id;
+        console.log(idgasto);
+    }
+
+    function eliminarGasto(e:Event){
+        let idgasto = (e.target as HTMLButtonElement)?.dataset.id;
+        console.log(idgasto);
+    }
+
+
 
   }
 

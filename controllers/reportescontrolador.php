@@ -355,15 +355,18 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
-              FROM facturas f JOIN clientes c ON f.idcliente = c.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
-              GROUP BY c.id, c.nombre;";
+      $sql = "SELECT g.id AS Id, g.fecha, CONCAT(u.nombre,' ',u.apellido) AS nombre, g.id_banco, b.nombre AS nombrebanco, g.idg_caja, c.nombre AS nombrecaja,
+	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, cg.id , cg.nombre AS categoriagasto
+              FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
+              JOIN usuarios u ON g.idg_usuario = u.id
+              JOIN cierrescajas cj ON g.idg_cierrecaja = cj.id
+              LEFT JOIN bancos b ON g.id_banco = b.id
+              JOIN caja c ON g.idg_caja = c.id
+	            WHERE g.id_sucursalfk = $idsucursal AND g.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY g.fecha DESC;";
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);
   }
-
 
 
 }
