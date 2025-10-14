@@ -12,9 +12,9 @@ class tarifas extends \Model\ActiveRecord{
         $this->valor = $args['valor']??'';
     }
 
-
-    public function validarTarifa(){
+    public function validar(){
         if(!$this->nombre)self::$alertas['error'][] = "Nombre de tarifa no ingresada";
+        if(strlen($this->nombre)>22)self::$alertas['error'][] = "Nombre de tarifa muy extenso";
         if(!$this->valor)self::$alertas['error'][] = "Valor de la tarifa no ingresada";
         if(!is_numeric($this->valor))self::$alertas['error'][] = 'Valor de la tarifa es incorrecto debe ser numerico';
         return self::$alertas;

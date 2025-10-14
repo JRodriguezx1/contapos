@@ -130,17 +130,11 @@
             <label class="formulario__label" for="tipodegasto">Tipo de gasto</label>
             <select id="tipodegasto" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos">
                 <option value="" disabled selected>-Seleccionar-</option>
-                <option value="1">Reabastecimiento</option>
-                <option value="2">Arriendo o alquiler de espacio</option>
-                <option value="3">Marketing y publicidad</option>
-                <option value="4">Papeleria</option>
-                <option value="5">Mantenimiento y/o reparacion</option>
-                <option value="6">Alquiler de equipos</option>
-                <option value="7">Servicios publicos</option>
-                <option value="8">Insumos de aseo</option>
-                <option value="9">Logistica distribucion o transporte</option>
-                <option value="10">Otros</option>
+                <?php foreach($categoriasgastos as $value): ?>
+                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
             </select>
+            <a class=" text-base text-gray-600 font-normal text-right" href="/admin/caja/categoriaGasto">Agregar categoria de gasto</a>
         </div>
         <div class="mb-6">
             <label class="formulario__label" for="dinero">Ingresar dinero</label>

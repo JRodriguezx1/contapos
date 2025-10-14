@@ -69,15 +69,17 @@
                 cancelButtonText: 'No',
             }).then((result:any) => {
                 if (result.isConfirmed) {
+                    (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
                     (async ()=>{
                         try {
                         const url = "/admin/api/reiniciarinv"; //llamado a la API REST y se trae las direcciones segun cliente elegido
                         const respuesta = await fetch(url); 
                         const resultado = await respuesta.json();
+                        (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
                         msjalertToast('success', '¡Éxito!', resultado);
                         setTimeout(() => {
                           window.location.reload();  
-                        }, 1200);
+                        }, 1260);
                         } catch (error) {
                             console.log(error);
                         }

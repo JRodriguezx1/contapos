@@ -105,6 +105,10 @@ $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscier
 $router->get('/admin/caja/pedidosguardados', [cajacontrolador::class, 'pedidosguardados']);
 $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
+$router->get('/admin/caja/categoriaGasto', [cajacontrolador::class, 'categoriaGasto']);
+$router->post('/admin/caja/categoriaGasto', [cajacontrolador::class, 'categoriaGasto']);
+$router->post('/admin/caja/crear_categoriaGasto', [cajacontrolador::class, 'crear_categoriaGasto']);
+$router->post('/admin/caja/editarcategoriagasto', [cajacontrolador::class, 'editarcategoriagasto']);
 $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen']);  //resumen de la orden
 //$router->get('/admin/caja/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']);  //imprimir factura tipo carta
 $router->get('/admin/caja/detallecredito', [cajacontrolador::class, 'detallecredito']); //detalle de la orden
@@ -209,22 +213,26 @@ $router->get('/admin/api/allclientes', [clientescontrolador::class, 'allclientes
 $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiActualizarcliente']);  //actualizar cliente en clientes.ts
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
 
-$router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.js
-$router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.js para crear cajas
-$router->post('/admin/api/actualizarCaja', [configcontrolador::class, 'actualizarCaja']); //api llamada desde gestioncajas.js para actualizar cajas
-$router->post('/admin/api/eliminarCaja', [configcontrolador::class, 'eliminarCaja']); //api llamada desde gestioncajas.js para eliminar cajas
-$router->get('/admin/api/allfacturadores', [configcontrolador::class, 'allfacturadores']); // me trae todos las cajas desde gestioncajas.js
-$router->post('/admin/api/crearFacturador', [configcontrolador::class, 'crearFacturador']); //api llamada desde gestioncajas.js para crear cajas
-$router->post('/admin/api/actualizarFacturador', [configcontrolador::class, 'actualizarFacturador']); //api llamada desde gestioncajas.js para actualizar cajas
-$router->post('/admin/api/eliminarFacturador', [configcontrolador::class, 'eliminarFacturador']); //api llamada desde gestioncajas.js para eliminar cajas
-$router->get('/admin/api/allbancos', [configcontrolador::class, 'allbancos']); // me trae todos las cajas desde gestionbancos.js
-$router->post('/admin/api/crearBanco', [configcontrolador::class, 'crearBanco']); //api llamada desde gestionbancos.js para crear bancos
-$router->post('/admin/api/actualizarBanco', [configcontrolador::class, 'actualizarBanco']); //api llamada desde gestionbancos.js para actualizar bancos
-$router->post('/admin/api/eliminarBanco', [configcontrolador::class, 'eliminarBanco']); //api llamada desde gestionbancos.js para eliminar bancos
-$router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.js
-$router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.js
-$router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.js
-$router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.js
+$router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.ts
+$router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.ts para crear cajas
+$router->post('/admin/api/actualizarCaja', [configcontrolador::class, 'actualizarCaja']); //api llamada desde gestioncajas.ts para actualizar cajas
+$router->post('/admin/api/eliminarCaja', [configcontrolador::class, 'eliminarCaja']); //api llamada desde gestioncajas.ts para eliminar cajas
+$router->get('/admin/api/allfacturadores', [configcontrolador::class, 'allfacturadores']); // me trae todos las cajas desde gestioncajas.ts
+$router->post('/admin/api/crearFacturador', [configcontrolador::class, 'crearFacturador']); //api llamada desde gestioncajas.ts para crear cajas
+$router->post('/admin/api/actualizarFacturador', [configcontrolador::class, 'actualizarFacturador']); //api llamada desde gestioncajas.ts para actualizar cajas
+$router->post('/admin/api/eliminarFacturador', [configcontrolador::class, 'eliminarFacturador']); //api llamada desde gestioncajas.ts para eliminar cajas
+$router->get('/admin/api/allbancos', [configcontrolador::class, 'allbancos']); // me trae todos las cajas desde gestionbancos.ts
+$router->post('/admin/api/crearBanco', [configcontrolador::class, 'crearBanco']); //api llamada desde gestionbancos.ts para crear bancos
+$router->post('/admin/api/actualizarBanco', [configcontrolador::class, 'actualizarBanco']); //api llamada desde gestionbancos.ts para actualizar bancos
+$router->post('/admin/api/eliminarBanco', [configcontrolador::class, 'eliminarBanco']); //api llamada desde gestionbancos.ts para eliminar bancos
+$router->get('/admin/api/alltarifas', [configcontrolador::class, 'alltarifas']); // me trae todos las cajas desde gestiontarifas.ts
+$router->post('/admin/api/crearTarifa', [configcontrolador::class, 'crearTarifa']); //api llamada desde gestiontarifas.ts para crear tarifas
+$router->post('/admin/api/actualizarTarifa', [configcontrolador::class, 'actualizarTarifa']); //api llamada desde gestiontarifas.ts para actualizar tarifas
+$router->post('/admin/api/eliminarTarifa', [configcontrolador::class, 'eliminarTarifa']); //api llamada desde gestiontarifas.ts para eliminar tarifas
+$router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.ts
+$router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.ts
+$router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.ts
+$router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.ts
 
 $router->get('/admin/api/reporteventamensual', [reportescontrolador::class, 'reporteventamensual']);
 $router->get('/admin/api/ventasGraficaMensual', [reportescontrolador::class, 'ventasGraficaMensual']);  //fetch llamado desde reportes.ts

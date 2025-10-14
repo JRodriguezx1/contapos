@@ -58,7 +58,32 @@ const configdatatables = {
   }
 }
 
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK RAPIDO /////////////////////
+///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA 25 REGISTROS /////////////////////
+const configdatatables25reg = {
+  pageLength: 25,
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+  "deferRender": true,
+  "retrieve": true,
+  "processing": true,
+  language: {
+      search: 'Busqueda',
+      emptyTable: 'No Hay datos disponibles',
+      zeroRecords:    "No se encontraron registros coincidentes",
+      lengthMenu: '_MENU_ Entradas por pagina',
+      info: 'Mostrando pagina _PAGE_ de _PAGES_',
+      infoEmpty: 'No hay entradas a mostrar',
+      infoFiltered: ' (filtrado desde _MAX_ registros)',
+      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+  }
+}
+
+///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA GENERAL /////////////////////
 const configdatatablesgenerico = {
   layout: {
         topStart: {

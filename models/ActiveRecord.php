@@ -646,6 +646,24 @@ class ActiveRecord {
     }
 
 
+    public static function unJoinWhereArrayObj($Obj, $t1id, $t2id, $array = []):array{ //$array = ['confirmado'=>1, 'admin'=>0]
+        $sql = "SELECT ".static::$tabla.".*, ".$Obj::$tabla.".*, ".static::$tabla.".id AS ID"." FROM ".static::$tabla." JOIN ".$Obj::$tabla." ON ".static::$tabla.".".$t1id." = ".$Obj::$tabla.".".$t2id." WHERE";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= " ${key} = '${value}';";
+            }else{
+                $sql.= " ${key} = '${value}' AND ";
+            }
+        }
+        $resultado = self::$db->query($sql);        //SELECT productos_sub.*, subproductos.*, productos_sub.id AS ID FROM productos_sub JOIN subproductos
+        $arreglo = [];                              //ON productos_sub.id_subproducto = subproductos.id
+        while($row = $resultado->fetch_object())     // WHERE productos_sub.id_producto = '2';
+        $arreglo[] = $row;
+        $resultado->free();
+        return $arreglo;
+    }
+
+
     //// se trae todos los registros haciendo un join de 2 tablas
     public static function unJoinAll($Obj, $t1id, $t2id):array{
         $sql = "SELECT ".static::$tabla.".*, ".$Obj::$tabla.".*, ".static::$tabla.".id AS ID"." FROM ".static::$tabla." JOIN ".$Obj::$tabla." ON ".static::$tabla.".".$t1id." = ".$Obj::$tabla.".".$t2id.";";

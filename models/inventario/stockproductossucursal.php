@@ -17,13 +17,16 @@ class stockproductossucursal extends \Model\ActiveRecord{
     }
 
     public static function indicadoresAllProductsXSucursal(int $idsucursal = 1):array|NULL{
-      $query="SELECT p.nombre, p.impuesto, p.tipoproducto, p.tipoproduccion, p.categoria, sps.productoid, sps.stock, sps.stockminimo, p.precio_compra, p.precio_venta, p.idunidadmedida, p.unidadmedida, p.fecha_ingreso, p.visible, 
-      ROUND(SUM(CASE WHEN p.tipoproduccion = 1 THEN sps.stock * p.precio_compra ELSE 0 END) OVER (), 2) AS valorinv, 
-      COUNT(p.id) OVER () AS cantidadreferencias, 
-      SUM(sps.stock) OVER () AS cantidadproductos,
-      SUM(CASE WHEN sps.stock < 10 THEN 1 ELSE 0 END) OVER () AS bajostock,
-      SUM(CASE WHEN sps.stock = 0 THEN 1 ELSE 0 END) OVER () AS productosagotados
-      FROM ".self::$tabla." sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = $idsucursal;";
+      $query="SELECT p.nombre, p.impuesto, p.tipoproducto, p.tipoproduccion, p.categoria, sps.productoid, sps.stock, sps.stockminimo, p.precio_compra, p.precio_venta, p.idunidadmedida, p.unidadmedida, p.fecha_ingreso, p.visible, t.valorinv, t.cantidadreferencias, t.cantidadproductos, t.bajostock,t.productosagotados
+	            FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id
+	            JOIN (SELECT 
+                ROUND(SUM(CASE WHEN (p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1) THEN sps.stock * p.precio_compra ELSE 0 END), 2) AS valorinv, 
+                COUNT(p.id) AS cantidadreferencias, 
+    	          SUM(CASE WHEN (p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1) THEN sps.stock ELSE 0 END) AS cantidadproductos,
+    	          SUM(CASE WHEN (p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1) AND sps.stock < sps.stockminimo THEN 1 ELSE 0 END) AS bajostock,
+    	          SUM(CASE WHEN (p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1) AND sps.stock = 0 THEN 1 ELSE 0 END) AS productosagotados
+    	          FROM ".self::$tabla." sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = $idsucursal
+              ) AS t WHERE sps.sucursalid = $idsucursal;";
       $array = self::camposJoinObj($query);
       return $array;
     }

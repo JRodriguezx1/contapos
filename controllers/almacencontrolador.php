@@ -118,8 +118,8 @@ class almacencontrolador{
     $unidadesmedida = unidadesmedida::all();
     $producto = new productos;
 
+    //$productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
     foreach($productos as $value)$value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
-
     
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
@@ -529,7 +529,8 @@ class almacencontrolador{
   public static function allproducts(){
     session_start();
     isadmin();
-    $productos = productos::all(); 
+    //$productos = productos::all(); 
+    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
     ////////////// calcular el impuesto como global o como discriminado por producto /////////////////////
     $conflocal = config_local::getParamGlobal();
     foreach($productos as $index=>$producto){
@@ -537,6 +538,7 @@ class almacencontrolador{
       if($conflocal['discriminar_impuesto_por_producto']->valor_final == 0){ //si es 0, es no, toma el impuesto global
         $producto->impuesto = $conflocal['porcentaje_de_impuesto']->valor_final;
       }
+      $producto->id = $producto->ID; //esto se hace por la union de las tablas con unJoinWhereArrayObj
       $producto->categoria = categorias::uncampo('id', $producto->idcategoria, 'nombre');
       $producto->preciosadicionales = precios_personalizados::idregistros('idproductoid', $producto->id);
     }
@@ -594,7 +596,7 @@ class almacencontrolador{
             
             if($r){
 
-              //procesamiento de actualizaciones de precios personalizados
+              //PROCESAMIENTO DE ACTUALIZACION DE PRECIOS ADICIONALES
               $arrayIdeliminar = []; $nuevosprecios = [];
               ///IDs a eliminar de la DB
               foreach($preciosAdicionalesDB as $key => $value)
@@ -606,6 +608,11 @@ class almacencontrolador{
               if($arrayIdeliminar)$r1 = precios_personalizados::eliminar_idregistros('id', $arrayIdeliminar);
               if($nuevosprecios)$r2 = $addnewprecios->crear_varios_reg_arrayobj($nuevosprecios);
               if($nuevosPreciosFront) $r3 = precios_personalizados::updatemultiregobj($nuevosPreciosFront, ['precio']);
+
+              //ACTUALIZAR STOCK MINIMO
+              $stockproducto = stockproductossucursal::uniquewhereArray(['productoid'=>$producto->id, 'sucursalid'=>id_sucursal()]);
+              $stockproducto->stockminimo = $producto->stockminimo;
+              $rsm = $stockproducto->actualizar();
 
               if($idunidadmedidaDB != $_POST['idunidadmedida']){ //validar si hubo cambio de unidad de medida
                 $conversion = new conversionunidades;
@@ -1193,11 +1200,24 @@ class almacencontrolador{
 
 
   public static function reiniciarinv(){
-    echo json_encode("reiniciando");
+    session_start();
+    $alertas = [];
+    $idsucursal = id_sucursal();
+    $sql1 = "UPDATE stockproductossucursal SET stock = 0 WHERE sucursalid = $idsucursal;";
+    $sql2 = "UPDATE stockinsumossucursal SET stock = 0 WHERE sucursalid = $idsucursal;";
+    $r1 = stockproductossucursal::actualizarLibre($sql1);
+    $r2 = stockinsumossucursal::actualizarLibre($sql2);
+    if($r1 && $r2){
+      $alertas['exito'][] = "Stock reiniciado completamente";
+    }else{
+      $alertas['error'][] = "Error al reiniciar stock, intenta nuevamente";
+    }
+    echo json_encode($alertas);
   }
 
 
   public static function cambiarestadoproducto(){
+    session_start();
     $producto = productos::find('id', $_POST['id']);
     $alertas=[];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
