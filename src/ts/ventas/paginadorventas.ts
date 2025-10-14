@@ -30,7 +30,7 @@
       const btnCerrarCarritoMovil = document.querySelector('#btnCerrarCarritoMovil') as HTMLButtonElement;
       const screenWidth:number = window.innerWidth;
 
-      //if(screenWidth<992)miDialogoCarritoMovil.appendChild(contenidocarrito);
+      if(screenWidth<992)miDialogoCarritoMovil.appendChild(contenidocarrito);
 
       window.addEventListener('resize', ()=>{
         if (window.innerWidth >= 992) {

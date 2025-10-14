@@ -233,7 +233,12 @@ class cajacontrolador{
     $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $categoriagasto = categoriagastos::find('id', $_POST['id']);
-      $r = $categoriagasto->eliminar_registro();
+      try {
+        $r = $categoriagasto->eliminar_registro();
+      } catch (\Throwable $th) {
+        $r = false;
+      }
+      
       if($r){
         $alertas['exito'][] = "Categoria de gastos eliminada correctamente";
       }else{
