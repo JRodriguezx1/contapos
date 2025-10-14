@@ -6,6 +6,26 @@
         <span class="sr-only">Atrás</span>
     </a>
 
+    <div class="flex flex-wrap gap-5 mt-6">
+        <!-- Traslado de inventario -->
+        <a href="/admin/almacen/trasladarinventario"
+            class="grid place-items-center w-[106px] h-46 bg-gray-50 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-100 transition p-4">
+            <span class="material-symbols-outlined text-5xl text-indigo-600 mb-2">sync_alt</span>
+            <p class="text-gray-700 font-semibold text-center text-sm uppercase tracking-wide m-0">
+            Trasladar<br>inventario
+            </p>
+        </a>
+
+        <!-- Solicitud de inventario -->
+        <a href="/admin/almacen/solicitudesrecibidas"
+            class="grid place-items-center w-[106px] h-46 bg-gray-50 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-100 transition p-4">
+            <span class="material-symbols-outlined text-5xl text-indigo-600 mb-2">move_to_inbox</span>
+            <p class="text-gray-700 font-semibold text-center text-sm uppercase tracking-wide m-0">
+            Solicitudes<br>recibidas
+            </p>
+        </a>
+    </div>
+
     <div class="p-6 dark:bg-neutral-900 rounded-2xl">
         <!-- Barra de progreso -->
         <div class="flex items-center justify-between mb-6">
@@ -26,7 +46,7 @@
         </div>
 
         <!-- Paso 1 -->
-        <h4 class="text-gray-600 mb-5 mt-6">Solicitud de Inventario</h4>
+        <h4 class="text-gray-600 mt-6 font-bold uppercase">Solicitud de Inventario</h4>
         <p class="text-gray-600 mb-5 mt-5">Realiza el proceso para solicitar productos - materia prima a otra sede</p>
         <section class="space-y-4 step-section step-1">
             <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 pt-6">Datos iniciales</h2>

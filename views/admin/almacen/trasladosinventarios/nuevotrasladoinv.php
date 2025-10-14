@@ -27,8 +27,8 @@
     </div>
 
     <!-- Paso 1 -->
-    <h4 class="text-gray-600 mb-5 mt-6">Traslado de Inventario</h4>
-    <p class="text-gray-600 mb-5 mt-5">Registra el envío de productos hacia otra sede</p>
+    <h4 class="text-gray-600 mt-6 font-bold uppercase">Traslado de Inventario</h4>
+    <p class="text-gray-600 mb-5 mt-5">Registra el envío de productos hacia otras sedes</p>
     <section class="space-y-4 step-section step-1">
       <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 pt-6">Datos del traslado</h2>
 

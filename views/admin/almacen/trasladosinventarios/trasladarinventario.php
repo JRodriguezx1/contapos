@@ -5,7 +5,28 @@
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
         </svg>
         <span class="sr-only">Atrás</span>
+      </a>
+
+      <div class="flex flex-wrap gap-5 mt-0">
+        <!-- Traslado de inventario -->
+        <a href="/admin/almacen/solicitarinventario"
+            class="grid place-items-center w-[106px] h-46 bg-gray-50 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-100 transition p-4">
+            <span class="material-symbols-outlined text-5xl text-indigo-600 mb-2">inventory_2</span>
+            <p class="text-gray-700 font-semibold text-center text-sm uppercase tracking-wide m-0">
+            Solicitar<br>inventario
+            </p>
         </a>
+
+        <!-- Solicitud de inventario -->
+        <a href="/admin/almacen/solicitudesrecibidas"
+            class="grid place-items-center w-[106px] h-46 bg-gray-50 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-100 transition p-4">
+            <span class="material-symbols-outlined text-5xl text-indigo-600 mb-2">move_to_inbox</span>
+            <p class="text-gray-700 font-semibold text-center text-sm uppercase tracking-wide m-0">
+            Solicitudes<br>recibidas
+            </p>
+        </a>
+    </div>
+
     <!-- Título principal -->
     <h4 class="text-gray-600 mb-5 mt-6 font-bold uppercase">
         Traslado de inventario
@@ -140,38 +161,82 @@
       </a>
     </div>
 
-    <!-- MODAL DE DETALLE DE TRASLADO SALIDA O SOLICITUD -->
-    <dialog id="miDialogoDetalleTrasladoSolicitud" class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-4xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
-      <!-- Encabezado -->
-      <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
-        <h4 id="modalDetalleTrasladoSolicitud" class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          Detalle Traslado/Solicutd de mercancia
+<!-- MODAL DETALLE TRASLADO / SOLICITUD -->
+<dialog id="miDialogoDetalleTrasladoSolicitud"
+    class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-4xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
+
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
+        <h4 id="modalDetalleTrasladoSolicitud"
+            class="text-2xl font-bold text-indigo-700 dark:text-indigo-400">
+            📦 Detalle Traslado / Solicitud de Mercancía
         </h4>
-        <button id="btnXCerrarDetalleTrasladoSolicitud" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
-          <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
+        <button id="btnXCerrarDetalleTrasladoSolicitud"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+            <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
         </button>
-      </div>
+    </div>
 
-      <div id="contenidodetalle" class="">
-        <div>
-          <p id="sedeorigen"></p>
-          <p id="sededestino"></p>
-          <p id="tipo"></p>
+    <!-- Contenido -->
+    <div id="contenidodetalle" class="space-y-6">
+        <!-- Cards informativos -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div
+                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Origen</p>
+                    <p id="sedeorigen" class="text-lg font-semibold text-gray-900 dark:text-gray-100">—</p>
+                </div>
+                <div class="text-3xl">🚚</div>
+            </div>
+
+            <div
+                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Destino</p>
+                    <p id="sededestino" class="text-lg font-semibold text-gray-900 dark:text-gray-100">—</p>
+                </div>
+                <div class="text-3xl">🏬</div>
+            </div>
+
+            <div
+                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Tipo</p>
+                    <p id="tipo" class="text-lg font-semibold text-gray-900 dark:text-gray-100">—</p>
+                </div>
+                <div class="text-3xl">📋</div>
+            </div>
         </div>
-        <table id="tabladetalleorden" class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
-          <thead class="bg-gray-100 text-gray-700">
-            <tr>
-              <th class="px-4 py-2 border">Producto</th>
-              <th class="px-4 py-2 border">Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-          </tbody>
-        </table>
 
-      </div>
-      
-    </dialog>
+        <!-- Observaciones -->
+        <div>
+            <label for="observaciones"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observaciones</label>
+            <textarea id="observaciones" rows="3"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-32 text-base focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                placeholder="Agrega tus observaciones aquí..."></textarea>
+        </div>
+
+        <!-- TABLA DE PRODUCTOS -->
+        <div class="overflow-x-auto border border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm">
+            <table id="tabladetalleorden"
+                class="w-full text-left border-collapse">
+                <thead
+                    class="bg-indigo-100 dark:bg-neutral-800 text-indigo-800 dark:text-gray-300 uppercase text-base tracking-wide">
+                    <tr>
+                        <th class="px-5 py-3 border-b border-gray-200 dark:border-neutral-700">Producto</th>
+                        <th class="px-5 py-3 border-b border-gray-200 dark:border-neutral-700">Unidad de medida</th>
+                        <th class="px-5 py-3 border-b border-gray-200 dark:border-neutral-700">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</dialog>
+
 
 </section>
