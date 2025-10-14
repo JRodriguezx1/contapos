@@ -7,6 +7,8 @@ module.exports = {
         'xxs': '480px',
         'xs': '540px',
         'tlg': '992px', // Breakpoint personalizado de 992px
+        'xlg': '1024px',
+        '2xlg': '1280px',
         'between1200and1600': { 'raw': '(min-width: 1200px) and (max-width: 1600px)' },
       },
     },

@@ -124,8 +124,8 @@
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
-          title: 'Desea eliminar la banco?',
-          text: "La banco sera eliminado definitivamente.",
+          title: 'Desea eliminar el banco?',
+          text: "El banco sera eliminado definitivamente.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',

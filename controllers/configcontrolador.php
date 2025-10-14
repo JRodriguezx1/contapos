@@ -13,6 +13,7 @@ use Model\configuraciones\bancos;
 use Model\caja\cierrescajas;
 use Model\parametrizacion\config_local;
 use Model\configuraciones\permisos;
+use Model\configuraciones\tarifas;
 use Model\configuraciones\tipofacturador;
 use Model\configuraciones\usuarios_permisos;
 use Model\sucursales;
@@ -33,6 +34,7 @@ class configcontrolador{
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
+    $tarifas = tarifas::all();
     $companias = [];
     $empleado = new \stdClass();
     $empleado->perfil = '';
@@ -45,7 +47,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -115,11 +117,12 @@ class configcontrolador{
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
+        $tarifas = tarifas::all();
         $companias = [];
         $empleado = new \stdClass();
          $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
 
 
@@ -366,8 +369,8 @@ class configcontrolador{
     }
 
     
-    ///////////////////procesando la gestion de los facturadores //////////////////////
-    public static function allfacturadores(){  //api llamado desde citas.js
+///////////////////procesando la gestion de los facturadores //////////////////////
+    public static function allfacturadores(){  //api llamado desde gestionfacturadores.js
       session_start();
       $consecutivos = consecutivos::all();
       foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
@@ -441,8 +444,8 @@ class configcontrolador{
     }
 
 
-    ///////////// procesando la gestion de los bancos ////////////////
-    public static function allbancos(){  //api llamado desde citas.js
+///////////// procesando la gestion de los bancos ////////////////
+    public static function allbancos(){  //api llamado desde gestionbancos.js
       $bancos = bancos::all();
       echo json_encode($bancos);
     }
@@ -502,6 +505,73 @@ class configcontrolador{
                 }
             }else{
                 ActiveRecord::setAlerta('error', 'banco no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
+    }
+
+
+///////////// procesando la gestion de las tarifas ////////////////
+    public static function alltarifas(){  //api llamado desde gestiontarifas.js
+      $tarifas = tarifas::all();
+      echo json_encode($tarifas);
+    }
+
+    public static function crearTarifa(){ //api llamada desde el modulo de gestiontarifas.ts cuando se crea un cliente
+        session_start();
+        isadmin();
+        $alertas = [];
+        $tarifa = new tarifas($_POST);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $tarifa->validar();
+            if(empty($alertas)){ //si los campos cumplen los criterios  
+                $r = $tarifa->crear_guardar();
+                if($r[0]){
+                    $tarifa->id = $r[1];
+                    $alertas['exito'][] = 'Tarifa creada correctamente';
+                    $alertas['tarifa'] = $tarifa;
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+    public static function actualizarTarifa(){
+        session_start();
+        $alertas = []; 
+        $tarifa = tarifas::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $tarifa->compara_objetobd_post($_POST);
+            $alertas = $tarifa->validar();
+            if(empty($alertas)){
+                $r = $tarifa->actualizar();
+                if($r){
+                    $alertas['exito'][] = "Datos del tarifa actualizados";
+                    $alertas['tarifa'][] = $tarifa;
+                }else{
+                    $alertas['error'][] = "Error al actualizar tarifa";
+                }
+            }
+        }
+        echo json_encode($alertas);  
+    }
+
+    public static function eliminarTarifa(){
+        session_start();
+        $tarifa = tarifas::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($tarifa)){
+                $r = $tarifa->eliminar_registro();
+                if($r){
+                    ActiveRecord::setAlerta('exito', 'Tarifa eliminado correctamente');
+                }else{
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Tarifa no encontrada');
             }
         }
         $alertas = ActiveRecord::getAlertas();

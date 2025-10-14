@@ -129,7 +129,9 @@
                   <td class="px-6 py-3 text-center"><?php echo $value->created_at;?></td>
                   <td class="px-6 py-3"><?php echo $value->tipo;?></td>
                   <td class="px-6 py-3 text-center">
-                    <span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700"><?php echo $value->estado;?></span>
+                    <span class="px-3 py-1 text-base font-semibold bg-indigo-100 rounded-full <?php echo $value->estado=='pendiente'?'bg-indigo-100 text-indigo-600':($value->estado=='entransito'?'bg-yellow-100 text-yellow-700':($value->estado=='entregada'?'bg-sky-50 text-sky-600':'bg-rose-50 text-rose-600'));?>">
+                        <?php echo $value->estado;?>
+                    </span>
                   </td>
                   <td id="<?php echo $value->id;?>" class="px-6 py-3 text-center flex justify-center gap-2">
                     <button class="enviar w-11 h-11 flex items-center justify-center text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 text-xl">✅</button>

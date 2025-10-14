@@ -378,7 +378,7 @@ class trasladosinvcontrolador{
         $listaproductos = detalletrasladoinv::idregistros('id_trasladoinv', $trasladoinv->id);
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          if($trasladoinv->tipo == 'Salida' && $trasladoinv->estado = 'entransito'){ //solicitud de ingreso
+          if($trasladoinv->tipo == 'Salida' && $trasladoinv->estado == 'entransito'){ //solicitud de ingreso
             $trasladoinv->estado = 'entregada';
             $ra = $trasladoinv->actualizar();
 

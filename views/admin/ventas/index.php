@@ -1,5 +1,5 @@
 <div class="box ventas !pb-28">
-  <div class="flex flex-col xl:flex-row">
+  <div class="flex flex-col tlg:flex-row">
     <div class="basis-2/3 px-4 pb-4 pt-0">
       <div id="divmsjalerta1"></div>
       <div class="xs:flex xs:flex-wrap gap-4">
@@ -71,9 +71,9 @@
         </div>
 
 
-        <div id="productos" class="list grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
-            <?php foreach($productos as $producto): 
-              if($producto->visible==1&&$producto->estado==1):?>
+        <div id="productos" class="list grid gap-4 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
+          <?php foreach($productos as $producto): 
+            if($producto->visible==1&&$producto->estado==1):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->id;?>">
                 <img 
                     src="/build/img/<?php echo $producto->foto;?>" 
@@ -83,14 +83,34 @@
                 
                 <div class="flex flex-col justify-between grow overflow-hidden">
                     <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
+                    
                     <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div>
-                <button title="Precio personalizado" class="text-indigo-600 hover:text-indigo-800">
-                  <i class="fa-solid fa-pen-to-square fa-xl"></i>
-                </button>
+                <button id="precioadicional" title="Precio personalizado" class="text-indigo-600 hover:text-indigo-800"><i class="fa-solid fa-pen-to-square fa-xl"></i></button>
                 <!--<div class="popup absolute right-8 top-1/3 -translate-y-14 translate-x-10 opacity-100 transition-all duration-800 ease-out w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white">2</div>-->
             </div>
-            <?php endif; endforeach; ?>
+
+            <!--
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200  gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->id;?>">
+              <div class="flex gap-4  h-32 md:h-auto">  
+                <img 
+                    src="/build/img/<?php echo $producto->foto;?>" 
+                    onerror="this.onerror=null;this.src='/build/img/default-product.png';"
+                    class="block object-contain h-24 min-w-24 w-24 rounded-md" 
+                    alt="Imagen de <?php echo $producto->nombre; ?>">
+                
+                <div class="overflow-hidden">
+                    <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
+                </div>
+              </div>
+              <div class="flex justify-between">
+                  <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
+                  <button title="Precio personalizado" class="text-indigo-600 hover:text-indigo-800"><i class="fa-solid fa-pen-to-square fa-xl"></i></button>
+              </div>
+            </div>
+              -->
+
+          <?php endif; endforeach; ?>
         </div> <!-- fin contenedor de productos -->
         <div id="hacker-list" class="paginadorventas">
           <ul class="list">
@@ -105,13 +125,13 @@
       <!-- Botón del carrito de ventas solo en móvil -->
       </style>
       <button id="btnCarritoMovil" 
-        class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 bottom-[82px] right-6 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full xl:hidden fixed z-51 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
+        class="transition-shadow duration-300 hover:shadow-xl shadow-lg shadow-indigo-500/50 bottom-[82px] right-6 text-white text-lg px-4 py-4 text-center w-24 h-24 rounded-full tlg:hidden fixed z-51 bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium">
         <span class="material-symbols-outlined">leak_add</span>
       </button> 
     </div> <!-- fin primera columna -->
 
 
-    <div id="contenedorDesktop" class="basis-1/3 hidden xl:block">
+    <div id="contenedorDesktop" class="basis-1/3 hidden tlg:block">
       <div id="contenidocarrito">
         <div class="formulario__campo">
             <label class="formulario__label" for="vendedor">vendedor</label>
@@ -236,12 +256,14 @@
 </dialog>
 
   <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
-  <dialog id="miDialogoAddCliente" class="midialog-sm p-12">
+  <dialog id="miDialogoAddCliente" class="midialog-sm p-5">
       <h4 class=" text-gray-700 font-semibold">Crear Cliente</h4>
       <form id="formAddCliente" class="formulario" action="/" enctype="multipart/form-data" method="POST">
 
-      <div class="formulario__campo"> 
+      <div class="border-b border-gray-900/10 pb-10 mb-3">
+        
         <p class="mt-2 text-xl text-gray-600">Información Personal.</p>
+
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div class="sm:col-span-3">
             <label for="nombreclientenuevo" class="block text-2xl font-medium text-gray-600">Nombre</label>
@@ -462,4 +484,6 @@
   <?php include __DIR__. "/modaladquiriente.php"; ?>
   <!-- MODAL OTROS PRODUCTOS -->
   <?php include __DIR__. "/modalotrosproductos.php"; ?>
+  <!-- MODAL PRECIOS ADICIONALES -->
+  <?php include __DIR__. "/modalpreciosadicionales.php"; ?>
 </div>

@@ -15,6 +15,7 @@ use Model\caja\declaracionesdineros;
 use Model\configuraciones\mediospago;
 use Model\caja\factmediospago;
 use Model\caja\arqueoscajas;
+use Model\caja\categoriagastos;
 use Model\configuraciones\bancos;
 use Model\clientes\clientes;
 use Model\clientes\direcciones;
@@ -59,8 +60,9 @@ class cajacontrolador{
     
 
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
+    $categoriasgastos = categoriagastos::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -216,10 +218,76 @@ class cajacontrolador{
 
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
+    $categoriasgastos = categoriagastos::all();
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $bancos = bancos::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
+
+  public static function categoriaGasto(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+    $alertas = [];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $categoriagasto = categoriagastos::find('id', $_POST['id']);
+      $r = $categoriagasto->eliminar_registro();
+      if($r){
+        $alertas['exito'][] = "Categoria de gastos eliminada correctamente";
+      }else{
+        $alertas['error'][] = "Error en la eliminacion de la categoria de gastos";
+      }
+    }
+    $categoriasgastos = categoriagastos::all();
+    $conflocal = config_local::getParamGlobal();
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'categoriasgastos'=>$categoriasgastos, 'sucursal'=>nombreSucursal(), 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
+
+  public static function crear_categoriaGasto(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+    $alertas = [];
+    $categoriagasto = new categoriagastos($_POST);
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $alertas = $categoriagasto->validar();
+      if(empty($alertas)){
+        $r = $categoriagasto->crear_guardar();
+        if($r[0]){
+          $alertas['exito'][] = "Categoria de gasto creado correctamente";
+        }else{
+          $alertas['error'][] = "Error en la creacion la categoria de gasto";
+        }
+      }
+    }
+    $categoriasgastos = categoriagastos::all();
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+  }
+
+
+  public static function editarcategoriagasto(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+    $alertas = [];
+    $categoriagasto = categoriagastos::find('id', $_POST['id']);
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $categoriagasto->compara_objetobd_post($_POST);
+      $alertas = $categoriagasto->validar();
+      if(empty($alertas)){
+        $r = $categoriagasto->actualizar();
+        if($r){
+          $alertas['exito'][] = "Categoria de gasto actualizada correctamente";
+        }else{
+          $alertas['error'][] = "Error de actualizacion en la categoria de gasto";
+        }
+      }
+    }
+    $categoriasgastos = categoriagastos::all();
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
