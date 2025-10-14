@@ -89,7 +89,7 @@
 
   <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1): ?>
     <div class="accordion">
-        <input type="checkbox" id="first">
+        <input type="checkbox" id="first" checked>
         <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>
         <div class="wrapper flex flex-col lg:flex-row gap-8">
             <div class="wrapper-content">
