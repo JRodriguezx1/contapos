@@ -72,7 +72,7 @@
 
           <div class="formulario__campo">
               <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida</label>
-              <select id="selectStockRapidoUndmedida" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="selectStockRapidoUndmedida" required>
+              <select id="selectStockRapidoUndmedida" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="selectStockRapidoUndmedida" required>
                   <option value="" disabled selected>-Seleccionar-</option>
                     <!-- se inserta por ts en almacen.ts -->
               </select>
@@ -81,7 +81,7 @@
           <div class="formulario__campo">
               <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
               <div class="formulario__dato">
-                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
+                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
               </div>
           </div>
 

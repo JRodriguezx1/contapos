@@ -11,7 +11,7 @@
             class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
             onclick="document.getElementById('miDialogoPreciosAdicioanles').close()">
             <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
-        </button>
+        </button> 
     </div>
 
     <!-- Contenido -->

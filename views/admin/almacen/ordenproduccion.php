@@ -8,7 +8,7 @@
         <div class="mt-10 mb-8 text-start">
             <label for="itemAproducir" class="block text-2xl font-medium text-gray-600">Producto/Insumo</label>
             <div class="mt-2 grid grid-cols-1">
-                <select id="itemAproducir" name="itemAproducir" autocomplete="itemAproducir-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
+                <select id="itemAproducir" name="itemAproducir" autocomplete="itemAproducir-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                     <?php foreach($productos as $value):
                         if($value->tipoproducto == 1 && $value->tipoproduccion):?>
                             <option 
@@ -36,30 +36,30 @@
     </div>
 
     <div class="max-w-6xl mx-auto">
-            <dl class="bg-white dark:bg-gray-800 rounded-lg shadow-lg sm:grid sm:grid-cols-3">
-                <div class="flex flex-col p-6 text-center border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-r">
-                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
+            <dl class="bg-white rounded-lg shadow-lg sm:grid sm:grid-cols-3">
+                <div class="flex flex-col p-6 text-center border-b border-gray-100 sm:border-0 sm:border-r">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
                         Disponibilidad
                     </dt>
-                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
+                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600"
                         aria-describedby="item-1" id="stock">
                         0
                     </dd>
                 </div>
-                <div class="flex flex-col p-6 text-center border-t border-b border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l sm:border-r">
-                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
+                <div class="flex flex-col p-6 text-center border-t border-b border-gray-100 sm:border-0 sm:border-l sm:border-r">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
                         Costo produccion
                     </dt>
-                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
+                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600"
                         id="costoProduccion">
                         $0
                     </dd>
                 </div>
-                <div class="flex flex-col p-6 text-center border-t border-gray-100 dark:border-gray-700 sm:border-0 sm:border-l">
-                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 dark:text-gray-400">
+                <div class="flex flex-col p-6 text-center border-t border-gray-100 sm:border-0 sm:border-l">
+                    <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
                         Precio de venta
                     </dt>
-                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600 dark:text-indigo-100"
+                    <dd class="order-1 text-4xl font-extrabold leading-none text-indigo-600"
                         id="precioVenta">
                         $0
                     </dd>

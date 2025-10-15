@@ -1,6 +1,6 @@
 <!-- VISTA: TRASLADO DE INVENTARIO (SEDE ORIGEN) -->
 <section class="box trasladoinventario p-10 !pb-20 rounded-lg mb-4">
-    <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-6">
+    <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
         </svg>
@@ -88,16 +88,16 @@
     <!-- Filtros -->
     <div class="flex gap-3 mb-6 w-full flex-col md:flex-row p-2">
       <input type="text" placeholder="Buscar por #, producto o sede..."
-        class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+        class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/2 p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
       
-      <select id="filtroSucursal" class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+      <select id="filtroSucursal" class="bg-gray-50 w-full border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
         <option value="">Todas las sedes</option>
         <?php foreach($sucursales as $value): ?>
             <option value="<?php echo $value->nombre;?>"><?php echo $value->nombre;?></option>
         <?php endforeach; ?>
       </select>
 
-      <select id="filtroEstados" class="bg-gray-50 border w-full border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+      <select id="filtroEstados" class="bg-gray-50 border w-full border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block md:w-1/4 p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
           <option value="">Todos los estados</option>
           <option value="pendiente">Pendiente</option>
           <option value="entransito">En transito</option>
@@ -165,17 +165,17 @@
 
 <!-- MODAL DETALLE TRASLADO / SOLICITUD -->
 <dialog id="miDialogoDetalleTrasladoSolicitud"
-    class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-4xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40">
+    class="rounded-2xl border border-gray-200 w-[95%] max-w-4xl p-8 bg-white backdrop:bg-black/40">
 
     <!-- Encabezado -->
-    <div class="flex justify-between items-center border-b border-gray-200 dark:border-neutral-700 pb-4 mb-6">
+    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
         <h4 id="modalDetalleTrasladoSolicitud"
-            class="text-2xl font-bold text-indigo-700 dark:text-indigo-400">
+            class="text-2xl font-bold text-indigo-700">
             📦 Detalle Traslado / Solicitud de Mercancía
         </h4>
         <button id="btnXCerrarDetalleTrasladoSolicitud"
-            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
-            <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
+            class="p-2 rounded-lg hover:bg-gray-100 transition">
+            <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
         </button>
     </div>
 
@@ -184,28 +184,28 @@
         <!-- Cards informativos -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div
-                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Origen</p>
-                    <p id="sedeorigen" class="text-lg font-semibold text-gray-900 dark:text-gray-100">—</p>
+                    <p class="text-sm text-gray-500">Origen</p>
+                    <p id="sedeorigen" class="text-lg font-semibold text-gray-900">—</p>
                 </div>
                 <div class="text-3xl">🚚</div>
             </div>
 
             <div
-                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Destino</p>
-                    <p id="sededestino" class="text-lg font-semibold text-gray-900 dark:text-gray-100">—</p>
+                    <p class="text-sm text-gray-500">Destino</p>
+                    <p id="sededestino" class="text-lg font-semibold text-gray-900">—</p>
                 </div>
                 <div class="text-3xl">🏬</div>
             </div>
 
             <div
-                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Tipo</p>
-                    <p id="tipo" class="text-lg font-semibold text-gray-900 dark:text-gray-100">—</p>
+                    <p class="text-sm text-gray-500">Tipo</p>
+                    <p id="tipo" class="text-lg font-semibold text-gray-900">—</p>
                 </div>
                 <div class="text-3xl">📋</div>
             </div>
@@ -214,22 +214,22 @@
         <!-- Observaciones -->
         <div>
             <label for="observaciones"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observaciones</label>
+                class="block text-sm font-medium text-gray-700 mb-1">Observaciones</label>
             <textarea id="observaciones" rows="3"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-32 text-base focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-32 text-base focus:outline-none focus:ring-1 focus:ring-indigo-600"
                 placeholder="Agrega tus observaciones aquí..."></textarea>
         </div>
 
         <!-- TABLA DE PRODUCTOS -->
-        <div class="overflow-x-auto border border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm">
+        <div class="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
             <table id="tabladetalleorden"
                 class="w-full text-left border-collapse">
                 <thead
-                    class="bg-indigo-100 dark:bg-neutral-800 text-indigo-800 dark:text-gray-300 uppercase text-base tracking-wide">
+                    class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
                     <tr>
-                        <th class="px-5 py-3 border-b border-gray-200 dark:border-neutral-700">Producto</th>
-                        <th class="px-5 py-3 border-b border-gray-200 dark:border-neutral-700">Unidad de medida</th>
-                        <th class="px-5 py-3 border-b border-gray-200 dark:border-neutral-700">Cantidad</th>
+                        <th class="px-5 py-3 border-b border-gray-200">Producto</th>
+                        <th class="px-5 py-3 border-b border-gray-200">Unidad de medida</th>
+                        <th class="px-5 py-3 border-b border-gray-200">Cantidad</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-lg divide-y divide-gray-100">

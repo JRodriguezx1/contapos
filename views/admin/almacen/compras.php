@@ -1,6 +1,6 @@
 <div class="box compras p-10 !pb-20 rounded-lg mb-4">
     <div>
-        <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <a href="/admin/almacen" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
         </svg>
@@ -18,7 +18,7 @@
                     <div class="sm:col-span-3 tlg:col-span-2">
                         <label for="proveedor" class="block text-2xl font-medium text-gray-600">Proveedor</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                            <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($proveedores as $value): ?>
                                 <option value="<?php echo $value->id; ?>"><?php echo $value->nombre;?></option>
@@ -41,7 +41,7 @@
                         <select 
                             id="inputimpuesto" 
                             name="inputimpuestocompra"
-                            class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                            class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                         >
                             <span class="text-indigo-600 font-bold">
                                 <optgroup label="IVA">
@@ -63,20 +63,20 @@
                     <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
                         <label for="factura" class="block text-2xl font-medium text-gray-600">N° Factura</label>
                         <div class="mt-2">
-                            <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                            <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
                     <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="fecha" class="block text-2xl font-medium text-gray-600">Fecha</label>
                         <div class="mt-2">
-                            <input type="date" name="fecha" id="fecha" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                            <input type="date" name="fecha" id="fecha" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                         </div>
                     </div>
 
                     <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
                         <label for="origenPago" class="block text-2xl font-medium text-gray-600">Origen</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                            <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <option value="0">Caja</option>
                                 <option value="1">Banco</option>
@@ -87,7 +87,7 @@
                     <div id="divCaja" class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="origenCaja" class="block text-2xl font-medium text-gray-600">Caja</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="origenCaja" name="origencaja" autocomplete="origencaja-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                            <select id="origenCaja" name="origencaja" autocomplete="origencaja-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($cajas as $value): ?>
                                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -99,7 +99,7 @@
                     <div id="divBanco" class="sm:col-span-2 md:col-span-3 tlg:col-span-2 hidden">
                         <label for="origenBanco" class="block text-2xl font-medium text-gray-600">Banco</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="origenBanco" name="origenbanco" autocomplete="origenbanco-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                            <select id="origenBanco" name="origenbanco" autocomplete="origenbanco-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <?php foreach($bancos as $value): ?>
                                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -114,7 +114,7 @@
                     <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="formapago" class="block text-2xl font-medium text-gray-600">Forma de pago</label>
                         <div class="mt-2 grid grid-cols-1">
-                            <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                            <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                                 <option value="" disabled selected>-Seleccionar-</option>
                                 <option value="1">Contado</option>
                                 <option value="2">Credito 1 mes</option>
@@ -137,7 +137,7 @@
                     <div class="sm:col-span-6 md:col-span-5 tlg:col-span-6">
                         <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
                         <div class="mt-2">
-                        <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 h-32">
+                        <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 text-xl focus:outline-none focus:ring-1 h-32">
                         </div>
                     </div>
                 
@@ -147,7 +147,7 @@
             <div class="mb-4 md:w-1/2">
                 <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
                 <div class="mt-2 grid grid-cols-1">
-                    <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
+                    <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                         <?php foreach($totalitems as $value): ?>
                             <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                         <?php endforeach; ?>

@@ -1,5 +1,5 @@
 <div class="box ensamblaje !pb-10">
-   <a href="/admin/almacen/productos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+   <a href="/admin/almacen/productos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
@@ -18,7 +18,7 @@
           <div class="sm:col-span-6">
             <label for="subproducto" class="block text-2xl font-medium text-gray-600">Subproducto</label>
             <div class="mt-2">
-              <select id="subproducto" name="subproducto" autocomplete="subproducto-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
+              <select id="subproducto" name="subproducto" autocomplete="subproducto-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
                 <?php foreach($subproductos as $value): ?>
                   <option 
                     value="<?php echo $value->id;?>" 
@@ -34,7 +34,7 @@
           <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
             <label for="unidadmedida" class="block text-2xl font-medium text-gray-600">Unidad de medida</label>
             <div class="mt-2 grid grid-cols-1">
-              <select id="unidadmedida" name="unidadmedida" autocomplete="unidadmedida-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+              <select id="unidadmedida" name="unidadmedida" autocomplete="unidadmedida-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
                 <!-- se carga las unidades de medida del subproducto en ensamblar.ts -->
               </select>
               <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
@@ -50,7 +50,7 @@
                      name="cantidad"
                      type="text"
                      autocomplete="cantidad ID"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                      maxlength="7"
                      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                      required>
@@ -63,7 +63,7 @@
               <input id="rendimientoestandar"
                      type="text"
                      autocomplete="rendimientoestandar ID"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                      maxlength="7"
                      value="<?php echo $producto->rendimientoestandar;?>"
                      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"

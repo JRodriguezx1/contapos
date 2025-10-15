@@ -1,5 +1,5 @@
 <div class="box ordenresumen !pb-20">
-    <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
@@ -13,7 +13,7 @@
         <button id="btneliminarorden" class="btn-command"><span class="material-symbols-outlined">delete</span>Eliminar orden</button>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
-        <button id="printcarta" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
+        <button id="printcarta" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
         <?php endif; ?>
         <?php if($factura->estado=='Guardado'):?>
         <button id="printcotizacion" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir cotizacion</button>
@@ -62,8 +62,8 @@
 
     <div class="flex flex-col tlg:flex-row gap-8">
             <div class="relative overflow-x-auto flex-1">
-                <table class="w-full text-xl text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class=" text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-xl text-left rtl:text-right text-gray-500">
+                    <thead class=" text-gray-700 uppercase bg-gray-100">
                         <tr>
                             <th scope="col" class="px-6 py-3 rounded-s-lg">
                                 Nombre producto
@@ -81,8 +81,8 @@
                     </thead>
                     <tbody>
                         <?php foreach($productos as $index=>$value): ?>
-                            <tr class="bg-white dark:bg-gray-800">
-                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                            <tr class="bg-white">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900">
                                     <div class="flex items-center gap-4">
                                         <img 
                                             class="w-24" 
@@ -107,7 +107,7 @@
                         
                     </tbody>
                     <tfoot>
-                        <tr class="font-semibold text-gray-900 dark:text-white">
+                        <tr class="font-semibold text-gray-900">
                             <th scope="row" class="px-6 py-3">Total</th>
                             <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
                             <td class="px-6 py-3"> - </td>
@@ -173,7 +173,7 @@
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
-              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
+              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
                   <!--<option value="" disabled selected>-Seleccionar-</option>
                   <option value="1">Caja principal</option>
                   <option value="2">Caja bodega</option>-->
@@ -184,7 +184,7 @@
             </div>
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
+              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -201,7 +201,7 @@
                   <?php foreach($mediospago as $index => $value):?>
                     <div class="mb-4 text-center">
                       <label class="text-gray-700 text-xl text-center leading-relaxed"><?php echo $value->mediopago??'';?>: </label>
-                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
                     </div>
                   <?php endforeach; ?>
                 </div>
@@ -271,14 +271,14 @@
             <div class="sm:col-start-2 col-span-4 mt-6">
               <label for="descuento" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
               <div class="mt-2">
-                <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
               </div>
             </div>
 
         </div>
 
-        <table id="productsInv" class="w-full text-xl text-left rtl:text-right text-gray-500 dark:text-gray-400 hidden">
-            <thead class=" text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+        <table id="productsInv" class="w-full text-xl text-left rtl:text-right text-gray-500 hidden">
+            <thead class=" text-gray-700 uppercase bg-gray-100">
                 <tr>
                     <th scope="col" class="px-6 py-3 rounded-s-lg">
                         Nombre producto
@@ -293,7 +293,7 @@
             </thead>
             <tbody>
                 <?php foreach($productos as $index=>$value): ?>
-                    <tr class="bg-white dark:bg-gray-800">
+                    <tr class="bg-white">
                         <td class="px-6 py-4">
                             <?php echo $value->nombreproducto??'';?>
                         </td>

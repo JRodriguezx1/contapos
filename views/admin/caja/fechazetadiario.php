@@ -1,6 +1,6 @@
 <div class="fechazetadiario relative bg-white p-12 rounded-lg shadow">
     <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
-    <a href="/admin/caja/zetadiario" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <a href="/admin/caja/zetadiario" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
@@ -9,20 +9,19 @@
     <h4 class="text-gray-600 my-2">Detalle del zeta diario</h4>
 
     <div class="mt-6 mb-20 flex justify-between flex-col gap-8 lg:flex-row md:gap-4 w-full lg:w-auto">
-        <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-auto p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="datetimes" />
+        <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="datetimes" />
         <div class="content-dropdawn !w-full md:!w-auto">
             <div class="btnmultiselect 
                 bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg 
                 focus:border-indigo-600 block !w-full md:w-auto 
-                p-2.5 dark:bg-gray-600 dark:border-gray-500 
-                dark:placeholder-gray-400 dark:text-white 
+                p-2.5 
                 h-14 text-xl focus:outline-none focus:ring-1">
                 <span class="btnmultiselect-text">Seleccionar Caja</span>
                 <span class="arrow !bg-indigo-600"><i class="fa-solid fa-chevron-down"></i></span>
             </div>
-            <ul class="list-items z-10 hidden bg-white rounded-lg shadow-sm dark:bg-gray-700 !mt-0 !pl-0 !pt-4 !pr-0 !min-w-0 !w-full md:w-auto">
+            <ul class="list-items z-10 hidden bg-white rounded-lg shadow-sm !mt-0 !pl-0 !pt-4 !pr-0 !min-w-0 !w-full md:w-auto">
                 <?php foreach($cajas as $value): ?>
-                <li class="flex items-center gap-2 p-3 text-lg text-gray-700 dark:text-gray-200 w-auto">
+                <li class="flex items-center gap-2 p-3 text-lg text-gray-700 w-auto">
                     <input class="caja scale-125" type="checkbox" id="caja<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
                     <label class="text-xl" for="caja<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
@@ -30,24 +29,24 @@
             </ul>
         </div>
         <div class="content-dropdawn w-auto">
-            <div class="btnmultiselect bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+            <div class="btnmultiselect bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
                 <span class="btnmultiselect-text">Seleccionar Facturador</span>
                 <span class="arrow !bg-indigo-600"><i class="fa-solid fa-chevron-down"></i></span>
             </div>
-            <ul class="list-items z-10 hidden bg-white rounded-lg shadow-sm dark:bg-gray-700 !mt-0 !pl-0 !pt-4 !pr-0 w-full !min-w-0">
+            <ul class="list-items z-10 hidden bg-white rounded-lg shadow-sm !mt-0 !pl-0 !pt-4 !pr-0 w-full !min-w-0">
                 <?php foreach($consecutivos as $value): ?>
-                <li class="flex items-center gap-2 p-3 text-lg text-gray-700 dark:text-gray-200 w-auto">
+                <li class="flex items-center gap-2 p-3 text-lg text-gray-700 w-auto">
                     <input class="facturador scale-125" type="checkbox" id="<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
                     <label class="text-xl" for="<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
                 <?php endforeach; ?>
             </ul>
         </div>
-        <button id="consultarZDiario" class="btn-md border border-gray-300 text-white !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 bg-indigo-600 hover:bg-indigo-800">Consultar</button>
+        <button id="consultarZDiario" class="btn-md border border-gray-300 text-white !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 bg-indigo-600 hover:bg-indigo-800">Consultar</button>
     </div>
 
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
-        <button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
+        <button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
 

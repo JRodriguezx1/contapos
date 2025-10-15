@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
+        'xsp': '530px',
         'xxs': '480px',
         'xs': '540px',
         'tlg': '992px', // Breakpoint personalizado de 992px

@@ -2,7 +2,7 @@
 <div class="relative pb-20">
     <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
 <div class="box cerrarcaja">
-  <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+  <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
@@ -27,7 +27,7 @@
           <label class="formulario__label" for="EF">Efectivo en caja</label>
           <div class="formulario__dato gap-x-[0.7rem]">
               <input id="Efectivo" 
-                class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                 type="text" 
                 placeholder="Dinero en caja" 
                 name="Efectivo" 
@@ -43,7 +43,7 @@
         <div class="formulario__campo">
           <label class="formulario__label" for="<?php echo $value->nick??'';?>"><?php echo $value->mediopago??'';?></label>
           
-          <input class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+          <input class="formulario__input inputmediopago bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
             type="text" 
             placeholder="Dinero en <?php echo $value->mediopago??'';?>" 
             id="<?php echo $value->nick??'';?>" 
@@ -339,39 +339,39 @@
     <form id="formArqueocaja" class="formulario" action="/" method="POST">
         <div class="formulario__campo">
           <label class="formulario__label " for="cienmil">$100.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $100.000" id="cienmil" name="cienmil" value="0" data-moneda="100000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $100.000" id="cienmil" name="cienmil" value="0" data-moneda="100000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="cincuentamil">$50.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $50.000" id="cincuentamil" name="cincuentamil" value="0" data-moneda="50000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $50.000" id="cincuentamil" name="cincuentamil" value="0" data-moneda="50000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="veintemil">$20.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $20.000" id="veintemil" name="veintemil" value="0" data-moneda="20000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $20.000" id="veintemil" name="veintemil" value="0" data-moneda="20000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="diezmil">$10.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $10.000" id="diezmil" name="diezmil" value="0" data-moneda="10000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $10.000" id="diezmil" name="diezmil" value="0" data-moneda="10000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="cincomil">$5.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $5.000" id="cincomil" name="cincomil" value="0" data-moneda="5000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $5.000" id="cincomil" name="cincomil" value="0" data-moneda="5000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="dosmil">$2.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $2.000" id="dosmil" name="dosmil" value="0" data-moneda="2000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $2.000" id="dosmil" name="dosmil" value="0" data-moneda="2000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="mil">$1.000</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $1.000" id="mil" name="mil" value="0" data-moneda="1000">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $1.000" id="mil" name="mil" value="0" data-moneda="1000">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="quinientos">$500</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $500" id="quinientos" name="quinientos" value="0" data-moneda="500">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $500" id="quinientos" name="quinientos" value="0" data-moneda="500">
         </div>
         <div class="formulario__campo">
           <label class="formulario__label" for="docientos">$200</label>
-          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $200" id="docientos" name="docientos" value="0" data-moneda="200">
+          <input class="formulario__input denominacion bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Denominacion de $200" id="docientos" name="docientos" value="0" data-moneda="200">
         </div>
         
         <div class="flex justify-end space-x-4">
@@ -400,7 +400,7 @@
     <form id="formCambiarCaja" class="formulario" action="/admin/caja" method="POST">
         <div class="formulario__campo">
             <label class="formulario__label" for="CambiarCaja">Seleccionar caja</label>
-            <select id="CambiarCaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="CambiarCaja" required>
+            <select id="CambiarCaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="CambiarCaja" required>
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($cajas as $index => $value): ?>
                     <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>

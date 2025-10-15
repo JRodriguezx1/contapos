@@ -41,44 +41,50 @@
     </div>
 </main>-->
 
-<div class="h-screen w-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+<div class="h-screen w-screen flex justify-center items-center bg-gray-100 px-6 transition-colors duration-300 relative overflow-hidden">
 
-  <div class="grid gap-8">
+  <!-- Fondo desenfocado / Light Glass Effect -->
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-100/20 via-purple-100/20 to-indigo-200/20 backdrop-blur-md"></div>
+
+  <div class="relative z-10 grid gap-0 w-full xsp:w-[38rem] xlg:w-[48rem] mx-auto">
+
     <?php include __DIR__. "/../templates/alertas.php"; ?>
 
-    <div id="back-div" class="md:w-[421px] bg-gradient-to-r from-blue-500 to-purple-500 rounded-[30px] rounded-tl-[34px] m-4 shadow-lg">
-      <img src="/build/img/Logoj2blanco.png" class="w-80 mx-auto mt-6" alt="logoj2">
+    <!-- Contenedor Principal Flotante -->
+    <div id="back-div" class="w-full bg-gradient-to-r from-blue-500/80 via-purple-500/70 to-indigo-500/80 rounded-[30px] shadow-2xl p-0 transition-transform duration-500 hover:scale-[1.02]">
+      <img src="/build/img/Logoj2blanco.png" class="w-56 sm:w-72 md:w-80 mx-auto mt-6 transition-transform duration-500 hover:scale-105" alt="logoj2">
 
-      <div class="border-[20px] border-transparent rounded-[24px] bg-white dark:bg-gray-800 shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-4 m-2 transition-colors duration-300">
-        <h1 class="pt-8 pb-6 font-bold text-5xl text-center cursor-default text-gray-800 dark:text-gray-200">
+      <!-- Formulario con efecto glass y sombras internas -->
+      <div class="border-[10px] border-transparent rounded-[24px] bg-white/90 shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-4 m-2 backdrop-blur-md transition-colors duration-300">
+        <h1 class="pt-8 pb-6 font-bold text-3xl sm:text-4xl md:text-5xl text-center text-gray-800 uppercase">
           Iniciar Sesión
         </h1>
 
         <form action="/login" method="post" class="space-y-4">
+
           <div>
-            <label for="nickname" class="mb-2 block text-xl text-gray-700 dark:text-gray-300">Usuario</label>
+            <label for="nickname" class="mb-2 block text-xl text-gray-700">Usuario</label>
             <input
               id="nickname"
               name="nickname"
               type="text"
               required
               placeholder="Ingresa tu usuario"
-              class="w-full h-16 p-2.5 text-xl text-gray-900 bg-white border border-gray-300 rounded-lg shadow-md
-                     placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:border-indigo-600 
-                     dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:placeholder-gray-400
-                     ease-in-out duration-300 focus:scale-105"
+              class="w-full h-[4.5rem] xlg:h-[5.5rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl
+                     shadow-inner placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                     transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             />
           </div>
 
           <div>
-            <label for="sucursal" class="block text-xl font-medium mb-1 text-gray-700 dark:text-gray-300">Sede</label>
+            <label for="sucursal" class="block text-xl font-medium mb-1 text-gray-700">Sede</label>
             <span class="block mb-1 text-base text-gray-500 dark:text-gray-400">Seleccione una sede</span>
             <select 
               id="sucursal"
               name="idsucursal"
-              class="w-full h-16 p-2.5 text-xl text-gray-900 bg-white border border-gray-300 rounded-lg shadow-md
-                     focus:outline-none focus:ring-1 focus:border-indigo-600
-                     dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:placeholder-gray-400"
+              class="w-full h-[4.5rem] xlg:h-[5.5rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
+                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out
+                     hover:scale-[1.02] focus:scale-[1.03]"
             >
               <?php foreach($sucursales as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -87,37 +93,36 @@
           </div>
 
           <div>
-            <label for="password" class="mb-2 block text-xl text-gray-700 dark:text-gray-300">Contraseña</label>
+            <label for="password" class="mb-2 block text-xl text-gray-700">Contraseña</label>
             <input
               id="password"
               name="password"
               type="password"
               required
               placeholder="Ingresa tu contraseña"
-              class="w-full h-16 p-2.5 text-xl text-gray-900 bg-white border border-gray-300 rounded-lg shadow-md
-                     placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:border-indigo-600 
-                     dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:placeholder-gray-400
-                     ease-in-out duration-300 focus:scale-105"
+              class="w-full h-[4.5rem] xlg:h-[5.5rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
+                     placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                     transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             />
           </div>
 
-          <a href="#" class="group text-blue-400 hover:text-blue-300 text-base transition-all duration-200">
+          <a href="#" class="group text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 text-base transition-all duration-200">
             ¿Olvidaste tu contraseña?
           </a>
 
           <button
             type="submit"
-            class="bg-gradient-to-r from-blue-500 to-purple-500 text-white dark:text-gray-200 shadow-lg mt-6 p-2 text-xl rounded-lg w-full
-                   hover:scale-105 hover:from-purple-500 hover:to-blue-500 transition duration-300 ease-in-out h-16"
+            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white dark:text-gray-200 shadow-lg mt-6 p-2 text-xl rounded-2xl w-full
+                   hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4.5rem] xlg:h-[5.5rem]"
           >
             INICIAR SESIÓN
           </button>
         </form>
 
         <div class="flex flex-col mt-4 items-center justify-center text-lg">
-          <h3 class="text-gray-700 dark:text-gray-300">
+          <h3 class="text-gray-700">
             ¿No tienes una cuenta?
-            <a href="#" class="group text-blue-400 hover:text-blue-300 transition-all duration-200">
+            <a href="#" class="group text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 transition-all duration-200">
               <span class="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat 
                            group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
                 Regístrate
@@ -129,18 +134,8 @@
         <div class="text-gray-500 dark:text-gray-400 flex text-center flex-col mt-4 items-center text-lg leading-snug">
           <p class="cursor-default">
             Al iniciar sesión, acepta
-            <a href="#" class="group text-blue-400 hover:text-blue-300 transition-all duration-200">
-              <span class="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat 
-                           group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                 nuestros
-              </span>
-            </a>
-            Términos y <br />Política
-            <a href="#" class="group text-blue-400 hover:text-blue-300 transition-all duration-200">
-              <span class="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat 
-                           group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                de privacidad.
-              </span>
+            <a href="#" class="group text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 transition-all duration-200">
+              nuestros Términos y <br />Política de privacidad.
             </a>
           </p>
         </div>
@@ -148,4 +143,7 @@
     </div>
   </div>
 </div>
+
+
+
 

@@ -3,7 +3,7 @@
   <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Gestion de Caja</h4>
   <div class="flex flex-wrap gap-4 mb-6">
     <a class="btn-command" href="/admin/caja/cerrarcaja"><span class="material-symbols-outlined">hard_drive</span>Cerrar Caja</a>
-    <button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="btnGastosingresos"><span class="material-symbols-outlined">paid</span>Gastos</br>Ingresos</button>
+    <button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="btnGastosingresos"><span class="material-symbols-outlined">paid</span>Gastos</br>Ingresos</button>
     <?php if($conflocal['permitir_ver_zeta_diario']->valor_final == 1):?>
         <a class="btn-command" href="/admin/caja/zetadiario"><span class="material-symbols-outlined">document_search</span>Zeta Diario</a>
     <?php endif; ?>
@@ -11,7 +11,7 @@
         <a class="btn-command text-center" href="/admin/caja/ultimoscierres"><span class="material-symbols-outlined">list_alt</span>Ultimos Cierres</a>
      <?php endif; ?>
     <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
-    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
+    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
   </div>
     <h5 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-4">
         Lista de Facturas
@@ -65,7 +65,7 @@
           <?php endforeach; ?>
       </tbody>
       <tfoot>
-        <tr class="font-semibold text-gray-900 dark:text-white">
+        <tr class="font-semibold text-gray-900">
             <td></td>
             <td></td>
             <td></td>
@@ -78,118 +78,190 @@
       </tfoot>
   </table>
 
-  <dialog id="gastosIngresos" class="midialog-sm p-12">
-    <h4 class="font-semibold text-gray-700 mb-4">Gastos e ingresos</h4>
-    <div id="divmsjalerta1"></div>
-    <form id="formGastosingresos" class="formulario" action="/admin/caja/ingresoGastoCaja" method="POST">
-        <div class="formulario__campo">
-            <label class="formulario__label" for="operacion">Operacion</label>
-            <select id="operacion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="operacion" required>
-                <option value="" disabled selected>-Seleccionar-</option>
-                <option value="ingreso">Ingreso a caja</option>
-                <option value="gasto">Gasto</option>
-            </select>
+    <!-- MODAL GASTOS E INGRESOS -->
+    <dialog id="gastosIngresos"
+        class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
+
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
+                💰 Gastos e ingresos
+            </h4>
+            <button id="btnCerrarGastosIngresos"
+                class="p-2 rounded-lg hover:bg-gray-100 transition"
+                onclick="document.getElementById('gastosIngresos').close()">
+                <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
+            </button>
         </div>
 
-        <div id="origengasto" class="hidden gap-2 mb-6">
-            <!--<label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Tipo costo inventario</label>-->
-            <label for="gastocaja" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1">
-                <input id="gastocaja" type="radio" name="origengasto" class="hidden peer" value="gastocaja" checked>
-                <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
-                <span class="ms-3 text-xl font-medium text-gray-900">Gastos de la caja</span>
-            </label>
+        <div id="divmsjalerta1"></div>
 
-            <label for="gastobanco" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1">
-                <input id="gastobanco" type="radio" name="origengasto" class="hidden peer" value="gastobanco">
-                <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
-                <span class="ms-3 text-xl font-medium text-gray-900">Gastos transaccionales</span>
-            </label>
-        </div>  
+        <form id="formGastosingresos" class="formulario space-y-6" action="/admin/caja/ingresoGastoCaja" method="POST">
 
-        <div id="showbancos" class="mb-6 hidden">
-            <label class="formulario__label" for="banco">Bancos</label>
-            <select id="banco" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_banco">
-                <option value="" disabled selected>-Seleccionar-</option>
-                <?php foreach($bancos as $value): ?>
-                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        
-        <div id="showcajas" class="mb-6 hidden">
-            <label class="formulario__label" for="caja">Caja</label>
-            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="id_caja" required>
-                <option value="" disabled selected>-Seleccionar-</option>
-                <?php foreach($cajas as $value): ?>
-                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+            <!-- Operación -->
+            <div class="formulario__campo">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="operacion">Operación</label>
+                <select id="operacion"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1"
+                    name="operacion" required>
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <option value="ingreso">Ingreso a caja</option>
+                    <option value="gasto">Gasto</option>
+                </select>
+            </div>
 
-        <div class="formulario__campo tipodegasto" style="display: none;"> <!-- solo aplica para gastos -->
-            <label class="formulario__label" for="tipodegasto">Tipo de gasto</label>
-            <select id="tipodegasto" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" name="idcategoriagastos">
-                <option value="" disabled selected>-Seleccionar-</option>
-                <?php foreach($categoriasgastos as $value): ?>
+            <!-- Origen del gasto -->
+            <div id="origengasto" class="hidden gap-3">
+                <label for="gastocaja"
+                    class="flex items-center ps-4 bg-indigo-50 border border-indigo-200 text-gray-900 rounded-xl cursor-pointer select-none w-full p-3 h-14 text-lg transition hover:bg-indigo-100">
+                    <input id="gastocaja" type="radio" name="origengasto" class="hidden peer" value="gastocaja" checked>
+                    <div class="w-5 h-5 border-2 border-indigo-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                    <span class="ms-3 font-medium">Gastos de la caja</span>
+                </label>
+
+                <label for="gastobanco"
+                    class="flex items-center ps-4 bg-indigo-50 border border-indigo-200 text-gray-900 rounded-xl cursor-pointer select-none w-full p-3 h-14 text-lg transition hover:bg-indigo-100">
+                    <input id="gastobanco" type="radio" name="origengasto" class="hidden peer" value="gastobanco">
+                    <div class="w-5 h-5 border-2 border-indigo-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                    <span class="ms-3 font-medium">Gastos transaccionales</span>
+                </label>
+            </div>
+
+            <!-- Banco -->
+            <div id="showbancos" class="hidden">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="banco">Banco</label>
+                <select id="banco"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                    name="id_banco">
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <?php foreach($bancos as $value): ?>
                     <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                <?php endforeach; ?>
-            </select>
-            <a class=" text-base text-gray-600 font-normal text-right" href="/admin/caja/categoriaGasto">Agregar categoria de gasto</a>
-        </div>
-        <div class="mb-6">
-            <label class="formulario__label" for="dinero">Ingresar dinero</label>
-            <div class="formulario__dato">
-                <input id="dinero" 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-14 text-xl focus:outline-none focus:ring-1" 
-                    type="text" 
-                    placeholder="Ingresa el dinero" 
-                    name="valor" 
-                    value=""
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Caja -->
+            <div id="showcajas" class="hidden">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="caja">Caja</label>
+                <select id="caja"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                    name="id_caja" required>
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <?php foreach($cajas as $value): ?>
+                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Tipo de gasto -->
+            <div class="formulario__campo tipodegasto hidden">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="tipodegasto">Tipo de gasto</label>
+                <select id="tipodegasto"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                    name="idcategoriagastos">
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <?php foreach($categoriasgastos as $value): ?>
+                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="/admin/caja/categoriaGasto"
+                    class="text-base text-indigo-600 font-medium hover:text-indigo-800 transition">Agregar categoría de gasto</a>
+            </div>
+
+            <!-- Dinero -->
+            <div>
+                <label class="formulario__label text-lg font-medium text-gray-700" for="dinero">Ingresar dinero</label>
+                <input id="dinero"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                    type="text" placeholder="Ingresa el dinero" name="valor" value=""
                     oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
                     required>
             </div>
-        </div>
-        <div class="mb-6">
-            <label class="formulario__label" for="descripcion">Descripcion: </label>
-            <textarea id="descripcion" class=" bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 mt-2 h-40 text-xl focus:outline-none focus:ring-1" name="descripcion" rows="4"></textarea>
-        </div>
-        
-        <div class="text-right">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[124px]" type="button" value="cancelar">cancelar</button>
-            <input id="btnEnviargastosingresos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[124px]" type="submit" value="Aplicar">
-        </div>
-    </form>
-  </dialog>
 
-
-  <dialog id="cambioMedioPago" class="midialog-sm p-12">
-    <h4 class="font-semibold text-gray-700 mb-4">Cambio medio de pago</h4>
-    <div id="divmsjalerta2"></div>
-    <form id="formCambioMedioPago" class="formulario" action="/admin/caja/cambioMedioPago" method="POST">
-        <label id="numfactura" class="text-gray-700 text-2xl text-center mb-2">Factura N° : </label>
-        <p class="text-gray-600 text-3xl text-center font-light m-0 mb-8">Total Pagado: $<span id="totalPagado" class="text-gray-700 font-semibold">0</span></p>
-        <span class="m-0 block text-center text-2xl uppercase">Diferencia</span>
-        <span id="diferencia" class="m-0 text-indigo-500 block text-center text-3xl font-bold mb-10">0</span>
-        <div id="mediospagos" class="content flex flex-col items-end w-96 mx-auto mb-8">
-            <?php foreach($mediospago as $index => $value):?>
-            <div class="mb-4 mx-auto">
-                <label class="text-gray-700 text-xl"><?php echo $value->mediopago??'';?>: </label>
-                <input id="<?php echo $value->id??'';?>" 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mediopago <?php echo $value->mediopago??'';?>"
-                    type="text" 
-                    value="0" 
-                    <?php //echo $value->mediopago=='Efectivo'?'readonly':'';?> 
-                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()"
-                >
+            <!-- Descripción -->
+            <div>
+                <label class="formulario__label text-lg font-medium text-gray-700" for="descripcion">Descripción</label>
+                <textarea id="descripcion"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-40 text-lg focus:outline-none focus:ring-1"
+                    name="descripcion" rows="4"></textarea>
             </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <div class="text-right space-x-4">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="cancelar">cancelar</button>
-            <input id="btnEnviarCambioMedioPago" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Aplicar">
-        </div>
-    </form>
-  </dialog>
 
+            <!-- Botones -->
+            <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]"
+                    onclick="document.getElementById('gastosIngresos').close()">Cancelar</button>
+                <input id="btnEnviargastosingresos" type="submit" value="Aplicar"
+                    class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
+            </div>
+        </form>
+    </dialog>
+
+
+    <!-- MODAL CAMBIO MEDIO DE PAGO -->
+    <dialog id="cambioMedioPago"
+        class="rounded-2xl border border-gray-200 w-[95%] max-w-[48rem] p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
+
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
+                💳 Cambio medio de pago
+            </h4>
+            <button type="button" id="btnCerrarCambioMedioPago"
+                class="p-2 rounded-lg hover:bg-gray-100 transition"
+                onclick="document.getElementById('cambioMedioPago').close()">
+                <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
+            </button>
+        </div>
+
+        <div id="divmsjalerta2"></div>
+
+        <form id="formCambioMedioPago" class="formulario space-y-6" action="/admin/caja/cambioMedioPago" method="POST">
+
+            <!-- Factura y total -->
+            <div class="text-center">
+                <label id="numfactura" class="text-gray-700 text-2xl font-medium block mb-2">
+                    Factura N° :
+                </label>
+                <p class="text-gray-600 text-3xl font-light m-0 mb-6">
+                    Total Pagado: $
+                    <span id="totalPagado" class="text-gray-800 font-semibold">0</span>
+                </p>
+            </div>
+
+            <!-- Diferencia -->
+            <div class="text-center">
+                <span class="block text-2xl uppercase text-gray-700 font-medium">Diferencia</span>
+                <span id="diferencia" class="block text-indigo-600 text-4xl font-bold mb-10">0</span>
+            </div>
+
+            <!-- Medios de pago -->
+            <div id="mediospagos" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                <?php foreach($mediospago as $index => $value): ?>
+                <div class="w-full">
+                    <label class="text-gray-700 text-xl font-medium">
+                        <?php echo $value->mediopago ?? ''; ?>:
+                    </label>
+                    <input id="<?php echo $value->id ?? ''; ?>"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-xl focus:outline-none focus:ring-1 mediopago <?php echo $value->mediopago ?? ''; ?>"
+                        type="text"
+                        value="0"
+                        oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Botones -->
+            <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+                <button type="button"
+                    class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]"
+                    onclick="document.getElementById('cambioMedioPago').close()">
+                    Cancelar
+                </button>
+                <input id="btnEnviarCambioMedioPago"
+                    class="btn-md btn-indigo !py-4 !px-6 !w-[136px]"
+                    type="submit"
+                    value="Aplicar">
+            </div>
+        </form>
+    </dialog>
 </div>

@@ -77,14 +77,14 @@
                 <div><p class="block font-semibold uppercase text-center">Cotizacion eliminada. <span class="font-normal text-gray-400 text-base normal-case">Documento no valido</span></p></div>
             <?php endif; ?>
             <!-- Table -->
-            <div class="mt-6 border border-gray-200 p-4 rounded-lg space-y-4 dark:border-neutral-700 text-lg leading-normal">
+            <div class="mt-6 border border-gray-200 p-4 rounded-lg space-y-4 text-lg leading-normal">
                 <div class="hidden sm:grid sm:grid-cols-5">
                     <div class="sm:col-span-2 text-base font-nomal text-gray-400 uppercase">Item</div>
                     <div class="text-start text-base font-nomal text-gray-400 uppercase">Cantidad</div>
                     <div class="text-start text-base font-nomal text-gray-400 uppercase">Vr. Unitario</div>
                     <div class="text-end text-base font-nomal text-gray-400 uppercase">Vr. Total</div>
                 </div>
-                <div class="hidden sm:block border-b border-gray-200 dark:border-neutral-700"></div>
+                <div class="hidden sm:block border-b border-gray-200"></div>
 
                 <?php foreach($productos as $index=>$value): ?>
                     <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -108,7 +108,7 @@
             <!-- Totales -->
             <div class="mt-8 flex sm:justify-end">
                 <div class="w-full max-w-2xl sm:text-end space-y-2">
-                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2 border border-gray-200 pl-3 pr-4 py-3 rounded-lg space-y-4 dark:border-neutral-700 text-lg leading-normal">
+                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2 border border-gray-200 pl-3 pr-4 py-3 rounded-lg space-y-4 text-lg leading-normal">
                         <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                             <dt class="col-span-3 text-gray-400">Subotal:</dt>
                             <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->subtotal??'', '0', ',', '.');?></dd>
