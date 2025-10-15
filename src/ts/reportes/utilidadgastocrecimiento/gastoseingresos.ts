@@ -1,7 +1,5 @@
 (():void=>{
-
   if(document.querySelector('.gastoseingresos')){
-
     const consultarFechaPersonalizada = document.querySelector('#consultarFechaPersonalizada') as HTMLButtonElement;
     const btnmesactual = document.querySelector('#btnmesactual') as HTMLButtonElement;
     const btnmesanterior = document.querySelector('#btnmesanterior') as HTMLButtonElement;
@@ -18,6 +16,7 @@
         nombre:string,
         operacion:string,
         categoriagasto:string,
+        estado:string,
         valor:string,
         fecha:string
     } 
@@ -139,7 +138,13 @@
             data: datosGastos,
             columns: [
                         {title: 'id', data: 'Id'}, 
-                        {title: 'Caja', data: 'nombrecaja'},
+                        {   
+                            title: 'Caja', 
+                            data: null, render: (data: apigastos) => { 
+                                            const x = data.estado == '0'?'Abierta':'Cerrada';
+                                            return `${data.nombrecaja} - ${x}`;
+                                        } 
+                         },
                         {title: 'Banco', data: 'nombrebanco'},
                         {title: 'Usuario', data: 'nombre'},
                         {title: 'Operacion', data: 'operacion'},
@@ -153,28 +158,62 @@
                             searchable: false, 
                             render: (data: any, type: any, row: any) => { 
                                     return `<button class="btn-ver" data-id="${row.Id}">✳️​</button>
-                                            <button class="btn-editar" data-id="${row.Id}">🖊️​</button>
                                             <button class="btn-eliminar" data-id="${row.Id}">⛔​</button>`}
                         }
                     ],
         });
     }
 
-    document.querySelector('#tablaGastos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+    //evento click sobre toda la tabla
+    document.querySelector('#tablaGastos')?.addEventListener("click", (e)=>{
       const target = e.target as HTMLButtonElement;
-      if((e.target as HTMLButtonElement)?.classList.contains("btn-editar"))editarGasto(e);
-      if(target?.classList.contains("btn-eliminar"))eliminarGasto(e);
+      let idgasto = target?.dataset.id;
+      if((e.target as HTMLButtonElement)?.classList.contains("btn-ver"))verGasto(idgasto);
+      if(target?.classList.contains("btn-eliminar"))eliminarGasto(idgasto);
     });
 
 
-    function editarGasto(e:Event){
-        let idgasto = (e.target as HTMLButtonElement)?.dataset.id;
-        console.log(idgasto);
+    function verGasto(idgasto:string|undefined){
+        const gasto = datosGastos.find(x=>x.Id==idgasto);
+        if(gasto?.id_compra != null)window.location.href = '/admin/reportes/compra?id='+gasto.id_compra;
     }
 
-    function eliminarGasto(e:Event){
-        let idgasto = (e.target as HTMLButtonElement)?.dataset.id;
-        console.log(idgasto);
+    function eliminarGasto(idgasto:string|undefined){
+        const gasto = datosGastos.find(x=>x.Id==idgasto);
+        if(gasto?.estado === '0'){
+            Swal.fire({
+                customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+                icon: 'question',
+                title: 'Desea eliminar el gasto de la caja?',
+                text: "El gasto sera eliminado por completo de la caja.",
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result:any) => {
+                if (result.isConfirmed) {
+                    //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
+                    (async ()=>{
+                        const datos = new FormData();
+                        datos.append('id', gasto.Id);
+                        try {
+                            const url = "/admin/api/eliminargasto"; //llamado a la API REST y se trae las direcciones segun cliente elegido
+                            const respuesta = await fetch(url, {method: 'POST', body: datos});
+                            const resultado = await respuesta.json();
+                            //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+                            if(resultado.exito !== undefined){ 
+                                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                            }else{
+                                msjalertToast('error', '¡Error!', resultado.error[0]);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })();
+                }
+            });
+        }else{
+             msjalertToast('error', '¡Error!', 'No se puede eliminar el gasto, porque la caja esta cerrada');
+        }
     }
 
 

@@ -2,6 +2,8 @@
 //$dias = facturacion::inner_join('SELECT COUNT(id) AS servicios, fecha_pago, SUM(total) AS totaldia FROM facturacion GROUP BY fecha_pago ORDER BY COUNT(id) DESC;');
 namespace Controllers;
 
+use Model\caja\cierrescajas;
+use Model\gastos;
 use Model\inventario\productos;
 use Model\inventario\subproductos;
 use Model\ventas\facturas;
@@ -363,9 +365,31 @@ class reportescontrolador{
               LEFT JOIN bancos b ON g.id_banco = b.id
               JOIN caja c ON g.idg_caja = c.id
 	            WHERE g.id_sucursalfk = $idsucursal AND g.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY g.fecha DESC;";
-      $datos = productos::camposJoinObj($sql);
+      $datos = gastos::camposJoinObj($sql);
     }
     echo json_encode($datos);
+  }
+
+
+  //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
+  public static function eliminargasto(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $alertas = [];
+    $gasto = gastos::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursalfk'=>$idsucursal]);
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $estadocierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja)->estado;
+      if($estadocierrecaja == 0){
+        //eliminar gasto 
+        //ajustar del cierre de caja
+      }else{
+
+      }
+    }
+    
+
+    echo json_encode($alertas);
   }
 
 
