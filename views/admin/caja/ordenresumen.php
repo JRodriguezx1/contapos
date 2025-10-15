@@ -42,11 +42,11 @@
     <div class="flex justify-between p-4 border border-gray-300 rounded mb-6">
         <div class="flex-1 text-center">
             <p class="font-bold">Fecha Orden</p>
-            <p><?php echo $factura->fechapago??'';?></p>
+            <p><?php echo $factura->fechacreacion??'';?></p>
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
-            <p class="font-bold">Fecha Entrega</p>
-            <p>Noviembre 28, 2023</p>
+            <p class="font-bold">Fecha Pago</p>
+            <p><?php echo $factura->fechapago??'';?></p>
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
             <p class="font-bold">Vendedor</p>

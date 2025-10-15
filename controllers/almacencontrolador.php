@@ -66,7 +66,9 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $conflocal = config_local::getParamGlobal();
+    //debuguear(userPerfil());
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, '$conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
@@ -1203,14 +1205,18 @@ class almacencontrolador{
     session_start();
     $alertas = [];
     $idsucursal = id_sucursal();
-    $sql1 = "UPDATE stockproductossucursal SET stock = 0 WHERE sucursalid = $idsucursal;";
-    $sql2 = "UPDATE stockinsumossucursal SET stock = 0 WHERE sucursalid = $idsucursal;";
-    $r1 = stockproductossucursal::actualizarLibre($sql1);
-    $r2 = stockinsumossucursal::actualizarLibre($sql2);
-    if($r1 && $r2){
-      $alertas['exito'][] = "Stock reiniciado completamente";
+    if(userPerfil()==1){
+      $sql1 = "UPDATE stockproductossucursal SET stock = 0 WHERE sucursalid = $idsucursal;";
+      $sql2 = "UPDATE stockinsumossucursal SET stock = 0 WHERE sucursalid = $idsucursal;";
+      $r1 = stockproductossucursal::actualizarLibre($sql1);
+      $r2 = stockinsumossucursal::actualizarLibre($sql2);
+      if($r1 && $r2){
+        $alertas['exito'][] = "Stock reiniciado completamente";
+      }else{
+        $alertas['error'][] = "Error al reiniciar stock, intenta nuevamente";
+      }
     }else{
-      $alertas['error'][] = "Error al reiniciar stock, intenta nuevamente";
+      $alertas['error'][] = "Usuario no tiene permisos.";
     }
     echo json_encode($alertas);
   }

@@ -94,6 +94,7 @@ class cajacontrolador{
       $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
       $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
       $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
+      $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $idcajaprincipal, $idsucursal);
       $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
       $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
       //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
@@ -123,7 +124,7 @@ class cajacontrolador{
     }
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   
@@ -233,7 +234,12 @@ class cajacontrolador{
     $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $categoriagasto = categoriagastos::find('id', $_POST['id']);
-      $r = $categoriagasto->eliminar_registro();
+      try {
+        $r = $categoriagasto->eliminar_registro();
+      } catch (\Throwable $th) {
+        $r = false;
+      }
+      
       if($r){
         $alertas['exito'][] = "Categoria de gastos eliminada correctamente";
       }else{
@@ -386,6 +392,7 @@ class cajacontrolador{
     $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
     $discriminarimpuesto = cierrescajas::discriminarimpuesto($cierreselected->id);
+    $discriminargastos = cierrescajas::discriminargastos($cierreselected->id, $cierreselected->idcaja, id_sucursal());
     $ventasxusuarios = cierrescajas::ventasXusuario($cierreselected->id);
     $mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
@@ -410,7 +417,7 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
-    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'discriminarimpuesto'=>$discriminarimpuesto, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function pedidosguardados(Router $router){

@@ -72,14 +72,18 @@
                     (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
                     (async ()=>{
                         try {
-                        const url = "/admin/api/reiniciarinv"; //llamado a la API REST y se trae las direcciones segun cliente elegido
-                        const respuesta = await fetch(url); 
-                        const resultado = await respuesta.json();
-                        (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
-                        msjalertToast('success', '¡Éxito!', resultado);
-                        setTimeout(() => {
-                          window.location.reload();  
-                        }, 1260);
+                            const url = "/admin/api/reiniciarinv"; //llamado a la API REST y se trae las direcciones segun cliente elegido
+                            const respuesta = await fetch(url); 
+                            const resultado = await respuesta.json();
+                            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+                            if(resultado.exito !== undefined){ 
+                                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                                setTimeout(() => {
+                                window.location.reload();  
+                                }, 1270);
+                            }else{
+                                msjalertToast('error', '¡Error!', resultado.error[0]);
+                            }
                         } catch (error) {
                             console.log(error);
                         }

@@ -246,7 +246,8 @@ $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifa
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportes.ts
-$router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde gastosingresos.ts
+$router->post('/admin/api/eliminargasto', [reportescontrolador::class, 'eliminargasto']);  //fetch llamado desde gastosingresos.ts
 
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js

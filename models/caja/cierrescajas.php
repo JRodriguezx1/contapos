@@ -135,4 +135,19 @@ class cierrescajas extends \Model\ActiveRecord {
         return $array;
     }
 
+
+    //discriminar gastos de un solo cierre de caja
+    public static function discriminargastos(string $idcierrecaja, $idcaja, $idsucursal)
+    {
+        $sql="SELECT SUM(g.valor) AS valorgasto, g.idg_caja, cg.nombre, cg.id 
+        FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id 
+        WHERE g.idg_cierrecaja = $idcierrecaja AND g.idg_caja = $idcaja AND g.id_sucursalfk = $idsucursal GROUP BY cg.id;";
+        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
 }
