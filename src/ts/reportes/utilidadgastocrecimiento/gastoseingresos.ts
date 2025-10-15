@@ -129,6 +129,7 @@
             console.log(error);
         }
     }
+    
 
 
     printTableGastos();

@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\caja\cierrescajas;
+use Model\caja\ingresoscajas;
 use Model\gastos;
 use Model\inventario\productos;
 use Model\inventario\subproductos;
@@ -228,27 +229,29 @@ class reportescontrolador{
   public static function ventasxtransaccionanual(){
     session_start();
     isadmin();
+    $datex = $_GET['x'];
     $idsucursal = id_sucursal();
     $sql = "SELECT DATE_FORMAT(fechapago, '%Y-%m') AS fecha, COUNT(*) AS num_transacciones,
             ROUND(AVG(total), 2) AS promedio_transaccion, SUM(total) AS total_venta,
             MAX(total) AS transaccion_mas_alta, MIN(total) AS transaccion_mas_baja
-            FROM facturas WHERE fechapago >= CONCAT('2025', '-01-01')
-            AND fechapago < DATE_ADD(CONCAT('2025', '-01-01'), INTERVAL 1 YEAR) AND estado = 'Paga' AND id_sucursal = $idsucursal
+            FROM facturas WHERE fechapago >= CONCAT('$datex', '-01-01')
+            AND fechapago < DATE_ADD(CONCAT('$datex', '-01-01'), INTERVAL 1 YEAR) AND estado = 'Paga' AND id_sucursal = $idsucursal
             GROUP BY DATE_FORMAT(fechapago, '%Y-%m') ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
   }
 
-  //transacciones acumuladas por dia durante mes elegido
+  //transacciones acumuladas por dia durante mes y año elegido
   public static function ventasxtransaccionmes(){
     session_start();
     isadmin();
+    $datex = $_GET['x'];
     $idsucursal = id_sucursal();
     $sql = "SELECT DATE(fechapago) AS fecha, COUNT(*) AS num_transacciones,
             ROUND(AVG(total), 2) AS promedio_transaccion, SUM(total) AS total_venta,
             MAX(total) AS transaccion_mas_alta, MIN(total) AS transaccion_mas_baja
-            FROM facturas WHERE fechapago >= CONCAT('2025-09', '-01')
-            AND fechapago < DATE_ADD(CONCAT('2025-09', '-01'), INTERVAL 1 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
+            FROM facturas WHERE fechapago >= CONCAT('$datex', '-01')
+            AND fechapago < DATE_ADD(CONCAT('$datex', '-01'), INTERVAL 1 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
             GROUP BY DATE(fechapago) ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
@@ -357,6 +360,7 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      //calculo de los gastos
       $sql = "SELECT g.id AS Id, g.fecha, CONCAT(u.nombre,' ',u.apellido) AS nombre, g.id_banco, b.nombre AS nombrebanco, g.idg_caja, c.nombre AS nombrecaja,
 	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, cg.id , cg.nombre AS categoriagasto
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
@@ -366,7 +370,18 @@ class reportescontrolador{
               JOIN caja c ON g.idg_caja = c.id
 	            WHERE g.id_sucursalfk = $idsucursal AND g.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY g.fecha DESC;";
       $datos = gastos::camposJoinObj($sql);
+
+      //calculo de los ingresos a caja
+      $sql = "SELECT i.id, i.operacion, i.valor, i.fecha, c.nombre AS nombrecaja,
+	            cj.estado, CONCAT(u.nombre,' ',u.apellido) AS nombreusuario
+              FROM ingresoscajas i 
+              JOIN usuarios u ON i.idusuario = u.id
+              JOIN caja c ON i.id_caja = c.id
+              JOIN cierrescajas cj ON i.id_cierrecaja = cj.id
+              WHERE i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
+      $datos1 = ingresoscajas::camposJoinObj($sql);
     }
+
     echo json_encode($datos);
   }
 
@@ -379,18 +394,67 @@ class reportescontrolador{
     $alertas = [];
     $gasto = gastos::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursalfk'=>$idsucursal]);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $estadocierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja)->estado;
-      if($estadocierrecaja == 0){
+      $cierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja);
+      if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
         //eliminar gasto 
-        //ajustar del cierre de caja
+        $re = $gasto->eliminar_registro();
+        if($re){
+          if($gasto->id_banco!=null){ //ajustar gasto banco del cierre de caja
+            $cierrecaja->gastosbanco -= $gasto->valor;
+          }else{ //ajustar gasto caja efectivo del cierre de caja
+            $cierrecaja->gastoscaja -= $gasto->valor;
+          }
+          $rc = $cierrecaja->actualizar();
+          if($rc){
+            $alertas['exito'][] = "Gasto eliminado correctamente";
+          }else{
+            $alertas['error'][] = "No se pudo eliminar el gasto del cierre de caja";
+            $gasto->crear_guardar();
+          }
+        }else{
+          $alertas['error'][] = "No se pudo eliminar el gasto";
+        }
       }else{
-
+        $alertas['error'][] = "Caja ya se encuentra cerrada";
       }
     }
-    
-
     echo json_encode($alertas);
   }
 
+
+  //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
+  public static function eliminaringresocaja(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $alertas = [];
+    $gasto = ingresoscajas::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursalfk'=>$idsucursal]);
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $cierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja);
+      if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
+        //eliminar gasto 
+        $re = $gasto->eliminar_registro();
+        if($re){
+          if($gasto->id_banco!=null){ //ajustar gasto banco del cierre de caja
+            $cierrecaja->gastosbanco -= $gasto->valor;
+          }else{ //ajustar gasto caja efectivo del cierre de caja
+            $cierrecaja->gastoscaja -= $gasto->valor;
+          }
+          $rc = $cierrecaja->actualizar();
+          if($rc){
+            $alertas['exito'][] = "Gasto eliminado correctamente";
+          }else{
+            $alertas['error'][] = "No se pudo eliminar el gasto del cierre de caja";
+            $gasto->crear_guardar();
+          }
+        }else{
+          $alertas['error'][] = "No se pudo eliminar el gasto";
+        }
+      }else{
+        $alertas['error'][] = "Caja ya se encuentra cerrada";
+      }
+    }
+    echo json_encode($alertas);
+  }
 
 }

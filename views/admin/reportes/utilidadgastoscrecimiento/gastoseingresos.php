@@ -48,22 +48,6 @@
   
   <div class="mt-4">
     <p class="text-gray-500 text-xl">Ingresos</p>
-    <table id="tablaIngresos" class="display responsive nowrap tabla" width="100%">
-        <thead>
-          <tr>
-              <th>Nº</th>
-              <th>Usuario</th>
-              <th>Origen</th>
-              <th>Compra Inv</th>
-              <th>Categoria</th>
-              <th>V. Total</th>
-              <th>Fecha</th>
-              <th class="accionesth">Acciones</th>
-          </tr>
-      </thead>
-      <tbody>
-          
-      </tbody>
-    </table>
+    <table id="tablaIngresos" class="display responsive nowrap tabla" width="100%"></table>
   </div>
 </div>

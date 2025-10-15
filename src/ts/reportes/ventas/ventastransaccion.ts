@@ -49,7 +49,7 @@
     });
 
 
-    //seleccionar mes, transacciones acumuladas por dia durante un mes
+    //seleccionar mes, transacciones acumuladas por dia durante un mes y año elejido
     document.querySelector('#formDiario')?.addEventListener('submit', e=>{
       e.preventDefault();
       const inputselectmesyaño = document.querySelector('#inputselectmesyaño') as HTMLInputElement;
