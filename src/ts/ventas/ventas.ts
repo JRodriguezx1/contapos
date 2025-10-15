@@ -99,14 +99,15 @@
     const mapMediospago = new Map();
 
     (async ()=>{
-      try {
+      products = await (window as any).POS.productosAPI.getProductosAPI();
+      /*try {
           const url = "/admin/api/allproducts"; //llamado a la API REST
           const respuesta = await fetch(url); 
           products = await respuesta.json(); 
           console.log(products);
       } catch (error) {
           console.log(error);
-      }
+      }*/
     })();
 
     /*productos.forEach(producto=>{
