@@ -4401,10 +4401,6 @@ video {
 }
 
 @media (min-width: 1024px) {
-  .xlg\:h-\[5rem\] {
-    height: 5rem;
-  }
-
   .xlg\:h-\[5\.5rem\] {
     height: 5.5rem;
   }
