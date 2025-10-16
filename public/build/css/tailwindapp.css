@@ -4434,8 +4434,13 @@ video {
 }
 
 @media (min-width: 1024px) {
+<<<<<<< HEAD
   .xlg\:h-\[5\.1rem\] {
     height: 5.1rem;
+=======
+  .xlg\:h-\[5\.5rem\] {
+    height: 5.5rem;
+>>>>>>> d48d58e05018f9ad0f4016474cf147777497dd7f
   }
 
   .xlg\:w-\[48rem\] {
