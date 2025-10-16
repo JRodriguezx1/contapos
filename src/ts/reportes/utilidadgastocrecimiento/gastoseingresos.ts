@@ -5,7 +5,7 @@
     const btnmesanterior = document.querySelector('#btnmesanterior') as HTMLButtonElement;
     const btnhoy = document.querySelector('#btnhoy') as HTMLButtonElement;
     const btnayer = document.querySelector('#btnayer') as HTMLButtonElement;
-    let fechainicio:string = "", fechafin:string = "", tablaGastos:HTMLElement;
+    let fechainicio:string = "", fechafin:string = "", tablaGastos:HTMLTableElement, tablaIngresos:HTMLTableElement;
 
     interface apigastos {
         Id:string,
@@ -19,9 +19,19 @@
         estado:string,
         valor:string,
         fecha:string
-    } 
+    }
 
-    let datosGastos:apigastos[] = [];
+    interface apiingresos {
+        id:string,
+        operacion:string,
+        valor:string,
+        fecha:string,
+        nombrecaja:string,
+        estado:string,
+        nombreusuario:string
+    }
+
+    let datosGastos:apigastos[] = [], datosIngresos:apiingresos[] = [];
 
 
     // SELECTOR DE FECHAS DEL CALENDARIO
@@ -53,7 +63,7 @@
         const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
         const fechainiciobtn:string = primerDia.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDia.toISOString().split('T')[0];
-        callApiGastos(fechainiciobtn, fechafinbtn);
+        callApiGastosIngresos(fechainiciobtn, fechafinbtn);
     });
 
 
@@ -66,7 +76,7 @@
         const ultimoDiaMesAnterior = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
         const fechainiciobtn:string = primerDiaMesAnterior.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDiaMesAnterior.toISOString().split('T')[0];
-        callApiGastos(fechainiciobtn, fechafinbtn);
+        callApiGastosIngresos(fechainiciobtn, fechafinbtn);
     });
 
     btnhoy.addEventListener('click', (e:Event)=>{
@@ -75,7 +85,7 @@
         const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioDia);
         const fechafinbtn:string = formatoFecha(finDia);
-        callApiGastos(fechainiciobtn, fechafinbtn);
+        callApiGastosIngresos(fechainiciobtn, fechafinbtn);
     });
 
     btnayer.addEventListener('click', (e:Event)=>{
@@ -88,7 +98,7 @@
         const finAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioAyer);
         const fechafinbtn:string = formatoFecha(finAyer);
-        callApiGastos(fechainiciobtn, fechafinbtn);
+        callApiGastosIngresos(fechainiciobtn, fechafinbtn);
     });
 
     function formatoFecha(fecha: Date): string {
@@ -108,10 +118,10 @@
          msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
          return;
       }
-      callApiGastos(fechainicio, fechafin);
+      callApiGastosIngresos(fechainicio, fechafin);
     });
 
-    async function callApiGastos(dateinicio:string, datefin:string){
+    async function callApiGastosIngresos(dateinicio:string, datefin:string){
         console.log(dateinicio, datefin);
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
@@ -121,9 +131,11 @@
             const url = "/admin/api/gastoseingresos"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            datosGastos = resultado;
-            console.log(datosGastos);
+            datosGastos = resultado.gastos;
+            datosIngresos = resultado.ingresos;
+            console.log(resultado);
             printTableGastos();
+            printTableIngresos();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
             console.log(error);
@@ -145,7 +157,7 @@
                                             const x = data.estado == '0'?'Abierta':'Cerrada';
                                             return `${data.nombrecaja} - ${x}`;
                                         } 
-                         },
+                        },
                         {title: 'Banco', data: 'nombrebanco'},
                         {title: 'Usuario', data: 'nombre'},
                         {title: 'Operacion', data: 'operacion'},
@@ -165,12 +177,43 @@
         });
     }
 
-    //evento click sobre toda la tabla
+
+    printTableIngresos();
+    function printTableIngresos(){
+        tablaIngresos = ($('#tablaIngresos') as any).DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: datosIngresos,
+            columns: [
+                        {title: 'id', data: 'id'}, 
+                        {   
+                            title: 'Caja', 
+                            data: null, render: (data: apiingresos) => { 
+                                            const x = data.estado == '0'?'Abierta':'Cerrada';
+                                            return `${data.nombrecaja} - ${x}`;
+                                        } 
+                        },
+                        {title: 'Usuario', data: 'nombreusuario'},
+                        {title: 'Operacion', data: 'operacion'},
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Fecha', data: 'fecha'},
+                        { 
+                            title: 'Acciones', 
+                            data: null, 
+                            orderable: false, 
+                            searchable: false, 
+                            render: (data: any, type: any, row: any) => {return `<button class="btn-eliminar" data-id="${row.id}">⛔​</button>`}
+                        }
+                    ],
+        });
+    }
+    
+
+    //evento click sobre toda la tabla gastos
     document.querySelector('#tablaGastos')?.addEventListener("click", (e)=>{
       const target = e.target as HTMLButtonElement;
       let idgasto = target?.dataset.id;
       if((e.target as HTMLButtonElement)?.classList.contains("btn-ver"))verGasto(idgasto);
-      if(target?.classList.contains("btn-eliminar"))eliminarGasto(idgasto);
+      if(target?.classList.contains("btn-eliminar"))eliminarGasto(idgasto, target);
     });
 
 
@@ -179,8 +222,9 @@
         if(gasto?.id_compra != null)window.location.href = '/admin/reportes/compra?id='+gasto.id_compra;
     }
 
-    function eliminarGasto(idgasto:string|undefined){
+    function eliminarGasto(idgasto:string|undefined, target:HTMLButtonElement){
         const gasto = datosGastos.find(x=>x.Id==idgasto);
+        const fila = (tablaIngresos as any).row(target.closest('tr'));
         if(gasto?.estado === '0'){
             Swal.fire({
                 customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
@@ -192,17 +236,16 @@
                 cancelButtonText: 'No',
             }).then((result:any) => {
                 if (result.isConfirmed) {
-                    //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
                     (async ()=>{
                         const datos = new FormData();
                         datos.append('id', gasto.Id);
                         try {
-                            const url = "/admin/api/eliminargasto"; //llamado a la API REST y se trae las direcciones segun cliente elegido
+                            const url = "/admin/api/eliminargasto"; //llamado a la API REST en reportescontrolador para eliminar el gasto
                             const respuesta = await fetch(url, {method: 'POST', body: datos});
                             const resultado = await respuesta.json();
-                            //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
                             if(resultado.exito !== undefined){ 
                                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                                fila.remove().draw(false);
                             }else{
                                 msjalertToast('error', '¡Error!', resultado.error[0]);
                             }
@@ -218,6 +261,50 @@
     }
 
 
+    //evento click sobre toda la tabla ingresos
+    document.querySelector('#tablaIngresos')?.addEventListener("click", (e)=>{
+      const target = e.target as HTMLButtonElement;
+      let idingreso = target?.dataset.id;
+      if(target?.classList.contains("btn-eliminar"))eliminarIngreso(idingreso, target);
+    });
+
+    function eliminarIngreso(idingreso:string|undefined, target:HTMLButtonElement){
+        const ingreso = datosIngresos.find(x=>x.id==idingreso);
+        const fila = (tablaIngresos as any).row(target.closest('tr'));
+        if(ingreso?.estado === '0'){
+            Swal.fire({
+                customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+                icon: 'question',
+                title: 'Desea eliminar el ingreso de la caja?',
+                text: "El ingreso sera eliminado por completo de la caja.",
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result:any) => {
+                if (result.isConfirmed) {
+                    (async ()=>{
+                        const datos = new FormData();
+                        datos.append('id', ingreso.id);
+                        try {
+                            const url = "/admin/api/eliminaringreso"; //llamado a la API REST en reportescontrolador para eliminar un ingreso
+                            const respuesta = await fetch(url, {method: 'POST', body: datos});
+                            const resultado = await respuesta.json();
+                            if(resultado.exito !== undefined){ 
+                                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                                fila.remove().draw(false);
+                            }else{
+                                msjalertToast('error', '¡Error!', resultado.error[0]);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })();
+                }
+            });
+        }else{
+             msjalertToast('error', '¡Error!', 'No se puede eliminar el ingreso, porque la caja esta cerrada');
+        }
+    }
 
   }
 

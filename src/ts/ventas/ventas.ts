@@ -137,7 +137,7 @@
     }
 
     //////////// evento al boton añadir cliente nuevo //////////////
-    btnAddCliente?.addEventListener('click', (e)=>{
+    /*btnAddCliente?.addEventListener('click', (e)=>{
       miDialogoAddCliente.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
@@ -266,7 +266,7 @@
       })();
       miDialogoAddDir.close();
       document.removeEventListener("click", cerrarDialogoExterno);
-    });
+    });*/
 
 
     //////////// evento al boton modalidad de entrega //////////////
@@ -869,6 +869,9 @@
     function limpiarformdialog(){
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();
     }
+
+    (window as any).POS.limpiarformdialog = limpiarformdialog;
   }
+
 
 })();

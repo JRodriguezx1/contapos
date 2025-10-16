@@ -248,6 +248,7 @@ $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 
 $router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde gastosingresos.ts
 $router->post('/admin/api/eliminargasto', [reportescontrolador::class, 'eliminargasto']);  //fetch llamado desde gastosingresos.ts
+$router->post('/admin/api/eliminaringreso', [reportescontrolador::class, 'eliminaringresocaja']);  //fetch llamado desde gastosingresos.ts
 
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
