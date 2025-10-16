@@ -4,10 +4,11 @@ namespace Model\caja;
 
 class ingresoscajas extends \Model\ActiveRecord{
     protected static $tabla = 'ingresoscajas';
-    protected static $columnasDB = ['id', 'idusuario', 'id_caja', 'id_cierrecaja', 'operacion', 'fecha', 'valor', 'descripcion'];
+    protected static $columnasDB = ['id', 'idsucursal_idfk', 'idusuario', 'id_caja', 'id_cierrecaja', 'operacion', 'fecha', 'valor', 'descripcion'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->idsucursal_idfk = id_sucursal();
         $this->idusuario = $args['idusuario']??'';
         $this->id_caja = $args['id_caja']??'';
         $this->id_cierrecaja = $args['id_cierrecaja']??'';
