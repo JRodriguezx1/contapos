@@ -21,12 +21,12 @@
         //////////// evento al boton añadir cliente nuevo //////////////
         btnAddCliente?.addEventListener('click', (e)=>{
         miDialogoAddCliente.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
+        document.addEventListener("click", POS.cerrarDialogoExterno);
         });
         //////////// evento al boton añadir nueva direccion //////////////
         btnAddDir?.addEventListener('click', (e)=>{
         miDialogoAddDir.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
+        document.addEventListener("click", POS.cerrarDialogoExterno);
         });
         //////////// evento al btn submit del formulario add nuevo cliente //////////////
         document.querySelector('#formAddCliente')?.addEventListener('submit', e=>{
@@ -59,7 +59,7 @@
             }
         })();
         miDialogoAddCliente.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
+        document.removeEventListener("click", POS.cerrarDialogoExterno);
         });
         /////////////// añadir cliente al select despues de crearse ///////////////////
         function addClienteSelect(clienteID:string): void{
@@ -124,30 +124,30 @@
 
         ////////////////// evento al btn submit del formulario add direccion //////////////////////
         document.querySelector('#formAddDir')?.addEventListener('submit', e=>{
-        e.preventDefault();
-        (async ()=>{
-            const datos = new FormData();
-            datos.append('idcliente', selectCliente.value);
-            datos.append('departamento', (document.querySelector('#adddepartamento') as HTMLInputElement).value);
-            datos.append('ciudad', (document.querySelector('#addciudad') as HTMLInputElement).value);
-            datos.append('direccion', (document.querySelector('#adddireccion') as HTMLInputElement).value);
-            datos.append('idtarifa', (document.querySelector('#tarifa') as HTMLSelectElement).value);
-            try {
-                const url = "/admin/api/addDireccionCliente";  //direccionescontrolador
-                const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-                const resultado = await respuesta.json();
-                if(resultado.exito !== undefined){
-                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                addDireccionSelect(resultado.direcciones);
-                }else{
-                msjalertToast('error', '¡Error!', resultado.error[0]);
+            e.preventDefault();
+            (async ()=>{
+                const datos = new FormData();
+                datos.append('idcliente', selectCliente.value);
+                datos.append('departamento', (document.querySelector('#adddepartamento') as HTMLInputElement).value);
+                datos.append('ciudad', (document.querySelector('#addciudad') as HTMLInputElement).value);
+                datos.append('direccion', (document.querySelector('#adddireccion') as HTMLInputElement).value);
+                datos.append('idtarifa', (document.querySelector('#tarifa') as HTMLSelectElement).value);
+                try {
+                    const url = "/admin/api/addDireccionCliente";  //direccionescontrolador
+                    const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                    const resultado = await respuesta.json();
+                    if(resultado.exito !== undefined){
+                    msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                    addDireccionSelect(resultado.direcciones);
+                    }else{
+                    msjalertToast('error', '¡Error!', resultado.error[0]);
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-            } catch (error) {
-                console.log(error);
-            }
-        })();
-        miDialogoAddDir.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
+            })();
+            miDialogoAddDir.close();
+            document.removeEventListener("click", POS.cerrarDialogoExterno);
         });
         
     }

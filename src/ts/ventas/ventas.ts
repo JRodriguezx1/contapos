@@ -7,10 +7,14 @@
     //const btnAddDir = document.querySelector('#adddir') as HTMLElement;
     //const selectCliente = document.querySelector('#selectCliente') as HTMLSelectElement;
     //const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
+
+    const selectCliente = POS.gestionClientes.selectCliente;
+    const dirEntrega = POS.gestionClientes.dirEntrega;
+
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
-    const btnotros = document.querySelector('#btnotros') as HTMLButtonElement;  //btn de otros
+    //const btnotros = document.querySelector('#btnotros') as HTMLButtonElement;  //btn de otros
     const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
@@ -22,7 +26,13 @@
     const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
     //const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
     //const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
-    const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
+
+    const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
+    const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
+
+    //const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
+    const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
+
     const miDialogoPreciosAdicioanles = document.querySelector('#miDialogoPreciosAdicioanles') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
@@ -102,7 +112,9 @@
     const mapMediospago = new Map();
 
     (async ()=>{
-      products = await (window as any).POS.productosAPI.getProductosAPI();
+      products = await POS.productosAPI.getProductosAPI();
+      POS.products = products;
+      POS.gestionOtrosProductos.otrosproductos();
       /*try {
           const url = "/admin/api/allproducts"; //llamado a la API REST
           const respuesta = await fetch(url); 
@@ -139,7 +151,8 @@
       $('#facturador').val(z.options[z.selectedIndex].dataset.idfacturador??'1');
     }
 
-    (window as any).POS.gestionClientes.clientes();
+    POS.gestionClientes.clientes();  //inicializa modulo de clientes
+
     //////////// evento al boton añadir cliente nuevo //////////////
     /*btnAddCliente?.addEventListener('click', (e)=>{
       miDialogoAddCliente.showModal();
@@ -282,8 +295,9 @@
 
     ///////// funcion que imprime el valor de la tarifa segun direccion ///////////
     function printTarifaEnvio():void{
-      const selectDir = (window as any).POS.dirEntrega.options[(window as any).POS.dirEntrega.selectedIndex];
-      if(modalidadEntrega.textContent == ": Presencial" || (window as any).POS.dirEntrega.selectedIndex == -1){
+      tarifas = POS.tarifas;
+      const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
+      if(modalidadEntrega.textContent == ": Presencial" || dirEntrega.selectedIndex == -1){
         valorTotal.valortarifa = 0;
         nombretarifa = '';
         return;
@@ -305,8 +319,9 @@
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
+    //POS.gestionOtrosProductos.otrosproductos();
     ///////////////////// Evento al btn Otros /////////////////////////
-    btnotros.addEventListener('click', (e:Event)=>{
+    /*btnotros.addEventListener('click', (e:Event)=>{
       miDialogoOtrosProductos.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
@@ -348,7 +363,7 @@
         stockminimo: '1',
         categoria: 'na',
         rendimientoestandar: '1',
-        precio_compra: 'na',
+        precio_compra: '0',
         precio_venta: otrosproductos!.valorunidad+'',
         fecha_ingreso: '',
         estado: '1',
@@ -358,7 +373,7 @@
       actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false);
       miDialogoOtrosProductos.close();
       document.removeEventListener("click", cerrarDialogoExterno);
-    });
+    });*/
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
@@ -587,7 +602,7 @@
     });
 
     btnaplicarcredito?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && ((window as any).POS.selectCliente.value =='1' || !(window as any).POS.dirEntrega.value) || (window as any).POS.selectCliente.value =='1'){
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value) || selectCliente.value =='1'){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
@@ -608,7 +623,7 @@
     });
 
     btnfacturar?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && ((window as any).POS.selectCliente.value =='1' || !(window as any).POS.dirEntrega.value)){
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value)){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
@@ -730,13 +745,13 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === (window as any).POS.miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === (window as any).POS.miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
         miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
-        (window as any).POS.miDialogoAddCliente.close();
-        (window as any).POS.miDialogoAddDir.close();
+        miDialogoAddCliente.close();
+        miDialogoAddDir.close();
         miDialogoFacturarA.close();
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicioanles.close();
@@ -786,13 +801,13 @@
       datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
       datos.append('idcaja', btnCaja.value);
       datos.append('idconsecutivo', btnTipoFacturador.value);
-      datos.append('iddireccion', (window as any).POS.dirEntrega.value);
+      datos.append('iddireccion', dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
-      datos.append('cliente', (window as any).POS.selectCliente.value=='1'?'N/A':(window as any).POS.selectCliente.options[(window as any).POS.selectCliente.selectedIndex].textContent!);
+      datos.append('cliente', selectCliente.value=='1'?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
       datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
-      datos.append('direccion', (window as any).POS.dirEntrega.options[(window as any).POS.dirEntrega.selectedIndex]?.text??'');
+      datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
       datos.append('tarifazona', nombretarifa||'');
       datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
       datos.append('totalunidades', totalunidades.textContent!);
@@ -874,11 +889,14 @@
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();
     }
 
-    //exponer funciones globalmente
-    (window as any).POS.limpiarformdialog = limpiarformdialog;
-    (window as any).POS.tarifas = tarifas;
-    (window as any).POS.printTarifaEnvio = printTarifaEnvio;
-    (window as any).POS.valorCarritoTotal = valorCarritoTotal;
+    //exponer variables y funciones globalmente
+    POS.limpiarformdialog = limpiarformdialog;
+    POS.printTarifaEnvio = printTarifaEnvio;
+    POS.valorCarritoTotal = valorCarritoTotal;
+    POS.actualizarCarrito = actualizarCarrito;
+    POS.cerrarDialogoExterno = cerrarDialogoExterno;
+    POS.tarifas = tarifas;
+    //POS.products = products;
   }
 
 
