@@ -1,9 +1,12 @@
 (()=>{
   if(document.querySelector('.ventas')){
-    const btnAddCliente = document.querySelector('#addcliente') as HTMLElement;
-    const btnAddDir = document.querySelector('#adddir') as HTMLElement;
-    const selectCliente = document.querySelector('#selectCliente') as HTMLSelectElement;
-    const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
+
+     const POS = (window as any).POS;
+     
+    //const btnAddCliente = document.querySelector('#addcliente') as HTMLElement;
+    //const btnAddDir = document.querySelector('#adddir') as HTMLElement;
+    //const selectCliente = document.querySelector('#selectCliente') as HTMLSelectElement;
+    //const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
@@ -17,8 +20,8 @@
     const btnguardar = document.querySelector('#btnguardar');
     const btnfacturar = document.querySelector('#btnfacturar');
     const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
-    const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
-    const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
+    //const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
+    //const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
     const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
     const miDialogoPreciosAdicioanles = document.querySelector('#miDialogoPreciosAdicioanles') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
@@ -136,6 +139,7 @@
       $('#facturador').val(z.options[z.selectedIndex].dataset.idfacturador??'1');
     }
 
+    (window as any).POS.gestionClientes.clientes();
     //////////// evento al boton añadir cliente nuevo //////////////
     /*btnAddCliente?.addEventListener('click', (e)=>{
       miDialogoAddCliente.showModal();
@@ -278,8 +282,8 @@
 
     ///////// funcion que imprime el valor de la tarifa segun direccion ///////////
     function printTarifaEnvio():void{
-      const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
-      if(modalidadEntrega.textContent == ": Presencial" || dirEntrega.selectedIndex == -1){
+      const selectDir = (window as any).POS.dirEntrega.options[(window as any).POS.dirEntrega.selectedIndex];
+      if(modalidadEntrega.textContent == ": Presencial" || (window as any).POS.dirEntrega.selectedIndex == -1){
         valorTotal.valortarifa = 0;
         nombretarifa = '';
         return;
@@ -583,7 +587,7 @@
     });
 
     btnaplicarcredito?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value) || selectCliente.value =='1'){
+      if(modalidadEntrega.textContent === ": Domicilio" && ((window as any).POS.selectCliente.value =='1' || !(window as any).POS.dirEntrega.value) || (window as any).POS.selectCliente.value =='1'){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
@@ -604,7 +608,7 @@
     });
 
     btnfacturar?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value)){
+      if(modalidadEntrega.textContent === ": Domicilio" && ((window as any).POS.selectCliente.value =='1' || !(window as any).POS.dirEntrega.value)){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
@@ -726,13 +730,13 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === (window as any).POS.miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === (window as any).POS.miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
         miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
-        miDialogoAddCliente.close();
-        miDialogoAddDir.close();
+        (window as any).POS.miDialogoAddCliente.close();
+        (window as any).POS.miDialogoAddDir.close();
         miDialogoFacturarA.close();
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicioanles.close();
@@ -782,13 +786,13 @@
       datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
       datos.append('idcaja', btnCaja.value);
       datos.append('idconsecutivo', btnTipoFacturador.value);
-      datos.append('iddireccion', dirEntrega.value);
+      datos.append('iddireccion', (window as any).POS.dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
-      datos.append('cliente', selectCliente.value=='1'?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
+      datos.append('cliente', (window as any).POS.selectCliente.value=='1'?'N/A':(window as any).POS.selectCliente.options[(window as any).POS.selectCliente.selectedIndex].textContent!);
       datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
-      datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
+      datos.append('direccion', (window as any).POS.dirEntrega.options[(window as any).POS.dirEntrega.selectedIndex]?.text??'');
       datos.append('tarifazona', nombretarifa||'');
       datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
       datos.append('totalunidades', totalunidades.textContent!);
@@ -870,7 +874,11 @@
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();
     }
 
+    //exponer funciones globalmente
     (window as any).POS.limpiarformdialog = limpiarformdialog;
+    (window as any).POS.tarifas = tarifas;
+    (window as any).POS.printTarifaEnvio = printTarifaEnvio;
+    (window as any).POS.valorCarritoTotal = valorCarritoTotal;
   }
 
 

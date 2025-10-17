@@ -11,6 +11,10 @@
     const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
 
   const gestionClientes = {
+    selectCliente,
+    dirEntrega,
+    miDialogoAddCliente,
+    miDialogoAddDir,
 
     clientes(){
         
@@ -88,7 +92,7 @@
         function addDireccionSelect<T extends {id:string, idcliente:string, idtarifa:string, tarifa:{id:string, idcliente:string, nombre:string, valor:string}, direccion:string, ciudad:string}>(addrs: T[]):void{
         while(dirEntrega?.firstChild)dirEntrega.removeChild(dirEntrega?.firstChild);
         const setTarifas = new Set();
-        tarifas.length = 0;
+        POS.tarifas.length = 0;
         console.log(addrs);
         addrs.forEach(dir =>{
             const option = document.createElement('option');
@@ -100,13 +104,13 @@
             dirEntrega.appendChild(option);
             dir.tarifa.idcliente = dir.idcliente;
             if(!setTarifas.has(dir.tarifa.id)){
-            tarifas = [...tarifas, dir.tarifa];
+            POS.tarifas = [...POS.tarifas, dir.tarifa];
             setTarifas.add(dir.tarifa.id);
             }
         });
         setTarifas.clear();
-        printTarifaEnvio();
-        valorCarritoTotal();
+        POS.printTarifaEnvio();
+        POS.valorCarritoTotal();
         (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = addrs[0]?.ciudad??'No especificado';
         }
         ///////// Evento al select de direcciones ////////////
@@ -114,8 +118,8 @@
         const select = (e.target as HTMLSelectElement);
         const x:string = select.options[select.selectedIndex].dataset.ciudad||'';
         (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = x;
-        printTarifaEnvio();
-        valorCarritoTotal();
+        POS.printTarifaEnvio();
+        POS.valorCarritoTotal();
         });
 
         ////////////////// evento al btn submit del formulario add direccion //////////////////////
