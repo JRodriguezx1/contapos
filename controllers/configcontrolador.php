@@ -57,7 +57,7 @@ class configcontrolador{
         if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
         $alertas = [];
         $idsucursal = id_sucursal();
-        $sucursal = sucursales::find('id', 1);
+        $sucursal = sucursales::find('id', $idsucursal);
 
         $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
         $dirlogo = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio;
@@ -133,7 +133,7 @@ class configcontrolador{
         $alertas = [];
         $usuarios_permisos = new usuarios_permisos;
         $idsucursal = id_sucursal();
-        $negocio = negocio::find('id', 1);
+        $sucursal = sucursales::find('id', $idsucursal);
         $permisos = $_POST['permisos']??[];
         //debuguear($permisos);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -169,7 +169,7 @@ class configcontrolador{
         $companias = [];
         $mediospago = mediospago::all();
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$negocio, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'user'=>$_SESSION]);
     }
 
   ///////////////////////////////////  Apis ////////////////////////////////////
@@ -302,7 +302,7 @@ class configcontrolador{
         $alertas = [];
         $caja = new caja($_POST);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          $caja->negocio = negocio::find('id', $caja->negocio)->nombre;
+          $caja->negocio = sucursales::find('id', $caja->idsucursalid)->nombre;
             $alertas = $caja->validar();
             if(empty($alertas)){ //si los campos cumplen los criterios  
                 $r = $caja->crear_guardar();
@@ -334,7 +334,7 @@ class configcontrolador{
         $caja = caja::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $caja->compara_objetobd_post($_POST);
-            $caja->negocio = negocio::find('id', $caja->negocio)->nombre;
+            $caja->negocio = sucursales::find('id', $caja->idsucursalid)->nombre;
             $alertas = $caja->validar();
             if(empty($alertas)){
                 $r = $caja->actualizar();
@@ -405,7 +405,7 @@ class configcontrolador{
         $consecutivo = consecutivos::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $consecutivo->compara_objetobd_post($_POST);
-            $consecutivo->negocio = negocio::find('id', $consecutivo->idnegocio)->nombre;
+            $consecutivo->negocio = sucursales::find('id', $consecutivo->id_sucursalid)->nombre;
             $consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
             $alertas = $consecutivo->validar();
             if(empty($alertas)){

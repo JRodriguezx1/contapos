@@ -479,7 +479,7 @@
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
   <?php include __DIR__. "/modalprocesarpago.php"; ?>
   <!--///////////////////// Modal procesar credito boton facturar /////////////////////////-->
-  <?php include __DIR__. "/modalprocesarcredito.php"; ?>
+  <?php //include __DIR__. "/modalprocesarcredito.php"; ?>
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
   <?php include __DIR__. "/modaladquiriente.php"; ?>
   <!-- MODAL OTROS PRODUCTOS -->
