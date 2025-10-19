@@ -24,7 +24,7 @@
       observacion: string,
       estado: string,
       created_at: string,
-      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, cantidadrecibida:string, cantidadrechazada:string}[]
+      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, unidadmedida:string, cantidadrecibida:string, cantidadrechazada:string}[]
     };
 
     let ordenes:ordenestrasladosinv[]=[], unaorden:ordenestrasladosinv;
@@ -175,8 +175,12 @@
         const tdcantidad = document.createElement('td');
         tdcantidad.classList.add('px-4', 'py-2', 'border');
         tdcantidad.textContent = x.cantidad;
+        const tdunidadmedida = document.createElement('td');
+        tdunidadmedida.classList.add('px-4', 'py-2', 'border');
+        tdunidadmedida.textContent = x.unidadmedida;
         tr.appendChild(tdproducto);
         tr.appendChild(tdcantidad);
+        tr.appendChild(tdunidadmedida);
         tbodydetalleorden.appendChild(tr);
       });
     }

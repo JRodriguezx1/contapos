@@ -172,10 +172,13 @@ class trasladosinvcontrolador{
         $orden = traslado_inv::camposJoinObj($sql);
         if($orden){
             $sql = "SELECT td.id, td.id_trasladoinv, td.fkproducto, td.idsubproducto_id,
+                    COALESCE(pund.nombre, spund.nombre) as unidadmedida,
                     COALESCE(p.nombre, sp.nombre) AS nombre, td.cantidad
                     FROM detalletrasladoinv td
                     LEFT JOIN productos p ON td.fkproducto = p.id
                     LEFT JOIN subproductos sp ON td.idsubproducto_id = sp.id
+                    LEFT JOIN unidadesmedida pund ON p.idunidadmedida = pund.id
+                    LEFT JOIN unidadesmedida spund ON sp.id_unidadmedida = spund.id
                     WHERE td.id_trasladoinv = $id;";
             $orden[0]->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql); 
             $alertas['exito'][] = "Consulta procesada";

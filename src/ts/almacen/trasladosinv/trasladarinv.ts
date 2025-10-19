@@ -24,7 +24,7 @@
       observacion: string,
       estado: string,
       created_at: string,
-      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, cantidadrecibida:string, cantidadrechazada:string}[]
+      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, unidadmedida:string, cantidadrecibida:string, cantidadrechazada:string}[]
     };
 
     let ordenes:ordenestrasladosinv[]=[], unaorden:ordenestrasladosinv;
@@ -112,8 +112,8 @@
       (async ()=>{
         try {
           const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+idorden; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
-          const respuesta = await fetch(url); 
-          const resultado = await respuesta.json(); 
+          const respuesta = await fetch(url);
+          const resultado = await respuesta.json();
           imprimirdatos(resultado.orden[0]);
         } catch (error) {
             console.log(error);
@@ -177,8 +177,12 @@
         const tdcantidad = document.createElement('td');
         tdcantidad.classList.add('px-4', 'py-2', 'border');
         tdcantidad.textContent = x.cantidad;
+        const tdunidadmedida = document.createElement('td');
+        tdunidadmedida.classList.add('px-4', 'py-2', 'border');
+        tdunidadmedida.textContent = x.unidadmedida;
         tr.appendChild(tdproducto);
         tr.appendChild(tdcantidad);
+        tr.appendChild(tdunidadmedida);
         tbodydetalleorden.appendChild(tr);
       });
     }

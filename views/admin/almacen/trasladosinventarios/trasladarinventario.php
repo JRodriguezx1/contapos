@@ -227,8 +227,8 @@
                     class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
                     <tr>
                         <th class="px-5 py-3 border-b border-gray-200">Producto</th>
-                        <th class="px-5 py-3 border-b border-gray-200">Unidad de medida</th>
                         <th class="px-5 py-3 border-b border-gray-200">Cantidad</th>
+                        <th class="px-5 py-3 border-b border-gray-200">Unidad de medida</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
