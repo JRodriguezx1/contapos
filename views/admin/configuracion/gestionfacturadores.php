@@ -16,7 +16,8 @@
           </tr>
       </thead>
       <tbody>
-          <?php foreach($facturadores as $index => $value): ?>
+          <?php foreach($facturadores as $index => $value): 
+            if($value->estado==1)?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->nombre; ?></td> 
@@ -69,7 +70,7 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="siguientevalor">Siguiente consecutivo</label>
                 <div class="formulario__dato">
-                    <input id="siguientevalor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Siguiente consecutivo" id="siguientevalor" name="siguientevalor" value="" required>
+                    <input id="siguientevalor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Siguiente consecutivo" name="siguientevalor" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>

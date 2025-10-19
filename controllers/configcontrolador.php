@@ -354,11 +354,22 @@ class configcontrolador{
         $caja = caja::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($caja)){
-                $r = $caja->eliminar_registro();
-                if($r){
-                    ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
-                }else{
-                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                try {
+                    $r = $caja->eliminar_registro();
+                    if($r){
+                        ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $caja->estado = 0;
+                    $ra = $caja->actualizar();
+                    if($ra){
+                        ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                    }
                 }
             }else{
                 ActiveRecord::setAlerta('error', 'Caja no encontrada');
@@ -423,20 +434,40 @@ class configcontrolador{
 
     public static function eliminarFacturador(){
         session_start();
-        $alertas['error'][] = "No es posible eliminar facturador";
-        echo json_encode($alertas); 
-        return;
+        //$alertas['error'][] = "No es posible eliminar facturador";
+        //echo json_encode($alertas); 
+        //return;
         $consecutivo = consecutivos::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            if(!empty($caja)){
-                $r = $caja->eliminar_registro();
-                if($r){
-                    ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
-                }else{
-                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+            if(!empty($consecutivo)){
+                try{
+                    $r = $consecutivo->eliminar_registro();
+                    if($r){
+                        ActiveRecord::setAlerta('exito', 'Consecutivo eliminado correctamente');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion del consecutivo');
+                    }
+                }catch (\Throwable $th){
+                    $mensaje = $th->getMessage();
+                    if(preg_match('/fails \(`[^`]+`\.`([^`]+)`/', $mensaje, $coincidencias)){
+                        if($coincidencias[1] == "caja"){
+                            ActiveRecord::setAlerta('error', '⚠️ Facturador usado en caja, desasociar de caja para eliminar.');
+                        }else{
+                            $consecutivo->estado = 0;
+                            $ra = $consecutivo->actualizar();
+                            if($ra){
+                                ActiveRecord::setAlerta('exito', 'Consecutivo eliminado correctamente');
+                            }else{
+                                ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion del consecutivo');
+                            }
+                        }
+                    }else{
+                        ActiveRecord::setAlerta('error', '⚠️ No se pudo determinar la entidad relacionada.');
+                    }  
                 }
+
             }else{
-                ActiveRecord::setAlerta('error', 'Caja no encontrada');
+                ActiveRecord::setAlerta('error', 'Consecutivo no encontrado');
             }
         }
         $alertas = ActiveRecord::getAlertas();

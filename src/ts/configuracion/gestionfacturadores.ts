@@ -134,6 +134,7 @@
                           <button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>
                       </div>`
                   ]).draw(false); // draw(false) evita recargar toda la tabla
+                  crearConsecutivoGestionCaja(resultado.facturador.id, resultado.facturador.nombre);
                 }else{ //si es actualizar
                   /// actualizar el arregle de facturadores ///
                   console.log(resultado);
@@ -147,6 +148,7 @@
                         datosActuales[6] =  resultado.facturador.estado==1?'Activo':'Inactivo';
                   (tablaFacturadores as any).row(indiceFila).data(datosActuales).draw();
                   (tablaFacturadores as any).page(info.page).draw('page'); //me mantiene la pagina actual
+                  actualizarConsecutivoGestionCaja(unfacturador!.id, resultado.facturador[0].nombre);
                 }
               }else{
                 miDialogoFacturador.close();
@@ -184,7 +186,8 @@
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
                         (tablaFacturadores as any).row(indiceFila+info.start).remove().draw(); 
-                        (tablaFacturadores as any).page(info.page).draw('page'); 
+                        (tablaFacturadores as any).page(info.page).draw('page');
+                        eliminardegestioncaja(idfacturador);
                         Swal.fire(resultado.exito[0], '', 'success')
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
@@ -195,6 +198,26 @@
               })();//cierre de async()
           }
       });
+    }
+
+    function crearConsecutivoGestionCaja(idfacturador:string, nombre:string){
+      const selectConsecutivoCaja = document.querySelector('#idtipoconsecutivo') as HTMLSelectElement;
+      const option = document.createElement('option');
+      option.value = idfacturador;
+      option.textContent = nombre;
+      selectConsecutivoCaja.appendChild(option);
+    }
+
+    function actualizarConsecutivoGestionCaja(idfacturador:string, nombre:string){
+      const selectConsecutivoCaja = document.querySelector('#idtipoconsecutivo') as HTMLSelectElement;
+      const opcionconsecutivo = selectConsecutivoCaja.querySelector(`option[value="${idfacturador}"]`) as HTMLOptionElement;
+      opcionconsecutivo.textContent = nombre;
+    }
+
+    function eliminardegestioncaja(idfacturador:string){
+      const selectConsecutivoCaja = document.querySelector('#idtipoconsecutivo') as HTMLSelectElement;
+      const opcionconsecutivo = selectConsecutivoCaja.querySelector(`option[value="${idfacturador}"]`);
+      opcionconsecutivo?.remove();
     }
 
     function cerrarDialogoExterno(event:Event) {

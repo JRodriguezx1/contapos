@@ -131,7 +131,7 @@ class trasladosinvcontrolador{
     $alertas = [];
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
-    $sql = "SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
+    $sql = "SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, td.observacion, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
                 FROM traslado_inv td 
                 INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
                 INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
@@ -289,26 +289,50 @@ class trasladosinvcontrolador{
         isadmin();
         $alertas = [];
         $addproductos = new detalletrasladoinv;
+        $trasladoinv = traslado_inv::find('id', $_POST['id_trasladoinv']);
         $detalletrasladoDB = detalletrasladoinv::idregistros('id_trasladoinv', $_POST['id_trasladoinv']);
         $idsdetalleproductos = json_decode($_POST['ids']);
         $nuevosproductosFront = json_decode($_POST['nuevosproductos']);
 
+        $r1 = true; $r2 = true; $r3 = true;
         $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = [];
-        ///IDs a eliminar de la DB
-        foreach($detalletrasladoDB as $key => $value)
-          if(!in_array($value->id, $idsdetalleproductos))$arrayIdeliminar[] = $value->id;
-        //registros a insertar
-        foreach ($nuevosproductosFront as $value){
-          $value->cantidadrecibida = 0;
-          $value->cantidadrechazada = 0;
-          if(is_numeric($value->id))$arrayactualizar[] = $value;
-          if($value->id=='') $nuevosproductos[] = $value;
+        
+        //Sincronizar id de la DB y del front si coinciden en el id de detalle_traslado i id de fkprpoducto o idsubproducto
+        foreach($nuevosproductosFront as $itemfront){
+          foreach($detalletrasladoDB as $itemDB){
+            if($itemfront->id_trasladoinv == $itemDB->id_trasladoinv){
+              if($itemfront->fkproducto == $itemDB->fkproducto || $itemfront->idsubproducto_id == $itemDB->idsubproducto_id){
+                $itemfront->id = $itemDB->id;
+                $idsdetalleproductos[] = $itemDB->id;
+                break;
+              }
+            }
+          }
         }
         
-        if($arrayIdeliminar)$r1 = detalletrasladoinv::eliminar_idregistros('id', $arrayIdeliminar);
-        if($nuevosproductos)$r2 = $addproductos->crear_varios_reg_arrayobj($nuevosproductos);
-        if($nuevosproductosFront) $r3 = detalletrasladoinv::updatemultiregobj($arrayactualizar, ['cantidad']);
-        
+        if($trasladoinv->estado == 'pendiente'){
+          ///IDs a eliminar de la DB
+          foreach($detalletrasladoDB as $key => $value)
+            if(!in_array($value->id, $idsdetalleproductos))$arrayIdeliminar[] = $value->id;
+          //registros a insertar
+          foreach ($nuevosproductosFront as $value){
+            $value->cantidadrecibida = 0;
+            $value->cantidadrechazada = 0;
+            if(is_numeric($value->id))$arrayactualizar[] = $value;
+            if($value->id=='') $nuevosproductos[] = $value;
+          }
+          
+          if($arrayIdeliminar)$r1 = detalletrasladoinv::eliminar_idregistros('id', $arrayIdeliminar);
+          if($nuevosproductos)$r2 = $addproductos->crear_varios_reg_arrayobj($nuevosproductos);
+          if($nuevosproductosFront) $r3 = detalletrasladoinv::updatemultiregobj($arrayactualizar, ['cantidad']);
+          if($r1&&$r2&&$r3){
+            $alertas['exito'][] = "$trasladoinv->tipo de transferencia actualizada correctamente";
+          }else{
+            $alertas['error'][] = "Error, intenta actualizar la orden nuevamnete";
+          }
+        }else{
+          $alertas['exito'][] = "La orden dbe estar en estado 'pendiente'";
+        }
         echo json_encode($alertas);
     }
 
@@ -378,7 +402,7 @@ class trasladosinvcontrolador{
         $listaproductos = detalletrasladoinv::idregistros('id_trasladoinv', $trasladoinv->id);
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          if($trasladoinv->tipo == 'Salida' && $trasladoinv->estado == 'entransito'){ //solicitud de ingreso
+          if(($trasladoinv->tipo == 'Salida' || $trasladoinv->tipo == 'Solicitud') && $trasladoinv->estado == 'entransito'){ //solicitud de ingreso
             $trasladoinv->estado = 'entregada';
             $ra = $trasladoinv->actualizar();
 
@@ -412,7 +436,11 @@ class trasladosinvcontrolador{
                $alertas['error'][] = "No se puedo actualizar el estado 'entregado', intentalo nuevamente";
             }
           }else{
-            $alertas['error'][] = "La orden debe estar como 'entransito' y ser de tipo Ingreso";
+            if($trasladoinv->tipo == 'Solicitud'){
+              $alertas['error'][] = "La orden debe estar como 'entransito' y ser de tipo Solicitud";
+            }else{
+              $alertas['error'][] = "La orden debe estar como 'entransito' y ser de tipo Ingreso";
+            }
           }
         }
         echo json_encode($alertas);

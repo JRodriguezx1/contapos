@@ -182,9 +182,9 @@
     <!-- Contenido -->
     <div id="contenidodetalle" class="space-y-6">
         <!-- Cards informativos -->
+        <p class="text-gray-500">Orden #: <span id="numOrden"></span></p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div
-                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
+            <div class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
                 <div>
                     <p class="text-sm text-gray-500">Origen</p>
                     <p id="sedeorigen" class="text-lg font-semibold text-gray-900">—</p>
@@ -192,8 +192,7 @@
                 <div class="text-3xl">🚚</div>
             </div>
 
-            <div
-                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
+            <div class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
                 <div>
                     <p class="text-sm text-gray-500">Destino</p>
                     <p id="sededestino" class="text-lg font-semibold text-gray-900">—</p>
@@ -201,8 +200,7 @@
                 <div class="text-3xl">🏬</div>
             </div>
 
-            <div
-                class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
+            <div class="flex justify-between items-center p-4 h-24 rounded-xl bg-indigo-50 border border-indigo-200">
                 <div>
                     <p class="text-sm text-gray-500">Tipo</p>
                     <p id="tipo" class="text-lg font-semibold text-gray-900">—</p>
@@ -213,11 +211,12 @@
 
         <!-- Observaciones -->
         <div>
-            <label for="observaciones"
-                class="block text-sm font-medium text-gray-700 mb-1">Observaciones</label>
-            <textarea id="observaciones" rows="3"
+            <label for="observaciones" class="block text-sm font-medium text-gray-700 mb-1">Observaciones</label>
+            <textarea 
+                id="observaciones" rows="3"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-32 text-base focus:outline-none focus:ring-1 focus:ring-indigo-600"
-                placeholder="Agrega tus observaciones aquí..."></textarea>
+                placeholder="Agrega tus observaciones aquí...">
+            </textarea>
         </div>
 
         <!-- TABLA DE PRODUCTOS -->

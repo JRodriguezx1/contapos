@@ -12,7 +12,7 @@ class traslado_inv extends \Model\ActiveRecord{
         $this->id_sucursaldestino = $args['id_sucursaldestino']??'';
         $this->fkusuario = $args['fkusuario']??'';
         $this->tipo = $args['tipo']??'';
-        $this->observacion = $args['observacion']??0;
+        $this->observacion = $args['observacion']??'';
         $this->estado = $args['estado']??'';  //pendiente, entransito, finalizado, rechazada, aprobada
         $this->created_at = $args['created_at']??'';
     }
