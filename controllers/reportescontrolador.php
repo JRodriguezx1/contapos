@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Model\caja\cierrescajas;
 use Model\caja\ingresoscajas;
+use Model\compras;
 use Model\gastos;
 use Model\inventario\productos;
 use Model\inventario\subproductos;
@@ -366,6 +367,42 @@ class reportescontrolador{
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);
+  }
+
+  public static function eliminarcompra(){
+    session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $alertas = [];
+    $compra = compras::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursal_id'=>$idsucursal]);
+    $gasto = gastos::uniquewhereArray(['id_compra'=>$compra->id, 'id_sucursalfk'=>$idsucursal]);
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $cierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja);
+      if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
+        //eliminar compra 
+        $rc = $compra->eliminar_registro(); // tambien se elimina el gasto por cascada de la tabla
+        if($rc){
+          if($gasto->id_banco!=null){ //ajustar gasto banco del cierre de caja
+            $cierrecaja->gastosbanco -= $gasto->valor;
+          }else{ //ajustar gasto caja efectivo del cierre de caja
+            $cierrecaja->gastoscaja -= $gasto->valor;
+          }
+          $rcc = $cierrecaja->actualizar();
+          if($rcc){
+            $alertas['exito'][] = "Compra eliminada correctamente";
+          }else{
+            $alertas['error'][] = "No se pudo eliminar la compra del cierre de caja";
+            $compra->crear_guardar();
+            $gasto->crear_guardar();
+          }
+        }else{
+          $alertas['error'][] = "No se pudo eliminar la compra";
+        }
+      }else{
+        $alertas['error'][] = "Caja ya se encuentra cerrada";
+      }
+    }
+    echo json_encode($alertas);
   }
 
   //Reporte de gastos e ingresos llamado desde gastoseingresos.ts

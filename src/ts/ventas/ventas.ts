@@ -27,7 +27,6 @@
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
-    //const mediospago = document.querySelectorAll('.mediopago');
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
@@ -51,14 +50,6 @@
       valorimpuesto: number
     }
     let factimpuestos:Item[] = [];
-
-    /*let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
-      id: 0,
-      nombre: '',
-      cantidad: 0,
-      valorunidad: 0,
-      total: 0
-    }*/
 
     type productsapi = {
       id:string,
@@ -111,9 +102,6 @@
     /////select 2 a btn selectCliente
     //selectCliente.select2  multiple="multiple" maximumSelectionLength: 1,
     ($('#selectCliente') as any).select2();
-
-
-    /******** Obtener datos de factura guardada o cotizacion***********/
     
 
 
@@ -205,15 +193,13 @@
             <span class="menos material-symbols-outlined text-base">remove</span>
           </button>
 
-          <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.cantidad}"
-            >
+          <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.cantidad}">
 
           <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
             <span class="mas material-symbols-outlined text-base">add</span>
           </button>
         </div>
       </td>
-
 
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.valorunidad).toLocaleString()}</td>
       <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.total).toLocaleString()}</td>
@@ -463,70 +449,6 @@
       miDialogoDescuento.close();
       document.removeEventListener("click", cerrarDialogoExterno);
     });
-
-  /////////////////////  logica del modal de pago  //////////////////////////
-    /*function subirModalPagar(){
-      document.querySelector('#totalPagar')!.textContent = `${valorTotal.total.toLocaleString()}`;
-      //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
-      let totalotrosmedios = 0;
-      mediospago.forEach((item, index)=>{
-        if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
-      });
-
-      if(valorTotal.total<totalotrosmedios){
-        totalotrosmedios = 0;
-        mapMediospago.clear();
-        $('.mediopago').val(0);
-      }
-      if(tipoventa == "Contado"){
-        (document.querySelector('.Efectivo')! as HTMLInputElement).value =  `${(valorTotal.total-totalotrosmedios).toLocaleString()}`;
-        mapMediospago.set('1', valorTotal.total-totalotrosmedios); //inicialmente el valor total se establece para efectivo
-      }
-      if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1');
-      calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
-    }*/
-    
-    //eventos a los inputs medios de pago
-    //mediospago.forEach(m=>{m.addEventListener('input', (e)=>{ calcularmediospago(e);});}); 
-
-    /*function calcularmediospago(e:Event){
-      let totalotrosmedios = 0;
-      mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
-        if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
-      });
-      if(totalotrosmedios<=valorTotal.total){
-        if(tipoventa == "Contado"){
-          mapMediospago.set('1', valorTotal.total-totalotrosmedios);
-          if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1'); //se elimina medio de pago efectivo
-        }
-        mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
-        if((e.target as HTMLInputElement).value == '0' && mapMediospago.has((e.target as HTMLInputElement).id))mapMediospago.delete((e.target as HTMLInputElement).id);
-      }else{ //si la suma de los medios de pago superan el valor total, toma el ultimo input digitado y lo reestablece a su ultimo valor
-        if(mapMediospago.has((e.target as HTMLInputElement).id)){
-          (e.target as HTMLInputElement).value = mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
-        }else{
-          (e.target as HTMLInputElement).value = '0';
-        }
-      }
-      if(tipoventa == "Contado"){
-        (mediospago[0] as HTMLInputElement).value = (mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
-      }
-      calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
-    }*/
-
-    /////////////////////  evento al input recibido  //////////////////////////
-    /*document.querySelector<HTMLInputElement>('#recibio')?.addEventListener('input', (e)=>{
-      calcularCambio((e.target as HTMLInputElement).value);
-    });
-
-    function calcularCambio(recibido:string):void{
-      recibido = recibido.replace(/[,.]/g, '');
-      if(Number(recibido)>mapMediospago.get('1')){
-        (document.querySelector('#cambio') as HTMLElement).textContent = (Number(recibido)-mapMediospago.get('1')).toLocaleString()+'';
-        return;
-      }
-      (document.querySelector('#cambio') as HTMLElement).textContent = '0';
-    }*/
 
 
     function cerrarDialogoExterno(event:Event) {
