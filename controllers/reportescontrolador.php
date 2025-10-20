@@ -122,6 +122,17 @@ class reportescontrolador{
         $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+    public static function detallecompra(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id))return;
+
+        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
     public static function utilidadxproducto(Router $router){
         session_start();
         isadmin();
@@ -343,10 +354,15 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
-              FROM facturas f JOIN clientes c ON f.idcliente = c.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
-              GROUP BY c.id, c.nombre;";
+      $sql = "SELECT c.id, c.formapago, c.nfactura, c.impuesto, c.cantidaditems, c.observacion, c.estado, c.subtotal, c.valortotal, c.fechacompra,
+              cc.estado AS estadocierrecaja, CONCAT(u.nombre,' ',u.apellido) as nombreusuario, p.nombre as nombreproveedor, cj.nombre as nombrecaja
+              FROM compras c
+              LEFT JOIN gastos g ON c.id = g.id_compra
+              LEFT JOIN cierrescajas cc ON g.idg_cierrecaja = cc.id
+              JOIN usuarios u ON c.idusuario = u.id 
+              JOIN proveedores p ON c.idproveedor = p.id 
+              JOIN caja cj ON c.idorigencaja = cj.id
+              WHERE c.id_sucursal_id = $idsucursal AND c.fechacompra BETWEEN '$fechainicio' AND '$fechafin' ORDER BY c.fechacompra DESC;";
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);

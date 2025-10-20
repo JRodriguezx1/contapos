@@ -129,6 +129,7 @@ $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);
 $router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class, 'inventarioxproducto']);
 $router->get('/admin/reportes/compras', [reportescontrolador::class, 'compras']);
+$router->get('/admin/reportes/detallecompra', [reportescontrolador::class, 'detallecompra']);
 $router->get('/admin/reportes/utilidadxproducto', [reportescontrolador::class, 'utilidadxproducto']);
 $router->get('/admin/reportes/gastoseingresos', [reportescontrolador::class, 'gastoseingresos']);
 $router->get('/admin/reportes/clientesnuevos', [reportescontrolador::class, 'clientesnuevos']);
