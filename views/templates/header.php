@@ -70,28 +70,59 @@
 </div>
 
 <div class="barra">
-    <div class="toggleanduser"><span class="sidebartoggle material-symbols-outlined">menu</span><p><span><?php echo $_SESSION['nombre']; ?></span></p></div>
+    <div class="toggleanduser">
+        <span class="sidebartoggle material-symbols-outlined">menu</span>
+        <p><span><?php echo $_SESSION['nombre']; ?></span></p>
+    </div>
 
     <div class="flex items-center gap-4 mr-4">
         <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">Cerrar Sesión</a>
 
-        <button type="button" data-dropdown-toggle="notification-dropdown" class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300">
+        <button type="button" data-dropdown-toggle="notification-dropdown"
+            class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300">
             <i class="text-4xl fa-solid fa-bell"></i>
         </button>
 
-        <button id="notification-dropdown" type="button" class="group relative flex rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown">
-            <img class="w-14 h-14 rounded-full" src="/build/img/avatar/avatar9.jpg" alt="user"/>
-            <div class="absolute z-10 bg-white flex flex-col items-start top-full right-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">    
-                <span class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"><?php echo nombreSucursal(); ?></span>
-                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/admin/dashboard">name@j2software.com</a>
-                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/admin/dashboard">Dashboard</a>
-                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/admin/perfil">mi Perfil</a>
-                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/admin/dashboard">Settings</a>
-                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/logout">Sign out</a>
+        <button id="notification-dropdown" type="button"
+            class="group relative flex rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false"
+            data-dropdown-toggle="dropdown">
+            <img class="w-14 h-14 rounded-full" src="/build/img/avatar/avatar9.jpg" alt="user" />
+            <div
+                class="absolute z-10 bg-white flex flex-col items-start top-full right-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
+
+                <!-- Nombre de sucursal actual -->
+                <!-- <span
+                    class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"><?php echo nombreSucursal(); ?></span> -->
+
+                <!-- 🔹 Selector de sucursal -->
+                <div class="w-full px-3 py-2">
+                <label for="selectSucursal" class="block text-lg font-medium mb-2 w-full text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3">
+                    <span class="text-indigo-600 uppercase font-semibold"><?php echo nombreSucursal(); ?></span>
+                </label>
+                <select id="selectSucursal"
+                    class="w-full h-14 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 transition duration-200 shadow-sm text-xl">
+                    <option value="" selected disabled>Cambiar de Sede</option>
+                    <option value="1">Sucursal Principal</option>
+                    <option value="2">Sucursal Norte</option>
+                    <option value="3">Sucursal Centro</option>
+                </select>
+                </div>
+
+
+                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+                    href="/admin/dashboard">name@j2software.com</a>
+                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+                    href="/admin/dashboard">Inicio</a>
+                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+                    href="/admin/perfil">Mi Perfil</a>
+                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+                    href="/admin/configuracion">Ajuste</a>
+                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/logout">Cerrar sesión</a>
             </div>
         </button>
     </div>
 </div>
+
 
 <!-- Menú movil barra inferior -->
 <dialog id="miDialogomenumovil" class="p-0 w-[90%] max-w-6xl h-[75%] bg-white rounded-lg" hidden>
