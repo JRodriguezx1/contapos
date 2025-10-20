@@ -1,13 +1,13 @@
 (():void=>{
 
-  if(document.querySelector('.facturasprocesadasza')){
+  if(document.querySelector('.reportescompras')){
 
     const consultarFechaPersonalizada = document.querySelector('#consultarFechaPersonalizada') as HTMLButtonElement;
     const btnmesactual = document.querySelector('#btnmesactual') as HTMLButtonElement;
     const btnmesanterior = document.querySelector('#btnmesanterior') as HTMLButtonElement;
     const btnhoy = document.querySelector('#btnhoy') as HTMLButtonElement;
     const btnayer = document.querySelector('#btnayer') as HTMLButtonElement;
-    let fechainicio:string = "", fechafin:string = "", tablaFacturasProcesadas:HTMLElement;
+    let fechainicio:string = "", fechafin:string = "", tablaReportesCompras:HTMLElement;
 
     interface facturaspagas {
         id:string,
@@ -133,7 +133,7 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             datosFacturasPagas = resultado;
-            printTableFacturasPagas();
+            printTableCompras();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
             console.log(error);
@@ -141,9 +141,9 @@
     }
 
 
-    printTableFacturasPagas();
-    function printTableFacturasPagas(){
-        tablaFacturasProcesadas = ($('#tablaFacturasProcesadas') as any).DataTable({
+    printTableCompras();
+    function printTableCompras(){
+        tablaReportesCompras = ($('#tablaReportesCompras') as any).DataTable({
             "responsive": true,
             destroy: true, // importante si recargas la tabla
             data: datosFacturasPagas,

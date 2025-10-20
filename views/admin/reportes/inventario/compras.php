@@ -42,7 +42,7 @@
 
 
   <div class="mt-4">
-    <p class="text-gray-500 text-xl">Septiembre 2025</p>
+    <p class="text-gray-500 text-xl">Octubre 2025</p>
     <table id="tablaReportesCompras" class="display responsive nowrap tabla" width="100%">
         <thead>
           <tr>

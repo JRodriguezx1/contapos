@@ -1,0 +1,9 @@
+SCRIPT PARA REINICIAR CUENTA DE UNA SUCURSAL (EJ: SUCURSAL id=2):
+
+DELETE FROM ingresoscajas WHERE idsucursal_idfk = 2;
+DELETE FROM facturas WHERE id_sucursal = 2;  (tambien se elimina ventas, factmediospago y factimpuestos)
+DELETE FROM gastos WHERE id_sucursalfk = 2;
+DELETE FROM declaracionesdineros WHERE idcierrecajaid IN (SELECT id FROM cierrescajas WHERE idsucursal_id = 2);
+DELETE FROM cierrescajas WHERE idsucursal_id = 2;  (tambien elimina arqueosdecaja)
+DELETE FROM compras WHERE id_sucursal_id = 2; (tambien se elimina detallecompra)
+UPDATE consecutivos SET siguientevalor = 1 WHERE id_sucursalid = 2 AND idtipofacturador = 2;  (reiniciar el consecutivos POS)
