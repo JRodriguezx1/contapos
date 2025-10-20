@@ -93,7 +93,7 @@
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        tr.children[5].innerHTML = `<span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700">entransito</span>`;
+                        tr.children[5].innerHTML = `<span class="px-3 py-1 text-base font-semibold rounded-full ${estado=='entregada'?'bg-sky-50 text-sky-600':estado=='entransito'?'bg-yellow-100 text-yellow-700':'bg-rose-50 text-rose-600'}">${estado}</span>`;
                         Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')

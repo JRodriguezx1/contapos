@@ -370,9 +370,9 @@ class trasladosinvcontrolador{
                   return $acumulador;
               }, ['productos'=>[], 'subproductos'=>[]]);
 
-              //descontar de inventario de la sucursal de origen
-              if(!empty($resultArray['productos']))$rsps = stockproductossucursal::reduceinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid ='.$trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino);
-              if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::reduceinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid ='.$trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino);
+              //descontar de inventario de la sucursal de origen de donde se despacha
+              if(!empty($resultArray['productos']))$rsps = stockproductossucursal::reduceinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
+              if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::reduceinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
 
               if($rsps&&$rsis){
                 $alertas['exito'][] = "Orden procesada en transito e inventario descontado";
@@ -424,8 +424,8 @@ class trasladosinvcontrolador{
               }, ['productos'=>[], 'subproductos'=>[]]);
 
               //sumar a inventario de la sucursal de destino
-              if(!empty($resultArray['productos']))$rsps = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid ='.$trasladoinv->id_sucursaldestino);
-              if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid ='.$trasladoinv->id_sucursaldestino);
+              if(!empty($resultArray['productos']))$rsps = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
+              if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
 
               if($rsps&&$rsis){
                 $alertas['exito'][] = "Orden procesada, mercancia recibida e ingresada a inventario";

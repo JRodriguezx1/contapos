@@ -533,7 +533,7 @@
       const f = event.target;
       if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
-        miDialogoCredito.close();
+        //miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
         miDialogoAddCliente.close();

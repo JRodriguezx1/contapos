@@ -149,13 +149,18 @@ class configcontrolador{
                 }
                 $empleado->hashPassword();
                 $empleado->confirmado = 1;
-                $r = $empleado->crear_guardar();
-                if($r[0]){
-                    $r2 = true;
-                    foreach($permisos as $index => $value)$crearpermisos[$index] = ['usuarioid' => $r[1], 'permisoid'=>$value];
-                    if(isset($crearpermisos))$r2 = $usuarios_permisos->crear_varios_reg($crearpermisos);
-                    if($r2)$alertas['exito'][] = "Usuario creado correctamente";
+                try {
+                    $r = $empleado->crear_guardar();
+                    if($r[0]){
+                        $r2 = true;
+                        foreach($permisos as $index => $value)$crearpermisos[$index] = ['usuarioid' => $r[1], 'permisoid'=>$value];
+                        if(isset($crearpermisos))$r2 = $usuarios_permisos->crear_varios_reg($crearpermisos);
+                        if($r2)$alertas['exito'][] = "Usuario creado correctamente";
+                    }
+                } catch (\Throwable $th) {
+                    $alertas['error'][] = "EL usuario ya existe en otra sucursal, colcoar otro usuario en esta sucursal.";
                 }
+                
                 //unset($empleado);
                 $empleado = new \stdClass();
                 $empleado->perfil = '';

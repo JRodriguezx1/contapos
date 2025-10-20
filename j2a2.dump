@@ -196,6 +196,8 @@ CREATE TABLE `caja` (
   `nombre` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
   `negocio` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `editable` tinyint(1) DEFAULT '1',
+  `estado` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idconsecutivo_idx` (`idtipoconsecutivo`),
   KEY `idsucursalid_idx` (`idsucursalid`),
@@ -210,7 +212,7 @@ CREATE TABLE `caja` (
 
 LOCK TABLES `caja` WRITE;
 /*!40000 ALTER TABLE `caja` DISABLE KEYS */;
-INSERT INTO `caja` VALUES (1,1,1,'Caja principal','Negocios pos sas',0);
+INSERT INTO `caja` VALUES (1,1,1,'Caja principal','Negocios pos sas',0,1,'2025-10-19 01:53:34');
 /*!40000 ALTER TABLE `caja` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2307,7 +2309,7 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `apellido` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `cedula` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  `nickname` varchar(12) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `nickname` varchar(12) COLLATE utf8mb3_unicode_ci NOT NULL,
   `movil` varchar(13) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `email` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `ws` varchar(13) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
@@ -2322,7 +2324,6 @@ CREATE TABLE `usuarios` (
   `fechacreacion` date DEFAULT NULL,
   `ultimologin` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `nickname_UNIQUE` (`nickname`),
   UNIQUE KEY `identificacion_UNIQUE` (`cedula`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `idsucursal_idx` (`idsucursal`),
@@ -2426,4 +2427,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-16  0:21:56
+-- Dump completed on 2025-10-19 18:44:14
