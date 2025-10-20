@@ -1,35 +1,33 @@
 (()=>{
   if(document.querySelector('.ventas')){
-    const btnAddCliente = document.querySelector('#addcliente') as HTMLElement;
-    const btnAddDir = document.querySelector('#adddir') as HTMLElement;
-    const selectCliente = document.querySelector('#selectCliente') as HTMLSelectElement;
-    const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
+
+     const POS = (window as any).POS;
+     
+    const selectCliente = POS.gestionClientes.selectCliente;
+    const dirEntrega = POS.gestionClientes.dirEntrega;
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
-    const btnotros = document.querySelector('#btnotros') as HTMLButtonElement;  //btn de otros
     const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
     const totalunidades = document.querySelector('#totalunidades') as HTMLElement;
     const tablaventa = document.querySelector('#tablaventa tbody');
-    //const btnvaciar = document.querySelector('#btnvaciar');
     const btnguardar = document.querySelector('#btnguardar');
     const btnfacturar = document.querySelector('#btnfacturar');
     const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
-    const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
-    const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
-    const miDialogoOtrosProductos = document.querySelector('#miDialogoOtrosProductos') as any;
+    const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
+    const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
+    const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
     const miDialogoPreciosAdicioanles = document.querySelector('#miDialogoPreciosAdicioanles') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
-    //const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
-    const mediospago = document.querySelectorAll('.mediopago');
+    //const mediospago = document.querySelectorAll('.mediopago');
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
@@ -54,13 +52,13 @@
     }
     let factimpuestos:Item[] = [];
 
-    let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
+    /*let otrosproductos:{id:number, nombre:string, cantidad:number, valorunidad:number, total:number}={
       id: 0,
       nombre: '',
       cantidad: 0,
       valorunidad: 0,
       total: 0
-    }
+    }*/
 
     type productsapi = {
       id:string,
@@ -99,15 +97,9 @@
     const mapMediospago = new Map();
 
     (async ()=>{
-      products = await (window as any).POS.productosAPI.getProductosAPI();
-      /*try {
-          const url = "/admin/api/allproducts"; //llamado a la API REST
-          const respuesta = await fetch(url); 
-          products = await respuesta.json(); 
-          console.log(products);
-      } catch (error) {
-          console.log(error);
-      }*/
+      products = await POS.productosAPI.getProductosAPI();
+      POS.products = products;
+      POS.gestionOtrosProductos.otrosproductos();
     })();
 
     /*productos.forEach(producto=>{
@@ -123,151 +115,17 @@
 
     /******** Obtener datos de factura guardada o cotizacion***********/
     
-    
 
 
                        /******** *********/
 
     selectFacturadorSegunCaja(btnCaja);
-    
     btnCaja.addEventListener('change', (e:Event)=>selectFacturadorSegunCaja(e.target as HTMLSelectElement));
-    
     function selectFacturadorSegunCaja(z:HTMLSelectElement){
       $('#facturador').val(z.options[z.selectedIndex].dataset.idfacturador??'1');
     }
 
-    //////////// evento al boton añadir cliente nuevo //////////////
-    btnAddCliente?.addEventListener('click', (e)=>{
-      miDialogoAddCliente.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
-    });
-    //////////// evento al boton añadir nueva direccion //////////////
-    btnAddDir?.addEventListener('click', (e)=>{
-      miDialogoAddDir.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
-    });
-    //////////// evento al btn submit del formulario add nuevo cliente //////////////
-    document.querySelector('#formAddCliente')?.addEventListener('submit', e=>{
-      e.preventDefault();
-      (async ()=>{
-        const datos = new FormData();
-        datos.append('nombre', (document.querySelector('#nombreclientenuevo') as HTMLInputElement).value);
-        datos.append('apellido', (document.querySelector('#clientenuevoapellido') as HTMLInputElement).value);
-        datos.append('tipodocumento', (document.querySelector('#tipodocumento') as HTMLInputElement).value);
-        datos.append('identificacion', (document.querySelector('#identificacion') as HTMLInputElement).value);
-        datos.append('telefono', (document.querySelector('#telefono') as HTMLInputElement).value);
-        datos.append('email', (document.querySelector('#clientenuevoemail') as HTMLInputElement).value);
-        datos.append('idtarifa', (document.querySelector('#clientenuevotarifa') as HTMLSelectElement).value);
-        datos.append('direccion', (document.querySelector('#clientenuevodireccion') as HTMLInputElement).value);
-        datos.append('departamento', (document.querySelector('#departamento') as HTMLInputElement).value);
-        datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
-        try {
-            const url = "/admin/api/apiCrearCliente";
-            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-            const resultado = await respuesta.json();
-            if(resultado.exito !== undefined){
-              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              addClienteSelect(resultado.nextID);
-              limpiarformdialog();
-            }else{
-              msjalertToast('error', '¡Error!', resultado.error[0]);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-      })();
-      miDialogoAddCliente.close();
-      document.removeEventListener("click", cerrarDialogoExterno);
-    });
-    /////////////// añadir cliente al select despues de crearse ///////////////////
-    function addClienteSelect(clienteID:string): void{
-      const option = document.createElement('option');
-      option.textContent = (document.querySelector('#nombreclientenuevo') as HTMLInputElement).value + " " + (document.querySelector('#clientenuevoapellido') as HTMLInputElement).value;
-      option.value = clienteID;
-      option.dataset.tipodocumento = (document.querySelector('#tipodocumento') as HTMLInputElement).value;
-      option.dataset.identidad = (document.querySelector('#identificacion') as HTMLInputElement).value;
-      selectCliente?.appendChild(option);
-      $('#selectCliente').val(clienteID).trigger('change'); // seleccionar el cliente nuevo, en el select y dispara evento
-    }
-    //evento 'cambio' al selecionar cliente, tambien se ejecuta cuando se crea cliente nuevo//
-    $("#selectCliente").on('change', (e)=>{
-      const idcli = (e.target as HTMLInputElement).value;
-      (async ()=>{
-        try {
-          const url = "/admin/api/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae las direcciones segun cliente elegido
-          const respuesta = await fetch(url); 
-          const resultado = await respuesta.json(); 
-          addDireccionSelect(resultado);
-        } catch (error) {
-            console.log(error);
-        }
-      })();
-      const select = (e.target as HTMLSelectElement);
-      const x:string = select.options[select.selectedIndex].dataset.identidad||'';
-      (document.querySelector('#documento') as HTMLInputElement).value = x;
-    });
-    ////// añade direccion al select de direcciones, cuando se selecciona o se agrega un cliente o si se agrega un nueva direccion/////
-    function addDireccionSelect<T extends {id:string, idcliente:string, idtarifa:string, tarifa:{id:string, idcliente:string, nombre:string, valor:string}, direccion:string, ciudad:string}>(addrs: T[]):void{
-      while(dirEntrega?.firstChild)dirEntrega.removeChild(dirEntrega?.firstChild);
-      const setTarifas = new Set();
-      tarifas.length = 0;
-      console.log(addrs);
-      addrs.forEach(dir =>{
-        const option = document.createElement('option');
-        option.textContent = dir.direccion;
-        option.value = dir.id;
-        option.dataset.idcliente = dir.idcliente;
-        option.dataset.idtarifa = dir.idtarifa;
-        option.dataset.ciudad = dir.ciudad;
-        dirEntrega.appendChild(option);
-        dir.tarifa.idcliente = dir.idcliente;
-        if(!setTarifas.has(dir.tarifa.id)){
-          tarifas = [...tarifas, dir.tarifa];
-          setTarifas.add(dir.tarifa.id);
-        }
-      });
-      setTarifas.clear();
-      printTarifaEnvio();
-      valorCarritoTotal();
-      (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = addrs[0]?.ciudad??'No especificado';
-    }
-    ///////// Evento al select de direcciones ////////////
-    dirEntrega?.addEventListener('change', (e)=>{
-      const select = (e.target as HTMLSelectElement);
-      const x:string = select.options[select.selectedIndex].dataset.ciudad||'';
-      (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = x;
-      printTarifaEnvio();
-      valorCarritoTotal();
-    });
-
-    ////////////////// evento al btn submit del formulario add direccion //////////////////////
-    document.querySelector('#formAddDir')?.addEventListener('submit', e=>{
-      e.preventDefault();
-      (async ()=>{
-        const datos = new FormData();
-        datos.append('idcliente', selectCliente.value);
-        datos.append('departamento', (document.querySelector('#adddepartamento') as HTMLInputElement).value);
-        datos.append('ciudad', (document.querySelector('#addciudad') as HTMLInputElement).value);
-        datos.append('direccion', (document.querySelector('#adddireccion') as HTMLInputElement).value);
-        datos.append('idtarifa', (document.querySelector('#tarifa') as HTMLSelectElement).value);
-        try {
-            const url = "/admin/api/addDireccionCliente";  //direccionescontrolador
-            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-            const resultado = await respuesta.json();
-            if(resultado.exito !== undefined){
-              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              addDireccionSelect(resultado.direcciones);
-            }else{
-              msjalertToast('error', '¡Error!', resultado.error[0]);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-      })();
-      miDialogoAddDir.close();
-      document.removeEventListener("click", cerrarDialogoExterno);
-    });
-
+    POS.gestionClientes.clientes();  //inicializa modulo de clientes
 
     //////////// evento al boton modalidad de entrega //////////////
     btnEntrega?.addEventListener('click', (e:Event)=>{
@@ -278,6 +136,7 @@
 
     ///////// funcion que imprime el valor de la tarifa segun direccion ///////////
     function printTarifaEnvio():void{
+      tarifas = POS.tarifas;
       const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
       if(modalidadEntrega.textContent == ": Presencial" || dirEntrega.selectedIndex == -1){
         valorTotal.valortarifa = 0;
@@ -301,60 +160,6 @@
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
-    ///////////////////// Evento al btn Otros /////////////////////////
-    btnotros.addEventListener('click', (e:Event)=>{
-      miDialogoOtrosProductos.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
-    });
-
-    /////////////////////Evento al formulario de agregar otros productos //////////////////////
-    document.querySelector('#formOtrosProductos')?.addEventListener('submit', (e:Event)=>{
-      e.preventDefault();
-      const formelements = (e.target as HTMLFormElement).elements;
-      const cantidadotros = Number((formelements.namedItem('cantidadotros') as HTMLInputElement).value);
-      const preciootros = Number((formelements.namedItem('preciootros') as HTMLInputElement).value);
-      
-      otrosproductos!.id += -1 ;
-      otrosproductos!.nombre = (formelements.namedItem('nombreotros') as HTMLInputElement).value;
-      otrosproductos!.cantidad = cantidadotros;
-      otrosproductos!.valorunidad = preciootros/cantidadotros;
-      otrosproductos!.total = preciootros;
-      
-      products = [...products, {
-        id: otrosproductos!.id+'', 
-        idcategoria: '-1',
-        idunidadmedida: '1',
-        nombre: otrosproductos!.nombre,
-        foto: 'na',
-        impuesto: '0', //impuesto en %
-        marca: 'na',
-        tipoproducto: '-1', // 0 = simple,  1 = compuesto
-        tipoproduccion: '-1', //0 = inmediato, 1 = construccion
-        codigo: '-1',
-        unidadmedida: 'Unidad',
-        descripcion: 'na',
-        peso: 'na',
-        medidas: 'na',
-        color: 'na',
-        funcion: 'na',
-        uso: 'na',
-        fabricante: 'na',
-        garantia: 'na',
-        stock: '0',
-        stockminimo: '1',
-        categoria: 'na',
-        rendimientoestandar: '1',
-        precio_compra: 'na',
-        precio_venta: otrosproductos!.valorunidad+'',
-        fecha_ingreso: '',
-        estado: '1',
-        visible: '1'
-      }];
-
-      actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false);
-      miDialogoOtrosProductos.close();
-      document.removeEventListener("click", cerrarDialogoExterno);
-    });
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
@@ -596,7 +401,7 @@
           $('.mediopago').val(0);
         }
         tipoventa = "Credito";
-        subirModalPagar();
+        POS.gestionSubirModalPagar.subirModalPagar();
         //miDialogoCredito.showModal();
         miDialogoFacturar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
@@ -613,7 +418,7 @@
         document.querySelector('#inputscreditos')?.classList.add('hidden');
         document.querySelector('#inputscreditos')?.classList.remove('flex');
         tipoventa = "Contado";
-        subirModalPagar();
+        POS.gestionSubirModalPagar.subirModalPagar();
         miDialogoFacturar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
@@ -660,7 +465,7 @@
     });
 
   /////////////////////  logica del modal de pago  //////////////////////////
-    function subirModalPagar(){
+    /*function subirModalPagar(){
       document.querySelector('#totalPagar')!.textContent = `${valorTotal.total.toLocaleString()}`;
       //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
       let totalotrosmedios = 0;
@@ -679,12 +484,12 @@
       }
       if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1');
       calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
-    }
+    }*/
     
     //eventos a los inputs medios de pago
-    mediospago.forEach(m=>{m.addEventListener('input', (e)=>{ calcularmediospago(e);});}); 
+    //mediospago.forEach(m=>{m.addEventListener('input', (e)=>{ calcularmediospago(e);});}); 
 
-    function calcularmediospago(e:Event){
+    /*function calcularmediospago(e:Event){
       let totalotrosmedios = 0;
       mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
         if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
@@ -707,10 +512,10 @@
         (mediospago[0] as HTMLInputElement).value = (mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
       }
       calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
-    }
+    }*/
 
     /////////////////////  evento al input recibido  //////////////////////////
-    document.querySelector<HTMLInputElement>('#recibio')?.addEventListener('input', (e)=>{
+    /*document.querySelector<HTMLInputElement>('#recibio')?.addEventListener('input', (e)=>{
       calcularCambio((e.target as HTMLInputElement).value);
     });
 
@@ -721,14 +526,14 @@
         return;
       }
       (document.querySelector('#cambio') as HTMLElement).textContent = '0';
-    }
+    }*/
 
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
       if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
-        miDialogoCredito.close();
+        //miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
         miDialogoAddCliente.close();
@@ -869,6 +674,20 @@
     function limpiarformdialog(){
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();
     }
+
+    //exponer variables y funciones globalmente
+    POS.limpiarformdialog = limpiarformdialog;
+    POS.printTarifaEnvio = printTarifaEnvio;
+    POS.valorCarritoTotal = valorCarritoTotal;
+    POS.actualizarCarrito = actualizarCarrito;
+    //POS.calcularCambio = calcularCambio;
+    POS.cerrarDialogoExterno = cerrarDialogoExterno;
+    POS.tarifas = tarifas;
+    POS.valorTotal = valorTotal;
+    POS.mapMediospago = mapMediospago;
+    POS.tipoventa = tipoventa;
+    //POS.products = products;
   }
+
 
 })();

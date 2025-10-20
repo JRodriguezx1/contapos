@@ -369,7 +369,7 @@ class reportescontrolador{
               LEFT JOIN bancos b ON g.id_banco = b.id
               JOIN caja c ON g.idg_caja = c.id
 	            WHERE g.id_sucursalfk = $idsucursal AND g.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY g.fecha DESC;";
-      $datos = gastos::camposJoinObj($sql);
+      $getgastos = gastos::camposJoinObj($sql);
 
       //calculo de los ingresos a caja
       $sql = "SELECT i.id, i.operacion, i.valor, i.fecha, c.nombre AS nombrecaja,
@@ -378,11 +378,11 @@ class reportescontrolador{
               JOIN usuarios u ON i.idusuario = u.id
               JOIN caja c ON i.id_caja = c.id
               JOIN cierrescajas cj ON i.id_cierrecaja = cj.id
-              WHERE i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
-      $datos1 = ingresoscajas::camposJoinObj($sql);
+              WHERE  i.idsucursal_idfk = 1 AND i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
+      $getingresos = ingresoscajas::camposJoinObj($sql);
     }
 
-    echo json_encode($datos);
+    echo json_encode(['gastos'=>$getgastos, 'ingresos'=>$getingresos]);
   }
 
 
@@ -422,33 +422,30 @@ class reportescontrolador{
   }
 
 
-  //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
+  //Reporte de gastos e ingresos efectivos "base" llamado desde gastoseingresos.ts
   public static function eliminaringresocaja(){
     session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $alertas = [];
-    $gasto = ingresoscajas::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursalfk'=>$idsucursal]);
+    $ingresocaja = ingresoscajas::uniquewhereArray(['id'=>$_POST['id'], 'idsucursal_idfk'=>$idsucursal]);
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $cierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja);
+      $cierrecaja = cierrescajas::find('id', $ingresocaja->id_cierrecaja);
       if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
-        //eliminar gasto 
-        $re = $gasto->eliminar_registro();
-        if($re){
-          if($gasto->id_banco!=null){ //ajustar gasto banco del cierre de caja
-            $cierrecaja->gastosbanco -= $gasto->valor;
-          }else{ //ajustar gasto caja efectivo del cierre de caja
-            $cierrecaja->gastoscaja -= $gasto->valor;
-          }
+        //eliminar ingreso efectivo "base" caja 
+        $ri = $ingresocaja->eliminar_registro();
+        if($ri){
+          //ajustar ingreso efectivo "base" a caja efectivo del cierre de caja
+          $cierrecaja->basecaja -= $ingresocaja->valor;
           $rc = $cierrecaja->actualizar();
           if($rc){
-            $alertas['exito'][] = "Gasto eliminado correctamente";
+            $alertas['exito'][] = "Ingreso eliminado correctamente";
           }else{
-            $alertas['error'][] = "No se pudo eliminar el gasto del cierre de caja";
-            $gasto->crear_guardar();
+            $alertas['error'][] = "No se pudo eliminar el ingreso del cierre de caja";
+            $ingresocaja->crear_guardar();
           }
         }else{
-          $alertas['error'][] = "No se pudo eliminar el gasto";
+          $alertas['error'][] = "No se pudo eliminar el ingreso";
         }
       }else{
         $alertas['error'][] = "Caja ya se encuentra cerrada";

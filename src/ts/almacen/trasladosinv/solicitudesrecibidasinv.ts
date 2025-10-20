@@ -2,9 +2,11 @@
   if(document.querySelector('.solicitudesrecibidas')){
     const miDialogoDetalleTrasladoSolicitud = document.querySelector('#miDialogoDetalleTrasladoSolicitud') as any;
     const btnXCerrarDetalleTrasladoSolicitud = document.querySelector('#btnXCerrarDetalleTrasladoSolicitud') as HTMLButtonElement;
+    const numOrden = document.querySelector('#numOrden') as HTMLSpanElement;
     const parrafoSedeorigen = document.querySelector('#sedeorigen') as HTMLParagraphElement;
     const parrafoSededestino = document.querySelector('#sededestino') as HTMLParagraphElement;
     const parrafotipo = document.querySelector('#tipo') as HTMLParagraphElement;
+    const textareaobservacion = document.querySelector('#observaciones') as HTMLTextAreaElement;
     const tbodydetalleorden = document.querySelector('#tabladetalleorden tbody') as HTMLTableElement;
     const filtroSucursal = document.getElementById('filtroSucursal') as HTMLSelectElement;
     const filtroEstado = document.getElementById('filtroEstados') as HTMLSelectElement;
@@ -22,7 +24,7 @@
       observacion: string,
       estado: string,
       created_at: string,
-      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, cantidadrecibida:string, cantidadrechazada:string}[]
+      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, unidadmedida:string, cantidadrecibida:string, cantidadrechazada:string}[]
     };
 
     let ordenes:ordenestrasladosinv[]=[], unaorden:ordenestrasladosinv;
@@ -159,9 +161,11 @@
     }
 
     function imprimirdatos(detalleorden:ordenestrasladosinv){
+      numOrden.textContent = detalleorden.id;
       parrafoSedeorigen.textContent = detalleorden.sucursal_origen;
       parrafoSededestino.textContent = detalleorden.sucursal_destino;
       parrafotipo.textContent = detalleorden.tipo;
+      textareaobservacion.textContent = detalleorden.observacion;
       while(tbodydetalleorden.firstChild)tbodydetalleorden.removeChild(tbodydetalleorden.firstChild);
       detalleorden.detalletrasladoinv.forEach(x=>{
         const tr = document.createElement('tr');
@@ -171,8 +175,12 @@
         const tdcantidad = document.createElement('td');
         tdcantidad.classList.add('px-4', 'py-2', 'border');
         tdcantidad.textContent = x.cantidad;
+        const tdunidadmedida = document.createElement('td');
+        tdunidadmedida.classList.add('px-4', 'py-2', 'border');
+        tdunidadmedida.textContent = x.unidadmedida;
         tr.appendChild(tdproducto);
         tr.appendChild(tdcantidad);
+        tr.appendChild(tdunidadmedida);
         tbodydetalleorden.appendChild(tr);
       });
     }

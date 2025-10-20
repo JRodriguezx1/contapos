@@ -2,9 +2,11 @@
   if(document.querySelector('.trasladoinventario')){
     const miDialogoDetalleTrasladoSolicitud = document.querySelector('#miDialogoDetalleTrasladoSolicitud') as any;
     const btnXCerrarDetalleTrasladoSolicitud = document.querySelector('#btnXCerrarDetalleTrasladoSolicitud') as HTMLButtonElement;
+    const numOrden = document.querySelector('#numOrden') as HTMLSpanElement;
     const parrafoSedeorigen = document.querySelector('#sedeorigen') as HTMLParagraphElement;
     const parrafoSededestino = document.querySelector('#sededestino') as HTMLParagraphElement;
     const parrafotipo = document.querySelector('#tipo') as HTMLParagraphElement;
+    const textareaobservacion = document.querySelector('#observaciones') as HTMLTextAreaElement;
     const tbodydetalleorden = document.querySelector('#tabladetalleorden tbody') as HTMLTableElement;
     const filtroSucursal = document.getElementById('filtroSucursal') as HTMLSelectElement;
     const filtroEstado = document.getElementById('filtroEstados') as HTMLSelectElement;
@@ -22,7 +24,7 @@
       observacion: string,
       estado: string,
       created_at: string,
-      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, cantidadrecibida:string, cantidadrechazada:string}[]
+      detalletrasladoinv: {id:string, id_trasladoinv:string, fkproducto:string, idsubproducto_id:string, nombre:string, cantidad:string, unidadmedida:string, cantidadrecibida:string, cantidadrechazada:string}[]
     };
 
     let ordenes:ordenestrasladosinv[]=[], unaorden:ordenestrasladosinv;
@@ -51,18 +53,32 @@
     });
 
 
-    ////// cuando se envia a pasa a estado en transito
+    ////// cuando se envia mercancia, pasa a estado en transito, tambien aplica cuando se solicitar mercancia y en la sede destino despachan, con este btn se recepciona.
     function enviar(e:Event){
       let idorden = (e.target as HTMLElement).parentElement?.id!;
       if((e.target as HTMLElement)?.tagName === 'I')idorden = (e.target as HTMLElement).parentElement?.parentElement?.id!;
       
+      let title:String = '', text:string = '', urlapi:string = '', estado:string = '';
       const tr = (e.target as HTMLElement).closest('tr') as HTMLTableRowElement;
+      console.log(tr.children[4].textContent);
+      if(tr.children[4].textContent === 'Solicitud'){
+        title = 'Desea confirmar la recepcion de la mercancia solicitada?';
+        text = "La marcancia ingresara al inventario de la sucursal y no se podra modificar.";
+        urlapi = 'confirmaringresoinv';
+        estado = 'entregada';
+      }
+      if(tr.children[4].textContent === 'Salida'){
+        title = 'Desea confirmar el envio de mercancia?';
+        text = "La orden entrara en estado: 'EN TRANSITO' y sera aceptada o rechazda por la sede de destino.";
+        urlapi = 'confirmarnuevotrasladoinv';
+        estado = 'entransito';
+      }
       
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
-          title: 'Desea confirmar el envio de mercancia?',
-          text: "La orden entrara en estado: 'EN TRANSITO' y sera aceptada o rechazda por la sede de destino.",
+          title: title,
+          text: text,
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -73,11 +89,11 @@
                   const datos = new FormData();
                   datos.append('id', idorden);
                   try {
-                      const url = "/admin/api/confirmarnuevotrasladoinv";  //api llamada a trasladosinvcontrolador para confirmar envio, pasa a estado en transito
+                      const url = "/admin/api/"+urlapi;  //api llamada a trasladosinvcontrolador para confirmar envio, pasa a estado en transito
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();  
                       if(resultado.exito !== undefined){
-                        tr.children[5].innerHTML = `<span class="px-3 py-1 text-base font-semibold rounded-full bg-yellow-100 text-yellow-700">entransito</span>`;
+                        tr.children[5].innerHTML = `<span class="px-3 py-1 text-base font-semibold rounded-full ${estado=='entregada'?'bg-sky-50 text-sky-600':estado=='entransito'?'bg-yellow-100 text-yellow-700':'bg-rose-50 text-rose-600'}">${estado}</span>`;
                         Swal.fire(resultado.exito[0], '', 'success') 
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
@@ -96,8 +112,8 @@
       (async ()=>{
         try {
           const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+idorden; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
-          const respuesta = await fetch(url); 
-          const resultado = await respuesta.json(); 
+          const respuesta = await fetch(url);
+          const resultado = await respuesta.json();
           imprimirdatos(resultado.orden[0]);
         } catch (error) {
             console.log(error);
@@ -147,9 +163,11 @@
     }
 
     function imprimirdatos(detalleorden:ordenestrasladosinv){
+      numOrden.textContent = detalleorden.id;
       parrafoSedeorigen.textContent = detalleorden.sucursal_origen;
       parrafoSededestino.textContent = detalleorden.sucursal_destino;
       parrafotipo.textContent = detalleorden.tipo;
+      textareaobservacion.textContent = detalleorden.observacion;
       while(tbodydetalleorden.firstChild)tbodydetalleorden.removeChild(tbodydetalleorden.firstChild);
       detalleorden.detalletrasladoinv.forEach(x=>{
         const tr = document.createElement('tr');
@@ -159,8 +177,12 @@
         const tdcantidad = document.createElement('td');
         tdcantidad.classList.add('px-4', 'py-2', 'border');
         tdcantidad.textContent = x.cantidad;
+        const tdunidadmedida = document.createElement('td');
+        tdunidadmedida.classList.add('px-4', 'py-2', 'border');
+        tdunidadmedida.textContent = x.unidadmedida;
         tr.appendChild(tdproducto);
         tr.appendChild(tdcantidad);
+        tr.appendChild(tdunidadmedida);
         tbodydetalleorden.appendChild(tr);
       });
     }

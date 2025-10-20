@@ -145,7 +145,7 @@
                     </div>
                     <div>
                     <p class="text-sm text-gray-500 uppercase font-medium">Sede origen</p>
-                    <p id="resumen-sede-origen" class="text-xl font-bold text-indigo-600">Centro Principal</p>
+                    <p id="resumen-sede-origen" class="text-xl font-bold text-indigo-600"><?php echo $sucursalorigen->nombre;?></p>
                     </div>
                 </div>
 
@@ -156,7 +156,7 @@
                     </div>
                     <div>
                     <p class="text-sm text-gray-500 uppercase font-medium">Sede destino</p>
-                    <p id="resumen-sede-destino" class="text-xl font-bold text-indigo-600">Sucursal Norte</p>
+                    <p id="resumenSedeDestino" class="text-xl font-bold text-indigo-600">Sucursal destino</p>
                     </div>
                 </div>
 
@@ -167,7 +167,7 @@
                     </div>
                     <div>
                     <p class="text-sm text-gray-500 uppercase font-medium">Fecha solicitud</p>
-                    <p id="resumen-fecha" class="text-lg font-semibold text-gray-800">09/10/2025</p>
+                    <p id="resumenFecha" class="text-lg font-semibold text-gray-800">--</p>
                     </div>
                 </div>
 
@@ -178,8 +178,8 @@
                     </div>
                     <div class="flex-1">
                     <p class="text-sm text-gray-500 uppercase font-medium">Observaciones</p>
-                    <p id="resumen-observaciones" class="text-base text-gray-800 mt-1 break-words leading-relaxed">
-                        Envío urgente por solicitud del cliente, se requiere entrega antes del mediodía.
+                    <p id="resumenObservaciones" class="text-base text-gray-800 mt-1 break-words leading-relaxed">
+                        --
                     </p>
                     </div>
                 </div>

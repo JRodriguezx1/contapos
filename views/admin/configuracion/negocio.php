@@ -69,7 +69,6 @@
       name="ws" 
       placeholder="Whatsapp" 
       value="<?php echo $negocio->ws ?? '';?>" 
-      required
     >
   </div>
 

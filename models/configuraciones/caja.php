@@ -4,7 +4,7 @@ namespace Model\configuraciones;
 
 class caja extends \Model\ActiveRecord{
     protected static $tabla = 'caja';
-    protected static $columnasDB = ['id', 'idsucursalid', 'idtipoconsecutivo', 'nombre', 'negocio', 'editable'];
+    protected static $columnasDB = ['id', 'idsucursalid', 'idtipoconsecutivo', 'nombre', 'negocio', 'editable', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -13,6 +13,8 @@ class caja extends \Model\ActiveRecord{
         $this->nombre = $args['nombre']??'';
         $this->negocio = $args['negocio']??'';
         $this->editable = $args['editable']??'1';
+        $this->estado = $args['estado']??'1';
+        $this->created_at = $args['created_at']??'';
     }
 
 

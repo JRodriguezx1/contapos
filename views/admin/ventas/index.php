@@ -76,7 +76,7 @@
             if($producto->visible==1&&$producto->estado==1):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->id;?>">
                 <img 
-                    src="/build/img/<?php echo $producto->foto;?>" 
+                    src="/build/img/<?php echo ($producto->foto!=null&&$producto->foto!='null'&&$producto->foto!='undefined')?$producto->foto:'default-product.png';?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
                     class="block object-contain h-24 min-w-24 w-24 rounded-md" 
                     alt="Imagen de <?php echo $producto->nombre; ?>">
@@ -231,7 +231,7 @@
           </button>
           
           <button id="btnaplicarcredito" 
-            class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto">
+            class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto hidden">
             
             <span class="material-symbols-outlined text-2xl">payments</span>
             <span class="font-medium text-2xl uppercase">Crédito</span>
@@ -479,7 +479,7 @@
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
   <?php include __DIR__. "/modalprocesarpago.php"; ?>
   <!--///////////////////// Modal procesar credito boton facturar /////////////////////////-->
-  <?php include __DIR__. "/modalprocesarcredito.php"; ?>
+  <?php //include __DIR__. "/modalprocesarcredito.php"; ?>
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
   <?php include __DIR__. "/modaladquiriente.php"; ?>
   <!-- MODAL OTROS PRODUCTOS -->

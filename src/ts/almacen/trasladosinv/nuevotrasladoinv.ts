@@ -8,6 +8,9 @@
         const stepSections = document.querySelectorAll<HTMLElement>(".step-section");
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
         const tablaItems = document.querySelector('#tablaItems tbody');
+        const resumenSedeDestino = document.querySelector('#resumenSedeDestino') as HTMLParagraphElement;
+        const resumenFecha = document.querySelector('#resumenFecha') as HTMLParagraphElement;
+        const resumenObservaciones = document.querySelector('#resumenObservaciones') as HTMLParagraphElement;
         let carrito:{iditem:string, idpx:string, idsx:string, tipo: string, nombreitem:string, unidad:string, cantidad: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
         let currentStep = 1;
@@ -201,6 +204,10 @@
         function resumen(){
             const tablaproductosresumen = document.querySelector('#tablaproductosresumen tbody');
             while(tablaproductosresumen?.firstChild)tablaproductosresumen.removeChild(tablaproductosresumen.firstChild);
+            resumenSedeDestino.textContent = (document.querySelector('#sucursaldestino') as HTMLSelectElement).textContent;
+            resumenFecha.textContent = inputFecha.value;
+            resumenObservaciones.textContent = (document.querySelector('#observaciones') as HTMLTextAreaElement).value;
+
             carrito.forEach(z=>{
                 const tr = document.createElement('tr');
                 const tdnombre = document.createElement('td');

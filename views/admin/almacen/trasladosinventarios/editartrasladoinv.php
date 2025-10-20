@@ -14,6 +14,7 @@
   <section class="space-y-6 mt-8">
 
     <!-- Información del traslado con emojis -->
+    <p class="text-gray-500">Orden #: <span id="numOrden"><?php echo $ordentraslado->id;?></span></p>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div class="flex justify-between items-center p-4 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 rounded-xl">
         <div>
@@ -64,6 +65,11 @@
         </div>
         <span class="text-3xl">👤</span>
       </div>
+
+      <div class="p-4 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 rounded-xl">
+        <textarea id="observacion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-32 text-base focus:outline-none focus:ring-1 focus:ring-indigo-600"><?php echo $ordentraslado->observacion;?></textarea>
+      </div>
+
     </div>
 
     <!-- Sección productos -->

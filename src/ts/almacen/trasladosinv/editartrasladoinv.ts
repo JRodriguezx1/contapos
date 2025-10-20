@@ -140,7 +140,7 @@
             const iditem = (elementItem as HTMLElement).dataset.id!;
             const tipoitem = (elementItem as HTMLElement).dataset.tipo!;
         
-            if((e.target as HTMLElement).classList.contains('eliminarItem')){
+            if((e.target as HTMLElement).classList.contains('eliminarItem')){ //se trae todoscon true menos el que coincida con iditem y tipoitem
                 carrito = carrito.filter(x=> {
                     if(x.iditem==iditem){
                         if(x.tipo==tipoitem){
@@ -181,7 +181,7 @@
                             if(resultado.exito !== undefined){
                                 setTimeout(() => {
                                     window.location.href = `/admin/almacen/trasladarinventario`;
-                                }, 1100);
+                                }, 1600);
                                 Swal.fire(resultado.exito[0], '', 'success') 
                             }else{
                                 Swal.fire(resultado.error[0], '', 'error')
