@@ -96,7 +96,7 @@
 
         <div id="divmsjalerta1"></div>
 
-        <form id="formGastosingresos" class="formulario space-y-6" action="/admin/caja/ingresoGastoCaja" method="POST">
+        <form id="formGastosingresos" class="formulario space-y-6" action="/admin/caja/ingresoGastoCaja" method="POST" enctype="multipart/form-data">
 
             <!-- Operación -->
             <div class="formulario__campo">
@@ -168,6 +168,14 @@
                     class="text-base text-indigo-600 font-medium hover:text-indigo-800 transition">Agregar categoría de gasto</a>
             </div>
 
+            <!-- Soporte físico (solo para gasto) -->
+            <div id="soporteGasto" class="hidden">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="soporte">Soporte físico (imagen del gasto)</label>
+                <input id="soporte" type="file" name="soporte" accept="image/*"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full mt-2 p-3 text-lg focus:outline-none focus:ring-1">
+                <p class="text-sm text-gray-500 mt-1">Formatos permitidos: JPG, PNG, JPEG.</p>
+            </div>
+
             <!-- Dinero -->
             <div>
                 <label class="formulario__label text-lg font-medium text-gray-700" for="dinero">Ingresar dinero</label>
@@ -195,6 +203,16 @@
             </div>
         </form>
     </dialog>
+
+    <script>
+    document.getElementById('operacion').addEventListener('change', function () {
+        const esGasto = this.value === 'gasto';
+        document.getElementById('origengasto').classList.toggle('hidden', !esGasto);
+        document.querySelector('.tipodegasto').classList.toggle('hidden', !esGasto);
+        document.getElementById('soporteGasto').classList.toggle('hidden', !esGasto);
+    });
+    </script>
+
 
 
     <!-- MODAL CAMBIO MEDIO DE PAGO -->

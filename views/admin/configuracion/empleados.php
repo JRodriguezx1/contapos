@@ -269,6 +269,18 @@
                     </label>
                 </div>
 
+                <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
+                    <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Inicio</p>
+
+                    <label for="habilitarmoduloinicio" class="flex items-center justify-between cursor-pointer mb-3">
+                    <span class="text-gray-600 text-xl dark:text-gray-300">Habilitar módulo de inicio</span>
+                    <input id="habilitarmoduloinicio" name="permisos[]" value="1" type="checkbox" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+                        </div>
+                    </label>
+                </div>
+
                 <!-- Módulo de Inventario -->
                 <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Inventario</p>
