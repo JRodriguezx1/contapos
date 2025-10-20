@@ -58,7 +58,7 @@ class parametroscontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
         $valordeFault = config_global::uncampo('clave', $clave, 'valor_default');
         if($valorLocal != $valordeFault){  //registrar con parametros local por sucursal
-            $x = config_local::find('clave', $clave);
+            $x = config_local::uniquewhereArray(['fk_sucursalid'=>id_sucursal(), 'clave'=>$clave]);
             if($x){
                 $x->compara_objetobd_post(['clave'=>$clave, 'valor'=>$valorLocal]);
                 $ra = $x->actualizar();
@@ -102,7 +102,7 @@ class parametroscontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
         $valordeFault = config_global::uncampo('clave', $clave, 'valor_default');
         if($valorLocal != $valordeFault){  //registrar con parametros local por sucursal
-            $x = config_local::find('clave', $clave);
+            $x = config_local::uniquewhereArray(['fk_sucursalid'=>id_sucursal(), 'clave'=>$clave]);
             if($x){
                 $x->compara_objetobd_post(['clave'=>$clave, 'valor'=>$valorLocal]);
                 $ra = $x->actualizar();

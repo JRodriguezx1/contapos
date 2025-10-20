@@ -216,7 +216,7 @@
       if(target?.classList.contains("btn-eliminar"))eliminarGasto(idgasto, target);
     });
 
-
+    //solo aplica para gastos de tipo compra
     function verGasto(idgasto:string|undefined){
         const gasto = datosGastos.find(x=>x.Id==idgasto);
         if(gasto?.id_compra != null)window.location.href = '/admin/reportes/compra?id='+gasto.id_compra;

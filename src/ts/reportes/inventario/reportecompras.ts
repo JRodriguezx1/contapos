@@ -1,39 +1,32 @@
 (():void=>{
 
-  if(document.querySelector('.facturasprocesadasza')){
+  if(document.querySelector('.reportescompras')){
 
     const consultarFechaPersonalizada = document.querySelector('#consultarFechaPersonalizada') as HTMLButtonElement;
     const btnmesactual = document.querySelector('#btnmesactual') as HTMLButtonElement;
     const btnmesanterior = document.querySelector('#btnmesanterior') as HTMLButtonElement;
     const btnhoy = document.querySelector('#btnhoy') as HTMLButtonElement;
     const btnayer = document.querySelector('#btnayer') as HTMLButtonElement;
-    let fechainicio:string = "", fechafin:string = "", tablaFacturasProcesadas:HTMLElement;
+    let fechainicio:string = "", fechafin:string = "", tablaReportesCompras:HTMLElement;
 
-    interface facturaspagas {
+    interface compras {
         id:string,
-        idvendedir:string,
-        idcaja:string,
-        idconsecutivo:string,
-        num_orden:string,
-        num_consecutivo:string,
-        vendedor:string,
-        caja:string,
-        tipofacturador:string,
-        totalunidades:string,
-        recibido:string,
-        cambio:string,
-        tipoventa:string,
+        formapago:string,
+        nfactura:string,
+        impuesto:string,
+        cantidaditems:string,
+        observacion:string,
         estado:string,
-        cambioaventa:string,
         subtotal:string,
-        base:string,
-        valorimpuesto:string,
-        descuento:string,
-        total:string,
-        fechapago:string
+        valortotal:string,
+        fechacompra:string,
+        nombreusuario:string,
+        nombreproveedor:string,
+        nombrecaja:string
+        estadocierrecaja:string
     } 
 
-    let datosFacturasPagas:facturaspagas[] = [];
+    let datosCompras:compras[] = [];
 
     // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
@@ -64,7 +57,7 @@
         const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
         const fechainiciobtn:string = primerDia.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDia.toISOString().split('T')[0];
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiCompras(fechainiciobtn, fechafinbtn);
     });
 
 
@@ -77,7 +70,7 @@
         const ultimoDiaMesAnterior = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
         const fechainiciobtn:string = primerDiaMesAnterior.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDiaMesAnterior.toISOString().split('T')[0];
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiCompras(fechainiciobtn, fechafinbtn);
     });
 
     btnhoy.addEventListener('click', (e:Event)=>{
@@ -86,7 +79,7 @@
         const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioDia);
         const fechafinbtn:string = formatoFecha(finDia);
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiCompras(fechainiciobtn, fechafinbtn);
     });
 
     btnayer.addEventListener('click', (e:Event)=>{
@@ -99,7 +92,7 @@
         const finAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioAyer);
         const fechafinbtn:string = formatoFecha(finAyer);
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiCompras(fechainiciobtn, fechafinbtn);
     });
 
     function formatoFecha(fecha: Date): string {
@@ -119,21 +112,22 @@
          msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
          return;
       }
-      callApiFacturasPagas(fechainicio, fechafin);
+      callApiCompras(fechainicio, fechafin);
     });
 
-    async function callApiFacturasPagas(dateinicio:string, datefin:string){
+    async function callApiCompras(dateinicio:string, datefin:string){
         console.log(dateinicio, datefin);
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);
         datos.append('fechafin', datefin);
         try {
-            const url = "/admin/api/facturaspagas"; //llama a la api que esta en reportescontrolador.php
+            const url = "/admin/api/reportecompras"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            datosFacturasPagas = resultado;
-            printTableFacturasPagas();
+            datosCompras = resultado;
+            console.log(datosCompras);
+            printTableCompras();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
             console.log(error);
@@ -141,14 +135,32 @@
     }
 
 
-    printTableFacturasPagas();
-    function printTableFacturasPagas(){
-        tablaFacturasProcesadas = ($('#tablaFacturasProcesadas') as any).DataTable({
+    printTableCompras();
+    function printTableCompras(){
+        tablaReportesCompras = ($('#tablaReportesCompras') as any).DataTable({
             "responsive": true,
             destroy: true, // importante si recargas la tabla
-            data: datosFacturasPagas,
-            columns: [{title: 'Orden', data: 'num_orden'}, {title: 'N° Factura', data: 'num_consecutivo'}, {title: 'Tipo', data: 'tipofacturador'}, {title: 'Cant vendida', data: 'totalunidades'}, {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Imp', data: 'valorimpuestototal'}, {title: 'Descuento', data: 'descuento'}, {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Vendedor', data: 'vendedor'}, {title: 'Caja', data: 'caja'}],
-            pageLength: 25,
+            data: datosCompras,
+            columns: [
+                {title: 'id', data: 'id'}, 
+                {title: 'nombreusuario', data: 'nombreusuario'},
+                {title: 'nombreproveedor', data: 'nombreproveedor'},
+                {title: 'nombrecaja', data: 'nombrecaja'},
+                {title: 'formapago', data: 'formapago'}, 
+                {title: 'nfactura', data: 'nfactura'},
+                {title: 'cantidaditems', data: 'cantidaditems'},
+                {title: 'valortotal', data: 'valortotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                {title: 'fechacompra', data: 'fechacompra'},
+                { 
+                    title: 'Acciones', 
+                    data: null, 
+                    orderable: false, 
+                    searchable: false, 
+                    render: (data: any, type: any, row: any) => {return `<button class="btn-ver mr-4" data-id="${row.id}">✳️​</button> <button class="btn-eliminar" data-id="${row.id}">⛔​</button>`}
+                }
+            ],
+            
+            /*pageLength: 25,
             language: {
                 search: 'Busqueda',
                 emptyTable: 'No Hay datos disponibles',
@@ -171,8 +183,60 @@
                     ],
                     pageLength: 'pageLength'
                 }
-            },
+            },*/
         });
+    }
+
+
+    //evento click sobre toda la tabla compras
+    document.querySelector('#tablaReportesCompras')?.addEventListener("click", (e)=>{
+      const target = e.target as HTMLButtonElement;
+      let idcompra = target?.dataset.id;
+      if((e.target as HTMLButtonElement)?.classList.contains("btn-ver"))verCompra(idcompra);
+      if(target?.classList.contains("btn-eliminar"))eliminarCompra(idcompra, target);
+    });
+
+    function verCompra(idcompra:string|undefined){
+        const compra = datosCompras.find(x=>x.id==idcompra);
+        if(compra?.id != null)window.location.href = '/admin/reportes/detallecompra?id='+compra.id;
+    }
+
+    function eliminarCompra(idcompra:string|undefined, target:HTMLButtonElement){
+        const compra = datosCompras.find(x=>x.id==idcompra);
+        const fila = (tablaReportesCompras as any).row(target.closest('tr'));
+        if(compra?.estadocierrecaja === '0'){
+            Swal.fire({
+                customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+                icon: 'question',
+                title: 'Desea eliminar la compra del sistema?',
+                text: "La compra sera eliminado por completo de la aplicacion.",
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result:any) => {
+                if (result.isConfirmed) {
+                    (async ()=>{
+                        const datos = new FormData();
+                        datos.append('id', compra.id);
+                        try {
+                            const url = "/admin/api/eliminarcompra"; //llamado a la API REST en reportescontrolador para eliminar la compra
+                            const respuesta = await fetch(url, {method: 'POST', body: datos});
+                            const resultado = await respuesta.json();
+                            if(resultado.exito !== undefined){ 
+                                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                                fila.remove().draw(false);
+                            }else{
+                                msjalertToast('error', '¡Error!', resultado.error[0]);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })();
+                }
+            });
+        }else{
+             msjalertToast('error', '¡Error!', 'No se puede eliminar la compra, porque la caja esta cerrada');
+        }
     }
 
 
