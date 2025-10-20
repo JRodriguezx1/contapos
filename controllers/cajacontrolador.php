@@ -88,7 +88,7 @@ class cajacontrolador{
     }
   
     $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
-    $facturas = []; $discriminarmediospagos=[]; $discriminarimpuesto=[]; $ventasxusuarios=[]; $sobrantefaltante=[];
+    $facturas = []; $discriminarmediospagos=[]; $discriminarimpuesto=[]; $discriminargastos=[]; $ventasxusuarios=[]; $sobrantefaltante=[];
     $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$idcajaprincipal, 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
     if(isset($ultimocierre)){
       $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
