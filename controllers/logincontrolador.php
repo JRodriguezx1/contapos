@@ -93,7 +93,11 @@ class logincontrolador{
 
                             //redireccion al dashboard del superior-admin-empleado o cliente
                             if($usuario->perfil){
-                                header('Location: /admin/dashboard');
+                                if(tienePermiso('Mostrar dashboard') || $usuario->perfil<4){
+                                    header('Location: /admin/dashboard');
+                                }else{
+                                    header('Location: /admin/perfil');
+                                }
                             }else{
                                 header('Location: /Cliente/app');
                             }

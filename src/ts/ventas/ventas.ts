@@ -8,7 +8,6 @@
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
-    //const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
     const totalunidades = document.querySelector('#totalunidades') as HTMLElement;
@@ -21,20 +20,17 @@
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
     const miDialogoPreciosAdicioanles = document.querySelector('#miDialogoPreciosAdicioanles') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
-    //const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
     const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
-    //const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
-    //const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
-    let nombretarifa:string|undefined='', /*valorMax = 0,*/ tipoventa:string="Contado";
+    let nombretarifa:string|undefined='', tipoventa:string="Contado";
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -134,8 +130,7 @@
       }
       if(selectDir?.dataset.idtarifa && modalidadEntrega.textContent == ": Domicilio"){
         const objtarifa = tarifas.find(tarifa =>{
-          if(tarifa.idcliente == selectDir.dataset.idcliente && tarifa.id == selectDir.dataset.idtarifa)
-            return true;
+          if(tarifa.idcliente == selectDir.dataset.idcliente && tarifa.id == selectDir.dataset.idtarifa)return true;
         });
         valorTotal.valortarifa = Number(objtarifa?.valor);
         valorTotal.idtarifa = Number(objtarifa?.id);
@@ -156,7 +151,6 @@
       const count = carrito.find(x=>x.idproducto == (elementProduct as HTMLElement).dataset.id);
 
       if((e.target as HTMLElement).parentElement?.id === 'precioadicional'){
-        console.log(123);
         miDialogoPreciosAdicioanles.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
         return;
@@ -177,8 +171,7 @@
         setTimeout(() => {popupx.forEach(t=>{t.remove();});}, 2500);
       }
 
-      if(elementProduct)
-        actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
+      if(elementProduct)actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
     });
 
     function printProduct(id:string){ //recibe el id del producto
@@ -349,16 +342,6 @@
       }
     });
 
-    /////////////////btns descuento, vaciar, guardar y facturar /////////////////
-
-    /*btndescuento?.addEventListener('click', ()=>{
-      if(carrito.length){
-        valorMax = valorTotal.subtotal;
-        //validar que si al reducir los productos o aumentar recalcular el porcentaje
-        miDialogoDescuento.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
-      }
-    });*/
 
     /*btnvaciar?.addEventListener('click', ()=>{
       if(carrito.length){
@@ -410,48 +393,6 @@
         document.addEventListener("click", cerrarDialogoExterno);
       }
     });
-
-  /////////////////////  logica del descuento  //////////////////////////
-  /*
-    tipoDescts.forEach(desc=>{ //evento a los radiobutton
-      desc.addEventListener('change', (e:Event)=>{
-        if((e.target as HTMLInputElement).value === "porcentaje"){
-          valorMax = 100;
-          inputDescuento.value = '';
-        }
-        if((e.target as HTMLInputElement).value === "valor"){
-          inputDescuento.value = '';
-          valorMax = valorTotal.subtotal;
-        }
-      });
-    });
-
-    inputDescuento?.addEventListener('input', (e)=>{
-      var valorInput:number = Number((e.target as HTMLInputElement).value);
-      if(valorInput > valorMax){
-        inputDescuento.value = valorMax+'';
-        valorInput = valorMax; 
-      }
-    });
-
-    document.querySelector('#formDescuento')?.addEventListener('submit', e=>{
-      e.preventDefault();
-      const valorInput:number = Number(inputDescuento.value);
-      if(tipoDescts[0].checked){  //tipo valor
-        valorTotal.dctox100 = Math.round((valorInput*100)/valorTotal.subtotal);  // valor en porcentaje
-        valorTotal.descuento = valorInput;  //valor del dcto
-      }
-      if(tipoDescts[1].checked){ //tipo porcentaje
-        valorTotal.descuento = (valorTotal.subtotal*valorInput)/100;  //valor descontado
-        valorTotal.dctox100 = valorInput;  //valor en porcentaje
-      }
-      valorTotal.total = valorTotal.subtotal - valorTotal.descuento + valorTotal.valortarifa;
-      document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
-      (document.querySelector('#descuento') as HTMLElement).textContent = '$'+valorTotal.descuento.toLocaleString();
-      miDialogoDescuento.close();
-      document.removeEventListener("click", cerrarDialogoExterno);
-    });
-    */
 
 
     function cerrarDialogoExterno(event:Event) {
@@ -547,7 +488,6 @@
           const url = "/admin/api/facturar";  //va al controlador ventascontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
-          console.log(resultado);
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
@@ -585,7 +525,6 @@
             const resultado = await respuesta.json();
             datosfactura = resultado.factura;
             carrito = resultado.productos;
-            console.log(carrito);
             carrito.forEach(item =>printProduct(item.idproducto));
             valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
             (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.num_orden;

@@ -135,7 +135,6 @@ class configcontrolador{
         $idsucursal = id_sucursal();
         $sucursal = sucursales::find('id', $idsucursal);
         $permisos = $_POST['permisos']??[];
-        //debuguear($permisos);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $empleado = new usuarios($_POST);
             $alertas = $empleado->validarimgempleado($_FILES);
@@ -201,7 +200,7 @@ class configcontrolador{
             $empleado->compara_objetobd_post($_POST);
 
             if(isset($_FILES['img']['name']))$alertas = $empleado->validarimgempleado($_FILES);
-            $alertas = $empleado->validarempleado();
+            $alertas = $empleado->validarempleadoexistente();
             $empleado->hashPassword();
             if(empty($alertas)){
                 if(isset($_FILES['img']['name'])){

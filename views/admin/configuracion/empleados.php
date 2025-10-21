@@ -118,16 +118,14 @@
                     <!--</div>
                 </div>-->
 
-                <div class="formulario__campo sm:col-span-3">
+                <div id="campopass1" class="formulario__campo sm:col-span-3">
                     <label class="formulario__label flex items-center gap-1 group relative" for="password">
                         Contraseña
                         <!-- icono obligatorio -->
                         <span class="text-red-500 font-bold cursor-help">⚠️</span>
-
-                        <!-- tooltip -->
                         <span
-                        class="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                        Campo obligatorio
+                            class="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                            Campo obligatorio
                         </span>
                     </label>
 
@@ -144,13 +142,11 @@
                     </div>
                 </div>
 
-                <div class="formulario__campo sm:col-span-3">
+                <div id="campopass2" class="formulario__campo sm:col-span-3">
                     <label class="formulario__label flex items-center gap-1 group relative" for="contraseña2">
                         Confirmar contraseña
                         <!-- icono obligatorio -->
                         <span class="text-red-500 font-bold cursor-help">⚠️</span>
-
-                        <!-- tooltip con tailwind -->
                         <span
                         class="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
                         Campo obligatorio
@@ -269,12 +265,13 @@
                     </label>
                 </div>
 
+                <!-- Módulo dashboard -->
                 <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Inicio</p>
 
                     <label for="habilitarmoduloinicio" class="flex items-center justify-between cursor-pointer mb-3">
                     <span class="text-gray-600 text-xl dark:text-gray-300">Habilitar módulo de inicio</span>
-                    <input id="habilitarmoduloinicio" name="permisos[]" value="1" type="checkbox" class="sr-only peer">
+                    <input id="habilitarmoduloinicio" name="permisos[]" value="18" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
                         </div>
@@ -420,7 +417,7 @@
         <form id="formContraseña" class="formulario" method="POST">
             <h5 id="nombreEmpleadoPass" class="mt-2 text-xl text-gray-500">Julian Rodriguez</h5>
             <label for="cambiocontraseña"></label>
-            <input id="changePassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="text" value="" required>
+            <input id="changePassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="password" value="" required>
             <div class="text-right mt-6">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
                 <input id="btnEnviarContrasela" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Actualizar">
