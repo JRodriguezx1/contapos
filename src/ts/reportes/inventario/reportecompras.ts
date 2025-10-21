@@ -143,9 +143,9 @@
             data: datosCompras,
             columns: [
                 {title: 'id', data: 'id'}, 
-                {title: 'nombreusuario', data: 'nombreusuario'},
-                {title: 'nombreproveedor', data: 'nombreproveedor'},
-                {title: 'nombrecaja', data: 'nombrecaja'},
+                {title: 'usuario', data: 'nombreusuario'},
+                {title: 'proveedor', data: 'nombreproveedor'},
+                {title: 'caja', data: null, render: (data:compras)=>{ const x = data.estadocierrecaja == '0'?'Abierta':'Cerrada'; return `${data.nombrecaja} - ${x}`; }},
                 {title: 'formapago', data: 'formapago'}, 
                 {title: 'nfactura', data: 'nfactura'},
                 {title: 'cantidaditems', data: 'cantidaditems'},

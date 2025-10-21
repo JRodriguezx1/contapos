@@ -56,7 +56,8 @@ class ventascontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $productos = productos::all();
+    //$productos = productos::all();
+    //$productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
     $categorias = categorias::all();
     $mediospago = mediospago::all();
     $clientes = clientes::all();

@@ -115,13 +115,16 @@ class almacencontrolador{
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
 
-    $productos = productos::all();
+    //$productos = productos::all();
     $categorias = categorias::all();
     $unidadesmedida = unidadesmedida::all();
     $producto = new productos;
 
-    //$productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
-    foreach($productos as $value)$value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
+    foreach($productos as $value){
+      $value->id = $value->ID;
+      $value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+    }
     
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
@@ -910,6 +913,7 @@ class almacencontrolador{
     $invpxs = true;
     $invsx = true;
     $invsxs = true;
+    date_default_timezone_set('America/Bogota');
     $compra = new compras($_POST);
     $detallecompra = new detallecompra();
     $carrito = json_decode($_POST['carrito']);
@@ -1225,13 +1229,17 @@ class almacencontrolador{
   public static function cambiarestadoproducto(){
     session_start();
     $producto = productos::find('id', $_POST['id']);
+    $productostocksucursal = stockproductossucursal::uniquewhereArray(['productoid'=>$_POST['id'], 'sucursalid'=>id_sucursal()]);
+
     $alertas=[];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $producto->estado == 1?$producto->estado=0:$producto->estado=1;
-      $r = $producto->actualizar();
+      //$producto->estado == 1?$producto->estado=0:$producto->estado=1;
+      //$r = $producto->actualizar();
+      $r = $productostocksucursal->habilitarventa == 1?$productostocksucursal->habilitarventa=0:$productostocksucursal->habilitarventa=1;
+      $r = $productostocksucursal->actualizar();
       if($r){
         $alertas['exito'][] = "Estado del producto actualizado";
-        $alertas['estado'][] = $producto->estado;
+        $alertas['estado'][] = $productostocksucursal->habilitarventa;
         $alertas['tipoproducto'][] = $producto->tipoproducto;
       }else{
         $alertas['error'][] = "Hubo un error, intentalo nuevamente";

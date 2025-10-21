@@ -380,7 +380,8 @@ class reportescontrolador{
     $compra = compras::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursal_id'=>$idsucursal]);
     $detallecompra = detallecompra::idregistros('idcompra', $compra->id);
     $gasto = gastos::uniquewhereArray(['id_compra'=>$compra->id, 'id_sucursalfk'=>$idsucursal]);
-    
+    $rsps = true;
+    $rsis = true;
     //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
     $resultArray = array_reduce($detallecompra, function($acumulador, $objeto){
       if($objeto->tipo == 0){

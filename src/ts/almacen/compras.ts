@@ -237,11 +237,11 @@
         async function procesarpedido(estado:string){
             const datos = new FormData();
             datos.append('idproveedor', proveedor.options[proveedor.selectedIndex].value);
-            datos.append('idformapago', formapago.options[formapago.selectedIndex].value);
+            //datos.append('idformapago', formapago.options[formapago.selectedIndex].value);
             datos.append('idorigencaja', origenCaja.options[origenCaja.selectedIndex].value);
             datos.append('idorigenbanco', origenBanco.options[origenBanco.selectedIndex].value);
             datos.append('nombreproveedor', proveedor.options[proveedor.selectedIndex].textContent!);
-            datos.append('formapago', formapago.options[formapago.selectedIndex].text);
+            //datos.append('formapago', formapago.options[formapago.selectedIndex].text);
             datos.append('nfactura', nfactura.value);
             datos.append('impuesto', impuesto.value);
             datos.append('origenpago', origenPago.options[origenPago.selectedIndex].value); //0 = si el origen viene de la caja,  1 = banco
