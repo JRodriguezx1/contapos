@@ -5,8 +5,11 @@ namespace Controllers;
 use Model\caja\cierrescajas;
 use Model\caja\ingresoscajas;
 use Model\compras;
+use Model\detallecompra;
 use Model\gastos;
 use Model\inventario\productos;
+use Model\inventario\stockinsumossucursal;
+use Model\inventario\stockproductossucursal;
 use Model\inventario\subproductos;
 use Model\ventas\facturas;
 use MVC\Router;  //namespace\clase
@@ -375,7 +378,23 @@ class reportescontrolador{
     $idsucursal = id_sucursal();
     $alertas = [];
     $compra = compras::uniquewhereArray(['id'=>$_POST['id'], 'id_sucursal_id'=>$idsucursal]);
+    $detallecompra = detallecompra::idregistros('idcompra', $compra->id);
     $gasto = gastos::uniquewhereArray(['id_compra'=>$compra->id, 'id_sucursalfk'=>$idsucursal]);
+    
+    //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
+    $resultArray = array_reduce($detallecompra, function($acumulador, $objeto){
+      if($objeto->tipo == 0){
+        $objeto->id = $objeto->idpx;
+        $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
+      }
+      else{
+        $objeto->id = $objeto->idsx;
+        $acumulador['subproductos'][] = $objeto;
+      }
+      return $acumulador;
+    }, ['productos'=>[], 'subproductos'=>[]]);
+
+    
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $cierrecaja = cierrescajas::find('id', $gasto->idg_cierrecaja);
       if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
@@ -389,7 +408,17 @@ class reportescontrolador{
           }
           $rcc = $cierrecaja->actualizar();
           if($rcc){
-            $alertas['exito'][] = "Compra eliminada correctamente";
+            //descontar del inventario
+            if(!empty($resultArray['productos']))$rsps = stockproductossucursal::reduceinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = '.$idsucursal);
+            if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::reduceinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid = '.$idsucursal);
+            if($rsps&&$rsis){
+              $alertas['exito'][] = "Compra eliminada correctamente";
+            }else{
+              $alertas['error'][] = "No se pudo eliminar la compra del cierre de caja";
+              $compra->crear_guardar();
+              $gasto->crear_guardar();
+              //dejar el inventario original
+            }
           }else{
             $alertas['error'][] = "No se pudo eliminar la compra del cierre de caja";
             $compra->crear_guardar();
@@ -405,6 +434,7 @@ class reportescontrolador{
     echo json_encode($alertas);
   }
 
+  
   //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
   public static function apigastoseingresos(){
     session_start();

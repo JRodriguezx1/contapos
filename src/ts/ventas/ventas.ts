@@ -8,7 +8,7 @@
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
-    const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
+    //const btndescuento = document.querySelector('#btndescuento') as HTMLButtonElement;
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
     const totalunidades = document.querySelector('#totalunidades') as HTMLElement;
@@ -21,19 +21,20 @@
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
     const miDialogoPreciosAdicioanles = document.querySelector('#miDialogoPreciosAdicioanles') as any;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
-    const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
+    //const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
+    const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
-    const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
-    const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
+    //const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
+    //const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
-    let nombretarifa:string|undefined='', valorMax = 0, tipoventa:string="Contado";
+    let nombretarifa:string|undefined='', /*valorMax = 0,*/ tipoventa:string="Contado";
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -350,14 +351,14 @@
 
     /////////////////btns descuento, vaciar, guardar y facturar /////////////////
 
-    btndescuento?.addEventListener('click', ()=>{
+    /*btndescuento?.addEventListener('click', ()=>{
       if(carrito.length){
         valorMax = valorTotal.subtotal;
         //validar que si al reducir los productos o aumentar recalcular el porcentaje
         miDialogoDescuento.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
-    });
+    });*/
 
     /*btnvaciar?.addEventListener('click', ()=>{
       if(carrito.length){
@@ -411,6 +412,7 @@
     });
 
   /////////////////////  logica del descuento  //////////////////////////
+  /*
     tipoDescts.forEach(desc=>{ //evento a los radiobutton
       desc.addEventListener('change', (e:Event)=>{
         if((e.target as HTMLInputElement).value === "porcentaje"){
@@ -449,6 +451,7 @@
       miDialogoDescuento.close();
       document.removeEventListener("click", cerrarDialogoExterno);
     });
+    */
 
 
     function cerrarDialogoExterno(event:Event) {
@@ -608,6 +611,7 @@
     POS.valorTotal = valorTotal;
     POS.mapMediospago = mapMediospago;
     POS.tipoventa = tipoventa;
+    POS.carrito = carrito;
     //POS.products = products;
   }
 
