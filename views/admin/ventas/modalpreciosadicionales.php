@@ -7,11 +7,9 @@
         <h4 class="text-2xl font-bold text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
             💰 Seleccionar precio adicional
         </h4>
-        <button id="btnCerrarPreciosAdicionales"
-            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition"
-            onclick="document.getElementById('miDialogoPreciosAdicioanles').close()">
-            <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl"></i>
-        </button> 
+        <button id="btnCerrarPreciosAdicionales" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+            <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl btnCerrarPreciosAdicionales"></i>
+        </button>
     </div>
 
     <!-- Contenido -->
@@ -101,13 +99,8 @@
 
         <!-- Botones inferiores -->
         <div class="text-right pt-6 border-t border-gray-200 dark:border-neutral-700 flex justify-end gap-3">
-            <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]"
-                onclick="document.getElementById('miDialogoPreciosAdicioanles').close()">
-                Cancelar
-            </button>
-            <button type="submit" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
-                Seleccionar
-            </button>
+            <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
+            <button id="aplicarprecioadicional" type="button" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]" value="Seleccionar">Seleccionar</button>
         </div>
     </form>
 

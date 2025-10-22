@@ -1,7 +1,7 @@
 (()=>{
   if(document.querySelector('.ventas')){
 
-     const POS = (window as any).POS;
+    const POS = (window as any).POS;
      
     const selectCliente = POS.gestionClientes.selectCliente;
     const dirEntrega = POS.gestionClientes.dirEntrega;
@@ -48,39 +48,6 @@
       valorimpuesto: number
     }
     let factimpuestos:Item[] = [];
-
-    type productsapi = {
-      id:string,
-      idcategoria: string,
-      idunidadmedida: string,
-      nombre: string,
-      foto: string,
-      impuesto: string,  //porcentaje(%) de impuesto
-      marca: string,
-      tipoproducto: string, // 0 = simple,  1 = compuesto
-      tipoproduccion: string, //0 = inmediato, 1 = construccion (aplica para productos compuestos)
-      codigo: string,
-      unidadmedida: string,
-      descripcion: string,
-      peso: string,
-      medidas: string,
-      color: string,
-      funcion: string,
-      uso:string,
-      fabricante: string,
-      garantia: string,
-      stock: string,
-      stockminimo: string,
-      categoria: string,
-      rendimientoestandar: string,
-      precio_compra: string,
-      precio_venta: string,
-      fecha_ingreso: string,
-      estado: string,
-      visible: string,
-      //idservicios:{idempleado:string, idservicio:string}[]
-    };
-    
 
     let products:productsapi[]=[], unproducto:productsapi;
     const mapMediospago = new Map();
@@ -154,7 +121,7 @@
       if((e.target as HTMLElement).parentElement?.id === 'precioadicional'){
         //miDialogoPreciosAdicionales.showModal();
         //document.addEventListener("click", cerrarDialogoExterno);
-        POS.gestionarPreciosAdicionales.abrirDialogo(elementProduct);
+        POS.gestionarPreciosAdicionales.abrirDialogo(elementProduct);  //ejecuta los precios adicionales
         return;
       }
 
@@ -399,7 +366,7 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
         miDialogoDescuento.close();
         //miDialogoCredito.close();
         miDialogoGuardar.close();
@@ -410,6 +377,9 @@
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicionales.close();
         document.removeEventListener("click", cerrarDialogoExterno);
+        /*if((f as HTMLButtonElement).value == "Seleccionar"){
+
+        }*/
         if((f as HTMLInputElement).closest('.siguardar')){
           tipoventa = "";
           procesarpedido('Guardado', '1');
