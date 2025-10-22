@@ -1,5 +1,5 @@
 <!-- MODAL SELECCIÓN DE PRECIOS ADICIONALES -->
-<dialog id="miDialogoPreciosAdicioanles"
+<dialog id="miDialogoPreciosAdicionales"
     class="rounded-2xl border border-gray-200 dark:border-neutral-700 w-[95%] max-w-3xl p-8 bg-white dark:bg-neutral-900 backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
     <!-- Encabezado -->
@@ -19,6 +19,7 @@
 
         <!-- Lista de precios -->
         <div id="listaPrecios" class="space-y-3">
+            <!--
             <label class="flex justify-between items-center p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition">
                 <div class="flex items-center gap-3">
                     <input type="radio" name="precioSeleccionado" value="20000"
@@ -45,6 +46,7 @@
                 </div>
                 <span class="text-gray-800 dark:text-gray-200 text-lg font-semibold">$10.000</span>
             </label>
+            -->
         </div>
 
         <!-- Botón agregar precio -->

@@ -14,7 +14,7 @@
         valorMax = POS.valorTotal.subtotal;
         //validar que si al reducir los productos o aumentar recalcular el porcentaje
         miDialogoDescuento.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
+        document.addEventListener("click", POS.cerrarDialogoExterno);
       }
     });
 
@@ -55,7 +55,7 @@
       document.querySelector('#total')!.textContent = '$ '+POS.valorTotal.total.toLocaleString();
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+POS.valorTotal.descuento.toLocaleString();
       miDialogoDescuento.close();
-      document.removeEventListener("click", cerrarDialogoExterno);
+      document.removeEventListener("click", POS.cerrarDialogoExterno);
     });
     
     

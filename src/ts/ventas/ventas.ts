@@ -18,7 +18,8 @@
     const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
     const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
-    const miDialogoPreciosAdicioanles = document.querySelector('#miDialogoPreciosAdicioanles') as any;
+    //const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as any;
+    const miDialogoPreciosAdicionales = POS.gestionarPreciosAdicionales.miDialogoPreciosAdicionales;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
@@ -86,7 +87,7 @@
 
     (async ()=>{
       products = await POS.productosAPI.getProductosAPI();
-      POS.products = products;
+      POS.products = products;  //Se expone globalmente
       POS.gestionOtrosProductos.otrosproductos();
     })();
 
@@ -151,8 +152,9 @@
       const count = carrito.find(x=>x.idproducto == (elementProduct as HTMLElement).dataset.id);
 
       if((e.target as HTMLElement).parentElement?.id === 'precioadicional'){
-        miDialogoPreciosAdicioanles.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
+        //miDialogoPreciosAdicionales.showModal();
+        //document.addEventListener("click", cerrarDialogoExterno);
+        POS.gestionarPreciosAdicionales.abrirDialogo(elementProduct);
         return;
       }
 
@@ -397,7 +399,7 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicioanles || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" ) {
         miDialogoDescuento.close();
         //miDialogoCredito.close();
         miDialogoGuardar.close();
@@ -406,7 +408,7 @@
         miDialogoAddDir.close();
         miDialogoFacturarA.close();
         miDialogoOtrosProductos.close();
-        miDialogoPreciosAdicioanles.close();
+        miDialogoPreciosAdicionales.close();
         document.removeEventListener("click", cerrarDialogoExterno);
         if((f as HTMLInputElement).closest('.siguardar')){
           tipoventa = "";
