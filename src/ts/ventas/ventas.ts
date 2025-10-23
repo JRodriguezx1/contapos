@@ -140,14 +140,16 @@
         setTimeout(() => {popupx.forEach(t=>{t.remove();});}, 2500);
       }
 
-      if(elementProduct)actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true);
+      const precio = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)?.precio_venta;
+      if(elementProduct)actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true, precio);
     });
 
-    function printProduct(id:string){ //recibe el id del producto
-      const uncarrito = carrito.find(x=>x.idproducto==id)!;
+    function printProduct(id:string, precio:string){ //recibe el id del producto
+      const uncarrito = carrito.find(x=>x.idproducto==id&&x.valorunidad==precio)!;
       const tr = document.createElement('TR');
       tr.classList.add('productselect');
       tr.dataset.id = `${id}`;
+      tr.dataset.precio = precio;
       tr.insertAdjacentHTML('afterbegin', `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5">${uncarrito?.nombreproducto}</td> 
 
       <td class="!px-0 !py-2">
@@ -171,8 +173,8 @@
     } //oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"
 
 
-    function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean){
-      const index = carrito.findIndex(x=>x.idproducto==id); //devuelve el index si el producto existe
+    function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean, precio:string = '0'){
+      const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio); //devuelve el index si el producto existe
       
       if(index>-1){
         if(cantidad <= 0){
@@ -194,13 +196,13 @@
 
         valorCarritoTotal();
         if(stateinput)
-        (tablaventa?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
-        (tablaventa?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
+        (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
+        (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
       }else{  //agregar a carrito si el producto no esta agregado en carrito, cuando se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
-        const productovalorimp = (Number(producto.precio_venta)*cantidad)*constImp[producto.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
-        const productototal = Number(producto.precio_venta)*cantidad;
+        const productovalorimp = (Number(precio)*cantidad)*constImp[producto.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+        const productototal = Number(precio)*cantidad;
         
         var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
           id: '',
@@ -212,7 +214,7 @@
           rendimientoestandar: producto.rendimientoestandar,
           foto: producto.foto,
           costo: producto.precio_compra,
-          valorunidad: producto.precio_venta,
+          valorunidad: precio,
           cantidad: cantidad,
           subtotal: productototal, //este es el subtotal del producto
           base: productototal-productovalorimp,
@@ -223,8 +225,9 @@
         }
         
         carrito = [...carrito, a];
+        console.log(carrito);
         valorCarritoTotal();
-        printProduct(id);
+        printProduct(id, precio);
       }
     }
 
@@ -279,9 +282,10 @@
     tablaventa?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
+      const precio = (elementProduct as HTMLElement).dataset.precio!;
+      const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
       if((e.target as HTMLElement).classList.contains('menos')){
-        const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
-        actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true);
+        actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('inputcantidad')){
         if((e.target as HTMLElement).dataset.event != "eventInput"){
@@ -295,14 +299,13 @@
             if (val === '' || isNaN(parseFloat(val))) val = '0';
 
             (e.target as HTMLInputElement).value = val;
-            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false);
+            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false,  productoCarrito?.valorunidad);
           });
           (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
         }
       }
       if((e.target as HTMLElement).classList.contains('mas')){
-        const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
-        actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true);
+        actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
         carrito = carrito.filter(x=>x.idproducto != idProduct);
@@ -497,7 +500,7 @@
             const resultado = await respuesta.json();
             datosfactura = resultado.factura;
             carrito = resultado.productos;
-            carrito.forEach(item =>printProduct(item.idproducto));
+            carrito.forEach(item =>printProduct(item.idproducto, item.valorunidad));
             valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
             (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.num_orden;
             $('#selectCliente').val(datosfactura.idcliente).trigger('change');

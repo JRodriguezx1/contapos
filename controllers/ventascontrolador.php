@@ -125,13 +125,22 @@ class ventascontrolador{
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
     $resultArray = array_reduce($carrito, function($acumulador, $objeto){
-      $objeto->id = $objeto->idproducto;
+      $obj = clone $objeto;
+      $obj->id = $objeto->idproducto;
       //unset($objeto->iditem);
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
-        $acumulador['productosSimples'][] = $objeto;
+        if(!isset($acumulador['productosSimples'][$objeto->id])){
+          $acumulador['productosSimples'][$objeto->id] = $obj;
+        }else{
+          $acumulador['productosSimples'][$objeto->id]->cantidad += $obj->cantidad;
+        }
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
-        $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
-        $acumulador['productosCompuestos'][] = $objeto;
+        if(!isset($acumulador['productosCompuestos'][$objeto->id])){
+          $acumulador['productosCompuestos'][$objeto->id] = $obj;
+        }else{
+          $acumulador['productosCompuestos'][$objeto->id]->cantidad += $obj->cantidad;
+        }
+        $acumulador['productosCompuestos'][$objeto->id]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->id]->cantidad/(float)$objeto->rendimientoestandar, 4);
       }
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
@@ -148,6 +157,9 @@ class ventascontrolador{
       $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
       }
     }
+
+    //stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+    //debuguear($resultArray['productosSimples']);
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //////////validar datos de factura, de ventas y medios de pago

@@ -28,7 +28,7 @@
   aplicarprecioadicional.addEventListener('click', ()=>{
     if(document.querySelector('.inputprecioadicional')){  //si existe uno de los input de precios adicionales
       const seleccionado = document.querySelector('.inputprecioadicional:checked') as HTMLInputElement;
-      POS.actualizarCarrito(seleccionado.dataset.precio, 1, true, true);
+      POS.actualizarCarrito(seleccionado.dataset.precio, 1, true, true, seleccionado.value);
       console.log(seleccionado);
     }
   });
