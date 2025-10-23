@@ -16,36 +16,7 @@
     <form id="formPreciosAdicioanles" class="space-y-6">
 
         <!-- Lista de precios -->
-        <div id="listaPrecios" class="space-y-3">
-            <!--
-            <label class="flex justify-between items-center p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition">
-                <div class="flex items-center gap-3">
-                    <input type="radio" name="precioSeleccionado" value="20000"
-                        class="w-5 h-5 text-indigo-600 focus:ring-indigo-500">
-                    <span class="text-gray-900 dark:text-gray-100 text-lg font-medium">Precio normal</span>
-                </div>
-                <span class="text-gray-800 dark:text-gray-200 text-lg font-semibold">$20.000</span>
-            </label>
-
-            <label class="flex justify-between items-center p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition">
-                <div class="flex items-center gap-3">
-                    <input type="radio" name="precioSeleccionado" value="15000"
-                        class="w-5 h-5 text-indigo-600 focus:ring-indigo-500">
-                    <span class="text-gray-900 dark:text-gray-100 text-lg font-medium">Precio por caja</span>
-                </div>
-                <span class="text-gray-800 dark:text-gray-200 text-lg font-semibold">$15.000</span>
-            </label>
-
-            <label class="flex justify-between items-center p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition">
-                <div class="flex items-center gap-3">
-                    <input type="radio" name="precioSeleccionado" value="10000"
-                        class="w-5 h-5 text-indigo-600 focus:ring-indigo-500">
-                    <span class="text-gray-900 dark:text-gray-100 text-lg font-medium">Precio mayorista</span>
-                </div>
-                <span class="text-gray-800 dark:text-gray-200 text-lg font-semibold">$10.000</span>
-            </label>
-            -->
-        </div>
+        <div id="listaPrecios" class="space-y-3"> </div>
 
         <!-- Botón agregar precio -->
         <div class="text-center mt-3">
@@ -56,9 +27,8 @@
         </div>
 
         <!-- Nuevo precio -->
-        <div id="nuevoPrecioContainer"
-            class="hidden mt-6 border-t border-gray-300 dark:border-neutral-700 pt-6 animate-fadeIn">
-            <h5 class="text-gray-700 dark:text-gray-200 font-medium text-lg mb-3">Nuevo precio personalizado</h5>
+        <div id="nuevoPrecioContainer" class="hidden mt-6 border-t border-gray-300 dark:border-neutral-700 pt-6 animate-fadeIn">
+            <!--<h5 class="text-gray-700 dark:text-gray-200 font-medium text-lg mb-3">Nuevo precio personalizado</h5>
 
             <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
                 <div class="sm:col-span-4">
@@ -75,7 +45,6 @@
                 </div>
             </div>
 
-            <!-- Autorización -->
             <div id="autorizacionSupervisor" class="mt-6 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 p-4 rounded-xl">
                 <h6 class="text-base font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2 mb-2">
                     <i class="fa-solid fa-lock text-indigo-600"></i> Autorización requerida
@@ -85,16 +54,16 @@
                 </p>
                 <input type="password" id="claveSupervisor" placeholder="Clave de supervisor"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base focus:outline-none focus:ring-1 focus:ring-indigo-500">
-            </div>
+            </div>-->
 
             <!-- Botón usar precio -->
-            <div class="mt-6">
+            <!--<div class="mt-6">
                 <button type="button" id="btnUsarPrecioPersonalizado"
                     class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-lg transition-all shadow-md hover:shadow-lg focus:ring-2 focus:ring-indigo-500 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-check text-white text-lg"></i>
                     Usar este precio
                 </button>
-            </div>
+            </div>-->
         </div>
 
         <!-- Botones inferiores -->

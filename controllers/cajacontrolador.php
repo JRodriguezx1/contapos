@@ -439,7 +439,6 @@ class cajacontrolador{
     $idsucursal = id_sucursal();
     //$alertas = usuarios::getAlertas();
 
-
     $factura = facturas::uniquewhereArray(['id'=>$id, 'id_sucursal'=>$idsucursal]);
     if($factura){
       $productos = ventas::idregistros('idfactura', $id);
@@ -862,6 +861,48 @@ class cajacontrolador{
       }
       $alertas = ActiveRecord::getAlertas();
       echo json_encode($alertas); 
+  }
+
+
+  //Enviar orden por email a cliente
+  public static function sendOrdenEmailToCustemer(){
+    session_start();
+    isadmin();
+    $alertas = [];
+
+    $id = $_POST['id'];
+    $sendEmail = $_POST['email'];
+    $path = __DIR__ . "/../views/templates/plantillafacturaemail.php";
+
+    //debuguear($path);
+    
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $factura = facturas::find('id', $id);
+      $productos = ventas::idregistros('idfactura', $id);
+      $cliente = clientes::find('id', $factura->idcliente);
+      $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+      if(!$direccion)$direccion = direcciones::find('id', 1);
+      $tarifa = tarifas::find('id', $direccion->idtarifa);
+      $vendedor = usuarios::find('id', $factura->idvendedor);
+      $sucursal = sucursales::find('id', id_sucursal());
+      $lineasencabezado = explode("\n", $sucursal->datosencabezados);
+      $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
+            JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$factura->id};";
+      $mediospago = ActiveRecord::camposJoinObj($sql);
+
+      ob_start();
+      include $path;
+      $html = ob_get_clean();
+
+      //debuguear($html);
+
+      $email = new Email($sendEmail, 'Julian Rodriguez', '', '', $html);
+      $r = $email->enviarConfirmacion();
+
+    }
+
+    echo json_encode($r);
+
   }
 
 }

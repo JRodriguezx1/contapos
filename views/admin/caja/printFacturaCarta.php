@@ -150,17 +150,17 @@
     <footer class="border-t border-gray-200 py-5 text-center text-sm text-gray-500 leading-snug">
         <p class="mb-1.5">
             Esta factura es un documento válido generado electrónicamente por 
-            <span class="font-semibold text-gray-700">Nombre de la Empresa S.A.S</span> - NIT 000000000-0.
+            <span class="font-semibold text-gray-700"><?php echo $sucursal->negocio;?></span> - NIT <?php echo $sucursal->nit;?>.
         </p>
         <p class="mb-1">Gracias por su compra.</p>
         <p class="mb-1">
             Contáctanos: 
-            <a href="mailto:correo@empresa.com" class="text-indigo-600 hover:underline">correo@empresa.com</a> 
-            | Tel: 000 000 0000
+            <a href="mailto:correo@empresa.com" class="text-indigo-600 hover:underline"><?php echo $sucursal->email??'';?></a> 
+            | Tel: <?php echo $sucursal->telefono??'';?>
         </p>
-        <p class="mb-1">Dirección: Calle 00 #00-00, Ciudad - Departamento</p>
+        <p class="mb-1">Dirección: <?php echo $sucursal->direccion??'';?>, <?php echo $sucursal->ciudad??'';?> - <?php echo $sucursal->departamento??'';?></p>
         <p class="mt-3 text-xs text-gray-400">
-            © <?php echo date("Y"); ?> Nombre de la Empresa. Todos los derechos reservados.
+            © <?php echo date("Y"); ?> <?php echo $sucursal->negocio;?>. Todos los derechos reservados.
         </p>
         <p class="mt-1 text-xs text-gray-400">
             Generado con <span class="text-indigo-500 font-semibold">J2 Software POS Multisucursal</span>

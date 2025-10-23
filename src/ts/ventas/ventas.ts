@@ -18,7 +18,6 @@
     const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
     const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
-    //const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as any;
     const miDialogoPreciosAdicionales = POS.gestionarPreciosAdicionales.miDialogoPreciosAdicionales;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
@@ -119,8 +118,6 @@
       const count = carrito.find(x=>x.idproducto == (elementProduct as HTMLElement).dataset.id);
 
       if((e.target as HTMLElement).parentElement?.id === 'precioadicional'){
-        //miDialogoPreciosAdicionales.showModal();
-        //document.addEventListener("click", cerrarDialogoExterno);
         POS.gestionarPreciosAdicionales.abrirDialogo(elementProduct);  //ejecuta los precios adicionales
         return;
       }
@@ -228,13 +225,13 @@
         console.log(carrito);
         valorCarritoTotal();
         printProduct(id, precio);
+        POS.carrito = carrito;
       }
     }
 
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
       //calcular el impuesto discriminado por tarifa
-     
       const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
       const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
 
@@ -257,7 +254,6 @@
           }else{
             factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
           }
-        
       });
 
      
@@ -380,9 +376,6 @@
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicionales.close();
         document.removeEventListener("click", cerrarDialogoExterno);
-        /*if((f as HTMLButtonElement).value == "Seleccionar"){
-
-        }*/
         if((f as HTMLInputElement).closest('.siguardar')){
           tipoventa = "";
           procesarpedido('Guardado', '1');
@@ -406,7 +399,6 @@
       document.querySelector('#total')!.textContent = '$'+0;
       $('#selectCliente').val(1).trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
-      
     }
 
 
@@ -525,7 +517,7 @@
     POS.valorTotal = valorTotal;
     POS.mapMediospago = mapMediospago;
     POS.tipoventa = tipoventa;
-    POS.carrito = carrito;
+    //POS.carrito = carrito;
     //POS.products = products;
   }
 

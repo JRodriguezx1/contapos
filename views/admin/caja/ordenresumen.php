@@ -21,8 +21,8 @@
         <?php if($factura->tipoventa=='Credito'):?>
         <a class="btn-command text-center" href="/admin/caja/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle credito</a>
         <?php endif; ?>
-        <a class="btn-command text-center" href="/admin/caja/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">mail</span>Enviar factura</a>
-        <!--<a class="btn-command text-center" href="/admin/caja/detalleorden?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle orden</a>-->
+        <button id="enviarEmail" class="btn-command text-center"><span class="material-symbols-outlined">mail</span>Enviar factura</button>
+        <!--<a class="btn-command text-center" href="/admin/caja/detalleorden?id=<?php //echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle orden</a>-->
         <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
         <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
@@ -323,4 +323,21 @@
             <div class="noeliminar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">Cancelar</p></div>
         </div>
     </dialog>
+
+    <dialog id="miDialogoEnviarEmailCliente" class="midialog-xs p-8 rounded-lg shadow-lg">
+        <h4 id="modalEnviarEmail" class="font-semibold text-gray-700 mb-4 mt-4">Enviar orden por email</h4>
+        <div id="divmsjalertaEnviarEmail"></div>
+        <form id="formEnviarEmailCliente" class="formulario" method="POST">
+            <h5 class="my-2 text-lg text-gray-500">Enviar detalle de la orden por correo electronico</h5>
+            <div class="formulario__campo">
+                <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+                    <input id="inputEmail" class="formulario__input !border-0" type="email" placeholder="Email"  required>
+                </div>
+            </div>
+            <div class="text-right">
+                <button class="btn-md btn-turquoise !py-4  !w-[100px]" type="button" value="Salir">Salir</button>
+                <input id="btnEnviarEmailCliente" class="btn-md btn-indigo !py-4  !w-[100px]" type="submit" value="Enviar">
+            </div>
+        </form>
+    </dialog><!--fin enviar email a cliente-->
 </div>

@@ -14,6 +14,8 @@
       const printcotizacion = document.querySelector('#printcotizacion');
       const numOrden = document.querySelector('#numOrden');
       const referenciaFactura = document.querySelector('#referenciaFactura');
+      const enviarEmail = document.querySelector('#enviarEmail') as HTMLButtonElement;
+      const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
 
       const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
       const mapMediospago = new Map();
@@ -74,6 +76,37 @@
       btneliminarorden?.addEventListener('click', ()=>{
           miDialogoEliminarOrden.showModal();
           document.addEventListener("click", cerrarDialogoExterno);
+      });
+
+
+      enviarEmail.addEventListener('click', ()=>{
+        miDialogoEnviarEmailCliente.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+      });
+
+
+      document.querySelector('#formEnviarEmailCliente')?.addEventListener('submit', (e:Event)=>{
+        e.preventDefault();
+        const idorden = (document.querySelector('#idorden') as HTMLElement).dataset.idorden;
+        if(idorden!=null && Number(idorden)>0){
+          const datos = new FormData();
+          datos.append('id', idorden);
+          datos.append('email', (document.querySelector('#inputEmail') as HTMLInputElement).value);
+          (async ()=>{
+            try {
+              const url = "/admin/api/sendOrdenEmailToCustemer";  //va al controlador cajacontrolador para enviar detalle de orden por email.
+              const respuesta = await fetch(url, {method: 'POST', body: datos});
+              const resultado = await respuesta.json();
+              if(resultado.exito!=undefined){
+                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+              }else{
+                msjalertToast('error', '¡Error!', resultado.error[0]);
+              }
+            } catch (error) {
+                console.log(error);
+            }
+          })();
+        }
       });
 
       ///////////////////// Logica botones devolver inventario ////////////////////////
@@ -236,9 +269,10 @@
   
       function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (event.target === miDialogoFacturar || event.target === miDialogoEliminarOrden || (event.target as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLInputElement).closest('.sieliminar')) {
+        if (event.target === miDialogoFacturar || event.target === miDialogoEliminarOrden || event.target === miDialogoEnviarEmailCliente || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLInputElement).closest('.sieliminar')) {
             miDialogoFacturar.close();
             miDialogoEliminarOrden.close();
+            miDialogoEnviarEmailCliente.close();
             if((f as HTMLInputElement).closest('.sieliminar'))eliminarorden();
             document.removeEventListener("click", cerrarDialogoExterno);
         }

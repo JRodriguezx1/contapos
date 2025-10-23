@@ -29,7 +29,6 @@
     if(document.querySelector('.inputprecioadicional')){  //si existe uno de los input de precios adicionales
       const seleccionado = document.querySelector('.inputprecioadicional:checked') as HTMLInputElement;
       POS.actualizarCarrito(seleccionado.dataset.precio, 1, true, true, seleccionado.value);
-      console.log(seleccionado);
     }
   });
 
@@ -40,8 +39,7 @@
       miDialogoPreciosAdicionales.showModal();
       cargarPreciosAdicionales(elementProduct.dataset.id!);
       document.addEventListener("click", POS.cerrarDialogoExterno);
-      console.log("Abriendo precios para producto", elementProduct.dataset.id);
-    },  
+    },
   };
 
   POS.gestionarPreciosAdicionales = gestionarPreciosAdicionales;
