@@ -304,7 +304,7 @@
         actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        carrito = carrito.filter(x=>x.idproducto != idProduct && x.valorunidad != precio);
+        carrito = carrito.filter(x=>x.idproducto != idProduct || x.valorunidad != precio);
         valorCarritoTotal();
         tablaventa?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
       }
