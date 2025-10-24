@@ -46,7 +46,7 @@
   <!-- Fondo desenfocado / Light Glass Effect -->
   <div class="absolute inset-0 bg-gradient-to-br from-blue-100/20 via-purple-100/20 to-indigo-200/20 backdrop-blur-md"></div>
 
-  <div class="relative z-10 grid gap-0 w-full xsp:w-[38rem] xlg:w-[48rem] mx-auto">
+  <div class="relative z-10 grid gap-0 w-full xsp:w-[38rem] xlg:w-[42rem] mx-auto">
 
     <?php include __DIR__. "/../templates/alertas.php"; ?>
 
@@ -56,7 +56,7 @@
 
       <!-- Formulario con efecto glass y sombras internas -->
       <div class="border-[10px] border-transparent rounded-[24px] bg-white/90 shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-4 m-2 backdrop-blur-md transition-colors duration-300">
-        <h1 class="pt-8 pb-6 font-bold text-3xl sm:text-4xl md:text-5xl text-center text-gray-800 uppercase">
+        <h1 class="pt-8 pb-6 font-bold text-3xl md:text-4xl text-center text-gray-800 uppercase">
           Iniciar Sesión
         </h1>
 
@@ -70,7 +70,7 @@
               type="text"
               required
               placeholder="Ingresa tu usuario"
-              class="w-full h-[4.7rem] xlg:h-[5.1rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl
+              class="w-full h-[4.7rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl
                      shadow-inner placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
                      transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             />
@@ -82,7 +82,7 @@
             <select 
               id="sucursal"
               name="idsucursal"
-              class="w-full h-[4.7rem] xlg:h-[5.1rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
+              class="w-full h-[4.7rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
                      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out
                      hover:scale-[1.02] focus:scale-[1.03]"
             >
@@ -100,7 +100,7 @@
               type="password"
               required
               placeholder="Ingresa tu contraseña"
-              class="w-full h-[4.7rem] xlg:h-[5.1rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
+              class="w-full h-[4.7rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
                      placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
                      transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             />
@@ -113,7 +113,7 @@
           <button
             type="submit"
             class="bg-gradient-to-r from-blue-600 to-purple-600 text-white dark:text-gray-200 shadow-lg mt-6 p-2 text-xl rounded-2xl w-full
-                   hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4.7rem] xlg:h-[5.1rem]"
+                   hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4.7rem]"
           >
             INICIAR SESIÓN
           </button>
