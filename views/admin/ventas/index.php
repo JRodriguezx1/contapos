@@ -446,7 +446,8 @@
             <div class="sm:col-start-2 col-span-4 mt-6">
               <label for="descuento" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
               <div class="mt-2">
-                <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+                <input id="inputDescuentoClave" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                <div id="divmsjalertaClaveDcto"></div>
               </div>
               <div class="grid grid-cols-2 gap-3 mt-6">
                 <button type="button" class="btn-md btn-turquoise !py-4 !px-6 w-full salir">Salir</button>

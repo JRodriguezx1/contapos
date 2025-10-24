@@ -602,17 +602,23 @@ class almacencontrolador{
             if($r){
 
               //PROCESAMIENTO DE ACTUALIZACION DE PRECIOS ADICIONALES
-              $arrayIdeliminar = []; $nuevosprecios = [];
+              $arrayIdeliminar = []; $nuevosprecios = []; $actualizarprecios = [];
               ///IDs a eliminar de la DB
               foreach($preciosAdicionalesDB as $key => $value)
                 if(!in_array($value->id, $idprecionsadicionales))$arrayIdeliminar[] = $value->id;
               //registros a insertar
-              foreach ($nuevosPreciosFront as $value)
-                if (!isset($value->id)) $nuevosprecios[] = $value;
+              foreach ($nuevosPreciosFront as $value){
+                if (!isset($value->id)){
+                  $nuevosprecios[] = $value;
+                }else{
+                  $actualizarprecios[] = $value;
+                }
+              }
               
+
               if($arrayIdeliminar)$r1 = precios_personalizados::eliminar_idregistros('id', $arrayIdeliminar);
               if($nuevosprecios)$r2 = $addnewprecios->crear_varios_reg_arrayobj($nuevosprecios);
-              if($nuevosPreciosFront) $r3 = precios_personalizados::updatemultiregobj($nuevosPreciosFront, ['precio']);
+              if($actualizarprecios) $r3 = precios_personalizados::updatemultiregobj($actualizarprecios, ['precio']);
 
               //ACTUALIZAR STOCK MINIMO
               $stockproducto = stockproductossucursal::uniquewhereArray(['productoid'=>$producto->id, 'sucursalid'=>id_sucursal()]);

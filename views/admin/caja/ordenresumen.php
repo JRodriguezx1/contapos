@@ -269,9 +269,9 @@
             </div>
 
             <div class="sm:col-start-2 col-span-4 mt-6">
-              <label for="descuento" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+              <label for="inputEliminarClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
               <div class="mt-2">
-                <input id="inputDescuentoClave" type="number" min="0" name="descuento" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                <input id="inputEliminarClave" type="password" min="0" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
               </div>
             </div>
 

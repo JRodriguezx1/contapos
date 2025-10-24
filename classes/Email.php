@@ -66,7 +66,6 @@ class Email {
                     </html>";
 
         $mail->Body = $this->html;
-
         //Enviar el mail
         try {
             $mail->send();

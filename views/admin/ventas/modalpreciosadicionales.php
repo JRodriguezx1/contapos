@@ -7,8 +7,8 @@
         <h4 class="text-2xl font-bold text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
             💰 Seleccionar precio adicional
         </h4>
-        <button id="btnCerrarPreciosAdicionales" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
-            <i class="fa-solid fa-xmark text-gray-600 dark:text-gray-300 text-2xl btnCerrarPreciosAdicionales"></i>
+        <button id="btnCerrarPreciosAdicionales" class=" rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition">
+            <i class="fa-solid fa-xmark px-2 text-gray-600 dark:text-gray-300 text-3xl btnCerrarPreciosAdicionales"></i>
         </button>
     </div>
 

@@ -149,6 +149,7 @@
       (document.querySelector('#stock')as HTMLInputElement).value = unproducto?.stock??'';
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
+      (document.querySelector('#precioventa')as HTMLInputElement).dataset.idproductoid = unproducto.id;
       imprimirpreciosadicionales(unproducto.preciosadicionales);
       (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
       (document.querySelector('#impuesto')as HTMLInputElement).value = unproducto?.impuesto??'';
@@ -167,7 +168,7 @@
           class="nuevosprecios bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
           type="number" 
           min="0" 
-          step="0.01" 
+          step="0.01"
           placeholder="Precio de venta incluido el impuesto" 
           name="nuevosprecios[]" 
           value="${z.precio}" 
@@ -209,8 +210,8 @@
           datos.append('stock', $('#stock').val()as string);
           datos.append('precio_compra', $('#preciocompra').val()as string);
           datos.append('precio_venta', $('#precioventa').val()as string);
-          datos.append('nuevosprecios', JSON.stringify(Array.from(w).map(input=>({id: input.dataset.id, precio: parseFloat(input.value) })).filter(x=>x.precio>0)));
-          datos.append('idprecionsadicionales', JSON.stringify(Array.from(w).filter(input => input.dataset.id && parseFloat(input.value) > 0).map( input=>input.dataset.id )));
+          datos.append('nuevosprecios', JSON.stringify(Array.from(w).map(input=>({id: input.dataset.id, idproductoid: input.dataset.idproductoid, precio: parseFloat(input.value), estado:1 })).filter(x=>x.precio>0)));
+          datos.append('idprecionsadicionales', JSON.stringify(Array.from(w).filter(input => input.dataset.id && parseFloat(input.value) > 0).map( input=>input.dataset.id ))); //solo los ids de la tabla precios_personalizados
           datos.append('sku', $('#sku').val()as string);
           datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
           datos.append('impuesto', $('#impuesto').val()as string);

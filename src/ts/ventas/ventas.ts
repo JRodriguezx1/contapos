@@ -274,7 +274,7 @@
       totalunidades.textContent = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
     }
 
-    //////////////////////////////////// evento a la tabla de productos de venta ///////////////////////////////////
+    /////////////////////// evento a la tabla de productos de venta (carrito) //////////////////////////
     tablaventa?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
@@ -304,9 +304,9 @@
         actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        carrito = carrito.filter(x=>x.idproducto != idProduct);
+        carrito = carrito.filter(x=>x.idproducto != idProduct && x.valorunidad != precio);
         valorCarritoTotal();
-        tablaventa?.querySelector(`TR[data-id="${idProduct}"]`)?.remove();
+        tablaventa?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
       }
     });
 

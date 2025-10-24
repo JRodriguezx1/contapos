@@ -898,11 +898,8 @@ class cajacontrolador{
 
       $email = new Email($sendEmail, 'Julian Rodriguez', '', '', $html);
       $r = $email->enviarConfirmacion();
-
     }
-
     echo json_encode($r);
-
   }
 
 }
