@@ -170,6 +170,21 @@ class cajacontrolador{
             }
           }
         }else{ // si la operacion es un gasto
+          //validar si viene comprobante de gasto
+          $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
+          $dirComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/comprobantes";
+          if (!is_dir($dirComprobante))mkdir($dirComprobante, 0755, true);
+
+          if($_FILES['foto']['name']){
+            $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/".$_FILES['foto']['name'];
+            $existe_archivo = file_exists($rutaComprobante);
+            if($existe_archivo)unlink($rutaComprobante);
+            $url_temp = $_FILES["logo"]["tmp_name"];
+            $nombreComprobante = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
+            $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$nombreComprobante;
+            if(move_uploaded_file($url_temp, $rutaComprobante))desactivarInterlacedPNG($rutaComprobante);
+          }
+
           $ingresoGasto = new gastos($_POST);
           $ingresoGasto->idg_usuario = $_SESSION['id'];
           $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
