@@ -18,7 +18,7 @@ class compras extends ActiveRecord{
         $this->nombreorigenbanco = $args['nombreorigenbanco']??'';
         $this->nombreusuario = $args['nombreusuario']??'';
         $this->nombreproveedor = $args['nombreproveedor']??'';
-        $this->formapago = $args['formapago']??'';
+        $this->formapago = $args['formapago']??'Contado';
         $this->nfactura = $args['nfactura']??'';
         $this->impuesto = $args['impuesto']??0;
         $this->origenpago = $args['origenpago']??0;  //0 = caja,  1 = banco

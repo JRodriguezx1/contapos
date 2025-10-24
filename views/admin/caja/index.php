@@ -205,12 +205,12 @@
     </dialog>
 
     <script>
-    document.getElementById('operacion').addEventListener('change', function () {
-        const esGasto = this.value === 'gasto';
-        document.getElementById('origengasto').classList.toggle('hidden', !esGasto);
-        document.querySelector('.tipodegasto').classList.toggle('hidden', !esGasto);
-        document.getElementById('soporteGasto').classList.toggle('hidden', !esGasto);
-    });
+        document.getElementById('operacion').addEventListener('change', function () {
+            const esGasto = this.value === 'gasto';
+            //document.getElementById('origengasto').classList.toggle('hidden', !esGasto);
+            //document.querySelector('.tipodegasto').classList.toggle('hidden', !esGasto);
+            document.getElementById('soporteGasto').classList.toggle('hidden', !esGasto);
+        });
     </script>
 
 

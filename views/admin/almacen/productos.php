@@ -48,7 +48,7 @@
                     <?php endif; ?>
                     <button class="btn-xs btn-lima" title="Más opciones"><i class="fa-solid fa-circle-plus text-[17px] leading-none"></i></button>
                     <button class="btn-xs btn-turquoise editarProductos" title="Actualizar Producto"><i class="fa-solid fa-pen-to-square text-[17px] leading-none"></i></button>
-                    <button class="btn-xs <?php echo $value->estado?'btn-light':'btn-orange';?> bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
+                    <button class="btn-xs <?php echo $value->habilitarventa?'btn-light':'btn-orange';?> bloquearProductos" title="Bloquear Producto"><span class="material-symbols-outlined text-[18px] leading-none">hide_source</span></button>
                     <button class="btn-xs btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[17px] leading-none"></i></button>
               </div></td>
           </tr>

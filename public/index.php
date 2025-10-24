@@ -204,6 +204,7 @@ $router->post('/admin/api/datoscajaseleccionada', [cajacontrolador::class, 'dato
 $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospagoXfactura']); //obtener los medios de pago segun factura elegido en caja.ts
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eliminarPedidoGuardado']);  //api llamada desde pedidosguardados.ts
+$router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -246,7 +247,8 @@ $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifactu
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts
-$router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportecompras.ts
+$router->post('/admin/api/eliminarcompra', [reportescontrolador::class, 'eliminarcompra']);  //fetch llamado desde reportecompras.ts
 $router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde gastosingresos.ts
 $router->post('/admin/api/eliminargasto', [reportescontrolador::class, 'eliminargasto']);  //fetch llamado desde gastosingresos.ts
 $router->post('/admin/api/eliminaringreso', [reportescontrolador::class, 'eliminaringresocaja']);  //fetch llamado desde gastosingresos.ts
@@ -255,6 +257,7 @@ $router->post('/admin/api/eliminaringreso', [reportescontrolador::class, 'elimin
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaPorcentajeImpuesto', [parametroscontrolador::class, 'parametrosSistemaPorcentajeImpuesto']); //fetch llamado en configparametros.js
+$router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
 
 
 //////***************************/***NO**************************//////

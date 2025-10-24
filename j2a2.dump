@@ -1235,7 +1235,7 @@ CREATE TABLE `gastos` (
   KEY `id_sucursalfk_idx` (`id_sucursalfk`),
   KEY `fecha_idx` (`fecha`) /*!80000 INVISIBLE */,
   CONSTRAINT `id_banco` FOREIGN KEY (`id_banco`) REFERENCES `bancos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `id_compra` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `id_compra` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_sucursalfk` FOREIGN KEY (`id_sucursalfk`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idcategoriagastos` FOREIGN KEY (`idcategoriagastos`) REFERENCES `categoriagastos` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idg_caja` FOREIGN KEY (`idg_caja`) REFERENCES `caja` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1738,7 +1738,7 @@ CREATE TABLE `permisos` (
 
 LOCK TABLES `permisos` WRITE;
 /*!40000 ALTER TABLE `permisos` DISABLE KEYS */;
-INSERT INTO `permisos` VALUES (1,'Habilitar modulo de venta','Modulo de venta\r\n\r\nModulo venta',NULL,'2025-09-11 06:15:04'),(2,'Registrar nueva venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(3,'Anular una venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(4,'Aplicar descuentos','Modulo de venta',NULL,'2025-09-11 06:15:04'),(5,'Habilitar modulo de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(6,'Consultar stock','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(7,'Hacer ajustes de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(8,'Actualizar precios o datos','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(9,'Habilitar modulo de facturacion','Modulo de Facturación','','2025-09-12 03:32:43'),(10,'Emitir facturas electrónicas','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(11,'Anular facturas y notas creditos','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(12,'Habilitar modulo de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(13,'Abrir caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(14,'Cerrar caja y generar arqueo','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(15,'Ver reportes de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(16,'Habilitar modulo de reportes','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(17,'Habilitar modulo de configuracion','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(20,'Mostrar dashboard','Modulo dashboard',NULL,'2025-10-20 06:53:33');
+INSERT INTO `permisos` VALUES (1,'Habilitar modulo de venta','Modulo de venta\r\n\r\nModulo venta',NULL,'2025-09-11 06:15:04'),(2,'Registrar nueva venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(3,'Anular una venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(4,'Aplicar descuentos','Modulo de venta',NULL,'2025-09-11 06:15:04'),(5,'Habilitar modulo de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(6,'Consultar stock','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(7,'Hacer ajustes de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(8,'Actualizar precios o datos','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(9,'Habilitar modulo de facturacion','Modulo de Facturación','','2025-09-12 03:32:43'),(10,'Emitir facturas electrónicas','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(11,'Anular facturas y notas creditos','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(12,'Habilitar modulo de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(13,'Abrir caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(14,'Cerrar caja y generar arqueo','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(15,'Ver reportes de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(16,'Habilitar modulo de reportes','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(17,'Habilitar modulo de configuracion','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(18,'Mostrar dashboard','Modulo dashboard',NULL,'2025-10-20 06:53:33');
 /*!40000 ALTER TABLE `permisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1753,7 +1753,7 @@ CREATE TABLE `precios_personalizados` (
   `id` int NOT NULL AUTO_INCREMENT,
   `idproductoid` int NOT NULL,
   `precio` decimal(12,2) NOT NULL,
-  `estado` tinyint(1) DEFAULT NULL,
+  `estado` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idproductoid_idx` (`idproductoid`),
@@ -2427,4 +2427,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-20  1:55:31
+-- Dump completed on 2025-10-24  0:17:51

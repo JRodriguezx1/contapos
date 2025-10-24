@@ -171,6 +171,7 @@
                             searchable: false, 
                             render: (data: any, type: any, row: any) => { 
                                     return `<button class="btn-ver" data-id="${row.Id}">✳️​</button>
+                                            <button class="btn-imgcomprobante" data-id="${row.Id}">🧾​</button>
                                             <button class="btn-eliminar" data-id="${row.Id}">⛔​</button>`}
                         }
                     ],

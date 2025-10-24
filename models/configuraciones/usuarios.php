@@ -168,9 +168,15 @@ class usuarios extends \Model\ActiveRecord {
     }
 
     public function validarempleado() {
-        if(!$this->nombre || strlen($this->nombre)<3) {
+        if(!$this->nombre || strlen($this->nombre)<3 || strlen($this->nombre)>36) {
             self::$alertas['error'][] = 'Nombre no valido'; 
         }  //como el arreglo alertas es heredada de la clase padre activerecord self hace referencia a este arreglo de la clase padre
+        if(strlen($this->apellido)>36) {
+            self::$alertas['error'][] = 'Apellido no valido'; 
+        }
+        if(strlen($this->movil)>13) {
+            self::$alertas['error'][] = 'Ha supererado el limite de caracteres para el telefono'; 
+        }
         if(!$this->nickname || strlen($this->nickname)<3) {
             self::$alertas['error'][] = 'usuario no valido';  
         }
@@ -185,6 +191,22 @@ class usuarios extends \Model\ActiveRecord {
         }
         if($this->password !== $this->password2) {
             self::$alertas['error'][] = 'Los password son diferentes';
+        }
+        return self::$alertas;
+    }
+
+    public function validarempleadoexistente() {
+        if(!$this->nombre || strlen($this->nombre)<3 || strlen($this->nombre)>36) {
+            self::$alertas['error'][] = 'Nombre no valido'; 
+        }  //como el arreglo alertas es heredada de la clase padre activerecord self hace referencia a este arreglo de la clase padre
+        if(strlen($this->apellido)>36) {
+            self::$alertas['error'][] = 'Apellido no valido'; 
+        }
+        if(strlen($this->movil)>13) {
+            self::$alertas['error'][] = 'Ha supererado el limite de caracteres para el telefono'; 
+        }
+        if(!$this->nickname || strlen($this->nickname)<3) {
+            self::$alertas['error'][] = 'usuario no valido';  
         }
         return self::$alertas;
     }

@@ -3,7 +3,7 @@
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
       <hr class="my-4 border-t border-neutral-300">
       <form id="formfacturar" class="formulario" method="POST">
-          <div id="divmsjalerta2"></div>
+          <div id="divmsjalertaprocesarpago"></div>
           <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">

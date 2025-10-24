@@ -88,6 +88,12 @@
     crearempleado.addEventListener('click', (e)=>{
       control = 0;
       limpiarformdialog();
+      
+      (document.querySelector('#campopass1') as HTMLElement).style.display = "";
+      (document.querySelector('#campopass2') as HTMLElement).style.display = "";
+      (document.querySelector('#passwordempleado') as HTMLInputElement).setAttribute('required', 'true');
+      (document.querySelector('#passwordempleado2') as HTMLInputElement).setAttribute('required', 'true');
+
       document.querySelector('#modalEmpleado')!.textContent = "Crear empleado";
       (document.querySelector('#btnEditarCrearEmpleado') as HTMLInputElement).value = "Crear";
       dialogoEmpleado.showModal();
@@ -121,6 +127,12 @@
       let idempleado = (e.target as HTMLElement).parentElement?.id;
       if((e.target as HTMLElement)?.tagName === 'I')idempleado = (e.target as HTMLElement).parentElement?.parentElement?.id;
       control = 1;
+
+      (document.querySelector('#campopass1') as HTMLElement).style.display = "none";
+      (document.querySelector('#campopass2') as HTMLElement).style.display = "none";
+      (document.querySelector('#passwordempleado') as HTMLInputElement).removeAttribute('required');
+      (document.querySelector('#passwordempleado2') as HTMLInputElement).removeAttribute('required');
+
       document.querySelector('#modalEmpleado')!.textContent = "Actualizar Empleado";
       (document.querySelector('#btnEditarCrearEmpleado') as HTMLInputElement)!.value = "Actualizar";
       unempleado = empleadosapi.find(x => x.id==idempleado); //me trae al empleado seleccionado

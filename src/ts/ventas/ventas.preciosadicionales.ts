@@ -3,7 +3,7 @@
 
   const POS = (window as any).POS;
 
-  /*const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as any;
+  const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as any;
   const aplicarprecioadicional = document.querySelector('#aplicarprecioadicional') as HTMLButtonElement;
 
   function cargarPreciosAdicionales(id:string) {
@@ -33,7 +33,7 @@
   });
 
 
-  const gestionarAdquiriente = {
+  const gestionarPreciosAdicionales = {
     miDialogoPreciosAdicionales,
     abrirDialogo(elementProduct: HTMLElement) {
       miDialogoPreciosAdicionales.showModal();
@@ -42,6 +42,6 @@
     },
   };
 
-  POS.gestionarAdquiriente = gestionarAdquiriente;*/
+  POS.gestionarPreciosAdicionales = gestionarPreciosAdicionales;
 
 })();

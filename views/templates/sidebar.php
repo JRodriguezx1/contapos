@@ -53,10 +53,12 @@
     </div>
     
     <nav class="sidebar-nav"> <!-- el tamaño de las letras de los links <a> estan definidos en 1.6rem en gloables.scss -->
-        <a class="<?php echo ($titulo === 'Inicio')?'activo':''; ?>" href="/admin/dashboard"><span class="material-symbols-outlined">home</span> <label class="btnav"> Inicio</label> </a>
+        <?php if(tienePermiso('Mostrar dashboard') || userPerfil()<=3): ?>
+            <a class="<?php echo ($titulo === 'Inicio')?'activo':''; ?>" href="/admin/dashboard"><span class="material-symbols-outlined">home</span> <label class="btnav"> Inicio</label> </a>
+        <?php endif; ?>
         <?php if(tienePermiso('Habilitar modulo de contabilidad')): ?>
             <a class="<?php echo ($titulo === 'Contabilidad')?'activo':''; ?>" href="/admin/contabilidad"><span class="material-symbols-outlined"> article</span> <label class="btnav"> Informes Contables</label></a>
-         <?php endif; ?>
+        <?php endif; ?>
         <?php if(tienePermiso('Habilitar modulo de inventario') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Almacen')?'activo':''; ?>" href="/admin/almacen"><span class="material-symbols-outlined">warehouse</span> <label class="btnav"> Almacen</label></a>
         <?php endif; ?>

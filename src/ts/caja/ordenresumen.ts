@@ -14,13 +14,36 @@
       const printcotizacion = document.querySelector('#printcotizacion');
       const numOrden = document.querySelector('#numOrden');
       const referenciaFactura = document.querySelector('#referenciaFactura');
+      const enviarEmail = document.querySelector('#enviarEmail') as HTMLButtonElement;
+      const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
+      const inputEliminarClave = document.querySelector('#inputEliminarClave') as HTMLInputElement;
 
       const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
       const mapMediospago = new Map();
+
+      interface clavesApi {
+      clave:string,
+      valor_default:string|null,
+      valor_final:string|null,
+      valor_local:string|null
+    };
+
+    let claveEliminarOrden:clavesApi[];
+
+    (async ()=>{
+      try {
+          const url = "/admin/api/getPasswords"; //llamado a la API REST
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json(); 
+          claveEliminarOrden = resultado;
+      } catch (error) {
+          console.log(error);
+      }
+    })();
+
   
       valorTotal.subtotal = Number(document.querySelector('#subTotal')?.textContent);
       valorTotal.total = Number(document.querySelector('#total')?.textContent?.replace(/[^\d]/g, ''));
-      
       
       selectFacturadorSegunCaja(btnCaja);
     
@@ -74,6 +97,39 @@
       btneliminarorden?.addEventListener('click', ()=>{
           miDialogoEliminarOrden.showModal();
           document.addEventListener("click", cerrarDialogoExterno);
+      });
+
+
+      enviarEmail.addEventListener('click', ()=>{
+        miDialogoEnviarEmailCliente.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+      });
+
+
+      document.querySelector('#formEnviarEmailCliente')?.addEventListener('submit', (e:Event)=>{
+        e.preventDefault();
+        const idorden = (document.querySelector('#idorden') as HTMLElement).dataset.idorden;
+        if(idorden!=null && Number(idorden)>0){
+          const datos = new FormData();
+          datos.append('id', idorden);
+          datos.append('email', (document.querySelector('#inputEmail') as HTMLInputElement).value);
+          miDialogoEnviarEmailCliente.close();
+          document.removeEventListener("click", cerrarDialogoExterno);
+          (async ()=>{
+            try {
+              const url = "/admin/api/sendOrdenEmailToCustemer";  //va al controlador cajacontrolador para enviar detalle de orden por email.
+              const respuesta = await fetch(url, {method: 'POST', body: datos});
+              const resultado = await respuesta.json();
+              if(resultado.exito!=undefined){
+                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+              }else{
+                msjalertToast('error', '¡Error!', resultado.error[0]);
+              }
+            } catch (error) {
+                console.log(error);
+            }
+          })();
+        }
       });
 
       ///////////////////// Logica botones devolver inventario ////////////////////////
@@ -236,19 +292,28 @@
   
       function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (event.target === miDialogoFacturar || event.target === miDialogoEliminarOrden || (event.target as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLInputElement).closest('.sieliminar')) {
+        if (event.target === miDialogoFacturar || event.target === miDialogoEliminarOrden || event.target === miDialogoEnviarEmailCliente || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar')) {
             miDialogoFacturar.close();
             miDialogoEliminarOrden.close();
-            if((f as HTMLInputElement).closest('.sieliminar'))eliminarorden();
+            miDialogoEnviarEmailCliente.close();
             document.removeEventListener("click", cerrarDialogoExterno);
         }
       }
+
+      //evento al boton confirmar para eliminar orden
+      document.querySelector('.sieliminar')?.addEventListener('click', (event:Event)=>{
+        const f = event.target;
+        if((f as HTMLInputElement).closest('.sieliminar'))eliminarorden();
+      });
 
 
       function eliminarorden():void{
         ///////*** crear arreglo de obj de los productos y sus cantidades ***///////
         type producto = {id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string };
         var products:producto[] = [];
+
+        const v:number = validarPasswordDcto();
+        if(!v)return;
 
         inputsInv.forEach(inputinv =>{
           const v = inputinv as HTMLInputElement;
@@ -267,6 +332,8 @@
               const resultado = await respuesta.json();
               if(resultado.exito !== undefined){
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                miDialogoEliminarOrden.close();
+                document.removeEventListener("click", cerrarDialogoExterno);
                 btneliminarorden.style.display = "none";
                 (document.querySelector('#estadoOrden') as HTMLElement).textContent = "Eliminada";
               }else{
@@ -277,6 +344,16 @@
           }
         })();
       }
+
+
+      function validarPasswordDcto():number{
+      const clave = claveEliminarOrden.find(c => c.clave=='clave_para_eliminar_factura');
+      if(clave?.valor_final!==null && inputEliminarClave.value !== clave?.valor_final){
+        msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalerta1') as HTMLElement));
+        return 0;
+      }
+      return 1;
+    }
 
     }
   

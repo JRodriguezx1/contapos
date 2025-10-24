@@ -111,7 +111,7 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
+                    <!--<div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                         <label for="formapago" class="block text-2xl font-medium text-gray-600">Forma de pago</label>
                         <div class="mt-2 grid grid-cols-1">
                             <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
@@ -127,12 +127,12 @@
                                 <option value="9">Credito 15 mes</option>
                                 <option value="10">Credito 18 mes</option>
                                 <option value="11">Credito 24 mes</option>
-                            </select>
+                            </select>-->
                             <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
                                 <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                             </svg> -->
-                        </div>
-                    </div>
+                        <!--</div>
+                    </div>-->
 
                     <div class="sm:col-span-6 md:col-span-5 tlg:col-span-6">
                         <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
