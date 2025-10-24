@@ -7,6 +7,7 @@
     const miDialogoDescuento = document.querySelector('#miDialogoDescuento') as any;
     const tipoDescts = document.querySelectorAll<HTMLInputElement>('input[name="tipodescuento"]'); //radio buttom
     const inputDescuento = document.querySelector('#inputDescuento') as HTMLInputElement;
+    const inputDescuentoClave = document.querySelector('#inputDescuentoClave') as HTMLInputElement;
     let valorMax = 0;
     
     btndescuento?.addEventListener('click', ()=>{
@@ -51,6 +52,9 @@
         POS.valorTotal.descuento = (POS.valorTotal.subtotal*valorInput)/100;  //valor descontado
         POS.valorTotal.dctox100 = valorInput;  //valor en porcentaje
       }
+      //validar en backend password
+      validarPasswordDcto();
+      
       POS.valorTotal.total = POS.valorTotal.subtotal - POS.valorTotal.descuento + POS.valorTotal.valortarifa;
       document.querySelector('#total')!.textContent = '$ '+POS.valorTotal.total.toLocaleString();
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+POS.valorTotal.descuento.toLocaleString();
@@ -58,6 +62,9 @@
       document.removeEventListener("click", POS.cerrarDialogoExterno);
     });
     
+    function validarPasswordDcto(){
+      
+    }
     
     const gestionarDescuentos = {
       miDialogoDescuento

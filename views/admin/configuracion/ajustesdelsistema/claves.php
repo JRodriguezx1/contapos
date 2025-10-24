@@ -8,7 +8,7 @@
                 Clave para eliminar factura
             </label>
             <input 
-                type="text" 
+                type="password" 
                 id="clave_para_eliminar_factura" 
                 name="clave_para_eliminar_factura" 
                 placeholder="Ingrese la clave eliminar factura"
@@ -20,7 +20,7 @@
                 Clave para eliminar un gasto/base
             </label>
             <input 
-                type="text" 
+                type="password" 
                 id="clave_para_eliminar_un_gasto/base" 
                 name="clave_para_eliminar_un_gasto/base" 
                 placeholder="Ingrese la clave eliminar gasto/base"
@@ -32,7 +32,7 @@
                 Clave para agregar descuento
             </label>
             <input 
-                type="text" 
+                type="password" 
                 id="clave_para_agregar_descuento" 
                 name="clave_para_agregar_descuento" 
                 placeholder="Ingrese la clave para descuento"
@@ -44,7 +44,7 @@
                 Clave para abrir cajón monedero
             </label>
             <input 
-                type="text" 
+                type="password" 
                 id="clave_para_abrir_cajón_monedero" 
                 name="clave_para_abrir_cajón_monedero" 
                 placeholder="Ingrese la clave abrir cajón"
