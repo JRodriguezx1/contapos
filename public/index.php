@@ -257,6 +257,7 @@ $router->post('/admin/api/eliminaringreso', [reportescontrolador::class, 'elimin
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaPorcentajeImpuesto', [parametroscontrolador::class, 'parametrosSistemaPorcentajeImpuesto']); //fetch llamado en configparametros.js
+$router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
 
 
 //////***************************/***NO**************************//////

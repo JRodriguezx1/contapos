@@ -30,4 +30,12 @@ class config_local extends \Model\ActiveRecord{
         $array = self::sqlLibreIndexKey($sql, 'clave');
         return $array;
     }
+
+    public static function getPasseords(): array{
+        $idsucursal = id_sucursal();
+        $sql = "SELECT c.clave, COALESCE(cs.valor, c.valor_default) AS valor_final, c.valor_default, cs.valor AS valor_local
+                                FROM config_global c LEFT JOIN config_local cs ON c.clave = cs.clave AND cs.fk_sucursalid = $idsucursal WHERE c.modulo = 'Claves';";
+        $array = self::sqlLibreIndexKey($sql, 'clave');
+        return $array;
+    }
 }
