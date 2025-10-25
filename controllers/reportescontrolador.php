@@ -446,7 +446,7 @@ class reportescontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //calculo de los gastos
       $sql = "SELECT g.id AS Id, g.fecha, CONCAT(u.nombre,' ',u.apellido) AS nombre, g.id_banco, b.nombre AS nombrebanco, g.idg_caja, c.nombre AS nombrecaja,
-	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, cg.id , cg.nombre AS categoriagasto
+	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, g.imgcomprobante, cg.id , cg.nombre AS categoriagasto
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
               JOIN usuarios u ON g.idg_usuario = u.id
               JOIN cierrescajas cj ON g.idg_cierrecaja = cj.id

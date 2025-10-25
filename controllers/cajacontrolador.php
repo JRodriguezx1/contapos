@@ -201,9 +201,9 @@ class cajacontrolador{
               $nombreComprobante = $subdominio.'/comprobantes/'.uniqid().$_FILES['imgcomprobante']['name'];
               $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$nombreComprobante;
               move_uploaded_file($url_temp, $rutaComprobante);
+              $ingresoGasto->imgcomprobante = $nombreComprobante;
             }
 
-            $ingresoGasto->imgcomprobante = $nombreComprobante;
             $r = $ingresoGasto->crear_guardar();
             if($r[0]){
               $r1 = $ultimocierre->actualizar();

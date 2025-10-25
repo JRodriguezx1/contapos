@@ -18,6 +18,7 @@
         categoriagasto:string,
         estado:string,
         valor:string,
+        imgcomprobante:string,
         fecha:string
     }
 
@@ -214,6 +215,7 @@
       const target = e.target as HTMLButtonElement;
       let idgasto = target?.dataset.id;
       if((e.target as HTMLButtonElement)?.classList.contains("btn-ver"))verGasto(idgasto);
+      if(target?.classList.contains("btn-imgcomprobante"))imgcomprobante(idgasto);
       if(target?.classList.contains("btn-eliminar"))eliminarGasto(idgasto, target);
     });
 
@@ -221,6 +223,11 @@
     function verGasto(idgasto:string|undefined){
         const gasto = datosGastos.find(x=>x.Id==idgasto);
         if(gasto?.id_compra != null)window.location.href = '/admin/reportes/compra?id='+gasto.id_compra;
+    }
+
+    function imgcomprobante(idgasto:string|undefined){
+        const gasto = datosGastos.find(x=>x.Id==idgasto);
+        if(gasto?.imgcomprobante)window.open("/build/img/"+gasto?.imgcomprobante, "_blank");
     }
 
     function eliminarGasto(idgasto:string|undefined, target:HTMLButtonElement){
