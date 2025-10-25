@@ -2,7 +2,7 @@
 <section class="box detallecompra p-10 !pb-20 rounded-lg mb-4">
 
   <!-- Botón atrás -->
-  <a href="/admin/almacen/compras"
+  <a href="/admin/reportes/compras"
     class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6 transition">
     <svg class="w-6 h-6 rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -75,34 +75,31 @@
   </div>
 
   <!-- Origen del dinero -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_2fr] gap-4 text-gray-700 mb-6">
+    <!-- Caja principal -->
     <div class="flex flex-col bg-green-50 rounded-xl p-3 space-y-4">
       <span class="text-base text-gray-500 font-semibold">Origen del dinero</span>
       <span class="text-green-700 text-xl font-extrabold">Caja Principal</span>
     </div>
 
+    <!-- Tipo de origen -->
     <div class="flex flex-col bg-green-50 rounded-xl p-3 space-y-4">
       <span class="text-base text-gray-500 font-semibold">Tipo de origen</span>
       <span class="text-green-700 text-xl font-extrabold">Efectivo</span>
     </div>
-  </div>
 
-  <!-- Observación -->
-  <div class="bg-yellow-50 rounded-xl p-4 border border-yellow-100">
-    <div class="flex items-start gap-2">
-      
-      <div>
-        <p class="font-semibold text-gray-700 mb-1"><i class="fa-solid fa-note-sticky text-yellow-500 text-xl mt-1"></i> Observación</p>
-        <p class="text-gray-600 leading-relaxed">
-          Compra realizada para reabastecer inventario de productos eléctricos.
-        </p>
+    <!-- Observación -->
+    <div class="bg-green-50 rounded-xl p-4">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-note-sticky text-green-500 text-xl"></i>
+        <p class="font-semibold text-gray-700">Observación</p>
       </div>
+      <p class="text-gray-600 leading-relaxed mt-2">
+        Compra realizada para reabastecer inventario de productos eléctricos.
+      </p>
     </div>
   </div>
-
 </div>
-
-
 
   <!-- Tabla de productos -->
   <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
