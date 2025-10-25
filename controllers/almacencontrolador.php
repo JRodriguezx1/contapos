@@ -160,7 +160,17 @@ class almacencontrolador{
           move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
         }
         $producto->categoria = $categoria->nombre;//categorias::uncampo('id', $producto->idcategoria, 'nombre');
-        $r = $producto->crear_guardar();
+        try {
+          $r = $producto->crear_guardar();
+        } catch (\Throwable $th) {
+          $r[0] = null;
+          if(str_contains($th->getMessage(), 'Duplicate entry')){
+            $alertas['error'][] = "Ya exite un producto con el mismo nombre";
+          }else{
+            $alertas['error'][] = "Erorr al crear producto, verifica los campos y vuelva a intentar";
+          }
+        }
+        
         $categoria->totalproductos = $producto->numreg_where('idcategoria', $categoria->id);//productos::numreg_where('idcategoria', $categoria->id);
         
         if($r[0]){

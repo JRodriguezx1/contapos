@@ -83,4 +83,15 @@ class sucursales extends ActiveRecord{
         return self::$alertas;
     }
 
+
+    public function validarimgnegocio($FILE) {
+      if($FILE['logo']['name'] && $FILE['logo']['size']>31000000) {
+          self::$alertas['error'][] = 'La foto no puede pasar los 500KB';
+      }
+      if($FILE['logo']['name'] && $FILE['logo']['type']!="image/jpeg" && $FILE['logo']['type']!="image/png") {
+          self::$alertas['error'][] = 'Seleccione una imagen en formato jpeg o png';
+      }
+      return self::$alertas;
+    }
+
 }

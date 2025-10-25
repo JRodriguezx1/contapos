@@ -482,6 +482,9 @@ class reportescontrolador{
       if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
         //eliminar gasto 
         $re = $gasto->eliminar_registro();
+        //eliminar img comprobante del gasto
+        $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$gasto->imgcomprobante);
+        if($existe_archivo && !empty($gasto->imgcomprobante))unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$gasto->imgcomprobante);
         if($re){
           if($gasto->id_banco!=null){ //ajustar gasto banco del cierre de caja
             $cierrecaja->gastosbanco -= $gasto->valor;

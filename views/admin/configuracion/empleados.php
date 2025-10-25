@@ -46,7 +46,7 @@
                         <div class="formulario__imginputfile"><img id="imginputfile" src="" alt=""></div>
                         <p class="text-greymouse">Subir imagen</p>
                     </div>
-                    <input id="upImage" class="formulario__inputfile" type="file" name="img" hidden>
+                    <input id="upImage" class="formulario__inputfile" type="file" accept="image/*" name="img" hidden>
                     <button id="customUpImage" class="text-white bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium rounded-lg text-sm text-center !w-[23%] !mx-auto mb-2 !px-8 !py-4" type="button">Cargar Imagen</button>
                 </div>
             <div class="grid grid-cols-1 gap-x-6 sm:grid-cols-6">

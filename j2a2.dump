@@ -1224,6 +1224,7 @@ CREATE TABLE `gastos` (
   `operacion` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `valor` decimal(12,2) NOT NULL,
   `descripcion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `imgcomprobante` varchar(155) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idg_usuario_idx` (`idg_usuario`),
@@ -2427,4 +2428,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-24  0:17:51
+-- Dump completed on 2025-10-24 23:04:15

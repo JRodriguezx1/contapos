@@ -135,6 +135,7 @@ class cajacontrolador{
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $mediospago = mediospago::all();
+    date_default_timezone_set('America/Bogota');
     
     $valor = str_replace('.', '', $_POST['valor']); // quita los puntos
      $_POST['valor'] = (int)$valor;
@@ -175,16 +176,6 @@ class cajacontrolador{
           $dirComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/comprobantes";
           if (!is_dir($dirComprobante))mkdir($dirComprobante, 0755, true);
 
-          if($_FILES['foto']['name']){
-            $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/".$_FILES['foto']['name'];
-            $existe_archivo = file_exists($rutaComprobante);
-            if($existe_archivo)unlink($rutaComprobante);
-            $url_temp = $_FILES["logo"]["tmp_name"];
-            $nombreComprobante = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
-            $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$nombreComprobante;
-            if(move_uploaded_file($url_temp, $rutaComprobante))desactivarInterlacedPNG($rutaComprobante);
-          }
-
           $ingresoGasto = new gastos($_POST);
           $ingresoGasto->idg_usuario = $_SESSION['id'];
           $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
@@ -199,7 +190,20 @@ class cajacontrolador{
           }
           ///// validar gastos en el modelo
           $alertas = $ingresoGasto->validar();
+          $alertas = $ingresoGasto->validarimgcomprobante($_FILES);
           if(empty($alertas)){
+
+            if($_FILES['imgcomprobante']['name']){
+              $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/comprobantes/".$_FILES['imgcomprobante']['name'];
+              $existe_archivo = file_exists($rutaComprobante);
+              if($existe_archivo)unlink($rutaComprobante);
+              $url_temp = $_FILES["imgcomprobante"]["tmp_name"];
+              $nombreComprobante = $subdominio.'/comprobantes/'.uniqid().$_FILES['imgcomprobante']['name'];
+              $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$nombreComprobante;
+              move_uploaded_file($url_temp, $rutaComprobante);
+            }
+
+            $ingresoGasto->imgcomprobante = $nombreComprobante;
             $r = $ingresoGasto->crear_guardar();
             if($r[0]){
               $r1 = $ultimocierre->actualizar();

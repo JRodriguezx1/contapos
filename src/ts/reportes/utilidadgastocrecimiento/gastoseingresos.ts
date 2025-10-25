@@ -225,7 +225,7 @@
 
     function eliminarGasto(idgasto:string|undefined, target:HTMLButtonElement){
         const gasto = datosGastos.find(x=>x.Id==idgasto);
-        const fila = (tablaIngresos as any).row(target.closest('tr'));
+        const fila = (tablaGastos as any).row(target.closest('tr'));
         if(gasto?.estado === '0'){
             Swal.fire({
                 customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
