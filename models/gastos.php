@@ -4,7 +4,7 @@ namespace Model;
 
 class gastos extends ActiveRecord {
     protected static $tabla = 'gastos';
-    protected static $columnasDB = ['id', 'id_sucursalfk', 'idg_usuario', 'id_compra', 'id_banco', 'idg_caja', 'idg_cierrecaja', 'idcategoriagastos', 'tipo_origen', 'operacion', 'valor', 'descripcion', 'fecha'];
+    protected static $columnasDB = ['id', 'id_sucursalfk', 'idg_usuario', 'id_compra', 'id_banco', 'idg_caja', 'idg_cierrecaja', 'idcategoriagastos', 'tipo_origen', 'operacion', 'valor', 'descripcion', 'imgcomprobante', 'fecha'];
     
     public function __construct($args = [])
     {
@@ -20,6 +20,7 @@ class gastos extends ActiveRecord {
         $this->operacion = $args['operacion'] ?? 'gasto';
         $this->valor = $args['valor'] ?? 0;
         $this->descripcion = $args['descripcion'] ?? '';
+        $this->imgcomprobante = $args['imgcomprobante']??'';
         $this->fecha = $args['fecha'] ?? date('Y-m-d H:i:s');
     }
 
@@ -33,5 +34,15 @@ class gastos extends ActiveRecord {
         if(!$this->valor)self::$alertas['error'][] = "Valor gasto no ingresado";
         if(strlen($this->descripcion)>244)self::$alertas['error'][] = "Has excecido el limite de caracteres de la descripcion";
         return self::$alertas;
+    }
+
+    public function validarimgcomprobante($FILE) {
+      if($FILE['imgcomprobante']['name'] && $FILE['imgcomprobante']['size']>31000000) {
+          self::$alertas['error'][] = 'La foto no puede pasar los 500KB';
+      }
+      if($FILE['imgcomprobante']['name'] && $FILE['imgcomprobante']['type']!="image/jpeg" && $FILE['imgcomprobante']['type']!="image/png") {
+          self::$alertas['error'][] = 'Seleccione una imagen en formato jpeg o png';
+      }
+      return self::$alertas;
     }
 }

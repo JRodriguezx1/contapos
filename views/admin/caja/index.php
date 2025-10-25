@@ -171,7 +171,7 @@
             <!-- Soporte físico (solo para gasto) -->
             <div id="soporteGasto" class="hidden">
                 <label class="formulario__label text-lg font-medium text-gray-700" for="soporte">Soporte físico (imagen del gasto)</label>
-                <input id="soporte" type="file" name="soporte" accept="image/*"
+                <input id="soporte" type="file" name="imgcomprobante" accept="image/*"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full mt-2 p-3 text-lg focus:outline-none focus:ring-1">
                 <p class="text-sm text-gray-500 mt-1">Formatos permitidos: JPG, PNG, JPEG.</p>
             </div>

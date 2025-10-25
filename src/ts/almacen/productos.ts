@@ -271,7 +271,7 @@
                               <button class="btn-xs btn-red eliminarProductos" title="Eliminar Producto"><i class="fa-solid fa-trash-can text-[17px] leading-none"></i></button>
                             </div>`;
                             
-                (tablaProductos as any).cell((tablaProductos as any).row(indiceFila+=info.start), 7).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
+                (tablaProductos as any).cell((tablaProductos as any).row(indiceFila), 7).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
                 (tablaProductos as any).page(info.page).draw('page'); //me mantiene la pagina actual
 
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);

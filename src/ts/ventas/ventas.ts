@@ -5,7 +5,6 @@
      
     const selectCliente = POS.gestionClientes.selectCliente;
     const dirEntrega = POS.gestionClientes.dirEntrega;
-    const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const contentproducts = document.querySelector('#productos');
     const btnEntrega = document.querySelector('#btnEntrega');
@@ -19,7 +18,7 @@
     const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
     const miDialogoPreciosAdicionales = POS.gestionarPreciosAdicionales.miDialogoPreciosAdicionales;
-    const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
+    const miDialogoFacturarA = POS.gestionarAdquiriente.miDialogoFacturarA;
     const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
@@ -104,12 +103,6 @@
         nombretarifa = objtarifa?.nombre;
       }
     }
-
-    ///////////////////// evento al btn facturar A /////////////////////
-    facturarA.addEventListener('click', (e:Event)=>{
-      miDialogoFacturarA.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
-    });
 
 
     //////////// evento a toda el area de los productos a seleccionar //////////////
@@ -304,7 +297,7 @@
         actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        carrito = carrito.filter(x=>x.idproducto != idProduct && x.valorunidad != precio);
+        carrito = carrito.filter(x=>x.idproducto != idProduct || x.valorunidad != precio);
         valorCarritoTotal();
         tablaventa?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
       }

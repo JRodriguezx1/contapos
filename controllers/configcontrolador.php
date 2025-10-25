@@ -63,6 +63,8 @@ class configcontrolador{
         $dirlogo = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio;
         if (!is_dir($dirlogo))mkdir($dirlogo, 0755, true);
 
+        $alertas = $sucursal->validarimgnegocio($_FILES);
+
         if($sucursal){ //actualizar
             if($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $sucursal->compara_objetobd_post($_POST);

@@ -446,7 +446,7 @@ class reportescontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //calculo de los gastos
       $sql = "SELECT g.id AS Id, g.fecha, CONCAT(u.nombre,' ',u.apellido) AS nombre, g.id_banco, b.nombre AS nombrebanco, g.idg_caja, c.nombre AS nombrecaja,
-	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, cg.id , cg.nombre AS categoriagasto
+	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, g.imgcomprobante, cg.id , cg.nombre AS categoriagasto
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
               JOIN usuarios u ON g.idg_usuario = u.id
               JOIN cierrescajas cj ON g.idg_cierrecaja = cj.id
@@ -482,6 +482,9 @@ class reportescontrolador{
       if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
         //eliminar gasto 
         $re = $gasto->eliminar_registro();
+        //eliminar img comprobante del gasto
+        $existe_archivo = file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/".$gasto->imgcomprobante);
+        if($existe_archivo && !empty($gasto->imgcomprobante))unlink($_SERVER['DOCUMENT_ROOT']."/build/img/".$gasto->imgcomprobante);
         if($re){
           if($gasto->id_banco!=null){ //ajustar gasto banco del cierre de caja
             $cierrecaja->gastosbanco -= $gasto->valor;
