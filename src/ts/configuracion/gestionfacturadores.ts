@@ -33,7 +33,6 @@
             const url = "/admin/api/allfacturadores"; //llamado a la API REST y se trae todos los productos
             const respuesta = await fetch(url); 
             facturadores = await respuesta.json(); 
-            console.log(facturadores);
         } catch (error) {
             console.log(error);
         }
@@ -137,7 +136,6 @@
                   crearConsecutivoGestionCaja(resultado.facturador.id, resultado.facturador.nombre);
                 }else{ //si es actualizar
                   /// actualizar el arregle de facturadores ///
-                  console.log(resultado);
                   facturadores.forEach(a=>{if(a.id == unfacturador?.id)a = Object.assign(a, resultado.facturador[0]);});
                   const datosActuales = (tablaFacturadores as any).row(indiceFila+=info.start).data();
                   /*xx*/datosActuales[1] = resultado.facturador[0].nombre;

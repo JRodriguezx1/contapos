@@ -6,6 +6,17 @@
 
     let chartVentasInstance: any | null = null;
 
+    (async ()=>{
+        try {
+          const url = "https://apidianj2.com/api/getconfigcompanies"; //llamado a la API REST Dianlaravel
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json();
+          console.log(resultado);
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+
     /*new Chart(ctx, {
       type: 'line',
       data: {

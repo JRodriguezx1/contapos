@@ -215,7 +215,6 @@
         }
         
         carrito = [...carrito, a];
-        console.log(carrito);
         valorCarritoTotal();
         printProduct(id, precio);
         POS.carrito = carrito;

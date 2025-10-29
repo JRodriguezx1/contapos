@@ -62,7 +62,7 @@ function desactivarInterlacedPNG(string $rutaimg):int{
     $ext = strtolower(pathinfo($rutaimg, PATHINFO_EXTENSION));
     // Si es PNG, limpiarla con GD
     if ($ext === 'png') {
-        $img = imagecreatefrompng($rutaimg);
+        $img = @imagecreatefrompng($rutaimg);
         if($img){
             // Desactivar interlazado
             imageinterlace($img, false);

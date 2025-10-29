@@ -11,6 +11,7 @@ use Model\configuraciones\mediospago;
 use Model\ActiveRecord;
 use Model\configuraciones\bancos;
 use Model\caja\cierrescajas;
+use Model\clientes\departments;
 use Model\parametrizacion\config_local;
 use Model\configuraciones\permisos;
 use Model\configuraciones\tarifas;
@@ -35,6 +36,7 @@ class configcontrolador{
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
     $tarifas = tarifas::all();
+    $dapartments = departments::all();
     $companias = [];
     $empleado = new \stdClass();
     $empleado->perfil = '';
@@ -47,7 +49,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -120,11 +122,12 @@ class configcontrolador{
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
         $tarifas = tarifas::all();
+        $dapartments = departments::all();
         $companias = [];
         $empleado = new \stdClass();
          $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
 
 
@@ -174,8 +177,9 @@ class configcontrolador{
         $bancos = bancos::all();
         $companias = [];
         $mediospago = mediospago::all();
+        $dapartments = departments::all();
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'user'=>$_SESSION]);
     }
 
   ///////////////////////////////////  Apis ////////////////////////////////////

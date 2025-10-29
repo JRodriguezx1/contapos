@@ -19,7 +19,6 @@
             const url = "/admin/api/allcajas"; //llamado a la API REST y se trae todos los productos
             const respuesta = await fetch(url); 
             cajas = await respuesta.json(); 
-            console.log(cajas);
         } catch (error) {
             console.log(error);
         }
