@@ -17,6 +17,7 @@ use Model\configuraciones\permisos;
 use Model\configuraciones\tarifas;
 use Model\configuraciones\tipofacturador;
 use Model\configuraciones\usuarios_permisos;
+use Model\felectronicas\diancompanias;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
  
@@ -37,7 +38,7 @@ class configcontrolador{
     $bancos = bancos::all();
     $tarifas = tarifas::all();
     $dapartments = departments::all();
-    $companias = [];
+    $companias = diancompanias::all();
     $empleado = new \stdClass();
     $empleado->perfil = '';
 
@@ -123,7 +124,7 @@ class configcontrolador{
         $bancos = bancos::all();
         $tarifas = tarifas::all();
         $dapartments = departments::all();
-        $companias = [];
+        $companias = diancompanias::all();
         $empleado = new \stdClass();
          $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
@@ -175,7 +176,7 @@ class configcontrolador{
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
-        $companias = [];
+        $companias = diancompanias::all();
         $mediospago = mediospago::all();
         $dapartments = departments::all();
         $conflocal = config_local::getParamGlobal();

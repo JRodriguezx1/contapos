@@ -11,7 +11,7 @@
     const miDialogosetpruebas = document.querySelector('#miDialogosetpruebas') as any;
     const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
     const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
-    let indiceFila=0, control=0, tablaCompañias:HTMLTableElement;
+    let indiceFila=0, control=0;
 
     interface configCompany {
       success:boolean,
@@ -145,7 +145,7 @@
           const base64String = await base64(archivoP12);
           datoscompañia.certificadop12base64 = base64String;
           console.log(datoscompañia);
-          crearCompany(datoscompañia);
+          crearCompanyAPI(datoscompañia);
         } catch (error) {
           alert('Error durante el procesamiento del certificado .p12');
           return;
@@ -154,12 +154,12 @@
     });
 
 
-    async function crearCompany(datoscompañia: Record<string, FormDataEntryValue>){
+    async function crearCompanyAPI(datoscompañia: Record<string, FormDataEntryValue>){
       const { identification_number, certificadop12base64, password } = datoscompañia;
         const dv = getDgv(Number(identification_number));
         try{
             const url = `https://apidianj2.com/api/ubl2.1/config/${identification_number}/${dv}`; //llamado a la API REST Dianlaravel
-            const respuesta = await fetch(url, {
+            const respuesta = await fetch(url,  {
                                                   method: 'POST',
                                                   headers: { "Accept": "application/json", "Content-Type": "application/json" },
                                                   body: JSON.stringify(datoscompañia)
@@ -168,13 +168,45 @@
             if(resultado.success){
               console.log(resultado);
               configCertificado(resultado.token, certificadop12base64+'', password+'');
+              crearCompanyJ2(datoscompañia, resultado.token);
             }
           } catch (error) {
               console.log(error);
           }
     }
 
-    async function configCertificado(token:string, certificado:string, password:string) {
+    async function crearCompanyJ2(datoscompañia: Record<string, FormDataEntryValue>, token:string){
+      datoscompañia.token = token;
+      try {
+            const url = `/admin/api/crearCompanyJ2`; //llamado a la API para crear la compañia en j2
+            const respuesta = await fetch(url,  { method: 'POST',
+                                                  headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                                  body: JSON.stringify(datoscompañia)
+                                                });
+            const resultado = await respuesta.json();
+            if(resultado.exito !== undefined){
+              const tablaCompañias = document.querySelector('#tablaCompañias tbody');
+              tablaCompañias?.insertAdjacentHTML('beforeend', `
+                <tr class="">
+                  <td class="">${resultado.id}</td>
+                  <td class="">${datoscompañia.business_name}</td> 
+                  <td class="">${datoscompañia.identification_number}</td>
+                  <td class="">${datoscompañia.idsoftware}</td>
+                  <td class=""><div class="acciones-btns" id="${resultado.id}">  <button><span class="material-symbols-outlined editarcompañia">edit_note</span></button> <button><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
+                </tr>`
+              );
+              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            }else{
+              msjalertToast('error', '¡Error!', resultado.error[0]);
+            }
+            miDialogoCompañia.close();
+            document.removeEventListener("click", cerrarDialogoExterno);
+          } catch (error) {
+              console.log(error);
+          }
+    }
+
+    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean> {
       try{
           const url = "https://apidianj2.com/api/ubl2.1/config/certificate"; //llamado a la API REST Dianlaravel
           const respuesta = await fetch(url, {
@@ -189,8 +221,10 @@
 
           const resultado = await respuesta.json();
           console.log(resultado);
+          return resultado.success;
         } catch (error) {
             console.log(error);
+            return false;
         }
     }
 
@@ -216,11 +250,11 @@
         digitos.forEach((digito, indice) => {
             const posicionMultiplicador = digitos.length - indice;
             suma += digito * multiplicadores[posicionMultiplicador - 1];
-        });
-        
+        }); 
         const modulo = suma%11;
         return modulo > 1 ?(11 - modulo):modulo;
     }
+
 
     function cerrarDialogoExterno(event:Event) {
       if (event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {

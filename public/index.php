@@ -261,6 +261,7 @@ $router->post('/admin/api/parametrosSistemaPorcentajeImpuesto', [parametroscontr
 $router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
 
 $router->get('/admin/api/citiesXdepartments', [apidiancontrolador::class, 'citiesXdepartments']);  //Consulta municipios segun departamento
+$router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCompanyJ2']);  // crear la compañia en j2
 
 
 //////***************************/***NO**************************//////

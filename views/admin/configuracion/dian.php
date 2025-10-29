@@ -9,11 +9,11 @@
 
     <div class="h-8 bg-slate-100"></div>
 
-    <h5 class="text-gray-600 mt-8 mb-3">Lista de n configuradas: <?php echo OPENSSL_VERSION_TEXT; ?></h5>
-    <table class="display responsive nowrap tabla" width="100%" id="tablan">
+    <h5 class="text-gray-600 mt-8 mb-3">Lista de compañias: <?php //echo OPENSSL_VERSION_TEXT; ?></h5>
+    <table class="display responsive nowrap tabla" width="100%" id="tablaCompañias">
       <thead>
           <tr>
-              <th>Nº</th>
+              <th>id</th>
               <th>Nombre</th>
               <th>Documento</th>
               <th>software</th>
@@ -23,11 +23,11 @@
       <tbody>
           <?php foreach($companias as $index => $value): ?>
           <tr> 
-              <td class=""><?php echo $index+1;?></td>        
-              <td class="" ><?php echo $value->nombre; ?></td> 
-              <td class=""><?php echo $value->documento;?></td>
-              <td class="" ><?php echo $value->software; ?></td> 
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-compañia="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarCompañia"><i class="fa-solid fa-pen-to-square" title="Actualizar facturador"></i></button><button class="btn-md btn-red eliminarCompañia"><i class="fa-solid fa-trash-can" title="Eliminar facturador"></i></button></div></td>
+              <td class=""><?php echo $value->id;?></td>        
+              <td class="" ><?php echo $value->business_name; ?></td> 
+              <td class=""><?php echo $value->identification_number;?></td>
+              <td class="" ><?php echo $value->idsoftware; ?></td> 
+              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button><span class="material-symbols-outlined editarcompañia">edit_note</span></button> <button><span class="material-symbols-outlined eliminarcompañia">delete</span></button></div></td>
           </tr>
           <?php endforeach; ?>
       </tbody>

@@ -9,6 +9,7 @@ use Model\clientes\departments;
 use Model\clientes\municipalities;
 use Model\parametrizacion\config_local;
 use Model\configuraciones\tipofacturador;
+use Model\felectronicas\diancompanias;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
  
@@ -38,8 +39,31 @@ class apidiancontrolador{
   }
 
 
-  public static function crearCompany(){
-    
+  public static function crearCompanyJ2(){
+    session_start();
+    isadmin();
+    $alertas = [];
+    if(userPerfil()>1){
+      $alertas['error'][] = "No tienes permisos";
+      return;
+    }
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+
+    $compañia = json_decode(file_get_contents('php://input'), true);
+    $diancompanias = new diancompanias($compañia);
+    $r = $diancompanias->crear_guardar();
+    if($r[0]){
+      $alertas['exito'][] = "Compañia guardada localmente";
+      $alertas['id'] = $r[1];
+    }else{
+      $alertas['error'][] = "No se guardo la configuracion de la compañia";
+    }
+    echo json_encode($alertas);
   }
 
 
