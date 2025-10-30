@@ -155,7 +155,7 @@
 
 
     async function crearCompanyAPI(datoscompañia: Record<string, FormDataEntryValue>){
-      const { identification_number, certificadop12base64, password } = datoscompañia;
+      const { identification_number, certificadop12base64, password, idsoftware, pinsoftware } = datoscompañia;
         const dv = getDgv(Number(identification_number));
         try{
             const url = `https://apidianj2.com/api/ubl2.1/config/${identification_number}/${dv}`; //llamado a la API REST Dianlaravel
@@ -167,7 +167,9 @@
             const resultado = await respuesta.json();
             if(resultado.success){
               console.log(resultado);
-              configCertificado(resultado.token, certificadop12base64+'', password+'');
+              const cert = configCertificado(resultado.token, certificadop12base64+'', password+'');
+              const soft = configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
+              const resol = crearResolucionPrueba();
               crearCompanyJ2(datoscompañia, resultado.token);
             }
           } catch (error) {
@@ -175,6 +177,56 @@
           }
     }
 
+
+    ///////    CREAR CERTIFICADO EN LA API DIAN    ///////
+    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean> {
+      try{
+          const url = "https://apidianj2.com/api/ubl2.1/config/certificate"; //llamado a la API REST Dianlaravel
+          const respuesta = await fetch(url, {
+                                                method: 'PUT',
+                                                headers: {
+                                                  "Accept": "application/json",
+                                                  "Content-Type": "application/json",
+                                                  "Authorization": "Bearer "+token
+                                                },
+                                                body: JSON.stringify({"certificate": certificado, "password":password})
+                                              });
+
+          const resultado = await respuesta.json();
+          console.log(resultado);
+          return resultado.success;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    
+    ///////    CREAR SOFTWARE EN LA API DIAN    ////////
+    async function configSoftware(token:string, idsoftware:string, pinsoftware:string) 
+    {
+      try {
+        
+      } catch (error) {
+        
+      }
+      
+    }
+
+
+    ///////    CREAR RESOLUCION DE PRUEBAS    ////////
+    async function crearResolucionPrueba()
+    {
+      try {
+        
+      } catch (error) {
+        
+      }
+      
+    }
+
+
+    ///////    CREAR COMPAÑIA EN J2    ////////
     async function crearCompanyJ2(datoscompañia: Record<string, FormDataEntryValue>, token:string){
       datoscompañia.token = token;
       try {
@@ -206,29 +258,9 @@
           }
     }
 
-    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean> {
-      try{
-          const url = "https://apidianj2.com/api/ubl2.1/config/certificate"; //llamado a la API REST Dianlaravel
-          const respuesta = await fetch(url, {
-                                                method: 'PUT',
-                                                headers: {
-                                                  "Accept": "application/json",
-                                                  "Content-Type": "application/json",
-                                                  "Authorization": "Bearer "+token
-                                                },
-                                                body: JSON.stringify({"certificate": certificado, "password":password})
-                                              });
 
-          const resultado = await respuesta.json();
-          console.log(resultado);
-          return resultado.success;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
+    ///////    ENVIOREMNET MODO PRUEBAS - PRODUCCION    ///////
 
-    
 
     function base64(archivo: File):Promise<string>{
       return new Promise((resolve, reject) => {
