@@ -71,6 +71,19 @@
       };
       let cities:municipalities[]=[];
 
+    //  Obtener compañias
+    async function getCompañiasLocal<T>():Promise<T[]> {
+      try {
+          const url = "/admin/api/getCompañiasLocal"; //llamado a la API REST y se trae las cities segun cliente elegido
+          const respuesta = await fetch(url); 
+          const resultado:T[] = await respuesta.json(); 
+          return resultado;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
 
     /////       Obtener municipio segun departamento        ///////
     selectDepartments?.addEventListener('change', (e:Event)=>{
@@ -128,9 +141,10 @@
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
-    setpruebas.addEventListener('click', ()=>{
+    setpruebas.addEventListener('click', async ()=>{
         control = 0;
         limpiarformdialog();
+        const r = await getCompañiasLocal();
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
     });
@@ -320,7 +334,7 @@
 
     ///////    ELIMINAR COMPAÑIA    ///////
     function eliminarCompañia(identification_number:string){
-      
+      console.log('compañia eliminada: '+identification_number);
     }
 
 
