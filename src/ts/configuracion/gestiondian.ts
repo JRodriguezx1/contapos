@@ -1,6 +1,6 @@
 (():void=>{
 
-  if(document.querySelector('.gestionfacturadores')){
+  if(document.querySelector('.gestionDian')){
 
     const crearCompañia = document.querySelector('#crearCompañia') as HTMLButtonElement;
     const obtenerresolucion = document.querySelector('#obtenerresolucion') as HTMLButtonElement;
@@ -50,6 +50,19 @@
       }
     }
 
+    interface resolconfig {
+      type_document_id:string, 
+      prefix:String, 
+      resolution:string, 
+      resolution_date:string, 
+      technical_key:string, 
+      from:string,
+      to:string, 
+      generated_to_date:string, 
+      date_from:string, 
+      date_to:string
+    }
+
     type municipalities = {
         id:string,
         department_id:string,
@@ -60,7 +73,7 @@
 
 
     /////       Obtener municipio segun departamento        ///////
-    selectDepartments.addEventListener('change', (e:Event)=>{
+    selectDepartments?.addEventListener('change', (e:Event)=>{
       const x:HTMLOptionElement = (e.target as HTMLOptionElement);
       imprimirCiudades(x.value);
     });
@@ -167,10 +180,29 @@
             const resultado = await respuesta.json();
             if(resultado.success){
               console.log(resultado);
-              const cert = configCertificado(resultado.token, certificadop12base64+'', password+'');
-              const soft = configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
-              const resol = crearResolucionPrueba();
-              crearCompanyJ2(datoscompañia, resultado.token);
+              const cert = await configCertificado(resultado.token, certificadop12base64+'', password+'');
+              const soft = await configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
+              const resolprueba:resolconfig = {
+                type_document_id:'1', 
+                prefix:'SETP', 
+                resolution:'18760000001', 
+                resolution_date:'2019-01-19', 
+                technical_key: 'fc8eac422eba16e22ffd8c6f94b3f40a6e38162c', 
+                from: '990000000', 
+                to: '995000000', 
+                generated_to_date:'0', 
+                date_from:'2019-01-19', 
+                date_to: '2030-01-19'
+              };
+              const resol = await crearResolucion(resolprueba, resultado.token);
+              if(cert && soft && resol){
+                crearCompanyJ2(datoscompañia, resultado.token);
+              }else{
+                //eliminar usuario de la api
+                eliminarCompañia(identification_number+'');
+              }
+            }else{
+
             }
           } catch (error) {
               console.log(error);
@@ -191,7 +223,6 @@
                                                 },
                                                 body: JSON.stringify({"certificate": certificado, "password":password})
                                               });
-
           const resultado = await respuesta.json();
           console.log(resultado);
           return resultado.success;
@@ -203,24 +234,49 @@
 
     
     ///////    CREAR SOFTWARE EN LA API DIAN    ////////
-    async function configSoftware(token:string, idsoftware:string, pinsoftware:string) 
+    async function configSoftware(token:string, idsoftware:string, pinsoftware:string):Promise<boolean>
     {
       try {
-        
+        const url = "https://apidianj2.com/api/ubl2.1/config/software"; //llamado a la API REST Dianlaravel
+        const respuesta = await fetch(url, {
+                                              method: 'PUT',
+                                              headers: {
+                                                "Accept": "application/json",
+                                                "Content-Type": "application/json",
+                                                "Authorization": "Bearer "+token
+                                              },
+                                              body: JSON.stringify({"id": idsoftware, "pin":pinsoftware})
+                                            });
+        const resultado = await respuesta.json();
+        console.log(resultado);
+        return resultado.success;
       } catch (error) {
-        
+        console.log(error);
+        return false;
       }
-      
     }
 
 
-    ///////    CREAR RESOLUCION DE PRUEBAS    ////////
-    async function crearResolucionPrueba()
+    ///////    CREAR RESOLUCIONES    ////////
+    async function crearResolucion(resolprueba:resolconfig, token:string)
     {
       try {
-        
+        const url = "https://apidianj2.com/api/ubl2.1/config/resolution"; //llamado a la API REST Dian-laravel
+        const respuesta = await fetch(url, {
+                                              method: 'PUT',
+                                              headers: {
+                                                "Accept": "application/json",
+                                                "Content-Type": "application/json",
+                                                "Authorization": "Bearer "+token
+                                              },
+                                              body: JSON.stringify(resolprueba)
+                                            });
+        const resultado = await respuesta.json();
+        console.log(resultado);
+        return resultado.success;
       } catch (error) {
-        
+        console.log(error);
+        return false;
       }
       
     }
@@ -260,6 +316,12 @@
 
 
     ///////    ENVIOREMNET MODO PRUEBAS - PRODUCCION    ///////
+
+
+    ///////    ELIMINAR COMPAÑIA    ///////
+    function eliminarCompañia(identification_number:string){
+      
+    }
 
 
     function base64(archivo: File):Promise<string>{
