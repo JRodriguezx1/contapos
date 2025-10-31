@@ -2,15 +2,17 @@
 
   if(document.querySelector('.gestionDian')){
 
-    const crearCompañia = document.querySelector('#crearCompañia') as HTMLButtonElement;
-    const obtenerresolucion = document.querySelector('#obtenerresolucion') as HTMLButtonElement;
-    const setpruebas = document.querySelector('#setpruebas') as HTMLButtonElement;
+    const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
+    const btnObtenerresolucion = document.querySelector('#btnObtenerresolucion') as HTMLButtonElement;
+    const BtnSetpruebas = document.querySelector('#BtnSetpruebas') as HTMLButtonElement;
     const formCrearUpdateCompañia = document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement;
     const miDialogoCompañia = document.querySelector('#miDialogoCompañia') as any;
     const miDialogoGetResolucion = document.querySelector('#miDialogoGetResolucion') as any;
     const miDialogosetpruebas = document.querySelector('#miDialogosetpruebas') as any;
     const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
     const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
+    const selectResolucioncompañia = document.querySelector('#selectResolucioncompañia') as HTMLSelectElement;
+    const selectSetCompañia = document.querySelector('#selectSetCompañia') as HTMLSelectElement;
     let indiceFila=0, control=0;
 
     interface configCompany {
@@ -125,7 +127,7 @@
 
     ///////////////////-------    crear compañia     --------///////////////////
     
-    crearCompañia.addEventListener('click', ()=>{
+    btnCrearCompañia.addEventListener('click', ()=>{
         control = 0;
         limpiarformdialog();
         document.querySelector('#modalCompañia')!.textContent = "Crear compañia";
@@ -134,17 +136,18 @@
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
-    obtenerresolucion.addEventListener('click', ()=>{
+    btnObtenerresolucion.addEventListener('click', ()=>{
         control = 0;
         limpiarformdialog();
         miDialogoGetResolucion.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
-    setpruebas.addEventListener('click', async ()=>{
+    BtnSetpruebas.addEventListener('click', async ()=>{
         control = 0;
         limpiarformdialog();
-        const r = await getCompañiasLocal();
+        //const r = await getCompañiasLocal();
+
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
     });
@@ -318,6 +321,8 @@
                 </tr>`
               );
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+              // añadir a los selects de obtener compañia para resoluciones y de set pruebas
+              SetCompañiaToSelect(resultado.id, datoscompañia.business_name+'');
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -335,8 +340,15 @@
     ///////    ELIMINAR COMPAÑIA    ///////
     function eliminarCompañia(identification_number:string){
       console.log('compañia eliminada: '+identification_number);
+
     }
 
+    ///////    Set compañia en los select    ///////
+    function SetCompañiaToSelect(id:string, business_name:string){
+      selectResolucioncompañia.insertAdjacentHTML('afterbegin', `<option data-x="" value="${id}" >${business_name}</option>`);
+      selectSetCompañia.insertAdjacentHTML('afterbegin', `<option data-x="" value="${id}" >${business_name}</option>`);
+    }
+    
 
     function base64(archivo: File):Promise<string>{
       return new Promise((resolve, reject) => {

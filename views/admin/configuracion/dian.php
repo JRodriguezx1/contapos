@@ -1,10 +1,10 @@
 <div class="gestionDian">
     <h4 class="text-gray-600 mb-12 mt-4">Gestionar Dian</h4>
     <div class="flex flex-wrap gap-2 mt-4 mb-4 pb-4">
-        <button id="crearCompañia" class="btn-command text-center"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
-        <button id="obtenerresolucion" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
-        <button id="setpruebas" class="btn-command text-center"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>  
-        <button id="setpruebas" class="btn-command text-center"><span class="material-symbols-outlined">inbox</span>Recepción documentos</button>  
+        <button id="btnCrearCompañia" class="btn-command text-center"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
+        <button id="btnObtenerresolucion" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
+        <button id="BtnSetpruebas" class="btn-command text-center"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>  
+        <button id="btnDocumentos" class="btn-command text-center"><span class="material-symbols-outlined">inbox</span>Recepción documentos</button>  
     </div>
 
     <div class="h-8 bg-slate-100"></div>
@@ -184,8 +184,8 @@
         <div id="divmsjalertaGetResolucion"></div>
         <form id="formGetResolucion" class="formulario" action="/admin/config/GetResolucion" method="POST">
             <div class="formulario__campo">
-                <label class="formulario__label" for="getresolucioncompañia">Seleccionar compañia</label>
-                <select id="getResolucioncompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="getresolucioncompañia" required>
+                <label class="formulario__label" for="selectResolucioncompañia">Seleccionar compañia</label>
+                <select id="selectResolucioncompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="getresolucioncompañia" required>
                     <option value="" disabled selected>-Seleccionar-</option>                   
                 </select>
             </div>
@@ -204,8 +204,8 @@
         <div id="divmsjalertasetpruebas"></div>
         <form id="formSetPruebas" class="formulario" action="/admin/config/setpruebas" method="POST">
             <div class="formulario__campo">
-                <label class="formulario__label" for="setcompañia">Seleccionar compañia</label>
-                <select id="setcompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="setcompañia" required>
+                <label class="formulario__label" for="selectSetCompañia">Seleccionar compañia</label>
+                <select id="selectSetCompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="setcompañia" required>
                     <option value="" disabled selected>-Seleccionar-</option>          
                 </select>
             </div>
