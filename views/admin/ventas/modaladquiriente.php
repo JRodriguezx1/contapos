@@ -62,9 +62,9 @@
 
           <!-- Nombre o Razón Social -->
           <div>
-            <label for="name" class="block text-2xl font-medium text-gray-600">Nombre o Razón Social</label>
+            <label for="business_name" class="block text-2xl font-medium text-gray-600">Nombre o Razón Social</label>
             <div class="mt-2">
-              <input id="name" type="text" name="name" required
+              <input id="business_name" type="text" name="business_name" required
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
                 placeholder="Nombre del cliente o empresa">
             </div>

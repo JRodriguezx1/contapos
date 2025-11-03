@@ -14,6 +14,7 @@ use Controllers\logincontrolador; //clase para logueo, registro de usuario, recu
 use Controllers\dashboardcontrolador;
 use Controllers\contabilidadcontrolador;
 use Controllers\almacencontrolador;
+use Controllers\apidiancontrolador;
 use Controllers\cajacontrolador;
 use Controllers\ventascontrolador;
 use Controllers\reportescontrolador;
@@ -258,6 +259,9 @@ $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'pa
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaPorcentajeImpuesto', [parametroscontrolador::class, 'parametrosSistemaPorcentajeImpuesto']); //fetch llamado en configparametros.js
 $router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
+
+$router->get('/admin/api/citiesXdepartments', [apidiancontrolador::class, 'citiesXdepartments']);  //Consulta municipios segun departamento
+$router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCompanyJ2']);  // crear la compañia en j2
 
 
 //////***************************/***NO**************************//////

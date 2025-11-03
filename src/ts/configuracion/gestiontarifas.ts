@@ -18,7 +18,6 @@
             const url = "/admin/api/alltarifas"; //llamado a la API REST y se trae todos las tarifas
             const respuesta = await fetch(url); 
             tarifas = await respuesta.json(); 
-            console.log(tarifas);
         } catch (error) {
             console.log(error);
         }

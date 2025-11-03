@@ -21,7 +21,6 @@
             const url = "/admin/api/allbancos"; //llamado a la API REST y se trae todos los bancos
             const respuesta = await fetch(url); 
             bancos = await respuesta.json(); 
-            console.log(bancos);
         } catch (error) {
             console.log(error);
         }

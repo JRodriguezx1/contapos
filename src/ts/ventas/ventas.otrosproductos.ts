@@ -36,6 +36,7 @@
             otrosproductos!.total = preciootros;
             
             POS.products.push({
+                ID: otrosproductos!.id+'',
                 id: otrosproductos!.id+'', 
                 idcategoria: '-1',
                 idunidadmedida: '1',
@@ -66,7 +67,7 @@
                 visible: '1'
             });
 
-            POS.actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false);
+            POS.actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false, otrosproductos!.valorunidad+'');
             miDialogoOtrosProductos.close();
             document.removeEventListener("click", POS.cerrarDialogoExterno);
         });
