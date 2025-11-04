@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Classes\Traits\DocumentTrait;
 use Model\ActiveRecord;
 use Model\configuraciones\usuarios; //namespace\clase hija
 use Model\inventario\productos;
@@ -29,6 +30,8 @@ use MVC\Router;  //namespace\clase
 use stdClass;
 
 class ventascontrolador{
+
+  use DocumentTrait;
 
   public static function index(Router $router):void{
     session_start();
@@ -91,6 +94,8 @@ class ventascontrolador{
     $invSub = true;
     $invPro = true;
     $c = true;
+
+    $this->createInvoiceElectronic();
 
     debuguear($datosAdquiriente);
     

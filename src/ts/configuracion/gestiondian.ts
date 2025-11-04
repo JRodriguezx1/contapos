@@ -537,8 +537,11 @@
     ///////   ENVIAR SET DE PRUEBAS    ///////
     document.querySelector('#formSetPruebas')?.addEventListener('submit', async(e:Event)=>{
       e.preventDefault();
-      const token = selectSetCompañia.options[selectSetCompañia.selectedIndex]?.dataset.token;
+      const id = selectSetCompañia.options[selectSetCompañia.selectedIndex]?.value;
       const test = document.querySelector('#idsetpruebas') as HTMLInputElement;
+
+      const oneC = companiesAll.find(x=>x.id == id)!;
+      const token = oneC.token;
 
       const date = new Date().toISOString().split("T")[0];
       const number = 992500000 + (Math.floor(Math.random()*500000)+1);  //rango de 1 a 500000
@@ -605,7 +608,7 @@
           }
         ]
       };
-      
+
       try {
         const url = "https://apidianj2.com/api/ubl2.1/invoice/"+test.value; //llamado a la API REST Dianlaravel
         const respuesta = await fetch(url, {
@@ -615,10 +618,12 @@
                                                 "Content-Type": "application/json",
                                                 "Authorization": "Bearer "+token
                                               },
-                                              body: JSON.stringify({})
+                                              body: JSON.stringify(factura)
                                             });
         const resultado = await respuesta.json();
         console.log(resultado);
+        miDialogosetpruebas.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
         return resultado.success;
       } catch (error) {
         console.log(error);
