@@ -1,439 +1,153 @@
 <html>
 	<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FACTURA DE VENTA</title>
 		<style rel="stylesheet" type="text/css">
 			@media (min-width: 640px){.sm\:col-span-2{grid-column:span 2 / span 2}.sm\:block{display:block}.sm\:grid{display:grid}.sm\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.sm\:grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.sm\:justify-end{justify-content:flex-end}.sm\:gap-2{gap:0.5rem}.sm\:text-end{text-align:end}}
 		</style>
 	</head>
-	<body style="margin: 0px; line-height: inherit;">
-		<div class="min-h-screen flex flex-col" style="display: flex; min-height: 100vh; flex-direction: column;">
-			<!-- Contenedor Factura -->
-			<div class="flex-1" style="flex: 1 1 0%;">
-				<!-- Invoice -->
-				<div
-					class="max-w-[85rem] px-16 mx-auto my-10"
-					style="margin: 2.5rem auto; padding-left: 4rem; padding-right: 4rem;">
-					<!-- Grid -->
-					<div class="flex justify-between" style="display: flex; justify-content: space-between;">
-						<div>
-							<div class="grid space-y-3" style="display: grid;">
-								<img
-									class="w-auto h-24"
-									src="https://inliner.kromate.dev/build/img/&lt;?php echo $sucursal-&gt;logo;?&gt;"
-									alt="user"
-									style="display: block; vertical-align: middle; max-width: 100%; height: 6rem; width: auto;" />
-								<dl
-									class="flex flex-col gap-y-3 text-sm pt-20"
-									style="margin: 0px; display: flex; flex-direction: column; row-gap: 0.75rem; padding-top: 5rem; font-size: 0.875rem; line-height: 1.25rem;">
-									<div
-										class="font-medium text-gray-800 text-lg leading-normal"
-										style="font-size: 1.125rem; line-height: 1.5; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										<span
-											class="block font-semibold uppercase"
-											style="display: block; font-weight: 600; text-transform: uppercase;">
-											Facturado a
-										</span>
-										<span
-											class="not-italic font-normal text-gray-400"
-											style="font-weight: 400; font-style: normal; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-											<!--?php echo $cliente--->
-											nombre.' '.$cliente-&gt;apellido;?&gt;
-										</span>
-										<address
-											class="not-italic font-normal text-gray-400"
-											style="font-weight: 400; font-style: normal; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-											<span class="font-semibold" style="font-weight: 600;">NIT/CC:</span>
-											<!--?php echo $cliente--->
-											identificacion;?&gt;,
-											<br />
-											<span
-												class="font-semibold uppercase"
-												style="font-weight: 600; text-transform: uppercase;">
-												Email:
-											</span>
-											<!--?php echo $cliente--->
-											email;?&gt;,
-											<br />
-											<span
-												class="font-semibold uppercase"
-												style="font-weight: 600; text-transform: uppercase;">
-												Teléfono:
-											</span>
-											<!--?php echo $cliente--->
-											telefono;?&gt;
-											<br />
-										</address>
-									</div>
-									<div
-										class="font-medium text-gray-800 text-lg leading-normal mt-5"
-										style="margin-top: 1.25rem; font-size: 1.125rem; line-height: 1.5; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										<span
-											class="block font-semibold uppercase"
-											style="display: block; font-weight: 600; text-transform: uppercase;">
-											Dirección de entrega
-										</span>
-										<address
-											class="not-italic font-normal text-gray-400"
-											style="font-weight: 400; font-style: normal; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-											<!--?php echo $direccion--->
-											direccion;?&gt;,
-											<br />
-											<!--?php echo $direccion--->
-											ciudad.' - '.$direccion-&gt;departamento;?&gt;
-											<br />
-										</address>
-									</div>
-								</dl>
-							</div>
-						</div>
-						<!-- Col -->
+  
+  <body style="background-color:#f3f4f6; padding:40px 0; font-family:'Segoe UI', Arial, sans-serif; color:#1f2937; margin:0;">
 
-						<div class="text-lg leading-normal" style="font-size: 1.125rem; line-height: 1.5;">
-							<div
-								class="grid font-medium text-gray-800 text-center text-lg leading-normal"
-								style="display: grid; text-align: center; font-size: 1.125rem; line-height: 1.5; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-								<span
-									class="block font-semibold text-lg uppercase"
-									style="display: block; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; text-transform: uppercase;">
-									<!--?php echo $sucursal--->
-									negocio;?&gt;
-								</span>
-								<address class="not-italic font-light" style="font-weight: 300; font-style: normal;">
-									<!--?php echo $sucursal--->
-									nombre;?&gt;,
-									<br />
-									<!--?php echo $sucursal--->
-									direccion;?&gt;,
-									<br />
-									Tel:
-									<!--?php echo $sucursal--->
-									telefono;?&gt;,
-									<br />
-									<!--?php echo $sucursal--->
-									ciudad.' - '.$sucursal-&gt;departamento;?&gt;,
-									<br />
-									<!--?php echo $sucursal--->
-									email;?&gt;
-									<br />
-									<!--?php //echo $sucursal--->
-									www;?&gt;
-									<br />
-								</address>
-							</div>
-						</div>
-						<!-- Col -->
+    <div style="max-width:600px; margin:0 auto; background-color:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
 
-						<div>
-							<div class="grid space-y-3" style="display: grid;">
-								<div class="text-lg leading-normal" style="font-size: 1.125rem; line-height: 1.5;">
-									<p
-										class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold"
-										style="margin: 0px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										FACTURA #:
-									</p>
-									<span
-										class="text-gray-500"
-										style="--tw-text-opacity: 1; color: rgb(107 114 128 / var(--tw-text-opacity));">
-										<!--?php echo $factura--->
-										prefijo.''.$factura-&gt;num_orden??'';?&gt;
-									</span>
-								</div>
-								<div class="text-lg leading-normal" style="font-size: 1.125rem; line-height: 1.5;">
-									<p
-										class="min-w-36 max-w-[200px] text-gray-800 text-lg font-semibold"
-										style="margin: 0px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										Vendedor:
-									</p>
-									<span
-										class="text-gray-500"
-										style="--tw-text-opacity: 1; color: rgb(107 114 128 / var(--tw-text-opacity));">
-										<!--?php echo $vendedor--->
-										nombre.' '.($vendedor-&gt;apellido??'');?&gt;
-									</span>
-								</div>
+      <!-- Encabezado -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 30px; border-bottom:1px solid #e5e7eb;">
+        <div style="text-align:left; line-height:1.1;">
+          <h2 style="margin:0; font-size:18px; color:#111827; font-weight:700;">NEGOCIO SAS</h2>
+          <p style="margin:2px 0; font-size:13px; color:#374151;">Sede centro, cr 19</p>
+          <p style="margin:2px 0; font-size:13px; color:#374151;">Tel: 3158863520</p>
+          <p style="margin:2px 0; font-size:13px; color:#374151;">Armenia - Quindío</p>
+          <a href="mailto:contabilidad@innovatech.com.co" style="color:#4338ca; font-size:13px; text-decoration:none;">contabilidad@innovatech.com.co</a>
+        </div>
+        <div style="text-align:right;">
+          <img src="https://raw.githubusercontent.com/JRodriguezx1/contapos/refs/heads/master/public/build/img/Logoj2indigo.png"
+              alt="Logo del negocio"
+              style="width:150px; height:auto; display:block; margin-left:auto;">
+        </div>
+      </div>
 
-								<div
-									class="flex flex-col gap-x-1 pt-8 text-lg leading-normal"
-									style="display: flex; flex-direction: column; column-gap: 0.25rem; padding-top: 2rem; font-size: 1.125rem; line-height: 1.5;">
-									<p
-										class="font-medium min-w-36 max-w-[200px] text-gray-800"
-										style="margin: 0px; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										<span class="uppercase" style="text-transform: uppercase;">
-											Fecha y Hora de Factura
-										</span>
-										<br />
-										<span
-											class="font-normal text-gray-400"
-											style="font-weight: 400; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-											<!--?php echo $factura--->
-											fechapago??'';?&gt;
-										</span>
-									</p>
-									<p
-										class="font-medium text-gray-800 mt-4"
-										style="margin: 1rem 0px 0px; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										<span class="uppercase" style="text-transform: uppercase;">Medio de Pago</span>
-										<br />
-										<span
-											class="font-normal text-gray-400"
-											style="font-weight: 400; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-											<!--?php foreach($mediospago as $value): echo $value--->
-											mediopago.' '; endforeach; ?&gt;
-										</span>
-									</p>
-								</div>
-							</div>
-						</div>
-						<!-- Col -->
-					</div>
-					<!-- End Grid -->
-					<!--?php if($factura--->
-					estado == 'Eliminada'): ?&gt;
-					<div>
-						<p
-							class="block font-semibold uppercase text-center"
-							style="margin: 0px; display: block; text-align: center; font-weight: 600; text-transform: uppercase;">
-							Factura eliminada.
-							<span
-								class="font-normal text-gray-400 text-base normal-case"
-								style="font-size: 1rem; line-height: 1.5rem; font-weight: 400; text-transform: none; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-								Documento no valido
-							</span>
-						</p>
-					</div>
-					<!--?php endif; ?-->
-					<!-- Table -->
-					<div
-						class="mt-6 border border-gray-200 p-4 rounded-lg space-y-4 text-lg leading-normal"
-						style="margin-top: 1.5rem; border-radius: 0.5rem; border-width: 1px; --tw-border-opacity: 1; border-color: rgb(229 231 235 / var(--tw-border-opacity)); padding: 1rem; font-size: 1.125rem; line-height: 1.5;">
-						<div class="hidden sm:grid sm:grid-cols-5" style="display: none;">
-							<div
-								class="sm:col-span-2 text-base font-nomal text-gray-400 uppercase"
-								style="font-size: 1rem; line-height: 1.5rem; text-transform: uppercase; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-								Item
-							</div>
-							<div
-								class="text-start text-base font-nomal text-gray-400 uppercase"
-								style="text-align: start; font-size: 1rem; line-height: 1.5rem; text-transform: uppercase; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-								Cantidad
-							</div>
-							<div
-								class="text-start text-base font-nomal text-gray-400 uppercase"
-								style="text-align: start; font-size: 1rem; line-height: 1.5rem; text-transform: uppercase; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-								Vr. Unitario
-							</div>
-							<div
-								class="text-end text-base font-nomal text-gray-400 uppercase"
-								style="text-align: end; font-size: 1rem; line-height: 1.5rem; text-transform: uppercase; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-								Vr. Total
-							</div>
-						</div>
-						<div
-							class="hidden sm:block border-b border-gray-200"
-							style="display: none; border-bottom-width: 1px; --tw-border-opacity: 1; border-color: rgb(229 231 235 / var(--tw-border-opacity));"></div>
+      <!-- Contenido -->
+      <div style="padding:0 30px 30px 30px;">
+        <h2 style="color:#111827; font-size:22px; margin-bottom:20px; text-align:center; letter-spacing:0.5px;">FACTURA ELECTRÓNICA DE VENTA</h2>
 
-						<!--?php foreach($productos as $index=-->
-						$value): ?&gt;
-						<div
-							class="grid grid-cols-3 sm:grid-cols-5 gap-2"
-							style="display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); gap: 0.5rem;">
-							<div class="col-span-full sm:col-span-2" style="grid-column: 1 / -1;">
-								<p
-									class="text-lg font-medium text-gray-800"
-									style="margin: 0px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-									<!--?php echo $value--->
-									nombreproducto??'';?&gt;
-								</p>
-							</div>
-							<div>
-								<p
-									class="text-lg text-gray-800"
-									style="margin: 0px; font-size: 1.125rem; line-height: 1.75rem; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-									<!--?php echo $value--->
-									cantidad??'';?&gt;
-								</p>
-							</div>
-							<div>
-								<p
-									class="text-lg text-gray-800"
-									style="margin: 0px; font-size: 1.125rem; line-height: 1.75rem; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-									<!--?php echo number_format($value--->
-									valorunidad??'', '0', ',', '.');?&gt;
-								</p>
-							</div>
-							<div>
-								<p
-									class="text-lg sm:text-end text-gray-800"
-									style="margin: 0px; font-size: 1.125rem; line-height: 1.75rem; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-									$
-									<!--?php echo number_format($value--->
-									total??'', '0', ',', '.');?&gt;
-								</p>
-							</div>
-						</div>
-						<!--?php endforeach; ?-->
-					</div>
-					<!-- End Table -->
+        <!-- 🧾 Detalles de la venta -->
+        <div style="background-color:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:15px 20px; margin-bottom:25px;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; line-height:1.1;">
+            <tr>
+              <td style="vertical-align:top; width:50%; padding-right:15px; border-right:1px solid #e5e7eb;">
+                <h4 style="margin:0 0 8px; font-size:13px; color:#4338ca;">Datos del Cliente</h4>
+                <p style="margin:0 0 4px;"><strong>Cliente:</strong> N/A N/a</p>
+                <p style="margin:0 0 4px;"><strong>NIT/CC:</strong> N/A</p>
+                <p style="margin:0 0 4px;"><strong>Correo:</strong> N/A</p>
+                <p style="margin:0 0 4px;"><strong>Teléfono:</strong> N/A</p>
+                <p style="margin:0;"><strong>Dirección:</strong> Almacén, Armenia - Quindío</p>
+              </td>
+              <td style="vertical-align:top; width:50%; padding-left:15px;">
+                <h4 style="margin:0 0 8px; font-size:13px; color:#4338ca;">Detalles de Factura</h4>
+                <p style="margin:0 0 4px;"><strong>Factura N°:</strong> FAP64</p>
+                <p style="margin:0 0 4px;"><strong>Vendedor:</strong> Julián Rodríguez</p>
+                <p style="margin:0 0 10px;"><strong>Medio de pago:</strong> Efectivo</p>
+                <hr style="border:none; border-top:1px solid #e5e7eb; margin:10px 0;">
+                <!-- 🕓 Nueva sección -->
+                <h4 style="margin:10px 0 6px; font-size:13px; color:#4338ca;">Fecha y hora de Factura</h4>
+                <p style="margin:0 0 4px;"><strong>Generación:</strong> 2025-10-25 12:49:48</p>
+                <p style="margin:0 0 4px;"><strong>Expedición:</strong> 2025-10-25 12:49:48</p>
+                <p style="margin:0;"><strong>Vencimiento:</strong> 2025-10-25</p>
+              </td>
 
-					<!-- Totales -->
-					<div class="mt-8 flex sm:justify-end" style="margin-top: 2rem; display: flex;">
-						<div class="w-full max-w-2xl sm:text-end space-y-2" style="width: 100%; max-width: 42rem;">
-							<div
-								class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2"
-								style="display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); gap: 0.75rem;">
-								<dl
-									class="grid sm:grid-cols-5 gap-x-3 text-sm"
-									style="margin: 0px; display: grid; column-gap: 0.75rem; font-size: 0.875rem; line-height: 1.25rem;">
-									<dt
-										class="col-span-3 text-gray-400"
-										style="grid-column: span 3 / span 3; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-										Subotal:
-									</dt>
-									<dd
-										class="col-span-2 font-medium text-gray-800"
-										style="margin: 0px; grid-column: span 2 / span 2; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										$
-										<!--?php echo number_format($factura--->
-										subtotal??'', '0', ',', '.');?&gt;
-									</dd>
-								</dl>
+            </tr>
+          </table>
+        </div>
 
-								<dl
-									class="grid sm:grid-cols-5 gap-x-3 text-sm"
-									style="margin: 0px; display: grid; column-gap: 0.75rem; font-size: 0.875rem; line-height: 1.25rem;">
-									<dt
-										class="col-span-3 text-gray-400"
-										style="grid-column: span 3 / span 3; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-										Descuento:
-									</dt>
-									<dd
-										class="col-span-2 font-medium text-gray-800"
-										style="margin: 0px; grid-column: span 2 / span 2; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										$
-										<!--?php echo number_format($factura--->
-										descuento??'', '0', ',', '.');?&gt;
-									</dd>
-								</dl>
+        <!-- 🧾 Tabla de productos -->
+        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:25px;">
+          <thead>
+            <tr style="background-color:#f9fafb;">
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e5e7eb;">Producto</th>
+              <th style="text-align:center; padding:10px; border-bottom:1px solid #e5e7eb;">Cantidad</th>
+              <th style="text-align:right; padding:10px; border-bottom:1px solid #e5e7eb;">Vr. Unitario</th>
+              <th style="text-align:right; padding:10px; border-bottom:1px solid #e5e7eb; width:150px;">Vr. Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se insertan dinámicamente los productos -->
+            <tr>
+              <td style="padding:8px 10px; border-bottom:1px solid #f3f4f6;">Pulidora DeWALT 8200rpm 1/2</td>
+              <td style="text-align:center; padding:8px 10px; border-bottom:1px solid #f3f4f6;">1.00</td>
+              <td style="text-align:right; padding:8px 10px; border-bottom:1px solid #f3f4f6;">$598.000</td>
+              <td style="text-align:right; padding:8px 10px; border-bottom:1px solid #f3f4f6;">$598.000</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 10px;">Taladro percutor BLACK AND DECKER 550W 1/2</td>
+              <td style="text-align:center; padding:8px 10px;">1.00</td>
+              <td style="text-align:right; padding:8px 10px;">$213.900</td>
+              <td style="text-align:right; padding:8px 10px;">$213.900</td>
+            </tr>
+          </tbody>
+        </table>
 
-								<dl
-									class="grid sm:grid-cols-5 gap-x-3 text-sm"
-									style="margin: 0px; display: grid; column-gap: 0.75rem; font-size: 0.875rem; line-height: 1.25rem;">
-									<dt
-										class="col-span-3 text-gray-400"
-										style="grid-column: span 3 / span 3; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-										Impuesto:
-									</dt>
-									<dd
-										class="col-span-2 font-medium text-gray-800"
-										style="margin: 0px; grid-column: span 2 / span 2; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										$
-										<!--?php echo number_format($factura--->
-										valorimpuestototal??'', '0', ',', '.');?&gt;
-									</dd>
-								</dl>
+        <!-- Totales -->
+        <div style="text-align:right; font-size:14px; margin-bottom:25px;">
+          <p style="margin:0;"><strong>Subtotal:</strong> $811.900</p>
+          <p style="margin:2px 0;"><strong>IVA (0%):</strong> $0</p>
+          <p style="margin:2px 0 10px;"><strong>Total:</strong> <span style="font-size:16px; color:#4338ca;">$811.900</span></p>
+        </div>
 
-								<dl
-									class="grid sm:grid-cols-5 gap-x-3 text-sm"
-									style="margin: 0px; display: grid; column-gap: 0.75rem; font-size: 0.875rem; line-height: 1.25rem;">
-									<dt
-										class="col-span-3 text-gray-400"
-										style="grid-column: span 3 / span 3; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-										Total:
-									</dt>
-									<dd
-										class="col-span-2 font-medium text-gray-800"
-										style="margin: 0px; grid-column: span 2 / span 2; font-weight: 500; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-										$
-										<!--?php echo number_format($factura--->
-										total??'','0', ',', '.');?&gt;
-									</dd>
-								</dl>
-							</div>
-						</div>
-					</div>
-					<!-- End Totales -->
+        <!-- 🧾 Código QR de validación -->
+        <div style="text-align:center; margin:30px 0;">
+          <div style="display:inline-block; padding:15px 25px; border:1px solid #e5e7eb; border-radius:10px; background-color:#f9fafb;">
+            <?php 
+              // Ejemplo de variables dinámicas (pueden venir del backend)
+              $cufe = "4A8D7F12345B9E00CFA9321ABCDEF12345678900"; 
+              $url_dian = "https://www.dian.gov.co";
+              $qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=" . urlencode($url_dian . '?cufe=' . $cufe);
+            ?>
+            <img src="<?= $qr_url ?>" 
+                alt="QR DIAN"
+                style="width:110px; height:110px; display:block; margin:0 auto 10px auto; border-radius:6px;">
+            <p style="margin:0; font-size:12px; color:#6b7280; line-height:1.5;">
+              <strong style="color:#374151;">Código QR de validación DIAN</strong><br>
+              Escanee para verificar la validez de esta factura electrónica.<br>
+              <span style="font-size:11px; color:#9ca3af;">CUFE: <?= $cufe ?></span>
+            </p>
+          </div>
+        </div>
 
-					<!-- Observaciones -->
-					<div class="mt-8" style="margin-top: 2rem;">
-						<div
-							class="border border-gray-200 p-4 rounded-lg space-y-2 text-lg leading-normal"
-							style="border-radius: 0.5rem; border-width: 1px; --tw-border-opacity: 1; border-color: rgb(229 231 235 / var(--tw-border-opacity)); padding: 1rem; font-size: 1.125rem; line-height: 1.5;">
-							<span
-								class="block font-semibold uppercase text-gray-800"
-								style="display: block; font-weight: 600; text-transform: uppercase; --tw-text-opacity: 1; color: rgb(31 41 55 / var(--tw-text-opacity));">
-								Observaciones
-							</span>
-							<p
-								class="text-gray-500"
-								style="margin: 0px; --tw-text-opacity: 1; color: rgb(107 114 128 / var(--tw-text-opacity));">
-								<!--?php echo $factura--->
-								observaciones ?? 'Ninguna'; ?&gt;
-							</p>
-						</div>
-					</div>
-					<!-- End Observaciones -->
-				</div>
-				<!-- End Invoice -->
-			</div>
+        <!-- 📄 Pie de página compacto -->
+        <hr style="margin:20px 0; border:none; border-top:1px solid #e5e7eb;">
 
-			<!-- Footer -->
-			<footer
-				class="border-t border-gray-200 py-5 text-center text-sm text-gray-500 leading-snug"
-				style="border-top-width: 1px; --tw-border-opacity: 1; border-color: rgb(229 231 235 / var(--tw-border-opacity)); padding-top: 1.25rem; padding-bottom: 1.25rem; text-align: center; font-size: 0.875rem; line-height: 1.375; --tw-text-opacity: 1; color: rgb(107 114 128 / var(--tw-text-opacity));">
-				<p class="mb-1.5" style="margin: 0px;">
-					Esta factura es un documento válido generado electrónicamente por
-					<span
-						class="font-semibold text-gray-700"
-						style="font-weight: 600; --tw-text-opacity: 1; color: rgb(55 65 81 / var(--tw-text-opacity));">
-						<!--?php echo $sucursal--->
-						negocio;?&gt;
-					</span>
-					- NIT
-					<!--?php echo $sucursal--->
-					nit;?&gt;.
-				</p>
-				<p class="mb-1" style="margin: 0px 0px 0.25rem;">Gracias por su compra.</p>
-				<p class="mb-1" style="margin: 0px 0px 0.25rem;">
-					Contáctanos:
-					<a
-						href="mailto:correo@empresa.com"
-						class="text-indigo-600 hover:underline"
-						style="color: rgb(79 70 229 / var(--tw-text-opacity)); text-decoration: inherit; --tw-text-opacity: 1;">
-						<!--?php echo $sucursal--->
-						email??'';?&gt;
-					</a>
-					| Tel:
-					<!--?php echo $sucursal--->
-					telefono??'';?&gt;
-				</p>
-				<p class="mb-1" style="margin: 0px 0px 0.25rem;">
-					Dirección:
-					<!--?php echo $sucursal--->
-					direccion??'';?&gt;,
-					<!--?php echo $sucursal--->
-					ciudad??'';?&gt; -
-					<!--?php echo $sucursal--->
-					departamento??'';?&gt;
-				</p>
-				<p
-					class="mt-3 text-xs text-gray-400"
-					style="margin: 0.75rem 0px 0px; font-size: 0.75rem; line-height: 1rem; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-					©
-					<!--?php echo date("Y"); ?-->
-					<!--?php echo $sucursal--->
-					negocio;?&gt;. Todos los derechos reservados.
-				</p>
-				<p
-					class="mt-1 text-xs text-gray-400"
-					style="margin: 0.25rem 0px 0px; font-size: 0.75rem; line-height: 1rem; --tw-text-opacity: 1; color: rgb(156 163 175 / var(--tw-text-opacity));">
-					Generado con
-					<span
-						class="text-indigo-500 font-semibold"
-						style="font-weight: 600; --tw-text-opacity: 1; color: rgb(99 102 241 / var(--tw-text-opacity));">
-						J2 Software POS Multisucursal
-					</span>
-				</p>
-			</footer>
-			<!-- End Footer -->
-		</div>
-	</body>
+        <div style="font-size:11.5px; color:#6b7280; text-align:center; line-height:1.1; padding:0 15px 15px;">
+          <p style="margin:0 0 0px;">
+            Esta factura es un documento válido generado electrónicamente por <strong style="color:#4338ca;">Negocio SAS</strong> - NIT 901155054. Gracias por su compra. Contáctanos: <a href="mailto:contabilidad@innovatech.com.co" style="color:#4338ca; text-decoration:none; margin:0 0 5px;">contabilidad@innovatech.com.co</a> | 
+            Tel: 3158863520
+          </p>
+
+          <p style="margin:0 0 5px;">Dirección: centro cr 19, Armenia - Quindío</p>
+          <p style="margin:0 0 0px; font-size:11px; color:#9ca3af;">
+            © 2025 <strong style="color:#4338ca;">Negocio SAS</strong>. Todos los derechos reservados.
+          </p>
+          <a href="https://subtle-souffle-25465c.netlify.app/" style="margin:0 0 0px;; font-size:11px;">
+            Elaborado y generado con <strong style="color:#4338ca;">J2 Software POS Multisucursal</strong>.
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📱 Estilos responsive -->
+    <style>
+      @media only screen and (max-width: 600px) {
+        .col-izq, .col-der {
+          display:block !important;
+          width:100% !important;
+          padding:0 !important;
+          border:none !important;
+        }
+        .col-der {
+          margin-top:10px !important;
+        }
+      }
+      </style>
+  </body>
 </html>
