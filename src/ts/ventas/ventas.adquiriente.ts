@@ -17,14 +17,16 @@
   formFacturarA.addEventListener('submit', (e:Event)=>{
     e.preventDefault();
     const data = new FormData(formFacturarA);
-    const datosAquiriente: Record<string, FormDataEntryValue> = Object.fromEntries(data.entries());
-    POS.gestionarAdquiriente.datosAquiriente = datosAquiriente;
+    const datosAdquiriente: Record<string, FormDataEntryValue> = Object.fromEntries(data.entries());
+    POS.gestionarAdquiriente.datosAdquiriente = datosAdquiriente; //guarda en el objeto global
+    miDialogoFacturarA.close();
+    document.removeEventListener("click", cerrarDialogoExterno);
   });
 
 
-  const gestionarAdquiriente = {
+  const gestionarAdquiriente = {  //objeto a exportar
     miDialogoFacturarA,
-    datosAdquiriente: {}
+    datosAdquiriente: {} //inicializar 
   };
 
   POS.gestionarAdquiriente = gestionarAdquiriente;

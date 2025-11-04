@@ -441,6 +441,7 @@
       datos.append('ciudad', (document.querySelector('#ciudadEntrega') as HTMLInputElement).value);
       datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
       datos.append('valortarifa', valorTotal.valortarifa+'');
+      datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
       datos.append('opc2', '');
       try {

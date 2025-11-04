@@ -1,11 +1,13 @@
 (():void=>{
 
   if(document.querySelector('.gestionDian')){
-
+    const POS = (window as any).POS;
+    const btnAdquirirCompañia = document.querySelector('#btnAdquirirCompañia') as HTMLButtonElement;
     const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
     const btnObtenerresolucion = document.querySelector('#btnObtenerresolucion') as HTMLButtonElement;
     const BtnSetpruebas = document.querySelector('#BtnSetpruebas') as HTMLButtonElement;
     const formCrearUpdateCompañia = document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement;
+    const miDialogoAdquirirCompañia = document.querySelector('#miDialogoAdquirirCompañia') as any;
     const miDialogoCompañia = document.querySelector('#miDialogoCompañia') as any;
     const miDialogoGetResolucion = document.querySelector('#miDialogoGetResolucion') as any;
     const miDialogosetpruebas = document.querySelector('#miDialogosetpruebas') as any;
@@ -13,7 +15,6 @@
     const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
     const selectResolucioncompañia = document.querySelector('#selectResolucioncompañia') as HTMLSelectElement;
     const selectSetCompañia = document.querySelector('#selectSetCompañia') as HTMLSelectElement;
-    let indiceFila=0, control=0;
 
     interface configCompany {
       success:boolean,
@@ -51,6 +52,24 @@
         }
       }
     }
+    
+
+    interface TechnicalKeyObject {
+      _attributes: {
+        nil: string;
+      };
+    }
+    interface NumberRangeItem {
+      ResolutionNumber: string;
+      ResolutionDate: string;
+      Prefix: string;
+      FromNumber: string;
+      ToNumber: string;
+      ValidDateFrom: string;
+      ValidDateTo: string;
+      TechnicalKey: string | TechnicalKeyObject;
+    }
+
 
     interface resolconfig {
       type_document_id:string, 
@@ -78,15 +97,20 @@
     //  Obtener compañias
     async function getCompañiasLocal<T>():Promise<T[]> {
       try {
-          const url = "/admin/api/getCompañiasLocal"; //llamado a la API REST y se trae las cities segun cliente elegido
+          const url = "/admin/api/getCompaniesAll"; //llamado a la API REST y se trae las cities segun cliente elegido
           const respuesta = await fetch(url); 
-          const resultado:T[] = await respuesta.json(); 
+          const resultado:T[]= await respuesta.json(); 
           return resultado;
         } catch (error) {
             console.log(error);
             return [];
         }
     }
+    
+    let companiesAll:{id:string, identification_number:string, business_name:string, idsoftware:string, token:string}[];
+    (async()=>{
+       companiesAll = await getCompañiasLocal<{id:string, identification_number:string, business_name:string, idsoftware:string, token:string}>();
+    })();
 
 
     /////       Obtener municipio segun departamento        ///////
@@ -127,10 +151,15 @@
     }
 
 
+    ///////////////////-------    Adquirir compañia     ---------//////////////////
+    btnAdquirirCompañia.addEventListener('click', ()=>{
+        miDialogoAdquirirCompañia.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+
     ///////////////////-------    crear compañia     --------///////////////////
-    
     btnCrearCompañia.addEventListener('click', ()=>{
-        control = 0;
         limpiarformdialog();
         document.querySelector('#modalCompañia')!.textContent = "Crear compañia";
         (document.querySelector('#btnEditarCrearCompañia') as HTMLInputElement).value = "Crear";
@@ -139,19 +168,24 @@
     });
 
     btnObtenerresolucion.addEventListener('click', ()=>{
-        control = 0;
         limpiarformdialog();
         miDialogoGetResolucion.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
     BtnSetpruebas.addEventListener('click', async ()=>{
-        control = 0;
         limpiarformdialog();
         //const r = await getCompañiasLocal();
 
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+
+    ///////////////////  ADQUIRIR COMPAÑIA  ////////////////////
+    document.querySelector('#formAdquirirCompañia')?.addEventListener('submit', (e:Event)=>{
+      e.preventDefault();
+      
     });
 
 
@@ -198,6 +232,8 @@
                                                 });
             const resultado = await respuesta.json();
             if(resultado.success){
+              miDialogoCompañia.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
               console.log(resultado);
               const cert = await configCertificado(resultado.token, certificadop12base64+'', password+'');
               const soft = await configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
@@ -218,7 +254,7 @@
                 crearCompanyJ2(datoscompañia, resultado.token);
               }else{
                 //eliminar usuario de la api
-                eliminarCompañia(identification_number+'');
+                eliminarCompañia('', identification_number+'', resultado.token);
               }
             }else{
 
@@ -314,22 +350,21 @@
             if(resultado.exito !== undefined){
               const tablaCompañias = document.querySelector('#tablaCompañias tbody');
               tablaCompañias?.insertAdjacentHTML('beforeend', `
-                <tr class="">
+                <tr class="" id="company${datoscompañia.identification_number}">
                   <td class="">${resultado.id}</td>
                   <td class="">${datoscompañia.business_name}</td> 
                   <td class="">${datoscompañia.identification_number}</td>
                   <td class="">${datoscompañia.idsoftware}</td>
-                  <td class=""><div class="acciones-btns" id="${resultado.id}">  <button><span class="material-symbols-outlined editarcompañia">edit_note</span></button> <button><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
+                  <td class=""><div class="acciones-btns">  <button id="${resultado.id}"><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
                 </tr>`
               );
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               // añadir a los selects de obtener compañia para resoluciones y de set pruebas
               SetCompañiaToSelect(resultado.id, token, datoscompañia.business_name+'');
+              companiesAll.push({id:resultado.id, identification_number:datoscompañia.identification_number+'', business_name:datoscompañia.business_name+'', idsoftware:datoscompañia.idsoftware+'', token});
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
-            miDialogoCompañia.close();
-            document.removeEventListener("click", cerrarDialogoExterno);
           } catch (error) {
               console.log(error);
           }
@@ -337,23 +372,170 @@
 
 
     ///////    ENVIOREMNET MODO PRUEBAS - PRODUCCION    ///////
+    
 
+    document.querySelector('#tablaCompañias tbody')?.addEventListener('click', (e:Event)=>{
+      const target = e.target as HTMLElement;
+      if(target?.classList.contains("eliminarcompañia")){
+        const id = target.parentElement?.id;
+        const oneC = companiesAll.find(x=>x.id == id)!;
+        eliminarCompañia(id!, oneC?.identification_number, oneC.token);
+      }
+    });
 
     ///////    ELIMINAR COMPAÑIA    ///////
-    function eliminarCompañia(identification_number:string){
-      console.log('compañia eliminada: '+identification_number);
-
+    function eliminarCompañia(id:string, identification_number:string, token:string){
+     
+      Swal.fire({
+          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          icon: 'question',
+          title: 'Desea eliminar la compañia?',
+          text: "La compañia sera eliminado definitivamente.",
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+      }).then((result:any) => {
+          if (result.isConfirmed) {
+            (async ()=>{ 
+              try {
+                const url = "https://apidianj2.com/api/ubl2.1/config/deleteCompany"; //llamado a la API REST Dianlaravel
+                const respuesta = await fetch(url, {
+                                                      method: 'DELETE',
+                                                      headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
+                                                      body: JSON.stringify({"identification_number": identification_number})
+                                                    });
+                const resultado = await respuesta.json();
+                if(resultado.message){
+                  const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
+                  const respuestaLocal = await fetch(urlX); 
+                  const resultadoLocal = await respuestaLocal.json(); 
+                  document.querySelector('#company'+identification_number)?.remove();
+                  msjalertToast('success', '¡Éxito!', resultado.message);
+                  deleteFromCompany(id);
+                }else{
+                  msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
+                }
+              } catch (error) {
+                console.log(error);
+                return false;
+              }
+            })();
+          }
+      });
     }
+
+    ///////  eliminar de los select de obtener resolucion y enviar set de pruebas  ///////
+    function deleteFromCompany(id:string){
+      selectResolucioncompañia.querySelector(`option[value=${id}]`)?.remove();
+      selectSetCompañia.querySelector(`option[value=${id}]`)?.remove();
+    }
+
 
     ///////    Set compañia en los select    ///////
     function SetCompañiaToSelect(id:string, token:string, business_name:string){
-      selectResolucioncompañia.insertAdjacentHTML('afterbegin', `<option data-x="" value="${id}" >${business_name}</option>`);
+      selectResolucioncompañia.insertAdjacentHTML('afterbegin', `<option data-token="" value="${id}" >${business_name}</option>`);
       selectSetCompañia.insertAdjacentHTML('afterbegin', `<option data-token="${token}" value="${id}" >${business_name}</option>`);
+    }
+
+    ///////    CONSULTAR RESOLUCIONES   ///////
+    document.querySelector('#formGetResolucion')?.addEventListener('submit', (e:Event)=>{
+      e.preventDefault();
+      const id:string = selectResolucioncompañia.options[selectResolucioncompañia.selectedIndex].value;
+      const oneC = companiesAll.find(x=>x.id == id)!;
+      console.log(oneC);
+      getResolutions(oneC.idsoftware, oneC.token);
+    });
+
+    async function getResolutions(idsoftware:string, token:string){
+      try {
+        const url = "https://apidianj2.com/api/ubl2.1/numbering-range"; //llamado a la API REST Dian-laravel para consultar las resoluciones
+        const respuesta = await fetch(url, {
+                                              method: 'POST',
+                                              headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
+                                              body: JSON.stringify({"IDSoftware": idsoftware})
+                                            });
+        const resultado = await respuesta.json();
+        const arrayResolutions = resultado.ResponseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList.NumberRangeResponse;
+        if(arrayResolutions&&arrayResolutions.length>0)printResolutions(arrayResolutions);
+      } catch (error) {
+        console.log(error);  
+      }
+    }
+
+    function printResolutions(arrayResolutions:NumberRangeItem[]){
+      console.log(arrayResolutions);
+      const tablaListResolutions = document.querySelector('#tablaListResolutions tbody') as HTMLTableElement;
+      while(tablaListResolutions.firstChild)tablaListResolutions.removeChild(tablaListResolutions.firstChild);
+      arrayResolutions.forEach(r =>{
+        tablaListResolutions.insertAdjacentHTML('beforeend', 
+          `<tr>
+              <td class="px-4 py-2 border">${r.Prefix}</td>
+              <td class="px-3 py-2 border">${r.ResolutionNumber}</td>
+              <td class="px-3 py-2 border">${r.FromNumber} - ${r.ToNumber}</td>
+              <td class="px-3 py-2 border">${r.ValidDateTo}</td>
+              <td class="px-4 py-2 border text-2xl"><button class="downResolution" type="button" id="${r.ResolutionNumber}">⏬</button></td>
+          </tr>`
+        )
+      });
+      tablaListResolutions.addEventListener('click', e=> descargarResolucion(e, arrayResolutions) );
+    }
+
+    async function descargarResolucion(e:Event, arrayResolutions:NumberRangeItem[]){
+      const target = e.target as HTMLButtonElement;
+      if(target.classList.contains('downResolution')){
+        const numberResolution = target.id;
+        const resolutionSelected = arrayResolutions.find(x=>x.ResolutionNumber === numberResolution);
+        console.log(resolutionSelected);
+        try {
+          const url = `/admin/api/guardarResolutionJ2`; //llamado a la API para guardar la resolucion DIAN
+          const respuesta = await fetch(url,  { method: 'POST',
+                                                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                                body: JSON.stringify(resolutionSelected)
+                                              });
+          const resultado = await respuesta.json();
+          if(resultado.exito != undefined){
+            const existeResol:number = POS.facturadores.findIndex((x:any)=>x.id==resultado.facturador.id&&x.resolucion == resolutionSelected?.ResolutionNumber);
+            if(existeResol === -1){ //si no existe consecutibo imprmir
+              // actualizar el arreglo de facturador
+              POS.facturadores.push(resultado.facturador); //= [...facturadores, resultado.facturador];
+              //insertar en vista facturador
+              const tablaFacturadores = ($('#tablaFacturadores') as any).DataTable(configdatatables);
+              (tablaFacturadores as any).row.add([
+                        (tablaFacturadores as any).rows().count() + 1,
+                        resultado.facturador.nombre,
+                        'ELECTRONICA',
+                        resolutionSelected?.FromNumber+' - '+resolutionSelected?.ToNumber,
+                        1,
+                        resolutionSelected?.ValidDateTo,
+                        'Activo',
+                        `<div class="acciones-btns" id="${resultado.facturador.id}" data-facturador="${resultado.facturador.nombre}">
+                            <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>`
+                    ]).draw(false);
+              //insertar facturador en caja para seleccionar
+              crearConsecutivoGestionCaja(resultado.facturador.id, resultado.facturador.nombre);
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        miDialogoGetResolucion.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
+      }//fin button
+    }//fin funcion descargarResolucion
+
+    function crearConsecutivoGestionCaja(idfacturador:string, nombre:string){
+      const selectConsecutivoCaja = document.querySelector('#idtipoconsecutivo') as HTMLSelectElement;
+      const option = document.createElement('option');
+      option.value = idfacturador;
+      option.textContent = nombre;
+      selectConsecutivoCaja.appendChild(option);
     }
 
 
     ///////   ENVIAR SET DE PRUEBAS    ///////
-    document.querySelector('#formSetPruebas')?.addEventListener('click', async(e:Event)=>{
+    document.querySelector('#formSetPruebas')?.addEventListener('submit', async(e:Event)=>{
       e.preventDefault();
       const token = selectSetCompañia.options[selectSetCompañia.selectedIndex]?.dataset.token;
       const test = document.querySelector('#idsetpruebas') as HTMLInputElement;
@@ -427,7 +609,7 @@
       try {
         const url = "https://apidianj2.com/api/ubl2.1/invoice/"+test.value; //llamado a la API REST Dianlaravel
         const respuesta = await fetch(url, {
-                                              method: 'PUT',
+                                              method: 'POST',
                                               headers: {
                                                 "Accept": "application/json",
                                                 "Content-Type": "application/json",
@@ -472,11 +654,12 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
-          miDialogoCompañia.close();
-          miDialogoGetResolucion.close();
-          miDialogosetpruebas.close();
-          document.removeEventListener("click", cerrarDialogoExterno);
+      if(event.target === miDialogoAdquirirCompañia || event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
+        miDialogoAdquirirCompañia.close();  
+        miDialogoCompañia.close();
+        miDialogoGetResolucion.close();
+        miDialogosetpruebas.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
       }
     }
 

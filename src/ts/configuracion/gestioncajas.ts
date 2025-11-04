@@ -16,7 +16,7 @@
       let cajas:cajasapi[]=[], unacaja:cajasapi|undefined;
       (async ()=>{
         try {
-            const url = "/admin/api/allcajas"; //llamado a la API REST y se trae todos los productos
+            const url = "/admin/api/allcajas"; //llamado a la API REST y se trae todos las cajas
             const respuesta = await fetch(url); 
             cajas = await respuesta.json(); 
         } catch (error) {

@@ -1,6 +1,7 @@
 <div class="gestionDian">
     <h4 class="text-gray-600 mb-12 mt-4">Gestionar Dian</h4>
     <div class="flex flex-wrap gap-2 mt-4 mb-4 pb-4">
+        <button id="btnAdquirirCompañia" class="btn-command text-center"><span class="material-symbols-outlined">arrow_and_edge</span>Adquirir compañia</button>
         <button id="btnCrearCompañia" class="btn-command text-center"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
         <button id="btnObtenerresolucion" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
         <button id="BtnSetpruebas" class="btn-command text-center"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>  
@@ -22,12 +23,12 @@
       </thead>
       <tbody>
           <?php foreach($companias as $index => $value): ?>
-          <tr> 
+          <tr id="company<?php echo $value->identification_number;?>"> 
               <td class=""><?php echo $value->id;?></td>        
               <td class="" ><?php echo $value->business_name; ?></td> 
               <td class=""><?php echo $value->identification_number;?></td>
               <td class="" ><?php echo $value->idsoftware; ?></td> 
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button><span class="material-symbols-outlined editarcompañia">edit_note</span></button> <button><span class="material-symbols-outlined eliminarcompañia">delete</span></button></div></td>
+              <td class="accionestd"><div class="acciones-btns"> <button id="<?php echo $value->id;?>"><span class="material-symbols-outlined eliminarcompañia">delete</span></button></div></td>
           </tr>
           <?php endforeach; ?>
       </tbody>
@@ -149,7 +150,7 @@
                     <select id="department_id" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="department_id">
                         <option value="" disabled selected>-Seleccionar-</option>
                         <?php foreach($departments as $value): ?>
-                            <option value="<?php echo $value->id?>"><?php echo $value->name?></option>
+                            <option value="<?php echo $value->id;?>"><?php echo $value->name;?></option>
                         <?php endforeach; ?>   
                     </select>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
@@ -179,6 +180,24 @@
         </form>
     </dialog><!--fin crear/editar compañia-->
 
+    <dialog id="miDialogoAdquirirCompañia" class="midialog-sm p-12">
+        <h4 class="font-semibold text-gray-700 mb-4">Aquirir compañia</h4>
+        <div id="divmsjalertaAdquirirCompañia"></div>
+        <form id="formAdquirirCompañia" class="formulario" action="/admin/config/AdquirirCompañia" method="POST">
+            
+            <div class="formulario__campo">
+                <label class="formulario__label" for="adquirirCompañia">Numero de RUT</label>
+                <div class="formulario__dato">
+                    <input id="adquirirCompañia" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nit sin digito de verificacion" name="adquirirCompañia" value="" required>
+                </div>
+            </div>
+            <div class="text-right">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEnviarAdquirirCompañia" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Enviar">
+            </div>
+        </form>
+    </dialog><!--fin adquirir compañia-->
+
     <dialog id="miDialogoGetResolucion" class="midialog-sm p-12">
         <h4 class="font-semibold text-gray-700 mb-4">Obtener resolución</h4>
         <div id="divmsjalertaGetResolucion"></div>
@@ -186,15 +205,32 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="selectResolucioncompañia">Seleccionar compañia</label>
                 <select id="selectResolucioncompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="getresolucioncompañia" required>
-                    <option value="" disabled selected>-Seleccionar-</option>                   
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <?php foreach($companias as $value): ?>
+                        <option data-token="" value="<?php echo $value->id;?>"><?php echo $value->business_name;?></option>
+                    <?php endforeach; ?>                 
                 </select>
             </div>
-            <div>
-                <!--lista de resoluciones-->
+            <div class="mb-4 listResolutions"><!--lista de resoluciones-->
+                <h3 class="text-lg font-semibold ">📃 Lista de resoluciones</h3>
+                <table id="tablaListResolutions" class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100 text-gray-700 text-xl">
+                        <tr>
+                            <th class="px-4 py-2 border">Prefijo</th>
+                            <th class="px-4 py-2 border">N° Resolucion</th>
+                            <th class="px-4 py-2 border">Rango</th>
+                            <th class="px-4 py-2 border">Fecha fin</th>
+                            <th class="px-4 py-2 border">Descargar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-lg text-center">
+                        
+                    </tbody>
+                </table>
             </div>
             <div class="text-right">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEnviarGetResolucion" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Descargar">
+                <input id="btnEnviarGetResolucion" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Consultar">
             </div>
         </form>
     </dialog><!--fin obtener resolucion-->
@@ -206,7 +242,10 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="selectSetCompañia">Seleccionar compañia</label>
                 <select id="selectSetCompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="setcompañia" required>
-                    <option value="" disabled selected>-Seleccionar-</option>          
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <?php foreach($companias as $value): ?>
+                        <option data-token="" value="<?php echo $value->id;?>"><?php echo $value->business_name;?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="formulario__campo">
