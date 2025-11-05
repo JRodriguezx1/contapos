@@ -37,11 +37,11 @@
         <div class="empleado-grid">
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombreBanco">Nombre</label>
-                <input id="nombreBanco" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del banco" name="nombre" value="" required>
+                <input id="nombreBanco" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del banco" name="nombre" value="" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="numeroCuenta">Numero de cuenta</label>
-                <input id="numeroCuenta" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Numero de cuenta" name="numerocuenta" value="" required>
+                <input id="numeroCuenta" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Numero de cuenta" name="numerocuenta" value="" required>
             </div>
         </div>  
         

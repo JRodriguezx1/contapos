@@ -19,19 +19,19 @@
             <div class="">   
                 <span class="text-lg text-gray-500">Celular Actual</span>
                 <div class="rounded-md transition focus-within:border-blue-600">
-                    <input type="number" id="movil" name="movil" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Tu celular" value="<?php echo $usuario->movil??'';?>" required/>
+                    <input type="number" id="movil" name="movil" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" placeholder="Tu celular" value="<?php echo $usuario->movil??'';?>" required/>
                 </div>
             </div>
             <div class="">   
                 <span class="text-lg text-gray-500">Ciudad</span>
                 <div class="rounded-md transition focus-within:border-blue-600">
-                    <input type="text" id="ciudad" name="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Ciudad de residencia" value="<?php echo $usuario->ciudad??'';?>" required/>
+                    <input type="text" id="ciudad" name="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" placeholder="Ciudad de residencia" value="<?php echo $usuario->ciudad??'';?>" required/>
                 </div>
             </div>   
             <div class="sm:min-w-96">
                 <span class="text-lg text-gray-500">Dirección</span>
                 <div class="rounded-md transition focus-within:border-blue-600">
-                    <input type="text" id="direccion" name="direccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="Dirección de residencia" value="<?php echo $usuario->direccion??'';?>" required/>
+                    <input type="text" id="direccion" name="direccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" placeholder="Dirección de residencia" value="<?php echo $usuario->direccion??'';?>" required/>
                 </div>
             </div>
                 
@@ -42,14 +42,14 @@
             <div>
                 <span class="text-lg text-gray-500">Contraseña Actual</span>
                 <div class="rounded-md transition focus-within:border-blue-600">
-                    <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="***********" required/>
+                    <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" placeholder="***********" required/>
                 </div>
             </div>
             <div>
                 <span class="text-lg text-gray-500">Nueva Contraseña</span>
                 <div class="flex items-center">
                     <div class="flex-1 rounded-md transition focus-within:border-blue-600">
-                        <input type="password" id="password2" name="password2" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" placeholder="***********" />
+                        <input type="password" id="password2" name="password2" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" placeholder="***********" />
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" class=" ml-2 h-6 w-6 cursor-pointer text-sm font-semibold text-gray-600 underline decoration-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
@@ -83,7 +83,7 @@
             <div class="sm:col-span-6 w-full">
                 <label class="formulario__label" for="email">Email</label>
                 <div class="formulario__dato mt-2 w-full">
-                    <input type="text" placeholder="Tu email actual" id="email" name="email" value="" class="bg-gray-50 !border !border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block !w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 outline-none">
+                    <input type="text" placeholder="Tu email actual" id="email" name="email" value="" class="bg-gray-50 !border !border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block !w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 outline-none">
                     <!-- <label data-num="36" class="count-charts" for="">36</label> -->
                 </div>
             </div>

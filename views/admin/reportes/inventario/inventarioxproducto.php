@@ -1,5 +1,5 @@
 <div class="box inventarioxproducto">
-  <a class="btn-xs btn-dark" href="/admin/reportes">Atras</a>
+  <a class="btn-xs btn-" href="/admin/reportes">Atras</a>
   <h4 class="text-gray-600 mb-8 mt-4">Inventario por producto</h4>
   
   <div>

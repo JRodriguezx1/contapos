@@ -47,7 +47,7 @@
                         <p class="text-greymouse">Subir imagen</p>
                     </div>
                     <input id="upImage" class="formulario__inputfile" type="file" accept="image/*" name="img" hidden>
-                    <button id="customUpImage" class="text-white bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa] dark:focus:ring-[#0a8a8a] font-medium rounded-lg text-sm text-center !w-[23%] !mx-auto mb-2 !px-8 !py-4" type="button">Cargar Imagen</button>
+                    <button id="customUpImage" class="text-white bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa]  font-medium rounded-lg text-sm text-center !w-[23%] !mx-auto mb-2 !px-8 !py-4" type="button">Cargar Imagen</button>
                 </div>
             <div class="grid grid-cols-1 gap-x-6 sm:grid-cols-6">
                 <div class="formulario__campo sm:col-span-3">
@@ -66,7 +66,7 @@
                     <div class="formulario__dato">
                         <input
                         id="nombreempleado"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
                         type="text"
                         placeholder="Nombre del empleado"
                         name="nombre"
@@ -79,7 +79,7 @@
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="apellido">Apellido</label>
                     <div class="formulario__dato">
-                        <input id="apellidoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Apellido del empleado" name="apellido" value="<?php echo $empleado->apellido??'';?>">
+                        <input id="apellidoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Apellido del empleado" name="apellido" value="<?php echo $empleado->apellido??'';?>">
                         <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                     <div class="formulario__dato">
                         <input
                         id="nicknameempleado"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
                         type="text"
                         placeholder="Usuario del empleado"
                         name="nickname"
@@ -113,7 +113,7 @@
                 <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="cedula">Cédula</label>
                     <div class="formulario__dato">
-                        <input id="cedulaempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Cedula del empleado" name="cedula" value="<?php //echo $empleado->cedula??'';?>">-->
+                        <input id="cedulaempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Cedula del empleado" name="cedula" value="<?php //echo $empleado->cedula??'';?>">-->
                         <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                     <!--</div>
                 </div>-->
@@ -132,7 +132,7 @@
                     <div class="formulario__dato">
                         <input
                         id="passwordempleado"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
                         type="password"
                         placeholder="Contraseña de sesión"
                         name="password"
@@ -156,7 +156,7 @@
                     <div class="formulario__dato">
                         <input
                         id="passwordempleado2"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
                         type="password"
                         placeholder="Confirmar contraseña"
                         name="password2"
@@ -169,32 +169,32 @@
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="movil">Teléfono</label>
                     <div class="formulario__dato">
-                        <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
+                        <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
                     </div>
                 </div>
                 <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="email">Email</label>
                     <div class="formulario__dato">
-                        <input id="emailempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Tu Email" name="email" value="<?php //echo $empleado->email??'';?>">
+                        <input id="emailempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Tu Email" name="email" value="<?php //echo $empleado->email??'';?>">
                     </div>
                 </div>-->
                 <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="direccion">Dirección</label>
                     <div class="formulario__dato">
-                        <input id="direccionempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion de  residencia" name="direccion" value="<?php //echo $empleado->direccion??'';?>">-->
+                        <input id="direccionempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion de  residencia" name="direccion" value="<?php //echo $empleado->direccion??'';?>">-->
                         <!-- <label data-num="90" class="count-charts" for="">90</label> -->
                     <!--</div>
                 </div>-->
                 <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="departamento">Departamento</label>
                     <div class="formulario__dato">
-                        <input id="departamentoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="departamento" name="departamento" value="<?php //echo $empleado->departamento??''; ?>">
+                        <input id="departamentoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="departamento" name="departamento" value="<?php //echo $empleado->departamento??''; ?>">
                     </div>
                 </div>-->
                 <!--<div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="ciudad">Ciudad</label>
                     <div class="formulario__dato">
-                        <input id="ciudadempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad" name="ciudad" value="<?php //echo $empleado->ciudad??'';?>">-->
+                        <input id="ciudadempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad" name="ciudad" value="<?php //echo $empleado->ciudad??'';?>">-->
                         <!-- <label data-num="14" class="count-charts" for="">14</label> -->
                     <!--</div>
                 </div>-->
@@ -214,7 +214,7 @@
                     <div class="formulario__dato">
                         <select
                         id="perfilempleado"
-                        class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
                         name="perfil"
                         required
                         >
@@ -233,7 +233,7 @@
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Ventas</p>
 
                     <label for="habilitarmoduloventa" class="flex items-center justify-between cursor-pointer mb-3">
-                    <span class="text-gray-600 text-xl dark:text-gray-300">Habilitar módulo de venta</span>
+                    <span class="text-gray-600 text-xl ">Habilitar módulo de venta</span>
                     <input id="habilitarmoduloventa" name="permisos[]" value="1" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -241,7 +241,7 @@
                     </label>
 
                     <label for="registrarventa" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Registrar nueva venta</span>
+                        <span class="text-gray-600  text-xl">Registrar nueva venta</span>
                         <input id="registrarventa" name="permisos[]" value="2" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -249,7 +249,7 @@
                     </label>
 
                     <label for="anularventa" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Anular una venta</span>
+                        <span class="text-gray-600  text-xl">Anular una venta</span>
                         <input id="anularventa" name="permisos[]" value="3" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -257,7 +257,7 @@
                     </label>
 
                     <label for="aplicardescuentos" class="flex items-center justify-between cursor-pointer">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Aplicar descuentos</span>
+                        <span class="text-gray-600  text-xl">Aplicar descuentos</span>
                         <input id="aplicardescuentos" name="permisos[]" value="4" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -270,7 +270,7 @@
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Inicio</p>
 
                     <label for="habilitarmoduloinicio" class="flex items-center justify-between cursor-pointer mb-3">
-                    <span class="text-gray-600 text-xl dark:text-gray-300">Habilitar módulo de inicio</span>
+                    <span class="text-gray-600 text-xl ">Habilitar módulo de inicio</span>
                     <input id="habilitarmoduloinicio" name="permisos[]" value="18" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -283,7 +283,7 @@
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Inventario</p>
 
                     <label for="habilitarmoduloinventario" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Habilitar módulo de inventario</span>
+                        <span class="text-gray-600  text-xl">Habilitar módulo de inventario</span>
                         <input id="habilitarmoduloinventario" name="permisos[]" value="5" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -291,7 +291,7 @@
                     </label>
 
                     <label for="consultarstock" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Consultar stock</span>
+                        <span class="text-gray-600  text-xl">Consultar stock</span>
                         <input id="consultarstock" name="permisos[]" value="6" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -299,7 +299,7 @@
                     </label>
 
                     <label for="ajustarinventario" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Hacer ajustes de inventario</span>
+                        <span class="text-gray-600  text-xl">Hacer ajustes de inventario</span>
                         <input id="ajustarinventario" name="permisos[]" value="7" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -307,7 +307,7 @@
                     </label>
 
                     <label for="actualizarprecios" class="flex items-center justify-between cursor-pointer">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Actualizar precios o datos</span>
+                        <span class="text-gray-600  text-xl">Actualizar precios o datos</span>
                         <input id="actualizarprecios" name="permisos[]" value="8" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -320,7 +320,7 @@
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Facturación</p>
 
                     <label for="habilitarmodulofacturacion" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300">Habilitar módulo de facturación</span>
+                        <span class="text-gray-600 ">Habilitar módulo de facturación</span>
                         <input id="habilitarmodulofacturacion" name="permisos[]" value="9" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -328,7 +328,7 @@
                     </label>
 
                     <label for="emitirfacturaselectronicas" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Emitir facturas electrónicas</span>
+                        <span class="text-gray-600  text-xl">Emitir facturas electrónicas</span>
                         <input id="emitirfacturaselectronicas" name="permisos[]" value="10" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -336,7 +336,7 @@
                     </label>
 
                     <label for="eliminarfacturas" class="flex items-center justify-between cursor-pointer">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Anular facturas y notas créditos</span>
+                        <span class="text-gray-600  text-xl">Anular facturas y notas créditos</span>
                         <input id="eliminarfacturas" name="permisos[]" value="11" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -349,7 +349,7 @@
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Caja</p>
 
                     <label for="habilitarmodulocaja" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Habilitar módulo de caja</span>
+                        <span class="text-gray-600  text-xl">Habilitar módulo de caja</span>
                         <input id="habilitarmodulocaja" name="permisos[]" value="12" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -357,7 +357,7 @@
                     </label>
 
                     <label for="abrircaja" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Abrir caja registradora</span>
+                        <span class="text-gray-600  text-xl">Abrir caja registradora</span>
                         <input id="abrircaja" name="permisos[]" value="13" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -365,7 +365,7 @@
                     </label>
 
                     <label for="cerrarcaja" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Cerrar caja y generar arqueo</span>
+                        <span class="text-gray-600  text-xl">Cerrar caja y generar arqueo</span>
                         <input id="cerrarcaja" name="permisos[]" value="14" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -373,7 +373,7 @@
                     </label>
 
                     <label for="verreportescaja" class="flex items-center justify-between cursor-pointer">
-                        <span class="text-gray-600 dark:text-gray-300">Ver reportes de caja</span>
+                        <span class="text-gray-600 ">Ver reportes de caja</span>
                         <input id="verreportescaja" name="permisos[]" value="15" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -387,7 +387,7 @@
                     <p class="text-slate-600 text-xl font-bold mb-4">Módulos Administrativos</p>
 
                     <label for="habilitarreportes" class="flex items-center justify-between cursor-pointer mb-3">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Habilitar módulo de reportes</span>
+                        <span class="text-gray-600  text-xl">Habilitar módulo de reportes</span>
                         <input id="habilitarreportes" name="permisos[]" value="16" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -395,7 +395,7 @@
                     </label>
 
                     <label for="habilitarconfiguracion" class="flex items-center justify-between cursor-pointer">
-                        <span class="text-gray-600 dark:text-gray-300 text-xl">Habilitar módulo de configuración</span>
+                        <span class="text-gray-600  text-xl">Habilitar módulo de configuración</span>
                         <input id="habilitarconfiguracion" name="permisos[]" value="17" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
@@ -417,7 +417,7 @@
         <form id="formContraseña" class="formulario" method="POST">
             <h5 id="nombreEmpleadoPass" class="mt-2 text-xl text-gray-500">Julian Rodriguez</h5>
             <label for="cambiocontraseña"></label>
-            <input id="changePassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="password" value="" required>
+            <input id="changePassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="password" value="" required>
             <div class="text-right mt-6">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
                 <input id="btnEnviarContrasela" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Actualizar">

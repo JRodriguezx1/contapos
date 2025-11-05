@@ -1,13 +1,13 @@
 <div class="box !pb-16">
     <!-- Botón atrás -->
-    <a href="/admin/campanas" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <a href="/admin/campanas" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
         </svg>
         <span class="sr-only">Atrás</span>
     </a>
 
-    <div class="p-6 dark:bg-neutral-900 rounded-2xl">
+    <div class="p-6  rounded-2xl">
         <!-- Barra de progreso -->
         <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-2">
@@ -38,8 +38,8 @@
 
         <!-- Paso 1 -->
         <section class="space-y-4 step-section step-1">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Número de origen</h2>
-            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-lg focus:outline-none focus:ring-1">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 ">Número de origen</h2>
+            <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3     h-14 text-lg focus:outline-none focus:ring-1">
                 <option value="">-- Selecciona --</option>
                 <option value="+573135421983">Atención al cliente (+57 313 5421983)</option>
                 <option value="+573001234567">Ventas (+57 300 1234567)</option>
@@ -48,40 +48,40 @@
 
         <!-- Paso 2 -->
         <section class="space-y-4 mt-8 step-section step-2 hidden">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Nombre campaña</h2>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-lg focus:outline-none focus:ring-1" placeholder="Ej: Promoción septiembre" />
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 ">Nombre campaña</h2>
+            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3     h-14 text-lg focus:outline-none focus:ring-1" placeholder="Ej: Promoción septiembre" />
         </section>
 
         <!-- Paso 3 -->
         <section class="space-y-4 mt-8 step-section step-3 hidden">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Audiencia</h2>
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 ">Audiencia</h2>
             <div class="flex flex-col md:flex-row gap-4">
-                <button type="button" class="px-6 py-3 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30">Seleccionar contactos</button>
-                <button type="button" class="px-6 py-3 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30">Subir archivo</button>
+                <button type="button" class="px-6 py-3 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-50 ">Seleccionar contactos</button>
+                <button type="button" class="px-6 py-3 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-50 ">Subir archivo</button>
             </div>
         </section>
 
         <!-- Paso 4 -->
         <section class="space-y-4 mt-8 step-section step-4 hidden">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Mensaje</h2>
-            <textarea rows="5" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white text-lg focus:outline-none focus:ring-1"></textarea>
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 ">Mensaje</h2>
+            <textarea rows="5" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3     text-lg focus:outline-none focus:ring-1"></textarea>
             <p class="text-sm text-gray-500 mt-2">Vista previa:</p>
-            <div class="border rounded-lg p-3 bg-gray-50 text-gray-700 dark:bg-neutral-800 dark:text-gray-300">
+            <div class="border rounded-lg p-3 bg-gray-50 text-gray-700  ">
                 Aquí se mostrará la vista previa del mensaje.
             </div>
         </section>
 
         <!-- Paso 5 -->
         <section class="space-y-4 mt-8 step-section step-5 hidden">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Confirmación</h2>
-            <div class="border rounded-lg p-4 dark:border-neutral-700 dark:bg-neutral-800">
-                <p class="text-gray-700 dark:text-gray-300">Aquí se mostrarán los datos finales de la campaña antes de enviarla.</p>
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 ">Confirmación</h2>
+            <div class="border rounded-lg p-4  ">
+                <p class="text-gray-700 ">Aquí se mostrarán los datos finales de la campaña antes de enviarla.</p>
             </div>
         </section>
 
         <!-- Navegación -->
         <div class="flex justify-between mt-6">
-            <button id="btnAnteriorWizard" class="px-6 py-3 border rounded-lg hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800">Anterior</button>
+            <button id="btnAnteriorWizard" class="px-6 py-3 border rounded-lg hover:bg-gray-100  ">Anterior</button>
             <button id="btnSiguienteWizard" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Siguiente</button>
         </div>
     </div>

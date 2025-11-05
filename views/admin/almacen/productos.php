@@ -137,7 +137,7 @@
 
             <!-- <div class="formulario__campo">
                 <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
-                <select id="idunidadmedida" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idunidadmedida" required>
+                <select id="idunidadmedida" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="idunidadmedida" required>
                     <?php foreach($unidadesmedida as $unidadmedida): ?>
                     <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
                     <?php endforeach; ?>
@@ -186,7 +186,7 @@
                         <label class="formulario__label" for="impuesto">Impuesto</label>
                         <div class="formulario__dato">
                             <!--<input 
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" 
                                 type="text" placeholder="Impuesto del producto en %" 
                                 id="impuesto" 
                                 name="impuesto" 

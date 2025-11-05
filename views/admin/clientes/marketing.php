@@ -9,7 +9,7 @@ $campanias = [
 
 <div class="p-6 bg-white rounded-lg shadow-md">
   <div class="box ventasxtransaccion">
-  <a href="/admin/clientes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-6">
+  <a href="/admin/clientes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2    mb-6">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
@@ -20,7 +20,7 @@ $campanias = [
     <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">Gestión de Campañas de Marketing</h3>
 
     <!-- Botón Crear Campaña (TYPE=button para evitar submit inesperado) -->
-    <a id="btnNuevaCampania" href="/admin/clientes/marketing/crearcampania" class="text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-semibold rounded-lg text-lg px-6 py-3 text-center shadow-lg transition transform hover:scale-105">
+    <a id="btnNuevaCampania" href="/admin/clientes/marketing/crearcampania" class="text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300  font-semibold rounded-lg text-lg px-6 py-3 text-center shadow-lg transition transform hover:scale-105">
       ➕ Crear Campaña
     </a>
   </div>
@@ -40,8 +40,8 @@ $campanias = [
       </thead>
       <tbody>
         <?php foreach ($campanias as $c): ?>
-          <tr class="border-t hover:bg-gray-50 dark:hover:bg-neutral-800 odd:bg-gray-50 even:bg-white dark:odd:bg-neutral-800 dark:even:bg-neutral-900">
-            <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><?= htmlspecialchars($c["nombre"]) ?></td>
+          <tr class="border-t hover:bg-gray-50  odd:bg-gray-50 even:bg-white  ">
+            <td class="px-4 py-3 font-medium text-gray-900 "><?= htmlspecialchars($c["nombre"]) ?></td>
             <td class="px-4 py-3"><?= htmlspecialchars($c["canal"]) ?></td>
             <td class="px-4 py-3"><?= htmlspecialchars($c["segmento"]) ?></td>
             <td class="px-4 py-3 font-semibold <?= $c["estado"] === "Enviada" ? 'text-green-600' : 'text-yellow-600' ?>">

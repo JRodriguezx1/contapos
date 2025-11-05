@@ -78,7 +78,7 @@
 
           <div>
             <label for="sucursal" class="block text-xl font-medium mb-1 text-gray-700">Sede</label>
-            <span class="block mb-1 text-base text-gray-500 dark:text-gray-400">Seleccione una sede</span>
+            <span class="block mb-1 text-base text-gray-500 ">Seleccione una sede</span>
             <select 
               id="sucursal"
               name="idsucursal"
@@ -106,13 +106,13 @@
             />
           </div>
 
-          <a href="#" class="group text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 text-base transition-all duration-200">
+          <a href="#" class="group text-blue-500  hover:text-blue-400  text-base transition-all duration-200">
             ¿Olvidaste tu contraseña?
           </a>
 
           <button
             type="submit"
-            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white dark:text-gray-200 shadow-lg mt-6 p-2 text-xl rounded-2xl w-full
+            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white  shadow-lg mt-6 p-2 text-xl rounded-2xl w-full
                    hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4.7rem]"
           >
             INICIAR SESIÓN
@@ -122,7 +122,7 @@
         <div class="flex flex-col mt-4 items-center justify-center text-lg">
           <h3 class="text-gray-700">
             ¿No tienes una cuenta?
-            <a href="#" class="group text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 transition-all duration-200">
+            <a href="#" class="group text-blue-500  hover:text-blue-400  transition-all duration-200">
               <span class="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat 
                            group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
                 Regístrate
@@ -131,10 +131,10 @@
           </h3>
         </div>
 
-        <div class="text-gray-500 dark:text-gray-400 flex text-center flex-col mt-4 items-center text-lg leading-snug">
+        <div class="text-gray-500  flex text-center flex-col mt-4 items-center text-lg leading-snug">
           <p class="cursor-default">
             Al iniciar sesión, acepta
-            <a href="#" class="group text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 transition-all duration-200">
+            <a href="#" class="group text-blue-500  hover:text-blue-400  transition-all duration-200">
               nuestros Términos y <br />Política de privacidad.
             </a>
           </p>

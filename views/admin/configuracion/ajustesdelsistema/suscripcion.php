@@ -2,7 +2,7 @@
 
 <!-- Botón que abre el modal -->
  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white"></h2>
+    <h2 class="text-2xl font-semibold text-gray-800 "></h2>
    <button onclick="document.getElementById('modal-suscripcion').classList.remove('hidden')" 
            class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
      Información del suscriptor
@@ -11,13 +11,13 @@
 
 <!-- Modal de suscripción -->
 <div id="modal-suscripcion" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 !mt-0 px-4">
-  <div class="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg w-full max-w-md md:max-w-2xl p-4 md:p-8 max-h-[90vh] overflow-y-auto">
+  <div class="bg-white  rounded-2xl shadow-lg w-full max-w-md md:max-w-2xl p-4 md:p-8 max-h-[90vh] overflow-y-auto">
     
-    <h3 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Detalles de la Suscripción</h3>
+    <h3 class="text-2xl font-semibold text-gray-800  mb-6">Detalles de la Suscripción</h3>
     
     <div class="grid grid-cols-1 gap-6">
       <div>
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-1">Estado</label>
+        <label class="block text-xl font-medium text-gray-700  mb-1">Estado</label>
         <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
           <option>Activa</option>
           <option>Inactiva</option>
@@ -26,31 +26,31 @@
       </div>
 
       <div>
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-1">Monto</label>
+        <label class="block text-xl font-medium text-gray-700  mb-1">Monto</label>
         <input type="number" placeholder="Ingresar monto de suscripción"
                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-lg focus:outline-none focus:ring-1">
       </div>
 
       <div>
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-1">Día de pago</label>
+        <label class="block text-xl font-medium text-gray-700  mb-1">Día de pago</label>
         <input type="number" placeholder="Ingresar día de pago" min="1" max="31"
                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-lg focus:outline-none focus:ring-1">
       </div>
 
       <div>
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-1">Mes siguiente</label>
+        <label class="block text-xl font-medium text-gray-700  mb-1">Mes siguiente</label>
         <input type="text" placeholder="Ingresar mes de suscripción"
                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-lg focus:outline-none focus:ring-1">
       </div>
 
       <div>
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-1">Año</label>
+        <label class="block text-xl font-medium text-gray-700  mb-1">Año</label>
         <input type="number" placeholder="Ingresar año de suscripción"
                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-lg focus:outline-none focus:ring-1">
       </div>
 
       <div>
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-1">Suscripción automática</label>
+        <label class="block text-xl font-medium text-gray-700  mb-1">Suscripción automática</label>
         <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
           <option>Sí</option>
           <option>No</option>
@@ -181,15 +181,15 @@
   <!-- //------------Información del botón descuento/cargos--------------// -->
   <!-- Modal Ajustes -->
   <div id="modal-ajustes" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 !mt-0 px-4">
-    <div class="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg w-full max-w-md md:max-w-2xl p-4 md:p-8 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white  rounded-2xl shadow-lg w-full max-w-md md:max-w-2xl p-4 md:p-8 max-h-[90vh] overflow-y-auto">
       <!-- Título -->
-      <h3 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Aplicar Ajustes</h3>
+      <h3 class="text-2xl font-semibold text-gray-800  mb-6">Aplicar Ajustes</h3>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Tipo de ajuste -->
         <div>
-          <label class="block text-xl font-medium text-gray-700 dark:text-gray-300">Tipo de ajuste</label>
-          <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+          <label class="block text-xl font-medium text-gray-700 ">Tipo de ajuste</label>
+          <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
             <option value="descuento">Descuento</option>
             <option value="cargo">Cargo</option>
           </select>
@@ -197,24 +197,24 @@
   
         <!-- Monto -->
         <div>
-          <label class="block text-xl font-medium text-gray-700 dark:text-gray-300">Monto</label>
+          <label class="block text-xl font-medium text-gray-700 ">Monto</label>
           <input type="number" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
         </div>
       </div>
   
       <!-- Detalle -->
       <div class="mt-6">
-        <label class="block text-xl font-medium text-gray-700 dark:text-gray-300">Detalle</label>
+        <label class="block text-xl font-medium text-gray-700 ">Detalle</label>
         <textarea rows="3" 
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-32 text-xl focus:outline-none focus:ring-1"></textarea>
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-32 text-xl focus:outline-none focus:ring-1"></textarea>
       </div>
   
       <!-- Acciones -->
       <div class="flex justify-end gap-4 mt-8">
         <!-- Botón cancelar que cierra el modal -->
         <button onclick="document.getElementById('modal-ajustes').classList.add('hidden')" 
-                class="px-8 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 text-xl uppercase">
+                class="px-8 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg    text-xl uppercase">
           Cancelar
         </button>
         <button class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-xl uppercase">

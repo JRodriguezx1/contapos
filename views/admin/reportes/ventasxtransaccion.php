@@ -1,5 +1,5 @@
 <div class="box ventasxtransaccion">
-  <a href="/admin/reportes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+  <a href="/admin/reportes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
@@ -60,7 +60,7 @@
           step="1" 
           value="2025" 
           required
-          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 m-auto"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 p-2.5     h-14 text-xl focus:outline-none focus:ring-1 m-auto"
         >
 
         <!-- Botones -->
@@ -89,7 +89,7 @@
     <h4 class=" text-gray-700 font-semibold">Aplicar cambios</h4>
     <form id="formDiario" class=" border-b border-gray-900/10 pb-6 text-center">
         <p class="mt-2 text-xl text-gray-600">Seleccionar mes.</p>
-        <input id="inputselectmesyaño" type="month" name="mes" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" required>
+        <input id="inputselectmesyaño" type="month" name="mes" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
         <div class="grid grid-cols-2 gap-3 mt-6">
             <button type="button" class="btn-md btn-turquoise !py-4 px-6 text-xl min-w-[130px] salir">Salir</button>
             <button id="btnaplicarmes" type="submit"class="btn-md btn-indigo !py-4 px-6 text-xl min-w-[130px] crearAddDir">Aplicar</button>

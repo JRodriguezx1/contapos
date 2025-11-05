@@ -109,7 +109,7 @@
                 </tr>
                 </thead>
                 <tbody class="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr:last-child]:border-none [&>tr>td]:p-5 [&>tr>td]:text-[0.95rem] [&>tr>td]:uppercase [&>tr>td]:text-gray-600 [&>tr]:hover:bg-gray-100 [&>tr]:transition-all [&>tr]:duration-150 [&>tr]:ease-in-out [&>tr]:h-16">
-                <!--<tr class="border-t dark:border-neutral-700">
+                <!--<tr class="border-t ">
                     <td class="p-4">Producto A</td>
                     <td class="p-4">10</td>
                     <td class="p-4 flex items-center justify-center gap-2">

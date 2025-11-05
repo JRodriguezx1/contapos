@@ -40,13 +40,13 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombrefacturador">Nombre</label>
                 <div class="formulario__dato">
-                    <input id="nombrefacturador" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del facturador" name="nombre" value="" required>
+                    <input id="nombrefacturador" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del facturador" name="nombre" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="idtipofacturador">Tipo facturador</label>
-                <select id="idtipofacturador" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idtipofacturador" required>
+                <select id="idtipofacturador" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="idtipofacturador" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <?php foreach($tipofacturadores as $value): ?>
                         <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -56,49 +56,49 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="rangoinicial">Consecutivo inicial</label>
                 <div class="formulario__dato">
-                    <input id="rangoinicial" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Consecutivo inicial del consecutivo" name="rangoinicial" value="" required>
+                    <input id="rangoinicial" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Consecutivo inicial del consecutivo" name="rangoinicial" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="rangofinal">Consecutivo final</label>
                 <div class="formulario__dato">
-                    <input id="rangofinal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Consecutivo final del consecutivo" name="rangofinal" value="" required>
+                    <input id="rangofinal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Consecutivo final del consecutivo" name="rangofinal" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="siguientevalor">Siguiente consecutivo</label>
                 <div class="formulario__dato">
-                    <input id="siguientevalor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Siguiente consecutivo" name="siguientevalor" value="" required>
+                    <input id="siguientevalor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Siguiente consecutivo" name="siguientevalor" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="fechainicio">Fecha inicio</label>
-                <input id="fechainicio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="date" placeholder="Siguiente consecutivo" name="fechainicio" value="">
+                <input id="fechainicio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="date" placeholder="Siguiente consecutivo" name="fechainicio" value="">
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="fechafin">Fecha fin</label>
-                <input id="fechafin" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="date" placeholder="Siguiente consecutivo" name="fechafin" value="">
+                <input id="fechafin" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="date" placeholder="Siguiente consecutivo" name="fechafin" value="">
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="resolucion">Número de resolución</label>
                 <div class="formulario__dato">
-                    <input id="resolucion" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Numero de resolucion" name="resolucion" value="">
+                    <input id="resolucion" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Numero de resolucion" name="resolucion" value="">
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="prefijo">Prefijo</label>
                 <div class="formulario__dato">
-                    <input id="prefijo" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Prefijo de la resolucion" name="prefijo" value="" required>
+                    <input id="prefijo" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Prefijo de la resolucion" name="prefijo" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="negociofacturador">Negocio</label>
-                <select id="negociofacturador" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="negocio" required>
+                <select id="negociofacturador" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="negocio" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     
                         <option value="<?php echo $negocio->id;?>"><?php echo $negocio->nombre;?></option>

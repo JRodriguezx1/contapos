@@ -8,7 +8,7 @@
           <div class="flex justify-center gap-12 mt-8">
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
-              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
+              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
                   <?php foreach($cajas as $index => $value):?>
                     <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
                   <?php endforeach; ?>
@@ -16,7 +16,7 @@
             </div>
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
+              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -28,14 +28,14 @@
             <div class="formulario__campo md:w-1/2">
               <label class="formulario__label" for="montoInicial">Abono inicial</label>
               <input id="montoInicial" name="montoInicial" type="text" placeholder="0"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
                 oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
             </div>
 
             <div class="formulario__campo md:w-1/2">
               <label class="formulario__label" for="saldoPendiente">Saldo pendiente</label>
               <input id="saldoPendiente" name="saldoPendiente" type="text" readonly
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1">
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
 
@@ -48,7 +48,7 @@
                   <?php foreach($mediospago as $index => $value):?>
                     <div class="mb-4 text-center">
                       <label class="text-gray-700 text-xl text-center leading-relaxed"><?php echo $value->mediopago??'';?>: </label>
-                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
                     </div>
                   <?php endforeach; ?>
                 </div>

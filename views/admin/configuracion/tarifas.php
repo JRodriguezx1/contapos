@@ -35,11 +35,11 @@
         <div class="empleado-grid">
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombreTarifa">Nombre</label>
-                <input id="nombreTarifa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del tarifa" name="nombre" value="" required>
+                <input id="nombreTarifa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del tarifa" name="nombre" value="" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="valorTarifa">Valor tarifa</label>
-                <input id="valorTarifa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la tarifa" name="valor" value="" required>
+                <input id="valorTarifa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la tarifa" name="valor" value="" required>
             </div>
         </div>  
         

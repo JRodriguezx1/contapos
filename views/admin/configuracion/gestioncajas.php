@@ -40,13 +40,13 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombrecaja">Nombre</label>
                 <div class="formulario__dato">
-                    <input id="nombrecaja" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la caja" name="nombre" value="" required>
+                    <input id="nombrecaja" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la caja" name="nombre" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="idtipoconsecutivo">Facturador automático</label>
-                <select id="idtipoconsecutivo" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="idtipoconsecutivo" required>
+                <select id="idtipoconsecutivo" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="idtipoconsecutivo" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <?php foreach($facturadores as $value): ?>
                         <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -55,7 +55,7 @@
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="negociogestioncaja">Negocio</label>
-                <select id="negociogestioncaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="negocio" required>
+                <select id="negociogestioncaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="negocio" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     
                         <option value="<?php echo $negocio->id;?>"><?php echo $negocio->nombre;?></option>
