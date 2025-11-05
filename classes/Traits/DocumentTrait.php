@@ -8,8 +8,9 @@ use Model\ventas\facturas;
 trait DocumentTrait
 {
 
-    protected function createInvoiceElectronic()
+    protected static function createInvoiceElectronic(int $x):int
     {
         $a = "aas";
+        return $x;
     }
 }
