@@ -95,9 +95,9 @@ class ventascontrolador{
     $invPro = true;
     $c = true;
 
-    $e = self::createInvoiceElectronic(123);
+    $e = self::createInvoiceElectronic($carrito, $datosAdquiriente);  //llamada al trait
 
-    debuguear($e);
+    debuguear(1);
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
