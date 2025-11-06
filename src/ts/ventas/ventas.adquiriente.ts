@@ -21,8 +21,30 @@
     POS.gestionarAdquiriente.datosAdquiriente = datosAdquiriente; //guarda en el objeto global
     miDialogoFacturarA.close();
     document.removeEventListener("click", cerrarDialogoExterno);
+    //guardar adquiriente en DB.
+    guardarAdquiriente(datosAdquiriente);
   });
 
+
+  async function guardarAdquiriente(datosAdquiriente: Record<string, FormDataEntryValue>){
+    try {
+          const url = "/admin/api/guardarAdquiriente";  //va al controlador ventascontrolador
+          const respuesta = await fetch(url, {
+                                    method: 'POST',
+                                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                    body: JSON.stringify(datosAdquiriente)
+                                  }); 
+          const resultado = await respuesta.json();
+          if(resultado.exito !== undefined){
+            msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+          }else{
+            msjalertToast('error', '¡Error!', resultado.error[0]);
+          }
+      } catch (error) {
+          console.log(error);
+      }
+  }
+  
 
   const gestionarAdquiriente = {  //objeto a exportar
     miDialogoFacturarA,

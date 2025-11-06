@@ -150,4 +150,19 @@ class apidiancontrolador{
   }
 
 
+  public static function guardarAdquiriente(){
+    session_start();
+    isadmin();
+    $alertas = [];
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+
+    $adquiriente = json_decode(file_get_contents('php://input'), true);
+
+  }
+
 }

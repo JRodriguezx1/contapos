@@ -95,7 +95,8 @@ class ventascontrolador{
     $invPro = true;
     $c = true;
 
-    $e = self::createInvoiceElectronic($carrito, $datosAdquiriente);  //llamada al trait
+    
+    $e = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo);  //llamada al trait
 
     debuguear(1);
     
