@@ -468,7 +468,7 @@ CREATE TABLE `config_local` (
   UNIQUE KEY `unique_sucursal_clave` (`fk_sucursalid`,`clave`) /*!80000 INVISIBLE */,
   KEY `fk_sucursalid_idx` (`fk_sucursalid`),
   CONSTRAINT `fk_sucursalid` FOREIGN KEY (`fk_sucursalid`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -477,7 +477,7 @@ CREATE TABLE `config_local` (
 
 LOCK TABLES `config_local` WRITE;
 /*!40000 ALTER TABLE `config_local` DISABLE KEYS */;
-INSERT INTO `config_local` VALUES (17,1,'tipo_costo_inventario','costo_promedio','2025-09-17 05:04:50'),(19,1,'mostrar_nombre_del_negocio_en_factura','0','2025-09-17 05:05:12'),(21,1,'mostrar_cufe_en_factura_electronica','0','2025-09-17 05:05:19'),(29,1,'limite_de_descuento_permitido','100','2025-09-19 05:46:43'),(36,1,'porcentaje_de_impuesto','8','2025-10-05 00:51:32'),(39,2,'discriminar_impuesto_por_producto','0','2025-10-20 06:16:12'),(40,2,'porcentaje_de_impuesto','19','2025-10-20 06:25:34');
+INSERT INTO `config_local` VALUES (17,1,'tipo_costo_inventario','costo_promedio','2025-09-17 05:04:50'),(19,1,'mostrar_nombre_del_negocio_en_factura','0','2025-09-17 05:05:12'),(21,1,'mostrar_cufe_en_factura_electronica','0','2025-09-17 05:05:19'),(29,1,'limite_de_descuento_permitido','100','2025-09-19 05:46:43'),(39,2,'discriminar_impuesto_por_producto','0','2025-10-20 06:16:12'),(40,2,'porcentaje_de_impuesto','19','2025-10-20 06:25:34'),(46,1,'discriminar_impuesto_por_producto','0','2025-11-06 04:17:50');
 /*!40000 ALTER TABLE `config_local` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -491,17 +491,18 @@ DROP TABLE IF EXISTS `consecutivos`;
 CREATE TABLE `consecutivos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_sucursalid` int DEFAULT NULL,
+  `idcompania` int DEFAULT NULL,
   `idtipofacturador` int NOT NULL,
   `idnegocio` int DEFAULT NULL,
-  `nombre` varchar(33) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `nombre` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `rangoinicial` int DEFAULT NULL,
-  `rangofinal` varchar(11) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `siguientevalor` varchar(11) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `rangofinal` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `siguientevalor` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `fechainicio` date DEFAULT NULL,
   `fechafin` date DEFAULT NULL,
-  `resolucion` varchar(22) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `consecutivoremplazo` varchar(33) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `prefijo` varchar(11) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `resolucion` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `consecutivoremplazo` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `prefijo` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `mostrarresolucion` tinyint(1) DEFAULT NULL,
   `mostrarimpuestodiscriminado` tinyint(1) DEFAULT NULL,
   `tokenfacturaelectronica` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
@@ -510,9 +511,11 @@ CREATE TABLE `consecutivos` (
   PRIMARY KEY (`id`),
   KEY `idtipofacturador_idx` (`idtipofacturador`),
   KEY `id_sucursalid_idx` (`id_sucursalid`),
+  KEY `idcompania_idx` (`idcompania`),
   CONSTRAINT `id_sucursalid` FOREIGN KEY (`id_sucursalid`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `idcompania` FOREIGN KEY (`idcompania`) REFERENCES `diancompanias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idtipofacturador` FOREIGN KEY (`idtipofacturador`) REFERENCES `tipofacturador` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -521,7 +524,7 @@ CREATE TABLE `consecutivos` (
 
 LOCK TABLES `consecutivos` WRITE;
 /*!40000 ALTER TABLE `consecutivos` DISABLE KEYS */;
-INSERT INTO `consecutivos` VALUES (1,1,2,1,'Facturacion POS',1,'5000','52',NULL,'2025-03-21',NULL,NULL,'FAP',1,1,NULL,NULL,1),(2,1,2,1,'Documento equivalente Pos',1,'500','1',NULL,'2025-05-12',NULL,NULL,'DOCP',1,1,NULL,NULL,1),(3,1,1,1,'Factura electronica 512',1,'1500','1',NULL,'2025-09-15','9560055445801',NULL,'FE',1,1,'abcde',NULL,1),(4,2,2,1,'Factura POS',1,'10000','2',NULL,NULL,NULL,NULL,'POS',1,1,NULL,NULL,1),(7,1,1,1,'Electronica FELP',1,'4000','1',NULL,NULL,NULL,NULL,'FEP',NULL,0,'0',NULL,1);
+INSERT INTO `consecutivos` VALUES (1,1,NULL,2,1,'Facturacion POS',1,'5000','52',NULL,'2025-03-21',NULL,NULL,'FAP',1,1,NULL,NULL,1),(2,1,NULL,2,1,'Documento equivalente Pos',1,'500','1',NULL,'2025-05-12',NULL,NULL,'DOCP',1,1,NULL,NULL,1),(3,1,NULL,1,1,'Factura electronica 512',1,'1500','1',NULL,'2025-09-15','9560055445801',NULL,'FE',1,1,'abcde',NULL,1),(4,2,NULL,2,1,'Factura POS',1,'10000','2',NULL,NULL,NULL,NULL,'POS',1,1,NULL,NULL,1),(7,1,NULL,1,1,'Electronica FELP',1,'4000','1',NULL,NULL,NULL,NULL,'FEP',NULL,0,'0',NULL,1),(8,1,1,1,1,'Electronica FE',2001,'10000','1','2024-12-09','2026-12-09','18764084947985',NULL,'FE',1,0,'0',1,1),(9,1,1,1,1,'Electronica DS',1,'100','1','2024-05-24','2026-05-24','18764071245941',NULL,'DS',1,0,'0',1,1),(10,1,NULL,2,1,'Prueba POS',1,'10000','1',NULL,NULL,NULL,NULL,'PPOS',NULL,0,'0',NULL,1);
 /*!40000 ALTER TABLE `consecutivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -860,11 +863,11 @@ CREATE TABLE `diancompanias` (
   `identification_number` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `idsoftware` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `pinsoftware` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `token` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `token` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `estado` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -873,6 +876,7 @@ CREATE TABLE `diancompanias` (
 
 LOCK TABLES `diancompanias` WRITE;
 /*!40000 ALTER TABLE `diancompanias` DISABLE KEYS */;
+INSERT INTO `diancompanias` VALUES (1,'DAVID FELIPE HERNANDEZ ZULETA','1098311392','f14345b9-c3f4-4f83-b1c1-8651398237c9','12345','5200bb7fd4fe052d35fc7dec6bf9d21a6a8189d906fee8e374f71bd87fb42447',1,'2025-11-03 20:08:38');
 /*!40000 ALTER TABLE `diancompanias` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1142,7 +1146,7 @@ CREATE TABLE `facturas_electronicas` (
   `cufe_nota` varchar(900) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `fecha_nota` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `is_auto` int DEFAULT NULL,
-  `json_envio` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `json_envio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `respuesta_factura` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
   `respuesta_nota` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
   `intentos_de_envio` int DEFAULT NULL,
@@ -1161,7 +1165,7 @@ CREATE TABLE `facturas_electronicas` (
   CONSTRAINT `id_estadonota` FOREIGN KEY (`id_estadonota`) REFERENCES `estados_electronicas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_facturaid` FOREIGN KEY (`id_facturaid`) REFERENCES `facturas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_sucursalidfk` FOREIGN KEY (`id_sucursalidfk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2477,4 +2481,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-29  1:11:39
+-- Dump completed on 2025-11-07  1:27:39

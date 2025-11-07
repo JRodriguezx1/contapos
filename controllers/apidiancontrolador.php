@@ -120,6 +120,7 @@ class apidiancontrolador{
     }else{
       $facturador = new consecutivos([
                                       'id_sucursalid'=>id_sucursal(), 
+                                      'idcompania' => $resolution['idcompany'],
                                       'idtipofacturador'=>1, 
                                       'nombre'=>'Electronica '.$resolution['Prefix'], 
                                       'rangoinicial'=>$resolution['FromNumber'],

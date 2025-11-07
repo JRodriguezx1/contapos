@@ -487,6 +487,7 @@ DROP TABLE IF EXISTS `consecutivos`;
 CREATE TABLE `consecutivos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_sucursalid` int DEFAULT NULL,
+  `idcompania` int DEFAULT NULL,
   `idtipofacturador` int NOT NULL,
   `idnegocio` int DEFAULT NULL,
   `nombre` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -506,9 +507,11 @@ CREATE TABLE `consecutivos` (
   PRIMARY KEY (`id`),
   KEY `idtipofacturador_idx` (`idtipofacturador`),
   KEY `id_sucursalid_idx` (`id_sucursalid`),
+  KEY `idcompania_idx` (`idcompania`),
   CONSTRAINT `id_sucursalid` FOREIGN KEY (`id_sucursalid`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `idcompania` FOREIGN KEY (`idcompania`) REFERENCES `diancompanias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idtipofacturador` FOREIGN KEY (`idtipofacturador`) REFERENCES `tipofacturador` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -517,7 +520,7 @@ CREATE TABLE `consecutivos` (
 
 LOCK TABLES `consecutivos` WRITE;
 /*!40000 ALTER TABLE `consecutivos` DISABLE KEYS */;
-INSERT INTO `consecutivos` VALUES (1,1,2,1,'Facturacion POS',1,'15000','1',NULL,'2029-03-21',NULL,NULL,'FAP',1,1,NULL,NULL,1);
+INSERT INTO `consecutivos` VALUES (1,1,NULL,2,1,'Facturacion POS',1,'15000','1',NULL,'2029-03-21',NULL,NULL,'FAP',1,1,NULL,NULL,1);
 /*!40000 ALTER TABLE `consecutivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -852,7 +855,7 @@ CREATE TABLE `diancompanias` (
   `identification_number` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `idsoftware` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `pinsoftware` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `token` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `token` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `estado` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -1131,7 +1134,7 @@ CREATE TABLE `facturas_electronicas` (
   `cufe_nota` varchar(900) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `fecha_nota` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `is_auto` int DEFAULT NULL,
-  `json_envio` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `json_envio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `respuesta_factura` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
   `respuesta_nota` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
   `intentos_de_envio` int DEFAULT NULL,
@@ -1150,7 +1153,7 @@ CREATE TABLE `facturas_electronicas` (
   CONSTRAINT `id_estadonota` FOREIGN KEY (`id_estadonota`) REFERENCES `estados_electronicas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_facturaid` FOREIGN KEY (`id_facturaid`) REFERENCES `facturas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_sucursalidfk` FOREIGN KEY (`id_sucursalidfk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2457,4 +2460,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-29  1:11:49
+-- Dump completed on 2025-11-07  1:28:07

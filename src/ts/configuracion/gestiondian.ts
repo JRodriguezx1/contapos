@@ -60,6 +60,7 @@
       };
     }
     interface NumberRangeItem {
+      idcompany?: string,
       ResolutionNumber: string;
       ResolutionDate: string;
       Prefix: string;
@@ -442,11 +443,10 @@
       e.preventDefault();
       const id:string = selectResolucioncompañia.options[selectResolucioncompañia.selectedIndex].value;
       const oneC = companiesAll.find(x=>x.id == id)!;
-      console.log(oneC);
-      getResolutions(oneC.idsoftware, oneC.token);
+      getResolutions(oneC.id, oneC.idsoftware, oneC.token);
     });
 
-    async function getResolutions(idsoftware:string, token:string){
+    async function getResolutions(idcompany:string, idsoftware:string, token:string){
       try {
         const url = "https://apidianj2.com/api/ubl2.1/numbering-range"; //llamado a la API REST Dian-laravel para consultar las resoluciones
         const respuesta = await fetch(url, {
@@ -456,14 +456,13 @@
                                             });
         const resultado = await respuesta.json();
         const arrayResolutions = resultado.ResponseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList.NumberRangeResponse;
-        if(arrayResolutions&&arrayResolutions.length>0)printResolutions(arrayResolutions);
+        if(arrayResolutions&&arrayResolutions.length>0)printResolutions(idcompany, arrayResolutions);
       } catch (error) {
         console.log(error);  
       }
     }
 
-    function printResolutions(arrayResolutions:NumberRangeItem[]){
-      console.log(arrayResolutions);
+    function printResolutions(idcompany:string, arrayResolutions:NumberRangeItem[]){
       const tablaListResolutions = document.querySelector('#tablaListResolutions tbody') as HTMLTableElement;
       while(tablaListResolutions.firstChild)tablaListResolutions.removeChild(tablaListResolutions.firstChild);
       arrayResolutions.forEach(r =>{
@@ -473,7 +472,7 @@
               <td class="px-3 py-2 border">${r.ResolutionNumber}</td>
               <td class="px-3 py-2 border">${r.FromNumber} - ${r.ToNumber}</td>
               <td class="px-3 py-2 border">${r.ValidDateTo}</td>
-              <td class="px-4 py-2 border text-2xl"><button class="downResolution" type="button" id="${r.ResolutionNumber}">⏬</button></td>
+              <td class="px-4 py-2 border text-2xl"><button class="downResolution" type="button" id="${r.ResolutionNumber} data-company="${idcompany}">⏬</button></td>
           </tr>`
         )
       });
@@ -483,9 +482,10 @@
     async function descargarResolucion(e:Event, arrayResolutions:NumberRangeItem[]){
       const target = e.target as HTMLButtonElement;
       if(target.classList.contains('downResolution')){
+        const idcompany:string = target.dataset.idcompany!;
         const numberResolution = target.id;
-        const resolutionSelected = arrayResolutions.find(x=>x.ResolutionNumber === numberResolution);
-        console.log(resolutionSelected);
+        const resolutionSelected = arrayResolutions.find(x=>x.ResolutionNumber === numberResolution)!;
+        resolutionSelected.idcompany = idcompany;
         try {
           const url = `/admin/api/guardarResolutionJ2`; //llamado a la API para guardar la resolucion DIAN
           const respuesta = await fetch(url,  { method: 'POST',
