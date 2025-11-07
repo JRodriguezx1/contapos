@@ -9,6 +9,7 @@ use Model\clientes\departments;
 use Model\clientes\municipalities;
 use Model\parametrizacion\config_local;
 use Model\configuraciones\tipofacturador;
+use Model\felectronicas\adquirientes;
 use Model\felectronicas\diancompanias;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
@@ -162,8 +163,17 @@ class apidiancontrolador{
       exit;
     }
 
-    $adquiriente = json_decode(file_get_contents('php://input'), true);
-
+    $datosadquiriente = json_decode(file_get_contents('php://input'), true);
+    $existeAdquiriente = adquirientes::find('identification_number', $datosadquiriente['identification_number']);
+    if($existeAdquiriente){
+      $existeAdquiriente->compara_objetobd_post($datosadquiriente);
+      $r = $existeAdquiriente->actualizar();
+    }else{
+      $adquiriente = new adquirientes($datosadquiriente);
+      $r = $adquiriente->crear_guardar();
+    }
+    echo json_encode($r);
   }
+  
 
 }

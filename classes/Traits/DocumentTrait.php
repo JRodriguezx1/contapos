@@ -20,6 +20,8 @@ trait DocumentTrait
         $tax_total = 0;
 
         $consecutivo = consecutivos::find('id', $idconsecutivo);
+        $compañia = diancompanias::find('id', $consecutivo->idcompania);
+
         if($consecutivo->estado && $consecutivo->idtipofacturador == 1){
             $customer = [
                 "identification_number" => $datosAdquiriente->identification_number??"222222222222",  //obligatorio
@@ -136,7 +138,7 @@ trait DocumentTrait
                 'num_factura'=>$consecutivo->prefijo.'-'.$consecutivo->siguientevalor,
                 'prefijo'=>$consecutivo->prefijo,
                 'resolucion'=>$consecutivo->resolucion,
-                'token_electronica'=>'',
+                'token_electronica'=>$compañia->token,  //token de la compañia
                 'cufe'=>'',
                 'qr'=>'',
                 'fecha_factura'=>date('Y-m-d H:i:s'),

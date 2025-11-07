@@ -265,6 +265,7 @@ $router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCom
 $router->get('/admin/api/getCompaniesAll', [apidiancontrolador::class, 'getCompaniesAll']);  //Consulta todas las compañias asociadas a la cuenta
 $router->get('/admin/api/eliminarCompanyLocal', [apidiancontrolador::class, 'eliminarCompanyLocal']);  //Elimina la compañia de manera local
 $router->post('/admin/api/guardarResolutionJ2', [apidiancontrolador::class, 'guardarResolutionJ2']);  // guardar resolucion en j2
+$router->get('/admin/api/filterAdquirientes', [apidiancontrolador::class, 'filterAdquirientes']);  //obtener todos los adquiriente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guardarAdquiriente']);  // guardar adquiente, llamada desde ventas.adquiriente.ts
 
 
