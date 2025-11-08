@@ -11,7 +11,7 @@ use stdClass;
 trait DocumentTrait
 {
 
-    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo):bool
+    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura):bool
     {
         $invoice_lines = [];
         $tax_summary = []; // para agrupar impuestos
@@ -131,8 +131,8 @@ trait DocumentTrait
                 'id_sucursalidfk'=>id_sucursal(),
                 'id_estadoelectronica'=>1,
                 'consecutivo_id'=>$consecutivo->id,
-                'id_facturaid'=>33,  //id del pedido o orden generado en la tabla factura
-                'id_adquiriente'=>1,
+                'id_facturaid'=>$idfactura,  //id del pedido o orden generado en la tabla factura
+                'id_adquiriente'=>$datosAdquiriente->id,
                 'id_estadonota'=>1,
                 'numero'=>$consecutivo->siguientevalor,
                 'num_factura'=>$consecutivo->prefijo.'-'.$consecutivo->siguientevalor,

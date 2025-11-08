@@ -4,7 +4,7 @@ namespace Model\felectronicas;
 
 class adquirientes extends \Model\ActiveRecord{
     protected static $tabla = 'adquirientes';
-    protected static $columnasDB = ['id', 'type_document_identification_id', 'identification_number', 'business_name', 'email', 'address', 'municipality_id', 'type_organization_id', 'type_regime_id', 'phone', 'departamento', 'departamento_nombre', 'ciudad_nombre'];
+    protected static $columnasDB = ['id', 'type_document_identification_id', 'identification_number', 'business_name', 'email', 'address', 'municipality_id', 'type_organization_id', 'type_regime_id', 'phone', 'department_id', 'departamento_nombre', 'ciudad_nombre'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -17,7 +17,7 @@ class adquirientes extends \Model\ActiveRecord{
         $this->type_organization_id = $args['type_organization_id']??1;
         $this->type_regime_id = $args['type_regime_id']??2;
         $this->phone = $args['phone']??'';
-        $this->departamento = $args['departamento']??'';
+        $this->department_id = $args['department_id']??'';
         $this->departamento_nombre = $args['departamento_nombre']??'';
         $this->ciudad_nombre = $args['ciudad_nombre']??'';
         $this->created_at = $args['created_at']??'';

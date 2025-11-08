@@ -164,23 +164,27 @@ class apidiancontrolador{
     session_start();
     isadmin();
     $alertas = [];
-
     if($_SERVER['REQUEST_METHOD'] !== 'POST'){
       http_response_code(405); // Método no permitido
       echo json_encode(['error' => 'Método no permitido']);
       exit;
     }
-
     $datosadquiriente = json_decode(file_get_contents('php://input'), true);
     $existeAdquiriente = adquirientes::find('identification_number', $datosadquiriente['identification_number']);
     if($existeAdquiriente){
       $existeAdquiriente->compara_objetobd_post($datosadquiriente);
       $r = $existeAdquiriente->actualizar();
+      $r = "actualizar";
+      $alertas['response'] = $r;
+      $alertas['obj'] = $existeAdquiriente;
     }else{
       $adquiriente = new adquirientes($datosadquiriente);
       $r = $adquiriente->crear_guardar();
+      $r = "crear";
+      $alertas['response'] = $r;
+      $alertas['obj'] = $adquiriente;
     }
-    echo json_encode($r);
+    echo json_encode($alertas);
   }
   
 

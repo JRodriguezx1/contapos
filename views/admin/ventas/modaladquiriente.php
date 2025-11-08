@@ -104,13 +104,24 @@
             <input id="address" type="text" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" placeholder="Dirección del adquiriente">
           </div>
 
+          <!-- Departamento -->
+          <div>
+            <label for="department_id" class="block text-2xl font-medium text-gray-600">Departamento</label>
+            <select id="department_id" name="department_id"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+              <option value="" disabled selected>Seleccionar departamento</option>
+              <?php foreach($departments as $value): ?>
+                  <option value="<?php echo $value->id;?>"><?php echo $value->name;?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
           <!-- Ciudad o Municipio -->
           <div>
             <label for="municipality_id" class="block text-2xl font-medium text-gray-600">Ciudad / Municipio</label>
             <select id="municipality_id" name="municipality_id"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
               <option value="" disabled selected>Seleccionar ciudad o municipio</option>
-              <option value="823">Armenia</option>
             </select>
           </div>
 
