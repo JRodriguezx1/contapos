@@ -152,6 +152,14 @@ class apidiancontrolador{
   }
 
 
+  public static function filterAdquirientes(){
+    session_start();
+    isadmin();
+    $alertas = [];
+    $adquirientes = adquirientes::all();
+    echo json_encode($adquirientes);
+  }
+
   public static function guardarAdquiriente(){
     session_start();
     isadmin();
