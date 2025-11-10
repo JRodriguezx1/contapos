@@ -67,6 +67,12 @@
     ($('#selectCliente') as any).select2();
     
 
+    /*(async ()=>{
+      const urlNc:string = "/admin/api/sendNc";
+      const respuesta = await fetch(urlNc);
+      const resultado = await respuesta.json();
+      console.log(resultado);
+    })();*/
 
                        /******** *********/
 

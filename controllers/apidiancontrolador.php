@@ -213,5 +213,18 @@ class apidiancontrolador{
   }
   
   
+  public static function sendNc(){
+    session_start();
+    isadmin();
+    $alertas = [];
+    $url = "https://apidianj2.com/api/ubl2.1/credit-note";
+    $invoice = facturas_electronicas::find('id', 1);
+    if($invoice->id_estadoelectronica == 2){ //la factura electronica debe estar en estado aceptado por la Dian 
+      $jsonenvio = json_decode($invoice->json_envio);
+      $x = self::createNcElectronic($jsonenvio, $invoice->numero, $invoice->prefijo, $invoice->cufe, $invoice->fecha_factura);
+      //$res = self::sendInvoiceDian($x, $url, $invoice->token_electronica);
+    }
+  }
+  
 
 }

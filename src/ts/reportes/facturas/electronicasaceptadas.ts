@@ -1,6 +1,6 @@
 (():void=>{
 
-  if(document.querySelector('.facturasanuladasxx')){
+  if(document.querySelector('.facturaselectronicas')){
 
     const consultarFechaPersonalizada = document.querySelector('#consultarFechaPersonalizada') as HTMLButtonElement;
     const btnmesactual = document.querySelector('#btnmesactual') as HTMLButtonElement;
@@ -11,29 +11,38 @@
 
     interface factuarasanuladas {
         id:string,
-        idvendedir:string,
-        idcaja:string,
-        idconsecutivo:string,
-        num_orden:string,
-        num_consecutivo:string,
-        vendedor:string,
-        caja:string,
-        tipofacturador:string,
-        totalunidades:string,
-        recibido:string,
-        cambio:string,
-        tipoventa:string,
-        estado:string,
-        cambioaventa:string,
-        subtotal:string,
-        base:string,
-        valorimpuesto:string,
-        descuento:string,
-        total:string,
-        fechapago:string
+        id_sucursalidfk:string,
+        id_estadoelectronica:string,
+        consecutivo_id:string,
+        id_facturaid:string,
+        id_adquiriente:string,
+        id_estadonota:string,
+        numero:string,
+        num_factura:string,
+        prefijo:string,
+        resolucion:string,
+        token_electronica:string,
+        cufe:string,
+        qr:string,
+        fecha_factura:string,
+        identificacion:string,
+        nombre:string,
+        email:string,
+        link:string,
+        nota_credito:string,
+        num_nota:string,
+        cufe_nota:string,
+        fecha_nota:string,
+        is_auto:string,
+        json_envio:string,
+        respuesta_factura:string,
+        respuesta_nota:string,
+        intentos_de_envio:string,
+        fecha_ultimo_intento:string,
+        created_at: string
     } 
 
-    let datosFacturasAnuladas:factuarasanuladas[] = [];
+    let facturaselectronicas:factuarasanuladas[] = [];
 
     // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
@@ -132,7 +141,7 @@
             const url = "/admin/api/facturasanuladas"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            datosFacturasAnuladas = resultado;
+            facturaselectronicas = resultado;
             printTableFacturasPagas();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
@@ -146,7 +155,7 @@
         tablaFacturasAnuladas = ($('#tablaFacturasAnuladas') as any).DataTable({
             "responsive": true,
             destroy: true, // importante si recargas la tabla
-            data: datosFacturasAnuladas,
+            data: facturaselectronicas,
             columns: [{title: 'Orden', data: 'num_orden'}, {title: 'N° Factura', data: 'num_consecutivo'}, {title: 'Tipo', data: 'tipofacturador'}, {title: 'Cant vendida', data: 'totalunidades'}, {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Imp', data: 'valorimpuestototal'}, {title: 'Descuento', data: 'descuento'}, {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Vendedor', data: 'vendedor'}, {title: 'Caja', data: 'caja'}],
             pageLength: 25,
             language: {

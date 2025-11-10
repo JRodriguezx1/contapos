@@ -166,7 +166,7 @@ trait DocumentTrait
                 'token_electronica'=>$compañia->token,  //token de la compañia
                 'cufe'=>'',
                 'qr'=>'',
-                'fecha_factura'=>date('Y-m-d H:i:s'),
+                'fecha_factura'=>date('Y-m-d H:i:s'),  //fecha de recepcion por la Dian
                 'identificacion'=>$customer['identification_number'],
                 'nombre'=>$customer['name'],
                 'email'=>$customer['email'],
@@ -191,138 +191,45 @@ trait DocumentTrait
     } //fin metodo crear factura electronica
 
 
-    protected static function createNcElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, int $descgeneral):void
+    protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha):string
     {
+        $billing_reference = [
+            "number" => "$prefix$number", //"FE2082",
+            "uuid" => $cufe,
+            "issue_date" => substr($fecha, 0, 10) //"2025-07-01"
+        ];
 
-        $credit_note_lines = [];
-        $tax_summary = []; // para agrupar impuestos
-        $line_extension_total = 0;
-        $tax_inclusive_total = 0;
-        $tax_total = 0;
+        $customer = $jsonenvio->customer;
+        $credit_note_lines = $jsonenvio->invoice_lines;
+        $tax_totals = $jsonenvio->tax_totals;
+        $legal_monetary_totals = $jsonenvio->legal_monetary_totals;
 
-        $consecutivo = consecutivos::find('id', $idconsecutivo);
-        //$compañia = diancompanias::find('id', $consecutivo->idcompania);
+        // Armar la nota credito final
+        $notaCredito = [
+            "billing_reference" => $billing_reference,
+            "discrepancyresponsecode" => 2,
+            "discrepancyresponsedescription" => "Nota credito total a factura",
+            "notes" => "Nota credito",
+            "prefix" => 'NCaz',
+            "number" => 1, 
+            "type_document_id" => 4,
+            "date" => date('Y-m-d'),   //fecha actual de la generacion de la NC
+            "time" => date('H:i:s'),
+            "type_operation_id" => 12,
+            "sendmail" => false,
+            "sendmailtome" => false,
+            "head_note" => "Este documento es una nota crédito con referencia generada automáticamente.",
+            "foot_note" => "Gracias por su atención. Cualquier duda comuníquese con servicio al cliente.",
+            "customer" => $customer,
+            "credit_note_lines" => $credit_note_lines,
+            "tax_totals" => $tax_totals,
+            "legal_monetary_totals" => $legal_monetary_totals
+        ];
 
-        if($consecutivo->estado && $consecutivo->idtipofacturador == 1){
-            $billing_reference = [
-                "number" => "FE2082",
-                "uuid" => "e8ab77148cf474a87ff93d73b43bd077c1fa3da7776f2ab771f95c723653fd92e4f2476f99aa5a735d8c896724ea3001",
-                "issue_date" => "2025-07-01"
-            ];
-
-            $customer = [
-                "identification_number" => '',  //obligatorio
-                "dv" => '',
-                "name" => '',  //obligatorio
-                "phone" => '',
-                "address" => '',
-                "email" => '',
-                "type_document_identification_id" => '',
-                "type_organization_id" => '',
-                "tax_id" => '',
-                "type_liability_id" => '',
-                "type_regime_id" => '',
-                "municipality_id" => ''
-            ];
-
-            foreach($carrito as $index => $value){
-                $credit_note_lines[$index] = [
-                    "type_item_identification_id" => "4", // tipo estándar
-                    "code" => $value->idproducto,
-                    "description" => $value->nombreproducto,
-                    "invoiced_quantity" => strval($value->cantidad),
-                    "unit_measure_id" => "70", // unidad por defecto: unidad
-                    "line_extension_amount" => number_format($value->base*$value->cantidad, 2, '.', ''),
-                    "free_of_charge_indicator" => false,
-                    "price_amount" => number_format($value->base, 2, '.', ''),
-                    "base_quantity" => strval($value->cantidad)
-                ];
-
-                if(is_numeric($value->impuesto)&&$value->impuesto>=0){
-                    $credit_note_lines[$index]["tax_totals"] = [
-                        [
-                            "tax_id" => $value->impuesto==8?4:1, // 1 = IVA code 01   -   4 = INC code 04
-                            "tax_amount" => number_format($value->valorimp, 2, '.', ''),
-                            "taxable_amount" => number_format($value->base, 2, '.', ''),
-                            "percent" => $value->impuesto
-                        ],
-                    ];
-
-                    // Agrupar impuestos por porcentaje
-                    $percent = $value->impuesto;
-                    if (!isset($tax_summary[$percent])) {
-                        $tax_summary[$percent] = [
-                            "tax_id" => $value->impuesto==8?4:1, // 1 = IVA code 01   -   4 = INC code 04
-                            "percent" => $percent,
-                            "taxable_amount" => 0,
-                            "tax_amount" => 0
-                        ];
-                    }
-                    $tax_summary[$percent]["taxable_amount"] += $value->base;
-                    $tax_summary[$percent]["tax_amount"] += $value->valorimp;
-                }   
-
-                // Acumulados
-                $line_extension_total += $value->base;
-                $tax_total += $value->valorimp;
-                $tax_inclusive_total += $value->total;
-            }
-
-            // Convertir el resumen de impuestos en arreglo
-            $tax_totals = array_values(array_map(function($t) {  //tax_summary = ["8" =>[], "19"=>[],...]
-                return [
-                    "tax_id" => $t["tax_id"],
-                    "tax_amount" => number_format($t["tax_amount"], 2, '.', ''),
-                    "percent" => $t["percent"],
-                    "taxable_amount" => number_format($t["taxable_amount"], 2, '.', '')
-                ];
-            }, $tax_summary));
-
-            //DESCUENTO GENERAL
-            $allowance_charges = [
-                [
-                    "discount_id" => 1,
-                    "charge_indicator" => false,
-                    "allowance_charge_reason" => "DESCUENTO GENERAL",
-                    "amount" => number_format($descgeneral, 2, '.', ''),
-                    "base_amount"  => number_format($tax_inclusive_total, 2, '.', '')
-                ]
-            ];
-
-            // Totales monetarios
-            $legal_monetary_totals = [
-                "line_extension_amount" => number_format($line_extension_total, 2, '.', ''),  //sin impuesto
-                "tax_exclusive_amount" => number_format($line_extension_total, 2, '.', ''),  //sin impuesto
-                "tax_inclusive_amount" => number_format($tax_inclusive_total, 2, '.', ''),  //con impuesto
-                "allowance_total_amount" => number_format($descgeneral, 2, '.', ''),
-                "charge_total_amount" => "0.00",
-                "payable_amount" => number_format($tax_inclusive_total-$descgeneral, 2, '.', '')
-            ];
-
-            // Armar la nota credito final
-            $notaCredito = [
-                "discrepancyresponsecode" => 2,
-	            "discrepancyresponsedescription" => "Prueba de nota credito",
-                "notes" => "Nota credito",
-                "prefix" => 'NCaz',
-                "number" => 1, 
-                "type_document_id" => 4,
-                "date" => date('Y-m-d'),
-                "time" => date('H:i:s'),
-                "type_operation_id" => 12,
-                "sendmail" => false,
-                "sendmailtome" => false,
-                "head_note" => "Este documento es una nota crédito con referencia generada automáticamente.",
-                "foot_note" => "Gracias por su atención. Cualquier duda comuníquese con servicio al cliente.",
-                "customer" => $customer,
-                "credit_note_lines" => $credit_note_lines,
-                "tax_totals" => $tax_totals,
-                "legal_monetary_totals" => $legal_monetary_totals
-            ];
-
-            if($descgeneral>0)$notaCredito["allowance_charges"] = $allowance_charges;
-        }
-
+        if(property_exists($jsonenvio, 'allowance_charges'))$notaCredito["allowance_charges"] = $jsonenvio->allowance_charges;
+        // generar json de la nota credito Dian
+        $jsonNcDian = json_encode($notaCredito, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        return $jsonNcDian;
     }
     
 
