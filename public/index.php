@@ -135,6 +135,7 @@ $router->get('/admin/reportes/utilidadxproducto', [reportescontrolador::class, '
 $router->get('/admin/reportes/gastoseingresos', [reportescontrolador::class, 'gastoseingresos']);
 $router->get('/admin/reportes/clientesnuevos', [reportescontrolador::class, 'clientesnuevos']);
 $router->get('/admin/reportes/clientesrecurrentes', [reportescontrolador::class, 'clientesrecurrentes']);
+$router->get('/admin/reportes/detalleInvoice', [reportescontrolador::class, 'detalleInvoice']);  //detalle de la factura electronica
 ///// area de clientes /////
 $router->get('/admin/clientes', [clientescontrolador::class, 'index']);
 $router->post('/admin/clientes', [clientescontrolador::class, 'index']); //filtro de busqueda

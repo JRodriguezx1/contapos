@@ -14,6 +14,7 @@ use Model\felectronicas\adquirientes;
 use Model\felectronicas\diancompanias;
 use Model\felectronicas\facturas_electronicas;
 use Model\sucursales;
+use Model\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
 class apidiancontrolador{
@@ -205,9 +206,9 @@ class apidiancontrolador{
       exit;
     }
     $idfactura = json_decode(file_get_contents('php://input'), true);
+    $factura = facturas::find('id', $idfactura);
     $facturaDian = facturas_electronicas::find('id_facturaid', $idfactura['id']);
-  
-    //if($facturaDian && ($facturaDian->id_estadoelectronica == 1 || $facturaDian->id_estadoelectronica == 1))
+    //if($facturaDian && $factura->estado == 'Paga' && ($facturaDian->id_estadoelectronica == 1 || $facturaDian->id_estadoelectronica == 1))
     //  $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
     
   }
@@ -225,6 +226,6 @@ class apidiancontrolador{
       //$res = self::sendInvoiceDian($x, $url, $invoice->token_electronica);
     }
   }
-  
+
 
 }
