@@ -1,6 +1,7 @@
 (():void=>{
 
   if(document.querySelector('.gestionfacturadores')){
+    const POS = (window as any).POS;
     const crearFacturador = document.querySelector('#crearFacturador') as HTMLButtonElement;
     const miDialogoFacturador = document.querySelector('#miDialogoFacturador') as any;
 
@@ -30,9 +31,10 @@
       let facturadores:facturadoresapi[]=[], unfacturador:facturadoresapi|undefined;
       (async ()=>{
         try {
-            const url = "/admin/api/allfacturadores"; //llamado a la API REST y se trae todos los productos
+            const url = "/admin/api/allfacturadores"; //llamado a la API REST y se trae todos los consecutivos
             const respuesta = await fetch(url); 
-            facturadores = await respuesta.json(); 
+            facturadores = await respuesta.json();
+            POS.facturadores = facturadores;  //se expone globalmente para procesar en gestiondian.ts
         } catch (error) {
             console.log(error);
         }

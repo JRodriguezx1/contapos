@@ -262,6 +262,14 @@ $router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPassw
 
 $router->get('/admin/api/citiesXdepartments', [apidiancontrolador::class, 'citiesXdepartments']);  //Consulta municipios segun departamento
 $router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCompanyJ2']);  // crear la compañia en j2
+$router->get('/admin/api/getCompaniesAll', [apidiancontrolador::class, 'getCompaniesAll']);  //Consulta todas las compañias asociadas a la cuenta
+$router->get('/admin/api/eliminarCompanyLocal', [apidiancontrolador::class, 'eliminarCompanyLocal']);  //Elimina la compañia de manera local
+$router->post('/admin/api/guardarResolutionJ2', [apidiancontrolador::class, 'guardarResolutionJ2']);  // guardar resolucion en j2
+$router->get('/admin/api/filterAdquirientes', [apidiancontrolador::class, 'filterAdquirientes']);  //obtener todos los adquiriente, llamada desde ventas.adquiriente.ts
+$router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guardarAdquiriente']);  // guardar adquiente, llamada desde ventas.adquiriente.ts
+$router->post('/admin/api/sendInvoice', [apidiancontrolador::class, 'sendInvoice']);  // guardar adquiente, llamada desde ventas.sendinvoice.ts
+$router->get('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
+
 
 
 //////***************************/***NO**************************//////

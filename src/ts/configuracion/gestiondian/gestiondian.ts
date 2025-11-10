@@ -1,19 +1,18 @@
 (():void=>{
 
   if(document.querySelector('.gestionDian')){
-
+    const POS = (window as any).POS;
+    const btnAdquirirCompañia = document.querySelector('#btnAdquirirCompañia') as HTMLButtonElement;
     const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
     const btnObtenerresolucion = document.querySelector('#btnObtenerresolucion') as HTMLButtonElement;
     const BtnSetpruebas = document.querySelector('#BtnSetpruebas') as HTMLButtonElement;
     const formCrearUpdateCompañia = document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement;
+    const miDialogoAdquirirCompañia = document.querySelector('#miDialogoAdquirirCompañia') as any;
     const miDialogoCompañia = document.querySelector('#miDialogoCompañia') as any;
-    const miDialogoGetResolucion = document.querySelector('#miDialogoGetResolucion') as any;
-    const miDialogosetpruebas = document.querySelector('#miDialogosetpruebas') as any;
-    const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
-    const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
-    const selectResolucioncompañia = document.querySelector('#selectResolucioncompañia') as HTMLSelectElement;
-    const selectSetCompañia = document.querySelector('#selectSetCompañia') as HTMLSelectElement;
-    let indiceFila=0, control=0;
+    const miDialogoGetResolucion = POS.gestionarGetResolutions.miDialogoGetResolucion
+    const miDialogosetpruebas = POS.gestionarSetPruebas.miDialogosetpruebas;
+    const selectResolucioncompañia = POS.gestionarGetResolutions.selectResolucioncompañia;
+    const selectSetCompañia = POS.gestionarSetPruebas.selectSetCompañia;
 
     interface configCompany {
       success:boolean,
@@ -52,85 +51,52 @@
       }
     }
 
-    interface resolconfig {
+
+    //Resolucion a almacenar en API
+    interface resolconfig { 
       type_document_id:string, 
       prefix:String, 
-      resolution:string, 
-      resolution_date:string, 
-      technical_key:string, 
+      resolution?:string, 
+      resolution_date?:string, 
+      technical_key?:string, 
       from:string,
       to:string, 
-      generated_to_date:string, 
-      date_from:string, 
-      date_to:string
+      generated_to_date?:string, 
+      date_from?:string, 
+      date_to?:string
     }
 
-    
-
-    type municipalities = {
-        id:string,
-        department_id:string,
-        name:string,
-        code:string,
-      };
-      let cities:municipalities[]=[];
 
     //  Obtener compañias
     async function getCompañiasLocal<T>():Promise<T[]> {
       try {
-          const url = "/admin/api/getCompañiasLocal"; //llamado a la API REST y se trae las cities segun cliente elegido
+          const url = "/admin/api/getCompaniesAll"; //llamado a la API REST y se trae las cities segun cliente elegido
           const respuesta = await fetch(url); 
-          const resultado:T[] = await respuesta.json(); 
+          const resultado:T[]= await respuesta.json(); 
           return resultado;
         } catch (error) {
             console.log(error);
             return [];
         }
     }
+    
+    let companiesAll:companiesDian[];
+    (async()=>{
+      companiesAll = await getCompañiasLocal<{id:string, identification_number:string, business_name:string, idsoftware:string, token:string}>();
+      POS.companiesAll = companiesAll; //exponer globalmente
+    })();
 
 
-    /////       Obtener municipio segun departamento        ///////
-    selectDepartments?.addEventListener('change', (e:Event)=>{
-      const x:HTMLOptionElement = (e.target as HTMLOptionElement);
-      imprimirCiudades(x.value);
+
+    ///////////////////-------    Adquirir compañia     ---------//////////////////
+    btnAdquirirCompañia.addEventListener('click', ()=>{
+        miDialogoAdquirirCompañia.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
     });
-
-    function imprimirCiudades(x:string){
-      (async ()=>{
-        try {
-          const url = "/admin/api/citiesXdepartments?id="+x; //llamado a la API REST y se trae las cities segun cliente elegido
-          const respuesta = await fetch(url); 
-          const resultado = await respuesta.json(); 
-          if(resultado.error){
-            Swal.fire(resultado.error[0], '', 'error')
-          }else{
-            cities = resultado;
-            addCitiesToSelect(cities);
-          }
-        } catch (error) {
-            console.log(error);
-        }
-      })();
-    }
-       
-    function addCitiesToSelect<T extends {id:string, department_id:string, name:string, code:string}>(addrs: T[]):void{
-      while(selectdCities?.firstChild)selectdCities.removeChild(selectdCities?.firstChild);
-      addrs.forEach(x =>{
-        const option = document.createElement('option');
-        option.textContent = x.name;
-        option.value = x.id;
-        option.dataset.code = x.code;
-        option.dataset.department_id = x.department_id;
-        selectdCities.appendChild(option);
-      });
-      
-    }
 
 
     ///////////////////-------    crear compañia     --------///////////////////
-    
     btnCrearCompañia.addEventListener('click', ()=>{
-        control = 0;
         limpiarformdialog();
         document.querySelector('#modalCompañia')!.textContent = "Crear compañia";
         (document.querySelector('#btnEditarCrearCompañia') as HTMLInputElement).value = "Crear";
@@ -139,19 +105,24 @@
     });
 
     btnObtenerresolucion.addEventListener('click', ()=>{
-        control = 0;
         limpiarformdialog();
         miDialogoGetResolucion.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
     BtnSetpruebas.addEventListener('click', async ()=>{
-        control = 0;
         limpiarformdialog();
         //const r = await getCompañiasLocal();
 
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+
+    ///////////////////  ADQUIRIR COMPAÑIA  ////////////////////
+    document.querySelector('#formAdquirirCompañia')?.addEventListener('submit', (e:Event)=>{
+      e.preventDefault();
+      
     });
 
 
@@ -176,7 +147,6 @@
         try {
           const base64String = await base64(archivoP12);
           datoscompañia.certificadop12base64 = base64String;
-          console.log(datoscompañia);
           crearCompanyAPI(datoscompañia);
         } catch (error) {
           alert('Error durante el procesamiento del certificado .p12');
@@ -198,7 +168,9 @@
                                                 });
             const resultado = await respuesta.json();
             if(resultado.success){
-              console.log(resultado);
+              miDialogoCompañia.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
+              
               const cert = await configCertificado(resultado.token, certificadop12base64+'', password+'');
               const soft = await configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
               const resolprueba:resolconfig = {
@@ -214,11 +186,23 @@
                 date_to: '2030-01-19'
               };
               const resol = await crearResolucion(resolprueba, resultado.token);
-              if(cert && soft && resol){
+
+              /////    crear resolucion para NC    ///////
+              const extprefix = (datoscompañia.business_name as string).match(/[a-zA-Z]/g)!;
+              const a:string = extprefix[0];
+              const b:string = extprefix[extprefix.length-1];
+              const resolNC:resolconfig = {
+                type_document_id:'4', 
+                prefix:'NC'+a+b, 
+                from: '1', 
+                to: '99999999', 
+              };
+              const resResolNC = await crearResolucion(resolNC, resultado.token);
+
+              if(cert && soft && resol && resResolNC){
                 crearCompanyJ2(datoscompañia, resultado.token);
-              }else{
-                //eliminar usuario de la api
-                eliminarCompañia(identification_number+'');
+              }else{//eliminar usuario de la api
+                eliminarCompañia('', identification_number+'', resultado.token);
               }
             }else{
 
@@ -243,7 +227,6 @@
                                                 body: JSON.stringify({"certificate": certificado, "password":password})
                                               });
           const resultado = await respuesta.json();
-          console.log(resultado);
           return resultado.success;
         } catch (error) {
             console.log(error);
@@ -267,7 +250,6 @@
                                               body: JSON.stringify({"id": idsoftware, "pin":pinsoftware})
                                             });
         const resultado = await respuesta.json();
-        console.log(resultado);
         return resultado.success;
       } catch (error) {
         console.log(error);
@@ -277,7 +259,7 @@
 
 
     ///////    CREAR RESOLUCIONES    ////////
-    async function crearResolucion(resolprueba:resolconfig, token:string)
+    async function crearResolucion(resolition:resolconfig, token:string)
     {
       try {
         const url = "https://apidianj2.com/api/ubl2.1/config/resolution"; //llamado a la API REST Dian-laravel
@@ -288,10 +270,9 @@
                                                 "Content-Type": "application/json",
                                                 "Authorization": "Bearer "+token
                                               },
-                                              body: JSON.stringify(resolprueba)
+                                              body: JSON.stringify(resolition)
                                             });
         const resultado = await respuesta.json();
-        console.log(resultado);
         return resultado.success;
       } catch (error) {
         console.log(error);
@@ -314,135 +295,89 @@
             if(resultado.exito !== undefined){
               const tablaCompañias = document.querySelector('#tablaCompañias tbody');
               tablaCompañias?.insertAdjacentHTML('beforeend', `
-                <tr class="">
+                <tr class="" id="company${datoscompañia.identification_number}">
                   <td class="">${resultado.id}</td>
                   <td class="">${datoscompañia.business_name}</td> 
                   <td class="">${datoscompañia.identification_number}</td>
                   <td class="">${datoscompañia.idsoftware}</td>
-                  <td class=""><div class="acciones-btns" id="${resultado.id}">  <button><span class="material-symbols-outlined editarcompañia">edit_note</span></button> <button><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
+                  <td class=""><div class="acciones-btns">  <button id="${resultado.id}"><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
                 </tr>`
               );
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               // añadir a los selects de obtener compañia para resoluciones y de set pruebas
               SetCompañiaToSelect(resultado.id, token, datoscompañia.business_name+'');
+              companiesAll.push({id:resultado.id, identification_number:datoscompañia.identification_number+'', business_name:datoscompañia.business_name+'', idsoftware:datoscompañia.idsoftware+'', token});
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
-            miDialogoCompañia.close();
-            document.removeEventListener("click", cerrarDialogoExterno);
           } catch (error) {
               console.log(error);
           }
     }
-
-
-    ///////    ENVIOREMNET MODO PRUEBAS - PRODUCCION    ///////
-
+    
+    //Tabla lista de compañias
+    document.querySelector('#tablaCompañias tbody')?.addEventListener('click', (e:Event)=>{
+      const target = e.target as HTMLElement;
+      if(target?.classList.contains("eliminarcompañia")){
+        const id = target.parentElement?.id;
+        const oneC = companiesAll.find(x=>x.id == id)!;
+        eliminarCompañia(id!, oneC?.identification_number, oneC.token);
+      }
+    });
 
     ///////    ELIMINAR COMPAÑIA    ///////
-    function eliminarCompañia(identification_number:string){
-      console.log('compañia eliminada: '+identification_number);
-
+    function eliminarCompañia(id:string, identification_number:string, token:string){
+     
+      Swal.fire({
+          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          icon: 'question',
+          title: 'Desea eliminar la compañia?',
+          text: "La compañia sera eliminado definitivamente.",
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+      }).then((result:any) => {
+          if (result.isConfirmed) {
+            (async ()=>{ 
+              try {
+                const url = "https://apidianj2.com/api/ubl2.1/config/deleteCompany"; //llamado a la API REST Dianlaravel
+                const respuesta = await fetch(url, {
+                                                      method: 'DELETE',
+                                                      headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
+                                                      body: JSON.stringify({"identification_number": identification_number})
+                                                    });
+                const resultado = await respuesta.json();
+                if(resultado.message){
+                  const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
+                  const respuestaLocal = await fetch(urlX); 
+                  const resultadoLocal = await respuestaLocal.json(); 
+                  document.querySelector('#company'+identification_number)?.remove();
+                  msjalertToast('success', '¡Éxito!', resultado.message);
+                  deleteFromCompany(id);
+                }else{
+                  msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
+                }
+              } catch (error) {
+                console.log(error);
+                return false;
+              }
+            })();
+          }
+      });
     }
+
+    ///////  eliminar de los select de obtener resolucion y enviar set de pruebas  ///////
+    function deleteFromCompany(id:string){
+      selectResolucioncompañia.querySelector(`option[value=${id}]`)?.remove();
+      selectSetCompañia.querySelector(`option[value=${id}]`)?.remove();
+    }
+
 
     ///////    Set compañia en los select    ///////
     function SetCompañiaToSelect(id:string, token:string, business_name:string){
-      selectResolucioncompañia.insertAdjacentHTML('afterbegin', `<option data-x="" value="${id}" >${business_name}</option>`);
+      selectResolucioncompañia.insertAdjacentHTML('afterbegin', `<option data-token="" value="${id}" >${business_name}</option>`);
       selectSetCompañia.insertAdjacentHTML('afterbegin', `<option data-token="${token}" value="${id}" >${business_name}</option>`);
     }
-
-
-    ///////   ENVIAR SET DE PRUEBAS    ///////
-    document.querySelector('#formSetPruebas')?.addEventListener('click', async(e:Event)=>{
-      e.preventDefault();
-      const token = selectSetCompañia.options[selectSetCompañia.selectedIndex]?.dataset.token;
-      const test = document.querySelector('#idsetpruebas') as HTMLInputElement;
-
-      const date = new Date().toISOString().split("T")[0];
-      const number = 992500000 + (Math.floor(Math.random()*500000)+1);  //rango de 1 a 500000
-
-      const factura = {
-        prefix: "SETP",
-        number, // dinámico
-        type_document_id: "1",
-        date,   // dinámico
-        time: "00:00:01",
-        resolution_number: "18760000001",
-        sendmail: false,
-        notes: "Factura Electrónica de pruebas Auto",
-        payment_form: {
-          payment_form_id: "1",
-          payment_method_id: "10",
-          payment_due_date: date,
-          duration_measure: "0"
-        },
-        customer: {
-          identification_number: "222222222222",
-          name: "Consumidor Final",
-          phone: null,
-          address: null,
-          type_document_identification_id: 3,
-          type_organization_id: 1,
-          municipality_id: null
-        },
-        invoice_lines: [
-          {
-            unit_measure_id: "70",
-            invoiced_quantity: "1.00",
-            line_extension_amount: "2000.00",
-            free_of_charge_indicator: false,
-            tax_totals: [
-              {
-                tax_id: 1,
-                tax_amount: "0.00",
-                taxable_amount: "2000.00",
-                percent: "0"
-              }
-            ],
-            description: "Producto Prueba",
-            code: "155",
-            type_item_identification_id: "4",
-            price_amount: "2000.00",
-            base_quantity: "1"
-          }
-        ],
-        legal_monetary_totals: {
-          line_extension_amount: "2000",
-          tax_exclusive_amount: "2000",
-          tax_inclusive_amount: "2000",
-          allowance_total_amount: "0",
-          charge_total_amount: "0",
-          payable_amount: "2000"
-        },
-        tax_totals: [
-          {
-            tax_id: 1,
-            tax_amount: "0.00",
-            percent: "0",
-            taxable_amount: "2000.00"
-          }
-        ]
-      };
-      
-      try {
-        const url = "https://apidianj2.com/api/ubl2.1/invoice/"+test.value; //llamado a la API REST Dianlaravel
-        const respuesta = await fetch(url, {
-                                              method: 'PUT',
-                                              headers: {
-                                                "Accept": "application/json",
-                                                "Content-Type": "application/json",
-                                                "Authorization": "Bearer "+token
-                                              },
-                                              body: JSON.stringify({})
-                                            });
-        const resultado = await respuesta.json();
-        console.log(resultado);
-        return resultado.success;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    });
     
 
     function base64(archivo: File):Promise<string>{
@@ -472,11 +407,12 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
-          miDialogoCompañia.close();
-          miDialogoGetResolucion.close();
-          miDialogosetpruebas.close();
-          document.removeEventListener("click", cerrarDialogoExterno);
+      if(event.target === miDialogoAdquirirCompañia || event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
+        miDialogoAdquirirCompañia.close();  
+        miDialogoCompañia.close();
+        miDialogoGetResolucion.close();
+        miDialogosetpruebas.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
       }
     }
 
@@ -484,6 +420,9 @@
       (document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement)?.reset();
     }
 
+
+    POS.cerrarDialogoExterno = cerrarDialogoExterno;
+    POS.crearResolucion = crearResolucion;
   }
 
 })();

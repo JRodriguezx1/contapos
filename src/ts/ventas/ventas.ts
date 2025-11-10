@@ -67,6 +67,12 @@
     ($('#selectCliente') as any).select2();
     
 
+    /*(async ()=>{
+      const urlNc:string = "/admin/api/sendNc";
+      const respuesta = await fetch(urlNc);
+      const resultado = await respuesta.json();
+      console.log(resultado);
+    })();*/
 
                        /******** *********/
 
@@ -441,6 +447,7 @@
       datos.append('ciudad', (document.querySelector('#ciudadEntrega') as HTMLInputElement).value);
       datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
       datos.append('valortarifa', valorTotal.valortarifa+'');
+      datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
       datos.append('opc2', '');
       try {
@@ -452,6 +459,11 @@
             /////// reinciar modulo de ventas
             vaciarventa();
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
+            if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
+              const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
+              console.log(resDian);
+            }
+            
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }

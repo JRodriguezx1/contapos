@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Classes\Traits\DocumentTrait;
 use Model\ActiveRecord;
 use Model\configuraciones\usuarios; //namespace\clase hija
 use Model\inventario\productos;
@@ -14,6 +15,7 @@ use Model\ventas\facturas;
 use Model\ventas\ventas;
 use Model\configuraciones\tarifas;
 use Model\caja\cierrescajas;
+use Model\clientes\departments;
 use Model\configuraciones\consecutivos;
 use Model\configuraciones\caja;
 use Model\configuraciones\tipofacturador;
@@ -29,6 +31,8 @@ use MVC\Router;  //namespace\clase
 use stdClass;
 
 class ventascontrolador{
+
+  use DocumentTrait;
 
   public static function index(Router $router):void{
     session_start();
@@ -64,10 +68,11 @@ class ventascontrolador{
     $tarifas = tarifas::all();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+    $departments = departments::all();
 
     $conflocal = config_local::getParamCaja();
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
@@ -81,6 +86,7 @@ class ventascontrolador{
     $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
     $factimpuestos = json_decode($_POST['factimpuestos']);
+    $datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $factura = new facturas($_POST);
     $factura->id_sucursal = id_sucursal();
     $venta = new ventas();
@@ -227,7 +233,9 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
+              $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $mediospago, $factura->descuento);  //llamada al trait para crear el json y guardar la FE en DB
               //....
+            
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
@@ -437,6 +445,7 @@ class ventascontrolador{
 
     $productos = ventas::idregistros('idfactura', $factura->id);
     $mediospago = json_decode($_POST['mediosPago']);
+    //$datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $factmediospago = new factmediospago();
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
@@ -501,6 +510,7 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
+              //$fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1]);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               $getDB->commit();
             } catch (\Throwable $th) {

@@ -46,8 +46,10 @@
             <label for="identification_number" class="block text-2xl font-medium text-gray-600">Número de Documento</label>
             <div class="mt-2 flex flex-wrap gap-2 items-center">
               <input id="identification_number" type="text" name="identification_number" required
-                class="flex-1 min-w-[200px] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
-                placeholder="Número sin dígito de verificación">
+                class="flex-1 min-w-[200px] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1"
+                placeholder="Número sin dígito de verificación"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+              >
 
               <button id="btnBuscarAdquiriente" type="button"
                 class="flex items-center gap-2 text-indigo-600 border border-indigo-600 hover:bg-indigo-50 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg px-4 py-2.5 h-14 text-xl    focus:outline-none">
@@ -102,13 +104,24 @@
             <input id="address" type="text" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" placeholder="Dirección del adquiriente">
           </div>
 
+          <!-- Departamento -->
+          <div>
+            <label for="department_id" class="block text-2xl font-medium text-gray-600">Departamento</label>
+            <select id="department_id" name="department_id"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+              <option value="" disabled selected>Seleccionar departamento</option>
+              <?php foreach($departments as $value): ?>
+                  <option value="<?php echo $value->id;?>"><?php echo $value->name;?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
           <!-- Ciudad o Municipio -->
           <div>
             <label for="municipality_id" class="block text-2xl font-medium text-gray-600">Ciudad / Municipio</label>
             <select id="municipality_id" name="municipality_id"
               class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
               <option value="" disabled selected>Seleccionar ciudad o municipio</option>
-              <option value="823">Armenia</option>
             </select>
           </div>
 

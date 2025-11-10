@@ -3,12 +3,13 @@ namespace Model\configuraciones;
 
 class consecutivos extends \Model\ActiveRecord {
     protected static $tabla = 'consecutivos';
-    protected static $columnasDB = ['id', 'id_sucursalid', 'idtipofacturador', 'idnegocio', 'nombre', 'rangoinicial', 'rangofinal', 'siguientevalor', 'fechainicio', 'fechafin', 'resolucion', 'consecutivoremplazo', 'prefijo', 'mostrarresolucion', 'mostrarimpuestodiscriminado', 'tokenfacturaelectronica', 'electronica', 'estado'];
+    protected static $columnasDB = ['id', 'id_sucursalid', 'idcompania', 'idtipofacturador', 'idnegocio', 'nombre', 'rangoinicial', 'rangofinal', 'siguientevalor', 'fechainicio', 'fechafin', 'resolucion', 'consecutivoremplazo', 'prefijo', 'mostrarresolucion', 'mostrarimpuestodiscriminado', 'tokenfacturaelectronica', 'electronica', 'estado'];
 
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
         $this->id_sucursalid = id_sucursal();
+        $this->idcompania = $args['idcompania'] ?? null;
         $this->idtipofacturador = $args['idtipofacturador'] ?? 1;
         $this->idnegocio = $args['idnegocio'] ?? 1; 
         $this->nombre = $args['nombre'] ?? 1;
