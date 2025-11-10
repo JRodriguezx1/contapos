@@ -137,6 +137,19 @@ class reportescontrolador{
         $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+
+    public static function detalleInvoice(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id))return;
+
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+
     public static function utilidadxproducto(Router $router){
         session_start();
         isadmin();
@@ -324,10 +337,12 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
-              FROM facturas f JOIN clientes c ON f.idcliente = c.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
-              GROUP BY c.id, c.nombre;";
+      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.identificacion, fe.nombre, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
+              FROM facturas_electronicas fe 
+              JOIN facturas f ON fe.id_facturaid = f.id
+              JOIN adquirientes a ON fe.id_adquiriente = a.id
+              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 2 AND f.id_sucursal = $idsucursal
+              ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);
@@ -341,10 +356,12 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
-              FROM facturas f JOIN clientes c ON f.idcliente = c.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
-              GROUP BY c.id, c.nombre;";
+      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.identificacion, fe.nombre, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
+              FROM facturas_electronicas fe 
+              JOIN facturas f ON fe.id_facturaid = f.id
+              JOIN adquirientes a ON fe.id_adquiriente = a.id
+              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 AND f.id_sucursal = $idsucursal
+              ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);

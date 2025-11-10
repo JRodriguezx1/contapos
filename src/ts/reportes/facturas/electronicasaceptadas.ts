@@ -7,42 +7,25 @@
     const btnmesanterior = document.querySelector('#btnmesanterior') as HTMLButtonElement;
     const btnhoy = document.querySelector('#btnhoy') as HTMLButtonElement;
     const btnayer = document.querySelector('#btnayer') as HTMLButtonElement;
-    let fechainicio:string = "", fechafin:string = "", tablaFacturasAnuladas:HTMLElement;
+    let fechainicio:string = "", fechafin:string = "", tablaFacturasElectronicas:HTMLElement;
 
-    interface factuarasanuladas {
-        id:string,
-        id_sucursalidfk:string,
-        id_estadoelectronica:string,
-        consecutivo_id:string,
-        id_facturaid:string,
-        id_adquiriente:string,
-        id_estadonota:string,
-        numero:string,
-        num_factura:string,
+    interface invoice {
+        id:string,     //id de la factura_electronica
+        orden:string,  //id de la factura
         prefijo:string,
+        numero:string, //numero del consecutivo de la factura electronica
         resolucion:string,
-        token_electronica:string,
         cufe:string,
-        qr:string,
-        fecha_factura:string,
         identificacion:string,
         nombre:string,
-        email:string,
-        link:string,
-        nota_credito:string,
-        num_nota:string,
-        cufe_nota:string,
-        fecha_nota:string,
-        is_auto:string,
-        json_envio:string,
-        respuesta_factura:string,
-        respuesta_nota:string,
-        intentos_de_envio:string,
-        fecha_ultimo_intento:string,
+        tipoventa:string,
+        base:string,
+        valorimpuestototal:string,
+        total:string,
         created_at: string
-    } 
+    }
 
-    let facturaselectronicas:factuarasanuladas[] = [];
+    let facturaselectronicas:invoice[] = [];
 
     // SELECTOR DE FECHAS DEL CALENDARIO
     ($('input[name="datetimes"]')as any).daterangepicker({
@@ -73,7 +56,7 @@
         const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
         const fechainiciobtn:string = primerDia.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDia.toISOString().split('T')[0];
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiInvoice(fechainiciobtn, fechafinbtn);
     });
 
 
@@ -86,7 +69,7 @@
         const ultimoDiaMesAnterior = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
         const fechainiciobtn:string = primerDiaMesAnterior.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDiaMesAnterior.toISOString().split('T')[0];
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiInvoice(fechainiciobtn, fechafinbtn);
     });
 
     btnhoy.addEventListener('click', (e:Event)=>{
@@ -95,7 +78,7 @@
         const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioDia);
         const fechafinbtn:string = formatoFecha(finDia);
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiInvoice(fechainiciobtn, fechafinbtn);
     });
 
     btnayer.addEventListener('click', (e:Event)=>{
@@ -108,7 +91,7 @@
         const finAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioAyer);
         const fechafinbtn:string = formatoFecha(finAyer);
-        callApiFacturasPagas(fechainiciobtn, fechafinbtn);
+        callApiInvoice(fechainiciobtn, fechafinbtn);
     });
 
     function formatoFecha(fecha: Date): string {
@@ -128,17 +111,17 @@
          msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
          return;
       }
-      callApiFacturasPagas(fechainicio, fechafin);
+      callApiInvoice(fechainicio, fechafin);
     });
 
-    async function callApiFacturasPagas(dateinicio:string, datefin:string){
+    async function callApiInvoice(dateinicio:string, datefin:string){
         console.log(dateinicio, datefin);
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);
         datos.append('fechafin', datefin);
         try {
-            const url = "/admin/api/facturasanuladas"; //llama a la api que esta en reportescontrolador.php
+            const url = "/admin/api/facturaselectronicas"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             facturaselectronicas = resultado;
@@ -152,11 +135,36 @@
 
     printTableFacturasPagas();
     function printTableFacturasPagas(){
-        tablaFacturasAnuladas = ($('#tablaFacturasAnuladas') as any).DataTable({
+        tablaFacturasElectronicas = ($('#tablaFacturasElectronicas') as any).DataTable({
             "responsive": true,
             destroy: true, // importante si recargas la tabla
             data: facturaselectronicas,
-            columns: [{title: 'Orden', data: 'num_orden'}, {title: 'N° Factura', data: 'num_consecutivo'}, {title: 'Tipo', data: 'tipofacturador'}, {title: 'Cant vendida', data: 'totalunidades'}, {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Imp', data: 'valorimpuestototal'}, {title: 'Descuento', data: 'descuento'}, {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Vendedor', data: 'vendedor'}, {title: 'Caja', data: 'caja'}],
+            columns: [
+                        {title: 'Orden', data: 'orden'}, 
+                        {title: 'Prefijo', data: 'prefijo'}, 
+                        {title: 'Numero', data: 'numero'},
+                        { 
+                            title: 'Abrir', 
+                            data: null, 
+                            orderable: false, 
+                            searchable: false, 
+                            render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/reportes/detalleInvoice?id=${row.id}" data-id="${row.id}">Abrir</a>`}
+                        },
+                        {
+                            title: 'Abrir Dian', 
+                            data: null, 
+                            orderable: false, 
+                            searchable: false, 
+                            render: (data: any, type: any, row: any) => {return `<button class="btn-ver btn-xs btn-lima" data-id="${row.id}">Abrir Dian</button>`}
+                        }, 
+                        {title: 'Identificacion', data: 'identificacion'}, 
+                        {title: 'Nombre', data: 'nombre'}, 
+                        {title: 'Tipo venta', data: 'tipoventa'}, 
+                        {title: 'Base', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
+                        {title: 'Valor imp', data: 'valorimpuestototal', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
+                        {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
+                        {title: 'Fecha', data: 'created_at'}
+                    ],
             pageLength: 25,
             language: {
                 search: 'Busqueda',

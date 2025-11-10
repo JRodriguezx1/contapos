@@ -114,13 +114,15 @@
         </tr>
       </thead>
       <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
-        <tr class="hover:bg-gray-50 transition">
+        <?php ?>
+        <!--<tr class="hover:bg-gray-50 transition">
           <td class="px-6 py-3">1</td>
           <td class="px-6 py-3">Maquina de afeitar VGR-306</td>
           <td class="px-6 py-3 text-center">10</td>
           <td class="px-6 py-3">$15.000</td>
           <td class="px-6 py-3">$150.000</td>
-        </tr>
+        </tr>-->
+        <?php ?>
       </tbody>
     </table>
   </div>
