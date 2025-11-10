@@ -201,7 +201,8 @@
     <dialog id="miDialogoGetResolucion" class="midialog-sm p-12">
         <h4 class="font-semibold text-gray-700 mb-4">Obtener resolución</h4>
         <div id="divmsjalertaGetResolucion"></div>
-        <form id="formGetResolucion" class="formulario" action="/admin/config/GetResolucion" method="POST">
+        <form id="formGetResolucion" class="formulario relative" action="/admin/config/GetResolucion" method="POST">
+            <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>    
             <div class="formulario__campo">
                 <label class="formulario__label" for="selectResolucioncompañia">Seleccionar compañia</label>
                 <select id="selectResolucioncompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="getresolucioncompañia" required>

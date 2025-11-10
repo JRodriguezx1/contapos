@@ -4,10 +4,11 @@ namespace Model\felectronicas;
 
 class facturas_electronicas extends \Model\ActiveRecord{
     protected static $tabla = 'facturas_electronicas';
-    protected static $columnasDB = ['id', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'num_nota', 'cufe_nota', 'fecha_nota', 'is_auto', 'json_envio', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
+    protected static $columnasDB = ['id', 'id_sucursalidfk', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'num_nota', 'cufe_nota', 'fecha_nota', 'is_auto', 'json_envio', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->id_sucursalidfk = $args['id_sucursalidfk']??'';
         $this->id_estadoelectronica = $args['id_estadoelectronica']??'';
         $this->consecutivo_id = $args['consecutivo_id']??'';
         $this->id_facturaid = $args['id_facturaid']??'';

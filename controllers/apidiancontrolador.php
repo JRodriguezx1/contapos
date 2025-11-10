@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Classes\Traits\DocumentTrait;
 use Model\configuraciones\consecutivos;
 use Model\configuraciones\usuarios; //namespace\clase hija
 use Model\ActiveRecord;
@@ -11,11 +12,13 @@ use Model\parametrizacion\config_local;
 use Model\configuraciones\tipofacturador;
 use Model\felectronicas\adquirientes;
 use Model\felectronicas\diancompanias;
+use Model\felectronicas\facturas_electronicas;
 use Model\sucursales;
 use MVC\Router;  //namespace\clase
  
 class apidiancontrolador{
 
+  use DocumentTrait;
 
   //////////////---------   API   ----------///////////////////
   public static function citiesXdepartments(){
@@ -186,6 +189,29 @@ class apidiancontrolador{
     }
     echo json_encode($alertas);
   }
+
+
+  //Metodo usado en ventas.sendinvoice.ts para enviar una factura desde ventas.ts
+  public static function sendInvoice(){
+    session_start();
+    isadmin();
+    $alertas = [];
+    
+    $url = "https://apidianj2.com/api/ubl2.1/invoice"; 
+    ///////////    enviar FE     /////////////
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+    $idfactura = json_decode(file_get_contents('php://input'), true);
+    $facturaDian = facturas_electronicas::find('id_facturaid', $idfactura['id']);
+  
+    //if($facturaDian && ($facturaDian->id_estadoelectronica == 1 || $facturaDian->id_estadoelectronica == 1))
+    //  $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
+    
+  }
+  
   
 
 }

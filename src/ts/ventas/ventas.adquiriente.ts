@@ -143,7 +143,7 @@
     const datosAdquiriente: Record<string, FormDataEntryValue> = Object.fromEntries(data.entries());
     POS.gestionarAdquiriente.datosAdquiriente = datosAdquiriente; //guarda en el objeto global
     miDialogoFacturarA.close();
-    document.removeEventListener("click", cerrarDialogoExterno);
+    document.removeEventListener("click", POS.cerrarDialogoExterno);
     //guardar adquiriente en DB.
     guardarAdquiriente(datosAdquiriente);
   });

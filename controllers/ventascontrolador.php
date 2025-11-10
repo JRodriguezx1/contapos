@@ -233,8 +233,9 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
-              $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1]);  //llamada al trait para crear el json y guardar la FE en DB
+              $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $mediospago, $factura->descuento);  //llamada al trait para crear el json y guardar la FE en DB
               //....
+            
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
@@ -444,6 +445,7 @@ class ventascontrolador{
 
     $productos = ventas::idregistros('idfactura', $factura->id);
     $mediospago = json_decode($_POST['mediosPago']);
+    //$datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $factmediospago = new factmediospago();
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
@@ -508,6 +510,7 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
+              //$fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1]);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               $getDB->commit();
             } catch (\Throwable $th) {
