@@ -5,9 +5,12 @@ namespace Controllers;
 use Model\caja\cierrescajas;
 use Model\caja\ingresoscajas;
 use Model\compras;
+use Model\configuraciones\caja;
+use Model\configuraciones\usuarios;
 use Model\detallecompra;
 use Model\gastos;
 use Model\inventario\productos;
+use Model\inventario\proveedores;
 use Model\inventario\stockinsumossucursal;
 use Model\inventario\stockproductossucursal;
 use Model\inventario\subproductos;
@@ -134,7 +137,12 @@ class reportescontrolador{
         $id=$_GET['id'];
         if(!is_numeric($id))return;
 
-        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $compra = compras::find('id', $id);
+        $usuario = usuarios::find('id', $compra->idusuario);
+        $proveedor = proveedores::find('id', $compra->idproveedor);
+        $caja = caja::find('id', $compra->idorigencaja);
+        $detallecompra = detallecompra::idregistros('idcompra', $compra->id);
+        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'compra'=>$compra, 'usuario'=>$usuario, 'proveedor'=>$proveedor, 'caja'=>$caja, 'detallecompra'=>$detallecompra, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
