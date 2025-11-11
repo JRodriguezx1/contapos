@@ -59,10 +59,12 @@ $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta'])
 
 //area publica
 //$router->get('/', [paginacontrolador::class, 'index']);
+///////////     print     ////////////
 $router->get('/', [logincontrolador::class, 'login']);
 $router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen y desde index caja
 $router->get('/printcotizacion', [cajacontrolador::class, 'printcotizacion']); //llamado desde ordenresumen
 $router->get('/printdetallecierre', [cajacontrolador::class, 'printdetallecierre']); //llamado desde cerrarcaja
+$router->get('/printDetalleCompra', [reportescontrolador::class, 'printDetalleCompra']);  //lamada desde detalle compra.
 
 
 /////area dashboard/////

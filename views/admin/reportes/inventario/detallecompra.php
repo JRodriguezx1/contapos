@@ -154,6 +154,7 @@
   <!-- Botón imprimir -->
   <div class="flex justify-end mt-8">
     <button
+      id="btnPrintCompra"
       class="flex items-center gap-2 bg-indigo-600 text-white font-medium px-6 py-3 rounded-xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition">
       <i class="fa fa-print"></i>
       Imprimir

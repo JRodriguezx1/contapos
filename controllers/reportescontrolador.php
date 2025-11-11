@@ -145,6 +145,9 @@ class reportescontrolador{
         $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'compra'=>$compra, 'usuario'=>$usuario, 'proveedor'=>$proveedor, 'caja'=>$caja, 'detallecompra'=>$detallecompra, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+    public static function printDetalleCompra(Router $router){
+        self::detallecompra($router);
+    }
 
     public static function detalleInvoice(Router $router){
         session_start();
