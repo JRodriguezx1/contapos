@@ -1198,6 +1198,7 @@ class almacencontrolador{
         $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $producto->stock = $cantidad;
         $ra = $producto->actualizar();
+        /////  registrar movimiento de inventario
         if($ra){
             $alertas['exito'][] = "Stock del producto actualizado con exito";
             $alertas['item'][] = $producto;
