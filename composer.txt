@@ -1,11 +1,13 @@
 {
-    "name": "jrodriguez/pos-system",
-    "description": "Sistema POS con PHP 8.1+, MVC, SQL, BEM, SASS, ts",
+    "name": "juandelatorre/devwebcamp",
+    "description": "Proyecto PHP 8, MVC, SQL, BEM, SASS",
     "type": "project",
     "autoload": {
         "psr-4": {
             "MVC\\" : "./",
-            "App\\": "app/"
+            "Controllers\\" : "./controllers",
+            "Model\\" : "./models",
+            "Classes\\" : "./classes"
         }
     },
     "authors": [

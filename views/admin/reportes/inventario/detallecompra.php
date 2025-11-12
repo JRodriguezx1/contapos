@@ -26,7 +26,7 @@
     <div class="bg-indigo-50 rounded-2xl shadow-md p-4 flex justify-between items-center hover:scale-105 hover:shadow-lg transition">
       <div>
         <p class="text-gray-700 text-base font-semibold">Usuario</p>
-        <h3 class="text-xl font-extrabold text-indigo-700 leading-tight">Julián Rodríguez</h3>
+        <h3 class="text-xl font-extrabold text-indigo-700 leading-tight"><?php echo $usuario->nombre.' '.$usuario->apellido??'';?></h3>
       </div>
       <i class="fa-solid fa-user text-indigo-500 text-3xl"></i>
     </div>
@@ -34,7 +34,7 @@
     <div class="bg-indigo-50 rounded-2xl shadow-md p-4 flex justify-between items-center hover:scale-105 hover:shadow-lg transition">
       <div>
         <p class="text-gray-700 text-base font-semibold">Proveedor</p>
-        <h3 class="text-xl font-extrabold text-indigo-700 leading-tight">Semiconductores LTA</h3>
+        <h3 class="text-xl font-extrabold text-indigo-700 leading-tight"><?php echo $proveedor->nombre;?></h3>
       </div>
       <i class="fa-solid fa-store text-indigo-500 text-3xl"></i>
     </div>
@@ -42,7 +42,7 @@
     <div class="bg-indigo-50 rounded-2xl shadow-md p-4 flex justify-between items-center hover:scale-105 hover:shadow-lg transition">
       <div>
         <p class="text-gray-700 text-base font-semibold">N° Factura</p>
-        <h3 class="text-xl font-extrabold text-indigo-700 leading-tight">564656565</h3>
+        <h3 class="text-xl font-extrabold text-indigo-700 leading-tight"><?php echo $compra->nfactura;?></h3>
       </div>
       <i class="fa-solid fa-file-invoice text-indigo-500 text-3xl"></i>
     </div>
@@ -60,17 +60,17 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-700 mb-6">
     <div class="flex flex-col bg-indigo-50 rounded-xl p-3 space-y-4">
       <span class="text-base text-gray-500 font-semibold">Forma de pago</span>
-      <span class="text-indigo-700 text-xl font-extrabold">Contado</span>
+      <span class="text-indigo-700 text-xl font-extrabold"><?php echo $compra->formapago;?></span>
     </div>
 
     <div class="flex flex-col bg-indigo-50 rounded-xl p-3 space-y-4">
       <span class="text-base text-gray-500 font-semibold">Fecha de compra</span>
-      <span class="text-indigo-700 text-xl font-extrabold">2025-10-20</span>
+      <span class="text-indigo-700 text-xl font-extrabold"><?php echo $compra->fechacompra;?></span>
     </div>
 
     <div class="flex flex-col bg-indigo-50 rounded-xl p-3 space-y-4">
       <span class="text-base text-gray-500 font-semibold">Valor total</span>
-      <span class="text-indigo-700 text-xl font-extrabold">$150.000</span>
+      <span class="text-indigo-700 text-xl font-extrabold">$<?php echo number_format($compra->valortotal, '2', ',', '.');?></span>
     </div>
   </div>
 
@@ -79,7 +79,7 @@
     <!-- Caja principal -->
     <div class="flex flex-col bg-green-50 rounded-xl p-3 space-y-4">
       <span class="text-base text-gray-500 font-semibold">Origen del dinero</span>
-      <span class="text-green-700 text-xl font-extrabold">Caja Principal</span>
+      <span class="text-green-700 text-xl font-extrabold"><?php echo $caja->nombre;?></span>
     </div>
 
     <!-- Tipo de origen -->
@@ -95,7 +95,7 @@
         <p class="font-semibold text-gray-700">Observación</p>
       </div>
       <p class="text-gray-600 leading-relaxed mt-2">
-        Compra realizada para reabastecer inventario de productos eléctricos.
+        <?php echo $compra->observacion;?>
       </p>
     </div>
   </div>
@@ -109,20 +109,22 @@
           <th class="p-4">#</th>
           <th class="p-4">Producto</th>
           <th class="p-4">Cantidad</th>
+          <th class="p-4">Unidad</th>
           <th class="p-4">Precio Unitario</th>
           <th class="p-4">Subtotal</th>
         </tr>
       </thead>
       <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
-        <?php ?>
-        <!--<tr class="hover:bg-gray-50 transition">
-          <td class="px-6 py-3">1</td>
-          <td class="px-6 py-3">Maquina de afeitar VGR-306</td>
-          <td class="px-6 py-3 text-center">10</td>
-          <td class="px-6 py-3">$15.000</td>
-          <td class="px-6 py-3">$150.000</td>
-        </tr>-->
-        <?php ?>
+        <?php foreach($detallecompra as $index => $value): ?>
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-3"><?php echo $index+1;?></td>
+          <td class="px-6 py-3"><?php echo $value->nombreitem;?></td>
+          <td class="px-6 py-3"><?php echo $value->cantidad;?></td>
+          <td class="px-6 py-3"><?php echo $value->unidad;?></td>
+          <td class="px-6 py-3"><?php echo $value->valorunidad;?></td>
+          <td class="px-6 py-3"><?php echo $value->valorcompra;?></td>
+        </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
   </div>
@@ -134,17 +136,17 @@
     <div class="space-y-3 text-gray-700 text-base">
       <div class="flex justify-between">
         <span>Subtotal:</span>
-        <span class="font-semibold">$130.000</span>
+        <span class="font-semibold">$<?php echo number_format($compra->valortotal, '2', ',', '.');?></span>
       </div>
 
       <div class="flex justify-between">
-        <span>IVA (15%):</span>
-        <span class="font-semibold">$20.000</span>
+        <span>IVA (0%):</span>
+        <span class="font-semibold">$0.00</span>
       </div>
 
       <div class="border-t border-gray-200 pt-3 mt-3 flex justify-between text-lg font-bold text-gray-800">
         <span>Total:</span>
-        <span class="text-indigo-600">$150.000</span>
+        <span class="text-indigo-600">$<?php echo number_format($compra->valortotal, '2', ',', '.');?></span>
       </div>
     </div>
   </div>
@@ -152,6 +154,7 @@
   <!-- Botón imprimir -->
   <div class="flex justify-end mt-8">
     <button
+      id="btnPrintCompra"
       class="flex items-center gap-2 bg-indigo-600 text-white font-medium px-6 py-3 rounded-xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition">
       <i class="fa fa-print"></i>
       Imprimir

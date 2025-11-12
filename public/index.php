@@ -10,21 +10,21 @@ require_once __DIR__ . '/../includes/app.php'; //apunta al directorio raiz y lue
 
 //me importa clases del controlador
 
-use Controllers\logincontrolador; //clase para logueo, registro de usuario, recuperacion, deslogueo etc..
-use Controllers\dashboardcontrolador;
-use Controllers\contabilidadcontrolador;
-use Controllers\almacencontrolador;
-use Controllers\apidiancontrolador;
-use Controllers\cajacontrolador;
-use Controllers\ventascontrolador;
-use Controllers\reportescontrolador;
-use Controllers\clientescontrolador;
-use Controllers\direccionescontrolador;
-use Controllers\configcontrolador;
-use Controllers\paginacontrolador;
-use Controllers\parametroscontrolador;
-use Controllers\printcontrolador;
-use Controllers\trasladosinvcontrolador;
+use App\Controllers\logincontrolador; //clase para logueo, registro de usuario, recuperacion, deslogueo etc..
+use App\Controllers\dashboardcontrolador;
+use App\Controllers\contabilidadcontrolador;
+use App\Controllers\almacencontrolador;
+use App\Controllers\apidiancontrolador;
+use App\Controllers\cajacontrolador;
+use App\Controllers\ventascontrolador;
+use App\Controllers\reportescontrolador;
+use App\Controllers\clientescontrolador;
+use App\Controllers\direccionescontrolador;
+use App\Controllers\configcontrolador;
+use App\Controllers\paginacontrolador;
+use App\Controllers\parametroscontrolador;
+use App\Controllers\printcontrolador;
+use App\Controllers\trasladosinvcontrolador;
 // me importa la clase router
 use MVC\Router;
 
@@ -59,10 +59,12 @@ $router->get('/confirmar-cuenta', [logincontrolador::class, 'confirmar_cuenta'])
 
 //area publica
 //$router->get('/', [paginacontrolador::class, 'index']);
+///////////     print     ////////////
 $router->get('/', [logincontrolador::class, 'login']);
 $router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']); //llamado desde ordenresumen y desde index caja
 $router->get('/printcotizacion', [cajacontrolador::class, 'printcotizacion']); //llamado desde ordenresumen
 $router->get('/printdetallecierre', [cajacontrolador::class, 'printdetallecierre']); //llamado desde cerrarcaja
+$router->get('/printDetalleCompra', [reportescontrolador::class, 'printDetalleCompra']);  //lamada desde detalle compra.
 
 
 /////area dashboard/////
