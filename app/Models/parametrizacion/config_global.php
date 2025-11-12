@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\parametrizacion;
+namespace App\Models\parametrizacion;
 
-class config_global extends \Model\ActiveRecord{
+class config_global extends \App\Models\ActiveRecord{
     protected static $tabla = 'config_global';
     protected static $columnasDB = ['id', 'modulo', 'clave', 'valor_default'];
     

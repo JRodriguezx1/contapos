@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace App\Models;
 
-class factimpuestos extends ActiveRecord{
+class factimpuestos extends \App\Models\ActiveRecord{
     protected static $tabla = 'factimpuestos';
     protected static $columnasDB = ['id', 'id_impuesto', 'facturaid', 'basegravable', 'valorimpuesto'];
     

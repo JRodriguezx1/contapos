@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class ordenes_produccion extends \Model\ActiveRecord{
+class ordenes_produccion extends \App\Models\ActiveRecord{
     protected static $tabla = 'ordenes_produccion';
     protected static $columnasDB = ['id', 'idsucursal_fk', 'id_productoid', 'nombreproducto', 'cantidadsolicitada', 'estado'];
     

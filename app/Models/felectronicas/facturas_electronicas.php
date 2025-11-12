@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\felectronicas;
+namespace App\Models\felectronicas;
 
-class facturas_electronicas extends \Model\ActiveRecord{
+class facturas_electronicas extends \App\Models\ActiveRecord{
     protected static $tabla = 'facturas_electronicas';
     protected static $columnasDB = ['id', 'id_sucursalidfk', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'num_nota', 'cufe_nota', 'fecha_nota', 'is_auto', 'json_envio', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
     

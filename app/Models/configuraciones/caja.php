@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\configuraciones;
+namespace App\Models\configuraciones;
 
-class caja extends \Model\ActiveRecord{
+class caja extends \App\Models\ActiveRecord{
     protected static $tabla = 'caja';
     protected static $columnasDB = ['id', 'idsucursalid', 'idtipoconsecutivo', 'nombre', 'negocio', 'editable', 'estado'];
     

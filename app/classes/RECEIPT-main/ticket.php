@@ -18,7 +18,7 @@
         public function generar($sucursal, $factura, $cliente, $direccion, $productos=[]){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
-            $this->pdf->Image(__DIR__ . '/../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
+            $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
             $this->pdf->Ln(25);
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);

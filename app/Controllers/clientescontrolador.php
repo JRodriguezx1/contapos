@@ -1,15 +1,15 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Model\ActiveRecord;
+use App\classes\Email;
+use App\Models\ActiveRecord;
 use MVC\Router;  //namespace\clase
-use Model\configuraciones\usuarios;
-use Model\clientes\clientes;
-use Model\empleados;
-use Model\clientes\direcciones;
-use Model\configuraciones\tarifas;
+use App\Models\configuraciones\usuarios;
+use App\Models\clientes\clientes;
+use App\Models\empleados;
+use App\Models\clientes\direcciones;
+use App\Models\configuraciones\tarifas;
 
  
 class clientescontrolador{

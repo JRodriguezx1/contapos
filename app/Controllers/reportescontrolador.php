@@ -1,20 +1,20 @@
 <?php
 //$dias = facturacion::inner_join('SELECT COUNT(id) AS servicios, fecha_pago, SUM(total) AS totaldia FROM facturacion GROUP BY fecha_pago ORDER BY COUNT(id) DESC;');
-namespace Controllers;
+namespace App\Controllers;
 
-use Model\caja\cierrescajas;
-use Model\caja\ingresoscajas;
-use Model\compras;
-use Model\configuraciones\caja;
-use Model\configuraciones\usuarios;
-use Model\detallecompra;
-use Model\gastos;
-use Model\inventario\productos;
-use Model\inventario\proveedores;
-use Model\inventario\stockinsumossucursal;
-use Model\inventario\stockproductossucursal;
-use Model\inventario\subproductos;
-use Model\ventas\facturas;
+use App\Models\caja\cierrescajas;
+use App\Models\caja\ingresoscajas;
+use App\Models\compras;
+use App\Models\configuraciones\caja;
+use App\Models\configuraciones\usuarios;
+use App\Models\detallecompra;
+use App\Models\gastos;
+use App\Models\inventario\productos;
+use App\Models\inventario\proveedores;
+use App\Models\inventario\stockinsumossucursal;
+use App\Models\inventario\stockproductossucursal;
+use App\Models\inventario\subproductos;
+use App\Models\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{

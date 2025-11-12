@@ -1,30 +1,30 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Model\ActiveRecord;
-use Model\configuraciones\usuarios; //namespace\clase hija
-//use Model\configuraciones\negocio;
-use Model\ventas\facturas;
-use Model\caja\cierrescajas;
-use Model\caja\ingresoscajas;
-use Model\gastos;
-use Model\configuraciones\caja;
-use Model\caja\declaracionesdineros;
-use Model\configuraciones\mediospago;
-use Model\caja\factmediospago;
-use Model\caja\arqueoscajas;
-use Model\caja\categoriagastos;
-use Model\configuraciones\bancos;
-use Model\clientes\clientes;
-use Model\clientes\direcciones;
-use Model\configuraciones\tarifas;
-use Model\ventas\ventas;
-use Model\configuraciones\consecutivos;
-use Model\parametrizacion\config_local;
-use Model\configuraciones\negocio;
-use Model\sucursales;
+use App\classes\Email;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+//use App\Models\configuraciones\negocio;
+use App\Models\ventas\facturas;
+use App\Models\caja\cierrescajas;
+use App\Models\caja\ingresoscajas;
+use App\Models\gastos;
+use App\Models\configuraciones\caja;
+use App\Models\caja\declaracionesdineros;
+use App\Models\configuraciones\mediospago;
+use App\Models\caja\factmediospago;
+use App\Models\caja\arqueoscajas;
+use App\Models\caja\categoriagastos;
+use App\Models\configuraciones\bancos;
+use App\Models\clientes\clientes;
+use App\Models\clientes\direcciones;
+use App\Models\configuraciones\tarifas;
+use App\Models\ventas\ventas;
+use App\Models\configuraciones\consecutivos;
+use App\Models\parametrizacion\config_local;
+use App\Models\configuraciones\negocio;
+use App\Models\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -891,7 +891,7 @@ class cajacontrolador{
 
     $id = $_POST['id'];
     $sendEmail = $_POST['email'];
-    $path = __DIR__ . "/../views/templates/plantillafacturaemail.php";
+    $path = __DIR__ . "/../../views/templates/plantillafacturaemail.php";
 
     //debuguear($path);
     

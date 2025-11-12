@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\configuraciones;
+namespace App\Models\configuraciones;
 
-class usuarios_permisos extends \Model\ActiveRecord{
+class usuarios_permisos extends \App\Models\ActiveRecord{
     protected static $tabla = 'usuarios_permisos';
     protected static $columnasDB = ['id', 'usuarioid', 'permisoid'];
     

@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class proveedores extends \Model\ActiveRecord {
+class proveedores extends \App\Models\ActiveRecord {
     protected static $tabla = 'proveedores';
     protected static $columnasDB = ['id', 'nit', 'nombre', 'telefono', 'email', 'direccion', 'pais', 'ciudad'];
     

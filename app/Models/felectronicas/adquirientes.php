@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\felectronicas;
+namespace App\Models\felectronicas;
 
-class adquirientes extends \Model\ActiveRecord{
+class adquirientes extends \App\Models\ActiveRecord{
     protected static $tabla = 'adquirientes';
     protected static $columnasDB = ['id', 'type_document_identification_id', 'identification_number', 'business_name', 'email', 'address', 'municipality_id', 'type_organization_id', 'type_regime_id', 'phone', 'department_id', 'departamento_nombre', 'ciudad_nombre'];
     

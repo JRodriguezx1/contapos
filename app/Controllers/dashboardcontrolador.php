@@ -1,18 +1,18 @@
 <?php
 
 
-namespace Controllers;
+namespace App\Controllers;
 //require __DIR__ . '/../classes/dompdf/autoload.inc.php';
 //require __DIR__ . '/../classes/twilio-php-main/src/Twilio/autoload.php';
 //require __DIR__ . '/../classes/aws/aws-autoloader.php';
 //require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 
-use Model\caja\cierrescajas;
+use App\Models\caja\cierrescajas;
 use MVC\Router;
-use Model\configuraciones\usuarios;
-use Model\inventario\stockproductossucursal;
-use Model\ventas\facturas;
-use Model\ventas\ventas;
+use App\Models\configuraciones\usuarios;
+use App\Models\inventario\stockproductossucursal;
+use App\Models\ventas\facturas;
+use App\Models\ventas\ventas;
 //use ticketPOS;
 
 

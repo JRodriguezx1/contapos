@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\parametrizacion;
+namespace App\Models\parametrizacion;
 
-class config_local extends \Model\ActiveRecord{
+class config_local extends \App\Models\ActiveRecord{
     protected static $tabla = 'config_local';
     protected static $columnasDB = ['id', 'fk_sucursalid', 'clave', 'valor'];
     

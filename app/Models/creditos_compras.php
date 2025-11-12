@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace App\Models;
 
-class creditos_compras extends ActiveRecord{
+class creditos_compras extends \App\Models\ActiveRecord{
     protected static $tabla = 'creditos_compras';
     protected static $columnasDB = ['id', 'id_sucursal_fk', 'compra_id', 'id_proveedor', 'nombreproveedor', 'montototal', 'saldopendiente', 'cantidadcuotas', 'montocuota', 'frecuenciapago', 'fechainicio', 'tasainteres', 'estado'];
     

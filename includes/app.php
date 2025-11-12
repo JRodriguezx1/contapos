@@ -1,7 +1,7 @@
 <?php 
 
 use Dotenv\Dotenv;   //variables de entorno para el deploy
-use Model\ActiveRecord;  //importa el archivo de modelo para la gestion de bd mysql
+use App\Models\ActiveRecord;  //importa el archivo de modelo para la gestion de bd mysql
 require __DIR__ . '/../vendor/autoload.php';  //localizar las clases
 
 // Añadir Dotenv

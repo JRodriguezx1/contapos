@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class traslado_inv extends \Model\ActiveRecord{
+class traslado_inv extends \App\Models\ActiveRecord{
     protected static $tabla = 'traslado_inv';
     protected static $columnasDB = ['id', 'id_sucursalorigen', 'id_sucursaldestino', 'fkusuario', 'tipo', 'observacion', 'estado'];
     

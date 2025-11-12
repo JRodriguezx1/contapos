@@ -1,10 +1,10 @@
 <?php
 
-namespace Classes;
+namespace App\classes;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use Model\configuraciones\negocio;
-use Model\sucursales;
+use App\Models\configuraciones\negocio;
+use App\Models\sucursales;
 
 /*
 EMAIL_HOST= smtp.gmail.com

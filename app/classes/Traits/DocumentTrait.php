@@ -1,11 +1,11 @@
 <?php
 
-namespace Classes\Traits;
+namespace App\Classes\Traits;
 
-use Model\configuraciones\consecutivos;
-use Model\felectronicas\diancompanias;
-use Model\felectronicas\facturas_electronicas;
-use Model\ventas\facturas;
+use App\Models\configuraciones\consecutivos;
+use App\Models\felectronicas\diancompanias;
+use App\Models\felectronicas\facturas_electronicas;
+use App\Models\ventas\facturas;
 use stdClass;
 
 trait DocumentTrait

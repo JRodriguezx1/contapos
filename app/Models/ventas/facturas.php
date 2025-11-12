@@ -1,7 +1,7 @@
 <?php
-namespace Model\ventas;
+namespace App\Models\ventas;
 
-class facturas extends \Model\ActiveRecord {
+class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
     protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'referencia', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];

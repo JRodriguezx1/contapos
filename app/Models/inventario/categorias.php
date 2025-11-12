@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class categorias extends \Model\ActiveRecord {
+class categorias extends \App\Models\ActiveRecord {
     protected static $tabla = 'categorias';
     protected static $columnasDB = ['id', 'nombre', 'codigo', 'totalproductos', 'foto', 'fechacreacion', 'visible'];
     

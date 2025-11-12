@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class insumos_consumidos extends \Model\ActiveRecord{
+class insumos_consumidos extends \App\Models\ActiveRecord{
     protected static $tabla = 'insumos_consumidos';
     protected static $columnasDB = ['id', 'idordenproduccion', 'subproducto_id', 'id_loteproduccion', 'nombresubproducto', 'cantidadutilizada'];
     

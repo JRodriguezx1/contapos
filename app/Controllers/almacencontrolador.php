@@ -1,30 +1,30 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Model\ActiveRecord;
-use Model\configuraciones\bancos;
-use Model\configuraciones\usuarios; //namespace\clase hija
-use Model\inventario\productos;
-use Model\inventario\subproductos;
-use Model\inventario\productos_sub;
-use Model\inventario\categorias;
-Use Model\inventario\unidadesmedida;
-use Model\inventario\conversionunidades;
-use Model\configuraciones\caja;
-use Model\gastos;
-use Model\caja\cierrescajas;
-use Model\compras;
-use Model\detallecompra;
-use Model\inventario\detalletrasladoinv;
-use Model\inventario\precios_personalizados;
-use Model\inventario\proveedores;
-use Model\inventario\stockinsumossucursal;
-use Model\inventario\stockproductossucursal;
-use Model\inventario\traslado_inv;
-use Model\parametrizacion\config_local;
-use Model\sucursales;
+use App\classes\Email;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\bancos;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+use App\Models\inventario\productos;
+use App\Models\inventario\subproductos;
+use App\Models\inventario\productos_sub;
+use App\Models\inventario\categorias;
+Use App\Models\inventario\unidadesmedida;
+use App\Models\inventario\conversionunidades;
+use App\Models\configuraciones\caja;
+use App\Models\gastos;
+use App\Models\caja\cierrescajas;
+use App\Models\compras;
+use App\Models\detallecompra;
+use App\Models\inventario\detalletrasladoinv;
+use App\Models\inventario\precios_personalizados;
+use App\Models\inventario\proveedores;
+use App\Models\inventario\stockinsumossucursal;
+use App\Models\inventario\stockproductossucursal;
+use App\Models\inventario\traslado_inv;
+use App\Models\parametrizacion\config_local;
+use App\Models\sucursales;
 use MVC\Router;  //namespace\clase
 use stdClass;
 

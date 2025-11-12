@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class stockinsumossucursal extends \Model\ActiveRecord{
+class stockinsumossucursal extends \App\Models\ActiveRecord{
     protected static $tabla = 'stockinsumossucursal';
     protected static $columnasDB = ['id', 'subproductoid', 'sucursalid', 'stock', 'stockminimo'];
     

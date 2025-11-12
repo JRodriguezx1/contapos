@@ -1,32 +1,32 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Classes\Traits\DocumentTrait;
-use Model\ActiveRecord;
-use Model\configuraciones\usuarios; //namespace\clase hija
-use Model\inventario\productos;
-use Model\inventario\categorias;
-use Model\configuraciones\mediospago;
-use Model\caja\factmediospago;
-use Model\clientes\clientes;
-use Model\ventas\facturas;
-use Model\ventas\ventas;
-use Model\configuraciones\tarifas;
-use Model\caja\cierrescajas;
-use Model\clientes\departments;
-use Model\configuraciones\consecutivos;
-use Model\configuraciones\caja;
-use Model\configuraciones\tipofacturador;
-use Model\factimpuestos;
-use Model\impuestos;
-use Model\parametrizacion\config_local;
-use Model\inventario\productos_sub;
-use Model\inventario\stockinsumossucursal;
-use Model\inventario\stockproductossucursal;
-use Model\inventario\subproductos;
-//use Model\configuraciones\negocio;
+use App\classes\Email;
+use App\classes\Traits\DocumentTrait;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+use App\Models\inventario\productos;
+use App\Models\inventario\categorias;
+use App\Models\configuraciones\mediospago;
+use App\Models\caja\factmediospago;
+use App\Models\clientes\clientes;
+use App\Models\ventas\facturas;
+use App\Models\ventas\ventas;
+use App\Models\configuraciones\tarifas;
+use App\Models\caja\cierrescajas;
+use App\Models\clientes\departments;
+use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\caja;
+use App\Models\configuraciones\tipofacturador;
+use App\Models\factimpuestos;
+use App\Models\impuestos;
+use App\Models\parametrizacion\config_local;
+use App\Models\inventario\productos_sub;
+use App\Models\inventario\stockinsumossucursal;
+use App\Models\inventario\stockproductossucursal;
+use App\Models\inventario\subproductos;
+//use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
 use stdClass;
 

@@ -2,7 +2,7 @@
 
 namespace App\Models\caja;
 
-class arqueoscajas extends App\Models\ActiveRecord{
+class arqueoscajas extends \App\Models\ActiveRecord{
     protected static $tabla = 'arqueoscajas';
     protected static $columnasDB = ['id', 'id_cierrecajaid', 'cienmil', 'cincuentamil', 'veintemil', 'diezmil', 'cincomil', 'dosmil', 'mil', 'quinientos', 'docientos', 'cien', 'cincuenta', 'dato1', 'dato2'];
     

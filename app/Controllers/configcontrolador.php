@@ -1,24 +1,24 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Model\configuraciones\caja;
-use Model\configuraciones\consecutivos;
-use Model\configuraciones\usuarios; //namespace\clase hija
-use Model\configuraciones\negocio;
-use Model\configuraciones\mediospago;
-use Model\ActiveRecord;
-use Model\configuraciones\bancos;
-use Model\caja\cierrescajas;
-use Model\clientes\departments;
-use Model\parametrizacion\config_local;
-use Model\configuraciones\permisos;
-use Model\configuraciones\tarifas;
-use Model\configuraciones\tipofacturador;
-use Model\configuraciones\usuarios_permisos;
-use Model\felectronicas\diancompanias;
-use Model\sucursales;
+use App\classes\Email;
+use App\Models\configuraciones\caja;
+use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+use App\Models\configuraciones\negocio;
+use App\Models\configuraciones\mediospago;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\bancos;
+use App\Models\caja\cierrescajas;
+use App\Models\clientes\departments;
+use App\Models\parametrizacion\config_local;
+use App\Models\configuraciones\permisos;
+use App\Models\configuraciones\tarifas;
+use App\Models\configuraciones\tipofacturador;
+use App\Models\configuraciones\usuarios_permisos;
+use App\Models\felectronicas\diancompanias;
+use App\Models\sucursales;
 use MVC\Router;  //namespace\clase
  
 class configcontrolador{

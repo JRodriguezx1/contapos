@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace App\Models;
 
-class empleados extends ActiveRecord {
+class empleados extends \App\Models\ActiveRecord {
     protected static $tabla = 'empleados';
     protected static $columnasDB = ['img', 'id', 'nombre', 'apellido', 'cedula', 'movil', 'email', 'fecha_nacimiento', 'genero', 'departamento', 'ciudad', 'direccion', 'perfil', 'timeservice', 'dato1', 'dato2'];
     protected static $avatar=['avatar/avatar.png', 'avatar/avatar1.png', 'avatar/avatar2.png', 'avatar/avatar3.png', 'avatar/avatar4.png', 'avatar/avatar5.png',

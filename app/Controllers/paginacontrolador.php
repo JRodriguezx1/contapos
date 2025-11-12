@@ -1,12 +1,12 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Model\configuraciones\negocio;
-use Model\categoriaserv;
-use Model\servicios;
-use Model\empserv;
-use Model\empleados;
+use App\Models\configuraciones\negocio;
+use App\Models\categoriaserv;
+use App\Models\servicios;
+use App\Models\empserv;
+use App\Models\empleados;
 //use DateTime;
 use MVC\Router;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace App\Models;
 
-class sucursales extends ActiveRecord{
+class sucursales extends \App\Models\ActiveRecord{
     protected static $tabla = 'sucursales';
     protected static $columnasDB = ['id', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'timezone'];
     

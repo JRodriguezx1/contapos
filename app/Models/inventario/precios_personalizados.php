@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class precios_personalizados extends \Model\ActiveRecord{
+class precios_personalizados extends \App\Models\ActiveRecord{
     protected static $tabla = 'precios_personalizados';
     protected static $columnasDB = ['id', 'idproductoid', 'precio', 'estado'];
     

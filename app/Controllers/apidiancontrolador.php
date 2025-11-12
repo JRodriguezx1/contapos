@@ -1,20 +1,20 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Traits\DocumentTrait;
-use Model\configuraciones\consecutivos;
-use Model\configuraciones\usuarios; //namespace\clase hija
-use Model\ActiveRecord;
-use Model\clientes\departments;
-use Model\clientes\municipalities;
-use Model\parametrizacion\config_local;
-use Model\configuraciones\tipofacturador;
-use Model\felectronicas\adquirientes;
-use Model\felectronicas\diancompanias;
-use Model\felectronicas\facturas_electronicas;
-use Model\sucursales;
-use Model\ventas\facturas;
+use App\classes\Traits\DocumentTrait;
+use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+use App\Models\ActiveRecord;
+use App\Models\clientes\departments;
+use App\Models\clientes\municipalities;
+use App\Models\parametrizacion\config_local;
+use App\Models\configuraciones\tipofacturador;
+use App\Models\felectronicas\adquirientes;
+use App\Models\felectronicas\diancompanias;
+use App\Models\felectronicas\facturas_electronicas;
+use App\Models\sucursales;
+use App\Models\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
 class apidiancontrolador{

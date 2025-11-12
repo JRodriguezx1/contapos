@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace App\Models;
 
-class impuestos extends ActiveRecord{
+class impuestos extends \App\Models\ActiveRecord{
     protected static $tabla = 'impuestos';
     protected static $columnasDB = ['id', 'nombre'];
     

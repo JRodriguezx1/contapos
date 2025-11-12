@@ -1,7 +1,7 @@
 <?php
-namespace Model\configuraciones;
+namespace App\Models\configuraciones;
 
-class consecutivos extends \Model\ActiveRecord {
+class consecutivos extends \App\Models\ActiveRecord {
     protected static $tabla = 'consecutivos';
     protected static $columnasDB = ['id', 'id_sucursalid', 'idcompania', 'idtipofacturador', 'idnegocio', 'nombre', 'rangoinicial', 'rangofinal', 'siguientevalor', 'fechainicio', 'fechafin', 'resolucion', 'consecutivoremplazo', 'prefijo', 'mostrarresolucion', 'mostrarimpuestodiscriminado', 'tokenfacturaelectronica', 'electronica', 'estado'];
 

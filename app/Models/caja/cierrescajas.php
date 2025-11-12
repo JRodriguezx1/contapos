@@ -1,7 +1,7 @@
 <?php
-namespace Model\caja;
+namespace App\Models\caja;
 
-class cierrescajas extends \Model\ActiveRecord {
+class cierrescajas extends \App\Models\ActiveRecord {
     protected static $tabla = 'cierrescajas';
     protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturaseliminadas', 'facturaselectronicaselimnadas', 'facturasposeliminadas', 'valorfeeliminado', 'valorposeliminado', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
 

@@ -1,7 +1,7 @@
 <?php
-namespace Model\clientes;
+namespace App\Models\clientes;
 
-class clientes extends \Model\ActiveRecord {
+class clientes extends \App\Models\ActiveRecord {
     protected static $tabla = 'clientes';
     protected static $columnasDB = ['id', 'nombre', 'apellido', 'tipodocumento', 'identificacion', 'telefono', 'email', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'data1'];
     

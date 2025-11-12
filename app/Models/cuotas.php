@@ -1,9 +1,9 @@
 <?php
 
-namespace Model;
+namespace App\Models;
 
-class cuotas_compras extends ActiveRecord{
-    protected static $tabla = 'cuotas_compras';
+class cuotas extends \App\Models\ActiveRecord{
+    protected static $tabla = 'cuotas';
     protected static $columnasDB = ['id', 'id_credito', 'numerocuota', 'montocuota', 'fechavencimiento', 'fechapagado', 'cuotascreditos', 'estado'];
     
     public function __construct($args = []){

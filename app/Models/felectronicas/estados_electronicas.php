@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\felectronicas;
+namespace App\Models\felectronicas;
 
-class estados_electronicas extends \Model\ActiveRecord{
+class estados_electronicas extends \App\Models\ActiveRecord{
     protected static $tabla = 'estados_electronicas';
     protected static $columnasDB = ['id', 'descripcion'];
     

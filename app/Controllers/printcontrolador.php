@@ -1,19 +1,19 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 require __DIR__ . '/../classes/RECEIPT-main/ticket.php';
 
-use Classes\Email;
-use Model\ActiveRecord;
-use Model\configuraciones\mediospago;
-use Model\caja\factmediospago;
-use Model\clientes\clientes;
-use Model\clientes\direcciones;
-use Model\ventas\facturas;
-use Model\configuraciones\negocio;
-use Model\ventas\ventas;
-use Model\configuraciones\tarifas;
-use Model\sucursales;
+use App\classes\Email;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\mediospago;
+use App\Models\caja\factmediospago;
+use App\Models\clientes\clientes;
+use App\Models\clientes\direcciones;
+use App\Models\ventas\facturas;
+use App\Models\configuraciones\negocio;
+use App\Models\ventas\ventas;
+use App\Models\configuraciones\tarifas;
+use App\Models\sucursales;
 use MVC\Router;  //namespace\clase
 use ticketPOS;
 

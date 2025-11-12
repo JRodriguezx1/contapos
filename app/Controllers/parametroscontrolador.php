@@ -1,14 +1,14 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Model\ActiveRecord;
-use Model\configuraciones\negocio;
-use Model\parametrizacion\config_global;
-use Model\parametrizacion\config_local;
-use Model\ventas\ventas;
-use Model\configuraciones\tarifas;
+use App\classes\Email;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\negocio;
+use App\Models\parametrizacion\config_global;
+use App\Models\parametrizacion\config_local;
+use App\Models\ventas\ventas;
+use App\Models\configuraciones\tarifas;
 use MVC\Router;  //namespace\clase
 
 class parametroscontrolador{

@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\inventario;
+namespace App\Models\inventario;
 
-class lotes_produccion extends \Model\ActiveRecord{
+class lotes_produccion extends \App\Models\ActiveRecord{
     protected static $tabla = 'lotes_produccion';
     protected static $columnasDB = ['id', 'id_ordenproduccion', 'idsucursalfk', 'num_lote', 'cantidadproducida', 'fechaproduccion', 'fechavencimiento'];
     

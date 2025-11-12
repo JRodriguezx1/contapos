@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\configuraciones;
+namespace App\Models\configuraciones;
 
-class usuarios extends \Model\ActiveRecord {
+class usuarios extends \App\Models\ActiveRecord {
     protected static $tabla = 'usuarios';
     protected static $columnasDB = ['id', 'idsucursal', 'nombre', 'apellido', 'cedula', 'nickname', 'movil', 'email', 'ws', 'password', 'confirmado', 'token', 'perfil', 'ciudad', 'direccion', 'fecha_nacimiento', 'img', 'fechacreacion', 'ultimologin'];
     

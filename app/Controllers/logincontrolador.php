@@ -1,12 +1,12 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Classes\Email;
-use Model\configuraciones\permisos;
-use Model\sucursales;
-use Model\configuraciones\usuarios; //namespace\clase hija
-use Model\configuraciones\usuarios_permisos;
+use App\classes\Email;
+use App\Models\configuraciones\permisos;
+use App\Models\sucursales;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+use App\Models\configuraciones\usuarios_permisos;
 //use Model\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
  
