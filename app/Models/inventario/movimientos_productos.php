@@ -4,7 +4,7 @@ namespace App\Models\inventario;
 
 class movimientos_productos extends \App\Models\ActiveRecord{
     protected static $tabla = 'movimientos_productos';
-    protected static $columnasDB = ['id', 'idfksucursal', 'idproducto_id', 'id_usuarioid', 'nombreusuario', 'tipo', 'referencia', 'stockanterior', 'stocknuevo', 'comentario'];
+    protected static $columnasDB = ['id', 'idfksucursal', 'idproducto_id', 'id_usuarioid', 'nombreusuario', 'tipo', 'referencia', 'cantidad', 'stockanterior', 'stocknuevo', 'comentario'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -12,8 +12,9 @@ class movimientos_productos extends \App\Models\ActiveRecord{
         $this->idproducto_id = $args['idproducto_id']??'';
         $this->id_usuarioid = $args['id_usuarioid']??'';
         $this->nombreusuario = $args['nombreusuario']??'';
-        $this->tipo = $args['tipo']??'';
-        $this->referencia = $args['referencia']??'';
+        $this->tipo = $args['tipo']??'';  //'entrada', 'salida', 'ajuste', 'traslado
+        $this->referencia = $args['referencia']??'';  //ej: factura, compra, nota de ajuste
+        $this->cantidad = $args['cantidad']??'';
         $this->stockanterior = $args['stockanterior']??'';
         $this->stocknuevo = $args['stocknuevo']??'';
         $this->comentario = $args['comentario']??'';

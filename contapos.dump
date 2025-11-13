@@ -1594,12 +1594,13 @@ CREATE TABLE `movimientos_insumos` (
   `fksucursal_id` int NOT NULL,
   `id_subproductoid` int NOT NULL,
   `idusuario_id` int DEFAULT NULL,
-  `nombreusuario` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `tipo` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `referencia` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `nombreusuario` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `tipo` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `referencia` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `cantidad` decimal(12,2) NOT NULL,
   `stockanterior` decimal(12,2) NOT NULL,
   `stocknuevo` decimal(12,2) NOT NULL,
-  `comentario` tinytext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
+  `comentario` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fksucursal_id_idx` (`fksucursal_id`),
@@ -1608,7 +1609,7 @@ CREATE TABLE `movimientos_insumos` (
   CONSTRAINT `fksucursal_id` FOREIGN KEY (`fksucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_subproductoid` FOREIGN KEY (`id_subproductoid`) REFERENCES `subproductos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idusuario_id` FOREIGN KEY (`idusuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1632,12 +1633,13 @@ CREATE TABLE `movimientos_productos` (
   `idfksucursal` int NOT NULL,
   `idproducto_id` int NOT NULL,
   `id_usuarioid` int DEFAULT NULL,
-  `nombreusuario` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `tipo` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `referencia` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `nombreusuario` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `referencia` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cantidad` decimal(12,2) NOT NULL,
   `stockanterior` decimal(12,2) NOT NULL,
   `stocknuevo` decimal(12,2) NOT NULL,
-  `comentario` tinytext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
+  `comentario` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idfksucursal_idx` (`idfksucursal`),
@@ -1646,7 +1648,7 @@ CREATE TABLE `movimientos_productos` (
   CONSTRAINT `id_usuarioid` FOREIGN KEY (`id_usuarioid`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idfksucursal` FOREIGN KEY (`idfksucursal`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idproducto_id` FOREIGN KEY (`idproducto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2482,4 +2484,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-10 14:05:30
+-- Dump completed on 2025-11-13  0:55:45

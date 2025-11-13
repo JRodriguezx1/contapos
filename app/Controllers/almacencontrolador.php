@@ -18,6 +18,7 @@ use App\Models\caja\cierrescajas;
 use App\Models\compras;
 use App\Models\detallecompra;
 use App\Models\inventario\detalletrasladoinv;
+use App\Models\inventario\movimientos_productos;
 use App\Models\inventario\precios_personalizados;
 use App\Models\inventario\proveedores;
 use App\Models\inventario\stockinsumossucursal;
@@ -1199,6 +1200,8 @@ class almacencontrolador{
         $producto->stock = $cantidad;
         $ra = $producto->actualizar();
         /////  registrar movimiento de inventario
+        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>, 'referencia'=>, 'cantidad'=>, 'stockanterior'=>, 'stocknuevo'=>, 'comentario'=>'Stock ajustado manualmente']);
+        
         if($ra){
             $alertas['exito'][] = "Stock del producto actualizado con exito";
             $alertas['item'][] = $producto;
