@@ -120,6 +120,15 @@ class reportescontrolador{
         $router->render('admin/reportes/inventario/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+    public static function movimientosinventarios(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/inventario/movimientosinventarios', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
     public static function compras(Router $router){
         session_start();
         isadmin();

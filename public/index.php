@@ -131,6 +131,7 @@ $router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'f
 $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);
 $router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class, 'inventarioxproducto']);
+$router->get('/admin/reportes/movimientosinventarios', [reportescontrolador::class, 'movimientosinventarios']);
 $router->get('/admin/reportes/compras', [reportescontrolador::class, 'compras']);
 $router->get('/admin/reportes/detallecompra', [reportescontrolador::class, 'detallecompra']);
 $router->get('/admin/reportes/utilidadxproducto', [reportescontrolador::class, 'utilidadxproducto']);

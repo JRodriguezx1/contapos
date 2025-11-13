@@ -18,6 +18,7 @@ use App\Models\caja\cierrescajas;
 use App\Models\compras;
 use App\Models\detallecompra;
 use App\Models\inventario\detalletrasladoinv;
+use App\Models\inventario\movimientos_insumos;
 use App\Models\inventario\movimientos_productos;
 use App\Models\inventario\precios_personalizados;
 use App\Models\inventario\proveedores;
@@ -1200,9 +1201,9 @@ class almacencontrolador{
         $producto->stock = $cantidad;
         $ra = $producto->actualizar();
         /////  registrar movimiento de inventario
-        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>, 'referencia'=>, 'cantidad'=>, 'stockanterior'=>, 'stocknuevo'=>, 'comentario'=>'Stock ajustado manualmente']);
-        
-        if($ra){
+        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>($producto->stock-$cantidad), 'stocknuevo'=>$producto->stock, 'comentario'=>'Stock ajustado manualmente']);
+        $rm = $movpro->crear_guardar();
+        if($ra && $rm){
             $alertas['exito'][] = "Stock del producto actualizado con exito";
             $alertas['item'][] = $producto;
         }else{
@@ -1212,7 +1213,9 @@ class almacencontrolador{
         //$insumo = subproductos::find('id', $iditem);
         $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $insumo->stock = $cantidad;
-         $ra = $insumo->actualizar();
+        $ra = $insumo->actualizar();
+        $movsub = new movimientos_insumos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>($producto->stock-$cantidad), 'stocknuevo'=>$producto->stock, 'comentario'=>'Stock ajustado manualmente']);
+        $rm = $movsub->crear_guardar();
         if($ra){
             $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
             $alertas['item'][] = $insumo;

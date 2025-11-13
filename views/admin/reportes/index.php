@@ -94,9 +94,9 @@
         <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">inventory_2</span>Inventario general
         </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Movimientos inventario
-        </button>
+        <a href="/admin/reportes/movimientosinventarios" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 text-center text-slate-600">
+          <span class="material-symbols-outlined">speaker_notes</span>Movimientos de inventario
+        </a>
         <a href="/admin/reportes/compras" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md   ">
           <span class="material-symbols-outlined">speaker_notes</span>Compras
         </a>
