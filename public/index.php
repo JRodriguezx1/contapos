@@ -252,6 +252,7 @@ $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifactu
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/movimientoInventario', [reportescontrolador::class, 'movimientoInventario']);  //fetch llamado desde movimientosinventarios.ts
 $router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportecompras.ts
 $router->post('/admin/api/eliminarcompra', [reportescontrolador::class, 'eliminarcompra']);  //fetch llamado desde reportecompras.ts
 $router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde gastosingresos.ts

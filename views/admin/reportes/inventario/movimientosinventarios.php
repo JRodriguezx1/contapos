@@ -42,12 +42,14 @@
           <tr>
               <th>Nº</th>
               <th>Usuario</th>
-              <th>Origen</th>
-              <th>Proveedor</th>
-              <th>N° Factura</th>
-              <th>V. Total</th>
+              <th>Producto</th>
+              <th>Unidad</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+              <th>Stock anterior</th>
+              <th>Stock</th>
               <th>Fecha</th>
-              <th class="accionesth">Acciones</th>
+              <th>Referencia</th>
           </tr>
       </thead>
       <tbody>

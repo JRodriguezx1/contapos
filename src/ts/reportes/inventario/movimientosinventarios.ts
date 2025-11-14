@@ -1,9 +1,26 @@
 (()=>{
     if(document.querySelector('.movimientosinventarios')){
 
+        interface compras {
+        id:string,
+        formapago:string,
+        nfactura:string,
+        impuesto:string,
+        cantidaditems:string,
+        observacion:string,
+        estado:string,
+        subtotal:string,
+        valortotal:string,
+        fechacompra:string,
+        nombreusuario:string,
+        nombreproveedor:string,
+        nombrecaja:string
+        estadocierrecaja:string
+    } 
 
         const consultarFechaPersonalizada = document.querySelector('#consultarFechaPersonalizada') as HTMLButtonElement;
         let fechainicio:string = "", fechafin:string = "", tablaMovimientosInventarios:HTMLElement;
+        let datosMovimientosInventarios:[] = [];
 
         // SELECTOR DE FECHAS DEL CALENDARIO
         ($('input[name="datetimes"]')as any).daterangepicker({
@@ -26,6 +43,8 @@
             //(document.querySelector('#fechafin') as HTMLParagraphElement).textContent = fechafin;
         });
 
+
+        ///////   productos y subproductos en el select
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
         (async ()=>{
             try {
@@ -62,31 +81,94 @@
 
         ////// consulta por fecha personalizada
         consultarFechaPersonalizada.addEventListener('click', ()=>{
-        if(fechainicio == '' || fechafin == ''){
-            msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
-            return;
-        }
-        //callApiCompras(fechainicio, fechafin);
+            let datos = ($('#item') as any).select2('data')[0];
+            if(fechainicio == '' || fechafin == ''){
+                msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
+                return;
+            }
+            if(datos === undefined){
+                msjalertToast('error', '¡Error!', "Seleccionar un item de la lista");
+                return;
+            }
+            console.log(datos);
+            callApiMovimientoInventario(fechainicio, fechafin, datos.tipo, datos.id);
         });
 
-        /*async function callApiCompras(dateinicio:string, datefin:string){
+        async function callApiMovimientoInventario(dateinicio:string, datefin:string, tipo:string, iditem:string){
             console.log(dateinicio, datefin);
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
             const datos = new FormData();
             datos.append('fechainicio', dateinicio);
             datos.append('fechafin', datefin);
+            datos.append('tipo', tipo);
+            datos.append('iditem', iditem);
             try {
-                const url = "/admin/api/reportecompras"; //llama a la api que esta en reportescontrolador.php
+                const url = "/admin/api/movimientoInventario"; //llama a la api que esta en reportescontrolador.php
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json();
-                datosCompras = resultado;
-                console.log(datosCompras);
+                datosMovimientosInventarios = resultado;
+                console.log(datosMovimientosInventarios);
                 printTableCompras();
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
             } catch (error) {
                 console.log(error);
             }
-        }*/
+        }
+
+
+        printTableCompras();
+        function printTableCompras(){
+            tablaMovimientosInventarios = ($('#tablaMovimientosInventarios') as any).DataTable({
+                "responsive": true,
+                pageLength: 25,
+                destroy: true, // importante si recargas la tabla
+                data: datosMovimientosInventarios,
+                order: [[7, "desc"]],
+                columns: [
+                    {title: 'id', data: 'id'}, 
+                    {title: 'Usuario', data: 'usuario'},
+                    {title: 'Producto', data: 'nombre'},
+                    {title: 'Unidad', data: 'unidadmedida'},
+                    {
+                        title: 'tipo', 
+                        data: null, 
+                        orderable: false, 
+                        searchable: false, 
+                        render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.tipo=='venta'?'btn-lima':row.tipo=='compra'?'btn-blue':row.tipo=='ajuste'?'btn-turquoise':row.tipo=='descuento de unidades'?'btn-bluelight':row.tipo=='salida por traslado'?'btn-orange':'btn-bluelintense'}">${row.tipo}</button>`}
+                    },
+                    {title: 'Cantidad', data: 'cantidad'},
+                    {title: 'Stock anterior', data: 'stockanterior'},
+                    {title: 'Stock', data: 'stocknuevo'},
+                    {title: 'Fecha', data: 'created_at'},
+                    {title: 'Referencia', data: 'referencia'},
+                ],
+                
+                /*pageLength: 25,
+                language: {
+                    search: 'Busqueda',
+                    emptyTable: 'No Hay datos disponibles',
+                    zeroRecords:    "No se encontraron registros coincidentes",
+                    lengthMenu: '_MENU_ Entradas por pagina',
+                    info: 'Mostrando pagina _PAGE_ de _PAGES_',
+                    infoEmpty: 'No hay entradas a mostrar',
+                    infoFiltered: ' (filtrado desde _MAX_ registros)',
+                    paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+                },
+                layout: {
+                    topStart: {
+                        buttons: [
+                        {extend: 'copyHtml5', text: 'Copia'}, 
+                        {extend: 'excelHtml5', title: 'facturas procesadas'}, 
+                        {extend: 'csvHtml5', title: 'facturas procesadas'}, 
+                        {extend: 'pdfHtml5', title: 'facturas procesadas'}, 
+                        {extend: 'print', title: 'facturas procesadas', text: 'Imprimir'},
+                        'colvis'
+                        ],
+                        pageLength: 'pageLength'
+                    }
+                },*/
+            });
+        }
 
 
     }

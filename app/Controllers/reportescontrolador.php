@@ -2,6 +2,7 @@
 //$dias = facturacion::inner_join('SELECT COUNT(id) AS servicios, fecha_pago, SUM(total) AS totaldia FROM facturacion GROUP BY fecha_pago ORDER BY COUNT(id) DESC;');
 namespace App\Controllers;
 
+use App\Models\ActiveRecord;
 use App\Models\caja\cierrescajas;
 use App\Models\caja\ingresoscajas;
 use App\Models\compras;
@@ -383,6 +384,37 @@ class reportescontrolador{
               WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 AND f.id_sucursal = $idsucursal
               ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+  //Reporte movimiento de inventarios
+  public static function movimientoInventario(){
+    session_start();
+    isadmin();
+    $datos = [];
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $tipo = $_POST['tipo'];
+    $iditem = $_POST['iditem'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      if($tipo == 0){ //productos
+        $sql = "SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,
+                p.id as iditem, p.nombre, p.unidadmedida, CONCAT(u.nombre,' ',u.apellido) as usuario
+                FROM movimientos_productos m
+                JOIN productos p ON m.idproducto_id = p.id
+                JOIN usuarios u ON m.id_usuarioid = u.id
+                WHERE m.created_at BETWEEN '$fechainicio' AND '$fechafin' AND idproducto_id = $iditem AND idfksucursal = $idsucursal ORDER BY m.created_at DESC;";
+      }else{  //subproductos - insumos
+        $sql = "SELECT SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,
+                s.id as iditem, s.nombre, s.unidadmedida, CONCAT(u.nombre,' ',u.apellido) as usuario
+                FROM movimientos_insumos m
+                JOIN subproductos s ON m.id_subproductoid = s.id
+                JOIN usuarios u ON m.idusuario_id = u.id
+                WHERE m.created_at BETWEEN '$fechainicio' AND '$fechafin' AND id_subproductoid = $iditem AND fksucursal_id = $idsucursal ORDER BY m.created_at DESC;";
+      }
+      $datos = ActiveRecord::camposJoinObj($sql);
     }
     echo json_encode($datos);
   }

@@ -12,7 +12,7 @@ class movimientos_productos extends \App\Models\ActiveRecord{
         $this->idproducto_id = $args['idproducto_id']??'';
         $this->id_usuarioid = $args['id_usuarioid']??'';
         $this->nombreusuario = $args['nombreusuario']??'';
-        $this->tipo = $args['tipo']??'';  //'entrada', 'salida', 'ajuste', 'traslado
+        $this->tipo = $args['tipo']??'';  //'Ingreso por traslado', 'ingreso de unidades', 'descuento de unidades' 'ajuste', 'salida por traslado, venta, compra
         $this->referencia = $args['referencia']??'';  //ej: factura, compra, nota de ajuste
         $this->cantidad = $args['cantidad']??'';
         $this->stockanterior = $args['stockanterior']??'';
