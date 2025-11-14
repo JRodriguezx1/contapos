@@ -36,7 +36,7 @@
 
 
   <div class="mt-4">
-    <p class="text-gray-500 text-xl">Octubre 2025</p>
+    <p id="mesañoactual" class="text-gray-500 text-xl"> -- </p>
     <table id="tablaMovimientosInventarios" class="display responsive nowrap tabla" width="100%">
         <thead>
           <tr>

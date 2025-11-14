@@ -283,3 +283,11 @@ if(document.querySelector('#tabulacion')){ // view/admin/adminconfig/index.php
   });
 }
 
+function mesyañoactual():[string, number]
+{
+  const fecha = new Date();
+  const mesTexto:string = fecha.toLocaleString('es-CO', { month: 'long' });
+  const año:number = fecha.getFullYear();
+  return [mesTexto, año];
+}
+

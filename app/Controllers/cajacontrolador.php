@@ -234,7 +234,7 @@ class cajacontrolador{
       }
     }
     $facturas = [];
-    if(!empty($ultimoscierres))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
 
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 

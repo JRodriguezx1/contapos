@@ -388,7 +388,7 @@ class reportescontrolador{
     echo json_encode($datos);
   }
 
-  //Reporte movimiento de inventarios
+  //Reporte movimiento de inventarios  llamada desde movimientosinventarios.ts
   public static function movimientoInventario(){
     session_start();
     isadmin();
@@ -407,7 +407,7 @@ class reportescontrolador{
                 JOIN usuarios u ON m.id_usuarioid = u.id
                 WHERE m.created_at BETWEEN '$fechainicio' AND '$fechafin' AND idproducto_id = $iditem AND idfksucursal = $idsucursal ORDER BY m.created_at DESC;";
       }else{  //subproductos - insumos
-        $sql = "SELECT SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,
+        $sql = "SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,
                 s.id as iditem, s.nombre, s.unidadmedida, CONCAT(u.nombre,' ',u.apellido) as usuario
                 FROM movimientos_insumos m
                 JOIN subproductos s ON m.id_subproductoid = s.id

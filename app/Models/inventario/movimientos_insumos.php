@@ -8,7 +8,7 @@ class movimientos_insumos extends \App\Models\ActiveRecord{
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
-        $this->fksucursal_id = $args['fksucursal_id']??'';
+        $this->fksucursal_id = $args['fksucursal_id']??id_sucursal();
         $this->id_subproductoid = $args['id_subproductoid']??'';
         $this->idusuario_id = $args['idusuario_id']??'';
         $this->nombreusuario = $args['nombreusuario']??'';

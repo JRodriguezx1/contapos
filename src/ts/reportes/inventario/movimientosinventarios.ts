@@ -22,6 +22,9 @@
         let fechainicio:string = "", fechafin:string = "", tablaMovimientosInventarios:HTMLElement;
         let datosMovimientosInventarios:[] = [];
 
+        const mesyaño:[string, number] = mesyañoactual();
+        document.querySelector('#mesañoactual')!.textContent = mesyaño[0]+' '+mesyaño[1];
+
         // SELECTOR DE FECHAS DEL CALENDARIO
         ($('input[name="datetimes"]')as any).daterangepicker({
         timePicker: true,
@@ -123,7 +126,7 @@
                 pageLength: 25,
                 destroy: true, // importante si recargas la tabla
                 data: datosMovimientosInventarios,
-                order: [[7, "desc"]],
+                order: [[8, "desc"]],
                 columns: [
                     {title: 'id', data: 'id'}, 
                     {title: 'Usuario', data: 'usuario'},
@@ -134,7 +137,7 @@
                         data: null, 
                         orderable: false, 
                         searchable: false, 
-                        render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.tipo=='venta'?'btn-lima':row.tipo=='compra'?'btn-blue':row.tipo=='ajuste'?'btn-turquoise':row.tipo=='descuento de unidades'?'btn-bluelight':row.tipo=='salida por traslado'?'btn-orange':'btn-bluelintense'}">${row.tipo}</button>`}
+                        render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.tipo=='venta'?'btn-lima':row.tipo=='compra'?'btn-blue':row.tipo=='ajuste'?'btn-turquoise':(row.tipo=='descuento de unidades' || row.tipo=='descuento por produccion')?'btn-bluelight':row.tipo=='salida por traslado'?'btn-yellow':'btn-bluelintense'}">${row.tipo}</button>`}
                     },
                     {title: 'Cantidad', data: 'cantidad'},
                     {title: 'Stock anterior', data: 'stockanterior'},
@@ -143,7 +146,7 @@
                     {title: 'Referencia', data: 'referencia'},
                 ],
                 
-                /*pageLength: 25,
+                
                 language: {
                     search: 'Busqueda',
                     emptyTable: 'No Hay datos disponibles',
@@ -157,16 +160,14 @@
                 layout: {
                     topStart: {
                         buttons: [
-                        {extend: 'copyHtml5', text: 'Copia'}, 
                         {extend: 'excelHtml5', title: 'facturas procesadas'}, 
-                        {extend: 'csvHtml5', title: 'facturas procesadas'}, 
                         {extend: 'pdfHtml5', title: 'facturas procesadas'}, 
                         {extend: 'print', title: 'facturas procesadas', text: 'Imprimir'},
                         'colvis'
                         ],
                         pageLength: 'pageLength'
                     }
-                },*/
+                }
             });
         }
 

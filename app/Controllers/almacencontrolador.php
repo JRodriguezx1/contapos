@@ -1132,6 +1132,10 @@ class almacencontrolador{
         $productostock = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $productostock->stock =  $productostock->stock+$cantidad;
         $ra = $productostock->actualizar();
+
+        /////  registrar movimiento de inventario a productos
+        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ingreso de unidades', 'referencia'=>'sumar unidades a inventario', 'cantidad'=>$cantidad, 'stockanterior'=>($productostock->stock-$cantidad), 'stocknuevo'=>$productostock->stock, 'comentario'=>'ingresando nuevas unidades a inventario']);
+        $rm = $movpro->crear_guardar();
         
         $producto = productos::find('id', $iditem);
         $producto->stock = $productostock->stock;
@@ -1153,6 +1157,26 @@ class almacencontrolador{
             $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdSubProduct).") AND sucursalid = 1;";
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);
             if($invSub){
+                $movInv = new movimientos_insumos;
+                //registrar descuento de movimiento de inventario de insumos de forma masiva
+                $arrayMovInv = [];
+                $cantidadxitem = array_column($descontarSubproductos, 'cantidad', 'id');
+                foreach($returnInsumos as $value){
+                  $obj = new stdClass();
+                  $obj->fksucursal_id = id_sucursal();
+                  $obj->id_subproductoid = $value->subproductoid;
+                  $obj->idusuario_id = $_SESSION['id'];
+                  $obj->nombreusuario = $_SESSION['nombre'];
+                  $obj->tipo = 'descuento por produccion';
+                  $obj->referencia = 'Descuento de insumos por produccion';
+                  $obj->cantidad = $cantidadxitem[$value->subproductoid];
+                  $obj->stockanterior = $value->stock + $cantidadxitem[$value->subproductoid];
+                  $obj->stocknuevo = $value->stock;
+                  $obj->comentario = '';
+                  $arrayMovInv[] = $obj;
+                }
+                $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
+                
                 $alertas['exito'][] = "Se realizo produccion con exito";
                 $alertas['item'][] = $producto;
                 $alertas['insumos'][] = $returnInsumos;  //se retorna solo para produccion
@@ -1178,8 +1202,11 @@ class almacencontrolador{
         $insumo->stock = $insumo->stock+$cantidad;
          $ra = $insumo->actualizar();
         if($ra){
-            $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
-            $alertas['item'][] = $insumo;
+          // registrar movimientos de inventario a insumos
+          $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ingreso de unidades', 'referencia'=>'sumar unidades a inventario', 'cantidad'=>$cantidad, 'stockanterior'=>($insumo->stock-$cantidad), 'stocknuevo'=>$insumo->stock, 'comentario'=>'ingresando nuevas unidades a inventario']);
+          $rm = $movsub->crear_guardar();
+          $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
+          $alertas['item'][] = $insumo;
         }else{
             $alertas['error'][] = "Hubo un error, intentalo nuevamente";
         }
@@ -1198,10 +1225,10 @@ class almacencontrolador{
       if($_POST['tipoitem'] == 0){ //si es producto
         //$producto = productos::find('id', $iditem);
         $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
+        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>$producto->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
         $producto->stock = $cantidad;
         $ra = $producto->actualizar();
-        /////  registrar movimiento de inventario
-        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>($producto->stock-$cantidad), 'stocknuevo'=>$producto->stock, 'comentario'=>'Stock ajustado manualmente']);
+        /////  registrar movimiento de inventario de productos
         $rm = $movpro->crear_guardar();
         if($ra && $rm){
             $alertas['exito'][] = "Stock del producto actualizado con exito";
@@ -1212,9 +1239,10 @@ class almacencontrolador{
       }else{  // si es insumo subproducto
         //$insumo = subproductos::find('id', $iditem);
         $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
+        $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>$insumo->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
         $insumo->stock = $cantidad;
         $ra = $insumo->actualizar();
-        $movsub = new movimientos_insumos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>($producto->stock-$cantidad), 'stocknuevo'=>$producto->stock, 'comentario'=>'Stock ajustado manualmente']);
+        /////  registrar movimiento de inventario de insumos
         $rm = $movsub->crear_guardar();
         if($ra){
             $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
@@ -1238,6 +1266,7 @@ class almacencontrolador{
       $r1 = stockproductossucursal::actualizarLibre($sql1);
       $r2 = stockinsumossucursal::actualizarLibre($sql2);
       if($r1 && $r2){
+        // movimientos de inventarios de forma masivo.
         $alertas['exito'][] = "Stock reiniciado completamente";
       }else{
         $alertas['error'][] = "Error al reiniciar stock, intenta nuevamente";
