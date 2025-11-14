@@ -137,7 +137,7 @@
                         data: null, 
                         orderable: false, 
                         searchable: false, 
-                        render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.tipo=='venta'?'btn-lima':row.tipo=='compra'?'btn-blue':row.tipo=='ajuste'?'btn-turquoise':(row.tipo=='descuento de unidades' || row.tipo=='descuento por produccion')?'btn-bluelight':row.tipo=='salida por traslado'?'btn-yellow':'btn-bluelintense'}">${row.tipo}</button>`}
+                        render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.tipo=='venta'?'btn-lima':row.tipo=='compra'?'btn-blue':row.tipo=='ajuste'?'btn-turquoise':(row.tipo=='descuento de unidades' || row.tipo=='descuento por produccion')?'btn-bluelight':row.tipo=='salida por traslado'?'btn-yellow':'btn-blueintense'}">${row.tipo}</button>`}
                     },
                     {title: 'Cantidad', data: 'cantidad'},
                     {title: 'Stock anterior', data: 'stockanterior'},
