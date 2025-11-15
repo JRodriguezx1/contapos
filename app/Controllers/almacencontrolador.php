@@ -27,6 +27,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\traslado_inv;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
+use App\services\stockService;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -935,15 +936,19 @@ class almacencontrolador{
     $compra = new compras($_POST);
     $detallecompra = new detallecompra();
     $carrito = json_decode($_POST['carrito']);
+    $soloIdproductos = [];
+    $soloIdinsumos = [];
     //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
-    $resultArray = array_reduce($carrito, function($acumulador, $objeto){
+    $resultArray = array_reduce($carrito, function($acumulador, $objeto)use($soloIdproductos, $soloIdinsumos){
       $objeto->id = $objeto->iditem;
       //unset($objeto->iditem);
       if($objeto->tipo == 0){
         $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
+        $soloIdproductos[] = $objeto->id;
       }
       else{
         $acumulador['subproductos'][] = $objeto;
+        $soloIdinsumos[] = $objeto->id;
       }
       return $acumulador;
     }, ['productos'=>[], 'subproductos'=>[]]);
@@ -997,19 +1002,20 @@ class almacencontrolador{
               if(!empty($resultArray['productos'])){
                 $invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
                 $invpxs = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', "sucursalid = ".id_sucursal()); //actualizando stock del inventario centralizado
-              
+                $query = "SELECT * FROM stockproductossucursal WHERE subproductoid IN(".join(', ', $soloIdproductos).") AND sucursalid = ".id_sucursal().";";
+                $returnProductos = stockproductossucursal::camposJoinObj($query);
               }
               if(!empty($resultArray['subproductos']) && $invpx && $invpxs){
                 $invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
                 $invsxs = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
-              
+                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdinsumos).") AND sucursalid = ".id_sucursal().";";
+                $returnInsumos = stockinsumossucursal::camposJoinObj($query);
               }
             
               if($invpx && $invpxs){  //productos
                 if($invsx && $invsxs){  //subproductos
                   // registrar ingreso de unidades de inventario
-
-
+                  
                   $alertas['exito'][] = "Compra realizada con exito.";
 
                   //*****/////////// registrarlo en tabla gastos, operacion compra /////////////
@@ -1164,29 +1170,10 @@ class almacencontrolador{
           if(!empty($descontarSubproductos)){
             //$invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
             $invSub = stockinsumossucursal::reduceinv1condicion($descontarSubproductos, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
-            $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdSubProduct).") AND sucursalid = 1;";
+            $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdSubProduct).") AND sucursalid = ".id_sucursal().";";
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);
             if($invSub){
-                $movInv = new movimientos_insumos;
-                //registrar descuento de movimiento de inventario de insumos de forma masiva
-                $arrayMovInv = [];
-                $cantidadxitem = array_column($descontarSubproductos, 'cantidad', 'id');
-                foreach($returnInsumos as $value){
-                  $obj = new stdClass();
-                  $obj->fksucursal_id = id_sucursal();
-                  $obj->id_subproductoid = $value->subproductoid;
-                  $obj->idusuario_id = $_SESSION['id'];
-                  $obj->nombreusuario = $_SESSION['nombre'];
-                  $obj->tipo = 'descuento por produccion';
-                  $obj->referencia = 'Descuento de insumos por produccion';
-                  $obj->cantidad = $cantidadxitem[$value->subproductoid];
-                  $obj->stockanterior = $value->stock + $cantidadxitem[$value->subproductoid];
-                  $obj->stocknuevo = $value->stock;
-                  $obj->comentario = '';
-                  $arrayMovInv[] = $obj;
-                }
-                $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
-                
+                stockService::downStock_movimientoInv($descontarSubproductos, $returnInsumos);  
                 $alertas['exito'][] = "Se realizo produccion con exito";
                 $alertas['item'][] = $producto;
                 $alertas['insumos'][] = $returnInsumos;  //se retorna solo para produccion
