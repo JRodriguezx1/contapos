@@ -26,7 +26,7 @@
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->fechacreacion; ?></td> 
-              <td class=""><?php echo $value->id;?></td>
+              <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->cliente;?></td>
               <td class=""><?php echo $value->vendedor;?></td>
               <td>

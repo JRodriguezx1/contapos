@@ -15,6 +15,7 @@ use App\Models\inventario\proveedores;
 use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
+use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
@@ -26,7 +27,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/index', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/index', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     ///////////////////////// Reportes ///////////////////////////////////
@@ -36,7 +37,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function ventasxtransaccion(Router $router){
@@ -45,7 +46,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function vistaVentasxcliente(Router $router){
@@ -54,7 +55,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function facturaspagas(Router $router){
@@ -63,7 +64,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/facturaspagas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/facturaspagas', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
@@ -72,7 +73,7 @@ class reportescontrolador{
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
     
     public static function facturasanuladas(Router $router){
@@ -81,7 +82,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/facturasanuladas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/facturasanuladas', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function facturaselectronicas(Router $router){
@@ -90,7 +91,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/facturaselectronicas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/facturaselectronicas', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     
@@ -100,7 +101,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function inventarioxproducto(Router $router){
@@ -118,7 +119,7 @@ class reportescontrolador{
                 WHERE sis.sucursalid = ".id_sucursal().";";  
         $subproductos = subproductos::camposJoinObj($sql);
 
-        $router->render('admin/reportes/inventario/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function movimientosinventarios(Router $router){
@@ -127,7 +128,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/inventario/movimientosinventarios', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/movimientosinventarios', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function compras(Router $router){
@@ -136,7 +137,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function detallecompra(Router $router){
@@ -152,7 +153,7 @@ class reportescontrolador{
         $proveedor = proveedores::find('id', $compra->idproveedor);
         $caja = caja::find('id', $compra->idorigencaja);
         $detallecompra = detallecompra::idregistros('idcompra', $compra->id);
-        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'compra'=>$compra, 'usuario'=>$usuario, 'proveedor'=>$proveedor, 'caja'=>$caja, 'detallecompra'=>$detallecompra, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'compra'=>$compra, 'usuario'=>$usuario, 'proveedor'=>$proveedor, 'caja'=>$caja, 'detallecompra'=>$detallecompra, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function printDetalleCompra(Router $router){
@@ -167,7 +168,7 @@ class reportescontrolador{
         $id=$_GET['id'];
         if(!is_numeric($id))return;
 
-        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
@@ -177,7 +178,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
         $productos = productos::whereArray(['visible'=>1]);
-        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function gastoseingresos(Router $router){
@@ -186,7 +187,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/utilidadgastoscrecimiento/gastoseingresos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/utilidadgastoscrecimiento/gastoseingresos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function clientesnuevos(Router $router){
@@ -195,7 +196,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/otros/clientesnuevos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/otros/clientesnuevos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function clientesrecurrentes(Router $router){
@@ -204,7 +205,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/otros/clientesrecurrentes', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/otros/clientesrecurrentes', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 

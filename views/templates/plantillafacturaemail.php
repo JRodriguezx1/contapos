@@ -15,14 +15,14 @@
       <!-- Encabezado -->
       <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 30px; border-bottom:1px solid #e5e7eb;">
         <div style="text-align:left; line-height:1.1;">
-          <h2 style="margin:0; font-size:18px; color:#111827; font-weight:700;">NEGOCIO SAS</h2>
-          <p style="margin:2px 0; font-size:13px; color:#374151;">Sede centro, cr 19</p>
-          <p style="margin:2px 0; font-size:13px; color:#374151;">Tel: 3158863520</p>
-          <p style="margin:2px 0; font-size:13px; color:#374151;">Armenia - Quindío</p>
-          <a href="mailto:contabilidad@innovatech.com.co" style="color:#4338ca; font-size:13px; text-decoration:none;">contabilidad@innovatech.com.co</a>
+          <h2 style="margin:0; font-size:18px; color:#111827; font-weight:700;"><?php echo $sucursal->negocio??'';?></h2>
+          <p style="margin:2px 0; font-size:13px; color:#374151;"><?php echo $sucursal->nombre??'';?></p>
+          <p style="margin:2px 0; font-size:13px; color:#374151;">Tel: <?php echo $cliente->telefono??'';?></p>
+          <p style="margin:2px 0; font-size:13px; color:#374151;"><?php echo $sucursal->ciudad.' - '.$sucursal->departamento;?></p>
+          <a href="mailto:contabilidad@innovatech.com.co" style="color:#4338ca; font-size:13px; text-decoration:none;"><?php echo $sucursal->email??'';?></a>
         </div>
         <div style="text-align:right;">
-          <img src="https://raw.githubusercontent.com/JRodriguezx1/contapos/refs/heads/master/public/build/img/Logoj2indigo.png"
+          <img src="cid:logo_id"
               alt="Logo del negocio"
               style="width:150px; height:auto; display:block; margin-left:auto;">
         </div>
@@ -30,7 +30,7 @@
 
       <!-- Contenido -->
       <div style="padding:0 30px 30px 30px;">
-        <h2 style="color:#111827; font-size:22px; margin-bottom:20px; text-align:center; letter-spacing:0.5px;">FACTURA ELECTRÓNICA DE VENTA</h2>
+        <h2 style="color:#111827; font-size:22px; margin-bottom:20px; text-align:center; letter-spacing:0.5px;">FACTURA DE VENTA</h2>
 
         <!-- 🧾 Detalles de la venta -->
         <div style="background-color:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:15px 20px; margin-bottom:25px;">
@@ -38,23 +38,22 @@
             <tr>
               <td style="vertical-align:top; width:50%; padding-right:15px; border-right:1px solid #e5e7eb;">
                 <h4 style="margin:0 0 8px; font-size:13px; color:#4338ca;">Datos del Cliente</h4>
-                <p style="margin:0 0 4px;"><strong>Cliente:</strong> N/A N/a</p>
-                <p style="margin:0 0 4px;"><strong>NIT/CC:</strong> N/A</p>
-                <p style="margin:0 0 4px;"><strong>Correo:</strong> N/A</p>
-                <p style="margin:0 0 4px;"><strong>Teléfono:</strong> N/A</p>
-                <p style="margin:0;"><strong>Dirección:</strong> Almacén, Armenia - Quindío</p>
+                <p style="margin:0 0 4px;"><strong>Cliente:</strong><?php echo $cliente->nombre.' '.$cliente->apellido;?></p>
+                <p style="margin:0 0 4px;"><strong>NIT/CC:</strong><?php echo $cliente->identificacion??'N/A';?></p>
+                <p style="margin:0 0 4px;"><strong>Correo:</strong><?php echo $cliente->email??'N/A';?></p>
+                <p style="margin:0 0 4px;"><strong>Teléfono:</strong><?php echo $cliente->telefono??'N/A';?></p>
+                <p style="margin:0;"><strong>Dirección:</strong><?php echo $direccion->direccion.', '.$direccion->departamento.' - '.$direccion->ciudad;?></p>
               </td>
               <td style="vertical-align:top; width:50%; padding-left:15px;">
-                <h4 style="margin:0 0 8px; font-size:13px; color:#4338ca;">Detalles de Factura</h4>
-                <p style="margin:0 0 4px;"><strong>Factura N°:</strong> FAP64</p>
-                <p style="margin:0 0 4px;"><strong>Vendedor:</strong> Julián Rodríguez</p>
+                <h4 style="margin:0 0 8px; font-size:13px; color:#4338ca;">Detalles de la orden</h4>
+                <p style="margin:0 0 4px;"><strong>Orden N°:</strong><?php echo $factura->num_orden;?></p>
+                <p style="margin:0 0 4px;"><strong>Vendedor:</strong><?php echo $vendedor->nombre.' '.$vendedor->apellido;?></p>
                 <p style="margin:0 0 10px;"><strong>Medio de pago:</strong> Efectivo</p>
                 <hr style="border:none; border-top:1px solid #e5e7eb; margin:10px 0;">
                 <!-- 🕓 Nueva sección -->
                 <h4 style="margin:10px 0 6px; font-size:13px; color:#4338ca;">Fecha y hora de Factura</h4>
-                <p style="margin:0 0 4px;"><strong>Generación:</strong> 2025-10-25 12:49:48</p>
-                <p style="margin:0 0 4px;"><strong>Expedición:</strong> 2025-10-25 12:49:48</p>
-                <p style="margin:0;"><strong>Vencimiento:</strong> 2025-10-25</p>
+                <p style="margin:0 0 4px;"><strong>Generación:</strong> <?php echo $factura->fechacreacion;?></p>
+                <p style="margin:0 0 4px;"><strong>Expedición:</strong> <?php echo date('Y-m-d H:i:s');?></p>
               </td>
 
             </tr>
@@ -73,26 +72,22 @@
           </thead>
           <tbody>
             <!-- Aquí se insertan dinámicamente los productos -->
+            <?php foreach($productos as $value): ?>
             <tr>
-              <td style="padding:8px 10px; border-bottom:1px solid #f3f4f6;">Pulidora DeWALT 8200rpm 1/2</td>
-              <td style="text-align:center; padding:8px 10px; border-bottom:1px solid #f3f4f6;">1.00</td>
-              <td style="text-align:right; padding:8px 10px; border-bottom:1px solid #f3f4f6;">$598.000</td>
-              <td style="text-align:right; padding:8px 10px; border-bottom:1px solid #f3f4f6;">$598.000</td>
+              <td style="padding:8px 10px; border-bottom:1px solid #f3f4f6;"><?php echo $value->nombreproducto;?></td>
+              <td style="text-align:center; padding:8px 10px; border-bottom:1px solid #f3f4f6;"><?php echo $value->cantidad;?></td>
+              <td style="text-align:right; padding:8px 10px; border-bottom:1px solid #f3f4f6;">$<?php echo number_format($value->valorunidad, '2', '.', ',');?></td>
+              <td style="text-align:right; padding:8px 10px; border-bottom:1px solid #f3f4f6;">$<?php echo number_format($value->total, '2', '.', ',');?></td>
             </tr>
-            <tr>
-              <td style="padding:8px 10px;">Taladro percutor BLACK AND DECKER 550W 1/2</td>
-              <td style="text-align:center; padding:8px 10px;">1.00</td>
-              <td style="text-align:right; padding:8px 10px;">$213.900</td>
-              <td style="text-align:right; padding:8px 10px;">$213.900</td>
-            </tr>
+            <?php endforeach; ?>
           </tbody>
         </table>
 
         <!-- Totales -->
         <div style="text-align:right; font-size:14px; margin-bottom:25px;">
-          <p style="margin:0;"><strong>Subtotal:</strong> $811.900</p>
-          <p style="margin:2px 0;"><strong>IVA (0%):</strong> $0</p>
-          <p style="margin:2px 0 10px;"><strong>Total:</strong> <span style="font-size:16px; color:#4338ca;">$811.900</span></p>
+          <p style="margin:0;"><strong>Subtotal:</strong> $<?php echo number_format($factura->base, '2', '.', ',');?></p>
+          <p style="margin:2px 0;"><strong>IVA:</strong> $<?php echo number_format($factura->valorimpuestototal, '2', '.', ',');?></p>
+          <p style="margin:2px 0 10px;"><strong>Total:</strong> <span style="font-size:16px; color:#4338ca;">$<?php echo number_format($factura->total, '2', '.', ',');?></span></p>
         </div>
 
         <!-- 🧾 Código QR de validación -->
@@ -120,13 +115,13 @@
 
         <div style="font-size:11.5px; color:#6b7280; text-align:center; line-height:1.1; padding:0 15px 15px;">
           <p style="margin:0 0 0px;">
-            Esta factura es un documento válido generado electrónicamente por <strong style="color:#4338ca;">Negocio SAS</strong> - NIT 901155054. Gracias por su compra. Contáctanos: <a href="mailto:contabilidad@innovatech.com.co" style="color:#4338ca; text-decoration:none; margin:0 0 5px;">contabilidad@innovatech.com.co</a> | 
-            Tel: 3158863520
+            Representacion grafica de factura de venta generada por <strong style="color:#4338ca;"><?php echo $sucursal->negocio??'';?></strong> - NIT <?php echo $sucursal->nit??'';?>. Gracias por su compra. Contáctanos: <a href="mailto:<?php echo $sucursal->email??'';?>" style="color:#4338ca; text-decoration:none; margin:0 0 5px;"><?php echo $sucursal->email??'';?></a> | 
+            Tel: <?php echo $sucursal->telefono??'';?>
           </p>
 
-          <p style="margin:0 0 5px;">Dirección: centro cr 19, Armenia - Quindío</p>
+          <p style="margin:0 0 5px;"><?php echo $sucursal->direccion.', '.$sucursal->ciudad.' - '.$sucursal->departamento;?></p>
           <p style="margin:0 0 0px; font-size:11px; color:#9ca3af;">
-            © 2025 <strong style="color:#4338ca;">Negocio SAS</strong>. Todos los derechos reservados.
+            © <?php echo date('Y');?> <strong style="color:#4338ca;"><?php echo $sucursal->negocio??'';?></strong>. Todos los derechos reservados.
           </p>
           <a href="https://subtle-souffle-25465c.netlify.app/" style="margin:0 0 0px;; font-size:11px;">
             Elaborado y generado con <strong style="color:#4338ca;">J2 Software POS Multisucursal</strong>.

@@ -26,6 +26,8 @@ use App\Models\inventario\productos_sub;
 use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
+use App\Models\sucursales;
+use App\services\stockService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -72,7 +74,7 @@ class ventascontrolador{
 
     $conflocal = config_local::getParamCaja();
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -137,6 +139,7 @@ class ventascontrolador{
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
         if(!isset($acumulador['productosSimples'][$objeto->id])){
           $acumulador['productosSimples'][$objeto->id] = $obj;
+          $acumulador['soloIdproductos'][] = $obj->id;
         }else{
           $acumulador['productosSimples'][$objeto->id]->cantidad += $obj->cantidad;
         }
@@ -151,21 +154,22 @@ class ventascontrolador{
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
     
+
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
     //////// sumar los subproductos repetidos
     $reduceSub = [];
+    $soloIdInsumos =[];
     foreach($descontarSubproductos as $idx => $obj){
       if(!isset($reduceSub[$obj->id_subproducto])){
         $obj->id = $obj->id_subproducto;
         $reduceSub[$obj->id_subproducto] = $obj;
+        $soloIdInsumos[] = $obj->id;
       }else{
       $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
       }
     }
 
-    //stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
-    //debuguear($resultArray['productosSimples']);
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //////////validar datos de factura, de ventas y medios de pago
@@ -304,12 +308,25 @@ class ventascontrolador{
               if($ru){
 
                 //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples']))$invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+                if(!empty($resultArray['productosSimples'])){
+                  $invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+                  //registrar descuento de movimiento de invnetario
+                  $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                  $returnProductos = stockproductossucursal::camposJoinObj($query);
+                  stockService::downStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'venta', 'descuento de unidades por venta');
+                }
                 //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub))//$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
+                if($invPro && !empty($reduceSub)){
+                  //$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
                   $invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+                  //registrar descuento de movimiento de invnetario
+                  $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
+                  $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                  stockService::downStock_movimientoInsumos($reduceSub, $returnInsumos, 'venta', 'descuento de unidades por venta');
+                }
                 if($invPro){
                   if($invSub){
+
                     $alertas['exito'][] = "Pago procesado con exito";
                     $alertas['idfactura'] = $r[1];
                   }else{
@@ -463,6 +480,7 @@ class ventascontrolador{
       //unset($objeto->iditem);
         if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){
           $acumulador['productosSimples'][] = $objeto;
+          $acumulador['soloIdproductos'][] = $objeto->id;
         }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){
           $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
           $acumulador['productosCompuestos'][] = $objeto;
@@ -470,14 +488,17 @@ class ventascontrolador{
         return $acumulador;
       }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
 
+    
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
     //////// sumar los subproductos repetidos
     $reduceSub = [];
+    $soloIdInsumos = [];
     foreach($descontarSubproductos as $idx => $obj){
       if(!isset($reduceSub[$obj->id_subproducto])){
         $obj->id = $obj->id_subproducto;
         $reduceSub[$obj->id_subproducto] = $obj;
+        $soloIdInsumos[] = $obj->id;
       }else{
       $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
       }
@@ -586,10 +607,21 @@ class ventascontrolador{
               $ru = $ultimocierre->actualizar();
               if($ru){
                 //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples']))$invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
-                //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub))$invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
-
+                if(!empty($resultArray['productosSimples'])){
+                  $invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+                  //registrar descuento de movimiento de invnetario
+                  $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                  $returnProductos = stockproductossucursal::camposJoinObj($query);
+                  stockService::downStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'venta', 'descuento de unidades por venta');
+                }
+                  //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
+                if($invPro && !empty($reduceSub)){
+                  $invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+                  //registrar descuento de movimiento de invnetario
+                  $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
+                  $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                  stockService::downStock_movimientoInsumos($reduceSub, $returnInsumos, 'venta', 'descuento de unidades por venta');
+                }
                 if($invPro){
                   if($invSub){
                     $alertas['idfactura'] = $factura->id;
@@ -675,6 +707,7 @@ class ventascontrolador{
       //unset($objeto->iditem);
         if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){
           $acumulador['productosSimples'][] = $objeto;
+          $acumulador['soloIdproductos'][] = $objeto->id;
         }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){
           $objeto->porcion = round((float)$objeto->cantidad/(float)$objeto->rendimientoestandar, 4);
           $acumulador['productosCompuestos'][] = $objeto;
@@ -685,10 +718,12 @@ class ventascontrolador{
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
     //////// sumar los subproductos repetidos
     $reduceSub = [];
+    $soloIdInsumos = [];
     foreach($descontarSubproductos as $idx => $obj){
       if(!isset($reduceSub[$obj->id_subproducto])){
         $obj->id = $obj->id_subproducto;
         $reduceSub[$obj->id_subproducto] = $obj;
+        $soloIdInsumos[] = $obj->id;
       }else{
       $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
       }
@@ -703,7 +738,7 @@ class ventascontrolador{
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       
-      if($cierrecaja->estado == 0){ //si cierre de caja esta abierto
+      if($cierrecaja->estado == 0 &&  $factura->estado == 'Paga'){ //si cierre de caja esta abierto y factura paga
         $factura->estado = "Eliminada";
 
         /////////// calcular cantidad de facturas y discriminar por tipo
@@ -727,7 +762,6 @@ class ventascontrolador{
 
         $r = $factura->actualizar();
         if($r){
-          if(!$factura->cotizacion){ //0 = factura,   1 = cotizacion
             $r1 = $cierrecaja->actualizar();
             if($r1){
               //eliminar detalle impuesto
@@ -736,13 +770,22 @@ class ventascontrolador{
               if($_POST['devolverinv'] == '1'){  //si se desea devolver a inventario
                 
 
-                //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples']))//$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
+                //////// sumar del inventario los productos simples ////////
+                if(!empty($resultArray['productosSimples'])){//$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
                   $invPro = stockproductossucursal::addinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
-                //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub))//$invSub = subproductos::addinv($reduceSub, 'stock');
+                //registrar suma de movimiento de invnetario
+                  $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                  $returnProductos = stockproductossucursal::camposJoinObj($query);
+                  stockService::upStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'devolucion', 'retorno de unidades por anulacion de venta');
+                }
+                  //////// sumar del inventario la variable reduceSub que es el total de subproductos a descontar
+                if($invPro && !empty($reduceSub)){//$invSub = subproductos::addinv($reduceSub, 'stock');
                   $invSub = stockinsumossucursal::addinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
-
+                  //registrar suma de movimiento de invnetario
+                  $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
+                  $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                  stockService::upStock_movimientoInsumos($reduceSub, $returnInsumos, 'devolucion', 'retorno de unidades por anulacion de venta');
+                }
                 if($invPro){
                   if($invSub){
                     $alertas['exito'][] = "Orden eliminada correctamente";
@@ -781,7 +824,6 @@ class ventascontrolador{
               //revertir la actualizacion de la factura
               $tempfactura->actualizar();
             }
-          }
         }else{
           $alertas['error'][] = "Error, intenta nuevamente";
         }

@@ -62,7 +62,7 @@ class cajacontrolador{
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $categoriasgastos = categoriagastos::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -124,7 +124,7 @@ class cajacontrolador{
     }
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   
@@ -242,7 +242,7 @@ class cajacontrolador{
     $cajas = caja::idregistros('idsucursalid', id_sucursal());
     $bancos = bancos::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -267,7 +267,7 @@ class cajacontrolador{
     }
     $categoriasgastos = categoriagastos::all();
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'categoriasgastos'=>$categoriasgastos, 'sucursal'=>nombreSucursal(), 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'categoriasgastos'=>$categoriasgastos, 'sucursal'=>nombreSucursal(), 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -289,7 +289,7 @@ class cajacontrolador{
       }
     }
     $categoriasgastos = categoriagastos::all();
-    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -312,7 +312,7 @@ class cajacontrolador{
       }
     }
     $categoriasgastos = categoriagastos::all();
-    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -329,7 +329,7 @@ class cajacontrolador{
       $idultimocierreabierto = -1;
     //}
     //Hay que sumar los ultimos cierres de caja abierto por sucursal = $idultimocierreabierto
-    $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -385,7 +385,7 @@ class cajacontrolador{
         }
       }
     }
-    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'discriminarimpuestos'=>$discriminarimpuestos, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'discriminarimpuestos'=>$discriminarimpuestos, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -395,7 +395,7 @@ class cajacontrolador{
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()], 'DESC');
-    $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -436,7 +436,7 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
-    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function pedidosguardados(Router $router){
@@ -445,7 +445,7 @@ class cajacontrolador{
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $pedidosguardados = facturas::whereArray(['cotizacion'=>1, 'estado'=>'guardado', 'id_sucursal'=>id_sucursal()]);
-    $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function ordenresumen(Router $router){
@@ -476,7 +476,7 @@ class cajacontrolador{
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
 
     $conflocal = config_local::getParamCaja();
-    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function detalleorden(Router $router){
@@ -488,7 +488,7 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
     
-    $router->render('admin/caja/detallepedidox', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallepedidox', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function detallecredito(Router $router){
@@ -500,7 +500,7 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
     
-    $router->render('admin/caja/detallecredito', ['titulo'=>'Caja', 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallecredito', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function printfacturacarta(Router $router){
@@ -523,7 +523,7 @@ class cajacontrolador{
     $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
           JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$factura->id};";
     $mediospago = ActiveRecord::camposJoinObj($sql);
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
   public static function printcotizacion(Router $router){
@@ -543,7 +543,7 @@ class cajacontrolador{
     $vendedor = usuarios::find('id', $factura->idvendedor);
     $sucursal = sucursales::find('id', id_sucursal());
     $lineasencabezado = explode("\n", $sucursal->datosencabezados);
-    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
@@ -588,7 +588,7 @@ class cajacontrolador{
     $negocio = negocio::get(1);
     $lineasencabezado = explode("\n", $negocio[0]->datosencabezados);
     
-    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'negocio'=>$negocio, 'lineasencabezado'=>$lineasencabezado, 'user'=>$_SESSION]);
+    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'negocio'=>$negocio, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 

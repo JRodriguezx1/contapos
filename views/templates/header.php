@@ -102,9 +102,9 @@
                     <select id="selectSucursal"
                         class=" h-14 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 transition duration-200 shadow-sm text-xl">
                         <option value="" selected disabled>Cambiar de Sede</option>
-                        <option value="1">Sucursal Principal</option>
-                        <option value="2">Sucursal Norte</option>
-                        <option value="3">Sucursal Centro</option>
+                        <?php foreach($sucursales as $val): ?>
+                            <option value="<?php echo $val->id;?>"><?php echo $val->nombre;?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 

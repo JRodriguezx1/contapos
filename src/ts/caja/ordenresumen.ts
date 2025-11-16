@@ -335,6 +335,7 @@
                 miDialogoEliminarOrden.close();
                 document.removeEventListener("click", cerrarDialogoExterno);
                 btneliminarorden.style.display = "none";
+                enviarEmail.style.display = "none";
                 (document.querySelector('#estadoOrden') as HTMLElement).textContent = "Eliminada";
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);

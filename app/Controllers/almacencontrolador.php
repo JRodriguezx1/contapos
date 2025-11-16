@@ -71,7 +71,7 @@ class almacencontrolador{
     //$alertas = usuarios::getAlertas();
     $conflocal = config_local::getParamGlobal();
     //debuguear(userPerfil());
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, '$conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, '$conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -86,7 +86,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/categorias', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/categorias', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function crear_categoria(Router $router){
@@ -109,7 +109,7 @@ class almacencontrolador{
     }
     
     $categorias = categorias::all();
-    $router->render('admin/almacen/categorias', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/categorias', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function productos(Router $router){
@@ -133,7 +133,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function crear_producto(Router $router){
@@ -224,7 +224,7 @@ class almacencontrolador{
     $productos = productos::all();
     $unidadesmedida = unidadesmedida::all();
     foreach($productos as $value)$value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
-    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'sucursales'=>$sucursales, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -241,7 +241,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproducto'=>$subproducto, 'subproductos'=>$subproductos, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproducto'=>$subproducto, 'subproductos'=>$subproductos, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function crear_subproducto(Router $router){
@@ -292,7 +292,7 @@ class almacencontrolador{
     }
     $unidadesmedida = unidadesmedida::all();
     $subproductos = subproductos::all();
-    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'unidadesmedida'=>$unidadesmedida, 'subproducto'=>$subproducto, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'unidadesmedida'=>$unidadesmedida, 'subproducto'=>$subproducto, 'alertas'=>$alertas, 'sucursales'=>$sucursales, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -318,7 +318,7 @@ class almacencontrolador{
         $newobj->unidadmedida =  $value['unidadmedida'];
         $subproductosenlazados[] = $newobj;
     }
-    $router->render('admin/almacen/componer', ['titulo'=>'Almacen', 'producto'=>$producto, /*'productos'=>$productos,*/ 'subproductos'=>$subproductos, 'subproductosenlazados'=>$subproductosenlazados, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/componer', ['titulo'=>'Almacen', 'producto'=>$producto, /*'productos'=>$productos,*/ 'subproductos'=>$subproductos, 'subproductosenlazados'=>$subproductosenlazados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -339,7 +339,7 @@ class almacencontrolador{
     $subproductos = subproductos::all();
     
     
-    $router->render('admin/almacen/ajustarcostos', ['titulo'=>'Almacen', 'productos'=>$productos, 'subproductos'=>$subproductos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/ajustarcostos', ['titulo'=>'Almacen', 'productos'=>$productos, 'subproductos'=>$subproductos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -359,7 +359,7 @@ class almacencontrolador{
     $productos = productos::all();
     $subproductos = subproductos::all();
     $totalitems = []; //array_merge($productos, $subproductos);
-    $router->render('admin/almacen/compras', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'totalitems'=>$totalitems, 'categorias'=>$categorias, 'cajas'=>$cajas, 'bancos'=>$bancos, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/compras', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'totalitems'=>$totalitems, 'categorias'=>$categorias, 'cajas'=>$cajas, 'bancos'=>$bancos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
   
 
@@ -374,7 +374,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/distribucion', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/distribucion', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function inventariar(Router $router){
@@ -388,7 +388,7 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/almacen/inventariar', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/inventariar', ['titulo'=>'Almacen', 'categorias'=>$categorias, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function unidadesmedida(Router $router){
@@ -407,7 +407,7 @@ class almacencontrolador{
     }
     //$alertas = usuarios::getAlertas();
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function crear_unidadmedida(Router $router){
@@ -429,7 +429,7 @@ class almacencontrolador{
     }
 
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function editarunidademedida(Router $router){
@@ -451,7 +451,7 @@ class almacencontrolador{
       }
     }
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/unidadesmedida', ['titulo'=>'Almacen', 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
 
@@ -944,11 +944,11 @@ class almacencontrolador{
       //unset($objeto->iditem);
       if($objeto->tipo == 0){
         $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-        $soloIdproductos[] = $objeto->id;
+        $acumulador['soloIdproductos'][] = $objeto->id;
       }
       else{
         $acumulador['subproductos'][] = $objeto;
-        $soloIdinsumos[] = $objeto->id;
+        $acumulador['soloIdinsumos'][] = $objeto->id;
       }
       return $acumulador;
     }, ['productos'=>[], 'subproductos'=>[]]);
@@ -992,9 +992,9 @@ class almacencontrolador{
 
         $r = $compra->crear_guardar();
         if($r[0]){
-          foreach($carrito as $obj){
+          foreach($carrito as $obj)
             $obj->idcompra = $r[1];
-          }
+          
           $r1 = $detallecompra->crear_varios_reg_arrayobj($carrito);  //crear los items de la factura de compra en tabla detallecompra
           if($r1){
             /// ACTUALIZAR EL STOCK Y PRECIO DE COMPRA (COSTO) DE LOS PRODUCTOS Y/O SUBPRODUCTOS DEL INVENTARIO ////
@@ -1002,20 +1002,22 @@ class almacencontrolador{
               if(!empty($resultArray['productos'])){
                 $invpx = productos::camposaddinv($resultArray['productos'], ['stock', 'precio_compra']);  //$resultArray[0] = [{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
                 $invpxs = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', "sucursalid = ".id_sucursal()); //actualizando stock del inventario centralizado
-                $query = "SELECT * FROM stockproductossucursal WHERE subproductoid IN(".join(', ', $soloIdproductos).") AND sucursalid = ".id_sucursal().";";
+                // registrar ingreso de unidades de inventario
+                $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
                 $returnProductos = stockproductossucursal::camposJoinObj($query);
+                stockService::upStock_movimientoProductos($resultArray['productos'], $returnProductos, 'compra', 'ingreso de unidades por compra');
               }
               if(!empty($resultArray['subproductos']) && $invpx && $invpxs){
                 $invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
                 $invsxs = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
-                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdinsumos).") AND sucursalid = ".id_sucursal().";";
+                // registrar ingreso de unidades de inventario
+                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $resultArray['soloIdinsumos']).") AND sucursalid = ".id_sucursal().";";
                 $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                stockService::upStock_movimientoInsumos($resultArray['subproductos'], $returnInsumos, 'compra', 'ingreso de unidades por compra');
               }
             
               if($invpx && $invpxs){  //productos
                 if($invsx && $invsxs){  //subproductos
-                  // registrar ingreso de unidades de inventario
-                  
                   $alertas['exito'][] = "Compra realizada con exito.";
 
                   //*****/////////// registrarlo en tabla gastos, operacion compra /////////////
@@ -1173,7 +1175,7 @@ class almacencontrolador{
             $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdSubProduct).") AND sucursalid = ".id_sucursal().";";
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);
             if($invSub){
-                stockService::downStock_movimientoInv($descontarSubproductos, $returnInsumos);  
+                stockService::downStock_movimientoInsumos($descontarSubproductos, $returnInsumos, 'descuento por produccion', 'Descuento de insumos por produccion');  
                 $alertas['exito'][] = "Se realizo produccion con exito";
                 $alertas['item'][] = $producto;
                 $alertas['insumos'][] = $returnInsumos;  //se retorna solo para produccion

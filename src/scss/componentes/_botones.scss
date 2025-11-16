@@ -117,12 +117,12 @@
     }
 }
 .btn-yellow{
-    background-color:v.$amarillo60;
-    border-color:v.$amarillo60;
+    background-color:v.$amarillo80;
+    border-color:v.$amarillo80;
     color: v.$blanco;
     &:hover{
-        background-color: darken(v.$amarillo60, 15);
-        border-color: darken(v.$amarillo60, 15);
+        background-color: darken(v.$amarillo80, 15);
+        border-color: darken(v.$amarillo80, 15);
     }
 }
 .btn-turquoise{
