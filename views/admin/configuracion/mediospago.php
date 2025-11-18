@@ -16,7 +16,7 @@
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->mediopago;?></td> 
-              <td class=""><?php echo $value->estado==1?'Activo':'Inactivo';?></td>
+              <td class=""><button class="btn-xs <?php echo $value->estado==1?'btn-lima':'btn-red';?>"><?php echo $value->estado==1?'Activo':'Inactivo';?></button></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-mediopago="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarMedioPago"><i class="fa-solid fa-pen-to-square" title="Actualizar el mediopago"></i></button>
