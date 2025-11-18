@@ -10,8 +10,8 @@ use App\Models\clientes\clientes;
 use App\Models\empleados;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\tarifas;
+use App\Models\sucursales;
 
- 
 class clientescontrolador{
 
     public static function index(Router $router){
@@ -24,7 +24,7 @@ class clientescontrolador{
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
         }
-        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'alertas'=>$alertas, 'buscar'=>$buscar, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'alertas'=>$alertas, 'buscar'=>$buscar, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function crear(Router $router){
@@ -53,7 +53,7 @@ class clientescontrolador{
         }
         $clientes = clientes::all();
         $tarifas = tarifas::all();
-        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -73,7 +73,7 @@ class clientescontrolador{
             }
         }
         $clientes = usuarios::whereArray(['confirmado'=>1, 'admin'=>0]);
-        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -101,21 +101,21 @@ class clientescontrolador{
         if(!$r)$alertas['exito'][] = 'hubo un error';
         
         $clientes = usuarios::whereArray(['confirmado'=>1, 'admin'=>0]);
-        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function marketing(Router $router){
         session_start();
         isadmin(); 
         $alertas = [];
-        $router->render('admin/clientes/marketing', ['titulo'=>'Clientes/marketing', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/marketing', ['titulo'=>'Clientes/marketing', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function crearcampania(Router $router){
         session_start();
         isadmin(); 
         $alertas = [];
-        $router->render('admin/clientes/crearcampania', ['titulo'=>'Clientes/crearcampania', 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/crearcampania', ['titulo'=>'Clientes/crearcampania', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function detalle(Router $router){
@@ -128,7 +128,7 @@ class clientescontrolador{
  
         $cliente = usuarios::find('id', $id);
         
-        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
      
 

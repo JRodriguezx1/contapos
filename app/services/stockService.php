@@ -9,7 +9,7 @@ use stdClass;
 class stockService {
 
     public static function upStock_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia){
-         $movInv = new movimientos_productos;
+        $movInv = new movimientos_productos;
         //registrar descuento de movimiento de inventario de insumos de forma masiva
         $arrayMovInv = [];
         $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');

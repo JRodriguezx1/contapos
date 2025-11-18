@@ -17,7 +17,7 @@ class mediospago extends \App\Models\ActiveRecord{
     public function validar():array
     {
         if(!$this->mediopago)self::$alertas['error'][] = "Medio de pago no especificado";
-        if(strlen($this->mediopago)>31)self::$alertas['error'][] = "Has excecido el limite de caracteres";
+        if(strlen($this->mediopago)>28)self::$alertas['error'][] = "Has excecido el limite de caracteres";
         return self::$alertas;
     }
 

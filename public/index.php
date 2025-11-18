@@ -236,6 +236,10 @@ $router->get('/admin/api/alltarifas', [configcontrolador::class, 'alltarifas']);
 $router->post('/admin/api/crearTarifa', [configcontrolador::class, 'crearTarifa']); //api llamada desde gestiontarifas.ts para crear tarifas
 $router->post('/admin/api/actualizarTarifa', [configcontrolador::class, 'actualizarTarifa']); //api llamada desde gestiontarifas.ts para actualizar tarifas
 $router->post('/admin/api/eliminarTarifa', [configcontrolador::class, 'eliminarTarifa']); //api llamada desde gestiontarifas.ts para eliminar tarifas
+$router->get('/admin/api/allmediospago', [configcontrolador::class, 'allmediospago']); // me trae todos los medios de pago desde gestionmediospago.ts
+$router->post('/admin/api/crearMedioPago', [configcontrolador::class, 'crearMedioPago']); //api llamada desde gestionmediospago.ts para crear medios de pagos
+$router->post('/admin/api/actualizarMedioPago', [configcontrolador::class, 'actualizarMedioPago']); //api llamada desde gestionmediospago.ts para actualizar medios de pagos
+$router->post('/admin/api/eliminarMedioPago', [configcontrolador::class, 'eliminarMedioPago']); //api llamada desde gestionmediospago.ts para eliminar medios de pagos
 $router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.ts
 $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.ts
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.ts
