@@ -240,6 +240,7 @@ $router->get('/admin/api/allmediospago', [configcontrolador::class, 'allmediospa
 $router->post('/admin/api/crearMedioPago', [configcontrolador::class, 'crearMedioPago']); //api llamada desde gestionmediospago.ts para crear medios de pagos
 $router->post('/admin/api/actualizarMedioPago', [configcontrolador::class, 'actualizarMedioPago']); //api llamada desde gestionmediospago.ts para actualizar medios de pagos
 $router->post('/admin/api/eliminarMedioPago', [configcontrolador::class, 'eliminarMedioPago']); //api llamada desde gestionmediospago.ts para eliminar medios de pagos
+$router->post('/admin/api/updateStateMedioPago', [configcontrolador::class, 'updateStateMedioPago']); //api llamada desde gestionmediospago.ts para cambiar el estado de medio de pago
 $router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.ts
 $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.ts
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.ts

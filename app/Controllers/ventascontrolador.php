@@ -65,7 +65,7 @@ class ventascontrolador{
     //$productos = productos::all();
     $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal(), 'habilitarventa'=>1]);
     $categorias = categorias::all();
-    $mediospago = mediospago::all();
+    $mediospago = mediospago::whereArray(['estado'=>1]);
     $clientes = clientes::all();
     $tarifas = tarifas::all();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);

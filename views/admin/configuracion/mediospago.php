@@ -16,12 +16,18 @@
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->mediopago;?></td> 
-              <td class=""><button class="btn-xs <?php echo $value->estado==1?'btn-lima':'btn-red';?>"><?php echo $value->estado==1?'Activo':'Inactivo';?></button></td>
+              <td class="">
+                <?php if($value->id != 1):?>
+                    <button id="<?php echo $value->id;?>" data-state="<?php echo $value->estado;?>" class="statemediopago btn-xs <?php echo $value->estado==1?'btn-lima':'btn-red';?>"><?php echo $value->estado==1?'Activo':'Inactivo';?></button>
+                <?php endif;?>
+            </td>
               <td class="accionestd">
+                <?php if($value->id != 1):?>
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-mediopago="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarMedioPago"><i class="fa-solid fa-pen-to-square" title="Actualizar el mediopago"></i></button>
                     <button class="btn-md btn-red eliminarMedioPago" title="Eliminar mediopago"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
+                <?php endif;?>
               </td>
           </tr>
           <?php endforeach; ?>

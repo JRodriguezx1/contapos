@@ -583,6 +583,7 @@ class configcontrolador{
 
     public static function actualizarTarifa(){
         session_start();
+        isadmin();
         $alertas = []; 
         $tarifa = tarifas::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -603,6 +604,7 @@ class configcontrolador{
 
     public static function eliminarTarifa(){
         session_start();
+        isadmin();
         $tarifa = tarifas::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($tarifa)){
@@ -624,6 +626,7 @@ class configcontrolador{
     ///////////// procesando la gestion de los medios de pago ////////////////
     public static function allmediospago(){  //api llamado desde gestionmediospago.js
       session_start();
+      isadmin();
       $mediosdepagos = mediospago::all();
       echo json_encode($mediosdepagos);
     }
@@ -651,6 +654,7 @@ class configcontrolador{
 
     public static function actualizarMedioPago(){
         session_start();
+        isadmin();
         $alertas = []; 
         $mediopago = mediospago::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -671,6 +675,7 @@ class configcontrolador{
 
     public static function eliminarMedioPago(){
         session_start();
+        isadmin();
         $mediopago = mediospago::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($mediopago)){
@@ -693,5 +698,28 @@ class configcontrolador{
         echo json_encode($alertas); 
     }
 
+
+    public static function updateStateMedioPago(){
+        session_start();
+        isadmin();
+        $mediopago = mediospago::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($mediopago)){
+                if($mediopago->estado != $_POST['estado']){
+                    $mediopago->estado = $_POST['estado'];
+                    $r = $mediopago->actualizar();
+                    if($r){
+                        ActiveRecord::setAlerta('exito', 'Medio de pago actualizado.');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'Medio de pago no se pudo actualizar su estado.');
+                    }
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Medio de pago no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas);
+    }
 
 }

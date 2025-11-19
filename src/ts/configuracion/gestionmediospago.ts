@@ -39,9 +39,36 @@
 
     document.querySelector('#tablamediosPagos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
+      if((e.target as HTMLElement)?.classList.contains("statemediopago"))changeState(e);
       if((e.target as HTMLElement)?.classList.contains("editarMedioPago")||(e.target as HTMLElement).parentElement?.classList.contains("editarMedioPago"))editarMedioPago(e);
       if(target?.classList.contains("eliminarMedioPago")||target.parentElement?.classList.contains("eliminarMedioPago"))eliminarMedioPago(e);
     });
+
+
+    ///////////////  Cambiar estado del medio de pago  ////////////////
+    function changeState(e:Event){
+      const button=(e.target as HTMLButtonElement), info = (tablamediosPagos as any).page.info();
+      indiceFila =  (tablamediosPagos as any).row(button.closest('tr')).index();
+      (async ()=>{ 
+        const datos = new FormData();
+        datos.append('id', button.id);
+        datos.append('estado', button.dataset.state=='0'?'1':'0');
+        try {
+            const url = "/admin/api/updateStateMedioPago";
+            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+            const resultado = await respuesta.json();  
+            if(resultado.exito !== undefined){
+              const s1 = `<button id="${button.id}" data-state="${button.dataset.state=='0'?'1':'0'}" class="statemediopago btn-xs ${button.dataset.state=='0'?'btn-lima':'btn-red'}">${button.dataset.state=='0'?'Activo':'Inactivo'}</button>`;
+              (tablamediosPagos as any).cell((tablamediosPagos as any).row(indiceFila+=info.start), 2).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
+              (tablamediosPagos as any).page(info.page).draw('page'); //me mantiene la pagina actual
+            }else{
+                msjalertToast('error', '¡Error!', resultado.error[0]);
+              }
+        } catch (error) {
+            console.log(error);
+        }
+      })();//cierre de async()
+    }
 
     //////////////////// ventana modal al Actualizar/Editar medio de pago  //////////////////////
     function editarMedioPago(e:Event){
