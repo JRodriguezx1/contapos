@@ -9,15 +9,18 @@
         page: 18,
         pagination: true,
       };
+      const productos = document.querySelectorAll<HTMLElement>('#producto');
+      if(productos.length)
       var hackerList = new List('hacker-list', options);
 
       filtrocategorias.forEach(element => {
         element.addEventListener('click', (e)=>{
           const categoria:string = (e.target as HTMLElement).dataset.categoria!;
-          hackerList.filter((item: any)=>{
-            if(categoria === 'Todos')return true;
-            return item.values().categoria === categoria}
-          );
+          if(hackerList)
+            hackerList.filter((item: any)=>{
+              if(categoria === 'Todos')return true;
+              return item.values().categoria === categoria}
+            );
         });
       });
 
