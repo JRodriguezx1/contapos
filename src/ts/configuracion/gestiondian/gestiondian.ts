@@ -172,7 +172,19 @@
               document.removeEventListener("click", cerrarDialogoExterno);
               
               const cert = await configCertificado(resultado.token, certificadop12base64+'', password+'');
+              if(cert == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la obtencion del certificado digital.');
+                return;
+              }
               const soft = await configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
+              if(soft == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la configuracion del software.');
+                return;
+              }
               const resolprueba:resolconfig = {
                 type_document_id:'1', 
                 prefix:'SETP', 
@@ -186,7 +198,12 @@
                 date_to: '2030-01-19'
               };
               const resol = await crearResolucion(resolprueba, resultado.token);
-
+              if(resol == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la configuracion de la resolucion.');
+                return;
+              }
               /////    crear resolucion para NC    ///////
               const extprefix = (datoscompañia.business_name as string).match(/[a-zA-Z]/g)!;
               const a:string = extprefix[0];
@@ -198,14 +215,17 @@
                 to: '99999999', 
               };
               const resResolNC = await crearResolucion(resolNC, resultado.token);
-
-              if(cert && soft && resol && resResolNC){
-                crearCompanyJ2(datoscompañia, resultado.token);
-              }else{//eliminar usuario de la api
-                eliminarCompañia('', identification_number+'', resultado.token);
+              if(resResolNC == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la configuracion de la resolucion de NC.');
+                return;
               }
-            }else{
 
+              crearCompanyJ2(datoscompañia, resultado.token);
+      
+            }else{
+              msjalertToast('error', '¡Error!', 'No se pudo crear la compañia de facturacion.');
             }
           } catch (error) {
               console.log(error);
@@ -214,7 +234,7 @@
 
 
     ///////    CREAR CERTIFICADO EN LA API DIAN    ///////
-    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean> {
+    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean|undefined> {
       try{
           const url = "https://apidianj2.com/api/ubl2.1/config/certificate"; //llamado a la API REST Dianlaravel
           const respuesta = await fetch(url, {
@@ -236,7 +256,7 @@
 
     
     ///////    CREAR SOFTWARE EN LA API DIAN    ////////
-    async function configSoftware(token:string, idsoftware:string, pinsoftware:string):Promise<boolean>
+    async function configSoftware(token:string, idsoftware:string, pinsoftware:string):Promise<boolean|undefined>
     {
       try {
         const url = "https://apidianj2.com/api/ubl2.1/config/software"; //llamado a la API REST Dianlaravel
@@ -327,7 +347,6 @@
 
     ///////    ELIMINAR COMPAÑIA    ///////
     function eliminarCompañia(id:string, identification_number:string, token:string){
-     
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -338,33 +357,39 @@
           cancelButtonText: 'No',
       }).then((result:any) => {
           if (result.isConfirmed) {
-            (async ()=>{ 
-              try {
-                const url = "https://apidianj2.com/api/ubl2.1/config/deleteCompany"; //llamado a la API REST Dianlaravel
-                const respuesta = await fetch(url, {
-                                                      method: 'DELETE',
-                                                      headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
-                                                      body: JSON.stringify({"identification_number": identification_number})
-                                                    });
-                const resultado = await respuesta.json();
-                if(resultado.message){
-                  const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
-                  const respuestaLocal = await fetch(urlX); 
-                  const resultadoLocal = await respuestaLocal.json(); 
-                  document.querySelector('#company'+identification_number)?.remove();
-                  msjalertToast('success', '¡Éxito!', resultado.message);
-                  deleteFromCompany(id);
-                }else{
-                  msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
-                }
-              } catch (error) {
-                console.log(error);
-                return false;
-              }
-            })();
+            sendDeleteCompany(id, identification_number, token)
           }
       });
     }
+
+
+    function sendDeleteCompany(id:string, identification_number:string, token:string){
+      (async ()=>{ 
+        try {
+          const url = "https://apidianj2.com/api/ubl2.1/config/deleteCompany"; //llamado a la API REST Dianlaravel
+          const respuesta = await fetch(url, {
+                                                method: 'DELETE',
+                                                headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
+                                                body: JSON.stringify({"identification_number": identification_number})
+                                              });
+          const resultado = await respuesta.json();
+          if(resultado.message){
+            const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
+            const respuestaLocal = await fetch(urlX); 
+            const resultadoLocal = await respuestaLocal.json(); 
+            document.querySelector('#company'+identification_number)?.remove();
+            msjalertToast('success', '¡Éxito!', resultado.message);
+            deleteFromCompany(id);
+          }else{
+            msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
+          }
+        } catch (error) {
+          console.log(error);
+          return false;
+        }
+      })();
+    }
+
 
     ///////  eliminar de los select de obtener resolucion y enviar set de pruebas  ///////
     function deleteFromCompany(id:string){
