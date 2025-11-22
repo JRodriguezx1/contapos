@@ -377,9 +377,11 @@
             const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
             const respuestaLocal = await fetch(urlX); 
             const resultadoLocal = await respuestaLocal.json(); 
-            document.querySelector('#company'+identification_number)?.remove();
-            msjalertToast('success', '¡Éxito!', resultado.message);
-            deleteFromCompany(id);
+            if(!isNaN(Number(id)) && resultadoLocal.exito !== undefined){
+              document.querySelector('#company'+identification_number)?.remove();
+              msjalertToast('success', '¡Éxito!', resultado.message);
+              deleteFromCompany(id);
+            }
           }else{
             msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
           }
