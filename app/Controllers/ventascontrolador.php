@@ -237,7 +237,7 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
-              $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $mediospago, $factura->descuento);  //llamada al trait para crear el json y guardar la FE en DB
+              $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento);  //llamada al trait para crear el json y guardar la FE en DB
               //....
             
               $getDB->commit();

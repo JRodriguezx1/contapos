@@ -23,7 +23,8 @@
                                               body: JSON.stringify({"IDSoftware": idsoftware})
                                             });
         const resultado = await respuesta.json();
-        const arrayResolutions = resultado.ResponseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList.NumberRangeResponse;
+        let arrayResolutions = resultado.ResponseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList.NumberRangeResponse;
+        if(typeof arrayResolutions == 'object')arrayResolutions = [arrayResolutions];
         if(arrayResolutions&&arrayResolutions.length>0)printResolutions(idcompany, arrayResolutions, token);
       } catch (error) {
         console.log(error);  
@@ -51,7 +52,7 @@
     async function descargarResolucion(e:Event, arrayResolutions:NumberRangeItem[], token:string){
       const target = e.target as HTMLButtonElement;
       if(target.classList.contains('downResolution')){
-        const idcompany:string = target.dataset.idcompany!;
+        const idcompany:string = target.dataset.company!;
         const numberResolution = target.id;
         const resolutionSelected = arrayResolutions.find(x=>x.ResolutionNumber === numberResolution)!;
         resolutionSelected.idcompany = idcompany;
@@ -81,7 +82,6 @@
 
           (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
 
-          console.log(sendresolToAPI);
           if(sendresolToAPI)msjalertToast('success', '¡Éxito!', 'Resoluccion asociada exitosamnete.');
 
 

@@ -32,7 +32,7 @@ class configcontrolador{
     $sucursal = sucursales::find('id', $idsucursal);
     $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
     $mediospago = mediospago::all();
-    $cajas = caja::idregistros('idsucursalid', $idsucursal);
+    $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();

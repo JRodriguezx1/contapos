@@ -13,7 +13,7 @@ class diancompanias extends \App\Models\ActiveRecord{
         $this->idsoftware = $args['idsoftware']??'';
         $this->pinsoftware = $args['pinsoftware']??'';
         $this->token = $args['token']??'';
-        $this->estado = $args['estado']??'';
+        $this->estado = $args['estado']??'1';
         $this->created_at = $args['created_at']??'';
     }
 

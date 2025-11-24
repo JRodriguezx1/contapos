@@ -22,9 +22,9 @@
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->nombre; ?></td> 
               <td class=""><?php echo $value->nombretipofacturador;?></td>
-              <td class="" ><?php echo $value->rangoinicial; ?></td> 
+              <td class="" ><?php echo $value->rangoinicial.' - '.$value->rangofinal; ?></td> 
               <td class=""><?php echo $value->siguientevalor;?></td>
-              <td class="" ><?php echo $value->fechafin; ?></td> 
+              <td class="" ><?php echo $value->fechafin; ?></td>
               <td class=""><?php echo $value->estado==1?'Activo':'Expirada';?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-facturador="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square" title="Actualizar facturador"></i></button><button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can" title="Eliminar facturador"></i></button></div></td>
           </tr>

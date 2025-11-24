@@ -58,6 +58,7 @@ class apidiancontrolador{
 
     $compañia = json_decode(file_get_contents('php://input'), true);
     $diancompanias = new diancompanias($compañia);
+    $diancompanias->estado = 1;
     $r = $diancompanias->crear_guardar();
     if($r[0]){
       $alertas['exito'][] = "Compañia guardada localmente";
@@ -192,7 +193,7 @@ class apidiancontrolador{
   }
 
 
-  //Metodo usado en ventas.sendinvoice.ts para enviar una factura desde ventas.ts
+  //Metodo usado en ventas.sendinvoice.ts para enviar una factura electronica desde ventas.ts
   public static function sendInvoice(){
     session_start();
     isadmin();
@@ -206,11 +207,22 @@ class apidiancontrolador{
       exit;
     }
     $idfactura = json_decode(file_get_contents('php://input'), true);
-    $factura = facturas::find('id', $idfactura);
+    $factura = facturas::find('id', $idfactura['id']);
     $facturaDian = facturas_electronicas::find('id_facturaid', $idfactura['id']);
-    //if($facturaDian && $factura->estado == 'Paga' && ($facturaDian->id_estadoelectronica == 1 || $facturaDian->id_estadoelectronica == 1))
-    //  $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
-    
+    if($facturaDian && $factura->estado == 'Paga' && $facturaDian->id_estadoelectronica != 2)
+      $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
+    //debuguear($res);
+    //actualizar respuesta de la dian en la tabla facturas_electronicas
+    if($res['success'] && buscarClaveArray($res, 'IsValid')=='true'){
+      $facturaDian->id_estadoelectronica = 2; //aceptada
+      $facturaDian->cufe = buscarClaveArray($res, 'cufe');
+      $facturaDian->qr = buscarClaveArray($res, 'QRStr');
+      $facturaDian->link =  $facturaDian->qr;
+      $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+      $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+      $$facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+      $r = $facturaDian->actualizar();
+    }
   }
   
   

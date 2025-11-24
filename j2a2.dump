@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: j2a2
+-- Host: 127.0.0.1    Database: j2a1
 -- ------------------------------------------------------
 -- Server version	8.0.40
 
@@ -39,7 +39,7 @@ CREATE TABLE `adquirientes` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `documento` (`identification_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,6 +48,7 @@ CREATE TABLE `adquirientes` (
 
 LOCK TABLES `adquirientes` WRITE;
 /*!40000 ALTER TABLE `adquirientes` DISABLE KEYS */;
+INSERT INTO `adquirientes` VALUES (1,6,'222222222222','Consumidor final',NULL,NULL,NULL,1,2,NULL,NULL,NULL,NULL,'2025-11-20 03:10:50');
 /*!40000 ALTER TABLE `adquirientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +105,7 @@ CREATE TABLE `arqueoscajas` (
   PRIMARY KEY (`id`),
   KEY `id_cierrecajaid_idx` (`id_cierrecajaid`),
   CONSTRAINT `id_cierrecajaid` FOREIGN KEY (`id_cierrecajaid`) REFERENCES `cierrescajas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +212,7 @@ CREATE TABLE `caja` (
 
 LOCK TABLES `caja` WRITE;
 /*!40000 ALTER TABLE `caja` DISABLE KEYS */;
-INSERT INTO `caja` VALUES (1,1,1,'Caja principal','Negocios pos sas',0,1,'2025-10-19 01:53:34');
+INSERT INTO `caja` VALUES (1,1,1,'Caja principal','',0,1,'2025-10-19 01:53:34');
 /*!40000 ALTER TABLE `caja` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,7 +324,7 @@ CREATE TABLE `cierrescajas` (
   CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idcaja` FOREIGN KEY (`idcaja`) REFERENCES `caja` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idsucursal_id` FOREIGN KEY (`idsucursal_id`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,7 +408,7 @@ CREATE TABLE `compras` (
   CONSTRAINT `id_sucursal_id` FOREIGN KEY (`id_sucursal_id`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idproveedor` FOREIGN KEY (`idproveedor`) REFERENCES `proveedores` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `usuario_id` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -519,7 +520,7 @@ CREATE TABLE `consecutivos` (
 
 LOCK TABLES `consecutivos` WRITE;
 /*!40000 ALTER TABLE `consecutivos` DISABLE KEYS */;
-INSERT INTO `consecutivos` VALUES (1,1,NULL,2,1,'Facturacion POS',1,'15000','1',NULL,'2029-03-21',NULL,NULL,'FAP',1,1,NULL,NULL,1);
+INSERT INTO `consecutivos` VALUES (1,1,NULL,2,1,'Facturacion POS',1,'15000','1',NULL,'2029-03-21',NULL,NULL,'POS',1,1,NULL,NULL,1);
 /*!40000 ALTER TABLE `consecutivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,7 +726,7 @@ CREATE TABLE `declaracionesdineros` (
   KEY `idcierrecajaid_idx` (`idcierrecajaid`),
   CONSTRAINT `id_mediopago` FOREIGN KEY (`id_mediopago`) REFERENCES `mediospago` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idcierrecajaid` FOREIGN KEY (`idcierrecajaid`) REFERENCES `cierrescajas` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1089,7 +1090,7 @@ CREATE TABLE `facturas` (
   CONSTRAINT `idclientex` FOREIGN KEY (`idcliente`) REFERENCES `clientes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `iddireccionx` FOREIGN KEY (`iddireccion`) REFERENCES `direcciones` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idvendedorx` FOREIGN KEY (`idvendedor`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1121,21 +1122,22 @@ CREATE TABLE `facturas_electronicas` (
   `prefijo` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
   `resolucion` varchar(200) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
   `token_electronica` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `cufe` varchar(900) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `qr` varchar(900) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cufe` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `qr` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `filename` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fecha_factura` timestamp NULL DEFAULT NULL,
   `identificacion` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `nombre` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
   `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `link` varchar(900) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `link` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `nota_credito` tinyint(1) NOT NULL DEFAULT '0',
   `num_nota` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
-  `cufe_nota` varchar(900) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `cufe_nota` varchar(256) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `fecha_nota` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `is_auto` int DEFAULT NULL,
   `json_envio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
-  `respuesta_factura` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
-  `respuesta_nota` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
+  `respuesta_factura` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `respuesta_nota` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
   `intentos_de_envio` int DEFAULT NULL,
   `fecha_ultimo_intento` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1255,7 +1257,7 @@ CREATE TABLE `gastos` (
   `operacion` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `valor` decimal(12,2) NOT NULL,
   `descripcion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `imgcomprobante` varchar(155) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `imgcomprobante` varchar(155) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idg_usuario_idx` (`idg_usuario`),
@@ -1273,7 +1275,7 @@ CREATE TABLE `gastos` (
   CONSTRAINT `idg_caja` FOREIGN KEY (`idg_caja`) REFERENCES `caja` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idg_cierrecaja` FOREIGN KEY (`idg_cierrecaja`) REFERENCES `cierrescajas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idg_usuario` FOREIGN KEY (`idg_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2094,7 +2096,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,'Negocio SAS','Sede centro',NULL,'Quindio','Armenia','centro cr 19','3158863520',NULL,'contabilidad@innovatech.com.co','MALORI ELIENNE CEPEDA MATEUS\r\nNo responsable de IVA\r\nRegimen Simple','www.innovatech.com','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46'),(2,'Negocio SAS','Sede Av centenario',NULL,'Quindio','Armenia','Av centenario N 18','3169856621',NULL,'contabilidad@innovatech.com.co',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2436,7 +2438,7 @@ CREATE TABLE `ventas` (
   KEY `idfactura_idx` (`idfactura`),
   CONSTRAINT `idfactura` FOREIGN KEY (`idfactura`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idproducto` FOREIGN KEY (`idproducto`) REFERENCES `productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2449,7 +2451,7 @@ LOCK TABLES `ventas` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'j2a2'
+-- Dumping routines for database 'j2a1'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -2461,4 +2463,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-19  0:58:50
+-- Dump completed on 2025-11-24  1:54:29
