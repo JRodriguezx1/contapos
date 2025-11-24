@@ -57,14 +57,27 @@ class apidiancontrolador{
     }
 
     $compañia = json_decode(file_get_contents('php://input'), true);
-    $diancompanias = new diancompanias($compañia);
-    $diancompanias->estado = 1;
-    $r = $diancompanias->crear_guardar();
-    if($r[0]){
-      $alertas['exito'][] = "Compañia guardada localmente";
-      $alertas['id'] = $r[1];
+    $identification_number = $compañia['identification_number'];
+    $companyExist = diancompanias::find('identification_number', $identification_number);
+    if($companyExist){
+      $companyExist->compara_objetobd_post($compañia);
+      $c = $companyExist->actualizar();
+      if($c){
+        $alertas['exito'][] = "Compañia guardada localmente";
+        $alertas['id'] = $companyExist->id;
+      }else{
+        $alertas['error'][] = "No se guardo la configuracion de la compañia";
+      }
     }else{
-      $alertas['error'][] = "No se guardo la configuracion de la compañia";
+      $diancompanias = new diancompanias($compañia);
+      $diancompanias->estado = 1;
+      $r = $diancompanias->crear_guardar();
+      if($r[0]){
+        $alertas['exito'][] = "Compañia guardada localmente";
+        $alertas['id'] = $r[1];
+      }else{
+        $alertas['error'][] = "No se guardo la configuracion de la compañia";
+      }
     }
     echo json_encode($alertas);
   }
@@ -211,7 +224,13 @@ class apidiancontrolador{
     $facturaDian = facturas_electronicas::find('id_facturaid', $idfactura['id']);
     if($facturaDian && $factura->estado == 'Paga' && $facturaDian->id_estadoelectronica != 2)
       $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
-    //debuguear($res);
+
+    if(!$res['success']){
+      $alertas['error'][] = $res['error'];
+      echo json_encode($alertas);
+      return;
+    }
+   
     //actualizar respuesta de la dian en la tabla facturas_electronicas
     if($res['success'] && buscarClaveArray($res, 'IsValid')=='true'){
       $facturaDian->id_estadoelectronica = 2; //aceptada
@@ -220,8 +239,21 @@ class apidiancontrolador{
       $facturaDian->link =  $facturaDian->qr;
       $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
       $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
-      $$facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+      $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
       $r = $facturaDian->actualizar();
+      $alertas['exito'][] = "Factura electronica procesadamente exitosamente.";
+      echo json_encode($alertas);
+    }else{
+      $facturaDian->id_estadoelectronica = 3; //error
+      $facturaDian->cufe = '';
+      $facturaDian->qr = '';
+      $facturaDian->link =  '';
+      $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+      $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+      $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+      $r = $facturaDian->actualizar();
+      $alertas['error'][] = "Error al enviar la factura electronica. $facturaDian->respuesta_factura";
+      echo json_encode($alertas);
     }
   }
   

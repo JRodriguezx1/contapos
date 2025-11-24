@@ -257,7 +257,7 @@ trait DocumentTrait
             $error = curl_error($ch);
             $errno = curl_errno($ch);
             curl_close($ch);
-            return ['success' => false, 'error cURL' => "Error de conexión: ($errno): $error"];
+            return ['success' => false, 'error' => "Error de conexión: ($errno): $error"];
         }
         curl_close($ch);
         

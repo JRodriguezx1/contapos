@@ -2,12 +2,11 @@
 
   if(document.querySelector('.gestionDian')){
     const POS = (window as any).POS;
-    const btnAdquirirCompañia = document.querySelector('#btnAdquirirCompañia') as HTMLButtonElement;
     const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
     const btnObtenerresolucion = document.querySelector('#btnObtenerresolucion') as HTMLButtonElement;
     const BtnSetpruebas = document.querySelector('#BtnSetpruebas') as HTMLButtonElement;
     const formCrearUpdateCompañia = document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement;
-    const miDialogoAdquirirCompañia = document.querySelector('#miDialogoAdquirirCompañia') as any;
+    const miDialogoAdquirirCompañia = POS.gestionAdquirirCompany.miDialogoAdquirirCompañia
     const miDialogoCompañia = document.querySelector('#miDialogoCompañia') as any;
     const miDialogoGetResolucion = POS.gestionarGetResolutions.miDialogoGetResolucion
     const miDialogosetpruebas = POS.gestionarSetPruebas.miDialogosetpruebas;
@@ -86,13 +85,6 @@
       POS.companiesAll = companiesAll; //exponer globalmente
     })();
 
-
-
-    ///////////////////-------    Adquirir compañia     ---------//////////////////
-    btnAdquirirCompañia.addEventListener('click', ()=>{
-        miDialogoAdquirirCompañia.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
-    });
 
 
     ///////////////////-------    crear compañia     --------///////////////////
@@ -314,6 +306,12 @@
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
               const tablaCompañias = document.querySelector('#tablaCompañias tbody');
+
+              const tr = tablaCompañias?.querySelector('tr[id="company'+datoscompañia.identification_number+'"]');
+              if(tr){
+                tr.remove();
+              }
+
               tablaCompañias?.insertAdjacentHTML('beforeend', `
                 <tr class="" id="company${datoscompañia.identification_number}">
                   <td class="">${resultado.id}</td>
@@ -323,6 +321,7 @@
                   <td class=""><div class="acciones-btns">  <button id="${resultado.id}"><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
                 </tr>`
               );
+
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               // añadir a los selects de obtener compañia para resoluciones y de set pruebas
               SetCompañiaToSelect(resultado.id, token, datoscompañia.business_name+'');
@@ -450,6 +449,7 @@
 
     POS.cerrarDialogoExterno = cerrarDialogoExterno;
     POS.crearResolucion = crearResolucion;
+    POS.crearCompanyJ2 = crearCompanyJ2;
   }
 
 })();
