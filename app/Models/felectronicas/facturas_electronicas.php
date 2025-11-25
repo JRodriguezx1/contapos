@@ -21,8 +21,8 @@ class facturas_electronicas extends \App\Models\ActiveRecord{
         $this->token_electronica = $args['token_electronica']??'';
         $this->cufe = $args['cufe']??'';
         $this->qr = $args['qr']??'';
-        $this->qr = $args['filename']??'';
-        $this->qr = $args['nitcompany']??'';
+        $this->filename = $args['filename']??'';
+        $this->nitcompany = $args['nitcompany']??'';
         $this->fecha_factura = $args['fecha_factura']??'';
         $this->identificacion = $args['identificacion']??'';
         $this->nombre = $args['nombre']??'';

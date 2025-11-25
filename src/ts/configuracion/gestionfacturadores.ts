@@ -145,7 +145,7 @@
                   /*x*/ datosActuales[3] = resultado.facturador[0].rangoinicial;
                         datosActuales[4] = resultado.facturador[0].siguientevalor;
                         datosActuales[5] = resultado.facturador[0].fechafin;
-                        datosActuales[6] =  resultado.facturador.estado==1?'Activo':'Inactivo';
+                        datosActuales[6] = resultado.facturador[0].estado==1?'Activo':'Inactivo';
                   (tablaFacturadores as any).row(indiceFila).data(datosActuales).draw();
                   (tablaFacturadores as any).page(info.page).draw('page'); //me mantiene la pagina actual
                   actualizarConsecutivoGestionCaja(unfacturador!.id, resultado.facturador[0].nombre);
