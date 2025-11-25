@@ -142,7 +142,7 @@
             columns: [
                         {title: 'Orden', data: 'orden'}, 
                         {title: 'Prefijo', data: 'prefijo'}, 
-                        {title: 'Numero', data: 'numero'},
+                        {title: 'Num', data: 'numero'},
                         { 
                             title: 'Abrir', 
                             data: null, 
@@ -155,7 +155,7 @@
                             data: null, 
                             orderable: false, 
                             searchable: false, 
-                            render: (data: any, type: any, row: any) => {return `<button class="btn-ver btn-xs btn-lima" data-id="${row.id}">Abrir Dian</button>`}
+                            render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-lima" data-id="${row.id}" target="_blank" href="${row.link}">Abrir Dian</a>`}
                         }, 
                         {title: 'Identificacion', data: 'identificacion'}, 
                         {title: 'Nombre', data: 'nombre'}, 
@@ -163,7 +163,14 @@
                         {title: 'Base', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                         {title: 'Valor imp', data: 'valorimpuestototal', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                         {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
-                        {title: 'Fecha', data: 'created_at'}
+                        {title: 'Fecha', data: 'created_at'},
+                        {
+                            title: 'Archivos', 
+                            data: null, 
+                            orderable: false, 
+                            searchable: false, 
+                            render: (data: any, type: any, row: any) => {return `<a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-red-600"></i></a>`}
+                        }, 
                     ],
             pageLength: 25,
             language: {
@@ -179,12 +186,10 @@
             layout: {
                 topStart: {
                     buttons: [
-                    {extend: 'copyHtml5', text: 'Copia'}, 
-                    {extend: 'excelHtml5', title: 'facturas procesadas'}, 
-                    {extend: 'csvHtml5', title: 'facturas procesadas'}, 
-                    {extend: 'pdfHtml5', title: 'facturas procesadas'}, 
-                    {extend: 'print', title: 'facturas procesadas', text: 'Imprimir'},
-                    'colvis'
+                        {extend: 'excelHtml5', title: 'facturas procesadas'},  
+                        {extend: 'pdfHtml5', title: 'facturas procesadas'}, 
+                        {extend: 'print', title: 'facturas procesadas', text: 'Imprimir'},
+                        'colvis'
                     ],
                     pageLength: 'pageLength'
                 }

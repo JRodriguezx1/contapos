@@ -166,6 +166,7 @@ trait DocumentTrait
                 'token_electronica'=>$compañia->token,  //token de la compañia
                 'cufe'=>'',
                 'qr'=>'',
+                'nitcompany'=>$compañia->identification_number,
                 'fecha_factura'=>date('Y-m-d H:i:s'),  //fecha de recepcion por la Dian
                 'identificacion'=>$customer['identification_number'],
                 'nombre'=>$customer['name'],

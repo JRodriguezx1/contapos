@@ -233,9 +233,11 @@ class apidiancontrolador{
    
     //actualizar respuesta de la dian en la tabla facturas_electronicas
     if($res['success'] && buscarClaveArray($res, 'IsValid')=='true'){
+      $arrayFile = explode('.', buscarClaveArray($res, 'urlinvoicexml'));
       $facturaDian->id_estadoelectronica = 2; //aceptada
       $facturaDian->cufe = buscarClaveArray($res, 'cufe');
       $facturaDian->qr = buscarClaveArray($res, 'QRStr');
+      $facturaDian->filename = "$facturaDian->nitcompany/$arrayFile[0]";
       $facturaDian->link =  $facturaDian->qr;
       $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
       $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
