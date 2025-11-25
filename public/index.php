@@ -21,6 +21,7 @@ use App\Controllers\reportescontrolador;
 use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
+use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
@@ -74,6 +75,8 @@ $router->post('/admin/perfil', [dashboardcontrolador::class, 'perfil']);
 $router->post('/admin/actualizaremail', [dashboardcontrolador::class, 'actualizaremail']);
 ///// area de contabilidad /////
 $router->get('/admin/contabilidad', [contabilidadcontrolador::class, 'index']);
+///// area de nomina electronica /////
+$router->get('/admin/nominaelectronica', [nominaelectcontrolador::class, 'index']);
 ///// area de almacen categorias, productos, subproductos, compras etc /////
 $router->get('/admin/almacen', [almacencontrolador::class, 'index']);
 $router->get('/admin/almacen/categorias', [almacencontrolador::class, 'categorias']);
@@ -278,7 +281,7 @@ $router->post('/admin/api/guardarResolutionJ2', [apidiancontrolador::class, 'gua
 $router->get('/admin/api/filterAdquirientes', [apidiancontrolador::class, 'filterAdquirientes']);  //obtener todos los adquiriente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guardarAdquiriente']);  // guardar adquiente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/sendInvoice', [apidiancontrolador::class, 'sendInvoice']);  // guardar adquiente, llamada desde ventas.sendinvoice.ts
-$router->get('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
+$router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
 
 
 

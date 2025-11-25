@@ -1,5 +1,4 @@
 (():void=>{
-
   if(document.querySelector('.gestionDian')){
     const POS = (window as any).POS;
     const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
@@ -108,13 +107,6 @@
 
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
-    });
-
-
-    ///////////////////  ADQUIRIR COMPAÑIA  ////////////////////
-    document.querySelector('#formAdquirirCompañia')?.addEventListener('submit', (e:Event)=>{
-      e.preventDefault();
-      
     });
 
 

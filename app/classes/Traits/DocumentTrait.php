@@ -211,8 +211,8 @@ trait DocumentTrait
             "discrepancyresponsecode" => 2,
             "discrepancyresponsedescription" => "Nota credito total a factura",
             "notes" => "Nota credito",
-            "prefix" => 'NCaz',
-            "number" => 1, 
+            "prefix" => 'NCQO',   //variable resol nc esta en la api
+            "number" => 1,        //variable resol nc esta en la api
             "type_document_id" => 4,
             "date" => date('Y-m-d'),   //fecha actual de la generacion de la NC
             "time" => date('H:i:s'),
