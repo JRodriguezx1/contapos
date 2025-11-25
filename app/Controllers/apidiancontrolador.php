@@ -8,6 +8,7 @@ use App\Models\configuraciones\usuarios; //namespace\clase hija
 use App\Models\ActiveRecord;
 use App\Models\clientes\departments;
 use App\Models\clientes\municipalities;
+use App\Models\configuraciones\notacreditoinvoice;
 use App\Models\parametrizacion\config_local;
 use App\Models\configuraciones\tipofacturador;
 use App\Models\felectronicas\adquirientes;
@@ -273,14 +274,23 @@ class apidiancontrolador{
     }
     $datos = json_decode(file_get_contents('php://input'), true);
     //debuguear($datos);
-    //obtener resolucion de NC, esta en la api y proximamente local
-
+    //obtener resolucion de NC de la factura electronica, esta en la api y proximamente local
+    $resolInvoiceNc = notacreditoinvoice::find('type_document_id', 4);
     $invoice = facturas_electronicas::find('id', $datos['id']);
     if($invoice&&$invoice->id_estadoelectronica == 2){ //la factura electronica debe estar en estado aceptado por la Dian 
       $jsonenvio = json_decode($invoice->json_envio);
-      $jsonNcDian = self::createNcElectronic($jsonenvio, $invoice->numero, $invoice->prefijo, $invoice->cufe, $invoice->fecha_factura);
+      $jsonNcDian = self::createNcElectronic($jsonenvio, $invoice->numero, $invoice->prefijo, $invoice->cufe, $invoice->fecha_factura, $resolInvoiceNc);
       debuguear($jsonNcDian);
       //$res = self::sendInvoiceDian($x, $url, $invoice->token_electronica);
+
+      /*if(!$res['success']){
+        $alertas['error'][] = $res['error'];
+        echo json_encode($alertas);
+        return;
+      }*/
+
+      //actualizar respuesta de la dian en la tabla facturas_electronicas
+      
 
     }
   }

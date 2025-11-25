@@ -192,7 +192,7 @@ trait DocumentTrait
     } //fin metodo crear factura electronica
 
 
-    protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha):string
+    protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha, $resolInvoiceNc):string
     {
         $billing_reference = [
             "number" => "$prefix$number", //"FE2082",
@@ -211,8 +211,8 @@ trait DocumentTrait
             "discrepancyresponsecode" => 2,
             "discrepancyresponsedescription" => "Nota credito total a factura",
             "notes" => "Nota credito",
-            "prefix" => 'NCQO',   //variable resol nc esta en la api
-            "number" => 1,        //variable resol nc esta en la api
+            "prefix" => $resolInvoiceNc->prefix,   //variable resol nc esta en la api
+            "number" => $resolInvoiceNc->nextnumber,        //variable resol nc esta en la api
             "type_document_id" => 4,
             "date" => date('Y-m-d'),   //fecha actual de la generacion de la NC
             "time" => date('H:i:s'),
