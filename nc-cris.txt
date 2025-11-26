@@ -1,0 +1,107 @@
+array(3) {
+  ["success"]=>
+  bool(true)
+  ["status"]=>
+  int(200)
+  ["response"]=>
+  array(10) {
+    ["message"]=>
+    string(43) "AttachedDocument #NCQO1 generada con éxito"
+    ["send_email_success"]=>
+    bool(false)
+    ["send_email_date_time"]=>
+    bool(false)
+    ["ResponseDian"]=>
+    array(1) {
+      ["Envelope"]=>
+      array(2) {
+        ["Header"]=>
+        array(2) {
+          ["Action"]=>
+          array(2) {
+            ["_attributes"]=>
+            array(1) {
+              ["mustUnderstand"]=>
+              string(1) "1"
+            }
+            ["_value"]=>
+            string(70) "http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillSyncResponse"
+          }
+          ["Security"]=>
+          array(2) {
+            ["_attributes"]=>
+            array(1) {
+              ["mustUnderstand"]=>
+              string(1) "1"
+            }
+            ["Timestamp"]=>
+            array(3) {
+              ["_attributes"]=>
+              array(1) {
+                ["Id"]=>
+                string(2) "_0"
+              }
+              ["Created"]=>
+              string(24) "2025-11-26T21:57:19.890Z"
+              ["Expires"]=>
+              string(24) "2025-11-26T22:02:19.890Z"
+            }
+          }
+        }
+        ["Body"]=>
+        array(1) {
+          ["SendBillSyncResponse"]=>
+          array(1) {
+            ["SendBillSyncResult"]=>
+            array(9) {
+              ["ErrorMessage"]=>
+              array(1) {
+                ["string"]=>
+                array(2) {
+                  [0]=>
+                  string(61) "Regla: CAK55, Notificación: Correo electrónico no informado"
+                  [1]=>
+                  string(96) "Regla: RUT01, Notificación: La validación del estado del RUT próximamente estará disponible."
+                }
+              }
+              ["IsValid"]=>
+              string(4) "true"
+              ["StatusCode"]=>
+              string(2) "00"
+              ["StatusDescription"]=>
+              string(24) "Procesado Correctamente."
+              ["StatusMessage"]=>
+              string(59) "La Nota de crédito electrónica NCQO1, ha sido autorizada."
+              ["XmlBase64Bytes"]=>
+              string(15140) "PD94bWwgdmVyc2lv"
+              ["XmlBytes"]=>
+              array(1) {
+                ["_attributes"]=>
+                array(1) {
+                  ["nil"]=>
+                  string(4) "true"
+                }
+              }
+              ["XmlDocumentKey"]=>
+              string(96) "97aa3c9ed7aa2c68c38272d8d16e24606a00770510b7485cfc64b53cd6800378968064ab9e27f611faf2868d16d7a9a8"
+              ["XmlFileName"]=>
+              string(25) "nc10949175080002500000001"
+            }
+          }
+        }
+      }
+    }
+    ["urlinvoicexml"]=>
+    string(13) "NCS-NCQO1.xml"
+    ["urlinvoicepdf"]=>
+    string(13) "NCS-NCQO1.pdf"
+    ["urlinvoiceattached"]=>
+    string(29) "ad10949175080002500000001.xml"
+    ["cude"]=>
+    string(96) "97aa3c9ed7aa2c68c38272d8d16e24606a00770510b7485cfc64b53cd6800378968064ab9e27f611faf2868d16d7a9a8"
+    ["QRStr"]=>
+    string(160) "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=97aa3c9ed7aa2c68c38272d8d16e24606a00770510b7485cfc64b53cd6800378968064ab9e27f611faf2868d16d7a9a8"
+    ["certificate_days_left"]=>
+    int(345)
+  }
+}
