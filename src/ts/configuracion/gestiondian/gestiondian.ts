@@ -198,6 +198,8 @@
                 from: '1', 
                 to: '99999999', 
               };
+              const resResolNCJ2 = crearResolucionNC(resolNC);
+
               const resResolNC = await crearResolucion(resolNC, resultado.token);
               if(resResolNC == undefined){
                 //eliminar usuario de la api
@@ -283,6 +285,22 @@
         return false;
       }
       
+    }
+
+
+    //////// CREAR RESOLUCION NC PARA INVOICE EN J2 LOCALMENTE ////////////
+    async function crearResolucionNC(resolNC:resolconfig){
+      try {
+          const url = `/admin/api/guardarNCInvoice`; //llamado a la API para guardar la resolucion DIAN
+          const respuesta = await fetch(url,  { method: 'POST',
+                                                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                                body: JSON.stringify(resolNC)
+                                              });
+          const resultado = await respuesta.json();
+          return resultado;
+      } catch (error) {
+        console.log(error);
+      }
     }
 
 

@@ -171,6 +171,14 @@ class apidiancontrolador{
   }
 
 
+   public static function guardarNCInvoice(){
+    session_start();
+    isadmin();
+    $alertas = [];
+    
+   }
+
+
   public static function filterAdquirientes(){
     session_start();
     isadmin();

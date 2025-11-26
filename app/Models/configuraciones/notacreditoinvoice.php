@@ -3,13 +3,13 @@ namespace App\Models\configuraciones;
 
 class notacreditoinvoice extends \App\Models\ActiveRecord {
     protected static $tabla = 'notacreditoinvoice';
-    protected static $columnasDB = ['id', 'id_sucursalid', 'idcompania', 'type_document_id', 'prefix', 'resolution', 'nextnumber', 'resolution_date', 'technical_key', 'from', 'to', 'date_from', 'date_to', 'estado'];
+    protected static $columnasDB = ['id', 'idsucursal_id_fk', 'id_compania', 'type_document_id', 'prefix', 'resolution', 'nextnumber', 'resolution_date', 'technical_key', 'from', 'to', 'date_from', 'date_to', 'estado'];
 
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
-        $this->id_sucursalid = id_sucursal();
-        $this->idcompania = $args['idcompania'] ?? null;
+        $this->idsucursal_id_fk = id_sucursal();
+        $this->id_compania = $args['id_compania'] ?? null;
         $this->type_document_id = $args['type_document_id'] ?? 4;
         $this->prefix = $args['prefix'] ?? ''; 
         $this->resolution = $args['resolution'] ?? '';
