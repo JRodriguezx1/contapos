@@ -115,6 +115,7 @@ class apidiancontrolador{
   }
 
 
+  //guardar resolucion invoice cuando se consulta o decarga de la Dian, de forma local.
   public static function guardarResolutionJ2(){
     session_start();
     isadmin();
@@ -122,7 +123,7 @@ class apidiancontrolador{
     
     if(userPerfil()>1){
       $alertas['error'][] = "No tienes permisos";
-      return;
+      return $alertas;
     }
     if($_SERVER['REQUEST_METHOD'] !== 'POST'){
       http_response_code(405); // Método no permitido
@@ -171,12 +172,53 @@ class apidiancontrolador{
   }
 
 
-   public static function guardarNCInvoice(){
+  //guardar resolucion de nota credito invoice, de forma local.
+  public static function guardarNCInvoiceJ2(){
     session_start();
     isadmin();
     $alertas = [];
-    
-   }
+
+    if(userPerfil()>1){
+      $alertas['error'][] = "No tienes permisos";
+      return $alertas;
+    }
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+
+    $resolution = json_decode(file_get_contents('php://input'), true);
+    $existeResolution = notacreditoinvoice::uniquewhereArray(['id_compania'=>$resolution['idcompany'], 'prefix'=>$resolution['Prefix']]);
+    if($existeResolution){
+      $existeResolution->estado = 1;
+      $alertas['exito'][] = "Resolucion de NC ya disponible en sistema.";
+    }else{
+      $facturadornc = new notacreditoinvoice([
+                                      'idsucursal_id_fk'=>id_sucursal(), 
+                                      'id_compania' => $resolution['idcompany'],
+                                      'type_document_id'=>$resolution['type_document_id'], 
+                                      'prefix'=>'Electronica '.$resolution['Prefix'], 
+                                      'resolution'=>'',
+                                      'nextnumber'=>1,
+                                      'resolution_date'=>date('Y-m-d'),
+                                      'technical_key'=>$resolution['technical_key'], //identification_number
+                                      'from'=>$resolution['from'],
+                                      'to'=>$resolution['to'],
+                                      'date_from'=>'',
+                                      'date_to'=>'',
+                                      'estado'=>1
+                                    ]);
+      //debuguear($facturadornc);
+      $r = $facturadornc->crear_guardar();
+      if($r[0]){
+        $alertas['exito'][] = "Resolucion descargada en sistema.";
+      }else{
+        $alertas['error'][] = "Error al descargar resolucion, intentalo de nuevo";
+      }
+    }
+    echo json_encode($alertas);
+  }
 
 
   public static function filterAdquirientes(){
@@ -281,25 +323,56 @@ class apidiancontrolador{
       exit;
     }
     $datos = json_decode(file_get_contents('php://input'), true);
-    //debuguear($datos);
-    //obtener resolucion de NC de la factura electronica, esta en la api y proximamente local
-    $resolInvoiceNc = notacreditoinvoice::find('type_document_id', 4);
-    $invoice = facturas_electronicas::find('id', $datos['id']);
-    if($invoice&&$invoice->id_estadoelectronica == 2){ //la factura electronica debe estar en estado aceptado por la Dian 
-      $jsonenvio = json_decode($invoice->json_envio);
-      $jsonNcDian = self::createNcElectronic($jsonenvio, $invoice->numero, $invoice->prefijo, $invoice->cufe, $invoice->fecha_factura, $resolInvoiceNc);
-      debuguear($jsonNcDian);
-      //$res = self::sendInvoiceDian($x, $url, $invoice->token_electronica);
+    $facturaDian = facturas_electronicas::find('id', $datos['id']);
+    $companyExist = diancompanias::find('identification_number', $facturaDian->nitcompany);
+    if($companyExist){
+      //obtener resolucion de NC de la factura electronica, esta en la api y proximamente local
+      $resolInvoiceNc = notacreditoinvoice::find('id_compania', $companyExist->id);
+      if($datos['consecutivo']!=''&&is_numeric($datos['consecutivo']))$resolInvoiceNc->nextnumber = $datos['consecutivo'];
+      if($facturaDian&&$facturaDian->id_estadoelectronica == 2){ //la factura electronica debe estar en estado aceptado por la Dian 
+        $jsonenvio = json_decode($facturaDian->json_envio);
+        //debuguear($jsonenvio);
+        $jsonNcDian = self::createNcElectronic($jsonenvio, $facturaDian->numero, $facturaDian->prefijo, $facturaDian->cufe, $facturaDian->fecha_factura, $resolInvoiceNc);
+        $res = self::sendInvoiceDian($jsonNcDian, $url, $facturaDian->token_electronica);
 
-      /*if(!$res['success']){
-        $alertas['error'][] = $res['error'];
-        echo json_encode($alertas);
-        return;
-      }*/
+        if(!$res['success']){
+          $alertas['error'][] = $res['error'];
+          echo json_encode($alertas);
+          return;
+        }
 
-      //actualizar respuesta de la dian en la tabla facturas_electronicas
-      
+        // actualizar consecutivo en la tabla de notacreditoinvoice
+        if($res['success'] && buscarClaveArray($res, 'IsValid')=='true'){
+          $arrayFile = explode('.', buscarClaveArray($res, 'urlinvoicexml'));
+          $facturaDian->id_estadoelectronica = 2; //aceptada
+          $facturaDian->cufe = buscarClaveArray($res, 'cufe');
+          $facturaDian->qr = buscarClaveArray($res, 'QRStr');
+          $facturaDian->filename = "$facturaDian->nitcompany/$arrayFile[0]";
+          $facturaDian->link =  $facturaDian->qr;
+          $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+          $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+          $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+          $r = $facturaDian->actualizar();
+          $alertas['exito'][] = "Factura electronica procesadamente exitosamente.";
+          echo json_encode($alertas);
+        }else{
+          $facturaDian->id_estadoelectronica = 3; //error
+          $facturaDian->cufe = '';
+          $facturaDian->qr = '';
+          $facturaDian->link =  '';
+          $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+          $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+          $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+          $r = $facturaDian->actualizar();
+          $alertas['error'][] = "Error al enviar la factura electronica. $facturaDian->respuesta_factura";
+          echo json_encode($alertas);
+        }
+        
 
+      }
+    }else{
+      $alertas['error'][] = "Error, no se puede generar nota credito, compañia no existe";
+      echo json_encode($alertas);
     }
   }
 

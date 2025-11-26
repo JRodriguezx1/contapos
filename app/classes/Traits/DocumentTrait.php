@@ -11,7 +11,7 @@ use stdClass;
 trait DocumentTrait
 {
 
-    //metodo llamado desde ventascontrolador para guar la FE de manera local
+    //metodo llamado desde ventascontrolador cuando se hace la venta, para guardar la FE de manera local
     protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, int $descgeneral):bool
     {
         $invoice_lines = [];

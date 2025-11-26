@@ -51,12 +51,13 @@
 
 
     //Resolucion a almacenar en API
-    interface resolconfig { 
+    interface resolconfig {
+      idcompany?:string,
       type_document_id:string, 
-      prefix:String, 
+      prefix:string, 
       resolution?:string, 
       resolution_date?:string, 
-      technical_key?:string, 
+      technical_key?:string,   //para la nota credito invoice se usa como identification_number de la compañia
       from:string,
       to:string, 
       generated_to_date?:string, 
@@ -198,9 +199,8 @@
                 from: '1', 
                 to: '99999999', 
               };
-              const resResolNCJ2 = crearResolucionNC(resolNC);
-
-              const resResolNC = await crearResolucion(resolNC, resultado.token);
+              
+              const resResolNC = await crearResolucion(resolNC, resultado.token); //crear resolucion nota credito invoice en la api
               if(resResolNC == undefined){
                 //eliminar usuario de la api
                 sendDeleteCompany('', identification_number+'', resultado.token);
@@ -208,7 +208,11 @@
                 return;
               }
 
-              crearCompanyJ2(datoscompañia, resultado.token);
+              const idcompany = await crearCompanyJ2(datoscompañia, resultado.token);
+              //crear resolucion nota credito invoice de forma local
+              if(idcompany!=undefined){
+                const resResolNCJ2 = crearResolucionNCJ2(resolNC, datoscompañia.identification_number+'', idcompany);
+              }
       
             }else{
               msjalertToast('error', '¡Error!', 'No se pudo crear la compañia de facturacion.');
@@ -264,7 +268,7 @@
     }
 
 
-    ///////    CREAR RESOLUCIONES    ////////
+    ///////    CREAR RESOLUCIONES EN LA API    ////////
     async function crearResolucion(resolition:resolconfig, token:string)
     {
       try {
@@ -289,9 +293,11 @@
 
 
     //////// CREAR RESOLUCION NC PARA INVOICE EN J2 LOCALMENTE ////////////
-    async function crearResolucionNC(resolNC:resolconfig){
+    async function crearResolucionNCJ2(resolNC:resolconfig, identification_number:string, idcompany:string){
+      resolNC.technical_key = identification_number;
+      resolNC.idcompany = idcompany;
       try {
-          const url = `/admin/api/guardarNCInvoice`; //llamado a la API para guardar la resolucion DIAN
+          const url = `/admin/api/guardarNCInvoiceJ2`; //llamado a la API para guardar la resolucion NC DIAN de forma local
           const respuesta = await fetch(url,  { method: 'POST',
                                                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                                                 body: JSON.stringify(resolNC)
@@ -305,7 +311,7 @@
 
 
     ///////    CREAR COMPAÑIA EN J2    ////////
-    async function crearCompanyJ2(datoscompañia: Record<string, FormDataEntryValue>, token:string){
+    async function crearCompanyJ2(datoscompañia: Record<string, FormDataEntryValue>, token:string):Promise<string|undefined>{
       datoscompañia.token = token;
       try {
             const url = `/admin/api/crearCompanyJ2`; //llamado a la API para crear la compañia en j2
@@ -336,6 +342,7 @@
               // añadir a los selects de obtener compañia para resoluciones y de set pruebas
               SetCompañiaToSelect(resultado.id, token, datoscompañia.business_name+'');
               companiesAll.push({id:resultado.id, identification_number:datoscompañia.identification_number+'', business_name:datoscompañia.business_name+'', idsoftware:datoscompañia.idsoftware+'', token});
+              return resultado.id;
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -460,6 +467,7 @@
     POS.cerrarDialogoExterno = cerrarDialogoExterno;
     POS.crearResolucion = crearResolucion;
     POS.crearCompanyJ2 = crearCompanyJ2;
+    POS.crearResolucionNCJ2 = crearResolucionNCJ2;
   }
 
 })();
