@@ -4,16 +4,17 @@ namespace App\Models\inventario;
 
 class movimientos_insumos extends \App\Models\ActiveRecord{
     protected static $tabla = 'movimientos_insumos';
-    protected static $columnasDB = ['id', 'fksucursal_id', 'id_subproductoid', 'idusuario_id', 'nombreusuario', 'tipo', 'referencia', 'stockanterior', 'stocknuevo', 'comentario'];
+    protected static $columnasDB = ['id', 'fksucursal_id', 'id_subproductoid', 'idusuario_id', 'nombreusuario', 'tipo', 'referencia', 'cantidad', 'stockanterior', 'stocknuevo', 'comentario'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
-        $this->fksucursal_id = $args['fksucursal_id']??'';
+        $this->fksucursal_id = $args['fksucursal_id']??id_sucursal();
         $this->id_subproductoid = $args['id_subproductoid']??'';
         $this->idusuario_id = $args['idusuario_id']??'';
         $this->nombreusuario = $args['nombreusuario']??'';
         $this->tipo = $args['tipo']??'';
         $this->referencia = $args['referencia']??'';
+        $this->cantidad = $args['cantidad']??'';
         $this->stockanterior = $args['stockanterior']??'';
         $this->stocknuevo = $args['stocknuevo']??'';
         $this->comentario = $args['comentario']??'';

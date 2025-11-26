@@ -78,3 +78,17 @@ function desactivarInterlacedPNG(string $rutaimg):int{
         return 0;
     }
 }
+
+function buscarClaveArray(array $array, string $clave): bool|string|int|float|null {
+    foreach ($array as $key => $value) {
+        if($key === $clave){
+            if(!is_array($value))return $value;
+            return false;
+        }
+        if (is_array($value)) {
+            $r = buscarClaveArray($value, $clave);
+            if ($r !== false)return $r;
+        } 
+    }
+    return false;
+}

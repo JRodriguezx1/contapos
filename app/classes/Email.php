@@ -59,13 +59,14 @@ class Email {
         $mail->isHTML(TRUE);
         $mail->CharSet = 'UTF-8';
 
-        $contenido = "<html>
+        /*$contenido = "<html>
                         <head><meta charset='UTF-8'></head>
                         <p> <strong>Hola {$this->nombre}</strong> Gracias por visitar nuestra tienda: <span>$sucursal->negocio</span> Te Hemos enviado el detalle de tu compra.</p>
                         <p>Si no realizo esta orden, puedes ignorar este mensaje</p>
-                    </html>";
+                    </html>";*/
 
         $mail->Body = $this->html;
+        $mail->addEmbeddedImage(__DIR__ . "/../../public/build/img/$sucursal->logo", 'logo_id');
         //Enviar el mail
         try {
             $mail->send();

@@ -1,13 +1,11 @@
 (():void=>{
-
   if(document.querySelector('.gestionDian')){
     const POS = (window as any).POS;
-    const btnAdquirirCompañia = document.querySelector('#btnAdquirirCompañia') as HTMLButtonElement;
     const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
     const btnObtenerresolucion = document.querySelector('#btnObtenerresolucion') as HTMLButtonElement;
     const BtnSetpruebas = document.querySelector('#BtnSetpruebas') as HTMLButtonElement;
     const formCrearUpdateCompañia = document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement;
-    const miDialogoAdquirirCompañia = document.querySelector('#miDialogoAdquirirCompañia') as any;
+    const miDialogoAdquirirCompañia = POS.gestionAdquirirCompany.miDialogoAdquirirCompañia
     const miDialogoCompañia = document.querySelector('#miDialogoCompañia') as any;
     const miDialogoGetResolucion = POS.gestionarGetResolutions.miDialogoGetResolucion
     const miDialogosetpruebas = POS.gestionarSetPruebas.miDialogosetpruebas;
@@ -53,12 +51,13 @@
 
 
     //Resolucion a almacenar en API
-    interface resolconfig { 
+    interface resolconfig {
+      idcompany?:string,
       type_document_id:string, 
-      prefix:String, 
+      prefix:string, 
       resolution?:string, 
       resolution_date?:string, 
-      technical_key?:string, 
+      technical_key?:string,   //para la nota credito invoice se usa como identification_number de la compañia
       from:string,
       to:string, 
       generated_to_date?:string, 
@@ -88,13 +87,6 @@
 
 
 
-    ///////////////////-------    Adquirir compañia     ---------//////////////////
-    btnAdquirirCompañia.addEventListener('click', ()=>{
-        miDialogoAdquirirCompañia.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
-    });
-
-
     ///////////////////-------    crear compañia     --------///////////////////
     btnCrearCompañia.addEventListener('click', ()=>{
         limpiarformdialog();
@@ -116,13 +108,6 @@
 
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
-    });
-
-
-    ///////////////////  ADQUIRIR COMPAÑIA  ////////////////////
-    document.querySelector('#formAdquirirCompañia')?.addEventListener('submit', (e:Event)=>{
-      e.preventDefault();
-      
     });
 
 
@@ -172,7 +157,19 @@
               document.removeEventListener("click", cerrarDialogoExterno);
               
               const cert = await configCertificado(resultado.token, certificadop12base64+'', password+'');
+              if(cert == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la obtencion del certificado digital.');
+                return;
+              }
               const soft = await configSoftware(resultado.token, idsoftware+'', pinsoftware+'');
+              if(soft == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la configuracion del software.');
+                return;
+              }
               const resolprueba:resolconfig = {
                 type_document_id:'1', 
                 prefix:'SETP', 
@@ -186,7 +183,12 @@
                 date_to: '2030-01-19'
               };
               const resol = await crearResolucion(resolprueba, resultado.token);
-
+              if(resol == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la configuracion de la resolucion.');
+                return;
+              }
               /////    crear resolucion para NC    ///////
               const extprefix = (datoscompañia.business_name as string).match(/[a-zA-Z]/g)!;
               const a:string = extprefix[0];
@@ -197,15 +199,23 @@
                 from: '1', 
                 to: '99999999', 
               };
-              const resResolNC = await crearResolucion(resolNC, resultado.token);
-
-              if(cert && soft && resol && resResolNC){
-                crearCompanyJ2(datoscompañia, resultado.token);
-              }else{//eliminar usuario de la api
-                eliminarCompañia('', identification_number+'', resultado.token);
+              
+              const resResolNC = await crearResolucion(resolNC, resultado.token); //crear resolucion nota credito invoice en la api
+              if(resResolNC == undefined){
+                //eliminar usuario de la api
+                sendDeleteCompany('', identification_number+'', resultado.token);
+                msjalertToast('error', '¡Error!', 'Error en la configuracion de la resolucion de NC.');
+                return;
               }
-            }else{
 
+              const idcompany = await crearCompanyJ2(datoscompañia, resultado.token);
+              //crear resolucion nota credito invoice de forma local
+              if(idcompany!=undefined){
+                const resResolNCJ2 = crearResolucionNCJ2(resolNC, datoscompañia.identification_number+'', idcompany);
+              }
+      
+            }else{
+              msjalertToast('error', '¡Error!', 'No se pudo crear la compañia de facturacion.');
             }
           } catch (error) {
               console.log(error);
@@ -214,7 +224,7 @@
 
 
     ///////    CREAR CERTIFICADO EN LA API DIAN    ///////
-    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean> {
+    async function configCertificado(token:string, certificado:string, password:string):Promise<boolean|undefined> {
       try{
           const url = "https://apidianj2.com/api/ubl2.1/config/certificate"; //llamado a la API REST Dianlaravel
           const respuesta = await fetch(url, {
@@ -236,7 +246,7 @@
 
     
     ///////    CREAR SOFTWARE EN LA API DIAN    ////////
-    async function configSoftware(token:string, idsoftware:string, pinsoftware:string):Promise<boolean>
+    async function configSoftware(token:string, idsoftware:string, pinsoftware:string):Promise<boolean|undefined>
     {
       try {
         const url = "https://apidianj2.com/api/ubl2.1/config/software"; //llamado a la API REST Dianlaravel
@@ -258,7 +268,7 @@
     }
 
 
-    ///////    CREAR RESOLUCIONES    ////////
+    ///////    CREAR RESOLUCIONES EN LA API    ////////
     async function crearResolucion(resolition:resolconfig, token:string)
     {
       try {
@@ -282,8 +292,26 @@
     }
 
 
+    //////// CREAR RESOLUCION NC PARA INVOICE EN J2 LOCALMENTE ////////////
+    async function crearResolucionNCJ2(resolNC:resolconfig, identification_number:string, idcompany:string){
+      resolNC.technical_key = identification_number;
+      resolNC.idcompany = idcompany;
+      try {
+          const url = `/admin/api/guardarNCInvoiceJ2`; //llamado a la API para guardar la resolucion NC DIAN de forma local
+          const respuesta = await fetch(url,  { method: 'POST',
+                                                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                                body: JSON.stringify(resolNC)
+                                              });
+          const resultado = await respuesta.json();
+          return resultado;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+
     ///////    CREAR COMPAÑIA EN J2    ////////
-    async function crearCompanyJ2(datoscompañia: Record<string, FormDataEntryValue>, token:string){
+    async function crearCompanyJ2(datoscompañia: Record<string, FormDataEntryValue>, token:string):Promise<string|undefined>{
       datoscompañia.token = token;
       try {
             const url = `/admin/api/crearCompanyJ2`; //llamado a la API para crear la compañia en j2
@@ -294,6 +322,12 @@
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
               const tablaCompañias = document.querySelector('#tablaCompañias tbody');
+
+              const tr = tablaCompañias?.querySelector('tr[id="company'+datoscompañia.identification_number+'"]');
+              if(tr){
+                tr.remove();
+              }
+
               tablaCompañias?.insertAdjacentHTML('beforeend', `
                 <tr class="" id="company${datoscompañia.identification_number}">
                   <td class="">${resultado.id}</td>
@@ -303,10 +337,12 @@
                   <td class=""><div class="acciones-btns">  <button id="${resultado.id}"><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
                 </tr>`
               );
+
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               // añadir a los selects de obtener compañia para resoluciones y de set pruebas
               SetCompañiaToSelect(resultado.id, token, datoscompañia.business_name+'');
               companiesAll.push({id:resultado.id, identification_number:datoscompañia.identification_number+'', business_name:datoscompañia.business_name+'', idsoftware:datoscompañia.idsoftware+'', token});
+              return resultado.id;
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -327,7 +363,6 @@
 
     ///////    ELIMINAR COMPAÑIA    ///////
     function eliminarCompañia(id:string, identification_number:string, token:string){
-     
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -338,33 +373,41 @@
           cancelButtonText: 'No',
       }).then((result:any) => {
           if (result.isConfirmed) {
-            (async ()=>{ 
-              try {
-                const url = "https://apidianj2.com/api/ubl2.1/config/deleteCompany"; //llamado a la API REST Dianlaravel
-                const respuesta = await fetch(url, {
-                                                      method: 'DELETE',
-                                                      headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
-                                                      body: JSON.stringify({"identification_number": identification_number})
-                                                    });
-                const resultado = await respuesta.json();
-                if(resultado.message){
-                  const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
-                  const respuestaLocal = await fetch(urlX); 
-                  const resultadoLocal = await respuestaLocal.json(); 
-                  document.querySelector('#company'+identification_number)?.remove();
-                  msjalertToast('success', '¡Éxito!', resultado.message);
-                  deleteFromCompany(id);
-                }else{
-                  msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
-                }
-              } catch (error) {
-                console.log(error);
-                return false;
-              }
-            })();
+            sendDeleteCompany(id, identification_number, token)
           }
       });
     }
+
+
+    function sendDeleteCompany(id:string, identification_number:string, token:string){
+      (async ()=>{ 
+        try {
+          const url = "https://apidianj2.com/api/ubl2.1/config/deleteCompany"; //llamado a la API REST Dianlaravel
+          const respuesta = await fetch(url, {
+                                                method: 'DELETE',
+                                                headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer "+token },
+                                                body: JSON.stringify({"identification_number": identification_number})
+                                              });
+          const resultado = await respuesta.json();
+          if(resultado.message){
+            const urlX = "/admin/api/eliminarCompanyLocal?id="+identification_number; // para eliminar compañia localmente
+            const respuestaLocal = await fetch(urlX); 
+            const resultadoLocal = await respuestaLocal.json(); 
+            if(!isNaN(Number(id)) && resultadoLocal.exito !== undefined){
+              document.querySelector('#company'+identification_number)?.remove();
+              msjalertToast('success', '¡Éxito!', resultado.message);
+              deleteFromCompany(id);
+            }
+          }else{
+            msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
+          }
+        } catch (error) {
+          console.log(error);
+          return false;
+        }
+      })();
+    }
+
 
     ///////  eliminar de los select de obtener resolucion y enviar set de pruebas  ///////
     function deleteFromCompany(id:string){
@@ -423,6 +466,8 @@
 
     POS.cerrarDialogoExterno = cerrarDialogoExterno;
     POS.crearResolucion = crearResolucion;
+    POS.crearCompanyJ2 = crearCompanyJ2;
+    POS.crearResolucionNCJ2 = crearResolucionNCJ2;
   }
 
 })();

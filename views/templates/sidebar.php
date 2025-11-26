@@ -59,6 +59,9 @@
         <?php if(tienePermiso('Habilitar modulo de contabilidad')): ?>
             <a class="<?php echo ($titulo === 'Contabilidad')?'activo':''; ?>" href="/admin/contabilidad"><span class="material-symbols-outlined"> article</span> <label class="btnav"> Informes Contables</label></a>
         <?php endif; ?>
+         <?php if(1): ?>
+            <a class="<?php echo ($titulo === 'Nomina electronica')?'activo':''; ?>" href="/admin/nominaelectronica"><span class="material-symbols-outlined"> article</span> <label class="btnav"> Nomina Electronica</label></a>
+        <?php endif; ?>
         <?php if(tienePermiso('Habilitar modulo de inventario') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Almacen')?'activo':''; ?>" href="/admin/almacen"><span class="material-symbols-outlined">warehouse</span> <label class="btnav"> Almacen</label></a>
         <?php endif; ?>

@@ -32,7 +32,7 @@ class configcontrolador{
     $sucursal = sucursales::find('id', $idsucursal);
     $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
     $mediospago = mediospago::all();
-    $cajas = caja::idregistros('idsucursalid', $idsucursal);
+    $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
@@ -50,7 +50,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
@@ -128,7 +128,7 @@ class configcontrolador{
         $empleado = new \stdClass();
          $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -180,7 +180,7 @@ class configcontrolador{
         $mediospago = mediospago::all();
         $dapartments = departments::all();
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
   ///////////////////////////////////  Apis ////////////////////////////////////
@@ -583,6 +583,7 @@ class configcontrolador{
 
     public static function actualizarTarifa(){
         session_start();
+        isadmin();
         $alertas = []; 
         $tarifa = tarifas::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -603,6 +604,7 @@ class configcontrolador{
 
     public static function eliminarTarifa(){
         session_start();
+        isadmin();
         $tarifa = tarifas::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($tarifa)){
@@ -620,5 +622,104 @@ class configcontrolador{
         echo json_encode($alertas); 
     }
 
+
+    ///////////// procesando la gestion de los medios de pago ////////////////
+    public static function allmediospago(){  //api llamado desde gestionmediospago.js
+      session_start();
+      isadmin();
+      $mediosdepagos = mediospago::all();
+      echo json_encode($mediosdepagos);
+    }
+
+    public static function crearMedioPago(){ //api llamada desde el modulo de gestiontarifas.ts cuando se crea un cliente
+        session_start();
+        isadmin();
+        $alertas = [];
+        $mediopago = new mediospago($_POST);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $mediopago->validar();
+            if(empty($alertas)){ //si los campos cumplen los criterios  
+                $r = $mediopago->crear_guardar();
+                if($r[0]){
+                    $mediopago->id = $r[1];
+                    $alertas['exito'][] = 'medio de pago creado correctamente';
+                    $alertas['mediopago'] = $mediopago;
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+    public static function actualizarMedioPago(){
+        session_start();
+        isadmin();
+        $alertas = []; 
+        $mediopago = mediospago::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $mediopago->compara_objetobd_post($_POST);
+            $alertas = $mediopago->validar();
+            if(empty($alertas)){
+                $r = $mediopago->actualizar();
+                if($r){
+                    $alertas['exito'][] = "Datos del medio de pago actualizados";
+                    $alertas['mediopago'] = $mediopago;
+                }else{
+                    $alertas['error'][] = "Error al actualizar medios de pago";
+                }
+            }
+        }
+        echo json_encode($alertas);  
+    }
+
+    public static function eliminarMedioPago(){
+        session_start();
+        isadmin();
+        $mediopago = mediospago::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($mediopago)){
+                try {
+                    $r = $mediopago->eliminar_registro();
+                    if($r){
+                        ActiveRecord::setAlerta('exito', 'Medio de pago eliminado correctamente');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                    }
+                } catch (\Throwable $th) {
+                    $th->getMessage();
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion - '.$th->getMessage());
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Medio de pago no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
+    }
+
+
+    public static function updateStateMedioPago(){
+        session_start();
+        isadmin();
+        $mediopago = mediospago::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($mediopago)){
+                if($mediopago->estado != $_POST['estado']){
+                    $mediopago->estado = $_POST['estado'];
+                    $r = $mediopago->actualizar();
+                    if($r){
+                        ActiveRecord::setAlerta('exito', 'Medio de pago actualizado.');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'Medio de pago no se pudo actualizar su estado.');
+                    }
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Medio de pago no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas);
+    }
 
 }

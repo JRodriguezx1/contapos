@@ -4,7 +4,7 @@ namespace App\Models\felectronicas;
 
 class facturas_electronicas extends \App\Models\ActiveRecord{
     protected static $tabla = 'facturas_electronicas';
-    protected static $columnasDB = ['id', 'id_sucursalidfk', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'num_nota', 'cufe_nota', 'fecha_nota', 'is_auto', 'json_envio', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
+    protected static $columnasDB = ['id', 'id_sucursalidfk', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'filename', 'nitcompany', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'num_nota', 'cufe_nota', 'fecha_nota', 'is_auto', 'json_envio', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -21,6 +21,8 @@ class facturas_electronicas extends \App\Models\ActiveRecord{
         $this->token_electronica = $args['token_electronica']??'';
         $this->cufe = $args['cufe']??'';
         $this->qr = $args['qr']??'';
+        $this->filename = $args['filename']??'';
+        $this->nitcompany = $args['nitcompany']??'';
         $this->fecha_factura = $args['fecha_factura']??'';
         $this->identificacion = $args['identificacion']??'';
         $this->nombre = $args['nombre']??'';

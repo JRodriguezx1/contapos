@@ -18,6 +18,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\traslado_inv;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
+use App\services\stockService;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -362,18 +363,31 @@ class trasladosinvcontrolador{
                   if(isset($objeto->fkproducto)){
                     $objeto->id = $objeto->fkproducto;
                     $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
+                    $acumulador['soloIdproductos'][] = $objeto->id;
                   }
                   else{
                     $objeto->id = $objeto->idsubproducto_id;
                     $acumulador['subproductos'][] = $objeto;
+                    $acumulador['soloIdinsumos'][] = $objeto->id;
                   }
                   return $acumulador;
               }, ['productos'=>[], 'subproductos'=>[]]);
 
               //descontar de inventario de la sucursal de origen de donde se despacha
-              if(!empty($resultArray['productos']))$rsps = stockproductossucursal::reduceinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
-              if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::reduceinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
-
+              if(!empty($resultArray['productos'])){
+                $rsps = stockproductossucursal::reduceinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
+                //registrar descuento de movimiento de invnetario
+                $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                $returnProductos = stockproductossucursal::camposJoinObj($query);
+                stockService::downStock_movimientoProductos($resultArray['productos'], $returnProductos, 'salida por traslado', 'descuento de unidades por traslado');
+              }
+              if(!empty($resultArray['subproductos'])){
+                $rsis = stockinsumossucursal::reduceinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
+                //registrar descuento de movimiento de invnetario
+                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $resultArray['soloIdinsumos']).") AND sucursalid = ".id_sucursal().";";
+                $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                stockService::downStock_movimientoInsumos($resultArray['subproductos'], $returnInsumos, 'salida por traslado', 'descuento de unidades por traslado');
+              }
               if($rsps&&$rsis){
                 $alertas['exito'][] = "Orden procesada en transito e inventario descontado";
               }else{
@@ -415,18 +429,31 @@ class trasladosinvcontrolador{
                   if(isset($objeto->fkproducto)){
                     $objeto->id = $objeto->fkproducto;
                     $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
+                    $acumulador['soloIdproductos'][] = $objeto->id;
                   }
                   else{
                     $objeto->id = $objeto->idsubproducto_id;
                     $acumulador['subproductos'][] = $objeto;
+                    $acumulador['soloIdinsumos'][] = $objeto->id;
                   }
                   return $acumulador;
               }, ['productos'=>[], 'subproductos'=>[]]);
 
               //sumar a inventario de la sucursal de destino
-              if(!empty($resultArray['productos']))$rsps = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
-              if(!empty($resultArray['subproductos']))$rsis = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
-
+              if(!empty($resultArray['productos'])){
+                $rsps = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
+                // registrar ingreso de unidades de inventario
+                $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                $returnProductos = stockproductossucursal::camposJoinObj($query);
+                stockService::upStock_movimientoProductos($resultArray['productos'], $returnProductos, 'ingreso por traslado', 'ingreso de unidades por traslado');
+              }
+              if(!empty($resultArray['subproductos'])){
+                $rsis = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
+                // registrar ingreso de unidades de inventario
+                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $resultArray['soloIdinsumos']).") AND sucursalid = ".id_sucursal().";";
+                $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                stockService::upStock_movimientoInsumos($resultArray['subproductos'], $returnInsumos, 'ingreso por traslado', 'ingreso de unidades por traslado');
+              }
               if($rsps&&$rsis){
                 $alertas['exito'][] = "Orden procesada, mercancia recibida e ingresada a inventario";
               }else{

@@ -8,7 +8,7 @@
             <div class="flex justify-between">
                 <div>
                     <div class="grid space-y-3">
-                        <img class="w-auto h-24" src="/build/img/<?php echo $sucursal->logo;?>" alt="user">
+                        <img class="w-auto h-24" src="/build/img/<?php echo $sucursal->logo;?>" alt="logo">
                         <dl class="flex flex-col gap-y-3 text-sm pt-20">
                             <div class="font-medium text-gray-800 text-lg leading-normal">
                                 <span class="block font-semibold uppercase">Cotizado a</span>

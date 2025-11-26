@@ -72,7 +72,7 @@
 <div class="barra">
     <div class="toggleanduser">
         <span class="sidebartoggle material-symbols-outlined">menu</span>
-        <p><span><?php echo $_SESSION['nombre']; ?></span></p>
+        <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide"><?php echo nombreSucursal(); ?></span>
     </div>
 
     <div class="flex items-center gap-4 mr-4">
@@ -97,14 +97,14 @@
                 <!-- 🔹 Selector de sucursal -->
                 <div class="px-3 py-2  w-full">
                     <label for="selectSucursal" class="block text-lg font-medium mb-2 w-full text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3">
-                        <span class="text-indigo-600 uppercase font-semibold"><?php echo nombreSucursal(); ?></span>
+                        <span class="text-indigo-600 uppercase font-semibold"><?php echo $user['nombre']; ?></span>
                     </label>
                     <select id="selectSucursal"
                         class=" h-14 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 transition duration-200 shadow-sm text-xl">
                         <option value="" selected disabled>Cambiar de Sede</option>
-                        <option value="1">Sucursal Principal</option>
-                        <option value="2">Sucursal Norte</option>
-                        <option value="3">Sucursal Centro</option>
+                        <?php foreach($sucursales as $val): ?>
+                            <option value="<?php echo $val->id;?>"><?php echo $val->nombre;?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -125,7 +125,7 @@
 
 
 <!-- Menú movil barra inferior -->
-<dialog id="miDialogomenumovil" class="p-0 w-[90%] max-w-6xl h-[75%] bg-white rounded-lg" hidden>
+<dialog id="miDialogomenumovil" class="p-0 w-[90%] max-w-6xl h-[71%] bg-white rounded-lg" hidden>
   <!-- Fondo semi-transparente -->
   <div class="fixed inset-0 bg-black bg-opacity-40" onclick="document.getElementById('miDialogomenumovil').close()"></div>
   
@@ -133,6 +133,9 @@
   <div class="relative w-auto h-full py-8 px-10 flex flex-col justify-between bg-white">
     <div class="flex justify-center">
         <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2indigo.png" alt="logoj2">
+    </div>
+    <div class=" text-center">
+        <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide"><?php echo nombreSucursal(); ?></span>
     </div>
     <!-- Encabezado con botón cerrar -->
     <div class="flex items-center justify-between mb-6 mt-4">
@@ -174,7 +177,7 @@
       <p class="text-gray-500 text-xl">Bienvenido: 
         <span class="text-indigo-600 font-bold text-right text-xl"><?php echo $_SESSION['nombre']; ?></span>
       </p>
-      <a class="cerrar-sesion mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout text-xl">Cerrar Sesión</a>
+      <a class="cerrar-sesion text-lg mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout">Cerrar Sesión</a>
     </div>
   </div>
 </dialog>

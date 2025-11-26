@@ -186,10 +186,14 @@
         <form id="formAdquirirCompañia" class="formulario" action="/admin/config/AdquirirCompañia" method="POST">
             
             <div class="formulario__campo">
-                <label class="formulario__label" for="adquirirCompañia">Numero de RUT</label>
+                <label class="formulario__label" for="nitcompany">Numero de RUT</label>
                 <div class="formulario__dato">
-                    <input id="adquirirCompañia" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nit sin digito de verificacion" name="adquirirCompañia" value="" required>
+                    <input id="nitcompany" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nit sin digito de verificacion" name="nitcompany" value="" required>
                 </div>
+            </div>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="adquirirCompañiaPassword">Contraseña</label>
+                <input id="adquirirCompañiaPassword" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Contraseña del certificaod digital" name="adquirirCompañiaPassword" value="" required>
             </div>
             <div class="text-right">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>

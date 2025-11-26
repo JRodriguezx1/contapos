@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: j2a2
+-- Host: 127.0.0.1    Database: j2a1
 -- ------------------------------------------------------
 -- Server version	8.0.40
 
@@ -39,7 +39,7 @@ CREATE TABLE `adquirientes` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `documento` (`identification_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,6 +48,7 @@ CREATE TABLE `adquirientes` (
 
 LOCK TABLES `adquirientes` WRITE;
 /*!40000 ALTER TABLE `adquirientes` DISABLE KEYS */;
+INSERT INTO `adquirientes` VALUES (1,6,'222222222222','Consumidor final',NULL,NULL,NULL,1,2,NULL,NULL,NULL,NULL,'2025-11-20 03:10:50');
 /*!40000 ALTER TABLE `adquirientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +105,7 @@ CREATE TABLE `arqueoscajas` (
   PRIMARY KEY (`id`),
   KEY `id_cierrecajaid_idx` (`id_cierrecajaid`),
   CONSTRAINT `id_cierrecajaid` FOREIGN KEY (`id_cierrecajaid`) REFERENCES `cierrescajas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +212,7 @@ CREATE TABLE `caja` (
 
 LOCK TABLES `caja` WRITE;
 /*!40000 ALTER TABLE `caja` DISABLE KEYS */;
-INSERT INTO `caja` VALUES (1,1,1,'Caja principal','Negocios pos sas',0,1,'2025-10-19 01:53:34');
+INSERT INTO `caja` VALUES (1,1,1,'Caja principal','',0,1,'2025-10-19 01:53:34');
 /*!40000 ALTER TABLE `caja` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,7 +324,7 @@ CREATE TABLE `cierrescajas` (
   CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idcaja` FOREIGN KEY (`idcaja`) REFERENCES `caja` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idsucursal_id` FOREIGN KEY (`idsucursal_id`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,7 +408,7 @@ CREATE TABLE `compras` (
   CONSTRAINT `id_sucursal_id` FOREIGN KEY (`id_sucursal_id`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idproveedor` FOREIGN KEY (`idproveedor`) REFERENCES `proveedores` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `usuario_id` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -519,7 +520,7 @@ CREATE TABLE `consecutivos` (
 
 LOCK TABLES `consecutivos` WRITE;
 /*!40000 ALTER TABLE `consecutivos` DISABLE KEYS */;
-INSERT INTO `consecutivos` VALUES (1,1,NULL,2,1,'Facturacion POS',1,'15000','1',NULL,'2029-03-21',NULL,NULL,'FAP',1,1,NULL,NULL,1);
+INSERT INTO `consecutivos` VALUES (1,1,NULL,2,1,'Facturacion POS',1,'15000','1',NULL,'2029-03-21',NULL,NULL,'POS',1,1,NULL,NULL,1);
 /*!40000 ALTER TABLE `consecutivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,7 +726,7 @@ CREATE TABLE `declaracionesdineros` (
   KEY `idcierrecajaid_idx` (`idcierrecajaid`),
   CONSTRAINT `id_mediopago` FOREIGN KEY (`id_mediopago`) REFERENCES `mediospago` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idcierrecajaid` FOREIGN KEY (`idcierrecajaid`) REFERENCES `cierrescajas` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1089,7 +1090,7 @@ CREATE TABLE `facturas` (
   CONSTRAINT `idclientex` FOREIGN KEY (`idcliente`) REFERENCES `clientes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `iddireccionx` FOREIGN KEY (`iddireccion`) REFERENCES `direcciones` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idvendedorx` FOREIGN KEY (`idvendedor`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1117,25 +1118,27 @@ CREATE TABLE `facturas_electronicas` (
   `id_adquiriente` int DEFAULT NULL,
   `id_estadonota` int DEFAULT NULL,
   `numero` int NOT NULL,
-  `num_factura` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `prefijo` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `resolucion` varchar(200) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
-  `token_electronica` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `cufe` varchar(900) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `qr` varchar(900) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `num_factura` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `prefijo` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `resolucion` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `token_electronica` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `cufe` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `qr` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `filename` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `nitcompany` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `fecha_factura` timestamp NULL DEFAULT NULL,
-  `identificacion` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `nombre` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `link` varchar(900) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `identificacion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `nombre` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `link` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `nota_credito` tinyint(1) NOT NULL DEFAULT '0',
   `num_nota` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
-  `cufe_nota` varchar(900) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `fecha_nota` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `cufe_nota` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `fecha_nota` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `is_auto` int DEFAULT NULL,
   `json_envio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
-  `respuesta_factura` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
-  `respuesta_nota` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
+  `respuesta_factura` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `respuesta_nota` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `intentos_de_envio` int DEFAULT NULL,
   `fecha_ultimo_intento` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1255,7 +1258,7 @@ CREATE TABLE `gastos` (
   `operacion` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `valor` decimal(12,2) NOT NULL,
   `descripcion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `imgcomprobante` varchar(155) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `imgcomprobante` varchar(155) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idg_usuario_idx` (`idg_usuario`),
@@ -1273,7 +1276,7 @@ CREATE TABLE `gastos` (
   CONSTRAINT `idg_caja` FOREIGN KEY (`idg_caja`) REFERENCES `caja` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idg_cierrecaja` FOREIGN KEY (`idg_cierrecaja`) REFERENCES `cierrescajas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idg_usuario` FOREIGN KEY (`idg_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1579,12 +1582,13 @@ CREATE TABLE `movimientos_insumos` (
   `fksucursal_id` int NOT NULL,
   `id_subproductoid` int NOT NULL,
   `idusuario_id` int DEFAULT NULL,
-  `nombreusuario` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `tipo` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `referencia` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `nombreusuario` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tipo` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `referencia` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cantidad` decimal(12,2) DEFAULT NULL,
   `stockanterior` decimal(12,2) NOT NULL,
   `stocknuevo` decimal(12,2) NOT NULL,
-  `comentario` tinytext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
+  `comentario` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fksucursal_id_idx` (`fksucursal_id`),
@@ -1593,7 +1597,7 @@ CREATE TABLE `movimientos_insumos` (
   CONSTRAINT `fksucursal_id` FOREIGN KEY (`fksucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_subproductoid` FOREIGN KEY (`id_subproductoid`) REFERENCES `subproductos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idusuario_id` FOREIGN KEY (`idusuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1617,12 +1621,13 @@ CREATE TABLE `movimientos_productos` (
   `idfksucursal` int NOT NULL,
   `idproducto_id` int NOT NULL,
   `id_usuarioid` int DEFAULT NULL,
-  `nombreusuario` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `tipo` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `referencia` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `nombreusuario` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tipo` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `referencia` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cantidad` decimal(12,2) NOT NULL,
   `stockanterior` decimal(12,2) NOT NULL,
   `stocknuevo` decimal(12,2) NOT NULL,
-  `comentario` tinytext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
+  `comentario` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idfksucursal_idx` (`idfksucursal`),
@@ -1631,7 +1636,7 @@ CREATE TABLE `movimientos_productos` (
   CONSTRAINT `id_usuarioid` FOREIGN KEY (`id_usuarioid`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idfksucursal` FOREIGN KEY (`idfksucursal`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idproducto_id` FOREIGN KEY (`idproducto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1713,6 +1718,46 @@ LOCK TABLES `negocio` WRITE;
 /*!40000 ALTER TABLE `negocio` DISABLE KEYS */;
 INSERT INTO `negocio` VALUES (1,'Negocios pos sa','Armenia','Cra 12#9-03 esquina','7358452','3183920532','sasha.spa@gmail.com','41936042-6','MALORI ELIENNE CEPEDA MATEUS\r\nNo responsable de IVA\r\nRegimen Simple','3183920532','https://www.facebook.com/profile.php?id=100007164136068',NULL,NULL,NULL,NULL,'65432f14b63a0logo.png','#051453','#ffffff',60);
 /*!40000 ALTER TABLE `negocio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notacreditoinvoice`
+--
+
+DROP TABLE IF EXISTS `notacreditoinvoice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notacreditoinvoice` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idsucursal_id_fk` int DEFAULT NULL,
+  `id_compania` int DEFAULT NULL,
+  `type_document_id` int DEFAULT NULL,
+  `prefix` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `resolution` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `nextnumber` int DEFAULT NULL,
+  `resolution_date` date DEFAULT NULL,
+  `technical_key` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `from` int DEFAULT NULL,
+  `to` int DEFAULT NULL,
+  `date_from` date DEFAULT NULL,
+  `date_to` date DEFAULT NULL,
+  `estado` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idsucursal_idfk_idx` (`idsucursal_id_fk`),
+  KEY `id_compania_idx` (`id_compania`),
+  CONSTRAINT `id_compania` FOREIGN KEY (`id_compania`) REFERENCES `contapos`.`diancompanias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `idsucursal_id_fk` FOREIGN KEY (`idsucursal_id_fk`) REFERENCES `contapos`.`sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notacreditoinvoice`
+--
+
+LOCK TABLES `notacreditoinvoice` WRITE;
+/*!40000 ALTER TABLE `notacreditoinvoice` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notacreditoinvoice` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2092,7 +2137,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,'Negocio SAS','Sede centro',NULL,'Quindio','Armenia','centro cr 19','3158863520',NULL,'contabilidad@innovatech.com.co','MALORI ELIENNE CEPEDA MATEUS\r\nNo responsable de IVA\r\nRegimen Simple','www.innovatech.com','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46'),(2,'Negocio SAS','Sede Av centenario',NULL,'Quindio','Armenia','Av centenario N 18','3169856621',NULL,'contabilidad@innovatech.com.co',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2434,7 +2479,7 @@ CREATE TABLE `ventas` (
   KEY `idfactura_idx` (`idfactura`),
   CONSTRAINT `idfactura` FOREIGN KEY (`idfactura`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idproducto` FOREIGN KEY (`idproducto`) REFERENCES `productos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2447,7 +2492,7 @@ LOCK TABLES `ventas` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'j2a2'
+-- Dumping routines for database 'j2a1'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -2459,4 +2504,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-10 14:06:04
+-- Dump completed on 2025-11-26  1:21:47

@@ -21,6 +21,7 @@ use App\Controllers\reportescontrolador;
 use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
+use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
@@ -74,6 +75,8 @@ $router->post('/admin/perfil', [dashboardcontrolador::class, 'perfil']);
 $router->post('/admin/actualizaremail', [dashboardcontrolador::class, 'actualizaremail']);
 ///// area de contabilidad /////
 $router->get('/admin/contabilidad', [contabilidadcontrolador::class, 'index']);
+///// area de nomina electronica /////
+$router->get('/admin/nominaelectronica', [nominaelectcontrolador::class, 'index']);
 ///// area de almacen categorias, productos, subproductos, compras etc /////
 $router->get('/admin/almacen', [almacencontrolador::class, 'index']);
 $router->get('/admin/almacen/categorias', [almacencontrolador::class, 'categorias']);
@@ -131,6 +134,7 @@ $router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'f
 $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);
 $router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class, 'inventarioxproducto']);
+$router->get('/admin/reportes/movimientosinventarios', [reportescontrolador::class, 'movimientosinventarios']);
 $router->get('/admin/reportes/compras', [reportescontrolador::class, 'compras']);
 $router->get('/admin/reportes/detallecompra', [reportescontrolador::class, 'detallecompra']);
 $router->get('/admin/reportes/utilidadxproducto', [reportescontrolador::class, 'utilidadxproducto']);
@@ -235,6 +239,11 @@ $router->get('/admin/api/alltarifas', [configcontrolador::class, 'alltarifas']);
 $router->post('/admin/api/crearTarifa', [configcontrolador::class, 'crearTarifa']); //api llamada desde gestiontarifas.ts para crear tarifas
 $router->post('/admin/api/actualizarTarifa', [configcontrolador::class, 'actualizarTarifa']); //api llamada desde gestiontarifas.ts para actualizar tarifas
 $router->post('/admin/api/eliminarTarifa', [configcontrolador::class, 'eliminarTarifa']); //api llamada desde gestiontarifas.ts para eliminar tarifas
+$router->get('/admin/api/allmediospago', [configcontrolador::class, 'allmediospago']); // me trae todos los medios de pago desde gestionmediospago.ts
+$router->post('/admin/api/crearMedioPago', [configcontrolador::class, 'crearMedioPago']); //api llamada desde gestionmediospago.ts para crear medios de pagos
+$router->post('/admin/api/actualizarMedioPago', [configcontrolador::class, 'actualizarMedioPago']); //api llamada desde gestionmediospago.ts para actualizar medios de pagos
+$router->post('/admin/api/eliminarMedioPago', [configcontrolador::class, 'eliminarMedioPago']); //api llamada desde gestionmediospago.ts para eliminar medios de pagos
+$router->post('/admin/api/updateStateMedioPago', [configcontrolador::class, 'updateStateMedioPago']); //api llamada desde gestionmediospago.ts para cambiar el estado de medio de pago
 $router->get('/admin/api/getAllemployee', [configcontrolador::class, 'getAllemployee']); //fetch en empleados.ts
 $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actualizarEmpleado']); //fetch llamado en empleados.ts
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.ts
@@ -251,6 +260,7 @@ $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifactu
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/movimientoInventario', [reportescontrolador::class, 'movimientoInventario']);  //fetch llamado desde movimientosinventarios.ts
 $router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportecompras.ts
 $router->post('/admin/api/eliminarcompra', [reportescontrolador::class, 'eliminarcompra']);  //fetch llamado desde reportecompras.ts
 $router->post('/admin/api/gastoseingresos', [reportescontrolador::class, 'apigastoseingresos']);  //fetch llamado desde gastosingresos.ts
@@ -271,7 +281,7 @@ $router->post('/admin/api/guardarResolutionJ2', [apidiancontrolador::class, 'gua
 $router->get('/admin/api/filterAdquirientes', [apidiancontrolador::class, 'filterAdquirientes']);  //obtener todos los adquiriente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guardarAdquiriente']);  // guardar adquiente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/sendInvoice', [apidiancontrolador::class, 'sendInvoice']);  // guardar adquiente, llamada desde ventas.sendinvoice.ts
-$router->get('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
+$router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
 
 
 

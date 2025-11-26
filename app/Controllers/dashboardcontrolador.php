@@ -11,6 +11,7 @@ use App\Models\caja\cierrescajas;
 use MVC\Router;
 use App\Models\configuraciones\usuarios;
 use App\Models\inventario\stockproductossucursal;
+use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
 //use ticketPOS;
@@ -36,6 +37,7 @@ class dashboardcontrolador{
         */
         //$pos = new ticketPOS();
         //$pos->generar();
+        
 
         if(!tienePermiso('Mostrar dashboard')&&userPerfil()>=3)return;
 
@@ -62,7 +64,7 @@ class dashboardcontrolador{
                 WHERE sps.stock <= sps.stockminimo AND sps.sucursalid = $idsucursal ORDER BY sps.stock ASC LIMIT 6;";
         $productosSotckMin = stockproductossucursal::camposJoinObj($sql);
 
-        $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'indicadoreseconomicos'=>$indicadoreseconomicos, 'cantidadesproductos'=>$cantidadesproductos, 'productosSotckMin'=>$productosSotckMin,  'user'=>$_SESSION]);
+        $router->render('admin/dashboard/index', ['titulo'=>'Inicio', 'indicadoreseconomicos'=>$indicadoreseconomicos, 'cantidadesproductos'=>$cantidadesproductos, 'productosSotckMin'=>$productosSotckMin, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function perfil(Router $router) {
@@ -94,7 +96,7 @@ class dashboardcontrolador{
             }
         }
         $usuario = usuarios::find('id', $_SESSION['id']);
-        $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function actualizaremail(Router $router) {
@@ -110,7 +112,7 @@ class dashboardcontrolador{
             }else{ $alertas['error'][] = "Hubo un error al actualizar el email"; }
         }
         $usuario = usuarios::find('id', $_SESSION['id']);
-        $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
     
 

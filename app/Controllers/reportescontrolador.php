@@ -2,6 +2,7 @@
 //$dias = facturacion::inner_join('SELECT COUNT(id) AS servicios, fecha_pago, SUM(total) AS totaldia FROM facturacion GROUP BY fecha_pago ORDER BY COUNT(id) DESC;');
 namespace App\Controllers;
 
+use App\Models\ActiveRecord;
 use App\Models\caja\cierrescajas;
 use App\Models\caja\ingresoscajas;
 use App\Models\compras;
@@ -14,6 +15,7 @@ use App\Models\inventario\proveedores;
 use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
+use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use MVC\Router;  //namespace\clase
  
@@ -25,7 +27,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/index', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/index', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     ///////////////////////// Reportes ///////////////////////////////////
@@ -35,7 +37,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function ventasxtransaccion(Router $router){
@@ -44,7 +46,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function vistaVentasxcliente(Router $router){
@@ -53,7 +55,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function facturaspagas(Router $router){
@@ -62,7 +64,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/facturaspagas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/facturaspagas', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
@@ -71,7 +73,7 @@ class reportescontrolador{
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
     
     public static function facturasanuladas(Router $router){
@@ -80,7 +82,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/facturasanuladas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/facturasanuladas', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function facturaselectronicas(Router $router){
@@ -89,7 +91,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/facturaselectronicas', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/facturaselectronicas', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     
@@ -99,7 +101,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function inventarioxproducto(Router $router){
@@ -117,7 +119,16 @@ class reportescontrolador{
                 WHERE sis.sucursalid = ".id_sucursal().";";  
         $subproductos = subproductos::camposJoinObj($sql);
 
-        $router->render('admin/reportes/inventario/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/inventarioxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'subproductos'=>$subproductos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function movimientosinventarios(Router $router){
+        session_start();
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+
+        $router->render('admin/reportes/inventario/movimientosinventarios', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function compras(Router $router){
@@ -126,7 +137,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function detallecompra(Router $router){
@@ -142,7 +153,7 @@ class reportescontrolador{
         $proveedor = proveedores::find('id', $compra->idproveedor);
         $caja = caja::find('id', $compra->idorigencaja);
         $detallecompra = detallecompra::idregistros('idcompra', $compra->id);
-        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'compra'=>$compra, 'usuario'=>$usuario, 'proveedor'=>$proveedor, 'caja'=>$caja, 'detallecompra'=>$detallecompra, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/inventario/detallecompra', ['titulo'=>'Reportes', 'compra'=>$compra, 'usuario'=>$usuario, 'proveedor'=>$proveedor, 'caja'=>$caja, 'detallecompra'=>$detallecompra, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function printDetalleCompra(Router $router){
@@ -157,7 +168,7 @@ class reportescontrolador{
         $id=$_GET['id'];
         if(!is_numeric($id))return;
 
-        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
@@ -167,7 +178,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
         $productos = productos::whereArray(['visible'=>1]);
-        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadxproducto', ['titulo'=>'Reportes', 'productos'=>$productos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function gastoseingresos(Router $router){
@@ -176,7 +187,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/utilidadgastoscrecimiento/gastoseingresos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/utilidadgastoscrecimiento/gastoseingresos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function clientesnuevos(Router $router){
@@ -185,7 +196,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/otros/clientesnuevos', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/otros/clientesnuevos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function clientesrecurrentes(Router $router){
@@ -194,7 +205,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/otros/clientesrecurrentes', ['titulo'=>'Reportes', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/otros/clientesrecurrentes', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
@@ -348,7 +359,7 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.identificacion, fe.nombre, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
+      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
               FROM facturas_electronicas fe 
               JOIN facturas f ON fe.id_facturaid = f.id
               JOIN adquirientes a ON fe.id_adquiriente = a.id
@@ -374,6 +385,37 @@ class reportescontrolador{
               WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 AND f.id_sucursal = $idsucursal
               ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+  //Reporte movimiento de inventarios  llamada desde movimientosinventarios.ts
+  public static function movimientoInventario(){
+    session_start();
+    isadmin();
+    $datos = [];
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $tipo = $_POST['tipo'];
+    $iditem = $_POST['iditem'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      if($tipo == 0){ //productos
+        $sql = "SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,
+                p.id as iditem, p.nombre, p.unidadmedida, CONCAT(u.nombre,' ',u.apellido) as usuario
+                FROM movimientos_productos m
+                JOIN productos p ON m.idproducto_id = p.id
+                JOIN usuarios u ON m.id_usuarioid = u.id
+                WHERE m.created_at BETWEEN '$fechainicio' AND '$fechafin' AND idproducto_id = $iditem AND idfksucursal = $idsucursal ORDER BY m.created_at DESC;";
+      }else{  //subproductos - insumos
+        $sql = "SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,
+                s.id as iditem, s.nombre, s.unidadmedida, CONCAT(u.nombre,' ',u.apellido) as usuario
+                FROM movimientos_insumos m
+                JOIN subproductos s ON m.id_subproductoid = s.id
+                JOIN usuarios u ON m.idusuario_id = u.id
+                WHERE m.created_at BETWEEN '$fechainicio' AND '$fechafin' AND id_subproductoid = $iditem AND fksucursal_id = $idsucursal ORDER BY m.created_at DESC;";
+      }
+      $datos = ActiveRecord::camposJoinObj($sql);
     }
     echo json_encode($datos);
   }

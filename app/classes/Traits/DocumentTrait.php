@@ -11,8 +11,8 @@ use stdClass;
 trait DocumentTrait
 {
 
-    //metodo llamado desde ventascontrolador para guar la FE de manera local
-    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, array $mediospago, int $descgeneral):bool
+    //metodo llamado desde ventascontrolador cuando se hace la venta, para guardar la FE de manera local
+    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, int $descgeneral):bool
     {
         $invoice_lines = [];
         $tax_summary = []; // para agrupar impuestos
@@ -126,7 +126,7 @@ trait DocumentTrait
             // Armar la factura final
             $factura = [
                 "prefix" => $consecutivo->prefijo,
-                "number" => $consecutivo->siguientevalor, 
+                "number" => $numconsecutivo, 
                 "type_document_id" => "1",
                 "date" => date('Y-m-d'),
                 "time" => date('H:i:s'),
@@ -154,18 +154,19 @@ trait DocumentTrait
             //guardar en tabla facturas_electronicas
             $facturasElectronicas = new facturas_electronicas([
                 'id_sucursalidfk'=>id_sucursal(),
-                'id_estadoelectronica'=>1,
+                'id_estadoelectronica'=>1, //pendiente
                 'consecutivo_id'=>$consecutivo->id,
                 'id_facturaid'=>$idfactura,  //id del pedido o orden generado en la tabla factura
                 'id_adquiriente'=>$datosAdquiriente->id??1,
                 'id_estadonota'=>1,
-                'numero'=>$consecutivo->siguientevalor,
-                'num_factura'=>$consecutivo->prefijo.'-'.$consecutivo->siguientevalor,
+                'numero'=>$numconsecutivo,
+                'num_factura'=>$consecutivo->prefijo.'-'.$numconsecutivo,
                 'prefijo'=>$consecutivo->prefijo,
                 'resolucion'=>$consecutivo->resolucion,
                 'token_electronica'=>$compañia->token,  //token de la compañia
                 'cufe'=>'',
                 'qr'=>'',
+                'nitcompany'=>$compañia->identification_number,
                 'fecha_factura'=>date('Y-m-d H:i:s'),  //fecha de recepcion por la Dian
                 'identificacion'=>$customer['identification_number'],
                 'nombre'=>$customer['name'],
@@ -191,7 +192,7 @@ trait DocumentTrait
     } //fin metodo crear factura electronica
 
 
-    protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha):string
+    protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha, $resolInvoiceNc):string
     {
         $billing_reference = [
             "number" => "$prefix$number", //"FE2082",
@@ -210,8 +211,8 @@ trait DocumentTrait
             "discrepancyresponsecode" => 2,
             "discrepancyresponsedescription" => "Nota credito total a factura",
             "notes" => "Nota credito",
-            "prefix" => 'NCaz',
-            "number" => 1, 
+            "prefix" => $resolInvoiceNc->prefix,   //variable resol nc esta en la api
+            "number" => $resolInvoiceNc->nextnumber,        //variable resol nc esta en la api
             "type_document_id" => 4,
             "date" => date('Y-m-d'),   //fecha actual de la generacion de la NC
             "time" => date('H:i:s'),
@@ -246,18 +247,23 @@ trait DocumentTrait
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonenvio);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+         // SOLUCIÓN TEMPORAL - Solo desarrollo
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         $response = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         // Verificar si hubo error de cURL
         if($response === false || curl_errno($ch)){
             $error = curl_error($ch);
+            $errno = curl_errno($ch);
             curl_close($ch);
-            return ['success' => false, 'error' => "Error de conexión: $error"];
+            return ['success' => false, 'error' => "Error de conexión: ($errno): $error"];
         }
         curl_close($ch);
+        
         $decoded = json_decode($response, true);
-        if($httpcode >= 200 && $httpcode < 300)return [ 'success' => true, 'status' => $httpcode, 'res' => $decoded, ];
+        if($httpcode >= 200 && $httpcode < 300)return [ 'success' => true, 'status' => $httpcode, 'response' => $decoded, ];
         
         // Error HTTP
         return [

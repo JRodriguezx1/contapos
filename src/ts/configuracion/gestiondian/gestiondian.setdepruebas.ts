@@ -94,7 +94,7 @@
                                               body: JSON.stringify(factura)
                                             });
         const resultado = await respuesta.json();
-        modoproduccion();
+        modoproduccion(token);
         miDialogosetpruebas.close();
         document.removeEventListener("click", POS.cerrarDialogoExterno);
         return resultado.success;
@@ -105,7 +105,25 @@
     });
 
     ///////    ENVIOREMNET MODO PRUEBAS - PRODUCCION    ///////
-    function modoproduccion(){
+    async function modoproduccion(token?:string){
+      try {
+        const url = "https://apidianj2.com/api/ubl2.1/config/environment"; //llamado a la API REST Dian-laravel
+        const respuesta = await fetch(url, {
+                                              method: 'PUT',
+                                              headers: {
+                                                "Accept": "application/json",
+                                                "Content-Type": "application/json",
+                                                "Authorization": "Bearer "+token
+                                              },
+                                              body: JSON.stringify({"type_environment_id": 1, "payroll_type_environment_id": 2})
+                                            });
+        const resultado = await respuesta.json();
+        msjalertToast('success', '¡Éxito!', 'Modo de producción activado correctamente.');
+        return resultado.success;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
 
     }
 
