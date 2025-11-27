@@ -37,7 +37,7 @@
             const respuesta = await fetch(url, {
                 method: 'POST', 
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                body: JSON.stringify({id: idfe, consecutivo}) 
+                body: JSON.stringify({id: idfe, consecutivo})  //si consecutivo es vacio '', es siguiente consecutivo
             });
             
             const responseDian = await respuesta.json(); 

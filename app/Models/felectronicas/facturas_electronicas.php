@@ -4,7 +4,7 @@ namespace App\Models\felectronicas;
 
 class facturas_electronicas extends \App\Models\ActiveRecord{
     protected static $tabla = 'facturas_electronicas';
-    protected static $columnasDB = ['id', 'id_sucursalidfk', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'filename', 'nitcompany', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'num_nota', 'cufe_nota', 'fecha_nota', 'is_auto', 'json_envio', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
+    protected static $columnasDB = ['id', 'id_sucursalidfk', 'id_estadoelectronica', 'consecutivo_id', 'id_facturaid', 'id_adquiriente', 'id_estadonota', 'numero', 'num_factura', 'prefijo', 'resolucion', 'token_electronica', 'cufe', 'qr', 'filename', 'nitcompany', 'fecha_factura', 'identificacion', 'nombre', 'email', 'link', 'nota_credito', 'prefixnc', 'num_nota', 'cufe_nota', 'qrnc', 'linknc', 'filenamenc', 'fecha_nota', 'is_auto', 'json_envio', 'json_envionc', 'respuesta_factura', 'respuesta_nota', 'intentos_de_envio', 'fecha_ultimo_intento'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -29,11 +29,16 @@ class facturas_electronicas extends \App\Models\ActiveRecord{
         $this->email = $args['email']??'';
         $this->link = $args['link']??'';
         $this->nota_credito = $args['nota_credito']??'';
+        $this->prefixnc = $args['prefixnc']??'';
         $this->num_nota = $args['num_nota']??'';
         $this->cufe_nota = $args['cufe_nota']??'';
+        $this->qrnc = $args['qrnc']??'';
+        $this->linknc = $args['linknc']??'';
+        $this->filenamenc = $args['filenamenc']??'';
         $this->fecha_nota = $args['fecha_nota']??'';
         $this->is_auto = $args['is_auto']??'';
         $this->json_envio = $args['json_envio']??'';
+        $this->json_envionc = $args['json_envionc']??'';
         $this->respuesta_factura = $args['respuesta_factura']??'';
         $this->respuesta_nota = $args['respuesta_nota']??'';
         $this->intentos_de_envio = $args['intentos_de_envio']??'';
