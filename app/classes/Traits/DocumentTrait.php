@@ -102,6 +102,8 @@ trait DocumentTrait
                 ];
             }, $tax_summary));
 
+            //CARGO GENERAL ADICIONAL
+
             //DESCUENTO GENERAL
             $allowance_charges = [
                 [
