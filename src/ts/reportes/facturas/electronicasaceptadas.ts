@@ -178,8 +178,8 @@
                             orderable: false, 
                             searchable: false, 
                             render: (data: any, type: any, row: any) => {return `
-                                                                                <a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-red-600"></i></a> 
-                                                                                ${row.nota_credito == 1?'<a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-blue-400"></i></a>':''}`
+                                                                                <a class="mr-4 text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-red-600"></i></a>` 
+                                                                                +(row.nota_credito == 1?` <a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filenamenc}"><i class="fa-solid fa-file-pdf text-blue-400"></i></a>`:'')
                                                                         }
                         }, 
                     ],
