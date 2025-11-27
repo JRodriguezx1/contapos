@@ -15,7 +15,7 @@
         }
 
 
-        public function generar($sucursal, $factura, $cliente, $direccion, $productos=[]){
+        public function generar($sucursal, $factura, $facturaElectronica, $cliente, $direccion, $productos=[]){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -33,6 +33,9 @@
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(5);
+
+            //////////  FACTURA ELECTRONICA  ///////////
+
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Fecha: ".$factura->fechapago),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
@@ -54,6 +57,8 @@
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(3);
+
+            ////////////  ADQUIRIENTE  ////////////
 
             # Tabla de productos #
             $this->pdf->SetFont('Arial','B',10);
@@ -136,6 +141,8 @@
             $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
 
             $this->pdf->Ln(10);
+
+            //////////////  RESOLUCION  ////////////
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","*** Precios de productos incluyen impuestos. Para poder realizar un reclamo o devolución debe de presentar este ticket ***"),0,'C',false);
 

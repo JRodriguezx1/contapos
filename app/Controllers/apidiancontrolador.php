@@ -335,7 +335,7 @@ class apidiancontrolador{
       }else{  //siguiente consecutivo automatico
         $resolInvoiceNc->nextnumber += 1;
       }
-      if($facturaDian&&$facturaDian->id_estadoelectronica == 2){ //la factura electronica debe estar en estado aceptado por la Dian 
+      if($facturaDian&&$facturaDian->id_estadoelectronica == 2&&$facturaDian->nota_credito==0){ //la factura electronica debe estar en estado aceptado por la Dian 
         $jsonenvio = json_decode($facturaDian->json_envio);
         //debuguear($jsonenvio);
         $jsonNcDian = self::createNcElectronic($jsonenvio, $facturaDian->numero, $facturaDian->prefijo, $facturaDian->cufe, $facturaDian->fecha_factura, $resolInvoiceNc);

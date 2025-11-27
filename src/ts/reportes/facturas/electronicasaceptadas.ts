@@ -159,7 +159,15 @@
                         }, 
                         {title: 'Identificacion', data: 'identificacion'}, 
                         {title: 'Nombre', data: 'nombre'}, 
-                        {title: 'Tipo venta', data: 'tipoventa'}, 
+                        {title: 'Tipo venta', data: 'tipoventa'},
+                        {title: 'Prefijo NC', data: 'prefixnc'},
+                        {title: 'Nun NC', data: 'num_nota'},
+                        {title: 'Abrir NC',
+                                data: null, 
+                                orderable: false, 
+                                searchable: false, 
+                                render: (data: any, type: any, row: any) => {return row.nota_credito == 1?`<a class="btn-ver btn-xs btn-orange" target="_blank" href="${row.linknc}">Abrir NC</a>`:''}
+                        },
                         {title: 'Base', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                         {title: 'Valor imp', data: 'valorimpuestototal', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                         {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
@@ -169,7 +177,10 @@
                             data: null, 
                             orderable: false, 
                             searchable: false, 
-                            render: (data: any, type: any, row: any) => {return `<a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-red-600"></i></a>`}
+                            render: (data: any, type: any, row: any) => {return `
+                                                                                <a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-red-600"></i></a> 
+                                                                                ${row.nota_credito == 1?'<a class=" text-3xl" target="_blank" href="https://apidianj2.com/j2softwarepos/download/${row.filename}"><i class="fa-solid fa-file-pdf text-blue-400"></i></a>':''}`
+                                                                        }
                         }, 
                     ],
             pageLength: 25,
