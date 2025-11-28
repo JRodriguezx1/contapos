@@ -1,7 +1,9 @@
 (()=>{
   if(document.querySelector('.productos')){
     const crearProducto = document.querySelector('#crearProducto');
+    const btnUploadExcel = document.querySelector('#btnUploadExcel');
     const miDialogoProducto = document.querySelector('#miDialogoProducto') as any;
+    const miDialogoImportarExcel = document.querySelector('#miDialogoImportarExcel') as any;
     const btnXCerrarModalproducto = document.querySelector('#btnXCerrarModalproducto') as HTMLButtonElement;
     const inputupImage = document.querySelector('#upImage') as HTMLInputElement;  //input para cargar el archivo imagen
     const btncustomUpImage = document.querySelector('#customUpImage');
@@ -100,6 +102,12 @@
           console.log(clone);
         });
     }
+
+
+    btnUploadExcel?.addEventListener('click', ()=>{
+      miDialogoImportarExcel.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+    });
 
 
     //////////////////  TABLA //////////////////////
@@ -339,8 +347,9 @@
       imginputfile.src = '';
     }
     function cerrarDialogoExterno(event:Event) {
-      if (/*event.target === miDialogoProducto ||*/ (event.target as HTMLInputElement).value === 'salir') {
+      if (event.target === miDialogoImportarExcel || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
         miDialogoProducto.close();
+        miDialogoImportarExcel.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

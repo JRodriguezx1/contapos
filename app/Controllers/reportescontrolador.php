@@ -383,7 +383,7 @@ class reportescontrolador{
               FROM facturas_electronicas fe 
               JOIN facturas f ON fe.id_facturaid = f.id
               JOIN adquirientes a ON fe.id_adquiriente = a.id
-              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 AND f.id_sucursal = $idsucursal
+              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 OR fe.id_estadoelectronica = 3 AND f.id_sucursal = $idsucursal
               ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
     }

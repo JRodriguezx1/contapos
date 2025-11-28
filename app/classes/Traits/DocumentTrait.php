@@ -48,6 +48,7 @@ trait DocumentTrait
                 "municipality_id" => $datosAdquiriente->municipality_id??null
             ];
 
+
             foreach($carrito as $index => $value){
                 $invoice_lines[$index] = [
                     "type_item_identification_id" => "4", // tipo estándar
@@ -55,9 +56,9 @@ trait DocumentTrait
                     "description" => $value->nombreproducto,
                     "invoiced_quantity" => strval($value->cantidad),
                     "unit_measure_id" => "70", // unidad por defecto: unidad
-                    "line_extension_amount" => number_format($value->base*$value->cantidad, 2, '.', ''),
+                    "line_extension_amount" => number_format($value->base, 2, '.', ''),
                     "free_of_charge_indicator" => false,
-                    "price_amount" => number_format($value->base, 2, '.', ''),
+                    "price_amount" => number_format($value->base/$value->cantidad, 2, '.', ''),
                     "base_quantity" => strval($value->cantidad)
                 ];
 
