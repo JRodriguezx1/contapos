@@ -502,7 +502,7 @@ class almacencontrolador{
         // Validar extensión
         $extensiones_permitidas = ['xlsx', 'xls', 'csv'];
         if(in_array($extension, $extensiones_permitidas)){
-          inventarioService::importarExcel($url_temp);
+          $alertas = inventarioService::importarExcel($url_temp);
         }else{
           $alertas['error'][] = "Extension del archivo no valido";
         }
