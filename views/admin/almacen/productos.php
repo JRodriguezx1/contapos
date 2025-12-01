@@ -254,6 +254,13 @@
             </div> 
           </div>
 
+          <div class="sm:col-span-3">
+              <a class="btn-md btn-lima" href="/admin/descarga/plantillaimportarproductos" target="_blank" rel="noopener noreferrer">Descargar plantilla</a> 
+          </div>
+          <div class="sm:col-span-3">
+              <a class="btn-md btn-blue" href="/admin/descarga/instruccionesimportarproductos" target="_blank" rel="noopener noreferrer">Instrucciones</a>
+          </div>
+
         </div>
 
       </div>

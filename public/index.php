@@ -15,6 +15,7 @@ use App\Controllers\dashboardcontrolador;
 use App\Controllers\contabilidadcontrolador;
 use App\Controllers\almacencontrolador;
 use App\Controllers\apidiancontrolador;
+use App\Controllers\archivocontroller;
 use App\Controllers\cajacontrolador;
 use App\Controllers\ventascontrolador;
 use App\Controllers\reportescontrolador;
@@ -154,12 +155,13 @@ $router->get('/admin/clientes/detalle', [clientescontrolador::class, 'detalle'])
 $router->get('/admin/clientes/hab_desh', [clientescontrolador::class, 'hab_desh']); //habilitar deshabilitar cliente
 ///// direcciones de los clientes /////
 $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear']);  //crear direccion en vista de clientes
-
 ///// area de configuracion /////
 $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
 $router->post('/admin/configuracion/editarnegocio', [configcontrolador::class, 'editarnegocio']);
 $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 'crear_empleado']);
-
+//// Descargas /////
+$router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
+$router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
 
 
 /////////////////////////////////////--   API'S   --////////////////////////////////////////
