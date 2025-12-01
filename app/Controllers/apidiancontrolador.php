@@ -384,6 +384,7 @@ class apidiancontrolador{
           $facturaDian->fecha_nota = date('Y-m-d H:i:s');
           $facturaDian->json_envionc = $jsonNcDian;
           $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+          debuguear($mensaje);
           $facturaDian->respuesta_nota = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
           $r = $facturaDian->actualizar();
           $alertas['error'][] = "Error al generar nota credito. $facturaDian->respuesta_factura";
