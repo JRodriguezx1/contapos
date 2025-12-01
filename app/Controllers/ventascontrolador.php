@@ -20,6 +20,7 @@ use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\tipofacturador;
 use App\Models\factimpuestos;
+use App\Models\felectronicas\adquirientes;
 use App\Models\impuestos;
 use App\Models\parametrizacion\config_local;
 use App\Models\inventario\productos_sub;
@@ -463,6 +464,8 @@ class ventascontrolador{
     $productos = ventas::idregistros('idfactura', $factura->id);
     $mediospago = json_decode($_POST['mediosPago']);
     //$datosAdquiriente = json_decode($_POST['datosAdquiriente']);
+    $datosAdquiriente = json_decode(json_encode(adquirientes::find('id', 1)));  //convierte el objeto de la clase adquitiente a stdclass
+    debuguear($datosAdquiriente);
     $factmediospago = new factmediospago();
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
@@ -531,7 +534,7 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
-              //$fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1]);  //llamada al trait para crear el json y guardar la FE en DB
+              $fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               $getDB->commit();
             } catch (\Throwable $th) {

@@ -9,6 +9,7 @@ use App\Models\configuraciones\mediospago;
 use App\Models\caja\factmediospago;
 use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
+use App\Models\configuraciones\consecutivos;
 use App\Models\ventas\facturas;
 use App\Models\configuraciones\negocio;
 use App\Models\ventas\ventas;
@@ -28,6 +29,8 @@ class printcontrolador{
     $sucursal = sucursales::find('id', id_sucursal());
     $factura = facturas::find('id', $id);
     $facturaElectronica = facturas_electronicas::find('id_facturaid', $factura->id);
+    if($facturaElectronica)$facturaElectronica->consecutivo = consecutivos::find('id', $facturaElectronica->consecutivo_id);
+    //debuguear($facturaElectronica);
     $cliente = clientes::find('id', $factura->idcliente);
     $direccion = direcciones::find('id', $factura->iddireccion);
     if(!$direccion)$direccion = direcciones::find('id', 1);
