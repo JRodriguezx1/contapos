@@ -330,17 +330,15 @@ class apidiancontrolador{
       //obtener resolucion de NC de la factura electronica, esta en la api y proximamente local
       $resolInvoiceNc = notacreditoinvoice::find('id_compania', $companyExist->id);
       
-      if($datos['consecutivo']!=''&&is_numeric($datos['consecutivo'])){ //consecutivo personalizado
+      if($datos['consecutivo']!=''&&is_numeric($datos['consecutivo'])) //consecutivo personalizado
         $resolInvoiceNc->nextnumber = $datos['consecutivo'];
-      }else{  //siguiente consecutivo automatico
-        $resolInvoiceNc->nextnumber += 1;
-      }
+     
       if($facturaDian&&$facturaDian->id_estadoelectronica == 2&&$facturaDian->nota_credito==0){ //la factura electronica debe estar en estado aceptado por la Dian 
         $jsonenvio = json_decode($facturaDian->json_envio);
         //debuguear($jsonenvio);
         $jsonNcDian = self::createNcElectronic($jsonenvio, $facturaDian->numero, $facturaDian->prefijo, $facturaDian->cufe, $facturaDian->fecha_factura, $resolInvoiceNc);
         $res = self::sendInvoiceDian($jsonNcDian, $url, $facturaDian->token_electronica);
-
+        //debuguear($mensaje);
         if(!$res['success']){
           $alertas['error'][] = $res['error'];
           //...
@@ -366,6 +364,9 @@ class apidiancontrolador{
             $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
             $facturaDian->respuesta_nota = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
             $r = $facturaDian->actualizar();
+            $resolInvoiceNc->nextnumber += 1;
+            if($datos['consecutivo']!=''&&is_numeric($datos['consecutivo'])) //consecutivo personalizado
+            $resolInvoiceNc->nextnumber = $datos['consecutivo'];
             $resolInvoiceNc->actualizar();
             $alertas['exito'][] = "Nota credito procesadamente exitosamente.";
             $getDB->commit();
@@ -387,6 +388,10 @@ class apidiancontrolador{
           debuguear($mensaje);
           $facturaDian->respuesta_nota = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
           $r = $facturaDian->actualizar();
+          $resolInvoiceNc->nextnumber += 1;
+          if($datos['consecutivo']!=''&&is_numeric($datos['consecutivo'])) //consecutivo personalizado
+          $resolInvoiceNc->nextnumber = $datos['consecutivo'];
+          $resolInvoiceNc->actualizar();
           $alertas['error'][] = "Error al generar nota credito. $facturaDian->respuesta_factura";
           echo json_encode($alertas);
         }
