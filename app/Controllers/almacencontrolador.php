@@ -222,9 +222,14 @@ class almacencontrolador{
       }
     }
     $categorias = categorias::all();
-    $productos = productos::all();
     $unidadesmedida = unidadesmedida::all();
-    foreach($productos as $value)$value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+    //$productos = productos::all();
+    //foreach($productos as $value)$value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
+    foreach($productos as $value){
+      $value->id = $value->ID;
+      $value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+    }
     $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'sucursales'=>$sucursales, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
