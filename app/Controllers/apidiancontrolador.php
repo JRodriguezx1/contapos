@@ -338,7 +338,7 @@ class apidiancontrolador{
         //debuguear($jsonenvio);
         $jsonNcDian = self::createNcElectronic($jsonenvio, $facturaDian->numero, $facturaDian->prefijo, $facturaDian->cufe, $facturaDian->fecha_factura, $resolInvoiceNc);
         $res = self::sendInvoiceDian($jsonNcDian, $url, $facturaDian->token_electronica);
-        //debuguear($mensaje);
+        debuguear($res);
         if(!$res['success']){
           $alertas['error'][] = $res['error'];
           //...
