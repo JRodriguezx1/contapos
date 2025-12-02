@@ -1156,6 +1156,7 @@ CREATE TABLE `facturas_electronicas` (
   KEY `id_sucursalfk_idx` (`id_sucursalidfk`),
   KEY `numero` (`numero`) /*!80000 INVISIBLE */,
   KEY `num_nota` (`num_nota`) /*!80000 INVISIBLE */,
+  KEY `idx_created_at` (`created_at`),
   CONSTRAINT `consecutivo_id` FOREIGN KEY (`consecutivo_id`) REFERENCES `consecutivos` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_adquiriente` FOREIGN KEY (`id_adquiriente`) REFERENCES `adquirientes` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_estadoelectronica` FOREIGN KEY (`id_estadoelectronica`) REFERENCES `estados_electronicas` (`id`) ON UPDATE CASCADE,
@@ -1744,8 +1745,8 @@ CREATE TABLE `notacreditoinvoice` (
   `nextnumber` int DEFAULT NULL,
   `resolution_date` date DEFAULT NULL,
   `technical_key` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
-  `from` int DEFAULT NULL,
-  `to` int DEFAULT NULL,
+  `fromNC` int DEFAULT NULL,
+  `toNC` int DEFAULT NULL,
   `date_from` date DEFAULT NULL,
   `date_to` date DEFAULT NULL,
   `estado` tinyint(1) NOT NULL,
@@ -2512,4 +2513,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-30 19:10:39
+-- Dump completed on 2025-12-02  0:28:55

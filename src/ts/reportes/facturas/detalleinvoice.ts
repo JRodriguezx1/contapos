@@ -32,6 +32,8 @@
         e.preventDefault();
         const idfe = (document.querySelector('#idfe') as HTMLInputElement).value;
         const consecutivo = (document.querySelector('#consecutivoPersonalizado') as HTMLInputElement).value;
+        miDialogoNC.close();
+        document.removeEventListener("click", cerrarDialogoExterno);
         try {
             const url = "/admin/api/sendNc"; //llamado a la API REST apidiancontrolador.php
             const respuesta = await fetch(url, {
@@ -42,6 +44,7 @@
             
             const responseDian = await respuesta.json(); 
             console.log(responseDian);
+            msjalertToast('success', '¡Éxito!', responseDian.exito[0]);
             return responseDian;
         } catch (error) {
             console.log(error);

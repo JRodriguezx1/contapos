@@ -14,6 +14,7 @@ trait DocumentTrait
     //metodo llamado desde ventascontrolador cuando se hace la venta, para guardar la FE de manera local
     protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, float $descgeneral, float $cargo):bool
     {
+        date_default_timezone_set('America/Bogota');
         $invoice_lines = [];
         $tax_summary = []; // para agrupar impuestos
         $line_extension_total = 0;
@@ -204,6 +205,7 @@ trait DocumentTrait
 
     protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha, $resolInvoiceNc):string
     {
+        date_default_timezone_set('America/Bogota');
         $billing_reference = [
             "number" => "$prefix$number", //"FE2082",
             "uuid" => $cufe,
