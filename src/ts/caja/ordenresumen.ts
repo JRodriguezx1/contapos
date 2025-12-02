@@ -1,6 +1,6 @@
 (():void=>{
     if(document.querySelector('.ordenresumen')){
-
+      const POS = (window as any).POS;
       const miDialogoFacturar:any = document.querySelector("#miDialogoFacturar");
       const miDialogoEliminarOrden = document.querySelector('#miDialogoEliminarOrden') as any;
       const btnfacturar = document.querySelector<HTMLButtonElement>("#btnfacturar");
@@ -100,7 +100,7 @@
       });
 
 
-      enviarEmail.addEventListener('click', ()=>{
+      enviarEmail?.addEventListener('click', ()=>{
         miDialogoEnviarEmailCliente.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       });
@@ -217,7 +217,7 @@
 
 
       ////////////////// evento al bton pagar del modal facturar //////////////////////
-      document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
+      document.querySelector('#formfacturarCotizacion')?.addEventListener('submit', e=>{
         e.preventDefault();
         procesarpedido('Guardado');
       });
@@ -256,6 +256,7 @@
         //datos.append('ciudad', (document.querySelector('#ciudadEntrega') as HTMLInputElement).value);
         //datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
         //datos.append('valortarifa', valorTotal.valortarifa+'');
+        //datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
         //datos.append('opc1', '');
         //datos.append('opc2', '');
         try {
@@ -266,16 +267,20 @@
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               /////// reinciar modulo de ventas
-              if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
               ordenpagada();
+              miDialogoFacturar.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
+              if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
+              if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
+              const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
+              console.log(resDian);
+            }
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
         } catch (error) {
             console.log(error);
         }
-        miDialogoFacturar.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
       }
   
       function printTicketPOS(idfactura:string){

@@ -12,7 +12,7 @@ trait DocumentTrait
 {
 
     //metodo llamado desde ventascontrolador cuando se hace la venta, para guardar la FE de manera local
-    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, int $descgeneral):bool
+    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, float $descgeneral, float $cargo):bool
     {
         $invoice_lines = [];
         $tax_summary = []; // para agrupar impuestos
@@ -48,6 +48,7 @@ trait DocumentTrait
                 "municipality_id" => $datosAdquiriente->municipality_id??null
             ];
 
+
             foreach($carrito as $index => $value){
                 $invoice_lines[$index] = [
                     "type_item_identification_id" => "4", // tipo estándar
@@ -55,9 +56,9 @@ trait DocumentTrait
                     "description" => $value->nombreproducto,
                     "invoiced_quantity" => strval($value->cantidad),
                     "unit_measure_id" => "70", // unidad por defecto: unidad
-                    "line_extension_amount" => number_format($value->base*$value->cantidad, 2, '.', ''),
+                    "line_extension_amount" => number_format($value->base, 2, '.', ''),
                     "free_of_charge_indicator" => false,
-                    "price_amount" => number_format($value->base, 2, '.', ''),
+                    "price_amount" => number_format($value->base/$value->cantidad, 2, '.', ''),
                     "base_quantity" => strval($value->cantidad)
                 ];
 
@@ -102,16 +103,25 @@ trait DocumentTrait
                 ];
             }, $tax_summary));
 
-            //DESCUENTO GENERAL
-            $allowance_charges = [
-                [
-                    "discount_id" => 1,
-                    "charge_indicator" => false,
-                    "allowance_charge_reason" => "DESCUENTO GENERAL",
-                    "amount" => number_format($descgeneral, 2, '.', ''),
-                    "base_amount"  => number_format($tax_inclusive_total, 2, '.', '')
-                ]
+            //CARGO GENERAL ADICIONAL
+            $cargos = [
+                "charge_id" => 1,
+                "charge_indicator" => true,
+                "allowance_charge_reason" => "CARGO GENERAL ADICIONAL",
+                "amount" => number_format($cargo, 2, '.', ''),
+                "base_amount"  => number_format($tax_inclusive_total, 2, '.', '')                
             ];
+            //DESCUENTO GENERAL
+            $descuentos = [
+                "discount_id" => 1,
+                "charge_indicator" => false,
+                "allowance_charge_reason" => "DESCUENTO GENERAL",
+                "amount" => number_format($descgeneral, 2, '.', ''),
+                "base_amount"  => number_format($tax_inclusive_total, 2, '.', '')                
+            ];
+            $allowance_charges = [];
+            if($cargo>0)$allowance_charges[] = $cargos;
+            if($descgeneral>0) $allowance_charges[] = $descuentos;
 
             // Totales monetarios
             $legal_monetary_totals = [
@@ -119,8 +129,8 @@ trait DocumentTrait
                 "tax_exclusive_amount" => number_format($line_extension_total, 2, '.', ''),  //sin impuesto
                 "tax_inclusive_amount" => number_format($tax_inclusive_total, 2, '.', ''),  //con impuesto
                 "allowance_total_amount" => number_format($descgeneral, 2, '.', ''),
-                "charge_total_amount" => "0.00",
-                "payable_amount" => number_format($tax_inclusive_total-$descgeneral, 2, '.', '')
+                "charge_total_amount" => number_format($cargo, 2, '.', ''),
+                "payable_amount" => number_format($tax_inclusive_total+$cargo-$descgeneral, 2, '.', '')
             ];
 
             // Armar la factura final
@@ -146,7 +156,7 @@ trait DocumentTrait
                 "legal_monetary_totals" => $legal_monetary_totals
             ];
 
-            if($descgeneral>0)$factura["allowance_charges"] = $allowance_charges;
+            if($descgeneral>0 || $cargo>0)$factura["allowance_charges"] = $allowance_charges;
 
 
             // generar json de la factura Dian

@@ -27,6 +27,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\traslado_inv;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
+use App\services\inventarioService;
 use App\services\stockService;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -480,6 +481,34 @@ class almacencontrolador{
     }
   }
 
+
+  public static function uploadExcel(Router $router){
+    session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    $categorias = categorias::all();
+    $unidadesmedida = unidadesmedida::all();
+    $producto = new productos;
+
+    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
+    foreach($productos as $value){
+      $value->id = $value->ID;
+      $value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
+    }
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && $_FILES['archivoexcel']['name']){ //para importar productos desde excel
+        $url_temp = $_FILES["archivoexcel"]["tmp_name"];
+        $extension = strtolower(pathinfo($_FILES['archivoexcel']['name'], PATHINFO_EXTENSION));
+        // Validar extensión
+        $extensiones_permitidas = ['xlsx', 'xls', 'csv'];
+        if(in_array($extension, $extensiones_permitidas)){
+          $alertas = inventarioService::importarExcel($url_temp);
+        }else{
+          $alertas['error'][] = "Extension del archivo no valido";
+        }
+    }
+    $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
 
   public static function downexcelinsumos(Router $router){
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos

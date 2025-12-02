@@ -359,11 +359,12 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
-              FROM facturas_electronicas fe 
+      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link,
+      fe.nota_credito, fe.prefixnc, fe.num_nota, fe.linknc, fe.filenamenc, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
+              FROM facturas_electronicas fe
               JOIN facturas f ON fe.id_facturaid = f.id
               JOIN adquirientes a ON fe.id_adquiriente = a.id
-              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 2 AND f.id_sucursal = $idsucursal
+              WHERE fe.created_at >= '$fechainicio' AND fe.created_at < DATE_ADD('$fechafin', INTERVAL 1 DAY) AND fe.id_estadoelectronica = 2 AND f.id_sucursal = $idsucursal
               ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
     }
@@ -382,7 +383,7 @@ class reportescontrolador{
               FROM facturas_electronicas fe 
               JOIN facturas f ON fe.id_facturaid = f.id
               JOIN adquirientes a ON fe.id_adquiriente = a.id
-              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 AND f.id_sucursal = $idsucursal
+              WHERE fe.created_at BETWEEN '$fechainicio' AND '$fechafin' AND fe.id_estadoelectronica = 1 OR fe.id_estadoelectronica = 3 AND f.id_sucursal = $idsucursal
               ORDER BY fe.created_at;";
       $datos = productos::camposJoinObj($sql);
     }

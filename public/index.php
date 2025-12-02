@@ -15,6 +15,7 @@ use App\Controllers\dashboardcontrolador;
 use App\Controllers\contabilidadcontrolador;
 use App\Controllers\almacencontrolador;
 use App\Controllers\apidiancontrolador;
+use App\Controllers\archivocontroller;
 use App\Controllers\cajacontrolador;
 use App\Controllers\ventascontrolador;
 use App\Controllers\reportescontrolador;
@@ -95,6 +96,7 @@ $router->post('/admin/almacen/unidadesmedida', [almacencontrolador::class, 'unid
 $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, 'crear_unidadmedida']);
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
 $router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
+$router->post('/admin/almacen/uploadExcel', [almacencontrolador::class, 'uploadExcel']);
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 ////// area de traslados de inventario  //////
 $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
@@ -153,12 +155,13 @@ $router->get('/admin/clientes/detalle', [clientescontrolador::class, 'detalle'])
 $router->get('/admin/clientes/hab_desh', [clientescontrolador::class, 'hab_desh']); //habilitar deshabilitar cliente
 ///// direcciones de los clientes /////
 $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear']);  //crear direccion en vista de clientes
-
 ///// area de configuracion /////
 $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
 $router->post('/admin/configuracion/editarnegocio', [configcontrolador::class, 'editarnegocio']);
 $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 'crear_empleado']);
-
+//// Descargas /////
+$router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
+$router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
 
 
 /////////////////////////////////////--   API'S   --////////////////////////////////////////

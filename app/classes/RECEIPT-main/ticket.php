@@ -15,7 +15,7 @@
         }
 
 
-        public function generar($sucursal, $factura, $cliente, $direccion, $productos=[]){
+        public function generar($sucursal, $factura, $facturaElectronica, $cliente, $direccion, $productos=[]){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -33,6 +33,14 @@
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(5);
+
+            //////////  FACTURA ELECTRONICA  ///////////
+            if($facturaElectronica != null){
+                $this->pdf->SetFont('Arial','B',9);
+                $this->pdf->MultiCell(0,7,iconv("UTF-8", "ISO-8859-1","FACTURA ELECTRONICA DE VENTA"),0,'C',false);
+            }
+
+            $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Fecha: ".$factura->fechapago),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
@@ -54,6 +62,8 @@
             $this->pdf->Ln(1);
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(3);
+
+            ////////////  ADQUIRIENTE  ////////////
 
             # Tabla de productos #
             $this->pdf->SetFont('Arial','B',10);
@@ -135,8 +145,19 @@
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","USTED AHORRA"),0,0,'C');
             $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
 
-            $this->pdf->Ln(10);
+            $this->pdf->Ln(16);
 
+            //////////////  RESOLUCION  ////////////
+            if($facturaElectronica != null){
+                $this->pdf->SetFont('Arial','',8);
+                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Resolucion N° $facturaElectronica->resolucion, rango: desde {$facturaElectronica->consecutivo->rangoinicial} hasta {$facturaElectronica->consecutivo->rangofinal}, prefijo: $facturaElectronica->prefijo, vigencia: {$facturaElectronica->consecutivo->fechafin}"),0,'C',false);
+                $this->pdf->Ln(5);
+                $this->pdf->SetFont('Arial','',7);
+                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","CUFE:$facturaElectronica->cufe"),0,'C',false);
+                $this->pdf->Ln(5);
+            }
+
+            $this->pdf->SetFont('Arial','',10);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","*** Precios de productos incluyen impuestos. Para poder realizar un reclamo o devolución debe de presentar este ticket ***"),0,'C',false);
 
             $this->pdf->SetFont('Arial','B',9);

@@ -147,7 +147,24 @@
             "responsive": true,
             destroy: true, // importante si recargas la tabla
             data: datosFacturasPagas,
-            columns: [{title: 'Orden', data: 'num_orden'}, {title: 'N° Factura', data: 'num_consecutivo'}, {title: 'Tipo', data: 'tipofacturador'}, {title: 'Cant vendida', data: 'totalunidades'}, {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Imp', data: 'valorimpuestototal'}, {title: 'Descuento', data: 'descuento'}, {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, {title: 'Vendedor', data: 'vendedor'}, {title: 'Caja', data: 'caja'}],
+            columns: [
+                {title: 'Orden', data: 'num_orden'}, 
+                {title: 'N° Factura', data: 'num_consecutivo'}, 
+                {title: 'Tipo', data: 'tipofacturador'}, 
+                { 
+                    title: 'Abrir', 
+                    data: null, 
+                    orderable: false, 
+                    searchable: false, 
+                    render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/caja/ordenresumen?id=${row.id}" data-id="${row.id}">Abrir</a>`}
+                },
+                {title: 'Cant vendida', data: 'totalunidades'}, 
+                {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
+                {title: 'Imp', data: 'valorimpuestototal'}, 
+                {title: 'Descuento', data: 'descuento'}, 
+                {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
+                {title: 'Vendedor', data: 'vendedor'}, 
+                {title: 'Caja', data: 'caja'}],
             pageLength: 25,
             language: {
                 search: 'Busqueda',

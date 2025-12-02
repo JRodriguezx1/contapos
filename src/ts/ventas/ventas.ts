@@ -458,21 +458,20 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
+            miDialogoFacturar.close();
+            (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
+            document.removeEventListener("click", cerrarDialogoExterno);
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
               console.log(resDian);
             }
-            
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
       } catch (error) {
           console.log(error);
       }
-      miDialogoFacturar.close();
-      (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
-      document.removeEventListener("click", cerrarDialogoExterno);
     }
 
 

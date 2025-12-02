@@ -218,14 +218,14 @@ class ActiveRecord {
             $query .= $col." = CASE ";
             foreach($array as $index => $value){
                 if(array_key_first($colums) === $idx){
-                    $query .= "WHEN id = $value->id THEN {$value->$col} ";
+                    $query .= "WHEN id = $value->id THEN '{$value->$col}' ";
                     if(array_key_last($array) === $index){
                         $in .= "$value->id";
                     }else{
                         $in .= "$value->id, ";
                     }
                 }else{
-                    $query .= "WHEN id = $value->id THEN {$value->$col} ";
+                    $query .= "WHEN id = $value->id THEN '{$value->$col}' ";
                 }
             }
             if(array_key_last($colums) === $idx){
