@@ -5,10 +5,13 @@ namespace App\Controllers;
 use App\Models\ActiveRecord;
 use App\Models\caja\cierrescajas;
 use App\Models\caja\ingresoscajas;
+use App\Models\clientes\departments;
 use App\Models\compras;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\usuarios;
 use App\Models\detallecompra;
+use App\Models\felectronicas\adquirientes;
+use App\Models\felectronicas\facturas_electronicas;
 use App\Models\gastos;
 use App\Models\inventario\productos;
 use App\Models\inventario\proveedores;
@@ -168,7 +171,16 @@ class reportescontrolador{
         $id=$_GET['id'];
         if(!is_numeric($id))return;
 
-        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $factura = facturas::find('id', $id);
+        $facturaElectronica = facturas_electronicas::find('id_facturaid', $factura->id);
+        $adquiriente = adquirientes::find('id', 1);
+        if($facturaElectronica)
+          $adquiriente = adquirientes::find('id', $facturaElectronica->id_adquiriente);
+        
+
+        $departments = departments::all();
+
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturaElectronica'=>$facturaElectronica, 'adquiriente'=>$adquiriente, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 

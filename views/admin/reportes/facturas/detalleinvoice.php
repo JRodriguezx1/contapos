@@ -1,5 +1,5 @@
 <!-- CONTENEDOR GENERAL -->
-<div class="space-y-10 bg-white p-8 mb-20  rounded-xl">
+<div class="space-y-10 bg-white p-8 mb-20  rounded-xl detalleinvoice">
 
     <!-- ENCABEZADO -->
     <div class="bg-white shadow rounded-xl p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-8 mb-5">
@@ -12,8 +12,8 @@
             <p class="text-gray-500 text-base">28 Nov 2025 - 3:45 PM</p>
 
             <!-- Badge Estado DIAN -->
-            <span class="inline-block mt-4 px-4 py-1.5 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-700 border border-yellow-200">
-                Pendiente DIAN
+            <span class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo $facturaElectronica->id_estadoelectronica==2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700'; ?>">
+                <?php echo $facturaElectronica->id_estadoelectronica==2?'Aceptada DIAN':'Pendiente DIAN'; ?>
             </span>
         </div>
 
@@ -82,21 +82,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-gray-700 text-lg">
             <div>
                 <p class="font-bold text-gray-900">Nombre</p>
-                <p>Consumidor Final</p>
+                <p><?php echo $adquiriente->business_name; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Identificación</p>
-                <p>No informado</p>
+                <p><?php echo $adquiriente->identification_number; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Correo</p>
-                <p>No informado</p>
+                <p><?php echo $adquiriente->email?$adquiriente->email:' - '; ?></p>
             </div>
         </div>
 
         <!-- Acción derecha -->
         <div class="flex justify-end mt-6">
-            <button id="btnAbrirFacturarA" class="px-6 py-3.5 bg-indigo-600 text-white rounded-lg text-xl font-medium hover:bg-indigo-700 flex items-center gap-2">
+            <button id="facturarA" class="px-6 py-3.5 bg-indigo-600 text-white rounded-lg text-xl font-medium hover:bg-indigo-700 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -222,7 +222,7 @@
     </dialog>
 
     <!-- MODAL NOTA CRÉDITO -->
-    <dialog id="modalNotaCredito"
+    <dialog id="miDialogoNC"
         class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-10 bg-white backdrop:bg-black/40 shadow-2xl
         transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out
         backdrop:backdrop-blur-sm">
@@ -234,7 +234,7 @@
 
             <button id="btnCerrarNotaCredito"
                 class="p-2 rounded-lg hover:bg-gray-100 transition"
-                onclick="document.getElementById('modalNotaCredito').close()">
+                onclick="document.getElementById('miDialogoNC').close()">
                 <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
             </button>
         </div>
@@ -274,8 +274,7 @@
 
             <!-- Botones -->
             <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-                <button type="button" id="btnCancelarNota"
-                    class="btn-md bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg !py-4 !px-6 !w-[135px]">
+                <button type="button" id="btnCancelarNota" class="btn-md bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg !py-4 !px-6 !w-[135px]" value="Cancelar">
                     Cancelar
                 </button>
 
@@ -375,7 +374,7 @@
     </dialog>
 
 
-    <dialog id="modalAdquiriente"
+    <dialog id="miDialogoFacturarA"
     class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
 
         <form id="formFacturarA"
@@ -402,7 +401,18 @@
                         <select id="type_document_identification_id" name="type_document_identification_id" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
                             <option value="" disabled selected>Seleccionar tipo de documento</option>
-                            <!-- tus opciones -->
+                            <option value="1" <?php  ?>>Registro civil</option>
+                            <option value="2" <?php  ?>>Tarjeta de identidad</option>
+                            <option value="3" <?php  ?>>Cédula de ciudadanía</option>
+                            <option value="4" <?php  ?>>Tarjeta de extranjería</option>
+                            <option value="5" <?php  ?>>Cédula de extranjería</option>
+                            <option value="6" <?php  ?>>NIT</option>
+                            <option value="7" <?php  ?>>Pasaporte</option>
+                            <option value="8" <?php  ?>>Documento de identificación extranjero</option>
+                            <option value="9" <?php  ?>>NIT de otro país</option>
+                            <option value="10" <?php  ?>>NUIP *</option>
+                            <option value="11" <?php  ?>>PEP (Permiso Especial de Permanencia)</option>
+                            <option value="12" <?php  ?>>PPT (Permiso Protección Temporal)</option>
                         </select>
                     </div>
 
@@ -479,6 +489,36 @@
                                 </select>
                             </div>
 
+                            <!-- Tipo de Organización -->
+                            <div>
+                                <label for="type_organization_id" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
+                                <select id="type_organization_id" name="type_organization_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+                                <option value="" disabled selected>Seleccione tipo de organización</option>
+                                <option value="1">Persona Jurídica y asimiladas</option>
+                                <option value="2">Persona Natural y asimiladas</option>
+                                </select>
+                            </div>
+
+                            <!-- Tipo Régimen -->
+                            <div>
+                                <label for="type_regime_id" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
+                                <select id="type_regime_id" name="type_regime_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+                                <option value="" disabled selected>Seleccione tipo de régimen</option>
+                                <option value="1">Responsable de IVA</option>
+                                <option value="2">No responsable de IVA</option>
+                                </select>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div>
+                                <label for="phone" class="block text-2xl font-medium text-gray-600">Teléfono</label>
+                                <input id="phone" type="tel" name="phone"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                                placeholder="Teléfono de contacto">
+                            </div>
+
                         </div>
 
                     </div>
@@ -490,7 +530,7 @@
             <div class="flex justify-end gap-4 pt-6 border-t">
                 <button type="button"
                     class="px-6 py-4 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-                    onclick="modalAdquiriente.close()">
+                    onclick="miDialogoFacturarA.close()">
                     Cancelar
                 </button>
 
@@ -504,139 +544,4 @@
     </dialog>
 
 </div>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-  /********************
-   * MODAL ENVIAR CORREO
-   ********************/
-  const modalCorreo = document.getElementById('modalEnviarCorreo');
-  const btnAbrirModalCorreo = document.getElementById('btnEnviarCorreo');
-  const btnCancelarModalCorreo = document.getElementById('btnCancelarModal');
-  const btnConfirmarEnviarCorreo = document.getElementById('btnConfirmarEnviarCorreo');
-
-  btnAbrirModalCorreo?.addEventListener('click', () => modalCorreo?.showModal());
-  btnCancelarModalCorreo?.addEventListener('click', () => modalCorreo?.close());
-  btnConfirmarEnviarCorreo?.addEventListener('click', (e) => {
-    e.preventDefault();
-    const correo = document.getElementById('correoCliente').value;
-    const asunto = document.getElementById('asuntoCorreo').value;
-    const mensaje = document.getElementById('mensajeCorreo').value;
-    const adjuntos = document.getElementById('adjuntarArchivos').checked;
-    console.log({ correo, asunto, mensaje, adjuntos });
-    alert("📧 Correo enviado correctamente (Simulado)");
-    modalCorreo?.close();
-  });
-
-  /********************
-   * MODAL NOTA CRÉDITO
-   ********************/
-  const modalNotaCredito = document.getElementById("modalNotaCredito");
-  const btnModalNotaCredito = document.querySelector("button:has(svg path[d='M15 9l-6 6m0-6l6 6M19 12a7 7 0 11-14 0 7 7 0 0114 0z'])");
-  const btnCancelarNota = document.getElementById("btnCancelarNota");
-  const btnCerrarNotaCredito = document.getElementById("btnCerrarNotaCredito");
-  const btnConfirmarNota = document.getElementById("btnConfirmarNota");
-
-  btnModalNotaCredito?.addEventListener('click', () => modalNotaCredito?.showModal());
-  btnCancelarNota?.addEventListener('click', () => modalNotaCredito?.close());
-  btnCerrarNotaCredito?.addEventListener('click', () => modalNotaCredito?.close());
-  btnConfirmarNota?.addEventListener('click', (e) => {
-    e.preventDefault();
-    modalNotaCredito?.close();
-    alert("Nota crédito generada correctamente ✔");
-  });
-
-  /********************
-   * MODAL NUEVA FACTURA
-   ********************/
-  const btnNuevaFactura = document.getElementById('btnNuevaFactura');
-  const modalNuevaFactura = document.getElementById('modalNuevaFactura');
-  const selectResolucion = document.getElementById('selectResolucion');
-  const inputManual = document.getElementById('consecutivoManual');
-  const btnCancelarNuevaFactura = document.getElementById('btnCancelarNuevaFactura');
-  const btnGenerarNuevaFactura = document.getElementById('btnGenerarNuevaFactura');
-  const previewFactura = document.getElementById('previewFactura');
-
-  if (btnNuevaFactura && modalNuevaFactura) {
-    btnNuevaFactura.setAttribute('type', 'button');
-    btnNuevaFactura.addEventListener('click', () => {
-      if (selectResolucion) selectResolucion.value = '';
-      if (inputManual) { inputManual.value = ''; inputManual.classList.add('hidden'); }
-      if (previewFactura) previewFactura.textContent = '---';
-      modalNuevaFactura.showModal();
-    });
-
-    btnCancelarNuevaFactura?.addEventListener('click', () => modalNuevaFactura.close());
-
-    const actualizarVista = () => {
-      if (!selectResolucion || !previewFactura) return;
-      const opcion = selectResolucion.selectedOptions[0];
-      if (!opcion) { previewFactura.textContent = '---'; return; }
-      const prefijo = opcion.dataset.prefijo || '';
-      const actualNum = parseInt(opcion.dataset.actual||'0', 10) + 1;
-      const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
-      let numero = tipo === 'manual' ? (inputManual?.value || '---') : actualNum;
-      previewFactura.textContent = `${prefijo}-${numero}`;
-    };
-
-    selectResolucion?.addEventListener('change', actualizarVista);
-    inputManual?.addEventListener('input', actualizarVista);
-    document.querySelectorAll('input[name="tipoConsecutivo"]').forEach(r =>
-      r.addEventListener('change', () => {
-        if (inputManual) inputManual.classList.toggle('hidden', r.value !== 'manual');
-        actualizarVista();
-      })
-    );
-
-    btnGenerarNuevaFactura?.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!selectResolucion || !selectResolucion.value) { alert('Selecciona una resolución.'); return; }
-      const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
-      if (tipo === 'manual' && (!inputManual || !inputManual.value)) { alert('Ingresa el consecutivo manual.'); return; }
-      const opcion = selectResolucion.selectedOptions[0];
-      const payload = {
-        id_resolucion: selectResolucion.value,
-        prefijo: opcion.dataset.prefijo || '',
-        consecutivo: tipo === 'manual' ? inputManual.value : (parseInt(opcion.dataset.actual||'0',10) + 1),
-        factura_origen: '<?= $factura_id ?? "FE-000123" ?>'
-      };
-      alert('Generando nueva factura: ' + payload.prefijo + '-' + payload.consecutivo);
-      modalNuevaFactura.close();
-    });
-  }
-
-  /********************
-   * MODAL ASIGNAR / ACTUALIZAR CLIENTE
-   ********************/
-  const modalAdquiriente = document.getElementById("modalAdquiriente");
-  const btnAbrirAdquiriente = document.getElementById("btnAbrirFacturarA");
-  const btnCancelarAdquiriente = modalAdquiriente?.querySelector("button[type='button']");
-  const formAdquiriente = document.getElementById("formFacturarA");
-  const inputNumeroDocumento = document.getElementById("identification_number");
-  const inputNombreCliente = document.getElementById("business_name");
-  const previewCliente = document.getElementById("previewCliente");
-
-  if (btnAbrirAdquiriente && modalAdquiriente && formAdquiriente) {
-    btnAbrirAdquiriente.setAttribute('type', 'button');
-    btnAbrirAdquiriente.addEventListener('click', () => modalAdquiriente.showModal());
-    btnCancelarAdquiriente?.addEventListener('click', () => modalAdquiriente.close());
-
-    formAdquiriente.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!inputNumeroDocumento.value || !inputNombreCliente.value) {
-        alert("El número de documento y el nombre son obligatorios.");
-        return;
-      }
-      const datosCliente = { documento: inputNumeroDocumento.value, nombre: inputNombreCliente.value };
-      console.log("Datos cliente:", datosCliente);
-      if (previewCliente) previewCliente.textContent = `${datosCliente.nombre} — ${datosCliente.documento}`;
-      alert("Cliente asignado correctamente (simulado)");
-      modalAdquiriente.close();
-    });
-  }
-
-});
-</script>
 

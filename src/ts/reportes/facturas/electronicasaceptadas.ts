@@ -148,7 +148,7 @@
                             data: null, 
                             orderable: false, 
                             searchable: false, 
-                            render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/reportes/detalleInvoice?id=${row.id}" data-id="${row.id}">Abrir</a>`}
+                            render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/reportes/detalleInvoice?id=${row.orden}" data-id="${row.orden}">Abrir</a>`}
                         },
                         {
                             title: 'Abrir Dian', 
