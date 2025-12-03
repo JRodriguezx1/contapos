@@ -12,6 +12,7 @@
       <thead>
           <tr>
               <th>Nº</th>
+              <th>ID</th>
               <th>Unidad</th>
               <th>Fecha creacion</th>
               <th class="accionesth">Acciones</th>
@@ -21,6 +22,7 @@
           <?php foreach($unidadesmedida as $index => $value): ?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>
+              <td class=""><?php echo $value->id;?></td>
               <td class=""><?php echo $value->nombre;?></td>
               <td class=""><?php echo $value->fechacreacion??'';?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-unidadmedida="<?php echo $value->nombre;?>">

@@ -2,6 +2,7 @@
     <!-- Menú horizontal fijo -->
     <div class="tabs sticky top-0 bg-white z-9 py-2" id="tabulacion">
         <div class="tabs-content">
+
             <label>
                 <input type="radio" name="radio" <?php echo $paginanegocio??'';?> >
                 <span id="pagina1">Negocio</span>
@@ -34,6 +35,7 @@
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
                 <span id="pagina8">Dian</span>
             </label>
+            
             <label>
                 <input type="radio" name="radio">
                 <span id="pagina9">Configuración</span>
@@ -62,6 +64,7 @@
     <!-- configuración -->
     <div class="hidden mt-6 paginas pagina9">
         <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
+
             <!-- Inputs de control de pestañas verticales -->
             <input type="radio" name="config" id="btn1" checked>
             <input type="radio" name="config" id="btn2">
@@ -91,15 +94,17 @@
             </div>
         
             <!-- Contenido con scroll -->
-            <div class="flex-1 tlg:overflow-y-scroll tlg:pl-4 contenedorsetup">       
-                <?php include __DIR__. "/ajustesdelsistema/caja.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/inventario.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/claves.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/permisos.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/impresion.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/impuestos.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/facturacion.php"; ?>
-                <?php include __DIR__. "/ajustesdelsistema/sistema.php"; ?>
+            <div class="flex-1 tlg:overflow-y-scroll tlg:pl-4 contenedorsetup">
+                <?php if(1): //esta activo cuando la suscripcion esta al dia ?>   
+                    <?php include __DIR__. "/ajustesdelsistema/caja.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/inventario.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/claves.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/permisos.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/impresion.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/impuestos.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/facturacion.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/sistema.php"; ?>
+                <?php endif; ?>
                 <?php include __DIR__. "/ajustesdelsistema/suscripcion.php"; ?>
             </div>
         </div>
