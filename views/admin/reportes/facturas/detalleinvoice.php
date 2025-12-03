@@ -41,7 +41,7 @@
 
 
             <!-- NOTA CRÉDITO -->
-            <button id="btnNotaCredito" class="flex items-center justify-center gap-2 w-full md:w-auto md:px-4 px-5 py-3 bg-red-600 text-white rounded-lg text-lg font-medium hover:bg-red-700 transition shadow-sm">
+            <button id="btnModalNotaCredito" class="flex items-center justify-center gap-2 w-full md:w-auto md:px-4 px-5 py-3 bg-red-600 text-white rounded-lg text-lg font-medium hover:bg-red-700 transition shadow-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 9l-6 6m0-6l6 6M19 12a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -96,7 +96,7 @@
 
         <!-- Acción derecha -->
         <div class="flex justify-end mt-6">
-            <button class="px-6 py-3.5 bg-indigo-600 text-white rounded-lg text-xl font-medium hover:bg-indigo-700 flex items-center gap-2">
+            <button id="btnAbrirFacturarA" class="px-6 py-3.5 bg-indigo-600 text-white rounded-lg text-xl font-medium hover:bg-indigo-700 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -240,12 +240,11 @@
         </div>
 
         <form method="dialog" class="grid grid-cols-1 gap-6">
-
             <!-- MOTIVO -->
             <div>
                 <label class="font-medium text-gray-800">Motivo de la nota crédito</label>
                 <select id="motivoNota"
-                    class="mt-1 w-full px-4 py-3 border rounded-lg bg-gray-50 focus:border-indigo-600 focus:ring-1 text-lg">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
                     <option value="devolucion">Devolución de productos</option>
                     <option value="descuento">Aplicación de descuento</option>
                     <option value="anulacion">Anulación de factura</option>
@@ -253,20 +252,24 @@
                 </select>
             </div>
 
+            <div class="formulario__campo">
+                <label class="formulario__label" for="selectSetConsecutivo">Seleccionar consecutivo</label>
+                <select id="selectSetConsecutivo" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="selectSetConsecutivo" required>
+                    <option value="0">Siguiente consecutivo</option>
+                    <option value="1">Consecutivo personalizado</option>
+                </select>
+            </div>
+            <div class="formulario__campo habilitaconsecutivo" style="display: none;">
+                <label class="formulario__label" for="consecutivoPersonalizado">Consecutivo personalizado</label>
+                <input id="consecutivoPersonalizado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Digite numero del consecutivo" name="consecutivoPersonalizado" value="" required>
+            </div>
+
             <!-- DESCRIPCIÓN -->
             <div>
                 <label class="font-medium text-gray-800">Descripción</label>
                 <textarea id="descripcionNota" rows="4"
-                    class="mt-1 w-full px-4 py-3 bg-gray-50 border text-gray-700 rounded-lg focus:border-indigo-600 focus:ring-1 text-lg"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 text-xl focus:outline-none focus:ring-1 mt-2 h-32"
                     placeholder="Escribe una breve descripción..."></textarea>
-            </div>
-
-            <!-- VALOR -->
-            <div>
-                <label class="font-medium text-gray-800">Valor a retornar</label>
-                <input type="number" id="valorNota"
-                    class="mt-1 w-full px-4 py-3 bg-gray-50 border rounded-lg focus:border-indigo-600 focus:ring-1 text-lg"
-                    placeholder="$0" min="0" required>
             </div>
 
             <!-- Botones -->
@@ -276,10 +279,9 @@
                     Cancelar
                 </button>
 
-                <button id="btnConfirmarNota"
-                    class="btn-md bg-red-600 hover:bg-red-700 text-white rounded-lg !py-4 !px-6 !w-[135px]">
-                    Generar
-                </button>
+                <input id="btnEnviarNotaCredito"
+                    class="btn-md bg-red-600 hover:bg-red-700 text-white rounded-lg !py-4 !px-6 !w-[135px]" type="submit" value="Generar">
+                </input>
             </div>
         </form>
     </dialog>
@@ -372,71 +374,183 @@
         </form>
     </dialog>
 
+
+    <dialog id="modalAdquiriente"
+    class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
+
+        <form id="formFacturarA"
+            class="bg-white rounded-2xl p-10 space-y-8 w-full" method="POST">
+
+            <!-- Header -->
+            <div class="flex items-center gap-4 pb-4 border-b">
+                <div class="text-indigo-600 mt-1">
+                    <i class="fas fa-user-circle text-[4rem] leading-[2.5rem]"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-indigo-800">
+                    Datos Factura Electrónica
+                </h3> 
+            </div>
+            <p class="text-lg text-gray-600">Ingresar datos del adquiriente</p>
+
+            <!-- Cuerpo del formulario -->
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-6">
+
+                    <!-- Tipo Documento -->
+                    <div>
+                        <label class="font-semibold text-gray-700 mb-3">Tipo Documento</label>
+                        <select id="type_document_identification_id" name="type_document_identification_id" required
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                            <option value="" disabled selected>Seleccionar tipo de documento</option>
+                            <!-- tus opciones -->
+                        </select>
+                    </div>
+
+                    <!-- Número + Buscar -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Número de Documento <span class="text-gray-700 text-lg font-normal">(Sin el dígito de verificación)</span> </label>
+                        <div class="flex gap-3">
+                            <input id="identification_number"
+                                name="identification_number"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                                required>
+                            <button id="btnBuscarAdquiriente" type="button"
+                                class="px-4 bg-indigo-100 text-indigo-700 rounded-lg flex items-center gap-2 hover:bg-indigo-200 mt-2">
+                                <i class="fa-solid fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Nombre -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Nombre / Razón Social</label>
+                        <input id="business_name" name="business_name"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                    </div>
+
+                    <!-- Correo -->
+                    <div>
+                        <label class="font-semibold text-gray-700">Correo Electrónico</label>
+                        <input id="email" name="email" type="email"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                    </div>
+
+                </div>
+
+                <!-- Opciones adicionales -->
+                <div class="mt-2">
+                    <input id="toggleOpcionesAdq" type="checkbox" class="peer sr-only">
+                    <label for="toggleOpcionesAdq"
+                        class="flex justify-center items-center gap-2 cursor-pointer text-gray-600 hover:text-indigo-700">
+                        Más opciones
+                        <span class="peer-checked:hidden">+</span>
+                        <span class="hidden peer-checked:inline">–</span>
+                    </label>
+
+                    <div class="max-h-0 overflow-hidden transition-[max-height] duration-300 peer-checked:max-h-[1000px] mt-4 space-y-5">
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            
+                            <!-- Dirección -->
+                            <div>
+                                <label class="font-semibold text-gray-700">Dirección</label>
+                                <input id="address" name="address"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                            </div>
+
+                            <!-- Departamento -->
+                            <div>
+                                <label class="font-semibold text-gray-700">Departamento</label>
+                                <select id="department_id" name="department_id"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                                    <option disabled selected>Seleccionar departamento</option>
+                                    <?php foreach($departments as $value): ?>
+                                        <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Municipio -->
+                            <div>
+                                <label class="font-semibold text-gray-700">Ciudad / Municipio</label>
+                                <select id="municipality_id" name="municipality_id"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                                    <option disabled selected>Seleccionar...</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-4 pt-6 border-t">
+                <button type="button"
+                    class="px-6 py-4 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+                    onclick="modalAdquiriente.close()">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                    class="px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md">
+                    Confirmar
+                </button>
+            </div>
+
+        </form>
+    </dialog>
+
 </div>
 
 
 <script>
-// Elementos
-const modalCorreo = document.getElementById('modalEnviarCorreo');
-const btnAbrirModal = document.getElementById('btnEnviarCorreo');
-const btnCancelarModal = document.getElementById('btnCancelarModal');
-const btnConfirmarEnviarCorreo = document.getElementById('btnConfirmarEnviarCorreo');
+document.addEventListener('DOMContentLoaded', () => {
 
-// Abrir modal
-btnAbrirModal?.addEventListener('click', () => {
-    modalCorreo.showModal();
-}); 
+  /********************
+   * MODAL ENVIAR CORREO
+   ********************/
+  const modalCorreo = document.getElementById('modalEnviarCorreo');
+  const btnAbrirModalCorreo = document.getElementById('btnEnviarCorreo');
+  const btnCancelarModalCorreo = document.getElementById('btnCancelarModal');
+  const btnConfirmarEnviarCorreo = document.getElementById('btnConfirmarEnviarCorreo');
 
-// Cerrar modal
-btnCancelarModal?.addEventListener('click', () => {
-    modalCorreo.close();
-});
-
-// Simulación de envío
-btnConfirmarEnviarCorreo?.addEventListener('click', (e) => {
+  btnAbrirModalCorreo?.addEventListener('click', () => modalCorreo?.showModal());
+  btnCancelarModalCorreo?.addEventListener('click', () => modalCorreo?.close());
+  btnConfirmarEnviarCorreo?.addEventListener('click', (e) => {
     e.preventDefault();
-
     const correo = document.getElementById('correoCliente').value;
     const asunto = document.getElementById('asuntoCorreo').value;
     const mensaje = document.getElementById('mensajeCorreo').value;
     const adjuntos = document.getElementById('adjuntarArchivos').checked;
-
     console.log({ correo, asunto, mensaje, adjuntos });
-
     alert("📧 Correo enviado correctamente (Simulado)");
+    modalCorreo?.close();
+  });
 
-    modalCorreo.close();
-});
+  /********************
+   * MODAL NOTA CRÉDITO
+   ********************/
+  const modalNotaCredito = document.getElementById("modalNotaCredito");
+  const btnModalNotaCredito = document.querySelector("button:has(svg path[d='M15 9l-6 6m0-6l6 6M19 12a7 7 0 11-14 0 7 7 0 0114 0z'])");
+  const btnCancelarNota = document.getElementById("btnCancelarNota");
+  const btnCerrarNotaCredito = document.getElementById("btnCerrarNotaCredito");
+  const btnConfirmarNota = document.getElementById("btnConfirmarNota");
 
-// --- MODAL NOTA CRÉDITO ---
-const modalNotaCredito = document.getElementById("modalNotaCredito");
-const btnNotaCredito = document.querySelector("button:has(svg path[d='M15 9l-6 6m0-6l6 6M19 12a7 7 0 11-14 0 7 7 0 0114 0z'])"); // Selecciona el botón por ícono
-const btnCancelarNota = document.getElementById("btnCancelarNota");
-const btnCerrarNotaCredito = document.getElementById("btnCerrarNotaCredito");
-
-// Abrir modal
-btnNotaCredito?.addEventListener("click", () => {
-    modalNotaCredito.showModal();
-});
-
-// Cerrar modal (2 botones)
-btnCancelarNota?.addEventListener("click", () => modalNotaCredito.close());
-btnCerrarNotaCredito?.addEventListener("click", () => modalNotaCredito.close());
-
-// Confirmar acción
-document.getElementById("btnConfirmarNota").addEventListener("click", (e) => {
+  btnModalNotaCredito?.addEventListener('click', () => modalNotaCredito?.showModal());
+  btnCancelarNota?.addEventListener('click', () => modalNotaCredito?.close());
+  btnCerrarNotaCredito?.addEventListener('click', () => modalNotaCredito?.close());
+  btnConfirmarNota?.addEventListener('click', (e) => {
     e.preventDefault();
-    modalNotaCredito.close();
+    modalNotaCredito?.close();
     alert("Nota crédito generada correctamente ✔");
-});
+  });
 
-
-</script>
-
-<!-- JS Nueva Factura  -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Elementos principales
+  /********************
+   * MODAL NUEVA FACTURA
+   ********************/
   const btnNuevaFactura = document.getElementById('btnNuevaFactura');
   const modalNuevaFactura = document.getElementById('modalNuevaFactura');
   const selectResolucion = document.getElementById('selectResolucion');
@@ -445,113 +559,84 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnGenerarNuevaFactura = document.getElementById('btnGenerarNuevaFactura');
   const previewFactura = document.getElementById('previewFactura');
 
-  if (!btnNuevaFactura) { console.warn('btnNuevaFactura no encontrado.'); return; }
-  if (!modalNuevaFactura) { console.warn('modalNuevaFactura no encontrado.'); return; }
+  if (btnNuevaFactura && modalNuevaFactura) {
+    btnNuevaFactura.setAttribute('type', 'button');
+    btnNuevaFactura.addEventListener('click', () => {
+      if (selectResolucion) selectResolucion.value = '';
+      if (inputManual) { inputManual.value = ''; inputManual.classList.add('hidden'); }
+      if (previewFactura) previewFactura.textContent = '---';
+      modalNuevaFactura.showModal();
+    });
 
-  // Asegura que el botón no sea submit (evita recargas)
-  btnNuevaFactura.setAttribute('type', 'button');
+    btnCancelarNuevaFactura?.addEventListener('click', () => modalNuevaFactura.close());
 
-  // Abrir modal
-  btnNuevaFactura.addEventListener('click', () => {
-    // reset previo (opcional)
-    if (selectResolucion) selectResolucion.value = '';
-    if (inputManual) { inputManual.value = ''; inputManual.classList.add('hidden'); }
-    if (previewFactura) previewFactura.textContent = '---';
-    modalNuevaFactura.showModal();
-  });
-
-  // Cancelar / cerrar
-  btnCancelarNuevaFactura?.addEventListener('click', () => modalNuevaFactura.close());
-
-  // Manejo de input manual + preview (por si no tienes el otro script cargado)
-  const actualizarVista = () => {
-    if (!selectResolucion || !previewFactura) return;
-    const opcion = selectResolucion.selectedOptions[0];
-    if (!opcion) { previewFactura.textContent = '---'; return; }
-    const prefijo = opcion.dataset.prefijo || '';
-    const actualNum = parseInt(opcion.dataset.actual||'0', 10) + 1;
-    const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
-    let numero = tipo === 'manual' ? (inputManual?.value || '---') : actualNum;
-    previewFactura.textContent = `${prefijo}-${numero}`;
-  };
-
-  // Listeners para preview (siempre seguros de existencia)
-  selectResolucion?.addEventListener('change', actualizarVista);
-  inputManual?.addEventListener('input', actualizarVista);
-  document.querySelectorAll('input[name="tipoConsecutivo"]').forEach(r => 
-    r.addEventListener('change', () => {
-      if (inputManual) inputManual.classList.toggle('hidden', r.value !== 'manual');
-      actualizarVista();
-    })
-  );
-
-  // Generar nueva factura (validación mínima)
-  btnGenerarNuevaFactura?.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    // Validaciones
-    if (!selectResolucion || !selectResolucion.value) {
-      alert('Selecciona una resolución.');
-      return;
-    }
-
-    const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
-    if (tipo === 'manual' && (!inputManual || !inputManual.value)) {
-      alert('Ingresa el consecutivo manual.');
-      return;
-    }
-
-    // Construir datos para enviar al backend
-    const opcion = selectResolucion.selectedOptions[0];
-    const payload = {
-      id_resolucion: selectResolucion.value,
-      prefijo: opcion.dataset.prefijo || '',
-      consecutivo: tipo === 'manual' ? inputManual.value : (parseInt(opcion.dataset.actual||'0',10) + 1),
-      factura_origen: '<?= $factura_id ?? "FE-000123" ?>' // ajusta si tienes variable PHP real
+    const actualizarVista = () => {
+      if (!selectResolucion || !previewFactura) return;
+      const opcion = selectResolucion.selectedOptions[0];
+      if (!opcion) { previewFactura.textContent = '---'; return; }
+      const prefijo = opcion.dataset.prefijo || '';
+      const actualNum = parseInt(opcion.dataset.actual||'0', 10) + 1;
+      const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
+      let numero = tipo === 'manual' ? (inputManual?.value || '---') : actualNum;
+      previewFactura.textContent = `${prefijo}-${numero}`;
     };
 
-    // Aquí puedes: 1) enviar por fetch a tu endpoint PHP, o 2) rellenar inputs hidden y submit del form.
-    // Ejemplo con fetch (descomenta y ajusta URL si quieres):
-    /*
-    btnGenerarNuevaFactura.disabled = true;
-    btnGenerarNuevaFactura.textContent = 'Generando...';
+    selectResolucion?.addEventListener('change', actualizarVista);
+    inputManual?.addEventListener('input', actualizarVista);
+    document.querySelectorAll('input[name="tipoConsecutivo"]').forEach(r =>
+      r.addEventListener('change', () => {
+        if (inputManual) inputManual.classList.toggle('hidden', r.value !== 'manual');
+        actualizarVista();
+      })
+    );
 
-    fetch('/ruta/generar_nueva_factura.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(r => r.json())
-    .then(data => {
-      if (data.ok) {
-        alert('Nueva factura generada: ' + data.nuevo_numero);
-        modalNuevaFactura.close();
-        // opcional: recargar o redirigir a la nueva factura
-        // location.href = '/factura/ver/' + data.id;
-      } else {
-        alert('Error: ' + (data.error || 'Desconocido'));
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert('Error en la petición.');
-    })
-    .finally(() => {
-      btnGenerarNuevaFactura.disabled = false;
-      btnGenerarNuevaFactura.textContent = 'Generar';
+    btnGenerarNuevaFactura?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!selectResolucion || !selectResolucion.value) { alert('Selecciona una resolución.'); return; }
+      const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
+      if (tipo === 'manual' && (!inputManual || !inputManual.value)) { alert('Ingresa el consecutivo manual.'); return; }
+      const opcion = selectResolucion.selectedOptions[0];
+      const payload = {
+        id_resolucion: selectResolucion.value,
+        prefijo: opcion.dataset.prefijo || '',
+        consecutivo: tipo === 'manual' ? inputManual.value : (parseInt(opcion.dataset.actual||'0',10) + 1),
+        factura_origen: '<?= $factura_id ?? "FE-000123" ?>'
+      };
+      alert('Generando nueva factura: ' + payload.prefijo + '-' + payload.consecutivo);
+      modalNuevaFactura.close();
     });
-    */
+  }
 
-    // Si prefieres submit clásico: crea hidden inputs y submit form:
-    // const form = document.getElementById('formNuevaFactura');
-    // add/create hidden inputs for payload, then form.submit();
+  /********************
+   * MODAL ASIGNAR / ACTUALIZAR CLIENTE
+   ********************/
+  const modalAdquiriente = document.getElementById("modalAdquiriente");
+  const btnAbrirAdquiriente = document.getElementById("btnAbrirFacturarA");
+  const btnCancelarAdquiriente = modalAdquiriente?.querySelector("button[type='button']");
+  const formAdquiriente = document.getElementById("formFacturarA");
+  const inputNumeroDocumento = document.getElementById("identification_number");
+  const inputNombreCliente = document.getElementById("business_name");
+  const previewCliente = document.getElementById("previewCliente");
 
-    // Por ahora solo demo:
-    alert('Generando nueva factura: ' + payload.prefijo + '-' + payload.consecutivo);
-    modalNuevaFactura.close();
-  });
+  if (btnAbrirAdquiriente && modalAdquiriente && formAdquiriente) {
+    btnAbrirAdquiriente.setAttribute('type', 'button');
+    btnAbrirAdquiriente.addEventListener('click', () => modalAdquiriente.showModal());
+    btnCancelarAdquiriente?.addEventListener('click', () => modalAdquiriente.close());
+
+    formAdquiriente.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!inputNumeroDocumento.value || !inputNombreCliente.value) {
+        alert("El número de documento y el nombre son obligatorios.");
+        return;
+      }
+      const datosCliente = { documento: inputNumeroDocumento.value, nombre: inputNombreCliente.value };
+      console.log("Datos cliente:", datosCliente);
+      if (previewCliente) previewCliente.textContent = `${datosCliente.nombre} — ${datosCliente.documento}`;
+      alert("Cliente asignado correctamente (simulado)");
+      modalAdquiriente.close();
+    });
+  }
 
 });
 </script>
-
 
