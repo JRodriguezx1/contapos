@@ -8,6 +8,7 @@ use App\Models\caja\ingresoscajas;
 use App\Models\clientes\departments;
 use App\Models\compras;
 use App\Models\configuraciones\caja;
+use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\usuarios;
 use App\Models\detallecompra;
 use App\Models\felectronicas\adquirientes;
@@ -177,10 +178,10 @@ class reportescontrolador{
         if($facturaElectronica)
           $adquiriente = adquirientes::find('id', $facturaElectronica->id_adquiriente);
         
-
+        $resoluciones = consecutivos::whereArray(['idtipofacturador'=>1, 'id_sucursalid'=>id_sucursal(), 'estado'=>1]);
         $departments = departments::all();
 
-        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturaElectronica'=>$facturaElectronica, 'adquiriente'=>$adquiriente, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturaElectronica'=>$facturaElectronica, 'adquiriente'=>$adquiriente, 'resoluciones'=>$resoluciones, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 

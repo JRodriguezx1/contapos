@@ -3,11 +3,14 @@
   if(document.querySelector('.detalleinvoice')){
     //const POS = (window as any).POS;
     const btnModalNotaCredito = document.querySelector('#btnModalNotaCredito') as HTMLButtonElement;
+    const btnNuevaFactura = document.querySelector('#btnNuevaFactura') as HTMLButtonElement;
+    const tipoConsecutivo = document.querySelectorAll<HTMLButtonElement>('input[name="tipoConsecutivo"]');
     const selectSetConsecutivo = document.querySelector('#selectSetConsecutivo') as HTMLSelectElement;
     const miDialogoNC = document.querySelector('#miDialogoNC') as any;
 
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
+    const modalNuevaFactura = document.querySelector('#modalNuevaFactura') as HTMLDialogElement;
     const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
     const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
     const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
@@ -133,14 +136,57 @@
       if(customersfiltrados.length>0&&customersfiltrados[0].municipality_id)$('#municipality_id').val(customersfiltrados[0].municipality_id);
     }
 
+    ///////////////////// btn nueva factura //////////////////////
+    btnNuevaFactura.addEventListener('click', ()=>{
+      modalNuevaFactura.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+    });
 
-    ///////////////////// evento al btn facturar A /////////////////////
+    ///////////////////// evento al btn facturar A - adquiriente /////////////////////
     facturarA.addEventListener('click', (e:Event)=>{
       miDialogoFacturarA.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
+
+    tipoConsecutivo.forEach(radio=>{
+      radio.addEventListener('change', (e:Event)=>{
+        const targetDom = e.target as HTMLInputElement;
+        if(targetDom.value == 'manual'){
+          document.querySelector('#consecutivoManual')?.classList.remove('hidden');
+          document.querySelector('#consecutivoManual')?.setAttribute("required", "");
+        }else{
+          document.querySelector('#consecutivoManual')?.classList.add('hidden');
+          document.querySelector('#consecutivoManual')?.removeAttribute("required");
+        }
+      })
+    });
+
+    /////////// Generar nueva facutura /////////
+    document.querySelector('#formNuevaFactura')?.addEventListener('submit', async e=>{
+      e.preventDefault();
+      const idResolution = (document.querySelector('#selectResolucion') as HTMLInputElement).value;
+      const datos = new FormData();
+      datos.append('idResolution', idResolution);
+      datos.append('consecutivo', (document.querySelector('#consecutivoManual') as HTMLButtonElement)?.value || '');
+      (async ()=>{
+        try {
+            const url = "/admin/api/crearFacturaPOSaElectronica";  //api llamada en parametroscontrolador.php
+            const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+            const resultado = await respuesta.json();
+            if(resultado.exito !== undefined){
+              msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            }else{
+              msjalertToast('error', '¡Error!', resultado.error[0]);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+    });
+
     
+    /////////// Guardar adquiriente /////////
     formFacturarA.addEventListener('submit', (e:Event)=>{
       e.preventDefault();
       const data = new FormData(formFacturarA);
@@ -222,8 +268,9 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if( event.target === miDialogoNC || event.target === miDialogoFacturarA || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
+      if( event.target === miDialogoNC || event.target === modalNuevaFactura || event.target === miDialogoFacturarA || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
         miDialogoNC.close();
+        modalNuevaFactura.close();
         miDialogoFacturarA.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }

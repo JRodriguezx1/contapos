@@ -285,6 +285,7 @@ $router->get('/admin/api/filterAdquirientes', [apidiancontrolador::class, 'filte
 $router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guardarAdquiriente']);  // guardar adquiente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/sendInvoice', [apidiancontrolador::class, 'sendInvoice']);  // guardar adquiente, llamada desde ventas.sendinvoice.ts
 $router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
+$router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::class, 'crearFacturaPOSaElectronica']);
 
 
 

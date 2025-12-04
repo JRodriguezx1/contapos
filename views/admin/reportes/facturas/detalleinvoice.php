@@ -311,15 +311,12 @@
             <div>
                 <label class="font-medium text-gray-800">Resolución en uso</label>
                 <select id="selectResolucion"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
-                    block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1"
                     required>
                     <option value="" selected disabled>- Seleccionar -</option>
                     <?php foreach($resoluciones as $value): ?>
-                    <option value="<?= $value->id ?>"
-                            data-prefijo="<?= $value->prefijo ?>"
-                            data-actual="<?= $value->consecutivo_actual ?>">
-                        <?= $value->prefijo ?> (Actual: <?= $value->consecutivo_actual ?>)
+                    <option value="<?= $value->id ?>" data-prefijo="<?= $value->prefijo ?>" data-actual="<?= $value->siguientevalor ?>">
+                        <?= $value->nombre; ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -341,7 +338,7 @@
                         <span class="text-gray-800 text-lg">Ingresar consecutivo manual</span>
                     </label>
 
-                    <input type="number" id="consecutivoManual"
+                    <input id="consecutivoManual" type="number"
                         class="hidden w-full p-3 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 focus:ring-1"
                         placeholder="Ej: 125">
                 </div>
@@ -423,6 +420,7 @@
                             <input id="identification_number"
                                 name="identification_number"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                                value="<?php echo $adquiriente->identification_number; ?>"
                                 required>
                             <button id="btnBuscarAdquiriente" type="button"
                                 class="px-4 bg-indigo-100 text-indigo-700 rounded-lg flex items-center gap-2 hover:bg-indigo-200 mt-2">
@@ -435,14 +433,18 @@
                     <div>
                         <label class="font-semibold text-gray-700">Nombre / Razón Social</label>
                         <input id="business_name" name="business_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                            value="<?php echo $adquiriente->business_name; ?>"
+                            >
                     </div>
 
                     <!-- Correo -->
                     <div>
                         <label class="font-semibold text-gray-700">Correo Electrónico</label>
                         <input id="email" name="email" type="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                            value="<?php echo $adquiriente->email; ?>"
+                        >
                     </div>
 
                 </div>
@@ -465,7 +467,9 @@
                             <div>
                                 <label class="font-semibold text-gray-700">Dirección</label>
                                 <input id="address" name="address"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                                    value="<?php $adquiriente->address; ?>"
+                                >
                             </div>
 
                             <!-- Departamento -->
@@ -495,8 +499,8 @@
                                 <select id="type_organization_id" name="type_organization_id"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
                                 <option value="" disabled selected>Seleccione tipo de organización</option>
-                                <option value="1">Persona Jurídica y asimiladas</option>
-                                <option value="2">Persona Natural y asimiladas</option>
+                                <option value="1" <?php echo $adquiriente->type_organization_id==1?'selected':'';?> >Persona Jurídica y asimiladas</option>
+                                <option value="2" <?php echo $adquiriente->type_organization_id==2?'selected':'';?> >Persona Natural y asimiladas</option>
                                 </select>
                             </div>
 
@@ -506,8 +510,8 @@
                                 <select id="type_regime_id" name="type_regime_id"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
                                 <option value="" disabled selected>Seleccione tipo de régimen</option>
-                                <option value="1">Responsable de IVA</option>
-                                <option value="2">No responsable de IVA</option>
+                                <option value="1" <?php echo $adquiriente->type_regime_id==1?'selected':'';?> >Responsable de IVA</option>
+                                <option value="2" <?php echo $adquiriente->type_regime_id==1?'selected':'';?>>No responsable de IVA</option>
                                 </select>
                             </div>
 
@@ -516,7 +520,7 @@
                                 <label for="phone" class="block text-2xl font-medium text-gray-600">Teléfono</label>
                                 <input id="phone" type="tel" name="phone"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-                                placeholder="Teléfono de contacto">
+                                placeholder="Teléfono de contacto" value="<?php echo $adquiriente->phone; ?>">
                             </div>
 
                         </div>
