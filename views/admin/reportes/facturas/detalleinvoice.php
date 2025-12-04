@@ -12,8 +12,8 @@
             <p class="text-gray-500 text-base">28 Nov 2025 - 3:45 PM</p>
 
             <!-- Badge Estado DIAN -->
-            <span class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo $facturaElectronica->id_estadoelectronica==2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700'; ?>">
-                <?php echo $facturaElectronica->id_estadoelectronica==2?'Aceptada DIAN':'Pendiente DIAN'; ?>
+            <span class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo ($facturaElectronica??null)?->id_estadoelectronica==2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700'; ?>">
+                <?php echo ($facturaElectronica??null)?->id_estadoelectronica==2?'Aceptada DIAN':'Pendiente DIAN'; ?>
             </span>
         </div>
 
@@ -22,7 +22,7 @@
             md:flex md:flex-row md:justify-end md:w-auto">
 
             <!-- ENVIAR A DIAN -->
-            <button class="flex items-center justify-center gap-2 w-full md:w-auto md:px-4 px-5 py-3 bg-indigo-600 text-white rounded-lg text-lg font-medium hover:bg-indigo-700 transition shadow-sm">
+            <button id="btnEnvarDian" class="flex items-center justify-center gap-2 w-full md:w-auto md:px-4 px-5 py-3 bg-indigo-600 text-white rounded-lg text-lg font-medium hover:bg-indigo-700 transition shadow-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -285,7 +285,7 @@
         </form>
     </dialog>
 
-    <!-- MODAL NUEVA FACTURA -->
+    <!-- MODAL NUEVA FACTURA EJ: POS A ELECTRONICA -->
     <dialog id="modalNuevaFactura"
         class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-10 bg-white backdrop:bg-black/40 shadow-2xl
             transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out
@@ -306,7 +306,7 @@
         </div>
 
         <form id="formNuevaFactura" method="POST" class="grid grid-cols-1 gap-6">
-
+            <input id="idfactura" class="hidden" type="text" value="<?php echo $factura->id;?>">
             <!-- Seleccionar Resolución -->
             <div>
                 <label class="font-medium text-gray-800">Resolución en uso</label>

@@ -2,13 +2,14 @@
 
   if(document.querySelector('.detalleinvoice')){
     //const POS = (window as any).POS;
+    const btnEnvarDian = document.querySelector('#btnEnvarDian') as HTMLButtonElement;
     const btnModalNotaCredito = document.querySelector('#btnModalNotaCredito') as HTMLButtonElement;
     const btnNuevaFactura = document.querySelector('#btnNuevaFactura') as HTMLButtonElement;
     const tipoConsecutivo = document.querySelectorAll<HTMLButtonElement>('input[name="tipoConsecutivo"]');
     const selectSetConsecutivo = document.querySelector('#selectSetConsecutivo') as HTMLSelectElement;
     const miDialogoNC = document.querySelector('#miDialogoNC') as any;
 
-    const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;
+    const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;  //btn para asignar adquiriente
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const modalNuevaFactura = document.querySelector('#modalNuevaFactura') as HTMLDialogElement;
     const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
@@ -167,8 +168,11 @@
       e.preventDefault();
       const idResolution = (document.querySelector('#selectResolucion') as HTMLInputElement).value;
       const datos = new FormData();
+      datos.append('idfactura', (document.querySelector('#idfactura') as HTMLInputElement).value);
       datos.append('idResolution', idResolution);
-      datos.append('consecutivo', (document.querySelector('#consecutivoManual') as HTMLButtonElement)?.value || '');
+      datos.append('numConsecutivo', (document.querySelector('#consecutivoManual') as HTMLButtonElement)?.value || '');
+      modalNuevaFactura.close();
+      document.removeEventListener("click", cerrarDialogoExterno);
       (async ()=>{
         try {
             const url = "/admin/api/crearFacturaPOSaElectronica";  //api llamada en parametroscontrolador.php

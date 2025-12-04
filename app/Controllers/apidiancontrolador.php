@@ -6,6 +6,7 @@ use App\classes\Traits\DocumentTrait;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\usuarios; //namespace\clase hija
 use App\Models\ActiveRecord;
+use App\Models\caja\factmediospago;
 use App\Models\clientes\departments;
 use App\Models\clientes\municipalities;
 use App\Models\configuraciones\notacreditoinvoice;
@@ -16,6 +17,7 @@ use App\Models\felectronicas\diancompanias;
 use App\Models\felectronicas\facturas_electronicas;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\Models\ventas\ventas;
 use MVC\Router;  //namespace\clase
  
 class apidiancontrolador{
@@ -412,14 +414,40 @@ class apidiancontrolador{
     session_start();
     isadmin();
     $alertas = [];
-    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-      http_response_code(405); // Método no permitido
-      echo json_encode(['error' => 'Método no permitido']);
-      exit;
+
+    $idfactura = $_POST['idfactura'];
+    $factura = facturas::find('id', $idfactura);
+    $productos = ventas::idregistros('idfactura', $factura->id);
+    $datosAdquiriente = json_decode(json_encode(adquirientes::find('id', 1)));
+    $mediospago = factmediospago::idregistros('id_factura', $factura->id);
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      if(!facturas_electronicas::find('id_facturaid', $factura->id)){
+        $consecutivo = consecutivos::findForUpdate('id', $_POST['idResolution']);
+        $numConsecutivo = $consecutivo->siguientevalor;
+        $factura->num_consecutivo = $numConsecutivo;
+        $factura->prefijo = $consecutivo->prefijo;
+        $factura->idconsecutivo = $consecutivo->id;
+        $r = $factura->actualizar();
+        $consecutivo->siguientevalor = $numConsecutivo + 1;
+        $c = $consecutivo->actualizar();
+        $rfe = self::createInvoiceElectronic($productos, $datosAdquiriente, $consecutivo->id, $idfactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);
+        if($rfe){
+          $alertas['exito'][] = "Factura convertida a factura electronica exitosamente.";
+          echo json_encode($alertas);
+          return;
+        }else{
+          $alertas['error'][] = "Error al convertir la factura a factura electronica.";
+          echo json_encode($alertas);
+          return;
+        }
+      }else{
+        $alertas['error'][] = "La factura ya se encuentra como factura electronica.";
+        echo json_encode($alertas);
+        return;
+      }
     }
-    $datos = json_decode(file_get_contents('php://input'), true);
-    $res = self::createFacturaPOSaElectronica($datos);
-    echo json_encode($res);
+   
+  }
 
 
 }
