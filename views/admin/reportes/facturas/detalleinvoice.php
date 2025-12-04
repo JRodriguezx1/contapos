@@ -401,18 +401,18 @@
                         <select id="type_document_identification_id" name="type_document_identification_id" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
                             <option value="" disabled selected>Seleccionar tipo de documento</option>
-                            <option value="1" <?php  ?>>Registro civil</option>
-                            <option value="2" <?php  ?>>Tarjeta de identidad</option>
-                            <option value="3" <?php  ?>>Cédula de ciudadanía</option>
-                            <option value="4" <?php  ?>>Tarjeta de extranjería</option>
-                            <option value="5" <?php  ?>>Cédula de extranjería</option>
-                            <option value="6" <?php  ?>>NIT</option>
-                            <option value="7" <?php  ?>>Pasaporte</option>
-                            <option value="8" <?php  ?>>Documento de identificación extranjero</option>
-                            <option value="9" <?php  ?>>NIT de otro país</option>
-                            <option value="10" <?php  ?>>NUIP *</option>
-                            <option value="11" <?php  ?>>PEP (Permiso Especial de Permanencia)</option>
-                            <option value="12" <?php  ?>>PPT (Permiso Protección Temporal)</option>
+                            <option value="1" <?php echo $adquiriente->type_document_identification_id==1?'selected':'';?>>Registro civil</option>
+                            <option value="2" <?php echo $adquiriente->type_document_identification_id==2?'selected':'';?>>Tarjeta de identidad</option>
+                            <option value="3" <?php echo $adquiriente->type_document_identification_id==3?'selected':'';?>>Cédula de ciudadanía</option>
+                            <option value="4" <?php echo $adquiriente->type_document_identification_id==4?'selected':'';?>>Tarjeta de extranjería</option>
+                            <option value="5" <?php echo $adquiriente->type_document_identification_id==5?'selected':'';?>>Cédula de extranjería</option>
+                            <option value="6" <?php echo $adquiriente->type_document_identification_id==6?'selected':'';?>>NIT</option>
+                            <option value="7" <?php echo $adquiriente->type_document_identification_id==7?'selected':'';?>>Pasaporte</option>
+                            <option value="8" <?php echo $adquiriente->type_document_identification_id==8?'selected':'';?>>Documento de identificación extranjero</option>
+                            <option value="9" <?php echo $adquiriente->type_document_identification_id==9?'selected':'';?>>NIT de otro país</option>
+                            <option value="10" <?php echo $adquiriente->type_document_identification_id==20?'selected':'';?>>NUIP *</option>
+                            <option value="11" <?php echo $adquiriente->type_document_identification_id==11?'selected':'';?>>PEP (Permiso Especial de Permanencia)</option>
+                            <option value="12" <?php echo $adquiriente->type_document_identification_id==12?'selected':'';?>>PPT (Permiso Protección Temporal)</option>
                         </select>
                     </div>
 
