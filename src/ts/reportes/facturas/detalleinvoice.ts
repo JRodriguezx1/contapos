@@ -215,7 +215,7 @@
         //guardar adquiriente en DB.
         guardarAdquiriente(datosAdquiriente);
         //asignar adquiriente a la factura
-        asignarAdquirienteAFactura();
+        asignarAdquirienteAFactura(datosAdquiriente);
       }else{
         msjalertToast('error', '¡Error!', 'La factura debe ser electrónica para asignarle un adquiriente.');
       }
@@ -225,7 +225,7 @@
 
     async function guardarAdquiriente(datosAdquiriente: Record<string, FormDataEntryValue>){
       try {
-            const url = "/admin/api/guardarAdquiriente";  //va al controlador ventascontrolador
+            const url = "/admin/api/guardarAdquiriente";
             const respuesta = await fetch(url, {
                                       method: 'POST',
                                       headers: { "Accept": "application/json", "Content-Type": "application/json" },
@@ -236,7 +236,6 @@
             if(resultado.response == "crear"){
               customers = [...customers, resultado.obj];
             }else{
-              /// actualizar el arregle del producto ///
               customers.forEach(a=>{if(a.identification_number == resultado.obj.identification_number)a = Object.assign(a, resultado.obj);});
             }
             datosAdquiriente.id = resultado.obj.id;
@@ -245,8 +244,20 @@
         }
     }
 
-    async function asignarAdquirienteAFactura(){
 
+    async function asignarAdquirienteAFactura(datosAdquiriente: Record<string, FormDataEntryValue>){
+      datosAdquiriente.idfe = (document.querySelector('#idfe') as HTMLInputElement).value;
+      try {
+            const url = "/admin/api/asignarAdquirienteAFactura";
+            const respuesta = await fetch(url, {
+                                      method: 'POST',
+                                      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                      body: JSON.stringify(datosAdquiriente)
+                                    }); 
+            const resultado = await respuesta.json();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 
@@ -273,7 +284,9 @@
 
     document.querySelector('#formNC')?.addEventListener('submit', async e=>{
         e.preventDefault();
-        const idfe = (document.querySelector('#idfe') as HTMLInputElement).value;
+        const idfactura = (document.querySelector('#idfactura') as HTMLInputElement).value
+        console.log(123);
+        return;
         const consecutivo = (document.querySelector('#consecutivoPersonalizado') as HTMLInputElement).value;
         miDialogoNC.close();
         document.removeEventListener("click", cerrarDialogoExterno);
@@ -282,7 +295,7 @@
             const respuesta = await fetch(url, {
                 method: 'POST', 
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                body: JSON.stringify({id: idfe, consecutivo})  //si consecutivo es vacio '', es siguiente consecutivo
+                body: JSON.stringify({id: idfactura, consecutivo})  //si consecutivo es vacio '', es siguiente consecutivo
             });
             
             const responseDian = await respuesta.json(); 

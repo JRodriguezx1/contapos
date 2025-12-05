@@ -238,8 +238,8 @@
                 <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
             </button>
         </div>
-
-        <form method="dialog" class="grid grid-cols-1 gap-6">
+        <div id="divmsjalertaNC"></div>
+        <form id="formNC" class="grid grid-cols-1 gap-6">
             <!-- MOTIVO -->
             <div>
                 <label class="font-medium text-gray-800">Motivo de la nota crédito</label>
@@ -261,7 +261,7 @@
             </div>
             <div class="formulario__campo habilitaconsecutivo" style="display: none;">
                 <label class="formulario__label" for="consecutivoPersonalizado">Consecutivo personalizado</label>
-                <input id="consecutivoPersonalizado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Digite numero del consecutivo" name="consecutivoPersonalizado" value="" required>
+                <input id="consecutivoPersonalizado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Digite numero del consecutivo" name="consecutivoPersonalizado" value="">
             </div>
 
             <!-- DESCRIPCIÓN -->
