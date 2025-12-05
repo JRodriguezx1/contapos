@@ -6,14 +6,14 @@
 
         <!-- Izquierda -->
         <div>
-            <h2 class="text-2xl font-semibold text-gray-900">
-                Factura Electrónica #FE-000123
+            <h2 id="prefixNumber" class="text-2xl font-semibold text-gray-900">
+                Factura #<?php echo $factura->prefijo.'-'.$factura->num_consecutivo; ?>
             </h2>
             <p class="text-gray-500 text-base">28 Nov 2025 - 3:45 PM</p>
 
             <!-- Badge Estado DIAN -->
-            <span class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo ($facturaElectronica??null)?->id_estadoelectronica==2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700'; ?>">
-                <?php echo ($facturaElectronica??null)?->id_estadoelectronica==2?'Aceptada DIAN':'Pendiente DIAN'; ?>
+            <span id="estadoFactura" class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo $facturaElectronica==null?'bg-slate-100 text-gray-700':($facturaElectronica?->id_estadoelectronica == 2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700');?>">
+                <?php echo $facturaElectronica == null?'Factura POS':($facturaElectronica?->id_estadoelectronica == 2?'Aceptada DIAN':'Pendiente DIAN' )?>
             </span>
         </div>
 
@@ -82,15 +82,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-gray-700 text-lg">
             <div>
                 <p class="font-bold text-gray-900">Nombre</p>
-                <p><?php echo $adquiriente->business_name; ?></p>
+                <p id="business_name"><?php echo $adquiriente->business_name; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Identificación</p>
-                <p><?php echo $adquiriente->identification_number; ?></p>
+                <p id="identification_number"><?php echo $adquiriente->identification_number; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Correo</p>
-                <p><?php echo $adquiriente->email?$adquiriente->email:' - '; ?></p>
+                <p id="email"><?php echo $adquiriente->email?$adquiriente->email:' - '; ?></p>
             </div>
         </div>
 
@@ -371,9 +371,7 @@
     </dialog>
 
 
-    <dialog id="miDialogoFacturarA"
-    class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
-
+    <dialog id="miDialogoFacturarA" class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
         <form id="formFacturarA"
             class="bg-white rounded-2xl p-10 space-y-8 w-full" method="POST">
 

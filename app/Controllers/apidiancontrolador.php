@@ -19,7 +19,8 @@ use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
 use MVC\Router;  //namespace\clase
- 
+use stdClass;
+
 class apidiancontrolador{
 
   use DocumentTrait;
@@ -433,6 +434,10 @@ class apidiancontrolador{
         $rfe = self::createInvoiceElectronic($productos, $datosAdquiriente, $consecutivo->id, $idfactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);
         if($rfe){
           $alertas['exito'][] = "Factura convertida a factura electronica exitosamente.";
+          $fe = new stdClass();
+          $fe->prefijo = $factura->prefijo;
+          $fe->num_consecutivo = $factura->num_consecutivo;
+          $alertas['facturaelectronica'] = $fe;
           echo json_encode($alertas);
           return;
         }else{

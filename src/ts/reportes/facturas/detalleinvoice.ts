@@ -16,6 +16,7 @@
     const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
     const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
     const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
+    let isElectronica = false;
     let customers:adquirientes[] = [];
     let customersfiltrados:adquirientes[] = [];
 
@@ -137,6 +138,11 @@
       if(customersfiltrados.length>0&&customersfiltrados[0].municipality_id)$('#municipality_id').val(customersfiltrados[0].municipality_id);
     }
 
+    ///////////////////// Enviar a DIAN //////////////////////
+    btnEnvarDian.addEventListener('click', async ()=>{
+      
+    });
+
     ///////////////////// btn nueva factura //////////////////////
     btnNuevaFactura.addEventListener('click', ()=>{
       modalNuevaFactura.showModal();
@@ -180,6 +186,11 @@
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+              document.querySelector('#estadoFactura')!.textContent = 'Pendiente DIAN';
+              document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'text-gray-700', 'bg-green-500', 'text-white');
+              document.querySelector('#estadoFactura')?.classList.add('bg-yellow-100', 'text-yellow-700');
+              document.querySelector('#prefixNumber')!.textContent = `Factura #${resultado.facturaelectronica.prefijo}-${resultado.facturaelectronica.num_consecutivo}`;
+              isElectronica = true;
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -197,8 +208,18 @@
       const datosAdquiriente: Record<string, FormDataEntryValue> = Object.fromEntries(data.entries());
       miDialogoFacturarA.close();
       document.removeEventListener("click", cerrarDialogoExterno);
-      //guardar adquiriente en DB.
-      guardarAdquiriente(datosAdquiriente);
+      if(isElectronica){
+        document.querySelector('#business_name')!.textContent = datosAdquiriente.business_name as string;
+        document.querySelector('#identification_number')!.textContent = datosAdquiriente.identification_number as string;
+        document.querySelector('#email')!.textContent = datosAdquiriente.email as string;
+        //guardar adquiriente en DB.
+        guardarAdquiriente(datosAdquiriente);
+        //asignar adquiriente a la factura
+        asignarAdquirienteAFactura();
+      }else{
+        msjalertToast('error', '¡Error!', 'La factura debe ser electrónica para asignarle un adquiriente.');
+      }
+
     });
 
 
@@ -222,6 +243,10 @@
         } catch (error) {
             console.log(error);
         }
+    }
+
+    async function asignarAdquirienteAFactura(){
+
     }
 
 
