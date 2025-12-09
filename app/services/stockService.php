@@ -6,6 +6,8 @@ use App\Models\inventario\movimientos_insumos;
 use App\Models\inventario\movimientos_productos;
 use stdClass;
 
+//**SERVICIO DE MOVIMIENTOS DE INVENTARIOS
+
 class stockService {
 
     public static function upDate_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia){

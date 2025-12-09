@@ -286,6 +286,8 @@ $router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guar
 $router->post('/admin/api/sendInvoice', [apidiancontrolador::class, 'sendInvoice']);  // guardar adquiente, llamada desde ventas.sendinvoice.ts
 $router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
 $router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::class, 'crearFacturaPOSaElectronica']);
+$router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::class, 'asignarAdquirienteAFactura']);
+$router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
 
 
 

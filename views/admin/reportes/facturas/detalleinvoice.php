@@ -1,19 +1,38 @@
 <!-- CONTENEDOR GENERAL -->
 <div class="space-y-10 bg-white p-8 mb-20  rounded-xl detalleinvoice">
+  <div class="relative">
+    <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
 
     <!-- ENCABEZADO -->
     <div class="bg-white shadow rounded-xl p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-8 mb-5">
 
         <!-- Izquierda -->
         <div>
+             <!-- id de la factura electronica de venta -->
+            <input id="idfe" class="hidden" type="text" value="<?php $ultimaFacturaElectronica?->id;?>">
+            <input id="idfeState" class="hidden" type="text" value="<?php $ultimaFacturaElectronica?->id_estadoelectronica;?>">
+            <!-- id de la factura general -->
+            <input id="idfactura" class="hidden" type="text" value="<?php echo $factura->id;?>">
+
             <h2 id="prefixNumber" class="text-2xl font-semibold text-gray-900">
                 Factura #<?php echo $factura->prefijo.'-'.$factura->num_consecutivo; ?>
             </h2>
-            <p class="text-gray-500 text-base">28 Nov 2025 - 3:45 PM</p>
+            <p class="text-gray-500 text-base"><?php
+                $fmt = new IntlDateFormatter(
+                    'es_CO',
+                    IntlDateFormatter::NONE,
+                    IntlDateFormatter::NONE,
+                    'America/Bogota',
+                    IntlDateFormatter::GREGORIAN,
+                    'dd MMM yyyy'
+                );
+
+                echo $fmt->format(new DateTime()).' - '.date("h:i A", strtotime(substr(($ultimaFacturaElectronica?->fecha_ultimo_intento)??$factura->fechapago, 12)));
+             ?></p>
 
             <!-- Badge Estado DIAN -->
-            <span id="estadoFactura" class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo $facturaElectronica==null?'bg-slate-100 text-gray-700':($facturaElectronica?->id_estadoelectronica == 2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700');?>">
-                <?php echo $facturaElectronica == null?'Factura POS':($facturaElectronica?->id_estadoelectronica == 2?'Aceptada DIAN':'Pendiente DIAN' )?>
+            <span id="estadoFactura" class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo $ultimaFacturaElectronica==null?'bg-slate-100 text-gray-700':($ultimaFacturaElectronica?->id_estadoelectronica == 2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700');?>">
+                <?php echo $ultimaFacturaElectronica == null?'Factura POS':($ultimaFacturaElectronica?->id_estadoelectronica == 2?'Aceptada DIAN':'Pendiente DIAN' )?>
             </span>
         </div>
 
@@ -82,15 +101,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-gray-700 text-lg">
             <div>
                 <p class="font-bold text-gray-900">Nombre</p>
-                <p id="business_name"><?php echo $adquiriente->business_name; ?></p>
+                <p id="nombreAdquiriente"><?php echo $adquiriente->business_name; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Identificación</p>
-                <p id="identification_number"><?php echo $adquiriente->identification_number; ?></p>
+                <p id="identificacionAdquiriente"><?php echo $adquiriente->identification_number; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Correo</p>
-                <p id="email"><?php echo $adquiriente->email?$adquiriente->email:' - '; ?></p>
+                <p id="emailAdquiriente"><?php echo $adquiriente->email?$adquiriente->email:' - '; ?></p>
             </div>
         </div>
 
@@ -107,36 +126,34 @@
         </div>
     </div>
 
-    <!-- DETALLE DE PRODUCTOS -->
+    <!-- DETALLE DOCUMENTOS ELECTRONICOS -->
     <div class="bg-white rounded-xl shadow p-8 overflow-x-auto mb-5">
-        <h3 class="text-2xl font-semibold text-gray-900 mb-6">Detalle de productos</h3>
+        <h3 class="text-2xl font-semibold text-gray-900 mb-6">Detalle documentos electronicos</h3>
 
         <table class="w-full text-lg">
             <thead class="bg-gray-100 text-gray-600 font-semibold">
                 <tr>
-                    <th class="py-3 px-4 text-left">Producto</th>
-                    <th class="py-3 px-4 text-center">Cant.</th>
-                    <th class="py-3 px-4 text-right">Precio</th>
-                    <th class="py-3 px-4 text-center">% IVA</th>
-                    <th class="py-3 px-4 text-right">Total</th>
+                    <th class="py-3 px-4 text-left">Id</th>
+                    <th class="py-3 px-4 text-center">Factura</th>
+                    <th class="py-3 px-4 text-center">F. Electronica/NC</th>
+                    <th class="py-3 px-4 text-center">Estado</th>
+                    <th class="py-3 px-4 text-center">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y">
-                <tr>
-                    <td class="py-3 px-4">Café x 500gr</td>
-                    <td class="text-center">2</td>
-                    <td class="text-right">$14.280</td>
-                    <td class="text-center">19%</td>
-                    <td class="text-right font-bold">$28.560</td>
-                </tr>
-
-                <tr>
-                    <td class="py-3 px-4">Pan integral</td>
-                    <td class="text-center">1</td>
-                    <td class="text-right">$5.950</td>
-                    <td class="text-center">19%</td>
-                    <td class="text-right font-bold">$5.950</td>
-                </tr>
+            <tbody id="detalleDocumento" class="divide-y">
+                <?php foreach($facturasElectronicas as $value): 
+                    if($value->id_estadoelectronica != 4): ?>
+                    <tr data-idfe="<?php echo $value->id;?>">
+                        <td class="py-3 px-4"><?php echo $value->id;?></td>
+                        <td class="text-center">N° <?php echo $value->id_facturaid;?></td>
+                        <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
+                        <td class="text-center">
+                            <div class="btn-xs <?php echo $value->id_estadoelectronica==2?'btn-lima':($value->id_estadoelectronica==1?'btn-blue':'btn-red');?>"><?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?></div>
+                            <div class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->id_estadonota==1?'btn-blue':'btn-red');?>"><?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?></div>
+                        </td>
+                        <td class="text-center"><?php echo $value->id_estadoelectronica!=2?'<span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span>':''?></td>
+                    </tr>
+                <?php endif; endforeach;  ?>
             </tbody>
         </table>
     </div>
@@ -240,6 +257,16 @@
         </div>
         <div id="divmsjalertaNC"></div>
         <form id="formNC" class="grid grid-cols-1 gap-6">
+            <div>
+                <label class="font-medium text-gray-800">Seleccionar factura electronica de venta</label>
+                <select id="selectInvoice" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2" required>
+                    <option value="" selected disabled>- Seleccionar -</option>
+                    <?php foreach($facturasElectronicas as $value):
+                        if($value->id_estadonota==2&&$value->nota_credito==0): ?>
+                            <option value="<?php echo $value->id;?>"><?php echo $value->num_factura;?></option>
+                    <?php endif; endforeach;  ?>
+                </select>
+            </div>
             <!-- MOTIVO -->
             <div>
                 <label class="font-medium text-gray-800">Motivo de la nota crédito</label>
@@ -306,7 +333,6 @@
         </div>
 
         <form id="formNuevaFactura" method="POST" class="grid grid-cols-1 gap-6">
-            <input id="idfactura" class="hidden" type="text" value="<?php echo $factura->id;?>">
             <!-- Seleccionar Resolución -->
             <div>
                 <label class="font-medium text-gray-800">Resolución en uso</label>
@@ -371,6 +397,7 @@
     </dialog>
 
 
+    <!-- MODAL ADQUIRIENTE -->                
     <dialog id="miDialogoFacturarA" class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
         <form id="formFacturarA"
             class="bg-white rounded-2xl p-10 space-y-8 w-full" method="POST">
@@ -545,5 +572,6 @@
         </form>
     </dialog>
 
+  </div>
 </div>
 

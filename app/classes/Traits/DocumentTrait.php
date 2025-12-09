@@ -12,7 +12,7 @@ trait DocumentTrait
 {
 
     //metodo llamado desde ventascontrolador cuando se hace la venta, para guardar la FE de manera local
-    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, float $descgeneral, float $cargo):bool
+    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, float $descgeneral, float $cargo):array
     {
         date_default_timezone_set('America/Bogota');
         $invoice_lines = [];
@@ -21,7 +21,9 @@ trait DocumentTrait
         $tax_inclusive_total = 0;
         $tax_total = 0;
         $metodoPago = 10;  //contado
+        $stateEmail = false;
 
+        if(isset($datosAdquiriente->email) && $datosAdquiriente?->email!='')$stateEmail=true;
         
         foreach($mediospago as $value)
             if($value->idmediopago != 1){
@@ -142,7 +144,7 @@ trait DocumentTrait
                 "date" => date('Y-m-d'),
                 "time" => date('H:i:s'),
                 "resolution_number" => $consecutivo->resolucion,
-                "sendmail" => false,
+                "sendmail" => $stateEmail,
                 "notes" => "Factura Electroncia de venta",
                 "payment_form" => [
                     "payment_form_id" => "1",  //1 = contado,  2  = credito
@@ -184,11 +186,16 @@ trait DocumentTrait
                 'email'=>$customer['email'],
                 'link'=>'',
                 'nota_credito'=>0,  //0 = no es una nota credito,  1 = si es nota credito
+                'prefixnc' => '',
                 'num_nota'=>'',
                 'cufe_nota'=>'',
+                'qrnc' => '',
+                'linknc' => '',
+                'filenamenc' => '',
                 'fecha_nota'=>'',
-                'is_auto'=>1,   //cuando se envia de manera automatica es 1, si la factua se envia de manera manual es 0.
+                'is_auto'=> 1,   //cuando se envia de manera automatica es 1, si la factua se envia de manera manual es 0.
                 'json_envio'=>$jsonDian,
+                'json_envionc' => '',
                 'respuesta_factura'=>'',
                 'respuesta_nota'=>'',
                 'intentos_de_envio'=>1,
@@ -196,9 +203,9 @@ trait DocumentTrait
             ]);
 
             $rfe = $facturasElectronicas->crear_guardar();
-            return $rfe[0];
+            return $rfe;
         }else{  //resolucion desactivada en sistema
-            return false;
+            return [false];
         }
     } //fin metodo crear factura electronica
 

@@ -14,7 +14,6 @@
             });
             
             const responseDian = await respuesta.json(); 
-            console.log(responseDian);
             return responseDian;
         } catch (error) {
             console.log(error);

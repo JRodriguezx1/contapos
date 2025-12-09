@@ -18,6 +18,8 @@ use App\Models\felectronicas\facturas_electronicas;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
+use App\Rules\FacturaElectronicaRules;
+use App\services\facturaElectronicaService;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -242,21 +244,9 @@ class apidiancontrolador{
       exit;
     }
     $datosadquiriente = json_decode(file_get_contents('php://input'), true);
-    $existeAdquiriente = adquirientes::find('identification_number', $datosadquiriente['identification_number']);
-    if($existeAdquiriente){
-      $existeAdquiriente->compara_objetobd_post($datosadquiriente);
-      $r = $existeAdquiriente->actualizar();
-      $r = "actualizar";
-      $alertas['response'] = $r;
-      $alertas['obj'] = $existeAdquiriente;
-    }else{
-      $adquiriente = new adquirientes($datosadquiriente);
-      $r = $adquiriente->crear_guardar();
-      $r = "crear";
-      $alertas['response'] = $r;
-      $alertas['obj'] = $adquiriente;
-    }
-    echo json_encode($alertas);
+    $resAdq = facturaElectronicaService::createUpDateAdquiriente($datosadquiriente);
+    echo json_encode($resAdq);
+    return;
   }
 
 
@@ -275,41 +265,56 @@ class apidiancontrolador{
     }
     $idfactura = json_decode(file_get_contents('php://input'), true);
     $factura = facturas::find('id', $idfactura['id']);
-    $facturaDian = facturas_electronicas::find('id_facturaid', $idfactura['id']);
-    if($facturaDian && $factura->estado == 'Paga' && $facturaDian->id_estadoelectronica != 2)
+    $allFacturasDian = facturas_electronicas::whereArray(['id_sucursalidfk'=>id_sucursal(), 'consecutivo_id'=>$factura->idconsecutivo, 'id_facturaid' => $idfactura['id'], 'nota_credito'=>0]);
+    //obtener la factura electronica que esta pendiente de enviar..
+    $filtrados = array_filter($allFacturasDian, function($obj) { return $obj->id_estadoelectronica != 2 && $obj->id_estadoelectronica != 4;});
+    $facturaDian = reset($filtrados); //reset devuelve el primer elemento del arreglo
+
+    if($facturaDian && $factura->estado == 'Paga' && $facturaDian->id_estadoelectronica != 2 && $facturaDian->id_estadoelectronica != 4){
       $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
 
-    if(!$res['success']){
-      $alertas['error'][] = $res['error'];
+      if(!$res['success']){
+        $alertas['error'][] = $res['error'];
+        echo json_encode($alertas);
+        return;
+      }
+    
+      //actualizar respuesta de la dian en la tabla facturas_electronicas
+      if($res['success'] && buscarClaveArray($res, 'IsValid')=='true'){
+        $arrayFile = explode('.', buscarClaveArray($res, 'urlinvoicexml'));
+        $facturaDian->id_estadoelectronica = 2; //aceptada
+        $facturaDian->cufe = buscarClaveArray($res, 'cufe');
+        $facturaDian->qr = buscarClaveArray($res, 'QRStr');
+        $facturaDian->filename = "$facturaDian->nitcompany/$arrayFile[0]";
+        $facturaDian->link =  $facturaDian->qr;
+        $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+        $error = $mensaje["ErrorMessage"]["string"];
+        if(!is_array($error))$error = [$error]; // convertir string en array
+        $facturaDian->respuesta_factura = join(' // ', $error).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+        $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+        $r = $facturaDian->actualizar();
+        $alertas['exito'][] = "Factura electronica procesadamente exitosamente.";
+        echo json_encode($alertas);
+        return;
+      }else{
+        $facturaDian->id_estadoelectronica = 3; //error
+        $facturaDian->cufe = '';
+        $facturaDian->qr = '';
+        $facturaDian->link =  '';
+        $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
+        $error = $mensaje["ErrorMessage"]["string"];
+        if(!is_array($error))$error = [$error]; // convertir string en array
+        $facturaDian->respuesta_factura = join(' // ', $error).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+        $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
+        $r = $facturaDian->actualizar();
+        $alertas['error'][] = "Error al enviar la factura electronica. $facturaDian->respuesta_factura";
+        echo json_encode($alertas);
+        return;
+      }
+    }else{
+      $alertas['error'][] = "Error factura no se encuentra como pendiente de enviar a Dian o no esta paga.";
       echo json_encode($alertas);
       return;
-    }
-   
-    //actualizar respuesta de la dian en la tabla facturas_electronicas
-    if($res['success'] && buscarClaveArray($res, 'IsValid')=='true'){
-      $arrayFile = explode('.', buscarClaveArray($res, 'urlinvoicexml'));
-      $facturaDian->id_estadoelectronica = 2; //aceptada
-      $facturaDian->cufe = buscarClaveArray($res, 'cufe');
-      $facturaDian->qr = buscarClaveArray($res, 'QRStr');
-      $facturaDian->filename = "$facturaDian->nitcompany/$arrayFile[0]";
-      $facturaDian->link =  $facturaDian->qr;
-      $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
-      $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
-      $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
-      $r = $facturaDian->actualizar();
-      $alertas['exito'][] = "Factura electronica procesadamente exitosamente.";
-      echo json_encode($alertas);
-    }else{
-      $facturaDian->id_estadoelectronica = 3; //error
-      $facturaDian->cufe = '';
-      $facturaDian->qr = '';
-      $facturaDian->link =  '';
-      $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
-      $facturaDian->respuesta_factura = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
-      $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
-      $r = $facturaDian->actualizar();
-      $alertas['error'][] = "Error al enviar la factura electronica. $facturaDian->respuesta_factura";
-      echo json_encode($alertas);
     }
   }
   
@@ -327,10 +332,10 @@ class apidiancontrolador{
       exit;
     }
     $datos = json_decode(file_get_contents('php://input'), true);
-    $facturaDian = facturas_electronicas::find('id', $datos['id']);
+    $facturaDian = facturas_electronicas::uniquewhereArray(['id'=>$datos['id'], 'id_sucursalidfk'=>id_sucursal(), 'id_facturaid'=>$datos['idfactura']]);
     $companyExist = diancompanias::find('identification_number', $facturaDian->nitcompany);
     if($companyExist){
-      //obtener resolucion de NC de la factura electronica, esta en la api y proximamente local
+      
       $resolInvoiceNc = notacreditoinvoice::find('id_compania', $companyExist->id);
       
       if($datos['consecutivo']!=''&&is_numeric($datos['consecutivo'])) //consecutivo personalizado
@@ -364,18 +369,23 @@ class apidiancontrolador{
             $facturaDian->fecha_nota = date('Y-m-d H:i:s');
             $facturaDian->json_envionc = $jsonNcDian;
             $mensaje = $res["response"]["ResponseDian"]["Envelope"]["Body"]["SendBillSyncResponse"]["SendBillSyncResult"];
-            $facturaDian->respuesta_nota = join(' // ', $mensaje["ErrorMessage"]["string"]).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
+            $error = $mensaje["ErrorMessage"]["string"];
+            if(!is_array($error))$error = [$error]; // convertir string en array
+            $facturaDian->respuesta_nota = join(' // ', $error).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
             $r = $facturaDian->actualizar();
-            if($datos['consecutivo']==''&&!is_numeric($datos['consecutivo']))
+            if($datos['consecutivo']==''&&!is_numeric($datos['consecutivo'])&&(is_null($facturaDian->num_nota) || empty($facturaDian->num_nota))){ //si no es consecutivo personalizado
               $resolInvoiceNc->nextnumber += 1;
-            $resolInvoiceNc->actualizar();
+              $resolInvoiceNc->actualizar();
+            }
             $alertas['exito'][] = "Nota credito procesadamente exitosamente.";
+            $alertas['notacredito'] = $facturaDian;
             $getDB->commit();
             echo json_encode($alertas);
             return;
           } catch (\Throwable $th) {
             $getDB->rollback();
             $alerta['error'][] = "Error en base de datos al generar la nota credito. ".$th->getMessage();
+            $alertas['notacredito'] = $facturaDian;
             echo json_encode($alertas);
             return;
           }
@@ -391,10 +401,12 @@ class apidiancontrolador{
           if(!is_array($error))$error = [$error]; // convertir string en array
           $facturaDian->respuesta_nota = join(' // ', $error).', IsValid = '.$mensaje["IsValid"].', StatusDescription = '.$mensaje["StatusDescription"].', StatusMessage = '.$mensaje["StatusMessage"];
           $r = $facturaDian->actualizar();
-          if($datos['consecutivo']==''&&!is_numeric($datos['consecutivo']))
+          if($datos['consecutivo']==''&&!is_numeric($datos['consecutivo'])&&(is_null($facturaDian->num_nota) || empty($facturaDian->num_nota))){
             $resolInvoiceNc->nextnumber += 1;
-          $resolInvoiceNc->actualizar();
+            $resolInvoiceNc->actualizar();
+          }
           $alertas['error'][] = "Error al generar nota credito. $facturaDian->respuesta_nota";
+          $alertas['notacredito'] = $facturaDian;
           echo json_encode($alertas);
           return;
         }
@@ -411,47 +423,154 @@ class apidiancontrolador{
   }
 
 
+  //METODO LLAMADO DESDE VISTA DETALLEINVOICE BTN + NUEVA FACTURA
   public static function crearFacturaPOSaElectronica(){
     session_start();
     isadmin();
     $alertas = [];
+    $existeInvoice = null;
 
-    $idfactura = $_POST['idfactura'];
+    // -------------------------------
+    // Datos iniciales
+    // -------------------------------
+    $idfactura = $_POST['idfactura']; //id de la factura general
+    $idconsecutivo = $_POST['idResolution']; //id de la resolucion o consecutivo, viene del front ya por sucursal filtrada
+    $numConsecutivoManual = $_POST['numConsecutivoManual'];
+    
     $factura = facturas::find('id', $idfactura);
     $productos = ventas::idregistros('idfactura', $factura->id);
     $datosAdquiriente = json_decode(json_encode(adquirientes::find('id', 1)));
     $mediospago = factmediospago::idregistros('id_factura', $factura->id);
+
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
-      if(!facturas_electronicas::find('id_facturaid', $factura->id)){
-        $consecutivo = consecutivos::findForUpdate('id', $_POST['idResolution']);
-        $numConsecutivo = $consecutivo->siguientevalor;
-        $factura->num_consecutivo = $numConsecutivo;
-        $factura->prefijo = $consecutivo->prefijo;
-        $factura->idconsecutivo = $consecutivo->id;
-        $r = $factura->actualizar();
-        $consecutivo->siguientevalor = $numConsecutivo + 1;
-        $c = $consecutivo->actualizar();
-        $rfe = self::createInvoiceElectronic($productos, $datosAdquiriente, $consecutivo->id, $idfactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);
-        if($rfe){
-          $alertas['exito'][] = "Factura convertida a factura electronica exitosamente.";
-          $fe = new stdClass();
-          $fe->prefijo = $factura->prefijo;
-          $fe->num_consecutivo = $factura->num_consecutivo;
-          $alertas['facturaelectronica'] = $fe;
-          echo json_encode($alertas);
-          return;
-        }else{
-          $alertas['error'][] = "Error al convertir la factura a factura electronica.";
-          echo json_encode($alertas);
-          return;
-        }
-      }else{
-        $alertas['error'][] = "La factura ya se encuentra como factura electronica.";
+      // -------------------------------
+      // Consecutivo DIAN
+      // -------------------------------
+      $consecutivo = consecutivos::findForUpdate('id', $idconsecutivo);
+      $numConsecutivo = $numConsecutivoManual!==''&&is_numeric($numConsecutivoManual)?$numConsecutivoManual:$consecutivo->siguientevalor;
+                        
+      if($numConsecutivoManual===''||!is_numeric($numConsecutivoManual))
+        $consecutivo->siguientevalor++;
+      
+      // -------------------------------
+      // Buscar FE existente con este consecutivo
+      // -------------------------------
+      $validationFE = FacturaElectronicaRules::validarSiPuedeGenerarFE($factura, $idconsecutivo, $numConsecutivo);
+      if(!$validationFE['success']){
+        $alertas['error'][] =  $validationFE['message'];
         echo json_encode($alertas);
         return;
       }
+      // SI ESTÁ ANULADA → RECICLAR
+      if($validationFE['reuse']){ // si una facturaelectronica es = 4, eliminada o anulada
+        // Si pertenece a otra factura POS, reasignar datos de la original
+          if($validationFE['fe']->id_facturaid != $factura->id){  //$validationFE['fe'] es el registro de factura electronica que coincide con el numero e id de resolucion y esta eliminada
+            facturaElectronicaService::reciclarFacturaElectronica($validationFE['fe']);
+          }
+          // Reusar FE
+          $validationFE['fe']->id_facturaid = $factura->id;
+          $validationFE['fe']->id_estadoelectronica=1;
+          $existeInvoice = $validationFE['fe'];
+      }
+
+      // -------------------------------
+      // Si se encontró FE reciclable
+      // -------------------------------
+      if($existeInvoice){
+        facturaElectronicaService::actualizarFacturaConsecutivo($factura, $consecutivo, $numConsecutivo);
+        $existeInvoice->actualizar();
+        $alertas['exito'][] = "Factura electronica regenerada con exito.";
+        $alertas['facturaelectronica'] = $existeInvoice;
+        echo json_encode($alertas);
+        return;
+      }
+
+      // -------------------------------
+      // Crear nueva FE
+      // -------------------------------
+      facturaElectronicaService::actualizarFacturaConsecutivo($factura, $consecutivo, $numConsecutivo);
+      $rfe = self::createInvoiceElectronic($productos, $datosAdquiriente, $consecutivo->id, $idfactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);
+      if($rfe[0]){
+        $alertas['exito'][] = "Factura electronica creada exitosamente.";
+        $fe = new stdClass();
+        $fe->id = $rfe[1];
+        $fe->id_estadoelectronica = 1;
+        $fe->numero = $factura->num_consecutivo;
+        $fe->num_factura = $factura->prefijo.'-'.$factura->num_consecutivo;
+        $fe->prefijo = $factura->prefijo;
+        $fe->id_facturaid = $factura->id;
+        $fe->id_adquiriente = 1;
+        $fe->id_estadonota = 1;
+        $fe->nota_credito = 0;
+        $fe->prefixnc = '';
+        $fe->num_nota = '';
+        $alertas['facturaelectronica'] = $fe;
+        echo json_encode($alertas);
+        return;
+      }else{
+        $alertas['error'][] = "Error al convertir la factura a factura electronica.";
+        echo json_encode($alertas);
+        return;
+      }
+      
     }
-   
+  }
+
+
+  //asigna adquiriente a la ultima factura electronica.
+  public static function asignarAdquirienteAFactura(){
+    session_start();
+    isadmin();
+    $alertas = [];
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+    $datosadquiriente = json_decode(file_get_contents('php://input'), true);
+    //obtener ultima factura electronica creada
+    $facturaDian = facturas_electronicas::uniquewhereArray(['id'=>$datosadquiriente['idfe'], 'id_sucursalidfk'=>id_sucursal(), 'id_facturaid'=>$datosadquiriente['idfactura']]);
+    if($facturaDian){
+      $resAdq = facturaElectronicaService::createUpDateAdquiriente($datosadquiriente);
+      $facturaDian->id_adquiriente = $resAdq['id'];
+      $r = $facturaDian->actualizar();
+      if($r){
+        $alertas['exito'][] = 'Adquiriente asignado correctamente';
+        $alertas['tipo'] = $resAdq['tipo'];
+        $alertas['obj'] = $resAdq['obj'];
+      }else{
+        $alertas['error'][] = 'No se pudo asignar adquiriente a la factura electronica';
+      }
+    }else{
+      $alertas['error'][] = 'Factura electronica no existe';
+    }
+    echo json_encode($alertas);
+    return;
+  }
+
+
+  public static function eliminarFacturaElectronica(){
+    session_start();
+    isadmin();
+    $alertas = [];
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+    $idfe = json_decode(file_get_contents('php://input'), true);
+    $idfe = $idfe['id'];
+    $facturaElectronica = facturas_electronicas::uniquewhereArray(['id'=>$idfe, 'id_sucursalidfk'=>id_sucursal()]);
+    $facturaElectronica->id_estadoelectronica = 4;
+    $r = $facturaElectronica->actualizar();
+    if($r){
+      facturaElectronicaService::reciclarFacturaElectronica($facturaElectronica);
+      $alertas['exito'][] = 'Factura electronica eliminada';
+    }
+    echo json_encode($alertas);
+    return;
   }
 
 

@@ -164,24 +164,38 @@ class reportescontrolador{
         self::detallecompra($router);
     }
 
+
     public static function detalleInvoice(Router $router){
         session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $id=$_GET['id'];
+        $id=$_GET['id'];  //id de la factura
         if(!is_numeric($id))return;
 
+        $ultimaFacturaElectronica = null;
         $factura = facturas::find('id', $id);
-        $facturaElectronica = facturas_electronicas::find('id_facturaid', $factura->id);
+        $facturasElectronicas = facturas_electronicas::whereArray(['id_sucursalidfk'=>id_sucursal(), 'id_facturaid' => $factura->id]);
         $adquiriente = adquirientes::find('id', 1);
-        if($facturaElectronica)
-          $adquiriente = adquirientes::find('id', $facturaElectronica->id_adquiriente);
-        
+        //Obtener la ultima factura electronica por prioridad de estado
+        if($facturasElectronicas){
+          $max = 0;
+          $prioridades = [2 => 3, 1 => 2, 3 => 2, 4 => 1];
+          $prioridadActual = 0;
+          foreach($facturasElectronicas as $value){
+            $p = $prioridades[$value->id_estadoelectronica];
+            if($p > $prioridadActual || ($value->id > $max && $p == $prioridadActual)){
+              $max = $value->id;
+              $ultimaFacturaElectronica = $value;
+              $prioridadActual = $p;
+            }
+          }
+          $adquiriente = adquirientes::find('id', $ultimaFacturaElectronica->id_adquiriente);
+        }
         $resoluciones = consecutivos::whereArray(['idtipofacturador'=>1, 'id_sucursalid'=>id_sucursal(), 'estado'=>1]);
         $departments = departments::all();
 
-        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturaElectronica'=>$facturaElectronica, 'adquiriente'=>$adquiriente, 'resoluciones'=>$resoluciones, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturasElectronicas'=>$facturasElectronicas, 'ultimaFacturaElectronica'=>$ultimaFacturaElectronica, 'adquiriente'=>$adquiriente, 'resoluciones'=>$resoluciones, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
