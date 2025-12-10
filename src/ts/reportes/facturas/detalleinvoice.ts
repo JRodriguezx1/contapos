@@ -171,7 +171,7 @@
           document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'text-gray-700', 'bg-yellow-100', 'text-yellow-700');
           document.querySelector('#estadoFactura')?.classList.add('bg-green-500', 'text-white');
           msjalertToast('success', '¡Éxito!', resDian.exito[0]);
-          if(filaDoc)filaDoc.children[3].children[1].innerHTML = `<div class="btn-xs 'btn-lima"> Aceptada </div>`;
+          if(filaDoc)filaDoc.children[3].children[1].innerHTML = `<div class="btn-xs btn-lima"> Aceptada </div>`;
         }else{
           document.querySelector('#estadoFactura')!.textContent = 'Error';
           document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'g-green-500', 'text-gray-700', 'bg-yellow-100', 'text-yellow-700');
@@ -355,6 +355,7 @@
       if(targetDom.value == '0'){  //  Siguiente consecutivo automatico
         habilitaconsecutivo.style.display = "none";
         document.querySelector('#consecutivoPersonalizado')?.removeAttribute("required");
+        (document.querySelector('#consecutivoPersonalizado') as HTMLInputElement).value = '';
       }
       else{  //consecutivo personalizado
         habilitaconsecutivo.style.display = "flex";
@@ -385,13 +386,21 @@
               if(responseDian.exito !== undefined){
                 msjalertToast('success', '¡Éxito!', responseDian.exito[0]);
                 //actualizar tabla de detalle de documentos electronicos
-                if(filaDoc)filaDoc.children[3].children[1].innerHTML = `<div class="btn-xs btn-orange"> Aceptada NC </div>`;
-                //quitar el documento del select de la modal NC
+                if(filaDoc){
+                  filaDoc.children[3].children[1].innerHTML = `Aceptada NC`;
+                  filaDoc.children[3].children[1].classList.remove('btn-blue', 'btn-red');
+                  filaDoc.children[3].children[1].classList.add('btn-orange');
+                }
+                  //quitar el documento del select de la modal NC
                 eliminarOptionSelectNC(idInvoice);
               }else{
                 msjalertToast('error', '¡Error!', responseDian.error[0]);
                 //actualizar tabla de detalle de documentos electronicos
-                if(filaDoc)filaDoc.children[3].children[1].innerHTML = `<div class="btn-xs btn-red"> Error NC </div>`;
+                if(filaDoc){
+                  filaDoc.children[3].children[1].innerHTML = `Error NC`;
+                  filaDoc.children[3].children[1].classList.remove('btn-blue', 'btn-orange');
+                  filaDoc.children[3].children[1].classList.add('btn-red');
+                }
               }
           } catch (error) {
               console.log(error);

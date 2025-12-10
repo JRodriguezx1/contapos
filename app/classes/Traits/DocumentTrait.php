@@ -213,6 +213,7 @@ trait DocumentTrait
     protected static function createNcElectronic(stdClass $jsonenvio, $number, $prefix, $cufe, $fecha, $resolInvoiceNc):string
     {
         date_default_timezone_set('America/Bogota');
+        $stateEmail = false;
         $billing_reference = [
             "number" => "$prefix$number", //"FE2082",
             "uuid" => $cufe,
@@ -223,6 +224,8 @@ trait DocumentTrait
         $credit_note_lines = $jsonenvio->invoice_lines;
         $tax_totals = $jsonenvio->tax_totals;
         $legal_monetary_totals = $jsonenvio->legal_monetary_totals;
+
+        if(isset($customer->email))$stateEmail = true;
 
         // Armar la nota credito final
         $notaCredito = [
@@ -236,7 +239,7 @@ trait DocumentTrait
             "date" => date('Y-m-d'),   //fecha actual de la generacion de la NC
             "time" => date('H:i:s'),
             "type_operation_id" => 12,
-            "sendmail" => false,
+            "sendmail" => $stateEmail,
             "sendmailtome" => false,
             "head_note" => "Este documento es una nota crédito con referencia generada automáticamente.",
             "foot_note" => "Gracias por su atención. Cualquier duda comuníquese con servicio al cliente.",

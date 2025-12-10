@@ -90,7 +90,6 @@ class ventascontrolador{
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
     $factimpuestos = json_decode($_POST['factimpuestos']);
     $datosAdquiriente = json_decode($_POST['datosAdquiriente']);
-    debuguear($datosAdquiriente);
     $factura = new facturas($_POST);
     $factura->id_sucursal = id_sucursal();
     $venta = new ventas();

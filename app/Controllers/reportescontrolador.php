@@ -386,8 +386,8 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link,
-      fe.nota_credito, fe.prefixnc, fe.num_nota, fe.linknc, fe.filenamenc, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
+      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link, fe.id_estadonota,
+              fe.nota_credito, fe.prefixnc, fe.num_nota, fe.linknc, fe.filenamenc, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
               FROM facturas_electronicas fe
               JOIN facturas f ON fe.id_facturaid = f.id
               JOIN adquirientes a ON fe.id_adquiriente = a.id

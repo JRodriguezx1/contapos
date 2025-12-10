@@ -9,8 +9,8 @@
         <!-- Izquierda -->
         <div>
              <!-- id de la factura electronica de venta -->
-            <input id="idfe" class="hidden" type="text" value="<?php $ultimaFacturaElectronica?->id;?>">
-            <input id="idfeState" class="hidden" type="text" value="<?php $ultimaFacturaElectronica?->id_estadoelectronica;?>">
+            <input id="idfe" class="hidden" type="text" value="<?php echo $ultimaFacturaElectronica?->id;?>">
+            <input id="idfeState" class="hidden" type="text" value="<?php echo $ultimaFacturaElectronica?->id_estadoelectronica;?>">
             <!-- id de la factura general -->
             <input id="idfactura" class="hidden" type="text" value="<?php echo $factura->id;?>">
 
@@ -149,7 +149,7 @@
                         <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
                         <td class="text-center">
                             <div class="btn-xs <?php echo $value->id_estadoelectronica==2?'btn-lima':($value->id_estadoelectronica==1?'btn-blue':'btn-red');?>"><?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?></div>
-                            <div class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->id_estadonota==1?'btn-blue':'btn-red');?>"><?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?></div>
+                            <div class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->nota_credito==1&&$value->id_estadonota==1?'btn-blue':($value->nota_credito==1&&$value->id_estadonota==3?'btn-red':''));?>"><?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?></div>
                         </td>
                         <td class="text-center"><?php echo $value->id_estadoelectronica!=2?'<span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span>':''?></td>
                     </tr>
@@ -161,14 +161,14 @@
     <!-- RESUMEN -->
     <div class="bg-white rounded-xl shadow p-8 max-w-xs ml-auto border border-gray-100">
         <div class="flex justify-between text-lg text-gray-700 mb-2">
-            <span>Subtotal</span><span>$29.000</span>
+            <span>Subtotal</span><span><?php echo $factura->base;?></span>
         </div>
         <div class="flex justify-between text-lg text-gray-700 mb-2">
-            <span>IVA 19%</span><span>$5.510</span>
+            <span>IVA-Imp</span><span>$<?php echo $factura->valorimpuestototal;?></span>
         </div>
         <div class="border-t border-gray-200 my-4"></div>
         <div class="flex justify-between text-xl font-extrabold text-gray-900">
-            <span>Total</span><span>$34.510</span>
+            <span>Total</span><span>$<?php echo $factura->total;?></span>
         </div>
     </div>
 
@@ -262,8 +262,8 @@
                 <select id="selectInvoice" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2" required>
                     <option value="" selected disabled>- Seleccionar -</option>
                     <?php foreach($facturasElectronicas as $value):
-                        if($value->id_estadonota==2&&$value->nota_credito==0): ?>
-                            <option value="<?php echo $value->id;?>"><?php echo $value->num_factura;?></option>
+                        if($value->id_estadoelectronica==2&&$value->nota_credito==0 || ($value->id_estadoelectronica==2&&($value->id_estadonota==1 || $value->id_estadonota==3))): ?>
+                            <option data-idfactura="<?php echo $value->id_facturaid;?>" data-estadoFE="<?php echo $value->id_estadoelectronica;?>" data-estadoNC="<?php echo $value->id_estadonota;?>" value="<?php echo $value->id;?>"><?php echo $value->num_factura;?></option>
                     <?php endif; endforeach;  ?>
                 </select>
             </div>
