@@ -194,7 +194,7 @@ class apidiancontrolador{
     }
 
     $resolution = json_decode(file_get_contents('php://input'), true);
-    $existeResolution = notacreditoinvoice::uniquewhereArray(['id_compania'=>$resolution['idcompany'], 'prefix'=>$resolution['Prefix']]);
+    $existeResolution = notacreditoinvoice::uniquewhereArray(['id_compania'=>$resolution['idcompany'], 'prefix'=>$resolution['prefix']]);
     if($existeResolution){
       $existeResolution->estado = 1;
       $alertas['exito'][] = "Resolucion de NC ya disponible en sistema.";
@@ -203,7 +203,7 @@ class apidiancontrolador{
                                       'idsucursal_id_fk'=>id_sucursal(), 
                                       'id_compania' => $resolution['idcompany'],
                                       'type_document_id'=>$resolution['type_document_id'], 
-                                      'prefix'=>'Electronica '.$resolution['Prefix'], 
+                                      'prefix'=>'Electronica '.$resolution['prefix'], 
                                       'resolution'=>'',
                                       'nextnumber'=>1,
                                       'resolution_date'=>date('Y-m-d'),
