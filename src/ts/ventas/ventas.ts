@@ -385,6 +385,7 @@
     function vaciarventa():void
     {
       if(datosfactura?.id)datosfactura.id = '';
+      (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
       mapMediospago.clear();
       $('.mediopago').val(0);
       carrito.length = 0;
