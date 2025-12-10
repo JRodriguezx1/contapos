@@ -147,7 +147,7 @@ class inventarioService {
                 }
                 
                 //ACTUALIZAR MOVIMIENTO DE INVENTARIO
-                stockService::upDate_movimientoProductos($upsertProductos, $returnProductos, 'ajuste', 'ajuste desde excel');
+                count($upsertProductos)>0?stockService::upDate_movimientoProductos($upsertProductos, $returnProductos, 'ajuste', 'ajuste desde excel'):'';
                 //movimiento de productos nuevos insertados
             }
 
