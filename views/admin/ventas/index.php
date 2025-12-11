@@ -308,7 +308,7 @@
           <div class="sm:col-span-4">
             <label for="clientenuevoemail" class="block text-2xl font-medium text-gray-600">Email</label>
             <div class="mt-2">
-              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
+              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
 

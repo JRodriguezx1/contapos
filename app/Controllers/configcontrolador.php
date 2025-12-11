@@ -76,7 +76,7 @@ class configcontrolador{
                     if($_FILES['logo']['name']){
                         $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
                         $existe_archivo = file_exists($rutaimg);
-                        if($existe_archivo)unlink($rutaimg);
+                        if($existe_archivo&&!empty($sucursal->logo))unlink($rutaimg);
                         $url_temp = $_FILES["logo"]["tmp_name"];
                         $sucursal->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
                         $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;

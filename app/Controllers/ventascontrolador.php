@@ -465,7 +465,7 @@ class ventascontrolador{
     $mediospago = json_decode($_POST['mediosPago']);
     //$datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $datosAdquiriente = json_decode(json_encode(adquirientes::find('id', 1)));  //convierte el objeto de la clase adquitiente a stdclass
-    debuguear($datosAdquiriente);
+    //debuguear($datosAdquiriente);
     $factmediospago = new factmediospago();
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
