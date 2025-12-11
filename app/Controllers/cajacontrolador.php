@@ -519,7 +519,7 @@ class cajacontrolador{
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
     $sucursal = sucursales::find('id', id_sucursal());
-    $lineasencabezado = explode("\n", $sucursal->datosencabezados);
+    $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
     $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
           JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$factura->id};";
     $mediospago = ActiveRecord::camposJoinObj($sql);
