@@ -18,16 +18,8 @@
                 Factura #<?php echo $factura->prefijo.'-'.$factura->num_consecutivo; ?>
             </h2>
             <p class="text-gray-500 text-base"><?php
-                $fmt = new IntlDateFormatter(
-                    'es_CO',
-                    IntlDateFormatter::NONE,
-                    IntlDateFormatter::NONE,
-                    'America/Bogota',
-                    IntlDateFormatter::GREGORIAN,
-                    'dd MMM yyyy'
-                );
-
-                echo $fmt->format(new DateTime()).' - '.date("h:i A", strtotime(substr(($ultimaFacturaElectronica?->fecha_ultimo_intento)??$factura->fechapago, 12)));
+                $fecha = new DateTime('now', new DateTimeZone('America/Bogota'));
+                echo $fecha->format('d M Y').' - '.date("h:i A", strtotime(substr(($ultimaFacturaElectronica?->fecha_ultimo_intento)??$factura->fechapago, 12)));
              ?></p>
 
             <!-- Badge Estado DIAN -->
@@ -148,8 +140,18 @@
                         <td class="text-center">N° <?php echo $value->id_facturaid;?></td>
                         <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
                         <td class="text-center">
-                            <div class="btn-xs <?php echo $value->id_estadoelectronica==2?'btn-lima':($value->id_estadoelectronica==1?'btn-blue':'btn-red');?>"><?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?></div>
-                            <div class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->nota_credito==1&&$value->id_estadonota==1?'btn-blue':($value->nota_credito==1&&$value->id_estadonota==3?'btn-red':''));?>"><?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?></div>
+                            <a 
+                                class="btn-xs <?php echo $value->id_estadoelectronica==2?'btn-lima':($value->id_estadoelectronica==1?'btn-blue':'btn-red');?>" 
+                                href="<?php echo $value->link??'/';?>" target="_blank"
+                            >
+                                <?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?>
+                            </a>
+                            <a 
+                                class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->nota_credito==1&&$value->id_estadonota==1?'btn-blue':($value->nota_credito==1&&$value->id_estadonota==3?'btn-red':''));?>" 
+                                href="<?php echo $value->linknc??'/';?>" target="_blank"
+                            >
+                                <?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?>
+                            </a>
                         </td>
                         <td class="text-center"><?php echo $value->id_estadoelectronica!=2?'<span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span>':''?></td>
                     </tr>

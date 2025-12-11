@@ -203,7 +203,7 @@ class apidiancontrolador{
                                       'idsucursal_id_fk'=>id_sucursal(), 
                                       'id_compania' => $resolution['idcompany'],
                                       'type_document_id'=>$resolution['type_document_id'], 
-                                      'prefix'=>'Electronica '.$resolution['prefix'], 
+                                      'prefix'=>$resolution['prefix'], 
                                       'resolution'=>'',
                                       'nextnumber'=>1,
                                       'resolution_date'=>date('Y-m-d'),
@@ -294,6 +294,7 @@ class apidiancontrolador{
         $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
         $r = $facturaDian->actualizar();
         $alertas['exito'][] = "Factura electronica procesadamente exitosamente.";
+        $alertas['link'] = $facturaDian->link;
         echo json_encode($alertas);
         return;
       }else{

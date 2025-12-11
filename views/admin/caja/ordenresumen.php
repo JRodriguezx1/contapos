@@ -28,7 +28,9 @@
         <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
             <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
+        <?php if($factura->estado=='Paga'):?>
         <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
+        <?php endif; ?>
     </div>
     
     <div class="flex gap-4 mb-4">
