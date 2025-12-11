@@ -1,11 +1,15 @@
 <div class="negocio__contenedor">
     <h4 class="text-center text-gray-600">Informacion Del Negocio</h4>
     <form class="formulario" action="/admin/configuracion/editarnegocio" enctype="multipart/form-data" method="POST">
-        <fieldset class="formulario__fieldset"> 
+        <fieldset class="formulario__fieldset">
             <div class="formulario__campo">
-                <label class="formulario__label" for="nombrenegocio">Nombre</label>
+                <label class="formulario__label" for="empresa">Empresa</label>
+                <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la empresa" id="empresa" name="negocio" value="<?php echo $negocio->negocio??''; ?>" required>
+            </div>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="nombrenegocio">Nombre de la sucursal</label>
                 <div class="formulario__dato">
-                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del negocio" id="nombrenegocio" name="nombre" value="<?php echo $negocio->nombre??''; ?>" required>
+                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la sucursal" id="nombrenegocio" name="nombre" value="<?php echo $negocio->nombre??''; ?>" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
