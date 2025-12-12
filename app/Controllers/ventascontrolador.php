@@ -380,7 +380,7 @@ class ventascontrolador{
                 $obj->dato1 = '';
                 $obj->dato2 = '';
                 $obj->idfactura = $factura->id;
-                if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
+                if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
                   $obj->id = 1;  //este es el id de Otros.
                   $obj->idproducto = 1;
                   $obj->idcategoria = 1;
@@ -403,7 +403,7 @@ class ventascontrolador{
                 $obj->dato1 = '';
                 $obj->dato2 = '';
                 $obj->idfactura = $r[1];
-                if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
+                if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
                   $obj->id = 1;  //este es el id de Otros.
                   $obj->idproducto = 1;
                   $obj->idcategoria = 1;

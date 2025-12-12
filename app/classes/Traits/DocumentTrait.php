@@ -129,7 +129,7 @@ trait DocumentTrait
             // Totales monetarios
             $legal_monetary_totals = [
                 "line_extension_amount" => number_format($line_extension_total, 2, '.', ''),  //sin impuesto
-                "tax_exclusive_amount" => number_format($line_extension_total, 2, '.', ''),  //sin impuesto
+                "tax_exclusive_amount" => number_format($$tax_total>0?$line_extension_total:0, 2, '.', ''),  //sin impuesto, ó '0' si es excluido de impuesto
                 "tax_inclusive_amount" => number_format($tax_inclusive_total, 2, '.', ''),  //con impuesto
                 "allowance_total_amount" => number_format($descgeneral, 2, '.', ''),
                 "charge_total_amount" => number_format($cargo, 2, '.', ''),

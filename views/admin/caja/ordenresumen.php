@@ -179,9 +179,6 @@
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
               <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
-                  <!--<option value="" disabled selected>-Seleccionar-</option>
-                  <option value="1">Caja principal</option>
-                  <option value="2">Caja bodega</option>-->
                   <?php foreach($cajas as $index => $value):?>
                     <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
                   <?php endforeach; ?>
@@ -191,7 +188,7 @@
               <label class="formulario__label" for="facturador">Facturador</label>
               <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
-                  <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                  <option data-idtipofacturador="<?php echo $value->idtipofacturador;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
               </select>
             </div>
