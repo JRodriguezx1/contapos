@@ -48,7 +48,7 @@ CREATE TABLE `adquirientes` (
 
 LOCK TABLES `adquirientes` WRITE;
 /*!40000 ALTER TABLE `adquirientes` DISABLE KEYS */;
-INSERT INTO `adquirientes` VALUES (1,6,'222222222222','Consumidor final',NULL,NULL,NULL,1,2,NULL,NULL,NULL,NULL,'2025-11-20 03:10:50');
+INSERT INTO `adquirientes` VALUES (1,3,'222222222222','Consumidor final',NULL,NULL,NULL,2,2,NULL,NULL,NULL,NULL,'2025-11-20 03:10:50');
 /*!40000 ALTER TABLE `adquirientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1045,7 +1045,7 @@ CREATE TABLE `facturas` (
   `num_orden` int DEFAULT NULL,
   `prefijo` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `num_consecutivo` int DEFAULT NULL,
-  `cliente` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `cliente` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `vendedor` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `caja` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `tipofacturador` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
@@ -1752,10 +1752,10 @@ CREATE TABLE `notacreditoinvoice` (
   `estado` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `idsucursal_idfk_idx` (`idsucursal_id_fk`),
   KEY `id_compania_idx` (`id_compania`),
-  CONSTRAINT `id_compania` FOREIGN KEY (`id_compania`) REFERENCES `contapos`.`diancompanias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `idsucursal_id_fk` FOREIGN KEY (`idsucursal_id_fk`) REFERENCES `contapos`.`sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `idsucursal_id_fk_idx` (`idsucursal_id_fk`),
+  CONSTRAINT `id_compania` FOREIGN KEY (`id_compania`) REFERENCES `diancompanias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `idsucursal_id_fk` FOREIGN KEY (`idsucursal_id_fk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2513,4 +2513,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-09 23:51:06
+-- Dump completed on 2025-12-12 13:53:03
