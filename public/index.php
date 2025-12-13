@@ -22,6 +22,7 @@ use App\Controllers\reportescontrolador;
 use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
+use App\Controllers\creditoscontrolador;
 use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
@@ -125,6 +126,8 @@ $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden'
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
 ///// print ticket //////
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
+///// Creditos /////
+$router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
 $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 'ventasgenerales']);

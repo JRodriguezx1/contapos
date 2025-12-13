@@ -71,8 +71,11 @@
         <?php if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Ventas')?'activo':''; ?>" href="/admin/ventas"><span class="material-symbols-outlined">storefront</span> <label class="btnav"> Ventas</label></a>
         <?php endif; ?>
+        <?php //if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
+            <a class="<?php echo ($titulo === 'Creditos')?'activo':''; ?>" href="/admin/creditos"><span class="material-symbols-outlined">swap_horiz</span> <label class="btnav"> Creditos</label></a>
+        <?php //endif; ?>
         <?php if(tienePermiso('Habilitar modulo de reportes')&&userPerfil()==3 || userPerfil()<3): ?>
-            <a class="<?php echo ($titulo === 'Reportes')?'activo':''; ?>" href="/admin/reportes"><span class="material-symbols-outlined">format_list_bulleted</span> <label class="btnav"> Reportes</label></a>
+            <a class="<?php echo ($titulo === 'Reportes')?'activo':''; ?>" href="/admin/reportes"><span class="material-symbols-outlined">finance</span> <label class="btnav"> Reportes</label></a>
         <?php endif; ?>
         <?php //if(tienePermiso('Habilitar modulo de venta')): ?>
             <a class="<?php echo (str_contains($titulo, 'Clientes'))?'activo':''; ?>" href="/admin/clientes"><span class="material-symbols-outlined">support_agent</span> <label class="btnav"> Clientes</label></a>
