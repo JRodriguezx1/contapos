@@ -1,48 +1,103 @@
-<div class="box creditos">
-  <?php include __DIR__. "/../../templates/alertas.php"; ?>
-  <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Gestion de creditos</h4>
-  <div class="flex flex-wrap gap-4 mb-6">
-    <button id="btnCrearCredito" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">add_2</span>Nuevo Credito</button>
-    <!--<button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="btnGastosingresos"><span class="material-symbols-outlined">paid</span>Gastos</br>Ingresos</button>
-    <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
-    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
-    -->
-</div>
+<div class="p-6 min-h-screen detallecredito">
+  <div class="max-w-auto mx-auto bg-white shadow-lg rounded-2xl p-8">
+    <!-- Título principal -->
+     <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">
+    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+    </svg>
+    <span class="sr-only">Atrás</span>
+    </a>
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      💳 Detalles del Crédito
+    </h2>
 
-  <table class="display responsive nowrap tabla" width="100%" id="tablaCreditos">
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Cliente</th>
-                    <th>Total del credito</th>
-                    <th>Deuda</th>
-                    <th>Cuota</th>
-                    <th>Abono total</th>
-                    <th class="accionesth">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($creditos as $value): ?>
-                    <tr> 
-                        <td class=""><?php echo $value->ID; ?></td> 
-                        <td class=""><?php echo $value->nombre.' '.$value->apellido; ?></td>         
-                        <td class="">$<?php echo number_format($value->montototal,'2', ',', '.'); ?></td>
-                        <td class="">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
-                        <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td> 
-                        <td class="">$<?php echo number_format($value->montototal-$value->saldopendiente,'2', ',', '.'); ?></td>        
-                        <td class="accionestd">
-                            <div class="acciones-btns" id="<?php echo $value->ID;?>">
-                                <button class="btn-md btn-turquoise editarCredito" title="Actualizar datos del cliente"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <a class="btn-md btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>
+    <!-- Información general del crédito -->
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🧾 Factura</h3>
+        <p class="text-gray-800 text-lg">FAP1</p>
+      </div>
 
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+      <div class="bg-green-50 border border-green-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-green-700 mb-1 uppercase">💰 Total del Credito</h3>
+        <p class="text-gray-800 text-lg">$ <?php echo number_format($credito->montototal,'2', ',', '.'); ?></p>
+      </div>
 
-  <!-- MODAL PARA CREAR CREDITOS-->
+      <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-yellow-700 mb-1 uppercase">📅 Fecha Emisión</h3>
+        <p class="text-gray-800 text-lg"><?php echo $credito->fechainicio;?></p>
+      </div>
+    </div>
+
+    <!-- Detalles financieros -->
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">🔢 Plazo</h3>
+        <p class="text-gray-800 text-lg"><?php echo $credito->cantidadcuotas;?>  / Cuotas</p>
+      </div>
+
+      <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-orange-700 mb-1 uppercase">📆 Fecha Vencimiento</h3>
+        <p class="text-gray-800 text-lg"> - </p>
+      </div>
+
+      <div class="bg-red-50 border border-red-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-red-700 mb-1 uppercase">💸 Abono Inicial</h3>
+        <p class="text-gray-800 text-lg">$ <?php echo $credito->abonoinicial;?></p>
+      </div>
+    </div>
+
+    <!-- Estado actual -->
+    <div class="bg-gray-100 border border-gray-300 rounded-xl p-5 mb-8">
+      <h3 class="text-xl font-semibold text-gray-700 mb-3 uppercase">📊 Estado del Crédito</h3>
+      <div class="flex items-center gap-4">
+        <span class="px-4 py-2 rounded-full text-sm font-semibold bg-green-100 text-green-700">
+          <?php echo $credito->estado==0?'En curso':'Finalizado'; ?>
+        </span>
+        <span class="text-gray-600">Saldo pendiente: <strong>$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
+      </div>
+    </div>
+
+    <!-- Historial de abonos -->
+    <div class="mb-10">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">📚 Historial de Abonos</h3>
+      <table id="tablacuotas" class="w-full border border-gray-200 rounded-xl overflow-hidden">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="text-left px-4 py-2 text-base font-semibold text-gray-700">Fecha</th>
+            <th class="text-left px-4 py-2 text-base font-semibold text-gray-700">Monto</th>
+            <th class="text-left px-4 py-2 text-base font-semibold text-gray-700">Método</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach($cuotas as $value): ?>
+            <tr class="border-t">
+              <td class="px-4 py-2 text-gray-800"><?php echo $value->fechapago;?></td>
+              <td class="px-4 py-2 text-gray-800">$<?php echo $value->montocuota;?></td>
+              <td class="px-4 py-2 text-gray-800"><?php echo $value->mediopago;?></td>
+            </tr>
+          <?php endforeach; ?>
+          
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex justify-end gap-4">
+      <button id="abonar" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">
+        ➕ Abonar
+      </button>
+      <button id="pagarTodo" class="hover:bg-green-700 btn-turquoise text-white font-semibold  rounded-lg shadow flex items-center gap-2 mb-4 py-4 px-6">
+        ✅ Pagar Todo
+      </button>
+      <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold  rounded-lg shadow flex items-center gap-2 mb-4 py-4 px-6">
+        ⬅️ Volver
+      </button>
+    </div>
+  </div>
+
+
+  <!-- MODAL PARA ABONAR-->
   <dialog id="miDialogoCredito" class="midialog-sm p-12">
     <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
         <h4 id="modalCredito" class="font-semibold text-gray-700 mb-4">Crear credito</h4>
@@ -150,6 +205,6 @@
             <input id="btnEditarCrearCredito" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
         </div>
     </form>
-  </dialog><!--fin crear/editar Credito-->
+  </dialog><!--fin modal Abonoar-->
 
 </div>

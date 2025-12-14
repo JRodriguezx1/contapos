@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\creditos;
 
 class cuotas extends \App\Models\ActiveRecord{
     protected static $tabla = 'cuotas';
-    protected static $columnasDB = ['id', 'id_credito', 'numerocuota', 'montocuota', 'fechavencimiento', 'fechapagado', 'cuotascreditos', 'estado'];
+    protected static $columnasDB = ['id', 'id_credito', 'mediopagoid', 'numerocuota', 'montocuota', 'valorpagado', 'fechavencimiento', 'fechapagado', 'cuotascreditos', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->id_credito = $args['id_credito']??'';
+        $this->mediopagoid = $args['mediopagoid']??'';
         $this->numerocuota = $args['numerocuota']??1;
         $this->montocuota = $args['montocuota']??0;
+        $this->valorpagado = $args['valorpagado']??0;
         $this->fechavencimiento = $args['fechavencimiento']??date('Y-m-d');
         $this->fechapagado = $args['fechapagado']?? date('Y-m-d');
         $this->estado = $args['estado']??0;

@@ -120,7 +120,6 @@ $router->post('/admin/caja/crear_categoriaGasto', [cajacontrolador::class, 'crea
 $router->post('/admin/caja/editarcategoriagasto', [cajacontrolador::class, 'editarcategoriagasto']);
 $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen']);  //resumen de la orden
 //$router->get('/admin/caja/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']);  //imprimir factura tipo carta
-$router->get('/admin/caja/detallecredito', [cajacontrolador::class, 'detallecredito']); //detalle de la orden
 $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
@@ -128,6 +127,9 @@ $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
 ///// Creditos /////
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
+$router->post('/admin/creditos/crearCredito', [creditoscontrolador::class, 'crearCredito']);
+$router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
+
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
 $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 'ventasgenerales']);
@@ -206,11 +208,6 @@ $router->post('/admin/api/confirmarnuevotrasladoinv', [trasladosinvcontrolador::
 $router->post('/admin/api/confirmaringresoinv', [trasladosinvcontrolador::class, 'confirmaringresoinv']); //api llamada desde solicitudesrecibidasinv.ts para confirmar lista de productos a recibir y sumar de inventario y pasar a estado en entregado
 $router->post('/admin/api/anularnuevotrasladoinv', [trasladosinvcontrolador::class, 'anularnuevotrasladoinv']); //api llamada desde trasladarinv.ts y solicitudesrecibidasinv para cancelar orden de traslado o solicitud
 
-$router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
-$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
-$router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
-$router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
-
 $router->post('/admin/api/declaracionDinero', [cajacontrolador::class, 'declaracionDinero']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/arqueocaja', [cajacontrolador::class, 'arqueocaja']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierrecajaconfirmado']);  //aip llamada desde cerrarcaja.ts
@@ -219,6 +216,13 @@ $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospa
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eliminarPedidoGuardado']);  //api llamada desde pedidosguardados.ts
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
+
+$router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
+$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
+$router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
+$router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
+
+$router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
