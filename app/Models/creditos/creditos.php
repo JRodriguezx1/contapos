@@ -4,7 +4,7 @@ namespace App\Models\creditos;
 
 class creditos extends \App\Models\ActiveRecord{
     protected static $tabla = 'creditos';
-    protected static $columnasDB = ['id', 'id_fksucursal', 'factura_id', 'cliente_id', 'nombrecliente', 'capital', 'abonoinicial', 'saldopendiente', 'cantidadcuotas', 'montocuota', 'frecuenciapago', 'fechainicio', 'interes', 'interesxcuota', 'interestotal', 'valorinteresxcuota', 'valorinterestotal', 'montototal', 'fechavencimiento', 'estado'];
+    protected static $columnasDB = ['id', 'id_fksucursal', 'factura_id', 'cliente_id', 'nombrecliente', 'capital', 'abonoinicial', 'saldopendiente', 'numcuota', 'cantidadcuotas', 'montocuota', 'frecuenciapago', 'fechainicio', 'interes', 'interesxcuota', 'interestotal', 'valorinteresxcuota', 'valorinterestotal', 'montototal', 'fechavencimiento', 'productoentregado', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -15,6 +15,7 @@ class creditos extends \App\Models\ActiveRecord{
         $this->capital = $args['capital']??0;
         $this->abonoinicial = $args['abonoinicial']??0;
         $this->saldopendiente = $args['saldopendiente']??0;
+        $this->numcuota = $args['numcuota']??0;
         $this->cantidadcuotas = $args['cantidadcuotas']??0;
         $this->montocuota = $args['montocuota']??0;
         $this->frecuenciapago = $args['frecuenciapago']??'';
@@ -26,6 +27,7 @@ class creditos extends \App\Models\ActiveRecord{
         $this->valorinterestotal = $args['valorinterestotal']??0;
         $this->montototal = $args['montototal']??0;
         $this->fechavencimiento = $args['fechavencimiento']??'';
+        $this->productoentregado = $args['productoentregado']??0;
         $this->estado = $args['estado']??0;
         $this->created_at = $args['created_at']??'';
     }

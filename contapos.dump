@@ -284,7 +284,7 @@ CREATE TABLE `cierrescajas` (
   `idsucursal_id` int DEFAULT NULL,
   `idcaja` int DEFAULT NULL,
   `id_usuario` int DEFAULT NULL,
-  `nombrecaja` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `nombrecaja` varchar(33) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nombreusuario` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `fechainicio` datetime NOT NULL,
   `fechacierre` datetime DEFAULT NULL,
@@ -299,11 +299,13 @@ CREATE TABLE `cierrescajas` (
   `facturaselectronicas` int DEFAULT '0',
   `facturaspos` int DEFAULT '0',
   `valorfe` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
-  `valorpos` varchar(14) COLLATE utf8mb3_unicode_ci DEFAULT '0',
+  `valorpos` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT '0',
   `descuentofe` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `descuentopos` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `basecaja` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `ventasenefectivo` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
+  `creditos` decimal(12,2) DEFAULT '0.00',
+  `abonos` decimal(12,2) DEFAULT '0.00',
   `gastoscaja` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `gastosbanco` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `dineroencaja` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
@@ -316,7 +318,7 @@ CREATE TABLE `cierrescajas` (
   `valorimpuestototal` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `basegravable` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0',
   `estado` tinyint(1) NOT NULL,
-  `dato1` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `dato1` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dato2` varchar(11) CHARACTER SET utf32 COLLATE utf32_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idcaja_idx` (`idcaja`),
@@ -325,7 +327,7 @@ CREATE TABLE `cierrescajas` (
   CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idcaja` FOREIGN KEY (`idcaja`) REFERENCES `caja` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idsucursal_id` FOREIGN KEY (`idsucursal_id`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -334,7 +336,7 @@ CREATE TABLE `cierrescajas` (
 
 LOCK TABLES `cierrescajas` WRITE;
 /*!40000 ALTER TABLE `cierrescajas` DISABLE KEYS */;
-INSERT INTO `cierrescajas` VALUES (1,1,1,1,'Caja principal','Julian Rodriguez','2025-09-22 02:08:52','2025-09-25 17:01:27',2,2,0,0,0,0.00,0.00,6,0,6,'0','3939800','0','0','0','3939800','0','0','3939800','0',0,'0','3939800','0','3939800','0','3939800',1,NULL,NULL),(2,1,1,1,'Caja principal','Julian Rodriguez','2025-09-25 17:01:27','2025-09-28 07:00:09',0,0,0,0,0,0.00,0.00,2,0,2,'0','2672400','0','0','0','2672400','0','0','2672400','0',0,'0','2672400','0','2672400','0','2672400',1,NULL,NULL),(3,1,1,1,'Caja principal','Julian Rodriguez','2025-09-28 07:00:09','2025-10-05 00:22:06',0,2,1,0,-1,0.00,0.00,4,0,4,'0','2849900','0','0','145000','640900','400010','120000','385890','0',0,'0','640900','0','640900','0','3102900',1,NULL,NULL),(4,1,1,1,'Caja principal',NULL,'2025-10-05 00:22:06','2025-10-05 00:22:06',10,15,7,0,-7,0.00,0.00,123,66,57,'2909754','20358800','55821','50000','0','22573054','897000','0','0','20000',0,'0','23268554','105821','0','798995.595','22628824.783',0,NULL,NULL),(5,NULL,4,1,'Caja almacen',NULL,'2025-10-19 06:22:13','2025-10-19 06:22:13',0,0,0,0,0,0.00,0.00,0,0,0,'0','0','0','0','0','0','0','0','0','0',0,'0','0','0','0','0','0',0,NULL,NULL),(10,2,2,1,'Caja principal',NULL,'2025-10-20 01:05:54','2025-10-20 01:05:54',0,0,0,0,0,0.00,0.00,2,0,2,'0','499000','0','0','0','499000','0','0','0','0',0,'0','499000','0','0','50932.773','448067.227',0,NULL,NULL);
+INSERT INTO `cierrescajas` VALUES (1,1,1,1,'Caja principal','Julian Rodriguez','2025-09-22 02:08:52','2025-09-25 17:01:27',2,2,0,0,0,0.00,0.00,6,0,6,'0','3939800','0','0','0','3939800',0.00,0.00,'0','0','3939800','0',0,'0','3939800','0','3939800','0','3939800',1,NULL,NULL),(2,1,1,1,'Caja principal','Julian Rodriguez','2025-09-25 17:01:27','2025-09-28 07:00:09',0,0,0,0,0,0.00,0.00,2,0,2,'0','2672400','0','0','0','2672400',0.00,0.00,'0','0','2672400','0',0,'0','2672400','0','2672400','0','2672400',1,NULL,NULL),(3,1,1,1,'Caja principal','Julian Rodriguez','2025-09-28 07:00:09','2025-10-05 00:22:06',0,2,1,0,-1,0.00,0.00,4,0,4,'0','2849900','0','0','145000','640900',0.00,0.00,'400010','120000','385890','0',0,'0','640900','0','640900','0','3102900',1,NULL,NULL),(4,1,1,1,'Caja principal',NULL,'2025-10-05 00:22:06','2025-10-05 00:22:06',10,15,7,0,-7,0.00,0.00,123,66,57,'2909754','20358800','55821','50000','0','22573054',0.00,0.00,'897000','0','0','20000',0,'0','23268554','105821','0','798995.595','22628824.783',0,NULL,NULL),(5,NULL,4,1,'Caja almacen',NULL,'2025-10-19 06:22:13','2025-10-19 06:22:13',0,0,0,0,0,0.00,0.00,0,0,0,'0','0','0','0','0','0',0.00,0.00,'0','0','0','0',0,'0','0','0','0','0','0',0,NULL,NULL),(10,2,2,1,'Caja principal',NULL,'2025-10-20 01:05:54','2025-10-20 01:05:54',0,0,0,0,0,0.00,0.00,2,0,2,'0','499000','0','0','0','499000',0.00,0.00,'0','0','0','0',0,'0','499000','0','0','50932.773','448067.227',0,NULL,NULL);
 /*!40000 ALTER TABLE `cierrescajas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -582,6 +584,7 @@ CREATE TABLE `creditos` (
   `capital` decimal(12,2) NOT NULL,
   `abonoinicial` decimal(10,2) DEFAULT '0.00',
   `saldopendiente` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `numcuota` int DEFAULT '0',
   `cantidadcuotas` int NOT NULL DEFAULT '0',
   `montocuota` decimal(12,2) NOT NULL DEFAULT '0.00',
   `frecuenciapago` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
@@ -593,6 +596,7 @@ CREATE TABLE `creditos` (
   `valorinterestotal` decimal(12,2) DEFAULT '0.00',
   `montototal` decimal(12,2) NOT NULL,
   `fechavencimiento` date DEFAULT NULL,
+  `productoentregado` tinyint(1) DEFAULT '0',
   `estado` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -611,7 +615,7 @@ CREATE TABLE `creditos` (
 
 LOCK TABLES `creditos` WRITE;
 /*!40000 ALTER TABLE `creditos` DISABLE KEYS */;
-INSERT INTO `creditos` VALUES (1,1,NULL,7,'cliente',1000000.00,0.00,1120000.00,6,186667.00,'15','2025-12-14',1,2.00,12.00,20000.00,120000.00,1120000.00,NULL,0,'2025-12-14 20:57:41');
+INSERT INTO `creditos` VALUES (1,1,NULL,7,'cliente',1000000.00,0.00,1120000.00,0,6,186667.00,'15','2025-12-14',1,2.00,12.00,20000.00,120000.00,1120000.00,NULL,0,0,'2025-12-14 20:57:41');
 /*!40000 ALTER TABLE `creditos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2550,4 +2554,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-15  7:51:45
+-- Dump completed on 2025-12-15 13:37:26
