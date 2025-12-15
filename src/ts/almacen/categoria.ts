@@ -79,8 +79,8 @@
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 ///////// cambiar la fila completa, su contenido //////////
                 const datosActuales = (tablaCategorias as any).row(indiceFila+=info.start).data();
-                /*Nombre categoria*/datosActuales[1] = $('#categoria').val();
-                /*data-categoria*/datosActuales[3] = `<div class="acciones-btns" id="${$('#idcategoria').val()}" data-categoria="${$('#categoria').val()}"><button class="btn-md btn-turquoise editarCategoria"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarCategoria"><i class="fa-solid fa-trash-can"></i></button></div>`;//$('#categoria').val();
+                /*Nombre categoria*/datosActuales[2] = $('#categoria').val();
+                /*data-categoria*/datosActuales[4] = `<div class="acciones-btns" id="${$('#idcategoria').val()}" data-categoria="${$('#categoria').val()}"><button class="btn-md btn-turquoise editarCategoria"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarCategoria"><i class="fa-solid fa-trash-can"></i></button></div>`;//$('#categoria').val();
                 
                 (tablaCategorias as any).row(indiceFila).data(datosActuales).draw();
                 (tablaCategorias as any).page(info.page).draw('page'); //me mantiene la pagina actual

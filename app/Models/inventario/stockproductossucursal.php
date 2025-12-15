@@ -17,8 +17,9 @@ class stockproductossucursal extends \App\Models\ActiveRecord{
     }
 
     public static function indicadoresAllProductsXSucursal(int $idsucursal = 1):array|NULL{
-      $query="SELECT p.nombre, p.impuesto, p.tipoproducto, p.tipoproduccion, p.categoria, sps.productoid, sps.stock, sps.stockminimo, p.precio_compra, p.precio_venta, p.idunidadmedida, p.unidadmedida, p.fecha_ingreso, p.visible, t.valorinv, t.cantidadreferencias, t.cantidadproductos, t.bajostock,t.productosagotados
-	            FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id
+      $query="SELECT p.nombre, p.impuesto, p.tipoproducto, p.tipoproduccion, sps.productoid, sps.stock, sps.stockminimo, p.precio_compra, p.precio_venta, p.idunidadmedida, und.nombre as unidadmedida, p.fecha_ingreso, p.visible, c.nombre as categoria, t.valorinv, t.cantidadreferencias, t.cantidadproductos, t.bajostock,t.productosagotados
+              FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id 
+              JOIN categorias c ON p.idcategoria = c.id JOIN unidadesmedida und ON p.idunidadmedida = und.id
 	            JOIN (SELECT 
                 ROUND(SUM(CASE WHEN (p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1) THEN sps.stock * p.precio_compra ELSE 0 END), 2) AS valorinv, 
                 COUNT(p.id) AS cantidadreferencias, 

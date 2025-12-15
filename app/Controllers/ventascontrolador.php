@@ -56,7 +56,9 @@ class ventascontrolador{
       if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0 && $facturacotz->id_sucursal == $idsucursal){
         $productoscotz = ventas::idregistros('idfactura', $id);
         $num_orden = $facturacotz->num_orden;
-      }else{ return;}
+      }else{ 
+        return;
+      }
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -64,7 +66,8 @@ class ventascontrolador{
     }
     //$alertas = usuarios::getAlertas();
     //$productos = productos::all();
-    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal(), 'habilitarventa'=>1]);
+    //$productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal(), 'habilitarventa'=>1]);
+    $productos = productos::SelectProducts_Category_StockXsucursal();
     $categorias = categorias::all();
     $mediospago = mediospago::whereArray(['estado'=>1]);
     $clientes = clientes::all();

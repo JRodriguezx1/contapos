@@ -466,9 +466,11 @@ class almacencontrolador{
       $excelproductos = productos::all();
       if(isset($_POST['downexcel'])){
         //debuguear(isset($_POST['downexcel']));
+        ob_clean();
+
                 if(!empty($excelproductos)){
                     $filename = "excelproductos.xls";
-                    header("Content-Type: application/vnd.ms-excel");
+                    header("Content-Type: application/vnd.ms-excel; charset=utf-8");
                     header("Content-Disposition: attachment; filename=".$filename);
 
                     $mostrar_columnas = false;

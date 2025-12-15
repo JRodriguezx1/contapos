@@ -109,6 +109,7 @@ class inventarioService {
                     }else{  //insertar
                         $value->fecha_ingreso = date('Y-m-d H:i:s');
                         $insertProductos[] = $value;
+                        
                     }
                 }
 

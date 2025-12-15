@@ -143,7 +143,7 @@ class productos extends \App\Models\ActiveRecord {
       return $equivalencias;
     }
 
-    public static function indicadoresAllProducts():array|NULL{
+    /*public static function indicadoresAllProducts():array|NULL{
       $query="SELECT *, SUM(stock*precio_compra) OVER () AS valorinv, 
       COUNT(id) OVER () AS cantidadreferencias, 
       SUM(stock) OVER () AS cantidadproductos,
@@ -152,6 +152,19 @@ class productos extends \App\Models\ActiveRecord {
       FROM ".self::$tabla.";";
       $array = self::camposJoinObj($query);
       return $array;
+    }*/
+
+
+    public static function SelectProducts_Category_StockXsucursal():array{
+        $idsucursal = id_sucursal();
+        $sql = "SELECT p.id as ID, p.idcategoria, p.nombre, p.foto, p.sku, p.precio_venta, p.estado, p.visible, 
+                sps.productoid, sps.sucursalid, sps.stock, sps.habilitarventa, c.nombre as categoria
+                FROM productos p 
+                JOIN stockproductossucursal sps ON p.id = sps.productoid
+                JOIN categorias c ON p.idcategoria = c.id
+                WHERE sps.sucursalid = $idsucursal  AND  sps.habilitarventa = '1';";
+        $array = self::camposJoinObj($sql);
+        return $array;
     }
     
 }
