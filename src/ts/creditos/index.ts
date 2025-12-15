@@ -84,7 +84,7 @@
 
     function calculoTasaInteres(){
       if(cantidadcuotas.value == '1' || (interes.value == '0' || interes.value == '')){
-        (document.querySelector('#montocuota') as HTMLInputElement).value = capital.value;
+        (document.querySelector('#montocuota') as HTMLInputElement).value =  Math.round(Number(capital.value)/Number(cantidadcuotas.value))+'';
         (document.querySelector('#interestotal') as HTMLInputElement).value = '0';
         (document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = '0';
         (document.querySelector('#valorinterestotal') as HTMLInputElement).value = '0';

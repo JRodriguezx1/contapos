@@ -134,7 +134,7 @@
                             <!-- DETALLE DE IMPUESTOS-->
                             <div class="mt-32 mb-12">
                                 <p class="text-sky-400 text-center  font-bold">Detalle de Impuestos</p>
-                                <table class="tabla2" width="100%" id="tablaMediosPago">
+                                <table class="tabla2" width="100%" id="tablaDetalleImpuestos">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Tarifa</th>
@@ -157,7 +157,7 @@
                             <!-- DETALLE GASTOS DE LA CAJA-->
                             <div class="mt-32 mb-12">
                                 <p class="text-sky-400 text-center  font-bold">Detalle gastos de la caja</p>
-                                <table class="tabla2" width="100%" id="tablaMediosPago">
+                                <table class="tabla2" width="100%" id="tablaDetalleCaja">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Categoria gasto</th>
@@ -193,6 +193,25 @@
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+
+                            <!-- DETALLE ABONOS-->
+                            <div class="mb-12">
+                                <table class="tabla2" width="100%" id="tablaAbonos">
+                                    <thead>
+                                        <tr class="bg-gray-100 text-gray-700 p-3 text-center">
+                                            <th>Abonos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($discriminargastos as $index => $value): ?>
+                                        <tr>
+                                            <td class=""><strong><?php echo $value['nombre'];?></td>
+                                            <td class=""><strong>$ </strong><?php echo number_format($value['valorgasto'], "2", ",", ".");?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
 
                             
                             <table class="tabla2" width="100%" id="">

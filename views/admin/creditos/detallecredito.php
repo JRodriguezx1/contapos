@@ -125,6 +125,14 @@
             <input id="montocuota" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg font-semibold focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la cuota" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>    
         </div>
         <div class="formulario__campo">
+            <label class="formulario__label" for="caja">Caja</label>
+            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="cajaid" required>
+                <?php foreach($cajas as $value):  ?>
+                      <option value="<?php echo $value->id;?>" ><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="formulario__campo">
             <label class="formulario__label" for="mediopago">Medio de pago</label>
             <select id="mediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"  multiple="multiple" name="mediopagoid" required>
                 <?php foreach($mediospago as $value):  ?>

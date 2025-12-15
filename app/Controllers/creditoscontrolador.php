@@ -5,12 +5,14 @@ namespace App\Controllers;
 use App\Models\ActiveRecord;
 use MVC\Router;  //namespace\clase
 use App\Models\clientes\clientes;
+use App\Models\configuraciones\caja;
 use App\Models\configuraciones\mediospago;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\services\creditosService;
 
 class creditoscontrolador{
 
@@ -68,6 +70,7 @@ class creditoscontrolador{
         $credito = creditos::find('id', $id);
         $cuotas = cuotas::idregistros('id_credito', $credito->id);
         $cliente = clientes::find('id', $credito->cliente_id);
+        $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $factura =null;
         if(is_null($credito->factura_id))
             $factura = facturas::find('id', $credito->factura_id);
@@ -79,7 +82,7 @@ class creditoscontrolador{
 
         $mediospago = mediospago::whereArray(['estado'=>1]);
         
-        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'cajas'=>$cajas, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -90,24 +93,29 @@ class creditoscontrolador{
         $alertas = [];
         $credito = creditos::find('id', $_POST['id_credito']);
         $cliente = clientes::find('id', $credito->cliente_id);
+        $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $factura = null;
-        if(is_null($credito->factura_id))
-            $factura = facturas::find('id', $credito->factura_id);
+        if(is_null($credito->factura_id))$factura = facturas::find('id', $credito->factura_id);
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $cuota = new cuotas($_POST);
-            $credito->numcuota += 1;
-            $cuota->numerocuota = $credito->numcuota;
-            $cuota->montocuota = $credito->montocuota;
-            $alertas = $cuota->validar();
-            if(empty($alertas)){
-                $r = $cuota->crear_guardar();
-                if($r[0]){
-                    $alertas['exito'][] = "Cuota procesada";
-                    $credito->saldopendiente -= $cuota->valorpagado;
-                    $ra = $credito->actualizar();
-                   
+            if($credito->estado == 0){
+                $cuota = new cuotas($_POST);
+                $credito->numcuota += 1;
+                $cuota->numerocuota = $credito->numcuota;
+                $cuota->montocuota = $credito->montocuota;
+                $alertas = $cuota->validar();
+                if(empty($alertas)){
+                    $r = $cuota->crear_guardar();
+                    if($r[0]){
+                        $alertas['exito'][] = "Cuota procesada";
+                        $credito->saldopendiente -= $cuota->valorpagado;
+                        if($credito->saldopendiente<=0)$credito->estado = 1;  //credito cerrado
+                        $ra = $credito->actualizar();
+                        
+                    }
                 }
+            }else{
+                $alertas['error'][] = "Credito finalizado, no se puede abonar mas";
             }
         }
         $mediospago = mediospago::whereArray(['estado'=>1]);
@@ -117,7 +125,7 @@ class creditoscontrolador{
             
         }
         
-        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'cajas'=>$cajas, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
