@@ -35,7 +35,7 @@
     <div class="grid md:grid-cols-3 gap-6 mb-6">
       <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
         <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">🔢 Plazo</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo ($credito->ultimacuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
+        <p class="text-gray-800 text-lg mb-0"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
       </div>
 
       <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-sm">

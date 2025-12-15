@@ -76,7 +76,6 @@ class creditoscontrolador{
             $value->mediopago = mediospago::find('id', $value->mediopagoid)->mediopago;
 
         }
-        if($cuotas)$credito->ultimacuota = end($cuotas)->numerocuota;
 
         $mediospago = mediospago::whereArray(['estado'=>1]);
         
@@ -97,8 +96,9 @@ class creditoscontrolador{
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $cuota = new cuotas($_POST);
+            $credito->numcuota += 1;
+            $cuota->numerocuota = $credito->numcuota;
             $cuota->montocuota = $credito->montocuota;
-            
             $alertas = $cuota->validar();
             if(empty($alertas)){
                 $r = $cuota->crear_guardar();
@@ -106,7 +106,7 @@ class creditoscontrolador{
                     $alertas['exito'][] = "Cuota procesada";
                     $credito->saldopendiente -= $cuota->valorpagado;
                     $ra = $credito->actualizar();
-                    $credito->ultimacuota = $cuota->numerocuota;
+                   
                 }
             }
         }
