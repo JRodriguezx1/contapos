@@ -498,11 +498,6 @@ class almacencontrolador{
     $unidadesmedida = unidadesmedida::all();
     $producto = new productos;
 
-    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
-    foreach($productos as $value){
-      $value->id = $value->ID;
-      $value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
-    }
     if($_SERVER['REQUEST_METHOD'] === 'POST' && $_FILES['archivoexcel']['name']){ //para importar productos desde excel
         $url_temp = $_FILES["archivoexcel"]["tmp_name"];
         $extension = strtolower(pathinfo($_FILES['archivoexcel']['name'], PATHINFO_EXTENSION));
@@ -510,9 +505,18 @@ class almacencontrolador{
         $extensiones_permitidas = ['xlsx', 'xls', 'csv'];
         if(in_array($extension, $extensiones_permitidas)){
           $alertas = inventarioService::importarExcel($url_temp);
+          if(empty($alertas)){
+            $alertas['exito'][] = "Extension del archivo no valido";
+          }
         }else{
           $alertas['error'][] = "Extension del archivo no valido";
         }
+    }
+
+    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
+    foreach($productos as $value){
+      $value->id = $value->ID;
+      $value->nombrecategoria = categorias::find('id', $value->idcategoria)->nombre;
     }
     $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
