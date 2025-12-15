@@ -127,6 +127,8 @@
       //indiceFila = (tablaProductos as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoCredito.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
+      ($('#cliente') as any).select2({ dropdownParent: $('#miDialogoCredito'), placeholder: "Seleccionar el cliente", maximumSelectionLength: 1});
+      ($('#frecuenciapago') as any).select2({ dropdownParent: $('#miDialogoCredito'), placeholder: "Seleccionar el cliente", maximumSelectionLength: 1});
     }
 
 

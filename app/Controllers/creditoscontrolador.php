@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\ActiveRecord;
 use MVC\Router;  //namespace\clase
 use App\Models\clientes\clientes;
+use App\Models\configuraciones\mediospago;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\parametrizacion\config_local;
@@ -59,20 +60,64 @@ class creditoscontrolador{
     public static function detallecredito(Router $router){
         session_start();
         isadmin();
-        if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+        //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
         $alertas = [];
         $id = $_GET['id'];
         if(!is_numeric($id))return;
 
         $credito = creditos::find('id', $id);
         $cuotas = cuotas::idregistros('id_credito', $credito->id);
-        $factura = [];
+        $cliente = clientes::find('id', $credito->cliente_id);
+        $factura =null;
         if(is_null($credito->factura_id))
             $factura = facturas::find('id', $credito->factura_id);
 
+        foreach($cuotas as $value){
+            $value->mediopago = mediospago::find('id', $value->mediopagoid)->mediopago;
 
+        }
+        if($cuotas)$credito->ultimacuota = end($cuotas)->numerocuota;
+
+        $mediospago = mediospago::whereArray(['estado'=>1]);
         
-        $router->render('admin/creditos/detallecredito', ['titulo'=>'Detalle Credito', 'credito'=>$credito, 'cuotas'=>$cuotas, '$factura'=>$factura, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+
+    public static function registrarAbono(Router $router){
+        date_default_timezone_set('America/Bogota');
+        session_start();
+        isadmin();
+        $alertas = [];
+        $credito = creditos::find('id', $_POST['id_credito']);
+        $cliente = clientes::find('id', $credito->cliente_id);
+        $factura = null;
+        if(is_null($credito->factura_id))
+            $factura = facturas::find('id', $credito->factura_id);
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $cuota = new cuotas($_POST);
+            $cuota->montocuota = $credito->montocuota;
+            
+            $alertas = $cuota->validar();
+            if(empty($alertas)){
+                $r = $cuota->crear_guardar();
+                if($r[0]){
+                    $alertas['exito'][] = "Cuota procesada";
+                    $credito->saldopendiente -= $cuota->valorpagado;
+                    $ra = $credito->actualizar();
+                    $credito->ultimacuota = $cuota->numerocuota;
+                }
+            }
+        }
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $cuotas = cuotas::idregistros('id_credito', $credito->id);
+        foreach($cuotas as $value){
+            $value->mediopago = mediospago::find('id', $value->mediopagoid)->mediopago;
+            
+        }
+        
+        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 

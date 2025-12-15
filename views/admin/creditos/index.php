@@ -7,9 +7,8 @@
     <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
     -->
-    
-</div>
-
+  </div>
+  <div id="divmsjalerta"></div>
   <table class="display responsive nowrap tabla" width="100%" id="tablaCreditos">
             <thead>
                 <tr>
@@ -19,6 +18,7 @@
                     <th>Deuda</th>
                     <th>Cuota</th>
                     <th>Abono total</th>
+                    <th>Estado</th>
                     <th class="accionesth">Acciones</th>
                 </tr>
             </thead>
@@ -30,7 +30,8 @@
                         <td class="">$<?php echo number_format($value->montototal,'2', ',', '.'); ?></td>
                         <td class="">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
                         <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td> 
-                        <td class="">$<?php echo number_format($value->montototal-$value->saldopendiente,'2', ',', '.'); ?></td>        
+                        <td class="">$<?php echo number_format($value->montototal-$value->saldopendiente,'2', ',', '.'); ?></td>
+                        <td class=""><?php echo $value->estado==0?'Abierto':'Cerrado'; ?></td>     
                         <td class="accionestd">
                             <div class="acciones-btns" id="<?php echo $value->ID;?>">
                                 <button class="btn-md btn-turquoise editarCredito" title="Actualizar datos del cliente"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -101,11 +102,11 @@
         </div>
         <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
         <div class="formulario__campo">
-            <label class="formulario__label" for="tipoproducto">Valor de la cuota</label>
-            <input id="montocuota" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Cantidad de cuotas" name="montocuota" value="<?php echo $producto->montocuota??'';?>" readonly required>    
+            <label class="formulario__label" for="montocuota">Valor de la cuota</label>
+            <input id="montocuota" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la cuota" name="montocuota" value="<?php echo $producto->montocuota??'';?>" readonly required>    
         </div>
         <div class="formulario__campo">
-            <label class="formulario__label" for="frecuenciapago">Frecuencia de pago</label>
+            <label class="formulario__label" for="frecuenciapago">Dia de pago</label>
             <select id="frecuenciapago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" name="frecuenciapago">
                 <option value="1">1</option>
                 <option value="2">2</option>

@@ -23,8 +23,9 @@ class cuotas extends \App\Models\ActiveRecord{
 
     public function validar():array
     {
-        if($this->numerocuota<=0)self::$alertas['error'][] = "Numero de cuotas es incorrecto, validar nuevamente";
+        if(!$this->numerocuota || $this->numerocuota<=0)self::$alertas['error'][] = "Numero de cuotas es incorrecto, validar nuevamente";
         if($this->montocuota<=0)self::$alertas['error'][] = "Monto de la cuota no es valido, verificar nuevamente.";
+        if(!$this->valorpagado || $this->valorpagado<=0)self::$alertas['error'][] = "Valor de la cuota no es valido, verificar nuevamente.";
         return self::$alertas;
     }
 

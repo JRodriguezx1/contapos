@@ -129,6 +129,7 @@ $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  /
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 $router->post('/admin/creditos/crearCredito', [creditoscontrolador::class, 'crearCredito']);
 $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
+$router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
