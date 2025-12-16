@@ -14,38 +14,48 @@
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->
-    <div class="grid md:grid-cols-3 gap-6 mb-6">
+    <div class="grid md:grid-cols-4 gap-6 mb-6">
       <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
         <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🧾 Factura</h3>
         <p class="text-gray-800 text-lg mb-0"><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
       </div>
 
       <div class="bg-green-50 border border-green-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-green-700 mb-1 uppercase">💰 Total del Credito</h3>
-        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->montototal,'2', ',', '.'); ?></p>
+        <h3 class="text-xl font-semibold text-green-700 mb-1 uppercase">💰 Credito</h3>
+        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
+      </div>
+
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💸 Abono Inicial</h3>
+        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
       </div>
 
       <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-yellow-700 mb-1 uppercase">📅 Fecha Emisión</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo $credito->fechainicio;?></p>
+        <h3 class="text-xl font-semibold text-yellow-700 mb-1 uppercase">💷 Interes Total</h3>
+        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
       </div>
     </div>
 
     <!-- Detalles financieros -->
-    <div class="grid md:grid-cols-3 gap-6 mb-6">
+    <div class="grid md:grid-cols-4 gap-6 mb-6">
       <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">🔢 Plazo</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
+        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💲 Credito Total</h3>
+        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
       </div>
 
       <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-orange-700 mb-1 uppercase">📆 Fecha Vencimiento</h3>
-        <p class="text-gray-800 text-lg mb-0"> - </p>
+        <h3 class="text-xl font-semibold text-orange-700 mb-1 uppercase">📅 Fecha Emisión</h3>
+        <p class="text-gray-800 text-lg mb-0"><?php echo $credito->fechainicio;?></p>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🔢 Plazo</h3>
+        <p class="text-gray-800 text-lg mb-0"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
       </div>
 
       <div class="bg-red-50 border border-red-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-red-700 mb-1 uppercase">💸 Abono Inicial</h3>
-        <p class="text-gray-800 text-lg mb-0">$ <?php echo $credito->abonoinicial;?></p>
+        <h3 class="text-xl font-semibold text-red-700 mb-1 uppercase">📆 Fecha Vencimiento</h3>
+        <p class="text-gray-800 text-lg mb-0"> - </p>
       </div>
     </div>
 

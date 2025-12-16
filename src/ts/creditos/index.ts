@@ -8,6 +8,7 @@
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const interes = document.querySelector('#interes') as HTMLSelectElement;
     const capital = (document.querySelector('#capital') as HTMLInputElement);
+    const abonoinicial = (document.querySelector('#abonoinicial') as HTMLInputElement);
     const cantidadcuotas = (document.querySelector('#cantidadcuotas') as HTMLInputElement);
     
     let indiceFila=0, control=0, tablaCreditos:HTMLElement;
@@ -20,7 +21,9 @@
       cliente_id: string,
       nombrecliente: string,
       capital: string,
+      abonoinicial: string,
       saldopendiente: string,
+      numcuota: string,
       cantidadcuotas: string,
       montocuota: string,
       frecuenciapago: string,
@@ -31,6 +34,8 @@
       valorinteresxcuota: string,
       valorinterestotal: string,
       montototal: string,
+      fechavencimiento: string,
+      productoentregado: string,
       estado: string,
       created_at: string,
       //preciosadicionales: {id:string, idproductoid:string, precio:string, estado:string, created_at:string}[]
@@ -80,26 +85,45 @@
     interes.addEventListener('change', e=>calculoTasaInteres());
     capital.addEventListener('input', e=>calculoTasaInteres());
     cantidadcuotas.addEventListener('input', e=>calculoTasaInteres());
+    abonoinicial.addEventListener('input', e=>calculoTasaInteres());
 
 
     function calculoTasaInteres(){
+      let creditofinal = recalcularCapitalXAbono(); //capital inicial - abono
       if(cantidadcuotas.value == '1' || (interes.value == '0' || interes.value == '')){
-        (document.querySelector('#montocuota') as HTMLInputElement).value =  Math.round(Number(capital.value)/Number(cantidadcuotas.value))+'';
+        (document.querySelector('#montocuota') as HTMLInputElement).value =  Math.round(creditofinal/Number(cantidadcuotas.value))+'';
         (document.querySelector('#interestotal') as HTMLInputElement).value = '0';
         (document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = '0';
         (document.querySelector('#valorinterestotal') as HTMLInputElement).value = '0';
-        (document.querySelector('#montototal') as HTMLInputElement).value = capital.value.toLocaleString();
+        (document.querySelector('#montototal') as HTMLInputElement).value = creditofinal.toLocaleString();
       }
       if(cantidadcuotas.value !== '1'&&interes.value === '1'){
-        const valorInteres = Number(capital.value)*0.02*Number(cantidadcuotas.value);
-        const total = Number(capital.value) + valorInteres;
+        const valorInteres = creditofinal*0.02*Number(cantidadcuotas.value);
+        const total = creditofinal + valorInteres;
         const valorxcuota = Math.round(total/Number(cantidadcuotas.value));
         (document.querySelector('#montocuota') as HTMLInputElement).value = valorxcuota+'';
-        (document.querySelector('#interestotal') as HTMLInputElement).value = 2*Number(cantidadcuotas.value)+'';
+        (document.querySelector('#interestotal') as HTMLInputElement).value = 2*Number(cantidadcuotas.value)+''; //porcentaje de interes total
         (document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = valorInteres/Number(cantidadcuotas.value)+'';
-        (document.querySelector('#valorinterestotal') as HTMLInputElement).value = valorInteres.toLocaleString();
-        (document.querySelector('#montototal') as HTMLInputElement).value = total.toLocaleString();
+        (document.querySelector('#valorinterestotal') as HTMLInputElement).value = valorInteres.toLocaleString();  //valor del interes total del credito
+        (document.querySelector('#montototal') as HTMLInputElement).value = total.toLocaleString();  //valor total del credito
       }
+      (document.querySelector('#capitalinicial') as HTMLInputElement).value = capital.value.toLocaleString();
+      (document.querySelector('#abono') as HTMLInputElement).value = Number(abonoinicial.value).toLocaleString();
+      (document.querySelector('#capitalFinanciado') as HTMLInputElement).value = creditofinal+'';
+    }
+
+    function recalcularCapitalXAbono():number{
+      let abono = Number(abonoinicial.value);
+      const capitalinicial:number = Number(capital.value)??0;
+      let creditofinal:number = capitalinicial;
+      if(capital.value != '' && capital.value != '0'){
+        if(abono < capitalinicial){
+          creditofinal = capitalinicial-abono;
+        }else{
+          abonoinicial.value = '0';
+        }
+      }
+      return creditofinal;
     }
 
 
