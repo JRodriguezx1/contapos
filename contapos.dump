@@ -615,7 +615,7 @@ CREATE TABLE `creditos` (
 
 LOCK TABLES `creditos` WRITE;
 /*!40000 ALTER TABLE `creditos` DISABLE KEYS */;
-INSERT INTO `creditos` VALUES (1,1,NULL,7,'cliente',1000000.00,0.00,1120000.00,0,6,186667.00,'15','2025-12-14',1,2.00,12.00,20000.00,120000.00,1120000.00,NULL,0,0,'2025-12-14 20:57:41');
+INSERT INTO `creditos` VALUES (1,1,NULL,7,'cliente',1000000.00,0.00,753333.00,2,6,186667.00,'15','2025-12-14',1,2.00,12.00,20000.00,120000.00,1120000.00,NULL,0,0,'2025-12-14 20:57:41');
 /*!40000 ALTER TABLE `creditos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -669,7 +669,9 @@ DROP TABLE IF EXISTS `cuotas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cuotas` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `id_sucursal_idfk` int NOT NULL,
   `id_credito` int NOT NULL,
+  `cajaid` int NOT NULL,
   `mediopagoid` int NOT NULL,
   `numerocuota` int NOT NULL,
   `montocuota` decimal(12,2) NOT NULL,
@@ -682,9 +684,13 @@ CREATE TABLE `cuotas` (
   PRIMARY KEY (`id`),
   KEY `id_credito_idx` (`id_credito`),
   KEY `id_mediopago_idx` (`mediopagoid`),
+  KEY `id_sucursalidfk_idx` (`id_sucursal_idfk`),
+  KEY `cajaid_idx` (`cajaid`),
+  CONSTRAINT `cajaid` FOREIGN KEY (`cajaid`) REFERENCES `caja` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_credito` FOREIGN KEY (`id_credito`) REFERENCES `creditos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `id_sucursal_idfk` FOREIGN KEY (`id_sucursal_idfk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mediopagoid` FOREIGN KEY (`mediopagoid`) REFERENCES `mediospago` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2554,4 +2560,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-15 13:37:26
+-- Dump completed on 2025-12-16  1:04:36

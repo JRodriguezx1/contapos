@@ -4,11 +4,13 @@ namespace App\Models\creditos;
 
 class cuotas extends \App\Models\ActiveRecord{
     protected static $tabla = 'cuotas';
-    protected static $columnasDB = ['id', 'id_credito', 'mediopagoid', 'numerocuota', 'montocuota', 'valorpagado', 'fechavencimiento', 'fechapagado', 'cuotascreditos', 'estado'];
+    protected static $columnasDB = ['id', 'id_sucursal_idfk', 'id_credito', 'cajaid', 'mediopagoid', 'numerocuota', 'montocuota', 'valorpagado', 'fechavencimiento', 'fechapagado', 'cuotascreditos', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->id_sucursal_idfk = $args['id_sucursal_idfk']??'';
         $this->id_credito = $args['id_credito']??'';
+        $this->cajaid = $args['cajaid']??'';
         $this->mediopagoid = $args['mediopagoid']??'';
         $this->numerocuota = $args['numerocuota']??1;
         $this->montocuota = $args['montocuota']??0;
