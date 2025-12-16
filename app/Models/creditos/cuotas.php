@@ -8,7 +8,7 @@ class cuotas extends \App\Models\ActiveRecord{
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
-        $this->id_sucursal_idfk = $args['id_sucursal_idfk']??'';
+        $this->id_sucursal_idfk = $args['id_sucursal_idfk']??id_sucursal();
         $this->id_credito = $args['id_credito']??'';
         $this->cajaid = $args['cajaid']??'';
         $this->mediopagoid = $args['mediopagoid']??'';

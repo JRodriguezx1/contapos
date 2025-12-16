@@ -170,6 +170,8 @@
 
 
     function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean, precio:string = '0'){
+      ///limpiar el campo de buscar producto
+      (document.querySelector('#buscarproducto') as HTMLInputElement).value = '';
       const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio); //devuelve el index si el producto existe
       
       if(index>-1){
