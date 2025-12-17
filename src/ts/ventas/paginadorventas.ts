@@ -6,6 +6,8 @@
 
       const inputBuscar = document.querySelector<HTMLInputElement>('#buscarproducto');
       const filtrocategorias = document.querySelectorAll('.filtrocategorias');  //los btns de las categorias
+      const btnCategorias = document.querySelector<HTMLButtonElement>('#btnCategorias');
+      const menuCategorias = document.querySelector<HTMLDivElement>('#menuCategorias');
 
       var options = {
         valueNames: [ 'card-producto', { data: ['categoria', 'code'] }],
@@ -50,6 +52,28 @@
         inputBuscar.value = '';
         hackerList.search('');
       });
+
+
+      //////--------  Apertura y cierre del btn Categorias
+
+      btnCategorias?.addEventListener('click', (e) => {
+        e.stopPropagation(); // evita cierre inmediato
+        menuCategorias?.classList.toggle('hidden');
+        if(!menuCategorias?.classList.contains('hidden'))document.addEventListener('click', cerrarMenuCategorias);
+      });
+      // cerrar al hacer click en una categoría
+      document.querySelectorAll('.filtrocategorias').forEach(el => {
+        el.addEventListener('click', () => {
+          menuCategorias?.classList.add('hidden');
+          document.removeEventListener('click', cerrarMenuCategorias);
+        });
+      });
+      // cerrar al hacer click fuera del menú
+      function cerrarMenuCategorias() {
+        menuCategorias?.classList.add('hidden');
+        document.removeEventListener('click', cerrarMenuCategorias);
+      }
+
 
 
       //////---------------------------------------------------------------------------

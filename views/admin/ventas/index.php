@@ -47,15 +47,17 @@
         </div>
         
         <div class="mt-4">
-          <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
-            <div class="absolute z-10 bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
-              <a data-categoria="Todos" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
-              <?php foreach($categorias as $categoria): 
-                if($categoria->visible > 0):?>
-                <a data-categoria="<?php echo $categoria->nombre;?>" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
-              <?php endif; endforeach; ?>
-            </div>
-          </button>
+          
+          <button id="btnCategorias" class="relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias</button>
+          <div id="menuCategorias" class="absolute z-10 bg-white flex flex-col items-start mt-1 rounded-lg pt-2 pb-3 px-4 shadow-md hidden">
+            <a data-categoria="Todos" class="filtrocategorias p-3 hover:bg-slate-200">Todos</a>
+            <?php foreach($categorias as $categoria): if($categoria->visible > 0): ?>
+              <a data-categoria="<?= $categoria->nombre ?>" class="filtrocategorias p-3 hover:bg-slate-200">
+                <?= $categoria->nombre ?>
+              </a>
+            <?php endif; endforeach; ?>
+          </div>
+
 
           <!-- Botón Otros -->
           <button id="btnotros" class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
