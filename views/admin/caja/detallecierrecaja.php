@@ -128,6 +128,19 @@
                             </tbody>
                         </table>
 
+                        <!-- DETALLE ABONOS-->
+                        <div class="mb-12">
+                            <table class="tabla2" width="100%" id="tablaAbonos">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-700 p-3 text-center">
+                                        <th>Abonos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
                         
                         <table class="tabla2" width="100%" id="">
                             <thead>

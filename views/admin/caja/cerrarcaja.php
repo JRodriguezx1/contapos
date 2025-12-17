@@ -203,12 +203,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($discriminargastos as $index => $value): ?>
-                                        <tr>
-                                            <td class=""><strong><?php echo $value['nombre'];?></td>
-                                            <td class=""><strong>$ </strong><?php echo number_format($value['valorgasto'], "2", ",", ".");?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
+                                        
                                     </tbody>
                                 </table>
                             </div>
