@@ -2,6 +2,9 @@
 (()=>{
     if(document.querySelector('.paginadorventas')){
 
+      const POS = (window as any).POS;
+
+      const inputBuscar = document.querySelector<HTMLInputElement>('#buscarproducto');
       const filtrocategorias = document.querySelectorAll('.filtrocategorias');  //los btns de las categorias
 
       var options = {
@@ -9,21 +12,46 @@
         page: 18,
         pagination: true,
       };
-      const productos = document.querySelectorAll<HTMLElement>('#producto');
+      const productos = document.querySelectorAll<HTMLElement>('.producto');
       if(productos.length)
       var hackerList = new List('hacker-list', options);
+      POS.hackerList = hackerList;  //exportar
 
       filtrocategorias.forEach(element => {
         element.addEventListener('click', (e)=>{
           const categoria:string = (e.target as HTMLElement).dataset.categoria!;
+          document.querySelector('#categorySelect')!.textContent = categoria;
           if(hackerList)
             hackerList.filter((item: any)=>{
               if(categoria === 'Todos')return true;
-              return item.values().categoria === categoria}
-            );
+              return item.values().categoria === categoria
+            });
         });
       });
 
+
+      inputBuscar?.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+
+        e.preventDefault();
+
+        if (!hackerList) return;
+
+        const items = hackerList.visibleItems;
+
+        if (!items.length) return;
+
+        const productosku = items[0].elm as HTMLElement;
+        const products = POS.products as productsapi[];
+        const precio = products.find(x=>x.id == productosku.dataset.id)?.precio_venta;
+        POS.actualizarCarrito(productosku.dataset.id, 1, true, true, precio);
+
+        inputBuscar.value = '';
+        hackerList.search('');
+      });
+
+
+      //////---------------------------------------------------------------------------
 
 
       const btnCarritoMovil = document.querySelector('#btnCarritoMovil') as HTMLButtonElement; //btn para abrir el modal del carrito de ventas en movil
@@ -64,6 +92,11 @@
         }
       }
 
+
+      /*const paginador ={
+
+      }
+      POS.paginador = paginador;*/
 
     }
 
