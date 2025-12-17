@@ -319,7 +319,7 @@ class configcontrolador{
                 $r = $caja->crear_guardar();
                 if($r[0]){
                     //crear cierre de caja para la caja recien creada
-                    $crearcierrecaja = new cierrescajas(['idcaja'=>$r[1], 'nombrecaja'=>$caja->nombre]);
+                    $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$r[1], 'nombrecaja'=>$caja->nombre]);
                     $rcc = $crearcierrecaja->crear_guardar();
                     if($rcc[0]){
                         $caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);

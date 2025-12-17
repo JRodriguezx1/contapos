@@ -138,7 +138,7 @@
                             <tbody>
                                 <tr>        
                                     <td class="">Ingreso de ventas total</td> 
-                                    <td id="ingresoVentasTotal" class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                    <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->totaldescuentos??0), "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Total gastos de caja</td> 
@@ -247,7 +247,7 @@
                                  <th class="p-2">Cliente</th>
                                  <th class="p-2">Factura</th>
                                  <th class="p-2">Estado</th>
-                                 <th class="p-2">Valor Bruto</th>
+                                 <th class="p-2">Subtotal</th>
                                  <th class="p-2">Total</th>
                                  <th class="p-2 accionesth">Acciones</th>
                              </tr>

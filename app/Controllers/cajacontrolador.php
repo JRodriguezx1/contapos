@@ -59,7 +59,7 @@ class cajacontrolador{
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     
 
-    $cajas = caja::idregistros('idsucursalid', id_sucursal());
+    $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
     $categoriasgastos = categoriagastos::all();
     $conflocal = config_local::getParamGlobal();
     $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
@@ -239,7 +239,7 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     $categoriasgastos = categoriagastos::all();
-    $cajas = caja::idregistros('idsucursalid', id_sucursal());
+    $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
     $bancos = bancos::all();
     $conflocal = config_local::getParamGlobal();
     $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);

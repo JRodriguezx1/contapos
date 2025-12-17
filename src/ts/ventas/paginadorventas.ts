@@ -23,6 +23,7 @@
           document.querySelector('#categorySelect')!.textContent = categoria;
           if(hackerList)
             hackerList.filter((item: any)=>{
+              hackerList.search('');
               if(categoria === 'Todos')return true;
               return item.values().categoria === categoria
             });

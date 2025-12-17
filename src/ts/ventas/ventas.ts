@@ -25,6 +25,7 @@
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
+    const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
@@ -412,6 +413,9 @@
         msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalerta2') as HTMLElement));
         return;
       }
+  
+      btnPagar.disabled = true;
+      btnPagar.value = 'Procesando...';
       procesarpedido('Paga', '0');
     });
 
@@ -463,6 +467,8 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
+             btnPagar.disabled = false;
+              btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);

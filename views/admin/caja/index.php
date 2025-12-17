@@ -30,7 +30,7 @@
               <th>Factura</th>
               <th>Medio Pago</th>
               <th>Estado</th>
-              <th>Valor Bruto</th>
+              <th>Subtotal</th>
               <th>Total</th>
               <th class="accionesth">Acciones</th>
           </tr>

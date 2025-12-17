@@ -106,7 +106,7 @@
 
           <div class="self-end">
               <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]" type="button" value="Cancelar">Cancelar</button>
-              <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]" type="submit" value="Pagar">
+              <input id="btnPagar" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]" type="submit" value="Pagar">
           </div>
           
       </form>
