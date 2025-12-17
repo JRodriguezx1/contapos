@@ -7,7 +7,7 @@
       const miDialogoUpDireccion = document.querySelector('#miDialogoUpDireccion') as any;
       const selectdirecciones = document.querySelector('#selectdirecciones') as HTMLSelectElement;
       const btnCerrarUpDireccion = document.querySelector('#btnCerrarUpDireccion') as HTMLButtonElement;
-      let indiceFila=0, control=0, tablaClientes:HTMLElement;
+      let select2Init = false, indiceFila=0, control=0, tablaClientes:HTMLElement;
       
       type direccionesapi = {
         id:string,
@@ -42,7 +42,6 @@
             const url = "/admin/api/allclientes"; //llamado a la API REST y se trae todos los productos
             const respuesta = await fetch(url); 
             clientes = await respuesta.json(); 
-            console.log(clientes);
         } catch (error) {
             console.log(error);
         }
@@ -50,6 +49,7 @@
   
       
   
+      document.addEventListener("click", cerrarDialogoExterno);
       //////////////////  TABLA //////////////////////
       tablaClientes = ($('#tablaClientes') as any).DataTable(configdatatables);
   
@@ -59,7 +59,6 @@
         document.querySelector('#modalCliente')!.textContent = "Crear cliente";
         (document.querySelector('#btnEditarCrearCliente') as HTMLInputElement).value = "Crear";
         miDialogoCliente.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       });
 
 
@@ -68,13 +67,19 @@
         document.querySelector('#modalDireccion')!.textContent = "Crear direccion";
         (document.querySelector('#btnEditarCrearDireccion') as HTMLInputElement).value = "Crear";
         miDialogoCrearDireccion.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
+        activarSelect2();
+      });
+
+
+      function activarSelect2(){
+        if(select2Init)return;
         ($('#selectcliente') as any).select2({
           dropdownParent: $('#miDialogoCrearDireccion'),
           placeholder: "Seleccionar el cliente",
           maximumSelectionLength: 1
         });
-      });
+        select2Init = true;
+      }
   
       document.querySelector('#tablaClientes')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
         const target = e.target as HTMLElement;
@@ -99,7 +104,6 @@
         (document.querySelector('#fecha_nacimiento')as HTMLInputElement).value = uncliente?.fecha_nacimiento??'';
         
         miDialogoCliente.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       }
   
       ////////////////////  Actualizar/Editar clientes  //////////////////////
@@ -122,7 +126,6 @@
                 const url = "/admin/api/actualizarCliente";
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json(); 
-                console.log(resultado); 
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                   /// actualizar el arregle de clientes ///
@@ -140,7 +143,7 @@
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
                 miDialogoCliente.close();
-                document.removeEventListener("click", cerrarDialogoExterno);
+                
             } catch (error) {
                 console.log(error);
             }
@@ -164,7 +167,6 @@
           }
         })();
         miDialogoUpDireccion.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       }
 
 
@@ -252,7 +254,7 @@
           miDialogoCliente.close();
           miDialogoCrearDireccion.close();
           miDialogoUpDireccion.close();
-          document.removeEventListener("click", cerrarDialogoExterno);
+          
         }
       }
     }

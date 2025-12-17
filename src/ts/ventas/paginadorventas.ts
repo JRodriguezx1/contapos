@@ -1,6 +1,6 @@
 
 (()=>{
-    if(document.querySelector('.paginadorventas')){
+    if(document.querySelector('.ventas')){
 
       const POS = (window as any).POS;
 
