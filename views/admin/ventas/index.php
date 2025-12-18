@@ -233,9 +233,7 @@
             <span class="font-medium text-2xl uppercase">Facturar</span>
           </button>
           
-          <button id="btnaplicarcredito" 
-            class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto hidden">
-            
+          <button id="btnaplicarcredito" class=" text-gray-800 rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto">
             <span class="material-symbols-outlined text-2xl">payments</span>
             <span class="font-medium text-2xl uppercase">Crédito</span>
           </button>

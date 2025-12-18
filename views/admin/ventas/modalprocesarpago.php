@@ -24,33 +24,38 @@
             </div>
           </div>
 
-          <div id="inputscreditos" class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div id="inputscreditos" class="grid grid-cols-1 md:grid-cols-2 gap-8 gap-y-0 mt-6">
             <!-- Abono inicial -->
             <div class="formulario__campo">
-              <label class="formulario__label" for="montoInicial">Abono inicial</label>
-              <input id="montoInicial" name="montoInicial" type="text" placeholder="0"
+              <label class="formulario__label" for="abonoinicial">Abono inicial</label>
+              <input id="abonoinicial" name="abonoinicial" type="text" placeholder="0" value="0"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5    h-14 text-xl focus:outline-none focus:ring-1"
-                oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';">
             </div>
 
-            <!-- Saldo pendiente -->
+            <!-- Aplicar interes -->
             <div class="formulario__campo">
-              <label class="formulario__label" for="saldoPendiente">Saldo pendiente</label>
-              <input id="saldoPendiente" name="saldoPendiente" type="text" readonly
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5    h-14 text-xl focus:outline-none focus:ring-1">
+              <label class="formulario__label" for="saldoPendiente">Aplicar interes</label>
+              <select id="interes" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="interes">
+                <option value="" disabled selected>-Seleccionar-</option>
+                <option value="1">Si</option>
+                <option value="0">No</option>
+              </select>
             </div>
 
-            <!-- Plazo (días) -->
+            <!-- Plazo (cuotas) -->
             <div class="formulario__campo">
-              <label class="formulario__label" for="plazo">Plazo (días)</label>
-              <input id="plazo" name="plazo" type="number" min="1" placeholder="Ingrese cantidad de días del palzo"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5    h-14 text-xl focus:outline-none focus:ring-1">
+              <label class="formulario__label" for="cantidadcuotas">Plazo (cuotas)</label>
+              <input id="cantidadcuotas" name="cantidadcuotas" type="text" min="1" placeholder="Ingrese cantidad de días del palzo" value="1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5    h-14 text-xl focus:outline-none focus:ring-1"
+                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = 1;}"
+              >
             </div>
 
-            <!-- Fecha de vencimiento -->
+            <!-- Valor de la cuota -->
             <div class="formulario__campo">
-              <label class="formulario__label" for="fechaVencimiento">Fecha de vencimiento</label>
-              <input id="fechaVencimiento" name="fechaVencimiento" type="date"
+              <label class="formulario__label" for="montocuota">Valor de la cuota</label>
+              <input id="montocuota" name="montocuota" type="text" readonly
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5    h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
