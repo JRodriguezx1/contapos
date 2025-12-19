@@ -28,6 +28,7 @@ use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
+use App\services\creditosService;
 use App\services\stockService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
@@ -92,6 +93,7 @@ class ventascontrolador{
     $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
     $factimpuestos = json_decode($_POST['factimpuestos']);
+    $valoresCredito = json_decode($_POST['valoresCredito']);
     $datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $factura = new facturas($_POST);
     $factura->id_sucursal = id_sucursal();
@@ -243,6 +245,10 @@ class ventascontrolador{
               $c = $consecutivo->actualizar();
               $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
               //....
+              //procesar si es credito....
+              if($_POST['tipoventa']=='Credito'){
+                creditosService::crearCredito($valoresCredito);
+              }
             
               $getDB->commit();
             } catch (\Throwable $th) {

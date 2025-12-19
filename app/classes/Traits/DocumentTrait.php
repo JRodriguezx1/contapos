@@ -257,7 +257,7 @@ trait DocumentTrait
     }
     
 
-    protected static function sendInvoiceDian($jsonenvio, $url, $token):array
+    protected static function sendInvoiceDian(string $jsonenvio, $url, $token):array
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

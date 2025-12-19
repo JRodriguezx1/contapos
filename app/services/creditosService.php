@@ -39,4 +39,10 @@ class creditosService {
         
         return $alertas;
     }
+
+    public static function crearCredito(stdClass $valoresCredito){
+        $array = (array)$valoresCredito;
+        $credito = new creditos($array);
+        $credito->crear_guardar();
+    }
 }

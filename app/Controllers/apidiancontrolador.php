@@ -269,10 +269,11 @@ class apidiancontrolador{
     //obtener la factura electronica que esta pendiente de enviar..
     $filtrados = array_filter($allFacturasDian, function($obj) { return $obj->id_estadoelectronica != 2 && $obj->id_estadoelectronica != 4;});
     $facturaDian = reset($filtrados); //reset devuelve el primer elemento del arreglo
-
-    //si es una factura pendiente o error, obtener el json y actualizar las fechas de envio
     
     if($facturaDian && $factura->estado == 'Paga' && $facturaDian->id_estadoelectronica != 2 && $facturaDian->id_estadoelectronica != 4){
+      //si es una factura pendiente o error, obtener el json y actualizar las fechas de envio
+      $json_envioDateUP = facturaElectronicaService::actualizarFechaEnvioInvoice(json_decode($facturaDian->json_envio));
+      $facturaDian->json_envio = $json_envioDateUP;
       $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
 
       if(!$res['success']){

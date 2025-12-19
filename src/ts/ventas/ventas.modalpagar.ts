@@ -5,7 +5,7 @@
 
     const mediospago = document.querySelectorAll('.mediopago');
     //let tipoventa:string="Contado";
-    let valoresCredito: {montocuota:string, interestotal:string, abonoinicial:number, valorinterestotal:number, valorinteresxcuota:number, montototal:number};
+    let valoresCredito = {capital:0, abonoinicial:0, cantidadcuotas:1, montocuota:0, interes:0, interestotal:0, valorinterestotal:0, valorinteresxcuota:0, montototal:0};
 
     //eventos a los inputs medios de pago
     mediospago.forEach(m=>{m.addEventListener('input', (e)=>{ calcularmediospago(e);});});
@@ -18,6 +18,7 @@
     const gestionSubirModalPagar = {
         
       subirModalPagar(){
+        initvaloresCredito();
         document.querySelector('#totalPagar')!.textContent = `${POS.valorTotal.total.toLocaleString()}`;
         //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
         let totalotrosmedios = 0;
@@ -37,8 +38,21 @@
         if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1');
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
       },
+      valoresCredito,
       
     };
+
+
+    function initvaloresCredito(){
+      valoresCredito.capital = POS.valorTotal.total;  //inicializar el capital en el obj
+      valoresCredito.montocuota = valoresCredito.capital;
+      valoresCredito.interes = 0;  //No aplicar interes
+      valoresCredito.interestotal = 0;  // 0% de interes
+      valoresCredito.valorinterestotal = 0; //0$ de interes total de la factura
+      valoresCredito.valorinteresxcuota = 0;  //0$ de interes de cada cuota
+      valoresCredito.montototal = valoresCredito.capital;
+       (document.querySelector('#montocuota') as HTMLInputElement).value = valoresCredito.montocuota+'';
+    }
 
     function calcularmediospago(e:Event){
         let totalotrosmedios = 0;
@@ -87,22 +101,33 @@
 
     function calculoTasaInteres(){
       let creditofinal = recalcularCapitalXAbono(); //capital inicial - abono
+      console.log(creditofinal);
       if(cantidadcuotas.value == '1' || (interes.value == '0' || interes.value == '')){
-        (document.querySelector('#montocuota') as HTMLInputElement).value =  Math.round(creditofinal/Number(cantidadcuotas.value))+'';
+        (document.querySelector('#montocuota') as HTMLInputElement).value =  (Math.ceil((creditofinal/Number(cantidadcuotas.value))*100)/100)+'';
         //(document.querySelector('#interestotal') as HTMLInputElement).value = '0';
         //(document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = '0';
         //(document.querySelector('#valorinterestotal') as HTMLInputElement).value = '0';
         //(document.querySelector('#montototal') as HTMLInputElement).value = creditofinal.toLocaleString();
+        valoresCredito.montocuota = (Math.ceil((creditofinal/Number(cantidadcuotas.value))*100)/100);
+        valoresCredito.interestotal = 0;
+        valoresCredito.valorinteresxcuota = 0;
+        valoresCredito.valorinterestotal = 0;
+        valoresCredito.montototal = creditofinal;
       }
       if(cantidadcuotas.value !== '1'&&interes.value === '1'){
         const valorInteres = creditofinal*0.02*Number(cantidadcuotas.value);
         const total = creditofinal + valorInteres;
-        const valorxcuota = Math.round(total/Number(cantidadcuotas.value));
+        const valorxcuota = Math.ceil((total/Number(cantidadcuotas.value))*100)/100;
         (document.querySelector('#montocuota') as HTMLInputElement).value = valorxcuota+'';
         //(document.querySelector('#interestotal') as HTMLInputElement).value = 2*Number(cantidadcuotas.value)+''; //porcentaje de interes total
         //(document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = valorInteres/Number(cantidadcuotas.value)+'';
         //(document.querySelector('#valorinterestotal') as HTMLInputElement).value = valorInteres.toLocaleString();  //valor del interes total del credito
         //(document.querySelector('#montototal') as HTMLInputElement).value = total.toLocaleString();  //valor total del credito
+        valoresCredito.montocuota = valorxcuota;
+        valoresCredito.interestotal = 2*Number(cantidadcuotas.value);
+        valoresCredito.valorinteresxcuota = valorInteres/Number(cantidadcuotas.value);
+        valoresCredito.valorinterestotal = valorInteres;
+        valoresCredito.montototal = total;
       }
       //(document.querySelector('#capitalinicial') as HTMLInputElement).value = capital.value.toLocaleString();
       //(document.querySelector('#abono') as HTMLInputElement).value = Number(abonoinicial.value).toLocaleString();
@@ -122,8 +147,11 @@
           abonoinicial.value = '0';
         }
       }
+      //valoresCredito.capital = capital;
+      valoresCredito.abonoinicial = abono;
       return creditofinal;
     }
+
 
     POS.gestionSubirModalPagar = gestionSubirModalPagar;
 

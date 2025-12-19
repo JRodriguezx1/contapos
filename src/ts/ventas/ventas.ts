@@ -415,6 +415,7 @@
 
     async function procesarpedido(estado:string, ctz:string){
       const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
+      const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
@@ -437,6 +438,7 @@
       datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
       datos.append('transaccion', '');
       datos.append('tipoventa', tipoventa);
+      datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('subtotal', valorTotal.subtotal+'');

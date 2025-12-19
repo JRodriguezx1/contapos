@@ -32,6 +32,7 @@ class facturaElectronicaService {
       return $alertas;
     }
 
+    //metodo usado en crearFacturaPOSaElectronica de apicdiancontrolador
     public static function reciclarFacturaElectronica($value){
 
       $previasAceptadas  = facturas_electronicas::whereArray(['id_sucursalidfk'=>id_sucursal(), 'id_estadoelectronica'=>2, 'id_facturaid'=>$value->id_facturaid], 'DESC');
@@ -47,11 +48,22 @@ class facturaElectronicaService {
       }
     }
 
+    //metodo usado en crearFacturaPOSaElectronica de apicdiancontrolador
     public static function actualizarFacturaConsecutivo($factura, $consecutivo, $numConsecutivo){
       $factura->num_consecutivo = $numConsecutivo;
       $factura->prefijo = $consecutivo->prefijo;
       $factura->idconsecutivo = $consecutivo->id;
       $r = $factura->actualizar();
       $c = $consecutivo->actualizar();
+    }
+
+    //actualizar las fechas de envio
+    public static function actualizarFechaEnvioInvoice(stdClass $json_envio):string{
+      date_default_timezone_set('America/Bogota');
+      $json_envio->date = date('Y-m-d');
+      $json_envio->time = date('H:i:s');
+      $json_envio->payment_form->payment_due_date = date('Y-m-d');
+      $json_envioDateUP = json_encode($json_envio, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+      return $json_envioDateUP;
     }
 }
