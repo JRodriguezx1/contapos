@@ -270,6 +270,8 @@ class apidiancontrolador{
     $filtrados = array_filter($allFacturasDian, function($obj) { return $obj->id_estadoelectronica != 2 && $obj->id_estadoelectronica != 4;});
     $facturaDian = reset($filtrados); //reset devuelve el primer elemento del arreglo
 
+    //si es una factura pendiente o error, obtener el json y actualizar las fechas de envio
+    
     if($facturaDian && $factura->estado == 'Paga' && $facturaDian->id_estadoelectronica != 2 && $facturaDian->id_estadoelectronica != 4){
       $res = self::sendInvoiceDian($facturaDian->json_envio, $url, $facturaDian->token_electronica);
 
