@@ -199,11 +199,15 @@
                                 <table class="tabla2" width="100%" id="tablaAbonos">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
+                                            <th>Creditos</th>
                                             <th>Abonos</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        <tr>
+                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->creditos??0, "0", ",", ".");?></td>
+                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonos??0, "0", ",", ".");?></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

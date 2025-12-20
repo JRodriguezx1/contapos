@@ -41,6 +41,7 @@ class creditoscontrolador{
             $alertas = $credito->validar();
             if(empty($alertas)){
                 $credito->id_fksucursal = id_sucursal();
+                $credito->idtipofinanciacion = 2;
                 $credito->saldopendiente = str_replace('.', '', $credito->montototal);
                 $credito->valorinteresxcuota = str_replace('.', '', $credito->valorinteresxcuota);
                 $credito->valorinterestotal = str_replace('.', '', $credito->valorinterestotal);

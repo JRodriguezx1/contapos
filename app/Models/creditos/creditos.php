@@ -4,11 +4,12 @@ namespace App\Models\creditos;
 
 class creditos extends \App\Models\ActiveRecord{
     protected static $tabla = 'creditos';
-    protected static $columnasDB = ['id', 'id_fksucursal', 'factura_id', 'cliente_id', 'nombrecliente', 'capital', 'abonoinicial', 'saldopendiente', 'numcuota', 'cantidadcuotas', 'montocuota', 'frecuenciapago', 'fechainicio', 'interes', 'interesxcuota', 'interestotal', 'valorinteresxcuota', 'valorinterestotal', 'montototal', 'fechavencimiento', 'productoentregado', 'estado'];
+    protected static $columnasDB = ['id', 'id_fksucursal', 'idtipofinanciacion', 'factura_id', 'cliente_id', 'nombrecliente', 'capital', 'abonoinicial', 'saldopendiente', 'numcuota', 'cantidadcuotas', 'montocuota', 'frecuenciapago', 'fechainicio', 'interes', 'interesxcuota', 'interestotal', 'valorinteresxcuota', 'valorinterestotal', 'montototal', 'fechavencimiento', 'productoentregado', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
-        $this->id_fksucursal = $args['id_fksucursal']??'';
+        $this->id_fksucursal = $args['id_fksucursal']??id_sucursal();
+        $this->idtipofinanciacion = $args['idtipofinanciacion']??'';
         $this->factura_id = $args['factura_id']??'';
         $this->cliente_id = $args['cliente_id']??'';
         $this->nombrecliente = $args['nombrecliente']??'cliente';

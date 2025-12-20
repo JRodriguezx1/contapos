@@ -40,9 +40,19 @@ class creditosService {
         return $alertas;
     }
 
-    public static function crearCredito(stdClass $valoresCredito){
+
+    public static function crearCredito(stdClass $valoresCredito, $idfactura, $idcliente){
+        date_default_timezone_set('America/Bogota');
+        $alertas = [];
         $array = (array)$valoresCredito;
         $credito = new creditos($array);
-        $credito->crear_guardar();
+        $credito->idtipofinanciacion = 1;
+        $credito->factura_id = $idfactura;
+        $credito->cliente_id = $idcliente;
+        $credito->frecuenciapago = date('j');
+        $alertas = $credito->validar();
+        if(empty($alertas)){
+            $r = $credito->crear_guardar();
+        }
     }
 }
