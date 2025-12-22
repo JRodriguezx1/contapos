@@ -16,16 +16,16 @@
         const tablaCompras = document.querySelector('#tablaCompras tbody');
 
         type conversionunidadesapi = {
-            id:string,
-            idproducto: string,
-            idsubproducto: string,
-            idunidadmedidabase: string,
-            idunidadmedidadestino: string,
-            nombreunidadbase: string,
-            nombreunidaddestino: string,
-            factorconversion: string,
-            //idservicios:{idempleado:string, idservicio:string}[]
-          };
+        id:string,
+        idproducto: string,
+        idsubproducto: string,
+        idunidadmedidabase: string,
+        idunidadmedidadestino: string,
+        nombreunidadbase: string,
+        nombreunidaddestino: string,
+        factorconversion: string,
+        //idservicios:{idempleado:string, idservicio:string}[]
+        };
 
         let carrito:{iditem:string, idpx:string, idsx:string, tipo: string, nombreitem:string, unidad:string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
         let allConversionUnidades:conversionunidadesapi[] = [];
@@ -37,7 +37,6 @@
                 const url = "/admin/api/allConversionesUnidades"; //llamado a la API REST en el controlador almacencontrolador para treaer todas las conversiones de unidades
                 const respuesta = await fetch(url); 
                 allConversionUnidades = await respuesta.json();
-                console.log(allConversionUnidades);
             } catch (error) {
                 console.log(error);
             }

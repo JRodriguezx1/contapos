@@ -264,7 +264,7 @@
       valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
-       (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+valorTotal.valortarifa.toLocaleString();
       document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
       // cantidad total de productos

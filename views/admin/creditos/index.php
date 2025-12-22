@@ -53,9 +53,9 @@
         </table>
 
   <!-- MODAL PARA CREAR SEPARADO-->
-  <dialog id="miDialogoCredito" class="midialog-md p-12">
+  <dialog id="miDialogoCredito" class="midialog-lg p-10">
     <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-        <h4 id="modalCredito" class="font-semibold text-gray-700 mb-4">Crear credito</h4>
+        <h4 id="modalCredito" class="font-semibold text-gray-700 mb-4">Crear separado</h4>
         <button id="btnXCerrarModalCredito" class="p-2 rounded-lg hover:bg-gray-100 transition">
             <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
         </button>
@@ -157,13 +157,13 @@
             </div>
 
             <div class="border-solid border-t-2 border-blue-600 pt-4 mb-4 overflow-x-auto">
-                <table class=" tabla" width="100%" id="tablaCompras">
+                <table class=" tabla" width="100%" id="tablaSeparado">
                     <thead>
                         <tr>
                             <th>Producto</th>
                             <th>Unidad</th>
                             <th>Cantidad</th>
-                            <th>V. Compra</th>
+                            <th>Total</th>
                             <th class="accionesth text-red-500"><i class="fa-solid fa-x"></i></th>
                         </tr>
                     </thead>
@@ -171,17 +171,22 @@
                     </tbody>
                 </table>
             </div> <!-- FIn Apilamiento de productos -->
-
         </div>
 
-        <p class="text-xl leading-7 text-gray-600 mb-0 mt-2">Tasa: %<input id="interesxcuota" type="text" name="interesxcuota" readonly value="2"></p>
-        <p class="text-xl leading-7 text-gray-600 mb-0 mt-1">Capital: + $<input id="capitalinicial" type="text" name="capitalinicial" readonly></p>
-        <p class="text-xl leading-7 text-gray-600 mb-0 mt-1">Abono: - $<input id="abono" type="text" name="abono" readonly></p>
-        <input id="interestotal" class="hidden" type="text" name="interestotal">
-        <input id="valorinteresxcuota" class="hidden" type="text" name="valorinteresxcuota">
-        <p class="text-xl leading-7 text-gray-600 mb-0 mt-1">Capital financiado: $<input id="capitalFinanciado" type="text" name="capitalFinanciado" readonly></p>
-        <p class="text-xl leading-7 text-gray-600 mb-0 mt-1">Interes: $<input id="valorinterestotal" type="text" name="valorinterestotal" readonly></p>
-        <p class="text-xl leading-7 text-gray-600 mb-0 mt-1">Total: $<input id="montototal" type="text" name="montototal" readonly></p>
+        <div class="flex justify-start gap-4 mt-6">
+            <div class="text-end">
+                <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Sub Total:</p>
+                <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Impuesto:</p>
+                <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Descuento:</p>
+                <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
+            </div>
+            <div>
+                <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
+                <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">% 0</p>
+                <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
+                <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
+            </div>
+        </div>
 
         <div class="text-right border-t border-gray-200 pt-12 mt-4">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
