@@ -336,6 +336,7 @@
           $('.mediopago').val(0);
         }
         tipoventa = "Credito";
+        POS.tipoventa = tipoventa;
         POS.gestionSubirModalPagar.subirModalPagar();
         //miDialogoCredito.showModal();
         miDialogoFacturar.showModal();
@@ -353,6 +354,7 @@
         document.querySelector('#inputscreditos')?.classList.add('hidden');
         document.querySelector('#inputscreditos')?.classList.remove('flex');
         tipoventa = "Contado";
+        POS.tipoventa = tipoventa;
         POS.gestionSubirModalPagar.subirModalPagar();
         miDialogoFacturar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);

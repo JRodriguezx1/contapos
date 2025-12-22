@@ -6,12 +6,6 @@
     const btnCrearCredito = document.querySelector('#btnCrearCredito') as HTMLButtonElement;
     const btnXCerrarModalCredito = document.querySelector('#btnXCerrarModalCredito') as HTMLButtonElement;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
-    const interes = document.querySelector('#interes') as HTMLSelectElement;
-    const capital = (document.querySelector('#capital') as HTMLInputElement);
-    const abonoinicial = (document.querySelector('#abonoinicial') as HTMLInputElement);
-    const cantidadcuotas = (document.querySelector('#cantidadcuotas') as HTMLInputElement);
-    
-    let indiceFila=0, control=0, tablaCreditos:HTMLElement;
 
 
     type creditsapi = {
@@ -42,16 +36,18 @@
       //idservicios:{idempleado:string, idservicio:string}[]
     };
     
-    interface Item {
+    /*interface Item {
       id_impuesto: number,
       facturaid: number,
       basegravable: number,
       valorimpuesto: number
     }
-    let factimpuestos:Item[] = [];
+    let factimpuestos:Item[] = [];*/
 
     let credits:creditsapi[]=[], uncredito:creditsapi;
-    const mapMediospago = new Map();
+    //const mapMediospago = new Map();
+        let indiceFila=0, control=0, tablaCreditos:HTMLElement;
+    let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
 
     (async ()=>{
@@ -64,6 +60,39 @@
           console.log(error);
       }
     })();
+
+    (async ()=>{
+        try {
+            const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
+            const respuesta = await fetch(url); 
+            const resultado:{id:string, nombre:string, tipoproducto:string, sku:string, unidadmedida:string, precio_venta:string}[] = await respuesta.json(); 
+            filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'1', sku: item.sku, unidadmedida: item.unidadmedida, precio_venta: item.precio_venta }));
+            activarselect2(filteredData);
+        } catch (error) {
+            console.log(error);
+        }
+    })();
+
+
+    function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string}[]){
+            ($('#articulo') as any).select2({ 
+                data: filteredData,
+                placeholder: "Selecciona un item",
+                maximumSelectionLength: 1,
+                dropdownParent: $('#miDialogoCredito'),
+                /*
+                templateResult: function (data:{id:string, text:string, tipo:string}) {
+                    // Personalizar cómo se muestra cada opción en el dropdown
+                    if (!data.id) { return data.text; }  // Si no hay id, solo mostrar el texto
+                    const html = `
+                        <div class="custom-option">
+                            <span class="item-name">${data.text}</span> 
+                            <span class="item-type">${data.tipo}</span>  <!-- Mostrar tipo adicional -->
+                        </div>`;
+                    return $(html);  // Devolver el HTML personalizado
+                }*/
+            });
+        }
     
     //////////////////  TABLA //////////////////////
     tablaCreditos = ($('#tablaCreditos') as any).DataTable(configdatatables);
@@ -82,49 +111,7 @@
         document.removeEventListener("click", cerrarDialogoExterno);
     });
 
-    interes.addEventListener('change', e=>calculoTasaInteres());
-    capital.addEventListener('input', e=>calculoTasaInteres());
-    cantidadcuotas.addEventListener('input', e=>calculoTasaInteres());
-    abonoinicial.addEventListener('input', e=>calculoTasaInteres());
-
-
-    function calculoTasaInteres(){
-      let creditofinal = recalcularCapitalXAbono(); //capital inicial - abono
-      if(cantidadcuotas.value == '1' || (interes.value == '0' || interes.value == '')){
-        (document.querySelector('#montocuota') as HTMLInputElement).value =  Math.round(creditofinal/Number(cantidadcuotas.value))+'';
-        (document.querySelector('#interestotal') as HTMLInputElement).value = '0';
-        (document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = '0';
-        (document.querySelector('#valorinterestotal') as HTMLInputElement).value = '0';
-        (document.querySelector('#montototal') as HTMLInputElement).value = creditofinal.toLocaleString();
-      }
-      if(cantidadcuotas.value !== '1'&&interes.value === '1'){
-        const valorInteres = creditofinal*0.02*Number(cantidadcuotas.value);
-        const total = creditofinal + valorInteres;
-        const valorxcuota = Math.round(total/Number(cantidadcuotas.value));
-        (document.querySelector('#montocuota') as HTMLInputElement).value = valorxcuota+'';
-        (document.querySelector('#interestotal') as HTMLInputElement).value = 2*Number(cantidadcuotas.value)+''; //porcentaje de interes total
-        (document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = valorInteres/Number(cantidadcuotas.value)+'';
-        (document.querySelector('#valorinterestotal') as HTMLInputElement).value = valorInteres.toLocaleString();  //valor del interes total del credito
-        (document.querySelector('#montototal') as HTMLInputElement).value = total.toLocaleString();  //valor total del credito
-      }
-      (document.querySelector('#capitalinicial') as HTMLInputElement).value = capital.value.toLocaleString();
-      (document.querySelector('#abono') as HTMLInputElement).value = Number(abonoinicial.value).toLocaleString();
-      (document.querySelector('#capitalFinanciado') as HTMLInputElement).value = creditofinal+'';
-    }
-
-    function recalcularCapitalXAbono():number{
-      let abono = Number(abonoinicial.value);
-      const capitalinicial:number = Number(capital.value)??0;
-      let creditofinal:number = capitalinicial;
-      if(capital.value != '' && capital.value != '0'){
-        if(abono < capitalinicial){
-          creditofinal = capitalinicial-abono;
-        }else{
-          abonoinicial.value = '0';
-        }
-      }
-      return creditofinal;
-    }
+    
 
 
     //evento a la tabla

@@ -1,6 +1,6 @@
 <p class="text-xl mt-0 text-gray-600">Utilidad de los productos</p>
     <div class=" overflow-x-auto">   
-        <table class="display responsive nowrap tabla" width="100%" id="">
+        <table id="utilidadProductos" class="display responsive nowrap tabla" width="100%" id="">
             <thead>
                 <tr>
                     <th>Nº</th>
@@ -18,7 +18,7 @@
                 if($value->visible == 1&&($value->tipoproducto == '0' || ($value->tipoproducto == '1' && $value->tipoproduccion == '1'))): ?>
                 <tr> 
                     <td class=""><?php echo $index+1;?></td>        
-                    <td class=""><?php echo $value->nombre;?></td> 
+                    <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
                     <td class=""><?php echo $value->impuesto;?>%</td>
                     <td class="" ><strong>$ </strong><?php echo $value->precio_compra;?></td> 
                     <td class=""><strong>$ </strong><?php echo number_format($value->precio_venta, '0', ',', '.');?></td>

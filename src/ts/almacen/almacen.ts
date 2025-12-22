@@ -217,6 +217,9 @@
             })();//cierre de async()
         });
 
+    //////////////////////////  UTILIDAD PRODUCTO  ///////////////////////////
+    ($('#utilidadProductos') as any).DataTable(configdatatablesstockrapido);  
+
 
     //////////////////////////// SOTCK POR SUCURSAL //////////////////////
     function printstockXsucursal(){

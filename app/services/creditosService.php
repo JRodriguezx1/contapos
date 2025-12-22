@@ -49,6 +49,7 @@ class creditosService {
         $credito->idtipofinanciacion = 1;
         $credito->factura_id = $idfactura;
         $credito->cliente_id = $idcliente;
+        $credito->saldopendiente = $credito->montototal;
         $credito->frecuenciapago = date('j');
         $alertas = $credito->validar();
         if(empty($alertas)){

@@ -3,7 +3,7 @@
 
     const POS = (window as any).POS;
 
-    const mediospago = document.querySelectorAll('.mediopago');
+    const mediospago = document.querySelectorAll<HTMLInputElement>('.mediopago');
     //let tipoventa:string="Contado";
     let valoresCredito = {capital:0, abonoinicial:0, cantidadcuotas:1, montocuota:0, interes:0, interestotal:0, valorinterestotal:0, valorinteresxcuota:0, montototal:0};
 
@@ -23,7 +23,7 @@
         //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{
-            if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
+            if(index>0)totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''));
         });
 
         if(POS.valorTotal.total<totalotrosmedios){
@@ -54,12 +54,13 @@
        (document.querySelector('#montocuota') as HTMLInputElement).value = valoresCredito.montocuota+'';
     }
 
+    
     function calcularmediospago(e:Event){
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
-          if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
+          if(index>0&&POS.tipoventa=="Contado" || POS.tipoventa=="Credito")totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''));
         });
-        if(totalotrosmedios<=POS.valorTotal.total){
+        if(totalotrosmedios<=POS.valorTotal.total&&POS.tipoventa == "Contado" || totalotrosmedios<=valoresCredito.abonoinicial&&POS.tipoventa == "Credito"){
           if(POS.tipoventa == "Contado"){
             POS.mapMediospago.set('1', POS.valorTotal.total-totalotrosmedios);
             if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1'); //se elimina medio de pago efectivo
@@ -74,7 +75,7 @@
           }
         }
         if(POS.tipoventa == "Contado"){
-          (mediospago[0] as HTMLInputElement).value = (POS.mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
+          mediospago[0].value = (POS.mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
         }
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
     }
@@ -101,7 +102,7 @@
 
     function calculoTasaInteres(){
       let creditofinal = recalcularCapitalXAbono(); //capital inicial - abono
-      console.log(creditofinal);
+      initMediosPagos();
       if(cantidadcuotas.value == '1' || (interes.value == '0' || interes.value == '')){
         (document.querySelector('#montocuota') as HTMLInputElement).value =  (Math.ceil((creditofinal/Number(cantidadcuotas.value))*100)/100)+'';
         //(document.querySelector('#interestotal') as HTMLInputElement).value = '0';
@@ -152,6 +153,11 @@
       return creditofinal;
     }
 
+
+    function initMediosPagos(){
+      mediospago.forEach(z=>z.value = '0');
+      POS.mapMediospago.clear();
+    }
 
     POS.gestionSubirModalPagar = gestionSubirModalPagar;
 
