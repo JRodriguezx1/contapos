@@ -136,45 +136,52 @@
     $("#articulo").on('change', (e)=>{
         let datos = ($('#articulo') as any).select2('data')[0];
         if(datos){
-            const index = carrito.findIndex(x=>x.iditem==datos.id);
-            if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-                const itemselected = filteredData.find(x=>x.id==datos.id)!; //products es el arreglo de todos los productos traido por api
-                
-                const productovalorimp = (Number(itemselected.precio_venta)*1)*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
-                const productototal = Number(itemselected.precio_venta)*1;
-                
-                const item:{iditem: string, tipo: string, nombreitem: string, unidad: string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
-                    iditem: itemselected?.id!,
-                    tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
-                    nombreitem: itemselected.text,
-                    unidad: itemselected.unidadmedida,
-                    cantidad: 1,
-                    factor: 1,
-                    impuesto: itemselected.impuesto,
-                    precio_venta: Number(itemselected.precio_venta),
-                    subtotal: Number(itemselected.precio_venta),
-                    base: productototal-productovalorimp,
-                    valorimp: productovalorimp,
-                    descuento: 0,
-                    total: Number(itemselected.precio_venta),
-                    precio_compra: 0,
-                }
-                carrito = [...carrito, item];
-            }else{
-              carrito[index].cantidad++;
-              /*const total:number = carrito[index].cantidad*carrito[index].precio_venta;
-              carrito[index].subtotal = total;
-              carrito[index].total = total;*/
-              carrito[index].subtotal = (carrito[index].precio_venta)*carrito[index].cantidad;
-              carrito[index].total = carrito[index].subtotal;
-              //calculo del impuesto y base por producto en el carrito deventas
-              carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
-              carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
-            }
-            console.log(carrito);
-            printItemTable();
+            actualizarCarrito(datos.id, 1);
         }
     });
+
+    function actualizarCarrito(id:string, cantidad:number){
+      const index = carrito.findIndex(x=>x.iditem==id);
+      if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
+          const itemselected = filteredData.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
+          
+          const productovalorimp = (Number(itemselected.precio_venta)*1)*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+          const productototal = Number(itemselected.precio_venta)*1;
+          
+          const item:{iditem: string, tipo: string, nombreitem: string, unidad: string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
+              iditem: itemselected?.id!,
+              tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
+              nombreitem: itemselected.text,
+              unidad: itemselected.unidadmedida,
+              cantidad: 1,
+              factor: 1,
+              impuesto: itemselected.impuesto,
+              precio_venta: Number(itemselected.precio_venta),
+              subtotal: Number(itemselected.precio_venta),
+              base: productototal-productovalorimp,
+              valorimp: productovalorimp,
+              descuento: 0,
+              total: Number(itemselected.precio_venta),
+              precio_compra: 0,
+          }
+          carrito = [...carrito, item];
+      }else{
+        carrito[index].cantidad = cantidad;
+        /*const total:number = carrito[index].cantidad*carrito[index].precio_venta;
+        carrito[index].subtotal = total;
+        carrito[index].total = total;*/
+        carrito[index].subtotal = (carrito[index].precio_venta)*carrito[index].cantidad;
+        carrito[index].total = carrito[index].subtotal;
+        //calculo del impuesto y base por producto en el carrito deventas
+        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
+        carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
+      }
+      console.log(carrito);
+      if(cantidad<1){
+          carrito = carrito.filter(x=>x.iditem != id);
+      }
+      printItemTable();
+    }
 
     function printItemTable(){
         let options:string;
@@ -186,15 +193,15 @@
           productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
 
           const tr = document.createElement('TR');
-          tr.classList.add('itemselect');
+          tr.classList.add('productselect');
           tr.dataset.id = `${item.iditem}`;
-          tr.dataset.tipo = `${item.tipo}`;
+          //tr.dataset.tipo = `${item.tipo}`;
           tr.insertAdjacentHTML('afterbegin', `
             <td class="!py-2 text-xl text-gray-500 leading-5">${item.nombreitem}</td> 
             <td class="!p-2 text-xl text-gray-500 leading-5"><select class="formulario__select selectunidad">${options}</select></td>
-            <td class="!py-2"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" value="${item.cantidad}" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
+            <td class="!py-2"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" name="inputcantidad" value="${item.cantidad}"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
             <td class="!p-2 text-xl text-gray-500 leading-5">${item.precio_venta*item.cantidad}</td>
-            <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarItem"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
+            <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
             tablaSeparado?.appendChild(tr);
         });
         valorCarritoTotal();
@@ -246,15 +253,15 @@
     tablaSeparado?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
-      const precio = (elementProduct as HTMLElement).dataset.precio!;
+      //const precio = (elementProduct as HTMLElement).dataset.precio!;
       const productoCarrito = carrito.find(x=>x.iditem==idProduct);
       if((e.target as HTMLElement).classList.contains('menos')){
-        //actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true, productoCarrito?.valorunidad);
+        actualizarCarrito(idProduct, productoCarrito!.cantidad-1);
       }
+      
       if((e.target as HTMLElement).classList.contains('inputcantidad')){
         if((e.target as HTMLElement).dataset.event != "eventInput"){
           e.target?.addEventListener('input', (e)=>{
-           
             let val = (e.target as HTMLInputElement).value;
             val = val.replace(/[^0-9.]/g, '');
             const partes = val.split('.');
@@ -263,20 +270,29 @@
             if (val === '' || isNaN(parseFloat(val))) val = '0';
 
             (e.target as HTMLInputElement).value = val;
-            //actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false,  productoCarrito?.valorunidad);
+            actualizarCarrito(idProduct, Number(val));
           });
           (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
         }
       }
+
       if((e.target as HTMLElement).classList.contains('mas')){
-        //actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
+        actualizarCarrito(idProduct, productoCarrito!.cantidad+1);
       }
+      
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
         carrito = carrito.filter(x=>x.iditem != idProduct);
         valorCarritoTotal();
-        tablaSeparado?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
+        tablaSeparado?.querySelector(`TR[data-id="${idProduct}"]`)?.remove();
       }
     });
+
+
+
+
+
+
+
 
     
     //////////////////  TABLA //////////////////////
