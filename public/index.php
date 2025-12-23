@@ -127,7 +127,7 @@ $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
 ///// Creditos /////
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
-$router->post('/admin/creditos/crearCredito', [creditoscontrolador::class, 'crearCredito']);
+$router->get('/admin/creditos/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
 $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 

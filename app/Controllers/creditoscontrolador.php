@@ -30,7 +30,7 @@ class creditoscontrolador{
     }
 
 
-    public static function crearCredito(Router $router){
+    /*public static function crearCredito(Router $router){
         date_default_timezone_set('America/Bogota');
         session_start();
         isadmin();
@@ -57,6 +57,16 @@ class creditoscontrolador{
         
 
         $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }*/
+
+    public static function crearSeparado(Router $router){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $clientes = clientes::all();
+      
+
+        $router->render('admin/creditos/crearseparado', ['titulo'=>'Creditos', 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -146,6 +156,7 @@ class creditoscontrolador{
     }
 
 
+    /*
      public static function actualizarCredito(){
         session_start();
         isadmin();
@@ -155,6 +166,8 @@ class creditoscontrolador{
         /*foreach($productos as $index=>$producto){
         $producto->id = $producto->ID; //esto se hace por la union de las tablas con unJoinWhereArrayObj
         }*/
-        echo json_encode($creditos);
-        }
+        /*echo json_encode($creditos);
+        }*/
+
+    
 }
