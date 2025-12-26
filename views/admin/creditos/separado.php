@@ -56,7 +56,7 @@
                 </div>
                 <div class="formulario__campo">
                     <label class="formulario__label" for="frecuenciapago">Dia de pago</label>
-                    <select id="frecuenciapago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" name="frecuenciapago">
+                    <select id="frecuenciapago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" name="frecuenciapago" required>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>

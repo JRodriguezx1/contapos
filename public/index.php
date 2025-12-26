@@ -127,7 +127,7 @@ $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
 ///// Creditos /////
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
-$router->get('/admin/creditos/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
+$router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);
 $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 
@@ -224,6 +224,7 @@ $router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOr
 $router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
 
 $router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
+$router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 

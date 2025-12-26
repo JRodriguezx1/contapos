@@ -35,6 +35,7 @@ trait DocumentTrait
         $consecutivo = consecutivos::find('id', $idconsecutivo);
         $compañia = diancompanias::find('id', $consecutivo->idcompania);
 
+        //solo si es tipo de facturador ELECTRONICO
         if($consecutivo->estado && $consecutivo->idtipofacturador == 1){
             $customer = [
                 "identification_number" => $datosAdquiriente->identification_number??"222222222222",  //obligatorio

@@ -60,6 +60,7 @@
             </div>
           </div>
        
+          <p id="abonoTotal" class="text-gray-600 text-2xl text-center font-light m-0 hidden">Abono Inicial $: <span id="valorAbono" class="text-gray-700 font-semibold"> 0 </span></p>
 
           <div class="accordion md:px-12 !mt-4">
             <input type="checkbox" id="first">

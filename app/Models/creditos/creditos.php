@@ -29,7 +29,7 @@ class creditos extends \App\Models\ActiveRecord{
         $this->montototal = $args['montototal']??0;
         $this->fechavencimiento = $args['fechavencimiento']??'';
         $this->productoentregado = $args['productoentregado']??0;
-        $this->estado = $args['estado']??0;
+        $this->estado = $args['estado']??0; //1 = credito finalizado
         $this->created_at = $args['created_at']??'';
     }
 

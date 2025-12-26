@@ -548,8 +548,8 @@ class ventascontrolador{
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
-              $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
-              $alerta['error'][] = $th->getMessage();
+              $alertas['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
+              $alertas['error'][] = $th->getMessage();
             }
           
             $factura->id = $r[1];

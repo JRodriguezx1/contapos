@@ -6,12 +6,14 @@ use App\Models\ActiveRecord;
 use MVC\Router;  //namespace\clase
 use App\Models\clientes\clientes;
 use App\Models\configuraciones\caja;
+use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\mediospago;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\Request\separadoRequest;
 use App\services\creditosService;
 
 class creditoscontrolador{
@@ -59,14 +61,17 @@ class creditoscontrolador{
         $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }*/
 
-    public static function crearSeparado(Router $router){
+    public static function separado(Router $router){
         session_start();
         isadmin();
         $alertas = [];
+        $idsucursal = id_sucursal();
         $clientes = clientes::all();
-      
-
-        $router->render('admin/creditos/crearseparado', ['titulo'=>'Creditos', 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+        $conflocal = config_local::getParamCaja();
+        $router->render('admin/creditos/separado', ['titulo'=>'Creditos', 'clientes'=>$clientes, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -170,4 +175,22 @@ class creditoscontrolador{
         }*/
 
     
+    public static function crearSeparado(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        $valoresCredito = (array)json_decode($_POST['valoresCredito']);
+        $carrito = json_decode($_POST['carrito']);
+        $mediospago = json_decode($_POST['mediospago']);
+        $factimpuestos = json_decode($_POST['factimpuestos']);
+        $valoresCredito = ['idtipofinanciacion' => 2]+$valoresCredito;
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $validate = new separadoRequest($valoresCredito);
+            $alertas = $validate->validate();
+            if(empty($alertas)){
+                $alertas = creditosService::ejecutarCrearSeparado($valoresCredito, $carrito, $mediospago);
+            }
+        }
+        echo json_encode($alertas);
+    }
 }

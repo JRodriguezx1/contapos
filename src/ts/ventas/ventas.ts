@@ -406,7 +406,7 @@
     document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
       e.preventDefault();
       if(valorTotal.total <= 0 || valorTotal.subtotal <= 0){
-        msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalerta2') as HTMLElement));
+        msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
   

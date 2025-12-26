@@ -4,7 +4,7 @@ namespace App\Models\inventario;
 
 class productos extends \App\Models\ActiveRecord {
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'preciopersonalizado', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso', 'estado', 'visible'];
+    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'preciopersonalizado', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'merma', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso', 'estado', 'visible'];
     
     //public $id;
     public function __construct($args = [])
@@ -32,6 +32,7 @@ class productos extends \App\Models\ActiveRecord {
         $this->stock = !empty($args['stock']) ? $args['stock']: 0;
         $this->stockminimo = !empty($args['stockminimo']) ? $args['stockminimo'] : 1;
         $this->categoria = $args['categoria'] ?? '';
+        $this->merma = $args['merma'] ?? 0;
         $this->rendimientoestandar = $args['rendimientoestandar'] ?? 1;
         $this->precio_compra = !empty($args['precio_compra']) ? $args['precio_compra']:  0;
         $this->precio_venta = $args['precio_venta'] ?? '';
