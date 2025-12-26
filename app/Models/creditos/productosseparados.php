@@ -3,7 +3,7 @@ namespace App\Models\creditos;
 
 class productosseparados extends \App\Models\ActiveRecord {
     protected static $tabla = 'productosseparados';
-    protected static $columnasDB = ['id', 'idcredito', 'fk_producto', 'tipoproducto', 'tipoproduccion', 'rendimientoestandar', 'nombreproducto', 'foto', 'costo', 'valorunidad', 'cantidad', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idcredito', 'fk_producto', 'tipoproducto', 'tipoproduccion', 'rendimientoestandar', 'nombreproducto', 'foto', 'costo', 'valorunidad', 'cantidad', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total'];
     
     public function __construct($args = [])
     {
@@ -15,8 +15,8 @@ class productosseparados extends \App\Models\ActiveRecord {
         $this->rendimientoestandar = $args['rendimientoestandar']??1;
         $this->nombreproducto = $args['nombreproducto'] ?? '';
         $this->foto = $args['foto'] ?? '';
-        $this->costo = $args['costo'] ?? '';
-        $this->valorunidad = $args['valorunidad'] ?? '';
+        $this->costo = $args['costo'] ?? 0;
+        $this->valorunidad = $args['valorunidad'] ?? 0;
         $this->cantidad = $args['cantidad'] ?? '';
         $this->subtotal = $args['subtotal'] ?? 0;
         $this->base = $args['base'] ?? 0;

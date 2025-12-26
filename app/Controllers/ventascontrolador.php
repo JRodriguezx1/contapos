@@ -143,19 +143,19 @@ class ventascontrolador{
       $obj->id = $objeto->idproducto;
       //unset($objeto->iditem);
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
-        if(!isset($acumulador['productosSimples'][$objeto->id])){
-          $acumulador['productosSimples'][$objeto->id] = $obj;
+        if(!isset($acumulador['productosSimples'][$objeto->idproducto])){
+          $acumulador['productosSimples'][$objeto->idproducto] = $obj;
           $acumulador['soloIdproductos'][] = $obj->id;
         }else{
-          $acumulador['productosSimples'][$objeto->id]->cantidad += $obj->cantidad;
+          $acumulador['productosSimples'][$objeto->idproducto]->cantidad += $obj->cantidad;
         }
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
-        if(!isset($acumulador['productosCompuestos'][$objeto->id])){
-          $acumulador['productosCompuestos'][$objeto->id] = $obj;
+        if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
+          $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
         }else{
-          $acumulador['productosCompuestos'][$objeto->id]->cantidad += $obj->cantidad;
+          $acumulador['productosCompuestos'][$objeto->idproducto]->cantidad += $obj->cantidad;
         }
-        $acumulador['productosCompuestos'][$objeto->id]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->id]->cantidad/(float)$objeto->rendimientoestandar, 4);
+        $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->cantidad/(float)$objeto->rendimientoestandar, 4);
       }
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
