@@ -2,18 +2,10 @@
 
 namespace App\services;
 
-use App\Models\caja\cierrescajas;
-use App\Models\clientes\clientes;
-use App\Models\configuraciones\caja;
-use App\Models\configuraciones\mediospago;
-use App\Models\creditos\creditos;
-use App\Models\creditos\cuotas;
-use App\Models\creditos\productosseparados;
 use App\Models\inventario\productos_sub;
 use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
-use App\Models\ventas\facturas;
-use stdClass;
+
 
 //**SERVICIO DE VENTAS
 

@@ -333,7 +333,7 @@
       datos.append('montocuota', $('#montocuota').val()as string);
       datos.append('frecuenciapago', $('#frecuenciapago').val()as string);
       datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
-      datos.append('mediospago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
+      datos.append('mediospago', JSON.stringify(Array.from(mapMediospago, ([mediopago_id, valor])=>({mediopago_id, idcuota:0, valor}))));
       datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
       try {

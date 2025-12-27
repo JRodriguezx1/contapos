@@ -9,6 +9,7 @@ use App\Models\configuraciones\mediospago;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\creditos\productosseparados;
+use App\Models\creditos\separadomediopago;
 use App\Models\inventario\productos_sub;
 use App\Models\ventas\facturas;
 use stdClass;
@@ -69,6 +70,7 @@ class creditosService {
         if(!isset($separado->frecuenciapago))$separado->frecuenciapago = date('j');
         //$alertas = $separado->validar();
         //if(empty($alertas)){
+
         $getDB->begin_transaction();
         try {
             $r = $separado->crear_guardar();
