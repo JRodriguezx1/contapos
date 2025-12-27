@@ -18,7 +18,7 @@ use stdClass;
 
 class creditosService {
 
-    public static function registrarAbono($datosCuota):array{
+    /*public static function registrarAbono($datosCuota):array{
         
             if($credito->estado == 0){
                 $cuota = new cuotas($datosCuota);
@@ -41,7 +41,7 @@ class creditosService {
             }
         
         return $alertas;
-    }
+    }*/
 
 
     public static function crearCredito(stdClass $valoresCredito, $idfactura, $idcliente){
@@ -71,21 +71,20 @@ class creditosService {
         //$alertas = $separado->validar();
         //if(empty($alertas)){
 
+        $cuota = new cuotas($valoresCredito);
+        debuguear($cuota);
+        
         $getDB->begin_transaction();
         try {
             $r = $separado->crear_guardar();
             // registrar abono inicial en tabla cuotas
-
-            //registrar medios de pago del abono inicial
-            foreach($mediospago as $obj){
-                $obj->idcuota = 1;
-                /*if($obj->mediopago_id == 1){
-                $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
-                }*/
+            if($separado->abonoinicial > 0){
+                $cuota = new cuotas($valoresCredito);
             }
-            $payment = new paymentService(separadomediopago::class);
-            $payment->registrarPagos($mediospago);
-            debuguear(123);
+            //registrar medios de pago del abono inicial si aplica
+            $payment = new paymentService(separadomediopago::class);  //separadomediopago::class = a nombre de la clase como string
+            $payment->registrarPagos($mediospago, 1);
+           
             //registrar los productos
             foreach($carrito as $obj){
               $obj->idcredito = $r[1];

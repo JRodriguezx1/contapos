@@ -12,11 +12,11 @@ class cuotas extends \App\Models\ActiveRecord{
         $this->id_credito = $args['id_credito']??'';
         $this->cajaid = $args['cajaid']??'';
         $this->mediopagoid = $args['mediopagoid']??'';
-        $this->numerocuota = $args['numerocuota']??1;
+        $this->numerocuota = $args['numerocuota']??0;
         $this->montocuota = $args['montocuota']??0;
         $this->valorpagado = $args['valorpagado']??0;
         $this->fechavencimiento = $args['fechavencimiento']??date('Y-m-d');
-        $this->fechapagado = $args['fechapagado']?? date('Y-m-d');
+        $this->fechapagado = $args['fechapagado']?? date('Y-m-d H:i:s');
         $this->estado = $args['estado']??0;
         $this->cuotascreditos = $args['cuotascreditos']??'';
         $this->created_at = $args['created_at']??'';

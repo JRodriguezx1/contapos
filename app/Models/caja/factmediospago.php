@@ -2,7 +2,9 @@
 
 namespace App\Models\caja;
 
-class factmediospago extends \App\Models\ActiveRecord{
+use App\Models\contracts\mediosPagoContract;
+
+class factmediospago extends \App\Models\ActiveRecord implements mediosPagoContract{
     protected static $tabla = 'factmediospago';
     protected static $columnasDB = ['id', 'idmediopago', 'id_factura', 'valor'];
     
@@ -21,6 +23,9 @@ class factmediospago extends \App\Models\ActiveRecord{
         return self::$alertas;
     }
     
+    public function pagoDestino(int $id):void{
+        $this->id_factura = $id;
+    }
 }
 
 ?>

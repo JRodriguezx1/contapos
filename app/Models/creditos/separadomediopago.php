@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Models\creditos;
+use App\Models\contracts\mediosPagoContract;
 
-class separadomediopago extends \App\Models\ActiveRecord{
+class separadomediopago extends \App\Models\ActiveRecord implements mediosPagoContract{
     protected static $tabla = 'separadomediopago';
     protected static $columnasDB = ['id', 'idcuota', 'mediopago_id', 'valor'];
     
@@ -22,4 +23,8 @@ class separadomediopago extends \App\Models\ActiveRecord{
         return self::$alertas;
     }
     
+
+    public function pagoDestino(int $id):void{
+        $this->idcuota = $id;
+    }
 }

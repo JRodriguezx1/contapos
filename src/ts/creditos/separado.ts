@@ -9,6 +9,7 @@
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const tablaSeparado = document.querySelector('#tablaSeparado tbody');
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
+    const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     
     /*interface Item {
       id_impuesto: number,
@@ -326,6 +327,9 @@
       const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
       const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
       valoresCredito.cliente_id = (document.querySelector('#cliente') as HTMLSelectElement).value;
+      valoresCredito.valorpagado = valoresCredito.abonoinicial;
+      valoresCredito.cajaid = btnCaja.value;
+      console.log(valoresCredito);
       const datos = new FormData();
       datos.append('cliente_id', $('#cliente').val()as string);
       datos.append('abonoinicial', $('#abonoinicial').val()as string);

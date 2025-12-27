@@ -50,7 +50,7 @@
     function initvaloresCredito(){
       valoresCredito.capital = POS.valorTotal.total;  //inicializar el capital en el obj
       valoresCredito.cantidadcuotas = Number(cantidadcuotas.value);
-      valoresCredito.montocuota = valoresCredito.capital/valoresCredito.cantidadcuotas;
+      valoresCredito.montocuota = (valoresCredito.capital - valoresCredito.abonoinicial)/valoresCredito.cantidadcuotas;
       valoresCredito.interes = 0;  //No aplicar interes
       valoresCredito.interestotal = 0;  // 0% de interes
       valoresCredito.valorinterestotal = 0; //0$ de interes total de la factura
@@ -150,6 +150,7 @@
           abonoinicial.value = '0';
         }
       }
+      valoresCredito.capital = capital;
       valoresCredito.abonoinicial = abono;
       document.querySelector('#valorAbono')!.textContent = abono.toLocaleString();
       return creditofinal;
