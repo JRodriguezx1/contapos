@@ -74,8 +74,18 @@ class creditosService {
         $getDB->begin_transaction();
         try {
             $r = $separado->crear_guardar();
+            // registrar abono inicial en tabla cuotas
+
             //registrar medios de pago del abono inicial
-            
+            foreach($mediospago as $obj){
+                $obj->idcuota = 1;
+                /*if($obj->mediopago_id == 1){
+                $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
+                }*/
+            }
+            $payment = new paymentService(separadomediopago::class);
+            $payment->registrarPagos($mediospago);
+            debuguear(123);
             //registrar los productos
             foreach($carrito as $obj){
               $obj->idcredito = $r[1];
