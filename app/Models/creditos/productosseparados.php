@@ -1,9 +1,7 @@
 <?php
 namespace App\Models\creditos;
 
-class productosseparados extends \App\Models\ActiveRecord {
-    protected static $tabla = 'productosseparados';
-    protected static $columnasDB = ['id', 'idcredito', 'fk_producto', 'tipoproducto', 'tipoproduccion', 'rendimientoestandar', 'nombreproducto', 'foto', 'costo', 'valorunidad', 'cantidad', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total'];
+class productosseparados {
     
     public function __construct($args = [])
     {
@@ -38,5 +36,29 @@ class productosseparados extends \App\Models\ActiveRecord {
         if(strlen($this->cantidad)>9999)self::$alertas['error'][] = 'Maxima cantidad 9999';
 
         return self::$alertas;
+    }
+
+
+    public function toArray():array {
+        return [
+            'id' => $this->id, 
+            'idcredito' => $this->idcredito, 
+            'fk_producto' => $this->fk_producto, 
+            'tipoproducto' => $this->tipoproducto, 
+            'tipoproduccion' => $this->tipoproduccion, 
+            'rendimientoestandar' => $this->rendimientoestandar, 
+            'nombreproducto' => $this->nombreproducto, 
+            'foto' => $this->foto, 
+            'costo' => $this->costo, 
+            'valorunidad' => $this->valorunidad, 
+            'cantidad' => $this->cantidad, 
+            'subtotal' => $this->subtotal, 
+            'base' => $this->base, 
+            'impuesto' => $this->impuesto, 
+            'valorimp' => $this->valorimp, 
+            'descuento' => $this->descuento, 
+            'total' => $this->total,
+            'created_at' => $this->created_at
+        ];
     }
 }

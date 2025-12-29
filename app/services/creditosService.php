@@ -12,6 +12,7 @@ use App\Models\creditos\productosseparados;
 use App\Models\creditos\separadomediopago;
 use App\Models\inventario\productos_sub;
 use App\Models\ventas\facturas;
+use App\Repositories\creditos\productsSeparadosRepository;
 use stdClass;
 
 //**SERVICIO DE CREDITOS
@@ -65,12 +66,12 @@ class creditosService {
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $separado = new creditos($valoresCredito);
-        $productosseparados = new productosseparados;
+        //$productosseparados = new productosseparados;
         $getDB = creditos::getDB();
         if(!isset($separado->frecuenciapago))$separado->frecuenciapago = date('j');
         //$alertas = $separado->validar();
         //if(empty($alertas)){
-        
+
         $getDB->begin_transaction();
         try {
             $separado->saldopendiente = $separado->montototal;
@@ -89,7 +90,9 @@ class creditosService {
               $obj->idcredito = $r[1];
               $obj->idproducto = $obj->fk_producto;
             }
-            $r1 = $productosseparados->crear_varios_reg_arrayobj($carrito);
+            //$r1 = $productosseparados->crear_varios_reg_arrayobj($carrito);
+            $repo = new productsSeparadosRepository();
+            $repo->crear_varios_reg_arrayobj($carrito);
             //descontar de inventario
             $a = ventasService::ajustarIventarioXVenta($carrito);
             //ajustar abono o pagos en caja

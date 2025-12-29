@@ -15,6 +15,7 @@ use App\Models\inventario\productos;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\Repositories\creditos\productsSeparadosRepository;
 use App\Request\separadoRequest;
 use App\services\creditosService;
 
@@ -87,7 +88,8 @@ class creditoscontrolador{
 
         $credito = creditos::find('id', $id);
         $cuotas = cuotas::idregistros('id_credito', $credito->id);
-        $productos = productosseparados::
+        $productos = new productsSeparadosRepository();
+        $productos = $productos->obtenerPorCredito($id);
         $cliente = clientes::find('id', $credito->cliente_id);
         $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $factura =null;

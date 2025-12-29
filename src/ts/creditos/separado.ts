@@ -40,7 +40,7 @@
 
     let allConversionUnidades:conversionunidadesapi[] = [];
     let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
-    let carrito:{id:string, fk_producto:string,  tipoproducto: string, tipoproduccion:string, idcategoria: string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
+    let carrito:{id:string, fk_producto:string,  tipoproducto: string, tipoproduccion:string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let factimpuestos:Item[] = [], tipoventa:string="Contado";
     const mapMediospago = new Map();
@@ -118,12 +118,11 @@
           const productototal = Number(itemselected.precio_venta)*cantidad;
           const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
           
-          const item:{id: string, fk_producto: string, tipoproducto: string, tipoproduccion:string, idcategoria: string, foto:string, costo:number, valorunidad:string, nombreproducto: string, rendimientoestandar:string, unidad: string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
+          const item:{id: string, fk_producto: string, tipoproducto: string, tipoproduccion:string, foto:string, costo:number, valorunidad:string, nombreproducto: string, rendimientoestandar:string, unidad: string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
               id: '',
               fk_producto: itemselected?.id!,
               tipoproducto: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
               tipoproduccion: itemselected.tipoproduccion,
-              idcategoria: '',
               foto: '',
               costo: 0,
               valorunidad: itemselected.precio_venta,
