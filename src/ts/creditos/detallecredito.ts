@@ -3,38 +3,42 @@
 
     //const POS = (window as any).POS;
      
+    const btnDetalleProductos = document.querySelector('#btnDetalleProductos') as HTMLButtonElement;
     const btnAbonar = document.querySelector('#btnAbonar') as HTMLButtonElement;
     const btnXCerrarModalAbono = document.querySelector('#btnXCerrarModalAbono') as HTMLButtonElement;
     const miDialogoAbono = document.querySelector('#miDialogoAbono') as any;
+    const miDialogoDetalleProducto = document.querySelector('#miDialogoDetalleProducto') as any;
     const pagarTodo = document.querySelector('#pagarTodo') as HTMLButtonElement;
     
     let indiceFila=0, control=0, tablacuotas:HTMLElement;
 
     
+    document.addEventListener("click", cerrarDialogoExterno);
      
     //////////////////  TABLA //////////////////////
     tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatables);
 
-    //btn para crear credito
+
+
+    btnDetalleProductos?.addEventListener('click', ():void=>{
+      miDialogoDetalleProducto.showModal();
+    });
+
+    //btn para abonar credito
     btnAbonar?.addEventListener('click', ():void=>{
       control = 0;
       miDialogoAbono.showModal();
-      document.addEventListener("click", cerrarDialogoExterno);
       ($('#mediopago') as any).select2({ dropdownParent: $('#miDialogoAbono'), placeholder: "Seleccionar el medio de pago", maximumSelectionLength: 1});
     });
-
-    btnXCerrarModalAbono.addEventListener('click', (e)=>{
-        miDialogoAbono.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
-    });
-    
 
 
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === miDialogoAbono || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
+      const f = event.target;
+      console.log(f);
+      if (f === miDialogoAbono || f === miDialogoDetalleProducto || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLButtonElement).id == 'btnXCerrarModalDetalleProducto' || (f as HTMLButtonElement).id == 'btnXCerrarModalAbono') {
         miDialogoAbono.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
+        miDialogoDetalleProducto.close();
       }
     }
 

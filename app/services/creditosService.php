@@ -70,21 +70,20 @@ class creditosService {
         if(!isset($separado->frecuenciapago))$separado->frecuenciapago = date('j');
         //$alertas = $separado->validar();
         //if(empty($alertas)){
-
-        $cuota = new cuotas($valoresCredito);
-        debuguear($cuota);
         
         $getDB->begin_transaction();
         try {
+            $separado->saldopendiente = $separado->montototal;
             $r = $separado->crear_guardar();
             // registrar abono inicial en tabla cuotas
             if($separado->abonoinicial > 0){
                 $cuota = new cuotas($valoresCredito);
+                $cuota->id_credito = $r['1'];
+                $rc = $cuota->crear_guardar();
+                //registrar medios de pago del abono inicial si aplica
+                $payment = new paymentService(separadomediopago::class);  //separadomediopago::class = a nombre de la clase como string
+                $payment->registrarPagos($mediospago, $rc['1']);
             }
-            //registrar medios de pago del abono inicial si aplica
-            $payment = new paymentService(separadomediopago::class);  //separadomediopago::class = a nombre de la clase como string
-            $payment->registrarPagos($mediospago, 1);
-           
             //registrar los productos
             foreach($carrito as $obj){
               $obj->idcredito = $r[1];

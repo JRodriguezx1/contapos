@@ -9,7 +9,7 @@
       <span class="sr-only">Atrás</span>
     </a>
     <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-      💳 Detalles del Crédito
+      💳 Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
     </h2>
 
     <div id="divmsjalerta"></div>
@@ -105,6 +105,9 @@
 
     <!-- Botones de acción -->
     <div class="flex justify-end gap-4">
+      <button id="btnDetalleProductos" class="btn-md btn-blue mb-4 !py-4 px-6">
+        📄 Productos
+      </button>
       <button id="btnAbonar" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">
         ➕ Abonar
       </button>
@@ -118,15 +121,51 @@
   </div>
 
 
+  <!-- MODAL DETALLE PRODUCTO-->
+  <dialog id="miDialogoDetalleProducto" class="midialog-md p-12">
+    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+      <h4 id="modalDetalleProducto" class="font-semibold text-gray-700 mb-4">Detalle producto</h4>
+      <button class="rounded-lg hover:bg-gray-100 transition">
+          <i id="btnXCerrarModalDetalleProducto" class="fa-solid fa-xmark text-gray-600 text-3xl p-2"></i>
+      </button>
+    </div>
+    <div id="divmsjalerta1"></div>
+    <!-- TABLA DE PRODUCTOS -->
+    <div class="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
+        <table id="tabladetalleProducto"
+            class="w-full text-left border-collapse">
+            <thead
+                class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
+                <tr>
+                    <th class="px-5 py-3 border-b border-gray-200">Producto</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Cantidad</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Unidad de medida</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
+                <!-- Filas dinámicas -->
+                <?php foreach($productos as $value): ?>
+                  <tr>
+                    <td class="px-4 py-2 border"><?php echo $value->nombreproducto; ?></td>
+                    <td class="px-4 py-2 border"><?php echo $value->cantidad; ?></td>
+                    <td class="px-4 py-2 border"><?php echo 'Unidades'; ?></td>
+                  </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+  </dialog><!--fin modal detalle producto-->
+
+
   <!-- MODAL PARA ABONAR-->
   <dialog id="miDialogoAbono" class="midialog-sm p-12">
     <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
         <h4 id="modalAbono" class="font-semibold text-gray-700 mb-4">Registrar abono</h4>
-        <button id="btnXCerrarModalAbono" class="p-2 rounded-lg hover:bg-gray-100 transition">
-            <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
+        <button class="rounded-lg hover:bg-gray-100 transition">
+            <i id="btnXCerrarModalAbono" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
         </button>
     </div>
-    <div id="divmsjalerta1"></div>
+    <div id="divmsjalerta2"></div>
     <form id="formCrearUpdateAbono" class="formulario" action="/admin/creditos/registrarAbono" enctype="multipart/form-data" method="POST">
         <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
         <input class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">

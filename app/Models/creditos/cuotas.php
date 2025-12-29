@@ -11,7 +11,7 @@ class cuotas extends \App\Models\ActiveRecord{
         $this->id_sucursal_idfk = $args['id_sucursal_idfk']??id_sucursal();
         $this->id_credito = $args['id_credito']??'';
         $this->cajaid = $args['cajaid']??'';
-        $this->mediopagoid = $args['mediopagoid']??'';
+        $this->mediopagoid = $args['mediopagoid']??1;
         $this->numerocuota = $args['numerocuota']??0;
         $this->montocuota = $args['montocuota']??0;
         $this->valorpagado = $args['valorpagado']??0;

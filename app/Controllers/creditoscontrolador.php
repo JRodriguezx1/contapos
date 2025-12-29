@@ -10,6 +10,8 @@ use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\mediospago;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
+use App\Models\creditos\productosseparados;
+use App\Models\inventario\productos;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
@@ -85,6 +87,7 @@ class creditoscontrolador{
 
         $credito = creditos::find('id', $id);
         $cuotas = cuotas::idregistros('id_credito', $credito->id);
+        $productos = productosseparados::
         $cliente = clientes::find('id', $credito->cliente_id);
         $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $factura =null;
@@ -98,7 +101,7 @@ class creditoscontrolador{
 
         $mediospago = mediospago::whereArray(['estado'=>1]);
         
-        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'cliente'=>$cliente, 'cajas'=>$cajas, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/creditos/detallecredito', ['titulo'=>'Creditos', 'credito'=>$credito, 'cuotas'=>$cuotas, 'productos'=>$productos, 'cliente'=>$cliente, 'cajas'=>$cajas, 'factura'=>$factura, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 

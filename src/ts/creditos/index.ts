@@ -66,7 +66,7 @@
 
     
     //////////////////  TABLA //////////////////////
-    tablaCreditos = ($('#tablaCreditos') as any).DataTable(configdatatables);
+    tablaCreditos = ($('#tablaCreditos') as any).DataTable(configdatatablesgenerico);
 
     //btn para crear credito
     /*btnCrearCredito?.addEventListener('click', ():void=>{

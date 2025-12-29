@@ -63,7 +63,6 @@
             const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
             const respuesta = await fetch(url); 
             const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, precio_venta:string}[] = await respuesta.json();
-            console.log(resultado);
             filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, precio_venta: item.precio_venta }));
             activarselect2(filteredData);
         } catch (error) {
@@ -317,8 +316,8 @@
         return;
       }
 
-      //btnPagar.disabled = true;
-      //btnPagar.value = 'Procesando...';
+      btnPagar.disabled = true;
+      btnPagar.value = 'Procesando...';
       procesarSeparado();
     });
 
@@ -329,7 +328,6 @@
       valoresCredito.cliente_id = (document.querySelector('#cliente') as HTMLSelectElement).value;
       valoresCredito.valorpagado = valoresCredito.abonoinicial;
       valoresCredito.cajaid = btnCaja.value;
-      console.log(valoresCredito);
       const datos = new FormData();
       datos.append('cliente_id', $('#cliente').val()as string);
       datos.append('abonoinicial', $('#abonoinicial').val()as string);
@@ -351,6 +349,7 @@
             btnPagar.disabled = false;
             btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
+            setTimeout(() => { window.location.href = "/admin/creditos"; }, 800);
             //if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);

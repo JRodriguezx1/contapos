@@ -21,7 +21,7 @@
     const gestionSubirModalPagar = {
         
       subirModalPagar(){
-        initvaloresCredito();
+        //initvaloresCredito();
         document.querySelector('#totalPagar')!.textContent = `${POS.valorTotal.total.toLocaleString()}`;
         //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
         let totalotrosmedios = 0;
@@ -126,6 +126,7 @@
         //(document.querySelector('#valorinteresxcuota') as HTMLInputElement).value = valorInteres/valoresCredito.cantidadcuotas+'';
         //(document.querySelector('#valorinterestotal') as HTMLInputElement).value = valorInteres.toLocaleString();  //valor del interes total del credito
         //(document.querySelector('#montototal') as HTMLInputElement).value = total.toLocaleString();  //valor total del credito
+        valoresCredito.interes = 1;
         valoresCredito.montocuota = valorxcuota;
         valoresCredito.interestotal = 2*valoresCredito.cantidadcuotas;
         valoresCredito.valorinteresxcuota = valorInteres/valoresCredito.cantidadcuotas;
@@ -139,7 +140,6 @@
 
     function recalcularCapitalXAbono():number{
       const capital = POS.valorTotal.total;
-      //console.log(capital);
       let abono = Number(abonoinicial.value);
       const capitalinicial:number = capital;
       let creditofinal:number = capitalinicial;
