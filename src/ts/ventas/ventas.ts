@@ -409,6 +409,14 @@
         msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
+
+      //calcular si el totoal de los medios de pago es menor al abono inicial, abortar pago...
+      let totalMediosPago:number = 0;
+      for(let value of mapMediospago.values())totalMediosPago+=value;
+      if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
+        msjAlert('error', 'Valor a pagar no corresponde', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        return;
+      }
   
       btnPagar.disabled = true;
       btnPagar.value = 'Procesando...';

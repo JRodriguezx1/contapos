@@ -157,12 +157,7 @@ class creditoscontrolador{
         session_start();
         isadmin();
         $creditos = creditos::unJoinWhereArrayObj(clientes::class, 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal()]);
-        ////////////// calcular el impuesto como global o como discriminado por producto /////////////////////
-        //$conflocal = config_local::getParamGlobal();
-        /*foreach($productos as $index=>$producto){
-        $producto->id = $producto->ID; //esto se hace por la union de las tablas con unJoinWhereArrayObj
-        }*/
-    echo json_encode($creditos);
+        echo json_encode($creditos);
     }
 
 
