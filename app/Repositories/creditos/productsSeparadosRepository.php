@@ -10,11 +10,14 @@ class productsSeparadosRepository extends operationRepository{
     //private $db;
     protected string $table = 'productosseparados';
     protected string $entityClass = productosseparados::class;
+    protected array $allowedColumns = [];
 
-    /*public function __construct($conexion)
+    public function __construct(/*$conexion*/)
     {
-        $this->db = $conexion;
-    }*/
+        //$this->db = $conexion;
+        $model = new $this->entityClass();
+        $this->allowedColumns = array_keys($model->toArray());
+    }
 
     
     /*public function obtenerPorCredito(int $id):array{
@@ -36,9 +39,14 @@ class productsSeparadosRepository extends operationRepository{
         return $array;
     }
 
-    public function crear_guardar():array{
+    /*public function crear_guardar():array{
 
         return [];
-    }
+    }*/
+
+    /*public function allowedColumns():void{
+        $model = new $this->entityClass();
+        $this->allowedColumns = array_keys($model->toArray());
+    }*/
     
 }

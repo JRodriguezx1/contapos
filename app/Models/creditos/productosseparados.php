@@ -41,7 +41,7 @@ class productosseparados {
 
     public function toArray():array {
         return [
-            'id' => $this->id, 
+            //'id' => $this->id, 
             'idcredito' => $this->idcredito, 
             'fk_producto' => $this->fk_producto, 
             'tipoproducto' => $this->tipoproducto, 
@@ -58,7 +58,8 @@ class productosseparados {
             'valorimp' => $this->valorimp, 
             'descuento' => $this->descuento, 
             'total' => $this->total,
-            'created_at' => $this->created_at
+            //'created_at' => $this->created_at
         ];
     }
+
 }
