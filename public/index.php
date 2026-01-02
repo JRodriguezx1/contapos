@@ -130,6 +130,7 @@ $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 $router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);
 $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
+$router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
 
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);

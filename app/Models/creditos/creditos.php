@@ -76,7 +76,10 @@ class creditos {
     public function actualizarCredito($valorpagadoCuota) {
         $this->numcuota += 1;
         $this->saldopendiente -= $valorpagadoCuota;
-        if($this->saldopendiente<=0)$this->estado = 1;  //credito cerrado
+        if($this->saldopendiente<=0){
+            $this->estado = 1;  //credito cerrado
+            $this->productoentregado = 1;  //producto entregado
+        }
     }
 
 }

@@ -82,8 +82,17 @@ class creditoscontrolador{
     }
 
 
-    public static function pagoTotal(){
+    public static function pagoTotal(Router $router){
+        date_default_timezone_set('America/Bogota');
+        session_start();
+        isadmin();
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
+        }
+        $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
+        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
+        $router->render('admin/creditos/detallecredito', $viewData);
     }
 
 

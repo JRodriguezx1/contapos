@@ -22,12 +22,13 @@ use stdClass;
 //**SERVICIO DE CREDITOS
 
 class creditosService {
+
     //metodo llamado desde ventascontrolador.php
     public static function crearCredito(stdClass $valoresCredito, $idfactura, $idcliente){
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $credito = new creditosRepository();
-        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente);
+        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente); //llama metodo del repositorio
         $alertas = $entity->validar();
         if(empty($alertas)){
             $r = $credito->insert($entity);
@@ -71,6 +72,19 @@ class creditosService {
             //descontar de inventario
             $a = ventasService::ajustarIventarioXVenta($carrito);
             //ajustar abono o pagos en caja
+            /****** */
+
+            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$cuota->cajaid, 'idsucursal_id'=>id_sucursal()]);
+            if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
+                $ultimocierre = new cierrescajas(['idcaja'=>$cuota->cajaid, 'nombrecaja'=>caja::find('id', $cuota->cajaid)->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+                $ultimocierre->crear_guardar();
+            }
+
+            $ultimocierre->abonos += $objMedioPago->valor;
+            if($objMedioPago->mediopago_id == 1)
+                $ultimocierre->ventasenefectivo += $objMedioPago->valor;
+            $ultimocierre->actualizar();
+
             $getDB->commit();
             $alertas['exito'][] = "Credito de tipo separado creado correctamente.";
         } catch (\Throwable $th) {
@@ -120,6 +134,20 @@ class creditosService {
                     $ra = $creditoRepo->update($credito);
                     $payment = new paymentService(new separadoMediopagoRepository());
                     $payment->registrarPagos([$objMedioPago], $r[1]);
+                    
+                    //si es abono en efectivo, registrar al efectivo del cierre de caja y en el abono del cierre de caja
+                    /********** */
+                    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$cuota->cajaid, 'idsucursal_id'=>id_sucursal()]);
+                    if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
+                        $ultimocierre = new cierrescajas(['idcaja'=>$cuota->cajaid, 'nombrecaja'=>caja::find('id', $cuota->cajaid)->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+                        $ultimocierre->crear_guardar();
+                    }
+
+                    $ultimocierre->abonos += $objMedioPago->valor;
+                    if($objMedioPago->mediopago_id == 1)
+                        $ultimocierre->ventasenefectivo += $objMedioPago->valor;
+                    $ultimocierre->actualizar();
+
                     $getDB->commit();
                     $alertas['exito'][] = "Cuota procesada";
                 } catch (\Throwable $th) {

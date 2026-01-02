@@ -39,6 +39,7 @@ class creditosRepository extends operationRepository{
         $entity->cliente_id = $idcliente;
         $entity->frecuenciapago = date('j');
         $entity->saldopendiente = $entity->montototal;
+        $entity->productoentregado = 1;
         //$array = $this->insert($entity);
         return $entity;
     }
