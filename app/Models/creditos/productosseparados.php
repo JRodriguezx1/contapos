@@ -27,15 +27,16 @@ class productosseparados {
 
     // Validación para venta nueva
     public function validar_nueva_venta():array {
-        if(!$this->idcredito)self::$alertas['error'][] = 'La factura es obligatoria';
+        $alertas = [];
+        if(!$this->idcredito)$alertas['error'][] = 'La factura es obligatoria';
         
-        if(!$this->fk_producto)self::$alertas['error'][] = 'El producto es obligatorio';
+        if(!$this->fk_producto)$alertas['error'][] = 'El producto es obligatorio';
         
-        if(!$this->cantidad)self::$alertas['error'][] = 'La cantidad es obligatoria';
+        if(!$this->cantidad)$alertas['error'][] = 'La cantidad es obligatoria';
 
-        if(strlen($this->cantidad)>9999)self::$alertas['error'][] = 'Maxima cantidad 9999';
+        if(strlen($this->cantidad)>9999)$alertas['error'][] = 'Maxima cantidad 9999';
 
-        return self::$alertas;
+        return $alertas;
     }
 
 

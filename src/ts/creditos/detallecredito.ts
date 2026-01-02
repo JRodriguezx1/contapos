@@ -28,7 +28,6 @@
     btnAbonar?.addEventListener('click', ():void=>{
       control = 0;
       miDialogoAbono.showModal();
-      ($('#mediopago') as any).select2({ dropdownParent: $('#miDialogoAbono'), placeholder: "Seleccionar el medio de pago", maximumSelectionLength: 1});
     });
 
 

@@ -26,6 +26,17 @@ abstract class BaseRepository
         return $rows;
     }
 
+    protected function fetchAllStd(string $sql): array
+    {
+        $res = self::$db->query($sql);
+        $rows = [];
+        while ($row = $res->fetch_object()) {
+            $rows[] = $row;
+        }
+        $res->free();
+        return $rows;
+    }
+
     protected function escape(string $value): string
     {
         return self::$db->escape_string($value);

@@ -183,7 +183,7 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="mediopago">Medio de pago</label>
-            <select id="mediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"  multiple="multiple" name="mediopagoid" required>
+            <select id="mediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="mediopagoid" required>
                 <?php foreach($mediospago as $value):  ?>
                       <option value="<?php echo $value->id;?>" ><?php echo $value->mediopago;?></option>
                 <?php endforeach; ?>

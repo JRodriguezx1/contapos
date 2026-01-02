@@ -12,6 +12,8 @@ use App\Models\inventario\stockproductossucursal;
 class ventasService {
 
     public static function ajustarIventarioXVenta($carrito):array{
+        //$invSub = true;
+        //$invPro = true;
         //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
         $resultArray = array_reduce($carrito, function($acumulador, $objeto){
             $obj = clone $objeto;

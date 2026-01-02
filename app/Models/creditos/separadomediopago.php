@@ -1,11 +1,8 @@
 <?php
 
 namespace App\Models\creditos;
-use App\Models\contracts\mediosPagoContract;
 
-class separadomediopago extends \App\Models\ActiveRecord implements mediosPagoContract{
-    protected static $tabla = 'separadomediopago';
-    protected static $columnasDB = ['id', 'idcuota', 'mediopago_id', 'valor'];
+class separadomediopago { // extends \App\Models\ActiveRecord implements mediosPagoContract
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -18,13 +15,25 @@ class separadomediopago extends \App\Models\ActiveRecord implements mediosPagoCo
 
     public function validar():array
     {
-        if(!$this->idcuota)self::$alertas['error'][] = "Error intenta nuevamnete";
-        if(!$this->mediopago_id)self::$alertas['error'][] = "Error intenta nuevamnete";
-        return self::$alertas;
+        $alertas = [];
+        if(!$this->idcuota)$alertas['error'][] = "Error intenta nuevamnete";
+        if(!$this->mediopago_id)$alertas['error'][] = "Error intenta nuevamnete";
+        return $alertas;
     }
     
 
-    public function pagoDestino(int $id):void{
-        $this->idcuota = $id;
+    public function toArray():array {
+        return [
+            //'id' => $this->id, 
+            'idcuota' => $this->idcuota, 
+            'mediopago_id' => $this->mediopago_id, 
+            'valor' => $this->valor, 
+            //'created_at' => $this->created_at
+        ];
     }
+
+    /*public function pagoDestino(int $id):void{
+        $this->idcuota = $id;
+    }*/
+    
 }

@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Repositories\creditos;
+
+use App\Models\contracts\mediosPagoContract;
+use App\Models\creditos\separadomediopago;
+use App\Repositories\operationRepository;
+
+class separadomediopagoRepository extends operationRepository implements mediosPagoContract{
+
+    //private $db;
+    protected string $table = 'separadomediopago';
+    protected string $entityClass = separadomediopago::class;
+    protected array $allowedColumns = [];
+    protected string $pagoDestino = 'idcuota';
+
+    public function __construct(/*$conexion*/)
+    {
+        //$this->db = $conexion;
+        $model = new $this->entityClass();
+        $this->allowedColumns = array_keys($model->toArray());
+        
+    }
+
+    
+    /*public function obtenerPorCredito(int $id):array{
+
+        $sql = "SELECT *FROM separadomediopago WHERE idcredito = $id;";
+        $resultado = $this->db->query($sql);
+        while($row = $resultado->fetch_assoc()){ 
+            $array[] = new separadomediopago($row);   
+        }
+        $resultado->free();
+        return $array;
+
+    }*/
+
+    /*public function obtenerPorCredito(int $id):array{
+        $sql = "SELECT *FROM separadomediopago WHERE id_credito = $id;";
+        $rows = $this->fetchAll($sql);
+        $array = array_map(fn($v) => new separadomediopago($v), $rows);
+        return $array;
+    }*/
+
+    /*public function crear_guardar():array{
+
+        return [];
+    }*/
+
+    public function getPagoDestino():string{
+        return $this->pagoDestino;
+    }
+
+    public function getEntityClass():string{
+        return $this->entityClass;
+    }
+    
+}

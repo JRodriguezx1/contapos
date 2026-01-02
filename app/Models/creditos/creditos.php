@@ -2,15 +2,13 @@
 
 namespace App\Models\creditos;
 
-class creditos extends \App\Models\ActiveRecord{
-    protected static $tabla = 'creditos';
-    protected static $columnasDB = ['id', 'id_fksucursal', 'idtipofinanciacion', 'factura_id', 'cliente_id', 'nombrecliente', 'capital', 'abonoinicial', 'saldopendiente', 'numcuota', 'cantidadcuotas', 'montocuota', 'frecuenciapago', 'fechainicio', 'interes', 'interesxcuota', 'interestotal', 'valorinteresxcuota', 'valorinterestotal', 'montototal', 'fechavencimiento', 'productoentregado', 'estado'];
+class creditos {
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->id_fksucursal = $args['id_fksucursal']??id_sucursal();
         $this->idtipofinanciacion = $args['idtipofinanciacion']??'';
-        $this->factura_id = $args['factura_id']??'';
+        $this->factura_id = $args['factura_id']??NULL;
         $this->cliente_id = $args['cliente_id']??'';
         $this->nombrecliente = $args['nombrecliente']??'cliente';
         $this->capital = $args['capital']??0;
@@ -36,13 +34,49 @@ class creditos extends \App\Models\ActiveRecord{
 
     public function validar():array
     {
-        if(!$this->cliente_id)self::$alertas['error'][] = "Debe seleccionar un cliente";
-        if($this->capital<=0)self::$alertas['error'][] = "el valor del credito total no es valido.";
-        if($this->cantidadcuotas<=0)self::$alertas['error'][] = "Numero de cuotas no es valido, verifica nuevamente.";
-        if($this->montocuota<=0)self::$alertas['error'][] = "Valor de la cuota no es valido.";
-        if($this->montototal<0)self::$alertas['error'][] = "El capital + interes no es valido";
-        if(!$this->frecuenciapago)self::$alertas['error'][] = "Seleccionar dia de pago de la cuota";
-        return self::$alertas;
+        $alertas = [];
+        if(!$this->cliente_id)$alertas['error'][] = "Debe seleccionar un cliente";
+        if($this->capital<=0)$alertas['error'][] = "el valor del credito total no es valido.";
+        if($this->cantidadcuotas<=0)$alertas['error'][] = "Numero de cuotas no es valido, verifica nuevamente.";
+        if($this->montocuota<=0)$alertas['error'][] = "Valor de la cuota no es valido.";
+        if($this->montototal<0)$alertas['error'][] = "El capital + interes no es valido";
+        if(!$this->frecuenciapago)$alertas['error'][] = "Seleccionar dia de pago de la cuota";
+        return $alertas;
+    }
+
+    public function toArray():array {
+        return [
+            //'id' => $this->id, 
+            'id_fksucursal' => $this->id_fksucursal, 
+            'idtipofinanciacion' => $this->idtipofinanciacion, 
+            'factura_id' => $this->factura_id, 
+            'cliente_id' => $this->cliente_id, 
+            'nombrecliente' => $this->nombrecliente, 
+            'capital' => $this->capital, 
+            'abonoinicial' => $this->abonoinicial, 
+            'saldopendiente' => $this->saldopendiente, 
+            'numcuota' => $this->numcuota, 
+            'cantidadcuotas' => $this->cantidadcuotas, 
+            'montocuota' => $this->montocuota,
+            'frecuenciapago' => $this->frecuenciapago, 
+            'fechainicio' => $this->fechainicio, 
+            'interes' => $this->interes, 
+            'interesxcuota' => $this->interesxcuota, 
+            'interestotal' => $this->interestotal, 
+            'valorinteresxcuota' => $this->valorinteresxcuota,
+            'valorinterestotal' => $this->valorinterestotal, 
+            'montototal' => $this->montototal, 
+            'fechavencimiento' => $this->fechavencimiento, 
+            'productoentregado' => $this->productoentregado, 
+            'estado' => $this->estado, 
+            //'created_at' => $this->created_at
+        ];
+    }
+
+    public function actualizarCredito($valorpagadoCuota) {
+        $this->numcuota += 1;
+        $this->saldopendiente -= $valorpagadoCuota;
+        if($this->saldopendiente<=0)$this->estado = 1;  //credito cerrado
     }
 
 }

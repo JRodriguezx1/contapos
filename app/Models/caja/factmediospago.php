@@ -4,7 +4,7 @@ namespace App\Models\caja;
 
 use App\Models\contracts\mediosPagoContract;
 
-class factmediospago extends \App\Models\ActiveRecord implements mediosPagoContract{
+class factmediospago extends \App\Models\ActiveRecord{
     protected static $tabla = 'factmediospago';
     protected static $columnasDB = ['id', 'idmediopago', 'id_factura', 'valor'];
     

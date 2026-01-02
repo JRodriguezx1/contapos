@@ -5,7 +5,7 @@ namespace App\Repositories;
 abstract class operationRepository extends BaseRepository{
 
     protected string $table;
-    protected string $entityClass;
+    protected string $entityClass;  //entidad o modelo
     protected array $allowedColumns = [];
 
 
@@ -22,12 +22,13 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function crear_varios_reg_arrayobj($arrays = []){  // $arrays = [{'col1':a, 'col2':b}, {'col1':c, 'col2':d}, ...] 
+    public function crear_varios_reg_arrayobj(array $arrays = []):array{  // $arrays = [{'col1':a, 'col2':b}, {'col1':c, 'col2':d}, ...] 
         $string2 = '';
 
         foreach($arrays as $key => $obj){
             // si viene como stdClass → convertir a array
-            if($obj instanceof \stdClass)$array = (array)$obj;
+        //if($obj instanceof \stdClass)
+            $array = (array)$obj;
             //crear entidad tipada
             $model = new $this->entityClass($array);
             $row = [];
@@ -53,6 +54,27 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
+    public function update(object $entity){
+        $data = $entity->toArray();
+        $sets = [];
+        $id = $entity->id;;
+        $query = "UPDATE {$this->table} SET ";
+        foreach( $data as $key => $value){
+            if($value === null || $value == ''){
+                $sets[] = "{$key}=NULL";
+                continue;
+            }
+            if(is_numeric($value)){
+                $sets[] = "{$key}={$value}";
+                continue;
+            }
+            $sets[] = "{$key}='{$value}'";
+        }
+        $query .= implode(', ', $sets);
+        $query .= " WHERE id = {$id} LIMIT 1";
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }
 
 
     public function delete(int $id): bool
@@ -69,12 +91,16 @@ abstract class operationRepository extends BaseRepository{
 
     public function find(int $id): ?object
     {
-        $rows = $this->fetchAll(
-            "SELECT * FROM {$this->table} WHERE id = {$id} LIMIT 1"
-        );
+        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE id = {$id} LIMIT 1");
         return $rows ? new $this->entityClass($rows[0]) : null;
     }
 
+
+    public function findAll(string $col, int $id): ?array
+    {
+        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE $col = {$id}");
+        return $rows ?  array_map(fn($r) => new $this->entityClass($r), $rows) : null;
+    }
 
     public function where(array $array = [], string $orden = "ASC"): array
     {
@@ -89,6 +115,25 @@ abstract class operationRepository extends BaseRepository{
         $sql .= " ORDER BY id $orden;";
         $rows = $this->fetchAll($sql);
         return array_map(fn($r) => new $this->entityClass($r), $rows);
+    }
+
+    public function unJoinWhereArrayObj(string $targetTable, string $fkLocal, string $fkTarget, array $where = []):array{
+        $sql = "SELECT {$this->table}.*, {$targetTable}.*, {$this->table}.id AS ID 
+                FROM {$this->table} 
+                JOIN {$targetTable} ON {$this->table}.{$fkLocal} = {$targetTable}.{$fkTarget}";
+
+        if (!empty($where)) {
+            $sql .= " WHERE";
+            foreach ($where as $key => $value) {
+                if(array_key_last($where) == $key){
+                    $sql.= " ${key} = '${value}';";
+                }else{
+                    $sql.= " ${key} = '${value}' AND ";
+                }
+            }
+        }
+        $rows = $this->fetchAllStd($sql);
+        return $rows;
     }
 
 }
