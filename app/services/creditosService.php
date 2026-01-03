@@ -6,6 +6,7 @@ use App\classes\serviceLocatorApp;
 use App\Models\caja\cierrescajas;
 use App\Models\clientes\clientes;
 use App\Models\configuraciones\caja;
+use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\mediospago;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
@@ -13,6 +14,7 @@ use App\Models\creditos\productosseparados;
 use App\Models\creditos\separadomediopago;
 use App\Models\inventario\productos_sub;
 use App\Models\ventas\facturas;
+use App\Models\ventas\ventas;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\productsSeparadosRepository;
@@ -147,6 +149,7 @@ class creditosService {
                     $ultimocierre->actualizar();
 
                     //**generar factura cuando se termine de pagar el separado
+                    //creditosService::registrarFactura($credito, $ultimocierre);
                     //**los productos llevarlos a la tabla ventas
 
                     $getDB->commit();
@@ -169,7 +172,64 @@ class creditosService {
     }
 
 
-    public static function generarFactura(){
+    public static function registrarFactura(object $credito, $ultimocierre, $carrito){
+        session_start();
+        $venta = new ventas();
+        $array = [
+                    'id_sucursal' => id_sucursal(), 
+                    'idcliente' => $credito->cliente_id, 
+                    'idvendedor' => $_SESSION['id'], 
+                    'idcaja' => $ultimocierre->idcaja, 
+                    'idconsecutivo' =>1,
+                    'iddireccion' => 1,
+                    'idtarifazona' => 1,
+                    'idcierrecaja' => $ultimocierre->id, 
+                    /*'num_orden' => 
+                    'prefijo' => 
+                    'num_consecutivo' => */
+                    'cliente' => '',
+                    'vendedor' => '',
+                    'caja' => '',
+                    'tipofacturador' => '', 
+                    'propina' => 0,
+                    'direccion' => 'Almacen',
+                    'tarifazona' => '',
+                    'totalunidades' => 1,
+                    'recibido' => 0,
+                    'cambio' => 0,
+                    'transaccion' => 0,
+                    'tipoventa' => 'credito',
+                    'cotizacion' => 0,
+                    'estado' => 'paga',
+                    'cambioaventa' => 0, 
+                    'referencia' => $credito->id,
+                    'subtotal' => $credito->montototal,
+                    'base' => $credito->montototal,
+                    'valorimpuestototal' => 0,
+                    'dctox100' => 0,
+                    'descuento' => 0,
+                    'total' => $credito->montototal,
+                    'observacion' => '',
+                    'departamento' => '',
+                    'ciudad' => '',
+                    'entrega' => 'Presencial',
+                    'valortarifa' => 0,
+                    'fechacreacion' => date('Y-m-d H:i:s'),
+                    'fechapago' => date('Y-m-d H:i:s'),
+                    'opc1' => '',
+                    'opc2' =>  '',
+                ];
+        $factura = new facturas($array);
+        $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
+        $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
+        $numConsecutivo = $consecutivo->siguientevalor;
+        $factura->num_consecutivo = $numConsecutivo;
+        $factura->prefijo = $consecutivo->prefijo;
+        $r = $factura->crear_guardar();
+        $consecutivo->siguientevalor = $numConsecutivo + 1;
+        $c = $consecutivo->actualizar();
+        $factura->crear_guardar();
 
+        $venta->crear_varios_reg_arrayobj($carrito);
     }
 }
