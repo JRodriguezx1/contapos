@@ -116,12 +116,14 @@ class creditoscontrolador{
         $carrito = json_decode($_POST['carrito']);
         $mediospago = json_decode($_POST['mediospago']);
         $factimpuestos = json_decode($_POST['factimpuestos']);
+        $valorefectivo = $_POST['valorefectivo']??0;
         $valoresCredito = ['idtipofinanciacion' => 2]+$valoresCredito;
+        
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $validate = new separadoRequest($valoresCredito);
             $alertas = $validate->validate();
             if(empty($alertas)){
-                $alertas = creditosService::ejecutarCrearSeparado($valoresCredito, $carrito, $mediospago);
+                $alertas = creditosService::ejecutarCrearSeparado($valoresCredito, $carrito, $mediospago, $valorefectivo);
             }
         }
         echo json_encode($alertas);
