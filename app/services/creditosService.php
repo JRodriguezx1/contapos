@@ -146,8 +146,8 @@ class creditosService {
                         $ultimocierre->ventasenefectivo += $objMedioPago->valor;
                     $ultimocierre->actualizar();
 
-                    //generar factura cuando se termine de pagar el separado
-                    //los productos llevarlos a la tabla ventas
+                    //**generar factura cuando se termine de pagar el separado
+                    //**los productos llevarlos a la tabla ventas
 
                     $getDB->commit();
                     $alertas['exito'][] = "Cuota procesada";
@@ -168,7 +168,7 @@ class creditosService {
         
     }
 
-    
+
     public static function generarFactura(){
 
     }
