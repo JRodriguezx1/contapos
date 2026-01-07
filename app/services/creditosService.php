@@ -4,7 +4,9 @@ namespace App\services;
 
 use App\classes\serviceLocatorApp;
 use App\Models\caja\cierrescajas;
+use App\Models\caja\factmediospago;
 use App\Models\clientes\clientes;
+use App\Models\clientes\direcciones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\mediospago;
@@ -12,6 +14,7 @@ use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\creditos\productosseparados;
 use App\Models\creditos\separadomediopago;
+use App\Models\factimpuestos;
 use App\Models\inventario\productos_sub;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
@@ -26,15 +29,22 @@ use stdClass;
 class creditosService {
 
     //metodo llamado desde ventascontrolador.php
-    public static function crearCredito(stdClass $valoresCredito, $idfactura, $idcliente){
+    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor){
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $credito = new creditosRepository();
-        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente); //llama metodo del repositorio
+        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente, $totalunidades, $base, $valorimpuestototal, $dctox100, $descuento, $idvendedor); //llama metodo del repositorio
         $alertas = $entity->validar();
         if(empty($alertas)){
             $r = $credito->insert($entity);
             if($r[0]){
+                $valoresCredito->id_credito = $r[1];
+                $valoresCredito->cierrecaja_id = $idcierrecaja;
+                $valoresCredito->cajaid = $idcaja;
+                $valoresCredito->valorpagado = $valoresCredito->abonoinicial;
+                //crear cuota con repositorio
+                $cuotasRepo = new cuotasRepository();
+                $rc = $cuotasRepo->insert(new cuotas((array)$valoresCredito));
                 $alertas['exito'][] = "Credito creado con exito";
             }else{
                 $alertas['error'][] = "Credito creado con exito";
@@ -53,10 +63,18 @@ class creditosService {
         //if(empty($alertas)){
         $getDB->begin_transaction();
         try {
+            //ajustar abono o pagos en caja
+            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$valoresCredito['cajaid'], 'idsucursal_id'=>id_sucursal()]);
+            if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
+                $ultimocierre = new cierrescajas(['idcaja'=>$valoresCredito['cajaid'], 'nombrecaja'=>caja::find('id', $valoresCredito['cajaid'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+                $ruc = $ultimocierre->crear_guardar();
+                $ultimocierre->id = $ruc[1];
+            }
+            
             $r = $separado->generarSeparado(new creditos($valoresCredito));
             // registrar abono inicial en tabla cuotas
             if($valoresCredito['abonoinicial'] > 0){
-                $valoresCredito = [ 'id_credito'=>$r['1'] ] + $valoresCredito;
+                $valoresCredito = [ 'id_credito'=>$r['1'], 'cierrecaja_id' => $ultimocierre->id ] + $valoresCredito;
                 //crear cuota con repositorio
                 $cuotasRepo = new cuotasRepository();
                 $rc = $cuotasRepo->insert(new cuotas($valoresCredito));
@@ -73,21 +91,17 @@ class creditosService {
             $repo->crear_varios_reg_arrayobj($carrito);
             //descontar de inventario
             $a = ventasService::ajustarIventarioXVenta($carrito); //no se ha convertido a repositorio los metodos internos
-            
-            //ajustar abono o pagos en caja
-            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$cuota->cajaid, 'idsucursal_id'=>id_sucursal()]);
-            if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
-                $ultimocierre = new cierrescajas(['idcaja'=>$cuota->cajaid, 'nombrecaja'=>caja::find('id', $cuota->cajaid)->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-                $ultimocierre->crear_guardar();
-            }
 
-            $ultimocierre->creditos += $valoresCredito['capital']-$valoresCredito['abonoinicial'];
-            $ultimocierre->abonos += $valoresCredito['abonoinicial'];
             $ultimocierre->ventasenefectivo += $valorefectivo;
+            $ultimocierre->creditocapital += $valoresCredito['capital'];
+            $ultimocierre->creditos += $valoresCredito['capital']-$valoresCredito['abonoinicial'];
+            $ultimocierre->abonosseparados += $valoresCredito['abonoinicial'];
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $valoresCredito['abonoinicial'];
             $ultimocierre->actualizar();
 
             $getDB->commit();
             $alertas['exito'][] = "Credito de tipo separado creado correctamente.";
+            $alertas['idcredito'][] = $r[1];
         } catch (\Throwable $th) {
             $getDB->rollback();
             $alertas['error'][] = "Error al generar el credito de tipo separado. ".$th->getMessage();
@@ -105,7 +119,7 @@ class creditosService {
         $detalle = [
             'titulo' => 'Creditos',
             'credito' => $credito,
-            'cuotas' => $cuotasRepo->unJoinWhereArrayObj('mediospago', 'mediopagoid', 'id', ['id_credito' => $credito->id]),
+            'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
             'productos' => $productos->obtenerPorCredito($credito->id),
             'cliente' => clientes::find('id', $credito->cliente_id),  //$credito->cliente_id
             'cajas' => caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]),
@@ -121,9 +135,21 @@ class creditosService {
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($datos['id_credito']);
         if($credito->estado == 0){
-            $cuota = new cuotas($datos);
-            $cuota->prepararSegunCredito($credito);
+
+            //si es abono en efectivo, registrar al efectivo del cierre de caja y en el abono del cierre de caja
+            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$datos['cajaid'], 'idsucursal_id'=>id_sucursal()]);
+            if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
+                $ultimocierre = new cierrescajas(['idcaja'=>$datos['cajaid'], 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+                $ruc = $ultimocierre->crear_guardar();
+                $ultimocierre->id = $ruc[1];
+            }
+
+            $cuota = new cuotas($datos+['cierrecaja_id' => $ultimocierre->id]);
+            $cuota->preparar($credito);
             $alertas = $cuota->validar();
+            //validar que la cuota no supera al saldo pendiente
+            if($cuota->valorpagado>$credito->saldopendiente)return ['error'=>['Valor de la cuota supera al saldo pendiente']];
+            
             if(empty($alertas)){
                 $cuotaRepo = new cuotasRepository();
                 $getDB = $cuotaRepo::getDB();
@@ -131,26 +157,30 @@ class creditosService {
                 try {
                     $r = $cuotaRepo->insert($cuota);
                     $objMedioPago = new separadomediopago(['idcuota'=>$r[1], 'mediopago_id'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
-                    $credito->actualizarCredito($cuota->valorpagado);
-                    $ra = $creditoRepo->update($credito);
-                    $payment = new paymentService(new separadoMediopagoRepository());
-                    $payment->registrarPagos([$objMedioPago], $r[1]);
-                    
-                    //si es abono en efectivo, registrar al efectivo del cierre de caja y en el abono del cierre de caja
-                    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$cuota->cajaid, 'idsucursal_id'=>id_sucursal()]);
-                    if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
-                        $ultimocierre = new cierrescajas(['idcaja'=>$cuota->cajaid, 'nombrecaja'=>caja::find('id', $cuota->cajaid)->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-                        $ultimocierre->crear_guardar();
-                    }
 
-                    $ultimocierre->abonos += $objMedioPago->valor;
+                    if(isset($credito->factura_id)){
+                        $factmediospago = new factmediospago(['id_factura'=>$credito->factura_id, 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
+                        $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
+                    }else{
+                        $payment = new paymentService(new separadoMediopagoRepository());
+                        $payment->registrarPagos([$objMedioPago], $r[1]);
+                    }
+                    
+
                     if($objMedioPago->mediopago_id == 1)
                         $ultimocierre->ventasenefectivo += $objMedioPago->valor;
+
+                    isset($credito->factura_id)?($ultimocierre->abonoscreditos += $objMedioPago->valor):($ultimocierre->abonosseparados += $objMedioPago->valor);
+
+                    $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $objMedioPago->valor; 
                     $ultimocierre->actualizar();
 
-                    //**generar factura cuando se termine de pagar el separado
-                    //creditosService::registrarFactura($credito, $ultimocierre);
-                    //**los productos llevarlos a la tabla ventas
+                    //**generar factura e impuestos cuando se termine de pagar el separado
+                    if($credito->saldopendiente <= 0 && $credito->factura_id == null)
+                        $idf = creditosService::registrarFactura($credito, $ultimocierre, $cuota->valorpagado);
+
+                    $credito->actualizarCredito($cuota->valorpagado, isset($idf)?$idf:null);
+                    $creditoRepo->update($credito);
 
                     $getDB->commit();
                     $alertas['exito'][] = "Cuota procesada";
@@ -167,22 +197,21 @@ class creditosService {
     }
 
 
-    public static function pagoTotal(){
+    public static function registrarFactura(object $credito, $ultimocierre, $ultimoValorPagado):int{
         
-    }
-
-
-    public static function registrarFactura(object $credito, $ultimocierre, $carrito){
-        session_start();
+        $productos = new productsSeparadosRepository();
+        $carrito = $productos->obtenerPorCredito($credito->id);
+        $dircli =direcciones::find('idcliente', $credito->cliente_id);
         $venta = new ventas();
-        $array = [
+        $factimpuestos = new factimpuestos;
+        $arrayfactura = [
                     'id_sucursal' => id_sucursal(), 
                     'idcliente' => $credito->cliente_id, 
-                    'idvendedor' => $_SESSION['id'], 
+                    'idvendedor' => $credito->usuariofk, 
                     'idcaja' => $ultimocierre->idcaja, 
                     'idconsecutivo' =>1,
-                    'iddireccion' => 1,
-                    'idtarifazona' => 1,
+                    'iddireccion' => $dircli->id??1,
+                    'idtarifazona' => $dircli->idtarifa??1,
                     'idcierrecaja' => $ultimocierre->id, 
                     /*'num_orden' => 
                     'prefijo' => 
@@ -194,20 +223,23 @@ class creditosService {
                     'propina' => 0,
                     'direccion' => 'Almacen',
                     'tarifazona' => '',
-                    'totalunidades' => 1,
+                    'totalunidades' => $credito->totalunidades,
                     'recibido' => 0,
                     'cambio' => 0,
-                    'transaccion' => 0,
+                    'transaccion' => null,
                     'tipoventa' => 'credito',
                     'cotizacion' => 0,
-                    'estado' => 'paga',
-                    'cambioaventa' => 0, 
-                    'referencia' => $credito->id,
-                    'subtotal' => $credito->montototal,
-                    'base' => $credito->montototal,
-                    'valorimpuestototal' => 0,
-                    'dctox100' => 0,
-                    'descuento' => 0,
+                    'estado' => 'Paga',
+                    'cambioaventa' => 0,
+                    'ref_creditoid' => $credito->id,
+                    //'referencia' => $credito->id,
+                    'abono' => $credito->abonoinicial,
+                    'abonofinal' => $ultimoValorPagado,
+                    'subtotal' => $credito->capital,
+                    'base' => $credito->base,
+                    'valorimpuestototal' => $credito->valorimpuestototal,
+                    'dctox100' => $credito->dctox100,
+                    'descuento' => $credito->descuento,
                     'total' => $credito->montototal,
                     'observacion' => '',
                     'departamento' => '',
@@ -216,20 +248,99 @@ class creditosService {
                     'valortarifa' => 0,
                     'fechacreacion' => date('Y-m-d H:i:s'),
                     'fechapago' => date('Y-m-d H:i:s'),
-                    'opc1' => '',
-                    'opc2' =>  '',
+                    'habilitada' => 1,
+                    /*'opc1' => '',
+                    'opc2' =>  '',*/
                 ];
-        $factura = new facturas($array);
+        $factura = new facturas($arrayfactura);
         $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
-        $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
+        $consecutivo = consecutivos::findForUpdate('id', 1);
         $numConsecutivo = $consecutivo->siguientevalor;
         $factura->num_consecutivo = $numConsecutivo;
         $factura->prefijo = $consecutivo->prefijo;
         $r = $factura->crear_guardar();
         $consecutivo->siguientevalor = $numConsecutivo + 1;
-        $c = $consecutivo->actualizar();
-        $factura->crear_guardar();
+        $consecutivo->actualizar();
+
+        $mapMpuesto = ['0'=>1, '5'=>2, '16'=>3, '19'=>4, 'excluido'=>5, '8'=>6];
+        $impuestos = [];
+        foreach($carrito as $value){
+            $value->idfactura = $r[1];
+            $value->idproducto = $value->fk_producto;
+            $value->dato1 = '';
+            $value->dato2 = '';
+
+            $obj = new stdClass;
+            $obj->id_impuesto = $mapMpuesto[$value->impuesto];
+            $obj->facturaid = $r[1];
+            $obj->basegravable = $value->base;
+            $obj->valorimpuesto = $value->valorimp;
+            $impuestos[] = $obj;
+        }
 
         $venta->crear_varios_reg_arrayobj($carrito);
+        $factimpuestos->crear_varios_reg_arrayobj($impuestos);
+        return $r[1];
+    }
+
+
+    public static function cambioMedioPagoSeparado(array $datos):array{
+        $alertas = [];
+        $idnuevomediopago = $datos['idnuevomediopago'];
+        $idcredito = $datos['id_credito'];
+        $creditoRepo = new creditosRepository();
+        $credito = $creditoRepo->find($idcredito);
+        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
+
+        $repo = new separadoMediopagoRepository();
+        $mediospago = $repo->uniqueWhere(['idcuota'=>$datos['id'], 'mediopago_id'=>$datos['idmediopago']]);
+        $mediospago->mediopago_id = $idnuevomediopago;
+        $r = $repo->update($mediospago);
+        if($r){
+            $alertas['exito'][] = "Medio de pago actualizado";
+            $alertas['mediosPagoUpdate'] = $mediospago;
+        }else{
+            $alertas['error'][] = "Error al actualizar el medio de pago";
+        }
+        return $alertas;
+    }
+    
+
+    public static function anularCredito(int $idcredito):array{
+        $alertas = [];
+        
+        $creditoRepo = new creditosRepository();
+        $credito = $creditoRepo->find($idcredito);
+        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+        
+        try {
+            //cambiar estado del credito
+            $creditoRepo->anularCredito($idcredito);
+            //Anular valores de la cuota de caja abierta
+            $cuotasRepo = new cuotasRepository();
+            $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($idcredito);
+            
+            $arrayCierresCaja = [];
+            foreach($cuotas as $cuota){
+                if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
+                    $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
+                    $obj->ventasenefectivo -= $cuota->valorcuota_efectivo;
+                    $obj->abonosseparados -= $cuota->cuotapagada; 
+                }else{
+                    $obj = new stdClass;
+                    $obj->id = $cuota->cierrecaja_id;
+                    $obj->ventasenefectivo = $cuota->ventasEfectivo_caja-$cuota->valorcuota_efectivo;
+                    $obj->abonosseparados = $cuota->abonosSeparados_caja-$cuota->cuotapagada; 
+                    $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
+                }
+            }
+            
+            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['ventasenefectivo', 'abonosseparados']);
+            $alertas['exito'][] = "Credito anulado correctamente";
+        } catch (\Throwable $th) {
+           $alertas['error'][] = "Error al anular el credito. {$th->getMessage()}"; 
+        }
+
+        return $alertas;
     }
 }

@@ -88,7 +88,7 @@
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Fecha</th>
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor cuota</th>
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor pagado</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Método</th>
+            <th class="px-4 py-2 text-base font-semibold text-gray-700">Medio pago</th>
           </tr>
         </thead>
         <tbody>
@@ -98,7 +98,11 @@
               <td class="px-4 py-2 text-gray-800"><?php echo $value->fechapagado;?></td>
               <td class="px-4 py-2 text-gray-800">$<?php echo number_format($value->montocuota, '2', ',', '.');?></td>
               <td class="px-4 py-2 text-gray-800">$<?php echo number_format($value->valorpagado, '2', ',', '.');?></td>
-              <td class="px-4 py-2 text-gray-800"><?php echo $value->mediopago;?></td>
+              <td class="px-4 py-2 text-gray-800">
+                <?php foreach($value->mediosdepago as $idx => $element): ?>
+                <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                <?php endforeach; ?>
+              </td>
             </tr>
           <?php endforeach; ?>
           
@@ -159,6 +163,49 @@
     </div>
   </dialog><!--fin modal detalle producto-->
 
+
+  <!-- MODAL CAMBIO MEDIO DE PAGO -->
+    <dialog id="cambioMedioPago"
+        class="midialog-xs p-12">
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">💳 Cambio medio de pago</h4>
+            <button type="button" id="btnCerrarCambioMedioPago"
+                class="p-2 rounded-lg hover:bg-gray-100 transition"
+                onclick="document.getElementById('cambioMedioPago').close()">
+                <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
+            </button>
+        </div>
+
+        <div id="divmsjalerta2"></div>
+
+        <form id="formCambioMedioPago" class="formulario space-y-6" action="/admin/caja/cambioMedioPago" method="POST">
+
+            <div class="text-center">
+                <label id="numCuota" class="text-gray-700 text-2xl font-medium block mb-2">
+                    Credito N° :
+                </label>
+                <p id="textMP" class="text-gray-600 text-3xl font-light m-0 mb-2"></p>
+                <span id="totalPagado" class="text-gray-800 text-2xl font-semibold block mb-4">$ </span>
+            </div>
+
+            <!-- Medios de pago -->
+            <div class="formulario__campo">
+                <label class="formulario__label" for="selectMediopago">Medio de pago</label>
+                <select id="selectMediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="mediopagoid" required>
+                    <?php foreach($mediospago as $value):  ?>
+                          <option value="<?php echo $value->id;?>" ><?php echo $value->mediopago;?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Botones -->
+            <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" value="Cancelar">Cancelar</button>
+                <input id="btnEnviarCambioMedioPago" class="btn-md btn-indigo !py-4 !px-6 !w-[136px]" type="submit" value="Aplicar">
+            </div>
+        </form>
+    </dialog>
 
   <?php include __DIR__ . "/abonoinicial.php"; ?>
   <?php include __DIR__ . "/abonototal.php"; ?>

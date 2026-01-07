@@ -2,8 +2,8 @@
 
   <style>
     /* Pequeño ajuste para que los canvases se vean bien dentro de cards */
-    .card-canvas { height: 220px; width: 100%; }
-    @media (min-width: 1024px) { .card-canvas { height: 260px; } }
+    /*.card-canvas { height: 220px; width: 100%; }
+    @media (min-width: 1024px) { .card-canvas { height: 260px; } }*/
   </style>
   
   <div class="w-full px-4 lg:px-4">

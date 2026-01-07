@@ -9,6 +9,7 @@ class cuotas {
         $this->id = $args['id']??null;
         $this->id_sucursal_idfk = $args['id_sucursal_idfk']??id_sucursal();
         $this->id_credito = $args['id_credito']??'';
+        $this->cierrecaja_id = $args['cierrecaja_id']??'';
         $this->cajaid = $args['cajaid']??'';
         $this->mediopagoid = $args['mediopagoid']??1;
         $this->numerocuota = $args['numerocuota']??0;
@@ -35,7 +36,8 @@ class cuotas {
         return [
             //'id' => $this->id, 
             'id_sucursal_idfk' => $this->id_sucursal_idfk, 
-            'id_credito' => $this->id_credito, 
+            'id_credito' => $this->id_credito,
+            'cierrecaja_id' => $this->cierrecaja_id,
             'cajaid' => $this->cajaid, 
             'mediopagoid' => $this->mediopagoid, 
             'numerocuota' => $this->numerocuota, 
@@ -50,7 +52,7 @@ class cuotas {
     }
 
 
-    public function prepararSegunCredito($credito) {
+    public function preparar($credito) {
         $this->numerocuota = $credito->numcuota + 1;
         $this->montocuota = $credito->montocuota;
     }

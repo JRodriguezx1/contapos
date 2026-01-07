@@ -7,9 +7,12 @@ class creditos {
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->id_fksucursal = $args['id_fksucursal']??id_sucursal();
+        $this->usuariofk = $args['usuariofk']??'';
         $this->idtipofinanciacion = $args['idtipofinanciacion']??'';
         $this->factura_id = $args['factura_id']??NULL;
         $this->cliente_id = $args['cliente_id']??'';
+        $this->idestadocreditos = $args['idestadocreditos']??2;  //2 = abierto, 1 = finalizado, 3 = anulado
+        $this->num_orden = $args['num_orden']??'';
         $this->nombrecliente = $args['nombrecliente']??'cliente';
         $this->capital = $args['capital']??0;
         $this->abonoinicial = $args['abonoinicial']??0;
@@ -27,6 +30,11 @@ class creditos {
         $this->montototal = $args['montototal']??0;
         $this->fechavencimiento = $args['fechavencimiento']??'';
         $this->productoentregado = $args['productoentregado']??0;
+        $this->totalunidades = $args['totalunidades']??'';
+        $this->base = $args['base']??'';
+        $this->valorimpuestototal = $args['valorimpuestototal']??'';
+        $this->dctox100 = $args['dctox100']??'';
+        $this->descuento = $args['descuento']??'';
         $this->estado = $args['estado']??0; //1 = credito finalizado
         $this->created_at = $args['created_at']??'';
     }
@@ -47,10 +55,13 @@ class creditos {
     public function toArray():array {
         return [
             //'id' => $this->id, 
-            'id_fksucursal' => $this->id_fksucursal, 
+            'id_fksucursal' => $this->id_fksucursal,
+            'usuariofk' => $this->usuariofk, 
             'idtipofinanciacion' => $this->idtipofinanciacion, 
             'factura_id' => $this->factura_id, 
-            'cliente_id' => $this->cliente_id, 
+            'cliente_id' => $this->cliente_id,
+            'idestadocreditos' => $this->idestadocreditos,  //2 = abierto, 1 = finalizado, 3 = anulado
+            'num_orden' =>$this->num_orden,
             'nombrecliente' => $this->nombrecliente, 
             'capital' => $this->capital, 
             'abonoinicial' => $this->abonoinicial, 
@@ -67,17 +78,24 @@ class creditos {
             'valorinterestotal' => $this->valorinterestotal, 
             'montototal' => $this->montototal, 
             'fechavencimiento' => $this->fechavencimiento, 
-            'productoentregado' => $this->productoentregado, 
+            'productoentregado' => $this->productoentregado,
+            'totalunidades' => $this->totalunidades,
+            'base' => $this->base,
+            'valorimpuestototal' => $this->valorimpuestototal,
+            'dctox100' => $this->dctox100,
+            'descuento' => $this->descuento,
             'estado' => $this->estado, 
             //'created_at' => $this->created_at
         ];
     }
 
-    public function actualizarCredito($valorpagadoCuota) {
+    public function actualizarCredito($valorpagadoCuota, int|null $idf) {
         $this->numcuota += 1;
         $this->saldopendiente -= $valorpagadoCuota;
         if($this->saldopendiente<=0){
+            $this->factura_id = $idf;
             $this->estado = 1;  //credito cerrado
+            $this->idestadocreditos = 1; //credito finalizado
             $this->productoentregado = 1;  //producto entregado
         }
     }

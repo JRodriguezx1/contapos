@@ -181,14 +181,14 @@
                             <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                                 <thead>
                                     <tr>
-                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pago</th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pagos de facturas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach($discriminarmediospagos as $index => $value): ?>
                                     <tr>        
                                         <td class=""><?php echo $value['mediopago'];?></td>
-                                        <td class=""><strong>$ </strong><?php echo number_format($value['valor'], "0", ",", ".");?></td>
+                                        <td class=""> + <strong>$ </strong><?php echo number_format($value['valor'], "0", ",", ".");?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -200,13 +200,15 @@
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Creditos</th>
-                                            <th>Abonos</th>
+                                            <th>Abonos creditos</th>
+                                            <th>Abonos separados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->creditos??0, "0", ",", ".");?></td>
-                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonos??0, "0", ",", ".");?></td>
+                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->creditocapital??0, "0", ",", ".");?></td>
+                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonoscreditos??0, "0", ",", ".");?></td>
+                                            <td class=""> + <strong>$ </strong><?php echo number_format($ultimocierre->abonosseparados??0, "0", ",", ".");?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -351,7 +353,7 @@
                                     <?php endforeach; ?>
                                 </div>
                                 </td>
-                                <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense';?>"><?php echo $value->estado;?></td>
+                                <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&& $value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':'btn-light'));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
                                 <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                                 <td>$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
                                 <td class="accionestd">
@@ -454,7 +456,7 @@
     </form>
   </dialog>
 
-  <div><a href="www.j2softwarepos.com" class="text-gray-500 text-center block text-lg">J2 Software POS MultiSucursal</a></div>
+  <div><a href="https://www.j2softwarepos.com" target="_blank" class="text-gray-500 text-center block text-lg">J2 Software POS MultiSucursal</a></div>
 
 </div>
 </div>

@@ -26,7 +26,14 @@
               <td class=""><?php echo $value->siguientevalor;?></td>
               <td class="" ><?php echo $value->fechafin; ?></td>
               <td class=""><?php echo $value->estado==1?'Activo':'Expirada';?></td>
-              <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-facturador="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square" title="Actualizar facturador"></i></button><button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can" title="Eliminar facturador"></i></button></div></td>
+              <td class="accionestd">
+                <div class="acciones-btns" id="<?php echo $value->id;?>" data-facturador="<?php echo $value->nombre;?>">
+                    <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square" title="Actualizar facturador"></i></button>
+                    <?php if($value->id > 1): ?>
+                    <button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can" title="Eliminar facturador"></i></button>
+                    <?php endif; ?>
+                </div>
+              </td>
           </tr>
           <?php endforeach; ?>
       </tbody>

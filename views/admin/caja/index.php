@@ -14,7 +14,7 @@
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
   </div>
     <h5 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-4">
-        Lista de Facturas
+        Lista de Ordenes
         <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide">
             <?php echo $sucursal; ?>
         </span>
@@ -50,7 +50,7 @@
                     <?php endforeach; ?>
                 </div>
               </td>
-              <td class=""><div class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':($value->estado=='Guardado'?'btn-xs btn-turquoise':'btn-xs btn-light');?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
+              <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&&$value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':'btn-light'));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-cotizacion="<?php echo $value->cotizacion;?>" >

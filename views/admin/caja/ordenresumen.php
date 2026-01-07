@@ -116,7 +116,7 @@
                             <th scope="row" class="px-6 py-3">Total</th>
                             <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
                             <td class="px-6 py-3"> - </td>
-                            <td class="px-6 py-3">$<?php echo number_format($factura->total??0, "0", ",", ".");?></td>
+                            <td class="px-6 py-3">$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -138,7 +138,7 @@
                 </div>
                 <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
                     <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de facturacion</p>
-                    <p class="md:text-left text-lg leading-5 text-gray-600">180 North King Street, Northhampton MA 1060</p>
+                    <p class="md:text-left text-lg leading-5 text-gray-600"> - </p>
                 </div>
             </div>
             
@@ -151,6 +151,7 @@
             <div class="flex justify-end gap-4 sm:gap-60">
                 <div class="text-end">
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>
+                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Abono:</p>
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Impuesto:</p>
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Descuento:</p>
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Tarifa Envio:</p>
@@ -158,6 +159,7 @@
                 </div>
                 <div>
                     <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->subtotal??0, '0', ',', '.');?></p>
+                    <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->abono??0, '0', ',', '.');?></p>
                     <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valorimpuestototal??0, '0', ',', '.');?></p>
                     <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal"><?php echo $factura->dctox100.'%  $'.$factura->descuento;?></p>
                     <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo $factura->valortarifa??'';?></p>

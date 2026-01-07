@@ -55,10 +55,11 @@ class creditoscontrolador{
         isadmin();
         //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
         $alertas = [];
-        $id = $_GET['id'];
+        $id = $_GET['id'];  //id del credito
         if(!is_numeric($id))return;
 
         $datos = creditosService::detallecredito($id);
+        
         $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         $router->render('admin/creditos/detallecredito', $viewData);
     }
@@ -117,7 +118,7 @@ class creditoscontrolador{
         $mediospago = json_decode($_POST['mediospago']);
         $factimpuestos = json_decode($_POST['factimpuestos']);
         $valorefectivo = $_POST['valorefectivo']??0;
-        $valoresCredito = ['idtipofinanciacion' => 2]+$valoresCredito;
+        $valoresCredito = ['usuariofk'=>$_SESSION['id'],'idtipofinanciacion' => 2]+$valoresCredito;
         
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $validate = new separadoRequest($valoresCredito);
@@ -126,6 +127,24 @@ class creditoscontrolador{
                 $alertas = creditosService::ejecutarCrearSeparado($valoresCredito, $carrito, $mediospago, $valorefectivo);
             }
         }
+        echo json_encode($alertas);
+    }
+
+
+    public static function cambioMedioPagoSeparado(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::cambioMedioPagoSeparado($_POST);
+        echo json_encode($alertas);
+    }
+
+
+    public static function anularCredito(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::anularCredito($_POST['id']);
         echo json_encode($alertas);
     }
 }

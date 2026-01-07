@@ -363,9 +363,15 @@ class configcontrolador{
     public static function eliminarCaja(){
         session_start();
         $caja = caja::find('id', $_POST['id']);
+        $cierrecaja = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($caja)){
                 try {
+                    $cierrecaja = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
+                    if($cierrecaja->ingresoventas>0){
+                        echo json_encode(['error'=>['No se puede eliminar la caja hasta que se haga el cierre de caja']]);
+                        return;
+                    }
                     $r = $caja->eliminar_registro();
                     if($r){
                         ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');

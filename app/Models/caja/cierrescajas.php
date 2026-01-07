@@ -3,7 +3,7 @@ namespace App\Models\caja;
 
 class cierrescajas extends \App\Models\ActiveRecord {
     protected static $tabla = 'cierrescajas';
-    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturaseliminadas', 'facturaselectronicaselimnadas', 'facturasposeliminadas', 'valorfeeliminado', 'valorposeliminado', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'creditos', 'abonos', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturaseliminadas', 'facturaselectronicaselimnadas', 'facturasposeliminadas', 'valorfeeliminado', 'valorposeliminado', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'creditocapital', 'creditos', 'abonoscreditos', 'abonosseparados', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
 
     public function __construct($args = [])
     {
@@ -31,8 +31,10 @@ class cierrescajas extends \App\Models\ActiveRecord {
         $this->descuentopos = $args['descuentopos'] ?? 0;
         $this->basecaja = $args['basecaja'] ?? 0;
         $this->ventasenefectivo = $args['ventasenefectivo'] ?? 0;
+        $this->creditocapital = $args['creditocapital'] ?? 0;
         $this->creditos = $args['creditos'] ?? 0;
-        $this->abonos = $args['abonos'] ?? 0;
+        $this->abonoscreditos = $args['abonoscreditos'] ?? 0;
+        $this->abonosseparados = $args['abonosseparados'] ?? 0;
         $this->gastoscaja = $args['gastoscaja'] ?? 0;
         $this->gastosbanco = $args['gastosbanco']??0;
         $this->dineroencaja = $args['dineroencaja'] ?? 0; 

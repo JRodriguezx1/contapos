@@ -387,10 +387,12 @@
     {
       if(datosfactura?.id)datosfactura.id = '';
       (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
+      (document.querySelector('#formfacturar') as HTMLFormElement)?.reset();
       mapMediospago.clear();
       $('.mediopago').val(0);
       carrito.length = 0;
       factimpuestos.length = 0;
+
       history.replaceState({}, "", "/admin/ventas");
       while(tablaventa?.firstChild)tablaventa.removeChild(tablaventa?.firstChild);
       (document.querySelector('#npedido') as HTMLInputElement).value = '';

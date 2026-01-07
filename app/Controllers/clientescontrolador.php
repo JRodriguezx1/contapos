@@ -11,6 +11,7 @@ use App\Models\empleados;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\tarifas;
 use App\Models\sucursales;
+use App\Repositories\creditos\creditosRepository;
 
 class clientescontrolador{
 
@@ -126,9 +127,13 @@ class clientescontrolador{
 
         $alertas = []; 
  
-        $cliente = usuarios::find('id', $id);
-        
-        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $cliente = clientes::find('id', $id);
+        //debuguear($cliente);
+        $indicadores = clientes::indicadoresVentasXcliente($cliente->id, id_sucursal());
+        $creditos = new creditosRepository;
+        $creditos = $creditos->findAll('cliente_id', $cliente->id);
+
+        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
      
 
@@ -213,5 +218,25 @@ class clientescontrolador{
         }
         $alertas = ActiveRecord::getAlertas();
         echo json_encode($alertas); 
+    }
+
+
+    public static function comprasXMesXCliente(){
+        session_start();
+        isadmin();
+        $id = $_GET['id'];
+        if(!is_numeric($id))return;
+        $comprasXMesXCliente = clientes::comprasXMesXCliente($id, id_sucursal());
+        echo json_encode($comprasXMesXCliente);
+    }
+
+
+    public static function ventasXCategoriasXCliente(){
+        session_start();
+        isadmin();
+        $id = $_GET['id'];
+        if(!is_numeric($id))return;
+        $ventasXCategoriasXCliente = clientes::ventasXCategoriasXCliente($id, id_sucursal());
+        echo json_encode($ventasXCategoriasXCliente);
     }
 }

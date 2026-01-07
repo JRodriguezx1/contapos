@@ -226,6 +226,8 @@ $router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getco
 
 $router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
 $router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
+$router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::class, 'cambioMedioPagoSeparado']);
+$router->post('/admin/api/anularCredito', [creditoscontrolador::class, 'anularCredito']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -235,6 +237,8 @@ $router->post('/admin/api/addDireccionCliente', [direccionescontrolador::class, 
 $router->get('/admin/api/allclientes', [clientescontrolador::class, 'allclientes']); // me trae todos los clientes desde clientes.js
 $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiActualizarcliente']);  //actualizar cliente en clientes.ts
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
+$router->get('/admin/api/clientes/comprasXMesXCliente', [clientescontrolador::class, 'comprasXMesXCliente']);
+$router->get('/admin/api/clientes/ventasXCategoriasXCliente', [clientescontrolador::class, 'ventasXCategoriasXCliente']);
 
 $router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.ts
 $router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.ts para crear cajas

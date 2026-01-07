@@ -91,7 +91,7 @@
           
          <!-- Opción imprimir factura -->
         <div class="formulario__campo md:px-12 mb-6">
-          <label class="formulario__label block text-center mb-2">¿Desea imprimir factura?</label>
+          <label id="textPrint" class="formulario__label block text-center mb-2">¿Desea imprimir factura?</label>
           <div class="flex justify-center gap-8">
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="radio" name="imprimir" value="1" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?> >

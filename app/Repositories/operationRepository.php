@@ -77,6 +77,33 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
+    public function updatemultiregobj(array $array=[], array $colums=[]){
+        $query = "UPDATE {$this->table} SET ";
+        $in = '';
+        foreach($colums as $idx => $col){
+            $query .= $col." = CASE ";
+            foreach($array as $index => $value){
+                if(array_key_first($colums) === $idx){
+                    $query .= "WHEN id = $value->id THEN '{$value->$col}' ";
+                    if(array_key_last($array) === $index){
+                        $in .= "$value->id";
+                    }else{
+                        $in .= "$value->id, ";
+                    }
+                }else{
+                    $query .= "WHEN id = $value->id THEN '{$value->$col}' ";
+                }
+            }
+            if(array_key_last($colums) === $idx){
+                $query .= "ELSE $col END WHERE id IN ($in);";
+            }else{
+                $query .= "ELSE $col END, ";
+            }
+        }
+        debuguear($query);
+    }
+
+
     public function delete(int $id): bool
     {
         return self::$db->query("DELETE FROM {$this->table} WHERE id = {$id} LIMIT 1");
@@ -96,10 +123,10 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function findAll(string $col, int $id): ?array
+    public function findAll(string $col, int $id): ?array  //similar a idregistros
     {
         $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE $col = {$id}");
-        return $rows ?  array_map(fn($r) => new $this->entityClass($r), $rows) : null;
+        return $rows ?  array_map(fn($r) => new $this->entityClass($r), $rows) : [];
     }
 
     public function where(array $array = [], string $orden = "ASC"): array
@@ -116,6 +143,38 @@ abstract class operationRepository extends BaseRepository{
         $rows = $this->fetchAll($sql);
         return array_map(fn($r) => new $this->entityClass($r), $rows);
     }
+
+
+    public function uniqueWhere(array $array = [], string $orden = "ASC"):object
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE ";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= " {$key} = '{$value}'";
+            }else{
+                $sql.= " {$key} = '{$value}' AND ";
+            }
+        }
+        $sql .= " ORDER BY id $orden;";
+        $rows = $this->fetchAll($sql);
+        return new $this->entityClass($rows[0]);
+    }
+
+
+    public function IN_Where(string $colum, array $array = [], array $filter=[]):array
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE {$colum} IN(";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= "{$value}) AND $filter[0] = $filter[1];";
+            }else{
+                 $sql.= "{$value}, ";
+            }
+        }
+        $rows = $this->fetchAll($sql);
+        return $rows ? array_map(fn($r) => new $this->entityClass($r), $rows): [];
+    }
+
 
     public function unJoinWhereArrayObj(string $targetTable, string $fkLocal, string $fkTarget, array $where = []):array{
         $sql = "SELECT {$this->table}.*, {$targetTable}.*, {$this->table}.id AS ID 

@@ -59,6 +59,8 @@ class cajacontrolador{
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     
 
+    //debuguear($facturas);
+
     $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
     $categoriasgastos = categoriagastos::all();
     $conflocal = config_local::getParamGlobal();
@@ -72,7 +74,7 @@ class cajacontrolador{
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $idsucursal = id_sucursal();
-    $cajas = caja::idregistros('idsucursalid', $idsucursal);
+    $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
 
     //calcular el id de la caja princial de la sucursal
     $idcajaprincipal = $cajas[0]->id;
@@ -344,7 +346,7 @@ class cajacontrolador{
     $alertas = [];
     $discriminarimpuestos = [];
     $discriminarmediospagos = [];
-    $cajas = caja::idregistros('idsucursalid', id_sucursal());
+    $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>id_sucursal(), 'estado'=>1]);
     $cajaselected = '';
     $cierreselected = new stdClass();
@@ -464,6 +466,7 @@ class cajacontrolador{
       $cliente = clientes::find('id', $factura->idcliente);
       if($factura->iddireccion){
         $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+        if(!$direccion)$direccion = direcciones::find('id', 1);
       }else{
         $direccion = direcciones::find('id', 1);
       }
@@ -681,7 +684,7 @@ class cajacontrolador{
         $ultimocierre->totalbruto = $ultimocierre->ingresoventas;
         $ultimocierre->estado = 1; //cerrar caja
         // crear el siguiente cierre de caja
-        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>$ultimocierre->nombrecaja, 'fechacierre'=>$ultimocierre->fechacierre]);
+        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'fechacierre'=>$ultimocierre->fechacierre]);
         $r = $crearcierrecaja->crear_guardar();
         if($r[0]){
           $ra = $ultimocierre->actualizar();

@@ -16,8 +16,7 @@
       facturaid: number,
       basegravable: number,
       valorimpuesto: number
-    }
-    let factimpuestos:Item[] = [];*/
+    }*/
 
     type conversionunidadesapi = {
       id:string,
@@ -290,6 +289,7 @@
         document.querySelector('.Efectivo')?.removeAttribute('readonly');
         document.querySelector('#inputscreditos')?.remove();  //elimina los inputs de credito en el modal de procesar pago.
         document.querySelector('#abonoTotal')?.classList.remove('hidden');
+        document.querySelector('#textPrint')!.textContent = '¿Desea imprimir comprobante?';
         tipoventa = "Credito";
         //mapMediospago.clear();
         POS.tipoventa = tipoventa;
@@ -327,6 +327,12 @@
       valoresCredito.cliente_id = (document.querySelector('#cliente') as HTMLSelectElement).value;
       valoresCredito.valorpagado = valoresCredito.abonoinicial;
       valoresCredito.cajaid = btnCaja.value;
+      valoresCredito.totalunidades = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
+      valoresCredito.base = valorTotal.base.toFixed(3);
+      valoresCredito.valorimpuestototal = valorTotal.valorimpuestototal+'';
+      valoresCredito.dctox100 = valorTotal.dctox100+'';
+      valoresCredito.descuento = valorTotal.descuento+'';
+
       const datos = new FormData();
       datos.append('cliente_id', $('#cliente').val()as string);
       datos.append('abonoinicial', $('#abonoinicial').val()as string);
@@ -335,9 +341,15 @@
       datos.append('frecuenciapago', $('#frecuenciapago').val()as string);
       datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
       datos.append('mediospago', JSON.stringify(Array.from(mapMediospago, ([mediopago_id, valor])=>({mediopago_id, idcuota:0, valor}))));
-      datos.append('valorefectivo', mapMediospago.get(1)??'0');
+      datos.append('valorefectivo', mapMediospago.get('1')??'0');
       datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
+
+      datos.append('totalunidades', carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'');
+      datos.append('base', valorTotal.base.toFixed(3));
+      datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
+      datos.append('dctox100', valorTotal.dctox100+'');
+      datos.append('descuento', valorTotal.descuento+'');
       try {
           const url = "/admin/api/crearSeparado";  //va al controlador ventascontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -349,8 +361,9 @@
             btnPagar.disabled = false;
             btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
-            setTimeout(() => { window.location.href = "/admin/creditos"; }, 800);
-            //if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
+            
+            if(resultado.idcredito && imprimir.value === '1')printTicketSeparado(resultado.idcredito);
+            setTimeout(() => { window.location.href = "/admin/creditos"; }, 900);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
@@ -359,10 +372,10 @@
       }
     }
 
-    function printTicketPOS(idfactura:string){
+    function printTicketSeparado(idcredito:string){
       setTimeout(() => {
-        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
-      }, 1200);
+        window.open("/admin/printPDFPOS?id=" + idcredito, "_blank");
+      }, 700);
     }
 
     function cerrarDialogoExterno(event:Event) {

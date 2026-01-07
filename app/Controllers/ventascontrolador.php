@@ -240,13 +240,15 @@ class ventascontrolador{
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
+              $factura->abono = $valoresCredito->abonoinicial??0;
+              $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
               $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               //procesar si es credito....
-              if($_POST['tipoventa']=='Credito')creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente']);
+              if($_POST['tipoventa']=='Credito')creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
               
               $getDB->commit();
             } catch (\Throwable $th) {
@@ -288,11 +290,13 @@ class ventascontrolador{
             //////// establecer el id de factura para factimpuestos ////////////
             foreach($factimpuestos as $obj)$obj->facturaid = $r[1];
 
-            $ultimocierre->creditos += $valoresCredito->capital-$valoresCredito->abonoinicial;
-            $ultimocierre->abonos += $valoresCredito->abonoinicial;
+            $ultimocierre->creditocapital += $valoresCredito->capital;  //acumulado de los creditos total
+            $ultimocierre->creditos += $valoresCredito->capital-$valoresCredito->abonoinicial;  //acumulados de los creditos menos el abono incial
+            $ultimocierre->abonoscreditos += $valoresCredito->abonoinicial; //acumulado de los abonos de solo creditos
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
+            
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?$valoresCredito->abonoinicial:$factura->total);
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             $ultimocierre->basegravable += $factura->base;
@@ -309,8 +313,9 @@ class ventascontrolador{
             }
 
             $r3[0] = true;
+            $r2[0] = true;
             $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta (detalle de los productos de la factura de venta)
-            $r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
+            if(!empty($mediospago))$r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
             if(!empty($factimpuestos))$r3 = $detalleimpuestos->crear_varios_reg_arrayobj($factimpuestos);
 
             if($r1[0] && $r2[0] && $r3[0]){
@@ -540,6 +545,7 @@ class ventascontrolador{
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
+              $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();

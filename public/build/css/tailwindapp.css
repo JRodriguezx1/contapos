@@ -1151,6 +1151,10 @@ video {
   width: 3.5rem;
 }
 
+.w-2\/3 {
+  width: 66.666667%;
+}
+
 .w-20 {
   width: 5rem;
 }
@@ -1379,16 +1383,16 @@ video {
   flex-grow: 1;
 }
 
+.basis-1\/2 {
+  flex-basis: 50%;
+}
+
 .basis-1\/3 {
   flex-basis: 33.333333%;
 }
 
 .basis-2\/3 {
   flex-basis: 66.666667%;
-}
-
-.basis-1\/2 {
-  flex-basis: 50%;
 }
 
 .border-collapse {
@@ -2496,11 +2500,6 @@ video {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
-}
-
-.\!py-0 {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
 }
 
 .\!pb-10 {
@@ -4302,11 +4301,6 @@ video {
   .lg\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
-  }
-
-  .lg\:text-5xl {
-    font-size: 3rem;
-    line-height: 1;
   }
 
   .lg\:leading-9 {
