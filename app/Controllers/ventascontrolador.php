@@ -248,13 +248,21 @@ class ventascontrolador{
               $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               //procesar si es credito....
-              if($_POST['tipoventa']=='Credito')creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
+              //if($_POST['tipoventa']=='Credito')$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
               
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
               $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
               $alerta['error'][] = $th->getMessage();
+            }
+            //procesar si es credito....
+            if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
+            if(!empty($alertas['error'])){
+              $facturadelete = facturas::find('id', $r[1]);
+              $facturadelete->eliminar_registro();
+              echo json_encode($alertas);
+              return;
             }
           }
           if($_POST['estado']=='Guardado')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts

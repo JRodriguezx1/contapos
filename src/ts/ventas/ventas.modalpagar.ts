@@ -40,9 +40,10 @@
         }
         if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1');
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
+        if(POS.tipoventa == "Credito")calculoTasaInteres();
       },
-      valoresCredito,
-      calculoTasaInteres
+      calculoTasaInteres,
+      valoresCredito
       
     };
 
@@ -136,6 +137,7 @@
       //(document.querySelector('#capitalinicial') as HTMLInputElement).value = capital.value.toLocaleString();
       //(document.querySelector('#abono') as HTMLInputElement).value = Number(abonoinicial.value).toLocaleString();
       //(document.querySelector('#capitalFinanciado') as HTMLInputElement).value = creditofinal+'';
+      
     }
 
     function recalcularCapitalXAbono():number{

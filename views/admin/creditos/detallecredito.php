@@ -64,8 +64,8 @@
       <h3 class="text-xl font-semibold text-gray-700 mb-3 uppercase">📊 Estado del Crédito</h3>
       <div class="flex flex-col sm:flex-row gap-10">
         <div class="flex items-center gap-4">
-          <span class="px-4 py-2 rounded-full text-sm font-semibold bg-green-100 text-green-700">
-            <?php echo $credito->estado==0?'En curso':'Finalizado'; ?>
+          <span class="px-4 py-2 rounded-full text-base font-semibold <?php echo $credito->idestadocreditos==1?' bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':' bg-red-100 text-red-700'); ?>">
+            <?php echo $credito->idestadocreditos==1?'Finalizado':($credito->idestadocreditos==2?'En curso':'Anulado'); ?>
           </span>
           <span class="text-gray-600">Saldo pendiente: <strong>$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>

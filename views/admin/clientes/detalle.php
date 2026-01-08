@@ -118,12 +118,12 @@
                     <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>
                     <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td>
                     <td class=""><?php echo $value->numcuota;?></td>
-                    <td class="">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
+                    <td class="<?php echo $value->saldopendiente>0?'text-red-500':'';?>">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
                     <td class=""><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');?></td>
                     <td class="accionestd">
                         <div class="acciones-btns" id="<?php echo $value->id;?>">
                             <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->id;?>" target="_blank" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
-                            <?php if($value->idtipofinanciacion==2): ?>
+                            <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
                             <button class="btn-xs btn-red anularCredito" title="Eliminar el credito"><i class="fa-solid fa-trash-can"></i></button>
                             <?php endif; ?>
                         </div>

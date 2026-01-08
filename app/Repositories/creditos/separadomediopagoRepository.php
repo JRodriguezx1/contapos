@@ -6,7 +6,7 @@ use App\Models\contracts\mediosPagoContract;
 use App\Models\creditos\separadomediopago;
 use App\Repositories\operationRepository;
 
-class separadomediopagoRepository extends operationRepository implements mediosPagoContract{
+class separadoMediopagoRepository extends operationRepository implements mediosPagoContract{
 
     //private $db;
     protected string $table = 'separadomediopago';

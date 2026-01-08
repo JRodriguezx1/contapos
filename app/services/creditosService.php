@@ -24,7 +24,7 @@ use App\Repositories\creditos\productsSeparadosRepository;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use stdClass;
 
-//**SERVICIO DE CREDITOS
+//**SERVICIO DE CREDITOS**//
 
 class creditosService {
 
@@ -134,7 +134,7 @@ class creditosService {
         $alertas = [];
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($datos['id_credito']);
-        if($credito->estado == 0){
+        if($credito->idestadocreditos == 2){
 
             //si es abono en efectivo, registrar al efectivo del cierre de caja y en el abono del cierre de caja
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$datos['cajaid'], 'idsucursal_id'=>id_sucursal()]);
@@ -190,7 +190,7 @@ class creditosService {
                 }
             }
         }else{
-            $alertas['error'][] = "Credito finalizado, no se puede abonar mas.";
+            $alertas['error'][] = "Credito debe estar abierto para abonar.";
         }
         return $alertas;
 
@@ -325,17 +325,19 @@ class creditosService {
                 if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
                     $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
                     $obj->ventasenefectivo -= $cuota->valorcuota_efectivo;
-                    $obj->abonosseparados -= $cuota->cuotapagada; 
+                    $obj->abonosseparados -= $cuota->cuotapagada;
+                    $obj->ingresoventas -= $cuota->cuotapagada; 
                 }else{
                     $obj = new stdClass;
                     $obj->id = $cuota->cierrecaja_id;
                     $obj->ventasenefectivo = $cuota->ventasEfectivo_caja-$cuota->valorcuota_efectivo;
-                    $obj->abonosseparados = $cuota->abonosSeparados_caja-$cuota->cuotapagada; 
+                    $obj->abonosseparados = $cuota->abonosSeparados_caja-$cuota->cuotapagada;
+                    $obj->ingresoventas = $cuota->ingresoventas_caja-$cuota->cuotapagada;
                     $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
                 }
             }
             
-            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['ventasenefectivo', 'abonosseparados']);
+            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['ventasenefectivo', 'abonosseparados', 'ingresoventas']);
             $alertas['exito'][] = "Credito anulado correctamente";
         } catch (\Throwable $th) {
            $alertas['error'][] = "Error al anular el credito. {$th->getMessage()}"; 

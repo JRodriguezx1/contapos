@@ -3,7 +3,7 @@ namespace App\Models\clientes;
 
 class clientes extends \App\Models\ActiveRecord {
     protected static $tabla = 'clientes';
-    protected static $columnasDB = ['id', 'nombre', 'apellido', 'tipodocumento', 'identificacion', 'telefono', 'email', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'data1'];
+    protected static $columnasDB = ['id', 'nombre', 'apellido', 'tipodocumento', 'identificacion', 'telefono', 'email', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'totaldebe', 'limitecredito', 'data1'];
     
     public function __construct($args = [])
     {
@@ -17,7 +17,10 @@ class clientes extends \App\Models\ActiveRecord {
         $this->fecha_nacimiento = $args['fecha_nacimiento'] ?? '';
         $this->total_compras = $args['total_compras '] ?? '';
         $this->ultima_compra = $args['ultima_compra'] ?? '';
+        $this->totaldebe = $args['totaldebe '] ?? '';
+        $this->limitecredito = $args['limitecredito'] ?? 100000;
         $this->data1 = $args['data1'] ?? '';
+        $this->created_at = $args['created_at']??'';
     }
 
     // Validación para clientes nuevos
@@ -63,8 +66,8 @@ class clientes extends \App\Models\ActiveRecord {
                     SUM(f.total) AS ventas_totales
                 FROM facturas f
                 WHERE f.fechapago >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND f.id_sucursal = $idsucursal AND f.idcliente = $idcliente AND f.estado = 'Paga'
-                GROUP BY YEAR(f.fechapago), MONTH(f.fechapago)
-                ORDER BY YEAR(f.fechapago), MONTH(f.fechapago);";
+                GROUP BY DATE_FORMAT(f.fechapago, '%Y-%m')
+                ORDER BY periodo";
         $array = self::camposJoinObj($query);
         return $array;
     }

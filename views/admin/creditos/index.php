@@ -43,7 +43,7 @@
                 <td class="accionestd">
                     <div class="acciones-btns" id="<?php echo $value->ID;?>">
                         <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
-                        <?php if($value->idtipofinanciacion==2): ?>
+                        <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
                         <button class="btn-xs btn-red anularCredito" title="Eliminar el credito"><i class="fa-solid fa-trash-can"></i></button>
                         <?php endif; ?>
                     </div>
