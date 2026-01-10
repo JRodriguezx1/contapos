@@ -48,12 +48,16 @@
                                     <td class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
+                                    <td class="">Abonos en efectivo</td> 
+                                    <td id="abonosEfectivo" class="">+ $<?php echo number_format($ultimocierre->abonosenefectivo??0, "0", ",", ".");?></td>
+                                </tr>
+                                <tr>        
                                     <td class="">Gastos de la caja</td> 
                                     <td class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-400 font-medium">Dinero en caja</td> 
-                                    <td class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
+                                    <td class="text-blue-400 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo+($ultimocierre->abonosenefectivo??0)-$ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Domicilios</td> 
@@ -61,7 +65,7 @@
                                 </tr>
                                 <tr>        
                                     <td class="text-blue-600 font-medium">Real en caja</td> 
-                                    <td class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
+                                    <td class="text-blue-600 font-medium">= $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo+($ultimocierre->abonosenefectivo??0)-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -109,6 +113,24 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- DETALLE ABONOS-->
+                        <div class="mt-32 mb-12">
+                            <table class="tabla2" width="100%" id="tablaAbonos">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-700 p-3 text-center">
+                                        <th>Abonos</th>
+                                        <th>Abonos separados</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonos??0, "0", ",", ".");?></td>
+                                        <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonosseparados??0, "0", ",", ".");?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="tlg:basis-1/2">
@@ -128,25 +150,6 @@
                             </tbody>
                         </table>
 
-                        <!-- DETALLE ABONOS-->
-                        <div class="mb-12">
-                            <table class="tabla2" width="100%" id="tablaAbonos">
-                                <thead>
-                                    <tr class="bg-gray-100 text-gray-700 p-3 text-center">
-                                        <th>Creditos</th>
-                                        <th>Abonos</th>
-                                        <th>Abonos separados</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->creditocapital??0, "0", ",", ".");?></td>
-                                        <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonos??0, "0", ",", ".");?></td>
-                                        <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonosseparados??0, "0", ",", ".");?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                         
                         <table class="tabla2" width="100%" id="">
                             <thead>
@@ -158,6 +161,10 @@
                                 <tr>        
                                     <td class="">Ingreso de ventas total</td> 
                                     <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->totaldescuentos??0), "0", ",", ".");?></td>
+                                </tr>
+                                <tr>        
+                                    <td class="">Abonos totales</td> 
+                                    <td id="abonosTotales" class=""> + $<?php echo number_format(($ultimocierre->abonostotales??0), "0", ",", ".");?></td>
                                 </tr>
                                 <tr>        
                                     <td class="">Total gastos de caja</td> 

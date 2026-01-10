@@ -105,9 +105,17 @@ class facturas extends \App\Models\ActiveRecord {
 
     //metodo usado para la graficas de index reportes
     public static function ventasGraficaMensual(int $idsucursal){
-        $sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
+
+        /*$sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
         WHERE fechapago >= CONCAT(YEAR(CURRENT_DATE()), '-01-01') AND fechapago < CONCAT(YEAR(CURRENT_DATE())+1, '-01-01') AND estado = 'Paga' AND id_sucursal = $idsucursal
-        GROUP BY MONTH(fechapago) ORDER BY mes;";
+        GROUP BY MONTH(fechapago) ORDER BY mes;";*/
+
+        $sql = "SELECT DATE_FORMAT(fechapago, '%Y-%m') AS periodo, SUM(total) AS total_venta
+                FROM facturas
+                WHERE fechapago >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
+                GROUP BY periodo
+                ORDER BY periodo;";
+
         $resultado = self::$db->query($sql);
         $array = [];
         while($row = $resultado->fetch_object())$array[] = $row;

@@ -92,11 +92,13 @@ class creditosService {
             //descontar de inventario
             $a = ventasService::ajustarIventarioXVenta($carrito); //no se ha convertido a repositorio los metodos internos
 
-            $ultimocierre->ventasenefectivo += $valorefectivo;
+            //$ultimocierre->ventasenefectivo += $valorefectivo;
             $ultimocierre->creditocapital += $valoresCredito['capital'];
             $ultimocierre->creditos += $valoresCredito['capital']-$valoresCredito['abonoinicial'];
+            $ultimocierre->abonostotales += $valoresCredito['abonoinicial']; 
+            $ultimocierre->abonosenefectivo += $valorefectivo;
             $ultimocierre->abonosseparados += $valoresCredito['abonoinicial'];
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $valoresCredito['abonoinicial'];
+            //$ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $valoresCredito['abonoinicial'];
             $ultimocierre->actualizar();
 
             $getDB->commit();
@@ -158,8 +160,8 @@ class creditosService {
                     $r = $cuotaRepo->insert($cuota);
                     $objMedioPago = new separadomediopago(['idcuota'=>$r[1], 'mediopago_id'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
 
-                    if(isset($credito->factura_id)){
-                        $factmediospago = new factmediospago(['id_factura'=>$credito->factura_id, 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
+                    if(isset($credito->factura_id)){ //si es credito abonado
+                        $factmediospago = new factmediospago(['cierrecajaid'=>$ultimocierre->id, 'id_factura'=>$credito->factura_id, 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
                         $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
                     }else{
                         $payment = new paymentService(new separadoMediopagoRepository());
@@ -168,11 +170,11 @@ class creditosService {
                     
 
                     if($objMedioPago->mediopago_id == 1)
-                        $ultimocierre->ventasenefectivo += $objMedioPago->valor;
+                        $ultimocierre->abonosenefectivo += $objMedioPago->valor;
 
                     isset($credito->factura_id)?($ultimocierre->abonoscreditos += $objMedioPago->valor):($ultimocierre->abonosseparados += $objMedioPago->valor);
 
-                    $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $objMedioPago->valor; 
+                    $ultimocierre->abonostotales =  $ultimocierre->abonostotales + $objMedioPago->valor; 
                     $ultimocierre->actualizar();
 
                     //**generar factura e impuestos cuando se termine de pagar el separado
@@ -294,9 +296,24 @@ class creditosService {
 
         $repo = new separadoMediopagoRepository();
         $mediospago = $repo->uniqueWhere(['idcuota'=>$datos['id'], 'mediopago_id'=>$datos['idmediopago']]);
+        
+        $cuotaRepo = new cuotasRepository();
+        $cuota = $cuotaRepo->find($datos['id']);
+        
+        $ultimocierre = cierrescajas::uniquewhereArray(['id'=>$cuota->cierrecaja_id, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+        if(!isset($ultimocierre))
+            return ['error'=>['Cierre de caja realizado para la cuota pagada']];
+
+
         $mediospago->mediopago_id = $idnuevomediopago;
         $r = $repo->update($mediospago);
         if($r){
+            //actualizar efectivo en caja si corresponde
+            if($datos['idmediopago'] == 1 && $idnuevomediopago!=1)
+                $ultimocierre->abonosenefectivo -= $mediospago->valor;
+            if($datos['idmediopago'] != 1 && $idnuevomediopago==1)
+                $ultimocierre->abonosenefectivo += $mediospago->valor;
+            $ultimocierre->actualizar();
             $alertas['exito'][] = "Medio de pago actualizado";
             $alertas['mediosPagoUpdate'] = $mediospago;
         }else{
@@ -304,45 +321,104 @@ class creditosService {
         }
         return $alertas;
     }
-    
 
-    public static function anularCredito(int $idcredito):array{
+    
+    //se llama desde creditoscontrolador cuando se anula un separado
+    public static function anularSeparado(int $idcredito):array{
         $alertas = [];
         
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($idcredito);
-        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+        if($credito->idestadocreditos != 2 )return ['error'=>['El separado debe estar abierto para anular.']];
         
         try {
-            //cambiar estado del credito
-            $creditoRepo->anularCredito($idcredito);
+            //cambiar estado del separado
+            $creditoRepo->anularCredito($credito->id);
             //Anular valores de la cuota de caja abierta
             $cuotasRepo = new cuotasRepository();
-            $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($idcredito);
+            $cuotas = $cuotasRepo->obtenerPorSeparado_cierracajaAbierto($credito->id);
             
             $arrayCierresCaja = [];
             foreach($cuotas as $cuota){
                 if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
                     $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
-                    $obj->ventasenefectivo -= $cuota->valorcuota_efectivo;
+                    //$obj->ventasenefectivo -= $cuota->valorcuota_efectivo;
+                    $obj->abonostotales -= $cuota->cuotapagada;
+                    $obj->abonosenefectivo -= $cuota->valorcuota_efectivo;
                     $obj->abonosseparados -= $cuota->cuotapagada;
-                    $obj->ingresoventas -= $cuota->cuotapagada; 
+                    //$obj->ingresoventas -= $cuota->cuotapagada;
                 }else{
                     $obj = new stdClass;
                     $obj->id = $cuota->cierrecaja_id;
-                    $obj->ventasenefectivo = $cuota->ventasEfectivo_caja-$cuota->valorcuota_efectivo;
+                    //$obj->ventasenefectivo = $cuota->ventasEfectivo_caja-$cuota->valorcuota_efectivo;
+                    $obj->abonostotales = $cuota->abonostotales_caja-$cuota->cuotapagada;
+                    $obj->abonosenefectivo = $cuota->abonosenefectivo_caja-$cuota->valorcuota_efectivo;
                     $obj->abonosseparados = $cuota->abonosSeparados_caja-$cuota->cuotapagada;
-                    $obj->ingresoventas = $cuota->ingresoventas_caja-$cuota->cuotapagada;
+                    //$obj->ingresoventas = $cuota->ingresoventas_caja-$cuota->cuotapagada;
                     $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
                 }
             }
-            
-            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['ventasenefectivo', 'abonosseparados', 'ingresoventas']);
-            $alertas['exito'][] = "Credito anulado correctamente";
+            //descontar los abonos de los separados en cierre de caja si esta abierta
+            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonosseparados']);
+            //eliminar los medios de pago de las cuotas relacionadas donde el cierre de caja este abierto
+
+            $alertas['exito'][] = "Separado anulado correctamente";
         } catch (\Throwable $th) {
-           $alertas['error'][] = "Error al anular el credito. {$th->getMessage()}"; 
+           $alertas['error'][] = "Error al anular el separado. {$th->getMessage()}"; 
         }
 
+        return $alertas;
+    }
+
+
+    //llamado desde ventascontrolador cuando se elimina o anula una factura tipo credito
+    public static function anularCredito(int $idfactura):array{
+        $alertas = [];
+
+        $creditoRepo = new creditosRepository();
+        $credito = $creditoRepo->uniqueWhere(['factura_id'=>$idfactura]);
+        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+
+        //$getDB = $creditoRepo->getConexion();
+        //$getDB->begin_transaction();
+        //try {
+            //cambiar estado del credito
+            $creditoRepo->anularCredito($credito->id);
+
+            $cuotasRepo = new cuotasRepository();
+            $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($credito->id);
+            
+            $arrayCierresCaja = [];
+            foreach($cuotas as $cuota){
+                if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
+                    $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
+                    $obj->abonostotales -= $cuota->cuotapagada;
+                    $obj->abonosenefectivo -= $cuota->valorcuota_efectivo;
+                    $obj->abonoscreditos -= $cuota->cuotapagada;
+                }else{
+                    $obj = new stdClass;
+                    $obj->id = $cuota->cierrecaja_id;
+                    $obj->abonostotales = $cuota->abonostotales_caja-$cuota->cuotapagada;
+                    $obj->abonosenefectivo = $cuota->abonosenefectivo_caja-$cuota->valorcuota_efectivo;
+                    $obj->abonoscreditos = $cuota->abonosCreditos_caja-$cuota->cuotapagada;
+                    $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
+                }
+            }
+
+           // debuguear($arrayCierresCaja);
+            //descontar los abonos de los separados en cierre de caja si esta abierta
+            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
+            //debuguear($r);
+            if($r){
+                $alertas['exito'][] = "Credito anulado correctamente";
+            }else{
+                $alertas['error'][] = "Error al anular el credito.";
+            }
+            //$getDB->commit();
+        //} catch (\Throwable $th) {
+            //$alertas['error'][] = "Error al anular el credito. {$th->getMessage()}";
+            //$getDB->rollback();
+        //}
         return $alertas;
     }
 }

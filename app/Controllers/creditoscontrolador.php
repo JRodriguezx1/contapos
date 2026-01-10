@@ -140,11 +140,11 @@ class creditoscontrolador{
     }
 
 
-    public static function anularCredito(){
+    public static function anularSeparado(){
         session_start();
         isadmin();
         $alertas = [];
-        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::anularCredito($_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::anularSeparado($_POST['id']);
         echo json_encode($alertas);
     }
 }

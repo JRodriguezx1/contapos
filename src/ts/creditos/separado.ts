@@ -38,7 +38,7 @@
     }
 
     let allConversionUnidades:conversionunidadesapi[] = [];
-    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
+    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
     let carrito:{id:string, fk_producto:string,  tipoproducto: string, tipoproduccion:string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let factimpuestos:Item[] = [], tipoventa:string="Contado";
@@ -61,8 +61,8 @@
         try {
             const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
             const respuesta = await fetch(url); 
-            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, precio_venta:string}[] = await respuesta.json();
-            filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, precio_venta: item.precio_venta }));
+            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_venta:string, visible:string, habilitarventa:string}[] = await respuesta.json();
+            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, rendimientoestandar: item.rendimientoestandar, precio_venta: item.precio_venta }));
             activarselect2(filteredData);
         } catch (error) {
             console.log(error);
@@ -126,7 +126,7 @@
               costo: 0,
               valorunidad: itemselected.precio_venta,
               nombreproducto: itemselected.text,
-              rendimientoestandar: '1',
+              rendimientoestandar: itemselected.rendimientoestandar,
               unidad: itemselected.unidadmedida,
               cantidad: 1,
               factor: 1,
@@ -285,6 +285,10 @@
         msjAlert('error', 'Debe seleccionar el cliente.', (document.querySelector('#divmsjalerta') as HTMLElement));
         return;
       }
+      if((document.querySelector('#cantidadcuotas') as HTMLSelectElement).value === ''){
+        msjAlert('error', 'Debe indicar la cantidad de cuotas.', (document.querySelector('#divmsjalerta') as HTMLElement));
+        return;
+      }
       if(carrito.length){
         document.querySelector('.Efectivo')?.removeAttribute('readonly');
         document.querySelector('#inputscreditos')?.remove();  //elimina los inputs de credito en el modal de procesar pago.
@@ -304,7 +308,7 @@
     document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
       e.preventDefault();
       if(valorTotal.total <= 0 || valorTotal.subtotal <= 0){
-        msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
       //calcular si el totoal de los medios de pago es menor al abono inicial, abortar pago...

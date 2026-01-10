@@ -13,7 +13,7 @@ class ventasService {
 
     public static function ajustarIventarioXVenta($carrito):array{
         //$invSub = true;
-        //$invPro = true;
+        $invPro = true;
         //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
         $resultArray = array_reduce($carrito, function($acumulador, $objeto){
             $obj = clone $objeto;
@@ -55,6 +55,7 @@ class ventasService {
 
         if(!empty($resultArray['productosSimples'])){
             $invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+            
             //registrar descuento de movimiento de invnetario
             $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
             $returnProductos = stockproductossucursal::camposJoinObj($query);

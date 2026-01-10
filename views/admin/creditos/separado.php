@@ -30,7 +30,7 @@
                             placeholder="Abono inicial al capital" 
                             name="abonoinicial" 
                             value="<?php echo $credito->abonoinicial??'0';?>"
-                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';"
+                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
                             required
                         >
                     </div>
@@ -45,7 +45,7 @@
                         placeholder="Cantidad de cuotas" 
                         name="cantidadcuotas" 
                         value="<?php echo $credito->cantidadcuotas??'1';?>"
-                        oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = 1;}"
+                        oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
                         required
                     >    
                 </div>

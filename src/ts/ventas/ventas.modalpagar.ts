@@ -41,6 +41,7 @@
         if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1');
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
         if(POS.tipoventa == "Credito")calculoTasaInteres();
+        if(POS.tipoventa == "Contado")initvaloresCredito();
       },
       calculoTasaInteres,
       valoresCredito
@@ -49,7 +50,7 @@
 
 
     function initvaloresCredito(){
-      valoresCredito.capital = POS.valorTotal.total;  //inicializar el capital en el obj
+      /*valoresCredito.capital = POS.valorTotal.total;  //inicializar el capital en el obj
       valoresCredito.cantidadcuotas = Number(cantidadcuotas.value);
       valoresCredito.montocuota = (valoresCredito.capital - valoresCredito.abonoinicial)/valoresCredito.cantidadcuotas;
       valoresCredito.interes = 0;  //No aplicar interes
@@ -57,7 +58,17 @@
       valoresCredito.valorinterestotal = 0; //0$ de interes total de la factura
       valoresCredito.valorinteresxcuota = 0;  //0$ de interes de cada cuota
       valoresCredito.montototal = valoresCredito.capital;
-       (document.querySelector('#montocuota') as HTMLInputElement).value = valoresCredito.montocuota+'';
+      (document.querySelector('#montocuota') as HTMLInputElement).value = valoresCredito.montocuota+'';*/
+      valoresCredito.capital=0; 
+      valoresCredito.abonoinicial=0;
+      valoresCredito.cantidadcuotas=1;
+      valoresCredito.montocuota=0;
+      valoresCredito.frecuenciapago=1,
+      valoresCredito.interes=0;
+      valoresCredito.interestotal=0;
+      valoresCredito.valorinterestotal=0;
+      valoresCredito.valorinteresxcuota=0;
+      valoresCredito.montototal=0;
     }
 
     
@@ -142,7 +153,7 @@
 
     function recalcularCapitalXAbono():number{
       const capital = POS.valorTotal.total;
-      let abono = Number(abonoinicial.value);
+      let abono = Number(abonoinicial.value??0);
       const capitalinicial:number = capital;
       let creditofinal:number = capitalinicial;
       if(capital>0){

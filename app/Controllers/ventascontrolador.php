@@ -68,7 +68,7 @@ class ventascontrolador{
     //$alertas = usuarios::getAlertas();
     //$productos = productos::all();
     //$productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal(), 'habilitarventa'=>1]);
-    $productos = productos::SelectProducts_Category_StockXsucursal();
+    $productos = productos::SelectProducts_Category_StockXsucursal(); //filtra habilitarventa = 1
     $categorias = categorias::all();
     $mediospago = mediospago::whereArray(['estado'=>1]);
     $clientes = clientes::all();
@@ -291,8 +291,10 @@ class ventascontrolador{
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
             foreach($mediospago as $obj){
               $obj->id_factura = $r[1];
+              $obj->cierrecajaid = $ultimocierre->id;
               if($obj->idmediopago == 1){
-                $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
+                $ultimocierre->ventasenefectivo +=  ($_POST['tipoventa']=='Contado'?$obj->valor:0);
+                $ultimocierre->abonosenefectivo += ($_POST['tipoventa']=='Credito'?$obj->valor:0);
               }
             }
             //////// establecer el id de factura para factimpuestos ////////////
@@ -301,10 +303,11 @@ class ventascontrolador{
             $ultimocierre->creditocapital += $valoresCredito->capital;  //acumulado de los creditos total
             $ultimocierre->creditos += $valoresCredito->capital-$valoresCredito->abonoinicial;  //acumulados de los creditos menos el abono incial
             $ultimocierre->abonoscreditos += $valoresCredito->abonoinicial; //acumulado de los abonos de solo creditos
+            $ultimocierre->abonostotales += $valoresCredito->abonoinicial;
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
             
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?$valoresCredito->abonoinicial:$factura->total);
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?0:$factura->total);
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             $ultimocierre->basegravable += $factura->base;
@@ -593,6 +596,7 @@ class ventascontrolador{
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
             foreach($mediospago as $obj){
               $obj->id_factura = $factura->id;
+              $obj->cierrecajaid = $ultimocierre->id;
               if($obj->idmediopago == 1){
                 $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
               }
@@ -778,10 +782,17 @@ class ventascontrolador{
           $cierrecaja->valorpos -= $factura->total;
           $cierrecaja->descuentopos += $factura->descuento;
         }
+
         ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
-        $cierrecaja->ventasenefectivo =  $cierrecaja->ventasenefectivo - $mediospago;
-        //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-        $cierrecaja->ingresoventas =  $cierrecaja->ingresoventas - $factura->total;
+
+        if($factura->tipoventa=='Contado'){
+          $cierrecaja->ventasenefectivo =  $cierrecaja->ventasenefectivo - $mediospago;
+          //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
+          $cierrecaja->ingresoventas =  $cierrecaja->ingresoventas - $factura->total;
+        }
+
+
+
         $cierrecaja->totaldescuentos = $cierrecaja->totaldescuentos - $factura->descuento;
         $cierrecaja->valorimpuestototal -= $factura->valorimpuestototal;
         $cierrecaja->basegravable -= $factura->base;
@@ -790,6 +801,14 @@ class ventascontrolador{
         if($r){
             $r1 = $cierrecaja->actualizar();
             if($r1){
+              ///descuenta los abonos de creditos por caja, si el cierre de caja no se ha cerrado 
+              $anularCredito = creditosService::anularCredito($factura->id);  //me vuelve a actualizar el cierre de caja
+              if(isset($anularCredito['error'])){
+                $tempfactura->actualizar();
+                $tempcierrecaja->actualizar();
+                echo json_encode($anularCredito);
+                return;
+              }
               //eliminar detalle impuesto
               $detallefacturaimp = factimpuestos::find('facturaid', $factura->id);
               $detallefacturaimp->eliminar_registro();

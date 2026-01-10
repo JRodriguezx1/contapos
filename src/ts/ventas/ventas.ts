@@ -416,7 +416,7 @@
       let totalMediosPago:number = 0;
       for(let value of mapMediospago.values())totalMediosPago+=value;
       if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
-        msjAlert('error', 'Valor a pagar no corresponde', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
   

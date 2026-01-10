@@ -44,13 +44,12 @@ class cajacontrolador{
     $ultimoscierres = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0]);
     $datacierrescajas['ingresoventas'][] = 0;
     foreach($ultimoscierres as $value){
-      if($value->ingresoventas>0 || $value->totalcotizaciones>0){
+      if($value->ingresoventas>0 || $value->totalcotizaciones>0 || $value->totalfacturas>0){
         $datacierrescajas['ids'][] = $value->id;
         $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
       } 
     }
 
-    
     $facturas = [];
     if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
     //debuguear($facturas);
@@ -798,6 +797,7 @@ class cajacontrolador{
           $crearMP=[];
           $j=0;
           for($i = count($mediospagoDB); $i<count($nuevosmediospago); $i++){
+            $crearMP[$j]['cierrecajaid'] = $mediospagoDB[0]->cierrecajaid;
             $crearMP[$j]['id_factura'] = $mediospagoDB[0]->id_factura;
             $crearMP[$j]['idmediopago'] = $nuevosmediospago[$i]->idmediopago;
             $crearMP[$j]['valor'] = $nuevosmediospago[$i]->valor;

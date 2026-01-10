@@ -94,7 +94,7 @@
                   const datos = new FormData();
                   datos.append('id', idcredito);
                   try {
-                      const url = "/admin/api/anularCredito";
+                      const url = "/admin/api/anularSeparado";
                       const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                       const resultado = await respuesta.json();
                       if(resultado.exito !== undefined){
