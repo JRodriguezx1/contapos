@@ -280,23 +280,6 @@
       if((e.target as HTMLElement).classList.contains('menos')){
         actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true, productoCarrito?.valorunidad);
       }
-      if((e.target as HTMLElement).classList.contains('inputcantidad')){
-        if((e.target as HTMLElement).dataset.event != "eventInput"){
-          e.target?.addEventListener('input', (e)=>{
-           
-            let val = (e.target as HTMLInputElement).value;
-            val = val.replace(/[^0-9.]/g, '');
-            const partes = val.split('.');
-            if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
-            if (val.startsWith('.'))val = '1';
-            if (val === '' || isNaN(parseFloat(val))) val = '0';
-
-            (e.target as HTMLInputElement).value = val;
-            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false,  productoCarrito?.valorunidad);
-          });
-          (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
-        }
-      }
       if((e.target as HTMLElement).classList.contains('mas')){
         actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
       }
@@ -305,6 +288,35 @@
         valorCarritoTotal();
         tablaventa?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
       }
+    });
+
+
+    tablaventa?.addEventListener('input', e=>{
+      const input = e.target as HTMLInputElement;
+      if (!input.classList.contains('inputcantidad')) return;
+      const fila = input?.closest('.productselect') as HTMLTableRowElement;
+      const idProduct = fila.dataset.id!;
+      const precio = fila.dataset.precio!;
+      const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
+      
+      
+        //if((e.target as HTMLElement).dataset.event != "eventInput"){
+          
+           
+            let val = input.value;
+            val = val.replace(/[^0-9.]/g, '');
+            const partes = val.split('.');
+            if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
+            if (val.startsWith('.'))val = '1';
+            if (val === '' || isNaN(parseFloat(val))) val = '0';
+
+            input.value = val;
+            actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
+          
+          //(e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
+        //}
+      
+
     });
 
 

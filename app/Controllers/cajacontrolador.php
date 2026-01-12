@@ -25,6 +25,7 @@ use App\Models\configuraciones\consecutivos;
 use App\Models\parametrizacion\config_local;
 use App\Models\configuraciones\negocio;
 use App\Models\sucursales;
+use App\Repositories\creditos\separadoMediopagoRepository;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -87,13 +88,27 @@ class cajacontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){  ///if se puede eliminar
             
     }
+
+    $separdomediospagoRepo = new separadoMediopagoRepository();
   
     $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
     $facturas = []; $discriminarmediospagos=[]; $discriminarimpuesto=[]; $discriminargastos=[]; $ventasxusuarios=[]; $sobrantefaltante=[];
     $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$idcajaprincipal, 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
     if(isset($ultimocierre)){
       $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-      $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
+
+      $factmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
+      $sepMediosPago = $separdomediospagoRepo->allMediospagoXCierrecaja($ultimocierre->id);
+      foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
+          $id = $item['idmediopago'];
+          if (!isset($discriminarmediospagos[$id])) {
+              $discriminarmediospagos[$id] = $item;
+              $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
+          } else {
+              $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
+          }
+      }
+
       $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
       $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $idcajaprincipal, $idsucursal);
       $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
@@ -408,9 +423,24 @@ class cajacontrolador{
     if(!is_numeric($id))return;
 
     $alertas = [];
+    $discriminarmediospagos=[];
+
+    $separdomediospagoRepo = new separadoMediopagoRepository();
     $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
     $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
-    $discriminarmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
+    
+    $factmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
+    $sepMediosPago = $separdomediospagoRepo->allMediospagoXCierrecaja($cierreselected->id);
+    foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
+        $id = $item['idmediopago'];
+        if (!isset($discriminarmediospagos[$id])) {
+            $discriminarmediospagos[$id] = $item;
+            $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
+        } else {
+            $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
+        }
+    }
+
     $discriminarimpuesto = cierrescajas::discriminarimpuesto($cierreselected->id);
     $discriminargastos = cierrescajas::discriminargastos($cierreselected->id, $cierreselected->idcaja, id_sucursal());
     $ventasxusuarios = cierrescajas::ventasXusuario($cierreselected->id);

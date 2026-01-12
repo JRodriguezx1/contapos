@@ -43,8 +43,9 @@
         document.querySelector('#tipodegasto')?.removeAttribute("required");
         document.querySelector('#origengasto')?.classList.add('hidden');
         document.querySelector('#origengasto')?.classList.remove('flex');
-         document.querySelector('#showcajas')?.classList.remove('hidden'); //mostar caja
+        document.querySelector('#showcajas')?.classList.remove('hidden'); //mostar caja
         document.querySelector('#showbancos')?.classList.add('hidden'); //oculta banco
+        document.querySelector('#banco')?.removeAttribute("required");
       }
     });
 
@@ -59,11 +60,13 @@
         document.querySelector('#showcajas')?.setAttribute("required", "");
         document.querySelector('#showbancos')?.classList.add('hidden');
         document.querySelector('#showbancos')?.removeAttribute("required");
+        document.querySelector('#banco')?.removeAttribute("required");
       }else{
         //document.querySelector('#showcajas')?.classList.add('hidden');
         //document.querySelector('#showcajas')?.removeAttribute("required");
         document.querySelector('#showbancos')?.classList.remove('hidden');
         document.querySelector('#showbancos')?.setAttribute("required", "");
+        document.querySelector('#banco')?.setAttribute("required", "");
       }
     }
 

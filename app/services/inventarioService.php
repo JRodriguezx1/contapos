@@ -76,6 +76,7 @@ class inventarioService {
                 $producto->cantidad = $stock;
                 $producto->stockminimo = 1;
                 $producto->categoria = '';
+                $producto->merma = 0;
                 $producto->rendimientoestandar = 1;
                 $producto->precio_compra = $precio_compra;
                 $producto->precio_venta = $precio_venta;

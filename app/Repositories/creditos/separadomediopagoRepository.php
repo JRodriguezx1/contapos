@@ -47,6 +47,15 @@ class separadoMediopagoRepository extends operationRepository implements mediosP
         return [];
     }*/
 
+    public function allMediospagoXCierrecaja(int $id):array{
+        $sql = "SELECT m.id as idmediopago, m.mediopago, smp.valor FROM separadomediopago smp
+                JOIN cuotas c ON smp.idcuota = c.id
+                JOIN mediospago m ON smp.mediopago_id = m.id
+                WHERE c.cierrecaja_id = $id;";
+        $rows = $this->fetchAll($sql);
+        return $rows;
+    }
+
     public function getPagoDestino():string{
         return $this->pagoDestino;
     }

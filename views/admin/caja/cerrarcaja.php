@@ -203,7 +203,7 @@
                             <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                                 <thead>
                                     <tr>
-                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pagos de facturas</th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pagos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
