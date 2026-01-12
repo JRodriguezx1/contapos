@@ -39,7 +39,10 @@
                 <td class="">$<?php echo number_format($value->montototal,'2', ',', '.'); ?></td>
                 <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td>
                 <td class="">$<?php echo number_format($value->montototal-$value->saldopendiente,'2', ',', '.'); ?></td>
-                <td class=""><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado'); ?></td>     
+                <td class=""><button class="btn-xs <?php echo $value->idestadocreditos==1?'btn-lima':($value->idestadocreditos==2?'Abierto':'btn-red'); ?>">
+                                <?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado'); ?>
+                            </button>
+                </td>     
                 <td class="accionestd">
                     <div class="acciones-btns" id="<?php echo $value->ID;?>">
                         <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>

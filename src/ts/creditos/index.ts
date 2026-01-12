@@ -63,6 +63,7 @@
 
     
     //////////////////  TABLA //////////////////////
+    Object.assign(configdatatablesgenerico, {order: [[ 0, 'desc' ]]});
     let tablaCreditos = ($('#tablaCreditos') as any).DataTable(configdatatablesgenerico);
 
 

@@ -363,11 +363,10 @@ class configcontrolador{
     public static function eliminarCaja(){
         session_start();
         $caja = caja::find('id', $_POST['id']);
-        $cierrecaja = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
+        $cierrecaja = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($caja)){
                 try {
-                    $cierrecaja = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
                     if($cierrecaja->ingresoventas>0){
                         echo json_encode(['error'=>['No se puede eliminar la caja hasta que se haga el cierre de caja']]);
                         return;
@@ -378,7 +377,7 @@ class configcontrolador{
                     }else{
                         ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
                     }
-                } catch (\Throwable $th) {
+                } catch (\Throwable $th) {  //entra aqui si al eliminar caja no se puede por facturas existentes asoicada a la caja.
                     //throw $th;
                     $caja->estado = 0;
                     $ra = $caja->actualizar();

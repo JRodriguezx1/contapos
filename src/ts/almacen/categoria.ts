@@ -30,7 +30,7 @@
     let products:productsapi[]=[], unproducto:productsapi;
 
     //////////////////  TABLA //////////////////////
-    tablaCategorias = ($('#tablaCategorias') as any).DataTable(configdatatables);
+    tablaCategorias = ($('#tablaCategorias') as any).DataTable(configdatatables25reg);
 
     crearCategoria?.addEventListener('click', (e):void=>{
       control = 0;

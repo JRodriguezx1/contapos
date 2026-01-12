@@ -98,14 +98,19 @@ class almacencontrolador{
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $categoria = new categorias($_POST);
+      $getDB = categorias::getDB();
       $alertas = $categoria->validar_nueva_categoria();
       if(empty($alertas)){
-        $r = $categoria->crear_guardar();
-        if($r[0]){
+        $getDB->begin_transaction();
+        try {
+          $categoria->crear_guardar();
+          $getDB->commit();
           $alertas['exito'][] = "Categoria creado correctamente";
-        }else{
-          $alertas['error'][] = "Error, intenta nuevamente";
+        } catch (\Throwable $th) {
+          $getDB->rollback();
+          $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
         }
+        
       }
     }
     

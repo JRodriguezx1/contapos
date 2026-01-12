@@ -10,6 +10,7 @@
 
 
   <h4 class="text-gray-600 mb-12 mt-4">Categorias</h4>
+  <div class="divmsjalerta0"><?php include __DIR__. "/../../templates/alertas.php"; ?></div>
   <button id="crearCategoria" class="btn-md btn-blueintense !mb-4 !py-4 px-6 !bg-indigo-600">Crear categoria</button>
   <a class="btn-md btn-turquoise !py-4 !px-6" href="/admin/almacen/productos">Ir a productos</a>
   <table class="display responsive nowrap tabla" width="100%" id="tablaCategorias">
