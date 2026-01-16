@@ -84,5 +84,26 @@
                 <span class="ms-3 text-xl font-medium text-gray-900">No</span>
             </label>
         </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="tasa_interes_por_cuota" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
+                Tasa de interes por cuota
+            </label>
+            <div class="flex items-center gap-3">
+                <input 
+                    type="text" 
+                    id="tasa_interes_por_cuota" 
+                    name="tasa_interes_por_cuota" 
+                    min="0" max="100"
+                    class=" keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
+                        block w-28 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 
+                           "
+                    placeholder="0"
+                    value="<?php echo $conflocal['cantidad_de_cierres_de_cajas_permitidos']->valor_final; ?>"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                >
+            </div>
+            <p class="mt-1 text-sm text-gray-500">Indica el porcentaje de interes que tendra cada cuota.</p>
+        </div>
     </div>
 </div> <!-- End Caja -->

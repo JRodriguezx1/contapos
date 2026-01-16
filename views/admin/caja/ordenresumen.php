@@ -18,9 +18,9 @@
         <?php if($factura->estado=='Guardado'):?>
             <button id="printcotizacion" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir cotizacion</button>
         <?php endif; ?>
-        <?php if($factura->tipoventa=='Credito'):?>
-            <a class="btn-command text-center" href="/admin/caja/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle credito</a>
-        <?php endif; ?>
+        <?php //if($factura->tipoventa=='Credito'):?>
+            <a class="btn-command text-center" href="/admin/creditos/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle credito</a>
+        <?php //endif; ?>
         <?php if($factura->estado=='Paga'):?>
             <button id="enviarEmail" class="btn-command text-center"><span class="material-symbols-outlined">mail</span>Enviar factura</button>
         <?php endif; ?>
@@ -28,7 +28,9 @@
         <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
             <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
+        <?php if($factura->estado=='Paga'):?>
         <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
+        <?php endif; ?>
     </div>
     
     <div class="flex gap-4 mb-4">
@@ -114,7 +116,7 @@
                             <th scope="row" class="px-6 py-3">Total</th>
                             <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
                             <td class="px-6 py-3"> - </td>
-                            <td class="px-6 py-3">$<?php echo number_format($factura->total??0, "0", ",", ".");?></td>
+                            <td class="px-6 py-3">$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -136,7 +138,7 @@
                 </div>
                 <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
                     <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de facturacion</p>
-                    <p class="md:text-left text-lg leading-5 text-gray-600">180 North King Street, Northhampton MA 1060</p>
+                    <p class="md:text-left text-lg leading-5 text-gray-600"> - </p>
                 </div>
             </div>
             
@@ -149,6 +151,7 @@
             <div class="flex justify-end gap-4 sm:gap-60">
                 <div class="text-end">
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>
+                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Abono:</p>
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Impuesto:</p>
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Descuento:</p>
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Tarifa Envio:</p>
@@ -156,6 +159,7 @@
                 </div>
                 <div>
                     <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->subtotal??0, '0', ',', '.');?></p>
+                    <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->abono??0, '0', ',', '.');?></p>
                     <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valorimpuestototal??0, '0', ',', '.');?></p>
                     <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal"><?php echo $factura->dctox100.'%  $'.$factura->descuento;?></p>
                     <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo $factura->valortarifa??'';?></p>
@@ -177,9 +181,6 @@
             <div class="formulario__campo w-1/2">
               <label class="formulario__label" for="caja">Caja</label>
               <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
-                  <!--<option value="" disabled selected>-Seleccionar-</option>
-                  <option value="1">Caja principal</option>
-                  <option value="2">Caja bodega</option>-->
                   <?php foreach($cajas as $index => $value):?>
                     <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
                   <?php endforeach; ?>
@@ -189,7 +190,7 @@
               <label class="formulario__label" for="facturador">Facturador</label>
               <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
-                  <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                  <option data-idtipofacturador="<?php echo $value->idtipofacturador;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
               </select>
             </div>

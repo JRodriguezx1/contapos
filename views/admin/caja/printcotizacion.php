@@ -149,11 +149,11 @@
 
     <!-- Footer -->
     <footer class="border-t border-gray-200 py-6 text-center text-sm text-gray-400 leading-relaxed">
-        <p class="mb-2">Esta factura es un documento válido generado por <span class="font-semibold text-gray-600">Innova Tech SAS</span>.</p>
+        <p class="mb-2">Esta factura es un documento válido generado por <span class="font-semibold text-gray-600"><?php echo $sucursal->nombre;?></span>.</p>
         <p class="mb-1">Gracias por confiar en nosotros.</p>
-        <p class="mb-1">Contáctanos: <a href="mailto:contabilidad@innovatech.com" class="text-indigo-600 hover:underline">contabilidad@innovatech.com</a> | Tel: 3183658250</p>
+        <p class="mb-1">Contáctanos: <a href="mailto:contabilidad@innovatech.com" class="text-indigo-600 hover:underline"><?php echo $sucursal->email;?></a> | Tel: <?php echo $sucursal->telefono;?></p>
         <p class="mb-1">Dirección: Cr 14 #18-31 Edificio Sur, Armenia - Quindío</p>
-        <p class="mt-4 text-xs text-gray-400">© <?php echo date("Y"); ?> Innova Tech SAS. Todos los derechos reservados.</p>
+        <p class="mt-4 text-xs text-gray-400">© <?php echo date("Y"); ?> <?php echo $sucursal->nombre;?>. Todos los derechos reservados.</p>
     </footer>
     <!-- End Footer -->
 </div>

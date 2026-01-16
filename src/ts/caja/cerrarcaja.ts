@@ -175,6 +175,9 @@
               //mostar datos de la caja seleccionada
               printdiscriminarmediospago(resultado.discriminarmediospagos);
               printindicadores(resultado.ultimocierre);
+              //printdetalleimpuesto();
+              //printgastosdelacaja();
+              //printdiscriminadoabonos();
               printsobrantesfaltantes(resultado.sobrantefaltante);
               printventasxusuarios(resultado.ventasxusuarios);
               printventas(resultado.facturas);
@@ -201,13 +204,15 @@
       });
     }
 
-    function printindicadores(obj:{id:string, idcaja:string, id_usuario:string, nombrecaja:string, nombreusuario:string, fechainicio:string, fechacierre:string, ncambiosaventa:string, totalcotizaciones:string, totalfacturas:string, facturaselectronicas:string, facturaspos:string, valorfe:string, descuentofe:string, valorpos:string, descuentopos:string, basecaja:string, ventasenefectivo:string, gastoscaja:string, gastosbanco:string, dineroencaja:string, domicilios:string, ndomicilios:string, realencaja:string, ingresoventas:string, totaldescuentos:string, realventas:string, valorimpuestototal:string, basegravable:string, estado:string}){
+    function printindicadores(obj:{id:string, idcaja:string, id_usuario:string, nombrecaja:string, nombreusuario:string, fechainicio:string, fechacierre:string, ncambiosaventa:string, totalcotizaciones:string, totalfacturas:string, facturaselectronicas:string, facturaspos:string, valorfe:string, descuentofe:string, valorpos:string, descuentopos:string, basecaja:string, ventasenefectivo:string, creditocapital:string, creditos:string, abonostotales:string, abonosenefectivo:string, abonoscreditos:string, abonosseparados:string, gastoscaja:string, gastosbanco:string, dineroencaja:string, domicilios:string, ndomicilios:string, realencaja:string, ingresoventas:string, totaldescuentos:string, realventas:string, valorimpuestototal:string, basegravable:string, estado:string}){
       const basecaja = Number(obj.basecaja);
       const ventasenefectivo = Number(obj.ventasenefectivo);
       const gastoscaja = Number(obj.gastoscaja);
       const domicilios = Number(obj.domicilios);
       const ingresoventas = Number(obj.ingresoventas);
       const totaldescuentos = Number(obj.totaldescuentos);
+      const abonosenefectivo = Number(obj.abonosenefectivo);
+      const abonostotales = Number(obj.abonostotales);
 
       document.querySelector('#basecajaResumen')!.textContent = '$'+basecaja.toLocaleString();
       document.querySelector('#gastoscajaResumen')!.textContent = '$'+gastoscaja.toLocaleString();
@@ -218,11 +223,13 @@
 
       document.querySelector('#baseIngresoCaja')!.textContent = '+ $'+basecaja.toLocaleString();
       document.querySelector('#ventasEfectivo')!.textContent = '+ $'+ventasenefectivo.toLocaleString();
+      document.querySelector('#abonosEfectivo')!.textContent = '+ $'+abonosenefectivo.toLocaleString();
       document.querySelector('#gastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
       document.querySelector('#dineroCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja).toLocaleString();
       document.querySelector('#domicilios')!.textContent = '- $'+domicilios.toLocaleString();
       document.querySelector('#realCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja-domicilios).toLocaleString();
       document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+ingresoventas.toLocaleString();
+      document.querySelector('#abonosTotales')!.textContent = '+ $'+abonostotales.toLocaleString();
       document.querySelector('#totalGastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
       document.querySelector('#totalDescuentos')!.textContent = '- $'+totaldescuentos.toLocaleString();
       document.querySelector('#totalDomicilios')!.textContent = '= $'+(domicilios).toLocaleString();

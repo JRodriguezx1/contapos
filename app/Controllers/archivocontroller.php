@@ -8,7 +8,7 @@ class archivocontroller{
 
     public static function descargarExcel()
     {
-        $nombre = $_GET['file'] ?? 'importar productos.xlsx';
+        $nombre = $_GET['file'] ?? 'Importar-productos.xlsx';
         $ruta = self::$basePath . '/' . $nombre;
 
         if (!file_exists($ruta)) {
@@ -16,6 +16,8 @@ class archivocontroller{
             echo "Archivo Excel no encontrado.";
             return;
         }
+
+        if(ob_get_level())ob_end_clean();
 
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header("Content-Disposition: attachment; filename=\"" . basename($ruta) . "\"");

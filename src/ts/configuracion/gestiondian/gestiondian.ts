@@ -436,7 +436,7 @@
       });
     }
 
-    function getDgv(nit: number): number {
+    /*function getDgv(nit: number): number {
         const multiplicadores = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71];
         const digitos = nit.toString().trim().split('').map(Number);
         let suma = 0;
@@ -446,7 +446,7 @@
         }); 
         const modulo = suma%11;
         return modulo > 1 ?(11 - modulo):modulo;
-    }
+    }*/
 
 
     function cerrarDialogoExterno(event:Event) {

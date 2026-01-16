@@ -22,6 +22,7 @@ use App\Controllers\reportescontrolador;
 use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
+use App\Controllers\creditoscontrolador;
 use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
@@ -119,12 +120,18 @@ $router->post('/admin/caja/crear_categoriaGasto', [cajacontrolador::class, 'crea
 $router->post('/admin/caja/editarcategoriagasto', [cajacontrolador::class, 'editarcategoriagasto']);
 $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen']);  //resumen de la orden
 //$router->get('/admin/caja/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']);  //imprimir factura tipo carta
-$router->get('/admin/caja/detallecredito', [cajacontrolador::class, 'detallecredito']); //detalle de la orden
 $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
 ///// print ticket //////
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
+///// Creditos /////
+$router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
+$router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);
+$router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
+$router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
+$router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
+
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
 $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 'ventasgenerales']);
@@ -203,11 +210,6 @@ $router->post('/admin/api/confirmarnuevotrasladoinv', [trasladosinvcontrolador::
 $router->post('/admin/api/confirmaringresoinv', [trasladosinvcontrolador::class, 'confirmaringresoinv']); //api llamada desde solicitudesrecibidasinv.ts para confirmar lista de productos a recibir y sumar de inventario y pasar a estado en entregado
 $router->post('/admin/api/anularnuevotrasladoinv', [trasladosinvcontrolador::class, 'anularnuevotrasladoinv']); //api llamada desde trasladarinv.ts y solicitudesrecibidasinv para cancelar orden de traslado o solicitud
 
-$router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
-$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
-$router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
-$router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
-
 $router->post('/admin/api/declaracionDinero', [cajacontrolador::class, 'declaracionDinero']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/arqueocaja', [cajacontrolador::class, 'arqueocaja']);  //aip llamada desde cerrarcaja.ts
 $router->post('/admin/api/cierrecajaconfirmado', [cajacontrolador::class, 'cierrecajaconfirmado']);  //aip llamada desde cerrarcaja.ts
@@ -217,6 +219,16 @@ $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedi
 $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eliminarPedidoGuardado']);  //api llamada desde pedidosguardados.ts
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
 
+$router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
+$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
+$router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
+$router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
+
+$router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
+$router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
+$router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::class, 'cambioMedioPagoSeparado']);
+$router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularSeparado']);
+
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
 $router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts
@@ -225,6 +237,8 @@ $router->post('/admin/api/addDireccionCliente', [direccionescontrolador::class, 
 $router->get('/admin/api/allclientes', [clientescontrolador::class, 'allclientes']); // me trae todos los clientes desde clientes.js
 $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiActualizarcliente']);  //actualizar cliente en clientes.ts
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
+$router->get('/admin/api/clientes/comprasXMesXCliente', [clientescontrolador::class, 'comprasXMesXCliente']);
+$router->get('/admin/api/clientes/ventasXCategoriasXCliente', [clientescontrolador::class, 'ventasXCategoriasXCliente']);
 
 $router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.ts
 $router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.ts para crear cajas
@@ -281,10 +295,14 @@ $router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCom
 $router->get('/admin/api/getCompaniesAll', [apidiancontrolador::class, 'getCompaniesAll']);  //Consulta todas las compañias asociadas a la cuenta
 $router->get('/admin/api/eliminarCompanyLocal', [apidiancontrolador::class, 'eliminarCompanyLocal']);  //Elimina la compañia de manera local
 $router->post('/admin/api/guardarResolutionJ2', [apidiancontrolador::class, 'guardarResolutionJ2']);  // guardar resolucion en j2
+$router->post('/admin/api/guardarNCInvoiceJ2', [apidiancontrolador::class, 'guardarNCInvoiceJ2']);  // guardar resolucion en j2
 $router->get('/admin/api/filterAdquirientes', [apidiancontrolador::class, 'filterAdquirientes']);  //obtener todos los adquiriente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/guardarAdquiriente', [apidiancontrolador::class, 'guardarAdquiriente']);  // guardar adquiente, llamada desde ventas.adquiriente.ts
 $router->post('/admin/api/sendInvoice', [apidiancontrolador::class, 'sendInvoice']);  // guardar adquiente, llamada desde ventas.sendinvoice.ts
 $router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
+$router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::class, 'crearFacturaPOSaElectronica']);
+$router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::class, 'asignarAdquirienteAFactura']);
+$router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
 
 
 

@@ -1,4 +1,4 @@
-<div class="space-y-8">
+<div class="space-y-6 detallecliente">
     <!-- Información del cliente -->
     <div class="bg-white rounded-2xl p-8 shadow-md">
             <a href="/admin/clientes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2    mb-6">
@@ -18,58 +18,56 @@
         <!-- Grid con datos -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-700">
             <!-- Columna izquierda -->
-            <div class="space-y-5">
-            <p class="flex items-center gap-3">
-                <span class="font-semibold text-base text-gray-500">Nombre:</span>
-                <span class="text-2xl font-bold text-gray-900">Juan Pérez</span>
-            </p>
-            <p class="flex items-center gap-3">
-                <span class="font-semibold text-base text-gray-500">Correo:</span>
-                <span class="text-lg font-medium text-indigo-600 underline">juanperez@email.com</span>
-            </p>
-            <p class="flex items-center gap-3">
-                <span class="font-semibold text-base text-gray-500">Teléfono:</span>
-                <span class="text-lg font-medium text-gray-900">+57 300 123 4567</span>
-            </p>
+            <div class="space-y-2">
+                <p class="flex items-center gap-3 mb-0">
+                    <span class="font-semibold text-base text-gray-500">Nombre:</span>
+                    <span class="text-2xl font-bold text-gray-900"><?php echo $cliente->nombre.' '.$cliente->apellido; ?></span>
+                </p>
+                <p class="flex items-center gap-3">
+                    <span class="font-semibold text-base text-gray-500">Correo:</span>
+                    <span class="text-lg font-medium text-indigo-600 underline"><?php echo $cliente->email; ?></span>
+                </p>
+                <p class="flex items-center gap-3">
+                    <span class="font-semibold text-base text-gray-500">Teléfono:</span>
+                    <span class="text-lg font-medium text-gray-900"><?php echo $cliente->telefono ?></span>
+                </p>
             </div>
 
             <!-- Columna derecha -->
-            <div class="space-y-5">
-            <p class="flex items-center gap-3">
-                <span class="font-semibold text-base text-gray-500">Última compra:</span>
-                <span class="text-lg font-medium text-gray-900">20/09/2025</span>
-            </p>
-            <p class="flex items-center gap-3">
-                <span class="font-semibold text-base text-gray-500">Cliente desde:</span>
-                <span class="text-lg font-medium text-gray-900">15/03/2023</span>
-            </p>
-            <p class="flex items-center gap-3">
-                <span class="font-semibold text-base text-gray-500">Estado:</span>
-                <span class="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700 font-semibold">
-                Activo
-                </span>
-            </p>
+            <div class="space-y-2">
+                <p class="flex items-center gap-3 mb-0">
+                    <span class="font-semibold text-base text-gray-500">Última compra:</span>
+                    <span class="text-lg font-medium text-gray-900"><?php echo $cliente->ultima_compra;?></span>
+                </p>
+                <p class="flex items-center gap-3">
+                    <span class="font-semibold text-base text-gray-500">Cliente desde:</span>
+                    <span class="text-lg font-medium text-gray-900"> - </span>
+                </p>
+                <p class="flex items-center gap-3">
+                    <span class="font-semibold text-base text-gray-500">Estado:</span>
+                    <span class="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700 font-semibold">Activo</span>
+                </p>
             </div>
         </div>
     </div>
 
     <!-- Indicadores -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white rounded-2xl p-5 shadow text-center border-b-4 border-green-600">
+        <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-green-600">
             <p class="text-base text-gray-500">🛒 Total de compras</p>
-            <p class="text-3xl lg:text-5xl font-bold">35</p>
+            <p class="text-3xl lg:text-4xl font-bold"><?php echo $indicadores->cantidad_ventas??0;?></p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow text-center border-b-4 border-indigo-600">
+        <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-indigo-600">
             <p class="text-base text-gray-500">💰 Monto total gastado</p>
-            <p class="text-3xl lg:text-5xl font-bold">$ 12.500.000</p>
+            <p class="text-3xl lg:text-4xl font-bold">$ <?php echo number_format($indicadores->total_ventas_cliente??0, 2, ',', '.');?></p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow text-center border-b-4 border-yellow-600">
+        <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-yellow-600">
             <p class="text-base text-gray-500">📊 Ticket promedio</p>
-            <p class="text-3xl lg:text-5xl font-bold">$ 357.000</p>
+            <p class="text-3xl lg:text-4xl font-bold">$ <?php echo number_format($indicadores->ticket_promedio??0, 2, ',', '.');?></p>
         </div>
-        <div class="bg-white rounded-2xl p-5 shadow text-center border-b-4 border-red-600">
-            <p class="text-base text-gray-500">⏳ Frecuencia (días)</p>
-            <p class="text-3xl lg:text-5xl font-bold">15</p>
+        <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-red-600">
+            <p class="text-base text-gray-500">🏷️ Productos comprados</p>
+            <p class="text-3xl lg:text-4xl font-bold"><?php echo $indicadores->total_productos_comprados??0;?></p>
         </div>
     </div>
 
@@ -90,90 +88,49 @@
             <div class="flex items-center justify-between mb-3">
                 <h3 class="text-xl font-semibold">Categorías más compradas</h3>
             </div>
-            <div class="card-canvas">
+            <div class="card-canvas w-2/3 mx-auto">
                 <canvas id="chartCategorias"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Historial de compras -->
+    <!-- Historial de creditos -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-2xl font-bold mb-4">Historial de Compras</h2>
-        <table class="w-full border-collapse">
-        <thead>
-            <tr class="bg-gray-100 text-left">
-            <th class="p-3">Fecha</th>
-            <th class="p-3">Producto</th>
-            <th class="p-3">Monto</th>
-            <th class="p-3">Método de pago</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="border-b">
-            <td class="p-3">20/09/2025</td>
-            <td class="p-3">Corte de cabello</td>
-            <td class="p-3">$ 50.000</td>
-            <td class="p-3">Efectivo</td>
-            </tr>
-            <tr class="border-b">
-            <td class="p-3">15/09/2025</td>
-            <td class="p-3">Tratamiento capilar</td>
-            <td class="p-3">$ 120.000</td>
-            <td class="p-3">Tarjeta</td>
-            </tr>
-            <tr>
-            <td class="p-3">10/09/2025</td>
-            <td class="p-3">Afeitado</td>
-            <td class="p-3">$ 35.000</td>
-            <td class="p-3">Nequi</td>
-            </tr>
-        </tbody>
+        <h2 class="text-2xl font-bold mb-4">Historial de creditos</h2>
+        <table id="tablaCreditos" class="tabla">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="p-3">Fecha</th>
+                    <th class="p-3">Tipo</th>
+                    <th class="p-3">Credito</th>
+                    <th class="p-3">Cuota</th>
+                    <th class="p-3">N° Cuota</th>
+                    <th class="p-3">Saldo pendiente</th>
+                    <th class="p-3">Estado</th>
+                    <th class="accionesth">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($creditos as $value): ?>
+                <tr class="border-b">
+                    <td class=""><?php echo $value->created_at;?></td>
+                    <td class=""><?php echo $value->idtipofinanciacion==1?'Credito':'Separado';?></td>
+                    <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>
+                    <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td>
+                    <td class=""><?php echo $value->numcuota;?></td>
+                    <td class="<?php echo $value->saldopendiente>0?'text-red-500':'';?>">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
+                    <td class=""><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');?></td>
+                    <td class="accionestd">
+                        <div class="acciones-btns" id="<?php echo $value->id;?>">
+                            <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->id;?>" target="_blank" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
+                            <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
+                            <button class="btn-xs btn-red anularCredito" title="Eliminar el credito"><i class="fa-solid fa-trash-can"></i></button>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
 </div>
-
-<!-- Scripts de gráficas -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Compras por mes
-  const ctxMes = document.getElementById("chartComprasMes");
-  if (ctxMes) {
-    new Chart(ctxMes, {
-      type: "line",
-      data: {
-        labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep"],
-        datasets: [{
-          label: "Compras",
-          data: [2, 4, 5, 6, 4, 7, 3, 8, 5],
-          borderColor: "rgba(99, 102, 241, 1)",
-          backgroundColor: "rgba(99, 102, 241, 0.2)",
-          tension: 0.4,
-          fill: true,
-        }]
-      },
-      options: { responsive: true }
-    });
-  }
-
-  // Categorías más compradas
-  const ctxCat = document.getElementById("chartCategorias");
-  if (ctxCat) {
-    new Chart(ctxCat, {
-      type: "doughnut",
-      data: {
-        labels: ["Corte", "Tratamiento", "Color", "Otros"],
-        datasets: [{
-          data: [12, 8, 5, 3],
-          backgroundColor: [
-            "rgba(99, 102, 241, 0.8)",   // Indigo
-            "rgba(16, 185, 129, 0.8)",   // Emerald
-            "rgba(249, 115, 22, 0.8)",   // Orange
-            "rgba(107, 114, 128, 0.8)"   // Gray
-          ],
-        }]
-      },
-      options: { responsive: true }
-    });
-  }
-});
-</script>

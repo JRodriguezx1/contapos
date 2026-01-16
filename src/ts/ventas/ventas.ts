@@ -25,6 +25,7 @@
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
+    const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
@@ -67,12 +68,6 @@
     ($('#selectCliente') as any).select2();
     
 
-    /*(async ()=>{
-      const urlNc:string = "/admin/api/sendNc";
-      const respuesta = await fetch(urlNc);
-      const resultado = await respuesta.json();
-      console.log(resultado);
-    })();*/
 
                        /******** *********/
 
@@ -170,6 +165,10 @@
 
 
     function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean, precio:string = '0'){
+      ///limpiar el campo de buscar producto
+      (document.querySelector('#buscarproducto') as HTMLInputElement).value = '';
+      //const hackerList = POS.hackerList;
+      //hackerList.search('');
       const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio); //devuelve el index si el producto existe
       
       if(index>-1){
@@ -265,7 +264,7 @@
       valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
-       (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+valorTotal.valortarifa.toLocaleString();
       document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
       // cantidad total de productos
@@ -281,23 +280,6 @@
       if((e.target as HTMLElement).classList.contains('menos')){
         actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true, productoCarrito?.valorunidad);
       }
-      if((e.target as HTMLElement).classList.contains('inputcantidad')){
-        if((e.target as HTMLElement).dataset.event != "eventInput"){
-          e.target?.addEventListener('input', (e)=>{
-           
-            let val = (e.target as HTMLInputElement).value;
-            val = val.replace(/[^0-9.]/g, '');
-            const partes = val.split('.');
-            if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
-            if (val.startsWith('.'))val = '1';
-            if (val === '' || isNaN(parseFloat(val))) val = '0';
-
-            (e.target as HTMLInputElement).value = val;
-            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false, false,  productoCarrito?.valorunidad);
-          });
-          (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
-        }
-      }
       if((e.target as HTMLElement).classList.contains('mas')){
         actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
       }
@@ -306,6 +288,35 @@
         valorCarritoTotal();
         tablaventa?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
       }
+    });
+
+
+    tablaventa?.addEventListener('input', e=>{
+      const input = e.target as HTMLInputElement;
+      if (!input.classList.contains('inputcantidad')) return;
+      const fila = input?.closest('.productselect') as HTMLTableRowElement;
+      const idProduct = fila.dataset.id!;
+      const precio = fila.dataset.precio!;
+      const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
+      
+      
+        //if((e.target as HTMLElement).dataset.event != "eventInput"){
+          
+           
+            let val = input.value;
+            val = val.replace(/[^0-9.]/g, '');
+            const partes = val.split('.');
+            if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
+            if (val.startsWith('.'))val = '1';
+            if (val === '' || isNaN(parseFloat(val))) val = '0';
+
+            input.value = val;
+            actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
+          
+          //(e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
+        //}
+      
+
     });
 
 
@@ -337,6 +348,7 @@
           $('.mediopago').val(0);
         }
         tipoventa = "Credito";
+        POS.tipoventa = tipoventa;
         POS.gestionSubirModalPagar.subirModalPagar();
         //miDialogoCredito.showModal();
         miDialogoFacturar.showModal();
@@ -354,6 +366,7 @@
         document.querySelector('#inputscreditos')?.classList.add('hidden');
         document.querySelector('#inputscreditos')?.classList.remove('flex');
         tipoventa = "Contado";
+        POS.tipoventa = tipoventa;
         POS.gestionSubirModalPagar.subirModalPagar();
         miDialogoFacturar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
@@ -385,10 +398,13 @@
     function vaciarventa():void
     {
       if(datosfactura?.id)datosfactura.id = '';
+      (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
+      (document.querySelector('#formfacturar') as HTMLFormElement)?.reset();
       mapMediospago.clear();
       $('.mediopago').val(0);
       carrito.length = 0;
       factimpuestos.length = 0;
+
       history.replaceState({}, "", "/admin/ventas");
       while(tablaventa?.firstChild)tablaventa.removeChild(tablaventa?.firstChild);
       (document.querySelector('#npedido') as HTMLInputElement).value = '';
@@ -404,14 +420,26 @@
     document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
       e.preventDefault();
       if(valorTotal.total <= 0 || valorTotal.subtotal <= 0){
-        msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalerta2') as HTMLElement));
+        msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
+
+      //calcular si el totoal de los medios de pago es menor al abono inicial, abortar pago...
+      let totalMediosPago:number = 0;
+      for(let value of mapMediospago.values())totalMediosPago+=value;
+      if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
+        msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        return;
+      }
+  
+      btnPagar.disabled = true;
+      btnPagar.value = 'Procesando...';
       procesarpedido('Paga', '0');
     });
 
     async function procesarpedido(estado:string, ctz:string){
       const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
+      const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
@@ -434,6 +462,7 @@
       datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
       datos.append('transaccion', '');
       datos.append('tipoventa', tipoventa);
+      datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('subtotal', valorTotal.subtotal+'');
@@ -458,12 +487,15 @@
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             vaciarventa();
+             btnPagar.disabled = false;
+              btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
+              POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
               console.log(resDian);
             }
           }else{

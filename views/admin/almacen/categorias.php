@@ -10,6 +10,7 @@
 
 
   <h4 class="text-gray-600 mb-12 mt-4">Categorias</h4>
+  <div class="divmsjalerta0"><?php include __DIR__. "/../../templates/alertas.php"; ?></div>
   <button id="crearCategoria" class="btn-md btn-blueintense !mb-4 !py-4 px-6 !bg-indigo-600">Crear categoria</button>
   <a class="btn-md btn-turquoise !py-4 !px-6" href="/admin/almacen/productos">Ir a productos</a>
   <table class="display responsive nowrap tabla" width="100%" id="tablaCategorias">
@@ -18,7 +19,7 @@
               <th>Nº</th>
               <th>ID</th>
               <th>Categoria</th>
-              <th>N. productos</th>
+              <!--<th>N. productos</th>-->
               <th class="accionesth">Acciones</th>
           </tr>
       </thead>
@@ -26,10 +27,10 @@
           <?php foreach($categorias as $index => $value): 
             if($value->visible == 1):?>
           <tr> 
-              <td class=""><?php echo $index+1;?></td>
+              <td class=""><?php echo $index;?></td>
               <td class=""><?php echo $value->id;?></td>
               <td class=""><?php echo $value->nombre; ?></td> 
-              <td class=""><?php echo $value->totalproductos;?></td>
+              <!--<td class=""><?php //echo $value->totalproductos;?></td>-->
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-categoria="<?php echo $value->nombre;?>"><button class="btn-md btn-turquoise editarCategoria" title="Actualizar categoria"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-md btn-red eliminarCategoria" title="Eliminar categoria"><i class="fa-solid fa-trash-can"></i></button></div></td>
           </tr>
           <?php endif; endforeach; ?>

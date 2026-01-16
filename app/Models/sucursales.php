@@ -34,7 +34,7 @@ class sucursales extends \App\Models\ActiveRecord{
     public function validar():array
     {
         if(!$this->negocio)self::$alertas['error'][] = "negocio no especificado";
-        if(strlen($this->negocio)>20)self::$alertas['error'][] = "Has excecido el limite de caracteres del nombre del negocio";
+        if(strlen($this->negocio)>34)self::$alertas['error'][] = "Has excecido el limite de caracteres del nombre del negocio";
         if(!$this->nombre)self::$alertas['error'][] = "Nombre de la sucursal no especificado";
         if(strlen($this->nombre)>20)self::$alertas['error'][] = "Has excecido el limite de caracteres del nombre de la sucursal";
         if(strlen($this->direccion)>60)self::$alertas['error'][] = "Has excecido el limite de caracteres para la direccion";

@@ -41,7 +41,6 @@
           </div>
 
           <!-- Número de Documento + Botón Buscar -->
-          <!-- Número de Documento + Botón Buscar -->
           <div>
             <label for="identification_number" class="block text-2xl font-medium text-gray-600">Número de Documento</label>
             <div class="mt-2 flex flex-wrap gap-2 items-center">

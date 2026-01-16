@@ -291,3 +291,15 @@ function mesyañoactual():[string, number]
   return [mesTexto, año];
 }
 
+function getDgv(nit: number): number {
+    const multiplicadores = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47, 53, 59, 67, 71];
+    const digitos = nit.toString().trim().split('').map(Number);
+    let suma = 0;
+    digitos.forEach((digito, indice) => {
+        const posicionMultiplicador = digitos.length - indice;
+        suma += digito * multiplicadores[posicionMultiplicador - 1];
+    }); 
+    const modulo = suma%11;
+    return modulo > 1 ?(11 - modulo):modulo;
+}
+

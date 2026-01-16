@@ -5,10 +5,14 @@ namespace App\Controllers;
 use App\Models\ActiveRecord;
 use App\Models\caja\cierrescajas;
 use App\Models\caja\ingresoscajas;
+use App\Models\clientes\departments;
 use App\Models\compras;
 use App\Models\configuraciones\caja;
+use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\usuarios;
 use App\Models\detallecompra;
+use App\Models\felectronicas\adquirientes;
+use App\Models\felectronicas\facturas_electronicas;
 use App\Models\gastos;
 use App\Models\inventario\productos;
 use App\Models\inventario\proveedores;
@@ -160,15 +164,38 @@ class reportescontrolador{
         self::detallecompra($router);
     }
 
+
     public static function detalleInvoice(Router $router){
         session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $id=$_GET['id'];
+        $id=$_GET['id'];  //id de la factura
         if(!is_numeric($id))return;
 
-        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $ultimaFacturaElectronica = null;
+        $factura = facturas::find('id', $id);
+        $facturasElectronicas = facturas_electronicas::whereArray(['id_sucursalidfk'=>id_sucursal(), 'id_facturaid' => $factura->id]);
+        $adquiriente = adquirientes::find('id', 1);
+        //Obtener la ultima factura electronica por prioridad de estado
+        if($facturasElectronicas){
+          $max = 0;
+          $prioridades = [2 => 3, 1 => 2, 3 => 2, 4 => 1];
+          $prioridadActual = 0;
+          foreach($facturasElectronicas as $value){
+            $p = $prioridades[$value->id_estadoelectronica];
+            if($p > $prioridadActual || ($value->id > $max && $p == $prioridadActual)){
+              $max = $value->id;
+              $ultimaFacturaElectronica = $value;
+              $prioridadActual = $p;
+            }
+          }
+          $adquiriente = adquirientes::find('id', $ultimaFacturaElectronica->id_adquiriente);
+        }
+        $resoluciones = consecutivos::whereArray(['idtipofacturador'=>1, 'id_sucursalid'=>id_sucursal(), 'estado'=>1]);
+        $departments = departments::all();
+
+        $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturasElectronicas'=>$facturasElectronicas, 'ultimaFacturaElectronica'=>$ultimaFacturaElectronica, 'adquiriente'=>$adquiriente, 'resoluciones'=>$resoluciones, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
 
@@ -243,7 +270,7 @@ class reportescontrolador{
     $label = [];
     $datos = [];
     foreach($data as $value){
-        $label[] = 'mes '.$value->mes;
+        $label[] = $value->periodo;
         $datos[] = $value->total_venta;
     }
     echo json_encode(['label'=>$label, 'datos'=>$datos]);
@@ -359,8 +386,8 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link,
-      fe.nota_credito, fe.prefixnc, fe.num_nota, fe.linknc, fe.filenamenc, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
+      $sql = "SELECT fe.id, fe.id_facturaid as orden, fe.prefijo, fe.numero, fe.cufe, fe.filename, fe.identificacion, fe.nombre, fe.link, fe.id_estadonota,
+              fe.nota_credito, fe.prefixnc, fe.num_nota, fe.linknc, fe.filenamenc, f.tipoventa, f.base, f.valorimpuestototal, f.total, fe.created_at
               FROM facturas_electronicas fe
               JOIN facturas f ON fe.id_facturaid = f.id
               JOIN adquirientes a ON fe.id_adquiriente = a.id
@@ -517,7 +544,7 @@ class reportescontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //calculo de los gastos
       $sql = "SELECT g.id AS Id, g.fecha, CONCAT(u.nombre,' ',u.apellido) AS nombre, g.id_banco, b.nombre AS nombrebanco, g.idg_caja, c.nombre AS nombrecaja,
-	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, g.imgcomprobante, cg.id , cg.nombre AS categoriagasto
+	            g.idg_cierrecaja, cj.estado, g.id_compra, g.operacion, g.idg_usuario, g.valor, g.descripcion, g.imgcomprobante, cg.id , cg.nombre AS categoriagasto
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
               JOIN usuarios u ON g.idg_usuario = u.id
               JOIN cierrescajas cj ON g.idg_cierrecaja = cj.id

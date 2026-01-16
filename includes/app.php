@@ -2,6 +2,8 @@
 
 use Dotenv\Dotenv;   //variables de entorno para el deploy
 use App\Models\ActiveRecord;  //importa el archivo de modelo para la gestion de bd mysql
+use App\Repositories\BaseRepository;
+
 require __DIR__ . '/../vendor/autoload.php';  //localizar las clases
 
 // Añadir Dotenv
@@ -14,4 +16,5 @@ require 'database.php';    //archivo de conexion de bd mysql con variables de en
 
 // Conectarnos a la base de datos
 ActiveRecord::setDB($db); //llama al modelo o clase ActiveRecord y a su metodo setDB y se le pasa la conexion $db definido dentro database.php
+BaseRepository::setDB($db);
 //setDB es publico estatic no requiere instanciarse para acceder a este metodo

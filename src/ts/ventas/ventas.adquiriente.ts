@@ -141,12 +141,33 @@
     e.preventDefault();
     const data = new FormData(formFacturarA);
     const datosAdquiriente: Record<string, FormDataEntryValue> = Object.fromEntries(data.entries());
-    POS.gestionarAdquiriente.datosAdquiriente = datosAdquiriente; //guarda en el objeto global
     miDialogoFacturarA.close();
     document.removeEventListener("click", POS.cerrarDialogoExterno);
+
+    const identification = datosAdquiriente.identification_number as string;
+    const requiereEmail = identification && identification!='222222222222';
+    // Validar email solo si identification_number es distinto de 222222222222 y no vacío
+    if (requiereEmail && !validarEmail(datosAdquiriente.email as string)) {
+        Swal.fire("Correo incorrecto", "Debe ingresar un email válido o enviar a consumidor final o generico: 222222222222", "error");
+        return; // detiene el proceso
+    }
+
+    if(identification && identification!='222222222222'){
+      const dv = getDgv(Number(identification));
+      datosAdquiriente.dv = dv.toString();
+    }
+
+    console.log(datosAdquiriente);
+
+    POS.gestionarAdquiriente.datosAdquiriente = datosAdquiriente; //guarda en el objeto global
     //guardar adquiriente en DB.
     guardarAdquiriente(datosAdquiriente);
   });
+
+  function validarEmail(correo: string): boolean {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(correo);
+  }
 
 
   async function guardarAdquiriente(datosAdquiriente: Record<string, FormDataEntryValue>){
@@ -159,10 +180,10 @@
                                   }); 
           const resultado = await respuesta.json();
           //añadir o actualizar al arreglo customers
-          if(resultado.response == "crear"){
+          if(resultado.tipo == "crear"){
             customers = [...customers, resultado.obj];
           }else{
-            /// actualizar el arregle del producto ///
+            /// actualizar el arregle del adquiriente o customers ///
             customers.forEach(a=>{if(a.identification_number == resultado.obj.identification_number)a = Object.assign(a, resultado.obj);});
           }
           datosAdquiriente.id = resultado.obj.id;

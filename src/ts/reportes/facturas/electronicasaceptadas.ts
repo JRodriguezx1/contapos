@@ -148,7 +148,7 @@
                             data: null, 
                             orderable: false, 
                             searchable: false, 
-                            render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/reportes/detalleInvoice?id=${row.id}" data-id="${row.id}">Abrir</a>`}
+                            render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/reportes/detalleInvoice?id=${row.orden}" data-id="${row.orden}">Abrir</a>`}
                         },
                         {
                             title: 'Abrir Dian', 
@@ -166,7 +166,7 @@
                                 data: null, 
                                 orderable: false, 
                                 searchable: false, 
-                                render: (data: any, type: any, row: any) => {return row.nota_credito == 1?`<a class="btn-ver btn-xs btn-orange" target="_blank" href="${row.linknc}">Abrir NC</a>`:''}
+                                render: (data: any, type: any, row: any) => {return row.id_estadonota==2&&row.nota_credito == 1?`<a class="btn-ver btn-xs btn-orange" target="_blank" href="${row.linknc}">Abrir NC</a>`:row.id_estadonota==1&&row.nota_credito == 1?'<button class="btn-xs btn-blue">pendiente NC</button>':row.id_estadonota==3&&row.nota_credito == 1?'<button class="btn-xs btn-red">Error NC</button>':''}
                         },
                         {title: 'Base', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                         {title: 'Valor imp', data: 'valorimpuestototal', render: (data:number) => `$${Number(data).toLocaleString()}`}, 

@@ -1,19 +1,30 @@
 <!-- CONTENEDOR GENERAL -->
-<div class="space-y-10 bg-white p-8 mb-20  rounded-xl">
+<div class="space-y-10 bg-white p-8 mb-20  rounded-xl detalleinvoice">
+  <div class="relative">
+    <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
 
     <!-- ENCABEZADO -->
     <div class="bg-white shadow rounded-xl p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-8 mb-5">
 
         <!-- Izquierda -->
         <div>
-            <h2 class="text-2xl font-semibold text-gray-900">
-                Factura Electrónica #FE-000123
+             <!-- id de la factura electronica de venta -->
+            <input id="idfe" class="hidden" type="text" value="<?php echo $ultimaFacturaElectronica?->id;?>">
+            <input id="idfeState" class="hidden" type="text" value="<?php echo $ultimaFacturaElectronica?->id_estadoelectronica;?>">
+            <!-- id de la factura general -->
+            <input id="idfactura" class="hidden" type="text" value="<?php echo $factura->id;?>">
+
+            <h2 id="prefixNumber" class="text-2xl font-semibold text-gray-900">
+                Factura #<?php echo $factura->prefijo.'-'.$factura->num_consecutivo; ?>
             </h2>
-            <p class="text-gray-500 text-base">28 Nov 2025 - 3:45 PM</p>
+            <p class="text-gray-500 text-base"><?php
+                $fecha = new DateTime('now', new DateTimeZone('America/Bogota'));
+                echo $fecha->format('d M Y').' - '.date("h:i A", strtotime(substr(($ultimaFacturaElectronica?->fecha_ultimo_intento)??$factura->fechapago, 12)));
+             ?></p>
 
             <!-- Badge Estado DIAN -->
-            <span class="inline-block mt-4 px-4 py-1.5 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-700 border border-yellow-200">
-                Pendiente DIAN
+            <span id="estadoFactura" class="inline-block mt-4 px-4 py-1.5 text-base font-semibold rounded-full <?php echo $ultimaFacturaElectronica==null?'bg-slate-100 text-gray-700':($ultimaFacturaElectronica?->id_estadoelectronica == 2?' bg-green-500 text-white':'bg-yellow-100 text-yellow-700');?>">
+                <?php echo $ultimaFacturaElectronica == null?'Factura POS':($ultimaFacturaElectronica?->id_estadoelectronica == 2?'Aceptada DIAN':'Pendiente DIAN' )?>
             </span>
         </div>
 
@@ -22,7 +33,7 @@
             md:flex md:flex-row md:justify-end md:w-auto">
 
             <!-- ENVIAR A DIAN -->
-            <button class="flex items-center justify-center gap-2 w-full md:w-auto md:px-4 px-5 py-3 bg-indigo-600 text-white rounded-lg text-lg font-medium hover:bg-indigo-700 transition shadow-sm">
+            <button id="btnEnvarDian" class="flex items-center justify-center gap-2 w-full md:w-auto md:px-4 px-5 py-3 bg-indigo-600 text-white rounded-lg text-lg font-medium hover:bg-indigo-700 transition shadow-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -82,21 +93,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-gray-700 text-lg">
             <div>
                 <p class="font-bold text-gray-900">Nombre</p>
-                <p>Consumidor Final</p>
+                <p id="nombreAdquiriente"><?php echo $adquiriente->business_name; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Identificación</p>
-                <p>No informado</p>
+                <p id="identificacionAdquiriente"><?php echo $adquiriente->identification_number; ?></p>
             </div>
             <div>
                 <p class="font-bold text-gray-900">Correo</p>
-                <p>No informado</p>
+                <p id="emailAdquiriente"><?php echo $adquiriente->email?$adquiriente->email:' - '; ?></p>
             </div>
         </div>
 
         <!-- Acción derecha -->
         <div class="flex justify-end mt-6">
-            <button id="btnAbrirFacturarA" class="px-6 py-3.5 bg-indigo-600 text-white rounded-lg text-xl font-medium hover:bg-indigo-700 flex items-center gap-2">
+            <button id="facturarA" class="px-6 py-3.5 bg-indigo-600 text-white rounded-lg text-xl font-medium hover:bg-indigo-700 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -107,36 +118,44 @@
         </div>
     </div>
 
-    <!-- DETALLE DE PRODUCTOS -->
+    <!-- DETALLE DOCUMENTOS ELECTRONICOS -->
     <div class="bg-white rounded-xl shadow p-8 overflow-x-auto mb-5">
-        <h3 class="text-2xl font-semibold text-gray-900 mb-6">Detalle de productos</h3>
+        <h3 class="text-2xl font-semibold text-gray-900 mb-6">Detalle documentos electronicos</h3>
 
         <table class="w-full text-lg">
             <thead class="bg-gray-100 text-gray-600 font-semibold">
                 <tr>
-                    <th class="py-3 px-4 text-left">Producto</th>
-                    <th class="py-3 px-4 text-center">Cant.</th>
-                    <th class="py-3 px-4 text-right">Precio</th>
-                    <th class="py-3 px-4 text-center">% IVA</th>
-                    <th class="py-3 px-4 text-right">Total</th>
+                    <th class="py-3 px-4 text-left">Id</th>
+                    <th class="py-3 px-4 text-center">Factura</th>
+                    <th class="py-3 px-4 text-center">F. Electronica/NC</th>
+                    <th class="py-3 px-4 text-center">Estado</th>
+                    <th class="py-3 px-4 text-center">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y">
-                <tr>
-                    <td class="py-3 px-4">Café x 500gr</td>
-                    <td class="text-center">2</td>
-                    <td class="text-right">$14.280</td>
-                    <td class="text-center">19%</td>
-                    <td class="text-right font-bold">$28.560</td>
-                </tr>
-
-                <tr>
-                    <td class="py-3 px-4">Pan integral</td>
-                    <td class="text-center">1</td>
-                    <td class="text-right">$5.950</td>
-                    <td class="text-center">19%</td>
-                    <td class="text-right font-bold">$5.950</td>
-                </tr>
+            <tbody id="detalleDocumento" class="divide-y">
+                <?php foreach($facturasElectronicas as $value): 
+                    if($value->id_estadoelectronica != 4): ?>
+                    <tr data-idfe="<?php echo $value->id;?>">
+                        <td class="py-3 px-4"><?php echo $value->id;?></td>
+                        <td class="text-center">N° <?php echo $value->id_facturaid;?></td>
+                        <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
+                        <td class="text-center">
+                            <a 
+                                class="btn-xs <?php echo $value->id_estadoelectronica==2?'btn-lima':($value->id_estadoelectronica==1?'btn-blue':'btn-red');?>" 
+                                href="<?php echo $value->link??'/';?>" target="_blank"
+                            >
+                                <?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?>
+                            </a>
+                            <a 
+                                class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->nota_credito==1&&$value->id_estadonota==1?'btn-blue':($value->nota_credito==1&&$value->id_estadonota==3?'btn-red':''));?>" 
+                                href="<?php echo $value->linknc??'/';?>" target="_blank"
+                            >
+                                <?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?>
+                            </a>
+                        </td>
+                        <td class="text-center"><?php echo $value->id_estadoelectronica!=2?'<span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span>':''?></td>
+                    </tr>
+                <?php endif; endforeach;  ?>
             </tbody>
         </table>
     </div>
@@ -144,14 +163,14 @@
     <!-- RESUMEN -->
     <div class="bg-white rounded-xl shadow p-8 max-w-xs ml-auto border border-gray-100">
         <div class="flex justify-between text-lg text-gray-700 mb-2">
-            <span>Subtotal</span><span>$29.000</span>
+            <span>Subtotal</span><span><?php echo $factura->base;?></span>
         </div>
         <div class="flex justify-between text-lg text-gray-700 mb-2">
-            <span>IVA 19%</span><span>$5.510</span>
+            <span>IVA-Imp</span><span>$<?php echo $factura->valorimpuestototal;?></span>
         </div>
         <div class="border-t border-gray-200 my-4"></div>
         <div class="flex justify-between text-xl font-extrabold text-gray-900">
-            <span>Total</span><span>$34.510</span>
+            <span>Total</span><span>$<?php echo $factura->total;?></span>
         </div>
     </div>
 
@@ -222,7 +241,7 @@
     </dialog>
 
     <!-- MODAL NOTA CRÉDITO -->
-    <dialog id="modalNotaCredito"
+    <dialog id="miDialogoNC"
         class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-10 bg-white backdrop:bg-black/40 shadow-2xl
         transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out
         backdrop:backdrop-blur-sm">
@@ -234,12 +253,22 @@
 
             <button id="btnCerrarNotaCredito"
                 class="p-2 rounded-lg hover:bg-gray-100 transition"
-                onclick="document.getElementById('modalNotaCredito').close()">
+                onclick="document.getElementById('miDialogoNC').close()">
                 <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
             </button>
         </div>
-
-        <form method="dialog" class="grid grid-cols-1 gap-6">
+        <div id="divmsjalertaNC"></div>
+        <form id="formNC" class="grid grid-cols-1 gap-6">
+            <div>
+                <label class="font-medium text-gray-800">Seleccionar factura electronica de venta</label>
+                <select id="selectInvoice" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2" required>
+                    <option value="" selected disabled>- Seleccionar -</option>
+                    <?php foreach($facturasElectronicas as $value):
+                        if($value->id_estadoelectronica==2&&$value->nota_credito==0 || ($value->id_estadoelectronica==2&&($value->id_estadonota==1 || $value->id_estadonota==3))): ?>
+                            <option data-idfactura="<?php echo $value->id_facturaid;?>" data-estadoFE="<?php echo $value->id_estadoelectronica;?>" data-estadoNC="<?php echo $value->id_estadonota;?>" value="<?php echo $value->id;?>"><?php echo $value->num_factura;?></option>
+                    <?php endif; endforeach;  ?>
+                </select>
+            </div>
             <!-- MOTIVO -->
             <div>
                 <label class="font-medium text-gray-800">Motivo de la nota crédito</label>
@@ -261,7 +290,7 @@
             </div>
             <div class="formulario__campo habilitaconsecutivo" style="display: none;">
                 <label class="formulario__label" for="consecutivoPersonalizado">Consecutivo personalizado</label>
-                <input id="consecutivoPersonalizado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Digite numero del consecutivo" name="consecutivoPersonalizado" value="" required>
+                <input id="consecutivoPersonalizado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Digite numero del consecutivo" name="consecutivoPersonalizado" value="">
             </div>
 
             <!-- DESCRIPCIÓN -->
@@ -274,8 +303,7 @@
 
             <!-- Botones -->
             <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-                <button type="button" id="btnCancelarNota"
-                    class="btn-md bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg !py-4 !px-6 !w-[135px]">
+                <button type="button" id="btnCancelarNota" class="btn-md bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg !py-4 !px-6 !w-[135px]" value="Cancelar">
                     Cancelar
                 </button>
 
@@ -286,7 +314,7 @@
         </form>
     </dialog>
 
-    <!-- MODAL NUEVA FACTURA -->
+    <!-- MODAL NUEVA FACTURA EJ: POS A ELECTRONICA -->
     <dialog id="modalNuevaFactura"
         class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-10 bg-white backdrop:bg-black/40 shadow-2xl
             transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out
@@ -307,20 +335,16 @@
         </div>
 
         <form id="formNuevaFactura" method="POST" class="grid grid-cols-1 gap-6">
-
             <!-- Seleccionar Resolución -->
             <div>
                 <label class="font-medium text-gray-800">Resolución en uso</label>
                 <select id="selectResolucion"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
-                    block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1"
                     required>
                     <option value="" selected disabled>- Seleccionar -</option>
                     <?php foreach($resoluciones as $value): ?>
-                    <option value="<?= $value->id ?>"
-                            data-prefijo="<?= $value->prefijo ?>"
-                            data-actual="<?= $value->consecutivo_actual ?>">
-                        <?= $value->prefijo ?> (Actual: <?= $value->consecutivo_actual ?>)
+                    <option value="<?= $value->id ?>" data-prefijo="<?= $value->prefijo ?>" data-actual="<?= $value->siguientevalor ?>">
+                        <?= $value->nombre; ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -342,7 +366,7 @@
                         <span class="text-gray-800 text-lg">Ingresar consecutivo manual</span>
                     </label>
 
-                    <input type="number" id="consecutivoManual"
+                    <input id="consecutivoManual" type="number"
                         class="hidden w-full p-3 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 focus:ring-1"
                         placeholder="Ej: 125">
                 </div>
@@ -375,9 +399,8 @@
     </dialog>
 
 
-    <dialog id="modalAdquiriente"
-    class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
-
+    <!-- MODAL ADQUIRIENTE -->                
+    <dialog id="miDialogoFacturarA" class="rounded-2xl backdrop:bg-black/40 p-0 w-[98vw] max-w-4xl">
         <form id="formFacturarA"
             class="bg-white rounded-2xl p-10 space-y-8 w-full" method="POST">
 
@@ -402,7 +425,18 @@
                         <select id="type_document_identification_id" name="type_document_identification_id" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
                             <option value="" disabled selected>Seleccionar tipo de documento</option>
-                            <!-- tus opciones -->
+                            <option value="1" <?php echo $adquiriente->type_document_identification_id==1?'selected':'';?>>Registro civil</option>
+                            <option value="2" <?php echo $adquiriente->type_document_identification_id==2?'selected':'';?>>Tarjeta de identidad</option>
+                            <option value="3" <?php echo $adquiriente->type_document_identification_id==3?'selected':'';?>>Cédula de ciudadanía</option>
+                            <option value="4" <?php echo $adquiriente->type_document_identification_id==4?'selected':'';?>>Tarjeta de extranjería</option>
+                            <option value="5" <?php echo $adquiriente->type_document_identification_id==5?'selected':'';?>>Cédula de extranjería</option>
+                            <option value="6" <?php echo $adquiriente->type_document_identification_id==6?'selected':'';?>>NIT</option>
+                            <option value="7" <?php echo $adquiriente->type_document_identification_id==7?'selected':'';?>>Pasaporte</option>
+                            <option value="8" <?php echo $adquiriente->type_document_identification_id==8?'selected':'';?>>Documento de identificación extranjero</option>
+                            <option value="9" <?php echo $adquiriente->type_document_identification_id==9?'selected':'';?>>NIT de otro país</option>
+                            <option value="10" <?php echo $adquiriente->type_document_identification_id==20?'selected':'';?>>NUIP *</option>
+                            <option value="11" <?php echo $adquiriente->type_document_identification_id==11?'selected':'';?>>PEP (Permiso Especial de Permanencia)</option>
+                            <option value="12" <?php echo $adquiriente->type_document_identification_id==12?'selected':'';?>>PPT (Permiso Protección Temporal)</option>
                         </select>
                     </div>
 
@@ -413,6 +447,7 @@
                             <input id="identification_number"
                                 name="identification_number"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                                value="<?php echo $adquiriente->identification_number; ?>"
                                 required>
                             <button id="btnBuscarAdquiriente" type="button"
                                 class="px-4 bg-indigo-100 text-indigo-700 rounded-lg flex items-center gap-2 hover:bg-indigo-200 mt-2">
@@ -425,14 +460,18 @@
                     <div>
                         <label class="font-semibold text-gray-700">Nombre / Razón Social</label>
                         <input id="business_name" name="business_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                            value="<?php echo $adquiriente->business_name; ?>"
+                            >
                     </div>
 
                     <!-- Correo -->
                     <div>
                         <label class="font-semibold text-gray-700">Correo Electrónico</label>
                         <input id="email" name="email" type="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                            value="<?php echo $adquiriente->email; ?>"
+                        >
                     </div>
 
                 </div>
@@ -455,7 +494,9 @@
                             <div>
                                 <label class="font-semibold text-gray-700">Dirección</label>
                                 <input id="address" name="address"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2">
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2"
+                                    value="<?php $adquiriente->address; ?>"
+                                >
                             </div>
 
                             <!-- Departamento -->
@@ -479,6 +520,36 @@
                                 </select>
                             </div>
 
+                            <!-- Tipo de Organización -->
+                            <div>
+                                <label for="type_organization_id" class="block text-2xl font-medium text-gray-600">Tipo de Organización</label>
+                                <select id="type_organization_id" name="type_organization_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+                                <option value="" disabled selected>Seleccione tipo de organización</option>
+                                <option value="1" <?php echo $adquiriente->type_organization_id==1?'selected':'';?> >Persona Jurídica y asimiladas</option>
+                                <option value="2" <?php echo $adquiriente->type_organization_id==2?'selected':'';?> >Persona Natural y asimiladas</option>
+                                </select>
+                            </div>
+
+                            <!-- Tipo Régimen -->
+                            <div>
+                                <label for="type_regime_id" class="block text-2xl font-medium text-gray-600">Tipo Régimen</label>
+                                <select id="type_regime_id" name="type_regime_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+                                <option value="" disabled selected>Seleccione tipo de régimen</option>
+                                <option value="1" <?php echo $adquiriente->type_regime_id==1?'selected':'';?> >Responsable de IVA</option>
+                                <option value="2" <?php echo $adquiriente->type_regime_id==1?'selected':'';?>>No responsable de IVA</option>
+                                </select>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div>
+                                <label for="phone" class="block text-2xl font-medium text-gray-600">Teléfono</label>
+                                <input id="phone" type="tel" name="phone"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                                placeholder="Teléfono de contacto" value="<?php echo $adquiriente->phone; ?>">
+                            </div>
+
                         </div>
 
                     </div>
@@ -490,7 +561,7 @@
             <div class="flex justify-end gap-4 pt-6 border-t">
                 <button type="button"
                     class="px-6 py-4 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-                    onclick="modalAdquiriente.close()">
+                    onclick="miDialogoFacturarA.close()">
                     Cancelar
                 </button>
 
@@ -503,140 +574,6 @@
         </form>
     </dialog>
 
+  </div>
 </div>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-  /********************
-   * MODAL ENVIAR CORREO
-   ********************/
-  const modalCorreo = document.getElementById('modalEnviarCorreo');
-  const btnAbrirModalCorreo = document.getElementById('btnEnviarCorreo');
-  const btnCancelarModalCorreo = document.getElementById('btnCancelarModal');
-  const btnConfirmarEnviarCorreo = document.getElementById('btnConfirmarEnviarCorreo');
-
-  btnAbrirModalCorreo?.addEventListener('click', () => modalCorreo?.showModal());
-  btnCancelarModalCorreo?.addEventListener('click', () => modalCorreo?.close());
-  btnConfirmarEnviarCorreo?.addEventListener('click', (e) => {
-    e.preventDefault();
-    const correo = document.getElementById('correoCliente').value;
-    const asunto = document.getElementById('asuntoCorreo').value;
-    const mensaje = document.getElementById('mensajeCorreo').value;
-    const adjuntos = document.getElementById('adjuntarArchivos').checked;
-    console.log({ correo, asunto, mensaje, adjuntos });
-    alert("📧 Correo enviado correctamente (Simulado)");
-    modalCorreo?.close();
-  });
-
-  /********************
-   * MODAL NOTA CRÉDITO
-   ********************/
-  const modalNotaCredito = document.getElementById("modalNotaCredito");
-  const btnModalNotaCredito = document.querySelector("button:has(svg path[d='M15 9l-6 6m0-6l6 6M19 12a7 7 0 11-14 0 7 7 0 0114 0z'])");
-  const btnCancelarNota = document.getElementById("btnCancelarNota");
-  const btnCerrarNotaCredito = document.getElementById("btnCerrarNotaCredito");
-  const btnConfirmarNota = document.getElementById("btnConfirmarNota");
-
-  btnModalNotaCredito?.addEventListener('click', () => modalNotaCredito?.showModal());
-  btnCancelarNota?.addEventListener('click', () => modalNotaCredito?.close());
-  btnCerrarNotaCredito?.addEventListener('click', () => modalNotaCredito?.close());
-  btnConfirmarNota?.addEventListener('click', (e) => {
-    e.preventDefault();
-    modalNotaCredito?.close();
-    alert("Nota crédito generada correctamente ✔");
-  });
-
-  /********************
-   * MODAL NUEVA FACTURA
-   ********************/
-  const btnNuevaFactura = document.getElementById('btnNuevaFactura');
-  const modalNuevaFactura = document.getElementById('modalNuevaFactura');
-  const selectResolucion = document.getElementById('selectResolucion');
-  const inputManual = document.getElementById('consecutivoManual');
-  const btnCancelarNuevaFactura = document.getElementById('btnCancelarNuevaFactura');
-  const btnGenerarNuevaFactura = document.getElementById('btnGenerarNuevaFactura');
-  const previewFactura = document.getElementById('previewFactura');
-
-  if (btnNuevaFactura && modalNuevaFactura) {
-    btnNuevaFactura.setAttribute('type', 'button');
-    btnNuevaFactura.addEventListener('click', () => {
-      if (selectResolucion) selectResolucion.value = '';
-      if (inputManual) { inputManual.value = ''; inputManual.classList.add('hidden'); }
-      if (previewFactura) previewFactura.textContent = '---';
-      modalNuevaFactura.showModal();
-    });
-
-    btnCancelarNuevaFactura?.addEventListener('click', () => modalNuevaFactura.close());
-
-    const actualizarVista = () => {
-      if (!selectResolucion || !previewFactura) return;
-      const opcion = selectResolucion.selectedOptions[0];
-      if (!opcion) { previewFactura.textContent = '---'; return; }
-      const prefijo = opcion.dataset.prefijo || '';
-      const actualNum = parseInt(opcion.dataset.actual||'0', 10) + 1;
-      const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
-      let numero = tipo === 'manual' ? (inputManual?.value || '---') : actualNum;
-      previewFactura.textContent = `${prefijo}-${numero}`;
-    };
-
-    selectResolucion?.addEventListener('change', actualizarVista);
-    inputManual?.addEventListener('input', actualizarVista);
-    document.querySelectorAll('input[name="tipoConsecutivo"]').forEach(r =>
-      r.addEventListener('change', () => {
-        if (inputManual) inputManual.classList.toggle('hidden', r.value !== 'manual');
-        actualizarVista();
-      })
-    );
-
-    btnGenerarNuevaFactura?.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!selectResolucion || !selectResolucion.value) { alert('Selecciona una resolución.'); return; }
-      const tipo = document.querySelector('input[name="tipoConsecutivo"]:checked')?.value || 'automatico';
-      if (tipo === 'manual' && (!inputManual || !inputManual.value)) { alert('Ingresa el consecutivo manual.'); return; }
-      const opcion = selectResolucion.selectedOptions[0];
-      const payload = {
-        id_resolucion: selectResolucion.value,
-        prefijo: opcion.dataset.prefijo || '',
-        consecutivo: tipo === 'manual' ? inputManual.value : (parseInt(opcion.dataset.actual||'0',10) + 1),
-        factura_origen: '<?= $factura_id ?? "FE-000123" ?>'
-      };
-      alert('Generando nueva factura: ' + payload.prefijo + '-' + payload.consecutivo);
-      modalNuevaFactura.close();
-    });
-  }
-
-  /********************
-   * MODAL ASIGNAR / ACTUALIZAR CLIENTE
-   ********************/
-  const modalAdquiriente = document.getElementById("modalAdquiriente");
-  const btnAbrirAdquiriente = document.getElementById("btnAbrirFacturarA");
-  const btnCancelarAdquiriente = modalAdquiriente?.querySelector("button[type='button']");
-  const formAdquiriente = document.getElementById("formFacturarA");
-  const inputNumeroDocumento = document.getElementById("identification_number");
-  const inputNombreCliente = document.getElementById("business_name");
-  const previewCliente = document.getElementById("previewCliente");
-
-  if (btnAbrirAdquiriente && modalAdquiriente && formAdquiriente) {
-    btnAbrirAdquiriente.setAttribute('type', 'button');
-    btnAbrirAdquiriente.addEventListener('click', () => modalAdquiriente.showModal());
-    btnCancelarAdquiriente?.addEventListener('click', () => modalAdquiriente.close());
-
-    formAdquiriente.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!inputNumeroDocumento.value || !inputNombreCliente.value) {
-        alert("El número de documento y el nombre son obligatorios.");
-        return;
-      }
-      const datosCliente = { documento: inputNumeroDocumento.value, nombre: inputNombreCliente.value };
-      console.log("Datos cliente:", datosCliente);
-      if (previewCliente) previewCliente.textContent = `${datosCliente.nombre} — ${datosCliente.documento}`;
-      alert("Cliente asignado correctamente (simulado)");
-      modalAdquiriente.close();
-    });
-  }
-
-});
-</script>
 

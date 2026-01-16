@@ -15,6 +15,7 @@
     let nuevosMediosPago:{idmediopago:string, valor: string}[]=[];  // guardar los medios de pago a enviar a backend
     const setMediosPagoDB = new Set();
     const mapMediospago = new Map();
+    let totalpagadointerno = 0;
 
     tablaListaPedidos = ($('#tablaListaPedidos') as any).DataTable(configdatatablescaja);
 
@@ -42,8 +43,9 @@
         document.querySelector('#tipodegasto')?.removeAttribute("required");
         document.querySelector('#origengasto')?.classList.add('hidden');
         document.querySelector('#origengasto')?.classList.remove('flex');
-         document.querySelector('#showcajas')?.classList.remove('hidden'); //mostar caja
+        document.querySelector('#showcajas')?.classList.remove('hidden'); //mostar caja
         document.querySelector('#showbancos')?.classList.add('hidden'); //oculta banco
+        document.querySelector('#banco')?.removeAttribute("required");
       }
     });
 
@@ -58,11 +60,13 @@
         document.querySelector('#showcajas')?.setAttribute("required", "");
         document.querySelector('#showbancos')?.classList.add('hidden');
         document.querySelector('#showbancos')?.removeAttribute("required");
+        document.querySelector('#banco')?.removeAttribute("required");
       }else{
         //document.querySelector('#showcajas')?.classList.add('hidden');
         //document.querySelector('#showcajas')?.removeAttribute("required");
         document.querySelector('#showbancos')?.classList.remove('hidden');
         document.querySelector('#showbancos')?.setAttribute("required", "");
+        document.querySelector('#banco')?.setAttribute("required", "");
       }
     }
 
@@ -101,9 +105,21 @@
           const url = "/admin/api/mediospagoXfactura?id="+idfactura; //llamado a la API REST y se trae los medios de pago segun factura
           const respuesta = await fetch(url); 
           mediospagoDB = await respuesta.json(); 
-          console.log(mediospagoDB);
+          //console.log(mediospagoDB);
           //const setMediosPagoDB = new Set(mediospagoDB.map(x=>x.idmediopago));
           //console.log(setMediosPagoDB);
+
+          //agrupar por idmediopago y sumar su valor
+          totalpagadointerno = 0;
+          mediospagoDB = Object.values(mediospagoDB.reduce<Record<string, {id:string, idmediopago:string, id_factura:string, valor:string}>>((obj, x)=>{
+            totalpagadointerno+=Number(x.valor);
+            const k = x.idmediopago;
+            if(!obj[k])obj[k] = {...x, valor: '0'}
+            obj[k].valor = (Number(obj[k].valor) + Number(x.valor))+'';
+            return obj;
+          }, {}));
+          console.log(totalpagadointerno);
+
           mediospagoDB.forEach(x => setMediosPagoDB.add(x.idmediopago));//se llena el set con los medios de pago de la DB
           mediosPago.forEach(mediopago =>{  //se llena los inputs medios de pago con los medios de pago de la DB
             mediopago.value = '0';
@@ -164,7 +180,7 @@
       }
     }
 
-    ////////////////// evento al bton pagar del modal facturar //////////////////////
+    ////////////////// evento al bton para cambiar medios de pago //////////////////////
     document.querySelector('#formCambioMedioPago')?.addEventListener('submit', e=>{
       e.preventDefault();
       let totalotrosmedios = 0;
@@ -175,7 +191,7 @@
           nuevosMediosPago = [...nuevosMediosPago, {idmediopago: item.id, valor: item.value.replace(/[,.]/g, '')}];  //obtengo los nuevos medios de pago difente a cero
       });
 
-      if(totalotrosmedios != parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))){
+      if(totalotrosmedios != parseInt(totalPagado.textContent!.replace(/[,.]/g, '')) && totalotrosmedios!=totalpagadointerno){
         msjAlert('error', 'Valor diferente al pagado', (document.querySelector('#divmsjalerta2') as HTMLElement));
         return;
       }

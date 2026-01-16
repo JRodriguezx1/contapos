@@ -4,7 +4,7 @@ namespace App\Models\inventario;
 
 class productos extends \App\Models\ActiveRecord {
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'preciopersonalizado', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso', 'estado', 'visible'];
+    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'preciopersonalizado', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'merma', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso', 'estado', 'visible'];
     
     //public $id;
     public function __construct($args = [])
@@ -32,6 +32,7 @@ class productos extends \App\Models\ActiveRecord {
         $this->stock = !empty($args['stock']) ? $args['stock']: 0;
         $this->stockminimo = !empty($args['stockminimo']) ? $args['stockminimo'] : 1;
         $this->categoria = $args['categoria'] ?? '';
+        $this->merma = $args['merma'] ?? 0;
         $this->rendimientoestandar = $args['rendimientoestandar'] ?? 1;
         $this->precio_compra = !empty($args['precio_compra']) ? $args['precio_compra']:  0;
         $this->precio_venta = $args['precio_venta'] ?? '';
@@ -143,7 +144,7 @@ class productos extends \App\Models\ActiveRecord {
       return $equivalencias;
     }
 
-    public static function indicadoresAllProducts():array|NULL{
+    /*public static function indicadoresAllProducts():array|NULL{
       $query="SELECT *, SUM(stock*precio_compra) OVER () AS valorinv, 
       COUNT(id) OVER () AS cantidadreferencias, 
       SUM(stock) OVER () AS cantidadproductos,
@@ -152,6 +153,19 @@ class productos extends \App\Models\ActiveRecord {
       FROM ".self::$tabla.";";
       $array = self::camposJoinObj($query);
       return $array;
+    }*/
+
+
+    public static function SelectProducts_Category_StockXsucursal():array{
+        $idsucursal = id_sucursal();
+        $sql = "SELECT p.id as ID, p.idcategoria, p.nombre, p.foto, p.sku, p.precio_venta, p.estado, p.visible, 
+                sps.productoid, sps.sucursalid, sps.stock, sps.habilitarventa, c.nombre as categoria
+                FROM productos p 
+                JOIN stockproductossucursal sps ON p.id = sps.productoid
+                JOIN categorias c ON p.idcategoria = c.id
+                WHERE sps.sucursalid = $idsucursal  AND  sps.habilitarventa = '1';";
+        $array = self::camposJoinObj($sql);
+        return $array;
     }
     
 }

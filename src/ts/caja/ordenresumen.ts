@@ -272,9 +272,9 @@
               document.removeEventListener("click", cerrarDialogoExterno);
               if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
               if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
-              const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
-              console.log(resDian);
-            }
+                const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura); //llama a la funcion que esta en ts/ventas/ventas.sendinvoice.ts
+                console.log(resDian);
+              }
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
             }

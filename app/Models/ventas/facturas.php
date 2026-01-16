@@ -3,7 +3,7 @@ namespace App\Models\ventas;
 
 class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'referencia', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -16,7 +16,7 @@ class facturas extends \App\Models\ActiveRecord {
         $this->idconsecutivo = $args['idconsecutivo'] ?? 1;
         $this->iddireccion = $args['iddireccion'] ?? 1;
         $this->idtarifazona = $args['idtarifazona'] ?? 1;
-        $this->idcierrecaja = $args['idtarifazona'] ?? '';
+        $this->idcierrecaja = $args['idcierrecaja'] ?? '';
         $this->num_orden = $args['num_orden'] ?? '';
         $this->prefijo = $args['prefijo'] ?? '';
         $this->num_consecutivo = $args['num_consecutivo'] ?? '';
@@ -35,7 +35,10 @@ class facturas extends \App\Models\ActiveRecord {
         $this->cotizacion = $args['cotizacion'] ?? 0; //1 = cotizacion
         $this->estado = $args['estado'] ?? 'paga';
         $this->cambioaventa = $args['cambioaventa']??0;  //1 = se pasa de cotizacion a venta
+        $this->ref_creditoid = $args['ref_creditoid']??'';
         $this->referencia = $args['referencia']??'';
+        $this->abono = $args['abono']??0;
+        $this->abonofinal = $args['abonofinal']??0;
         $this->subtotal = $args['subtotal'] ?? 0;
         $this->base = $args['base'] ?? 0;
         $this->valorimpuestototal = $args['valorimpuestototal'] ?? 0;
@@ -49,6 +52,7 @@ class facturas extends \App\Models\ActiveRecord {
         $this->valortarifa = $args['valortarifa'] ?? 0;
         $this->fechacreacion = $args['fechacreacion'] ?? date('Y-m-d H:i:s');
         $this->fechapago = $args['fechapago'] ?? date('Y-m-d H:i:s');
+        $this->habilitada = $args['habilitada']??0;
         $this->opc1 = $args['opc1'] ?? '';
         $this->opc2 = $args['opc2'] ?? '';
     }
@@ -101,9 +105,17 @@ class facturas extends \App\Models\ActiveRecord {
 
     //metodo usado para la graficas de index reportes
     public static function ventasGraficaMensual(int $idsucursal){
-        $sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
+
+        /*$sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
         WHERE fechapago >= CONCAT(YEAR(CURRENT_DATE()), '-01-01') AND fechapago < CONCAT(YEAR(CURRENT_DATE())+1, '-01-01') AND estado = 'Paga' AND id_sucursal = $idsucursal
-        GROUP BY MONTH(fechapago) ORDER BY mes;";
+        GROUP BY MONTH(fechapago) ORDER BY mes;";*/
+
+        $sql = "SELECT DATE_FORMAT(fechapago, '%Y-%m') AS periodo, SUM(total) AS total_venta
+                FROM facturas
+                WHERE fechapago >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
+                GROUP BY periodo
+                ORDER BY periodo;";
+
         $resultado = self::$db->query($sql);
         $array = [];
         while($row = $resultado->fetch_object())$array[] = $row;

@@ -47,15 +47,17 @@
         </div>
         
         <div class="mt-4">
-          <button class="group relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias
-            <div class="absolute z-10 bg-white flex flex-col items-start top-full left-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
-              <a data-categoria="Todos" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2">Todos</a>
-              <?php foreach($categorias as $categoria): 
-                if($categoria->visible > 0):?>
-                <a data-categoria="<?php echo $categoria->nombre;?>" class=" filtrocategorias text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="#2"><?php echo $categoria->nombre;?></a>
-              <?php endif; endforeach; ?>
-            </div>
-          </button>
+          
+          <button id="btnCategorias" class="relative btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]">Categorias</button>
+          <div id="menuCategorias" class="absolute z-10 bg-white flex flex-col items-start mt-1 rounded-lg pt-2 pb-3 px-4 shadow-md hidden">
+            <a data-categoria="Todos" class="filtrocategorias p-3 hover:bg-slate-200">Todos</a>
+            <?php foreach($categorias as $categoria): if($categoria->visible > 0): ?>
+              <a data-categoria="<?= $categoria->nombre ?>" class="filtrocategorias p-3 hover:bg-slate-200">
+                <?= $categoria->nombre ?>
+              </a>
+            <?php endif; endforeach; ?>
+          </div>
+
 
           <!-- Botón Otros -->
           <button id="btnotros" class="btn-md btn-turquoise !mb-4 !py-4 px-6 !w-[140px] flex items-center justify-center gap-2">
@@ -70,11 +72,12 @@
           </button>
         </div>
 
+        <p>Categoria: <strong id="categorySelect">Todos</strong></p>
 
         <div id="productos" class="list grid gap-4 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
           <?php foreach($productos as $producto): 
             if($producto->visible==1&&$producto->estado==1):?>
-            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->ID;?>">
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->ID;?>">
                 <img 
                     src="/build/img/<?php echo ($producto->foto!=null&&$producto->foto!='null'&&$producto->foto!='undefined')?$producto->foto:'default-product.png';?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
@@ -230,9 +233,7 @@
             <span class="font-medium text-2xl uppercase">Facturar</span>
           </button>
           
-          <button id="btnaplicarcredito" 
-            class="bg-white text-gray-800 font-semibold text-2xl rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto hidden">
-            
+          <button id="btnaplicarcredito" class=" text-gray-800 rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto">
             <span class="material-symbols-outlined text-2xl">payments</span>
             <span class="font-medium text-2xl uppercase">Crédito</span>
           </button>
@@ -308,7 +309,7 @@
           <div class="sm:col-span-4">
             <label for="clientenuevoemail" class="block text-2xl font-medium text-gray-600">Email</label>
             <div class="mt-2">
-              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
+              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
 

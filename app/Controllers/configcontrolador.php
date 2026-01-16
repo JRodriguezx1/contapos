@@ -76,7 +76,7 @@ class configcontrolador{
                     if($_FILES['logo']['name']){
                         $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
                         $existe_archivo = file_exists($rutaimg);
-                        if($existe_archivo)unlink($rutaimg);
+                        if($existe_archivo&&!empty($sucursal->logo))unlink($rutaimg);
                         $url_temp = $_FILES["logo"]["tmp_name"];
                         $sucursal->logo = $subdominio.'/'.uniqid().$_FILES['logo']['name'];
                         $rutaimg = $_SERVER['DOCUMENT_ROOT']."/build/img/".$sucursal->logo;
@@ -319,7 +319,7 @@ class configcontrolador{
                 $r = $caja->crear_guardar();
                 if($r[0]){
                     //crear cierre de caja para la caja recien creada
-                    $crearcierrecaja = new cierrescajas(['idcaja'=>$r[1], 'nombrecaja'=>$caja->nombre]);
+                    $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$r[1], 'nombrecaja'=>$caja->nombre]);
                     $rcc = $crearcierrecaja->crear_guardar();
                     if($rcc[0]){
                         $caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
@@ -363,16 +363,21 @@ class configcontrolador{
     public static function eliminarCaja(){
         session_start();
         $caja = caja::find('id', $_POST['id']);
+        $cierrecaja = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($caja)){
                 try {
+                    if($cierrecaja->ingresoventas>0){
+                        echo json_encode(['error'=>['No se puede eliminar la caja hasta que se haga el cierre de caja']]);
+                        return;
+                    }
                     $r = $caja->eliminar_registro();
                     if($r){
                         ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
                     }else{
                         ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
                     }
-                } catch (\Throwable $th) {
+                } catch (\Throwable $th) {  //entra aqui si al eliminar caja no se puede por facturas existentes asoicada a la caja.
                     //throw $th;
                     $caja->estado = 0;
                     $ra = $caja->actualizar();

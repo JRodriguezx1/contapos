@@ -1,5 +1,5 @@
 (()=>{
-  if(document.querySelector('.ventas') || document.querySelector('.ordenresumen')){
+  if(document.querySelector('.ventas') || document.querySelector('.ordenresumen') || document.querySelector('.detalleinvoice')){
 
     const sendInvoiceAPI = {
 
@@ -14,7 +14,6 @@
             });
             
             const responseDian = await respuesta.json(); 
-            console.log(responseDian);
             return responseDian;
         } catch (error) {
             console.log(error);

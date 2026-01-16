@@ -139,9 +139,9 @@
             <!-- <div class="formulario__campo">
                 <label class="formulario__label" for="idunidadmedida">Unidad de medida</label>
                 <select id="idunidadmedida" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="idunidadmedida" required>
-                    <?php foreach($unidadesmedida as $unidadmedida): ?>
-                    <option value="<?php echo $unidadmedida->id;?>" <?php echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php echo $unidadmedida->nombre;?></option>
-                    <?php endforeach; ?>
+                    <?php //foreach($unidadesmedida as $unidadmedida): ?>
+                    <option value="<?php //echo $unidadmedida->id;?>" <?php //echo $unidadmedida->id==$producto->idunidadmedida?'selected':'';?>><?php //echo $unidadmedida->nombre;?></option>
+                    <?php //endforeach; ?>
                 </select>  
             </div> -->
             
@@ -151,17 +151,19 @@
               <div class="wrapper-content">
                 <div id="otrosopciones" class="content flex flex-col w-full mx-auto">  
                     
+                    
                     <div class="formulario__campo stock">
-                        <label class="formulario__label" for="stock">Cantidad</label>
+                        <!--<label class="formulario__label" for="stock">Cantidad</label>-->
                         <div class="formulario__dato">
                             <input id="stock" 
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 hidden" 
                                 type="text" placeholder="Precio de venta" 
                                 name="stock" 
                                 oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, '')|| 0"
                                 value="">
                         </div>
                     </div>
+                    
 
                     <div class="formulario__campo preciocompra">
                         <label class="formulario__label" for="preciocompra">Precio compra</label>

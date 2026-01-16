@@ -28,6 +28,7 @@ use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
+use App\services\creditosService;
 use App\services\stockService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
@@ -56,7 +57,9 @@ class ventascontrolador{
       if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0 && $facturacotz->id_sucursal == $idsucursal){
         $productoscotz = ventas::idregistros('idfactura', $id);
         $num_orden = $facturacotz->num_orden;
-      }else{ return;}
+      }else{ 
+        return;
+      }
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -64,7 +67,8 @@ class ventascontrolador{
     }
     //$alertas = usuarios::getAlertas();
     //$productos = productos::all();
-    $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal(), 'habilitarventa'=>1]);
+    //$productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal(), 'habilitarventa'=>1]);
+    $productos = productos::SelectProducts_Category_StockXsucursal(); //filtra habilitarventa = 1
     $categorias = categorias::all();
     $mediospago = mediospago::whereArray(['estado'=>1]);
     $clientes = clientes::all();
@@ -89,6 +93,7 @@ class ventascontrolador{
     $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
     $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
     $factimpuestos = json_decode($_POST['factimpuestos']);
+    $valoresCredito = json_decode($_POST['valoresCredito']);
     $datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $factura = new facturas($_POST);
     $factura->id_sucursal = id_sucursal();
@@ -138,19 +143,19 @@ class ventascontrolador{
       $obj->id = $objeto->idproducto;
       //unset($objeto->iditem);
       if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
-        if(!isset($acumulador['productosSimples'][$objeto->id])){
-          $acumulador['productosSimples'][$objeto->id] = $obj;
+        if(!isset($acumulador['productosSimples'][$objeto->idproducto])){
+          $acumulador['productosSimples'][$objeto->idproducto] = $obj;
           $acumulador['soloIdproductos'][] = $obj->id;
         }else{
-          $acumulador['productosSimples'][$objeto->id]->cantidad += $obj->cantidad;
+          $acumulador['productosSimples'][$objeto->idproducto]->cantidad += $obj->cantidad;
         }
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
-        if(!isset($acumulador['productosCompuestos'][$objeto->id])){
-          $acumulador['productosCompuestos'][$objeto->id] = $obj;
+        if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
+          $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
         }else{
-          $acumulador['productosCompuestos'][$objeto->id]->cantidad += $obj->cantidad;
+          $acumulador['productosCompuestos'][$objeto->idproducto]->cantidad += $obj->cantidad;
         }
-        $acumulador['productosCompuestos'][$objeto->id]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->id]->cantidad/(float)$objeto->rendimientoestandar, 4);
+        $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->cantidad/(float)$objeto->rendimientoestandar, 4);
       }
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
@@ -235,17 +240,29 @@ class ventascontrolador{
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
+              $factura->abono = $valoresCredito->abonoinicial??0;
+              $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
               $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
               //....
-            
+              //procesar si es credito....
+              //if($_POST['tipoventa']=='Credito')$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
+              
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
               $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
               $alerta['error'][] = $th->getMessage();
+            }
+            //procesar si es credito....
+            if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
+            if(!empty($alertas['error'])){
+              $facturadelete = facturas::find('id', $r[1]);
+              $facturadelete->eliminar_registro();
+              echo json_encode($alertas);
+              return;
             }
           }
           if($_POST['estado']=='Guardado')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
@@ -274,16 +291,23 @@ class ventascontrolador{
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
             foreach($mediospago as $obj){
               $obj->id_factura = $r[1];
+              $obj->cierrecajaid = $ultimocierre->id;
               if($obj->idmediopago == 1){
-                $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
+                $ultimocierre->ventasenefectivo +=  ($_POST['tipoventa']=='Contado'?$obj->valor:0);
+                $ultimocierre->abonosenefectivo += ($_POST['tipoventa']=='Credito'?$obj->valor:0);
               }
             }
             //////// establecer el id de factura para factimpuestos ////////////
             foreach($factimpuestos as $obj)$obj->facturaid = $r[1];
 
+            $ultimocierre->creditocapital += $valoresCredito->capital;  //acumulado de los creditos total
+            $ultimocierre->creditos += $valoresCredito->capital-$valoresCredito->abonoinicial;  //acumulados de los creditos menos el abono incial
+            $ultimocierre->abonoscreditos += $valoresCredito->abonoinicial; //acumulado de los abonos de solo creditos
+            $ultimocierre->abonostotales += $valoresCredito->abonoinicial;
             $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $factura->total;
+            
+            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?0:$factura->total);
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             $ultimocierre->basegravable += $factura->base;
@@ -300,8 +324,9 @@ class ventascontrolador{
             }
 
             $r3[0] = true;
+            $r2[0] = true;
             $r1 = $venta->crear_varios_reg_arrayobj($carrito);  //crear los productos de la factura en tabla venta (detalle de los productos de la factura de venta)
-            $r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
+            if(!empty($mediospago))$r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
             if(!empty($factimpuestos))$r3 = $detalleimpuestos->crear_varios_reg_arrayobj($factimpuestos);
 
             if($r1[0] && $r2[0] && $r3[0]){
@@ -380,7 +405,7 @@ class ventascontrolador{
                 $obj->dato1 = '';
                 $obj->dato2 = '';
                 $obj->idfactura = $factura->id;
-                if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
+                if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
                   $obj->id = 1;  //este es el id de Otros.
                   $obj->idproducto = 1;
                   $obj->idcategoria = 1;
@@ -403,7 +428,7 @@ class ventascontrolador{
                 $obj->dato1 = '';
                 $obj->dato2 = '';
                 $obj->idfactura = $r[1];
-                if($obj->id<0&&$obj->id!=''){  //para productos "Otros"
+                if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
                   $obj->id = 1;  //este es el id de Otros.
                   $obj->idproducto = 1;
                   $obj->idcategoria = 1;
@@ -465,7 +490,7 @@ class ventascontrolador{
     $mediospago = json_decode($_POST['mediosPago']);
     //$datosAdquiriente = json_decode($_POST['datosAdquiriente']);
     $datosAdquiriente = json_decode(json_encode(adquirientes::find('id', 1)));  //convierte el objeto de la clase adquitiente a stdclass
-    debuguear($datosAdquiriente);
+    //debuguear($datosAdquiriente);
     $factmediospago = new factmediospago();
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
@@ -531,6 +556,7 @@ class ventascontrolador{
               $numConsecutivo = $consecutivo->siguientevalor;
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
+              $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
@@ -539,8 +565,8 @@ class ventascontrolador{
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
-              $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
-              $alerta['error'][] = $th->getMessage();
+              $alertas['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
+              $alertas['error'][] = $th->getMessage();
             }
           
             $factura->id = $r[1];
@@ -570,6 +596,7 @@ class ventascontrolador{
             ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
             foreach($mediospago as $obj){
               $obj->id_factura = $factura->id;
+              $obj->cierrecajaid = $ultimocierre->id;
               if($obj->idmediopago == 1){
                 $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
               }
@@ -755,10 +782,17 @@ class ventascontrolador{
           $cierrecaja->valorpos -= $factura->total;
           $cierrecaja->descuentopos += $factura->descuento;
         }
+
         ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
-        $cierrecaja->ventasenefectivo =  $cierrecaja->ventasenefectivo - $mediospago;
-        //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-        $cierrecaja->ingresoventas =  $cierrecaja->ingresoventas - $factura->total;
+
+        if($factura->tipoventa=='Contado'){
+          $cierrecaja->ventasenefectivo =  $cierrecaja->ventasenefectivo - $mediospago;
+          //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
+          $cierrecaja->ingresoventas =  $cierrecaja->ingresoventas - $factura->total;
+        }
+
+
+
         $cierrecaja->totaldescuentos = $cierrecaja->totaldescuentos - $factura->descuento;
         $cierrecaja->valorimpuestototal -= $factura->valorimpuestototal;
         $cierrecaja->basegravable -= $factura->base;
@@ -767,6 +801,14 @@ class ventascontrolador{
         if($r){
             $r1 = $cierrecaja->actualizar();
             if($r1){
+              ///descuenta los abonos de creditos por caja, si el cierre de caja no se ha cerrado 
+              $anularCredito = creditosService::anularCredito($factura->id);  //me vuelve a actualizar el cierre de caja
+              if(isset($anularCredito['error'])){
+                $tempfactura->actualizar();
+                $tempcierrecaja->actualizar();
+                echo json_encode($anularCredito);
+                return;
+              }
               //eliminar detalle impuesto
               $detallefacturaimp = factimpuestos::find('facturaid', $factura->id);
               $detallefacturaimp->eliminar_registro();

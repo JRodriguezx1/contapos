@@ -3,6 +3,7 @@
 namespace App\services;
 
 use App\Models\ActiveRecord;
+use App\Models\inventario\conversionunidades;
 use App\Models\inventario\productos;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\sucursales;
@@ -15,6 +16,7 @@ class inventarioService {
         $alertas = [];
         $idsExcel = [];
         $productos = new productos();
+        $conversion = new conversionunidades;
         $sucursales = sucursales::all();
         $getDB = productos::getDB();
         try {
@@ -74,6 +76,7 @@ class inventarioService {
                 $producto->cantidad = $stock;
                 $producto->stockminimo = 1;
                 $producto->categoria = '';
+                $producto->merma = 0;
                 $producto->rendimientoestandar = 1;
                 $producto->precio_compra = $precio_compra;
                 $producto->precio_venta = $precio_venta;
@@ -109,6 +112,7 @@ class inventarioService {
                     }else{  //insertar
                         $value->fecha_ingreso = date('Y-m-d H:i:s');
                         $insertProductos[] = $value;
+                        
                     }
                 }
 
@@ -122,18 +126,40 @@ class inventarioService {
                     $nuevosIds = range($lastId, $lastId + $cantidadInsertados - 1);
 
                     foreach($insertProductos as $i => $val){
+                        $val->id = $nuevosIds[$i];
                         $idproducto = $nuevosIds[$i];
                         foreach($sucursales as $index => $value){
                             // Sucursal actual → stock Excel
                             if ($value->id == $idsucursal) {
                                 $rowsStock[] = "($idproducto, $idsucursal, $val->stock, 0, 1)";
+                                
                             } else {
                                 // Otras sucursales → stock = 0
                                 $rowsStock[] = "($idproducto, $value->id, 0, 0, 1)";
                             }
                         }
                     }
+
+                    ///////  EQUIVALENCIAS DE UNIDAD DE MEDIDA  ////////////
+                    $rowsEquivalencias = [];
+                    foreach ($insertProductos as $producto) {
+                        $equivs = $productos->equivalencias($producto->id, $producto->idunidadmedida);
+
+                        foreach ($equivs as $eq) {
+                            $rowsEquivalencias[] = "({$eq->idproducto}, NULL, {$eq->idunidadmedidabase}, {$eq->idunidadmedidadestino}, '$eq->nombreunidadbase', '$eq->nombreunidaddestino', {$eq->factorconversion})";
+                        }
+                    }
                 }
+
+
+                //////  INSERTAR LAS EQUIVALENCIAS DE UNIDAD DE MEDIDA  ///////
+                if (!empty($rowsEquivalencias)) {
+                    $sqlEq = "INSERT INTO conversionunidades 
+                        (idproducto, idsubproducto, idunidadmedidabase, idunidadmedidadestino, nombreunidadbase, nombreunidaddestino, factorconversion)
+                        VALUES " . implode(',', $rowsEquivalencias);
+                    conversionunidades::actualizarLibre($sqlEq);
+                }
+
 
                 //Traer todos los productos del stockporsucursal que se va a actualizar su stock
                 $returnProductos = stockproductossucursal::IN_Where('productoid', array_keys($mapId), ['sucursalid', $idsucursal]);
@@ -147,7 +173,7 @@ class inventarioService {
                 }
                 
                 //ACTUALIZAR MOVIMIENTO DE INVENTARIO
-                stockService::upDate_movimientoProductos($upsertProductos, $returnProductos, 'ajuste', 'ajuste desde excel');
+                count($upsertProductos)>0?stockService::upDate_movimientoProductos($upsertProductos, $returnProductos, 'ajuste', 'ajuste desde excel'):'';
                 //movimiento de productos nuevos insertados
             }
 

@@ -113,12 +113,16 @@
                                         <td id="ventasEfectivo" class="">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>        
+                                        <td class="">Abonos en efectivo</td> 
+                                        <td id="abonosEfectivo" class="">+ $<?php echo number_format($ultimocierre->abonosenefectivo??0, "0", ",", ".");?></td>
+                                    </tr>
+                                    <tr>        
                                         <td class="">Gastos de la caja</td> 
                                         <td id="gastosCaja" class="">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>        
                                         <td class="text-blue-400 font-medium">Dinero en caja</td> 
-                                        <td id="dineroCaja" class="text-blue-400 font-medium">= $<?php echo number_format(($ultimocierre->basecaja??0)+($ultimocierre->ventasenefectivo??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
+                                        <td id="dineroCaja" class="text-blue-400 font-medium">= $<?php echo number_format(($ultimocierre->basecaja??0)+($ultimocierre->ventasenefectivo??0)+($ultimocierre->abonosenefectivo??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>        
                                         <td class="">Domicilios</td> 
@@ -126,7 +130,7 @@
                                     </tr>
                                     <tr>        
                                         <td class="text-blue-600 font-medium">Real en caja</td> 
-                                        <td id="realCaja" class="text-blue-600 font-medium">= $<?php echo number_format(($ultimocierre->basecaja??0)+($ultimocierre->ventasenefectivo??0)-($ultimocierre->gastoscaja??0)-($ultimocierre->domicilios??0), "0", ",", ".");?></td>
+                                        <td id="realCaja" class="text-blue-600 font-medium">= $<?php echo number_format(($ultimocierre->basecaja??0)+($ultimocierre->ventasenefectivo??0)+($ultimocierre->abonosenefectivo??0)-($ultimocierre->gastoscaja??0)-($ultimocierre->domicilios??0), "0", ",", ".");?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -134,7 +138,7 @@
                             <!-- DETALLE DE IMPUESTOS-->
                             <div class="mt-32 mb-12">
                                 <p class="text-sky-400 text-center  font-bold">Detalle de Impuestos</p>
-                                <table class="tabla2" width="100%" id="tablaMediosPago">
+                                <table class="tabla2" width="100%" id="tablaDetalleImpuestos">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Tarifa</th>
@@ -157,7 +161,7 @@
                             <!-- DETALLE GASTOS DE LA CAJA-->
                             <div class="mt-32 mb-12">
                                 <p class="text-sky-400 text-center  font-bold">Detalle gastos de la caja</p>
-                                <table class="tabla2" width="100%" id="tablaMediosPago">
+                                <table class="tabla2" width="100%" id="tablaDetalleCaja">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Categoria gasto</th>
@@ -175,20 +179,38 @@
                                 </table>
                             </div>
 
+                            <!-- DETALLE ABONOS-->
+                            <div class="mt-32 mb-12">
+                                <table class="tabla2" width="100%" id="tablaAbonos">
+                                    <thead>
+                                        <tr class="bg-gray-100 text-gray-700 p-3 text-center">
+                                            <th>Abonos creditos</th>
+                                            <th>Abonos separados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonoscreditos??0, "0", ",", ".");?></td>
+                                            <td class=""> + <strong>$ </strong><?php echo number_format($ultimocierre->abonosseparados??0, "0", ",", ".");?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
 
                         <div class="tlg:basis-1/2">
                             <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
                                 <thead>
                                     <tr>
-                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pago</th>
+                                        <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pagos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach($discriminarmediospagos as $index => $value): ?>
                                     <tr>        
                                         <td class=""><?php echo $value['mediopago'];?></td>
-                                        <td class=""><strong>$ </strong><?php echo number_format($value['valor'], "0", ",", ".");?></td>
+                                        <td class=""> + <strong>$ </strong><?php echo number_format($value['valor'], "0", ",", ".");?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -204,7 +226,11 @@
                                 <tbody>
                                     <tr>        
                                         <td class="">Ingreso de ventas total</td> 
-                                        <td id="ingresoVentasTotal" class=""> + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></td>
+                                        <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->totaldescuentos??0), "0", ",", ".");?></td>
+                                    </tr>
+                                    <tr>        
+                                        <td class="">Abonos totales</td> 
+                                        <td id="abonosTotales" class=""> + $<?php echo number_format($ultimocierre->abonostotales??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>        
                                         <td class="">Total gastos de caja</td> 
@@ -220,7 +246,7 @@
                                     </tr>
                                     <tr>        
                                         <td class="text-blue-400 font-medium">Real ingreso de ventas</td> 
-                                        <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
+                                        <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                                     </tr>
                                     
                                     <tr>        
@@ -314,7 +340,7 @@
                                 <th class="p-2">Factura</th>
                                 <th class="p-2">Medio pago</th>
                                 <th class="p-2">Estado</th>
-                                <th class="p-2">Valor Bruto</th>
+                                <th class="p-2">Subtotal</th>
                                 <th class="p-2">Total</th>
                                 <th class="p-2 accionesth">Acciones</th>
                             </tr>
@@ -333,7 +359,7 @@
                                     <?php endforeach; ?>
                                 </div>
                                 </td>
-                                <td class="<?php echo $value->estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense';?>"><?php echo $value->estado;?></td>
+                                <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&& $value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':'btn-light'));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
                                 <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                                 <td>$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
                                 <td class="accionestd">
@@ -436,7 +462,7 @@
     </form>
   </dialog>
 
-  <div><a href="www.j2softwarepos.com" class="text-gray-500 text-center block text-lg">J2 Software POS MultiSucursal</a></div>
+  <div><a href="https://www.j2softwarepos.com" target="_blank" class="text-gray-500 text-center block text-lg">J2 Software POS MultiSucursal</a></div>
 
 </div>
 </div>
