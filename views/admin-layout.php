@@ -33,7 +33,7 @@
             <?php include_once __DIR__."/templates/header.php"; ?>  <!-- barra superior -->
 
             <div class="contenido">
-                <h2 class="nombre-pagina"><?php //echo $titulo; ?></h2>
+                <h2 class="nombre-pagina"><?php echo "Cuenta vencida.." //$titulo; ?></h2>
                 <?php echo $contenido; ?>
             </div>
         </div>

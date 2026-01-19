@@ -147,4 +147,13 @@ class creditoscontrolador{
         if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::anularSeparado($_POST['id']);
         echo json_encode($alertas);
     }
+
+
+    public static function ajustarCreditoAntiguo(){
+        session_start();
+        isadmin();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::ajustarCreditoAntiguo($_POST);
+        echo json_encode($alertas);
+    }
 }

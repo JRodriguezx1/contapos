@@ -35,6 +35,9 @@ class creditos {
         $this->valorimpuestototal = $args['valorimpuestototal']??'';
         $this->dctox100 = $args['dctox100']??'';
         $this->descuento = $args['descuento']??'';
+        $this->abonototalantiguo = $args['abonototalantiguo']??'0';
+        $this->cantidadcuotasantiguas = $args['cantidadcuotasantiguas']??'0';
+        $this->fechaultimoabonoantiguo = $args['fechaultimoabonoantiguo']??'';
         $this->estado = $args['estado']??0; //1 = credito finalizado
         $this->created_at = $args['created_at']??'';
     }
@@ -84,6 +87,9 @@ class creditos {
             'valorimpuestototal' => $this->valorimpuestototal,
             'dctox100' => $this->dctox100,
             'descuento' => $this->descuento,
+            'abonototalantiguo' => $this->abonototalantiguo,
+            'cantidadcuotasantiguas' => $this->cantidadcuotasantiguas,
+            'fechaultimoabonoantiguo' => $this->fechaultimoabonoantiguo,
             'estado' => $this->estado, 
             //'created_at' => $this->created_at
         ];

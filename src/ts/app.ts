@@ -10,6 +10,11 @@ declare let List: any;
 
 (window as any).POS = (window as any).POS || {};
 
+ // Submódulos
+  if (!(window as any).POS.gestionarDescuentos) {
+    (window as any).POS.gestionarDescuentos = {};
+  }
+
 if(mobilemenu){
     mobilemenu.addEventListener('click', function(){
       if (sidebar && barra) {

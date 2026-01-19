@@ -421,4 +421,32 @@ class creditosService {
         //}
         return $alertas;
     }
+
+
+    public static function ajustarCreditoAntiguo(array $datos):array{
+        date_default_timezone_set('America/Bogota');
+        $alertas = [];
+        $idcredito = $datos['id'];
+        $abonototalantiguo = $datos['abonototalantiguo'];
+        $creditoRepo = new creditosRepository();
+        $credito = $creditoRepo->find($idcredito);
+        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
+
+        $credito->saldopendiente = $credito->capital - $abonototalantiguo;
+        $credito->fechaultimoabonoantiguo = date('Y-m-d H:i:s');
+
+        $getDB = $creditoRepo->getConexion();
+        $getDB->begin_transaction();
+        try {
+            $creditoRepo->update($credito);
+            $getDB->commit();
+            $alertas['exito'][] = "Credito actualizado correctamente";
+        } catch (\Throwable $th) {
+            //throw $th;
+            $getDB->rollback();
+            $alertas['error'][] = "Error al actualizar el credito. {$th->getMessage()}";
+        }
+        
+        return $alertas;
+    }
 }

@@ -3,9 +3,7 @@
 
     const POS = (window as any).POS;
      
-    //const btnCrearCredito = document.querySelector('#btnCrearCredito') as HTMLButtonElement;
     const btnCrearSeparado = document.querySelector('#btnCrearSeparado');
-    //const btnXCerrarModalCredito = document.querySelector('#btnXCerrarModalCredito') as HTMLButtonElement;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
     const tablaSeparado = document.querySelector('#tablaSeparado tbody');
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
@@ -27,7 +25,6 @@
       nombreunidadbase: string,
       nombreunidaddestino: string,
       factorconversion: string,
-      //idservicios:{idempleado:string, idservicio:string}[]
     };
 
     interface Item {
@@ -140,6 +137,7 @@
               precio_compra: 0,
           }
           carrito = [...carrito, item];
+          POS.carrito = carrito;
           printItemTable(id);
       }else{  //si ya existe en el carrito, sumar
         if(cantidad <= 0){
@@ -383,13 +381,16 @@
     }
 
     function cerrarDialogoExterno(event:Event) {
+      const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
       const f = event.target;
-      if (f === miDialogoFacturar || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar') {
+      if (f === miDialogoFacturar || f === miDialogoDescuento || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar') {
         miDialogoFacturar.close();
+        miDialogoDescuento.close();
       }
     }
 
 
+    POS.cerrarDialogoExterno = cerrarDialogoExterno;
   }
 
 })();

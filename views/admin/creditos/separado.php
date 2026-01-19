@@ -121,18 +121,21 @@
                 </div> <!-- FIn Apilamiento de productos -->
                 
 
-                <div class="flex justify-start gap-4 mt-6">
-                    <div class="text-end">
-                        <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Sub Total:</p>
-                        <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Impuesto:</p>
-                        <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Descuento:</p>
-                        <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
-                    </div>
-                    <div>
-                        <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
-                        <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">% 0</p>
-                        <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
-                        <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
+                <div class="">
+                    <button id="btndescuento" class="btn-xs btn-light ml-4" type="button">Descuento</button>
+                    <div class="flex justify-start gap-4 mt-6">
+                        <div class="text-end">
+                            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Sub Total:</p>
+                            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Impuesto:</p>
+                            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Descuento:</p>
+                            <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
+                        </div>
+                        <div>
+                            <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
+                            <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">% 0</p>
+                            <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
+                            <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
+                        </div>
                     </div>
                 </div>
 
@@ -143,6 +146,47 @@
             </div>
         </form>
     </div>
+
+
+    <!-- MODAL PARA AGREGAR DESCUENTO -->
+  <dialog id="miDialogoDescuento" class="midialog-xs p-8">
+    <h4 class=" text-gray-700 font-semibold">Aplicar Descuento</h4>
+    
+    <form id="formDescuento" class=" border-b border-gray-900/10 pb-6 text-center">
+        <p class="mt-2 text-xl text-gray-600">Aplicar descuento al subtotal del pedido.</p>
+
+        <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">   
+          <label class="flex  p-1 cursor-pointer">
+            <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked/>
+            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Valor </span>
+          </label>
+          <label class="flex  p-1 cursor-pointer">
+            <input type="radio" name="tipodescuento" value="porcentaje" class="peer hidden"/>
+            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Porcentaje </span>
+          </label>
+        </div>
+
+        <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-start-2 col-span-4">
+            <label for="inputDescuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
+            <div class="mt-2">
+              <input id="inputDescuento" type="number" min="0" name="descuento" data-descuento="" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
+            </div>
+            
+            <div class="sm:col-start-2 col-span-4 mt-6">
+              <label for="inputDescuentoClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+              <div class="mt-2">
+                <input id="inputDescuentoClave" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
+                <div id="divmsjalertaClaveDcto"></div>
+              </div>
+              <div class="grid grid-cols-2 gap-3 mt-6">
+                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 w-full salir">Salir</button>
+                <button id="btnCrearAddDir" type="submit" class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">Aplicar</button>
+              </div>
+            </div>
+        </div>
+      </form>
+  </dialog>
 
     <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
     <?php include __DIR__. "/../ventas/modalprocesarpago.php"; ?>
