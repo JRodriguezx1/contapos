@@ -16,7 +16,7 @@ use App\Repositories\creditos\creditosRepository;
 class clientescontrolador{
 
     public static function index(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $buscar = '';
@@ -32,7 +32,7 @@ class clientescontrolador{
         /*$alertas = $usuario->validarEmail();    
         $usuarioexiste = $usuario->validar_registro();//retorna 1 si existe usuario(email), 0 si no existe
         $usuariotelexiste = $usuario->find('movil', $_POST['movil']);*/
-        session_start();
+        //session_start();
         isadmin();
         $cliente = new clientes($_POST);
         $alertas = [];
@@ -59,7 +59,7 @@ class clientescontrolador{
 
 
     public static function actualizar(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];  
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -79,7 +79,7 @@ class clientescontrolador{
 
 
     public static function hab_desh(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];  
         $id = $_GET['id'];
@@ -106,21 +106,21 @@ class clientescontrolador{
     }
 
     public static function marketing(Router $router){
-        session_start();
+        //session_start();
         isadmin(); 
         $alertas = [];
         $router->render('admin/clientes/marketing', ['titulo'=>'Clientes/marketing', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function crearcampania(Router $router){
-        session_start();
+        //session_start();
         isadmin(); 
         $alertas = [];
         $router->render('admin/clientes/crearcampania', ['titulo'=>'Clientes/crearcampania', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function detalle(Router $router){
-        session_start();
+        //session_start();
         isadmin(); 
         $id = $_GET['id'];
         if(!is_numeric($id))return;
@@ -146,7 +146,7 @@ class clientescontrolador{
     
 
     public static function apiCrearCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $cliente = new clientes($_POST);
         $direccion = new direcciones($_POST);
@@ -181,7 +181,7 @@ class clientescontrolador{
 
 
     public static function apiActualizarcliente(){
-        session_start();
+        //session_start();
         $alertas = []; 
         $cliente = clientes::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -202,7 +202,7 @@ class clientescontrolador{
 
 
     public static function apiEliminarCliente(){
-        session_start();
+        //session_start();
         $cliente = clientes::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($cliente)){
@@ -222,7 +222,7 @@ class clientescontrolador{
 
 
     public static function comprasXMesXCliente(){
-        session_start();
+        //session_start();
         isadmin();
         $id = $_GET['id'];
         if(!is_numeric($id))return;
@@ -232,7 +232,7 @@ class clientescontrolador{
 
 
     public static function ventasXCategoriasXCliente(){
-        session_start();
+        //session_start();
         isadmin();
         $id = $_GET['id'];
         if(!is_numeric($id))return;

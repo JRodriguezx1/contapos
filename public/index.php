@@ -28,6 +28,7 @@ use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
 use App\Controllers\trasladosinvcontrolador;
+use App\Middlewares\MembershipMiddleware;
 // me importa la clase router
 use MVC\Router;
 
@@ -36,6 +37,8 @@ use MVC\Router;
 $router = new Router();
 
 
+$suscripcion = new MembershipMiddleware($router);
+$suscripcion->validarSuscripcion();
 
 // Login
 $router->get('/loginauth', [logincontrolador::class, 'loginauth']);

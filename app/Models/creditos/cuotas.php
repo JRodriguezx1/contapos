@@ -21,7 +21,7 @@ class cuotas {
         $this->estado = $args['estado']??0;
         $this->registrarencaja = $args['registrarencaja']??'1';  //1 = si registra en caja
         $this->cuotaantigua = $args['cuotaantigua']??'0';  //0 = no es cuota antigua
-        $this->fechacuotaantigua = $args['fechacuotaantigua']??'1';
+        $this->fechacuotaantigua = $args['fechacuotaantigua']??NULL;
         $this->created_at = $args['created_at']??'';
     }
 

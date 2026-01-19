@@ -10,7 +10,7 @@ use MVC\Router;  //namespace\clase
 class contabilidadcontrolador{
 
   public static function index(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 

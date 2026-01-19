@@ -32,7 +32,7 @@ use stdClass;
 class cajacontrolador{
 
   public static function index(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -69,7 +69,7 @@ class cajacontrolador{
 
 
   public static function cerrarcaja(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -146,7 +146,7 @@ class cajacontrolador{
   
 //////// ingreso de base o gasto de caja tambien como apertura /////////
   public static function ingresoGastoCaja(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -263,7 +263,7 @@ class cajacontrolador{
 
 
   public static function categoriaGasto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -288,7 +288,7 @@ class cajacontrolador{
 
 
   public static function crear_categoriaGasto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -310,7 +310,7 @@ class cajacontrolador{
 
 
   public static function editarcategoriagasto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -333,7 +333,7 @@ class cajacontrolador{
 
 
   public static function zetadiario(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -351,7 +351,7 @@ class cajacontrolador{
 
   //cuando se da clic en el btn "zeta diario de hoy" o en el btn "zeta diario por fecha"
   public static function fechazetadiario(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
@@ -406,7 +406,7 @@ class cajacontrolador{
 
 
   public static function ultimoscierres(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -416,7 +416,7 @@ class cajacontrolador{
 
 
   public static function detallecierrecaja(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
@@ -471,7 +471,7 @@ class cajacontrolador{
   }
 
   public static function pedidosguardados(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -480,7 +480,7 @@ class cajacontrolador{
   }
 
   public static function ordenresumen(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -512,7 +512,7 @@ class cajacontrolador{
   }
 
   public static function detalleorden(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -524,7 +524,7 @@ class cajacontrolador{
   }
 
   public static function printfacturacarta(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -547,7 +547,7 @@ class cajacontrolador{
   }
 
   public static function printcotizacion(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -567,7 +567,7 @@ class cajacontrolador{
   }
 
   public static function printdetallecierre(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -616,7 +616,7 @@ class cajacontrolador{
 
   ///////////  API REST llamada desde cerrarcaja.ts cuando se declara dinero  ////////////
   public static function declaracionDinero(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $ax = false;
@@ -649,7 +649,7 @@ class cajacontrolador{
 
 
   public static function arqueocaja(){   
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $arqueocaja = new arqueoscajas($_POST);
@@ -682,7 +682,7 @@ class cajacontrolador{
 
 
   public static function cierrecajaconfirmado(){  //// Api llamada desde cerrarcaja.ts
-    session_start();
+    //session_start();
     isauth();
     date_default_timezone_set('America/Bogota');
 
@@ -736,7 +736,7 @@ class cajacontrolador{
 
   // cuando se cambia la caja para ver y cerrar la caja
   public static function datoscajaseleccionada(){ //llamado desde cerrarcaja.ts
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 
@@ -884,7 +884,7 @@ class cajacontrolador{
 
   //Eliminar cotizacion por completo del sistema
   public static function eliminarPedidoGuardado(){ //llamada desde caja/pedidosguardados.ts
-    session_start();
+    //session_start();
       $pedidoguardado = facturas::find('id', $_POST['id']);
       if($_SERVER['REQUEST_METHOD'] === 'POST' ){
           if(!empty($pedidoguardado)){
@@ -906,7 +906,7 @@ class cajacontrolador{
 
   //Enviar orden por email a cliente
   public static function sendOrdenEmailToCustemer(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 

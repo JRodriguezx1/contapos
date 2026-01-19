@@ -26,7 +26,7 @@ use MVC\Router;  //namespace\clase
 class reportescontrolador{
 
     public static function index(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -36,7 +36,7 @@ class reportescontrolador{
 
     ///////////////////////// Reportes ///////////////////////////////////
     public static function ventasgenerales(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -45,7 +45,7 @@ class reportescontrolador{
     }
 
     public static function ventasxtransaccion(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -54,7 +54,7 @@ class reportescontrolador{
     }
 
     public static function vistaVentasxcliente(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -63,7 +63,7 @@ class reportescontrolador{
     }
 
     public static function facturaspagas(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -73,7 +73,7 @@ class reportescontrolador{
 
 
     public static function creditos(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -81,7 +81,7 @@ class reportescontrolador{
     }
     
     public static function facturasanuladas(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -90,7 +90,7 @@ class reportescontrolador{
     }
 
     public static function facturaselectronicas(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -100,7 +100,7 @@ class reportescontrolador{
 
     
     public static function facturaselectronicaspendientes(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -109,7 +109,7 @@ class reportescontrolador{
     }
 
     public static function inventarioxproducto(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -127,7 +127,7 @@ class reportescontrolador{
     }
 
     public static function movimientosinventarios(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -136,7 +136,7 @@ class reportescontrolador{
     }
 
     public static function compras(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -145,7 +145,7 @@ class reportescontrolador{
     }
 
     public static function detallecompra(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -166,7 +166,7 @@ class reportescontrolador{
 
 
     public static function detalleInvoice(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -200,7 +200,7 @@ class reportescontrolador{
 
 
     public static function utilidadxproducto(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -209,7 +209,7 @@ class reportescontrolador{
     }
 
     public static function gastoseingresos(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -218,7 +218,7 @@ class reportescontrolador{
     }
 
     public static function clientesnuevos(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -227,7 +227,7 @@ class reportescontrolador{
     }
 
     public static function clientesrecurrentes(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
@@ -243,7 +243,7 @@ class reportescontrolador{
 
   ///////////  API REST llamada desde reportes o fechazetadiario.ts  ////////////
   public static function consultafechazetadiario(){
-    session_start();
+    //session_start();
     isadmin();
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
@@ -264,7 +264,7 @@ class reportescontrolador{
 
   //// grafica de ventas menusal año acutal de la vista principal de reportes index.php
   public static function ventasGraficaMensual(){
-    session_start();
+    //session_start();
     isadmin();
     $data = facturas::ventasGraficaMensual(id_sucursal());
     $label = [];
@@ -279,7 +279,7 @@ class reportescontrolador{
 
   //// grafica de ventas diarias mes acutal de la vista principal de reportes index.php
   public static function ventasGraficaDiario(){
-    session_start();
+    //session_start();
     isadmin();
     $data = facturas::ventasGraficaDiario(id_sucursal());
     $label = [];
@@ -293,7 +293,7 @@ class reportescontrolador{
 
   ///// grafica "Valor de los productos principales del inventario" vista principal de reportes index.php
   public static function graficaValorInventario(){
-    session_start();
+    //session_start();
     isadmin();
     $sql = "SELECT SUM(sps.stock*p.precio_compra) AS costoinv, SUM(sps.stock*p.precio_venta) AS valorventa
     FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = ".id_sucursal().";";
@@ -304,7 +304,7 @@ class reportescontrolador{
 
   //transacciones acumuladas por mes durante año elegido
   public static function ventasxtransaccionanual(){
-    session_start();
+    //session_start();
     isadmin();
     $datex = $_GET['x'];
     $idsucursal = id_sucursal();
@@ -320,7 +320,7 @@ class reportescontrolador{
 
   //transacciones acumuladas por dia durante mes y año elegido
   public static function ventasxtransaccionmes(){
-    session_start();
+    //session_start();
     isadmin();
     $datex = $_GET['x'];
     $idsucursal = id_sucursal();
@@ -336,7 +336,7 @@ class reportescontrolador{
 
   //Ventas acumuladas por cliente en un periodo determinado
   public static function ventasxcliente(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -354,7 +354,7 @@ class reportescontrolador{
 
   //Facturas procesadas como pagas
   public static function apifacturaspagas(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -367,7 +367,7 @@ class reportescontrolador{
 
   //Facturas procesadas que luego fueron anuladas
   public static function apifacturasanuladas(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -380,7 +380,7 @@ class reportescontrolador{
 
   //Facturas electronicas aceptadas
   public static function apifacturaselectronicas(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -400,7 +400,7 @@ class reportescontrolador{
 
   //Facturas electronicas pendientes
   public static function apielectronicaspendientes(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -419,7 +419,7 @@ class reportescontrolador{
 
   //Reporte movimiento de inventarios  llamada desde movimientosinventarios.ts
   public static function movimientoInventario(){
-    session_start();
+    //session_start();
     isadmin();
     $datos = [];
     $idsucursal = id_sucursal();
@@ -450,7 +450,7 @@ class reportescontrolador{
 
   //Reporte de compras
   public static function reportecompras(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -471,7 +471,7 @@ class reportescontrolador{
   }
 
   public static function eliminarcompra(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $alertas = [];
@@ -536,7 +536,7 @@ class reportescontrolador{
   
   //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
   public static function apigastoseingresos(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -570,7 +570,7 @@ class reportescontrolador{
 
   //Reporte de gastos e ingresos llamado desde gastoseingresos.ts
   public static function eliminargasto(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $alertas = [];
@@ -609,7 +609,7 @@ class reportescontrolador{
 
   //Reporte de gastos e ingresos efectivos "base" llamado desde gastoseingresos.ts
   public static function eliminaringresocaja(){
-    session_start();
+    //session_start();
     isadmin();
     $idsucursal = id_sucursal();
     $alertas = [];

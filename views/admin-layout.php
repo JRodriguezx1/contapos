@@ -32,8 +32,15 @@
         <div class="principal">
             <?php include_once __DIR__."/templates/header.php"; ?>  <!-- barra superior -->
 
-            <div class="contenido">
-                <h2 class="nombre-pagina"><?php echo "Cuenta vencida.." //$titulo; ?></h2>
+            <div class="contenido relative">
+
+                <?php if(isset($this->getData()['Aviso_vencimiento'])): ?>
+                    <div class="absolute top-1 z-20 left-1/2 -translate-x-2/3  bg-yellow-50 shadow-[0_3px_10px_-3px_rgba(6,81,237,0.3)] text-slate-900 flex flex-col justify-center py-2 px-4 mx-4 min-w-xs max-w-lg rounded-md overflow-hidden">
+                        <h2 class="text-xl font-semibold"><span class="text-3xl">🚨</span><?php echo $this->data['msj_titulo_aviso_vencimiento']; //$titulo; ?></h2>
+                        <p class="text-base text-slate-400 mt-0.5"><?php echo $this->data['msj_texto_aviso_vencimiento']; ?></p>
+                    </div>
+                <?php endif; ?>
+
                 <?php echo $contenido; ?>
             </div>
         </div>

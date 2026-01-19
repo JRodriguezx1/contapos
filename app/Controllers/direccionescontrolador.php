@@ -14,7 +14,7 @@ use App\Models\configuraciones\tarifas;
 class direccionescontrolador{
 
     public static function index(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $buscar = '';
@@ -31,7 +31,7 @@ class direccionescontrolador{
     }
 
     public static function crear(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $direccion = new direcciones($_POST);
         $alertas = [];  
@@ -65,7 +65,7 @@ class direccionescontrolador{
     
 
     public static function addDireccionCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea una direccion
-        session_start();
+        //session_start();
         isadmin();
         $direccion = new direcciones($_POST);
         $alertas = [];  

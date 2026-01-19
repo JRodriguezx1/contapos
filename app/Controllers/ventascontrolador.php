@@ -39,7 +39,7 @@ class ventascontrolador{
   use DocumentTrait;
 
   public static function index(Router $router):void{
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     $alertas = [];
@@ -85,7 +85,7 @@ class ventascontrolador{
 
   ///////////  API REST llamada desde ventas.ts cuando se procesa un pago  ////////////
   public static function facturar(){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     date_default_timezone_set('America/Bogota');
@@ -469,7 +469,7 @@ class ventascontrolador{
 
  //////////////// cuando de cotizacion o guardada pasa a orden pagada sin modificar la factura o sus productos /////////////////
   public static function facturarCotizacion(){
-    session_start();
+    //session_start();
     isadmin();
     $getDB = facturas::getDB();
     $factura = facturas::find('id', $_POST['id']);
@@ -719,7 +719,7 @@ class ventascontrolador{
 
 
   public static function eliminarOrden(){  //llamada dedse ordenresumen.ts
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 
@@ -883,7 +883,7 @@ class ventascontrolador{
 
 
   public static function getcotizacion_venta(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     if(isset($_GET['id'])){

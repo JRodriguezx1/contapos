@@ -22,7 +22,7 @@ use ticketPOS;
 class printcontrolador{
     
   public static function printPDFPOS():void{
-    session_start();
+    //session_start();
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;

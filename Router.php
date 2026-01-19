@@ -7,7 +7,7 @@ class Router
 {
     public array $getRoutes = [];
     public array $postRoutes = [];
-    
+    protected array $data = [];
 
     public function get($url, $fn){ $this->getRoutes[$url] = $fn; }
 
@@ -61,5 +61,18 @@ class Router
             }
         }
         
+    }
+
+    public function set(string $key, $value): void {
+        $this->data[$key] = $value;
+    }
+
+    public function getData(): array {
+        return $this->data;
+    }
+
+    // método para obtener una sola variable
+    public function share(string $key, $default = null) {
+        return $this->data[$key] ?? $default;
     }
 }

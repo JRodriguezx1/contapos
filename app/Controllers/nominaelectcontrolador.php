@@ -8,7 +8,7 @@ use MVC\Router;  //namespace\clase
 class nominaelectcontrolador{
 
     public static function index(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         //if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
