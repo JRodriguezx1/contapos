@@ -76,7 +76,7 @@
     document.querySelector('#tablacuotas')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLButtonElement;
       if(target?.classList.contains("mediosdepago")||target.parentElement?.classList.contains("mediosdepago"))cambiomediopago(target);
-      
+      if(target?.classList.contains("printPOSAbono"))printPOSComprobanteAbono(target.id);
     });
 
 
@@ -192,6 +192,11 @@
       }
     }
 
+
+    function printPOSComprobanteAbono(idabono:string){
+      if(!isNaN(Number(idabono)))
+        window.open("/admin/printPDFAbonoCredito?id=" + idabono, "_blank"); //controlador printcontrolador
+    }
 
   }
 

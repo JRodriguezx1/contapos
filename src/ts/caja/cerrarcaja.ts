@@ -8,6 +8,7 @@
     const btnCerrarcaja = document.querySelector<HTMLButtonElement>("#btnCerrarcaja");
     const btnImprimirDetalleCaja = document.querySelector('#btnImprimirDetalleCaja') as HTMLButtonElement;
     const btnCambiarCaja = document.querySelector<HTMLButtonElement>("#btnCambiarCaja");
+    const btnVerCierreWeb = document.querySelector('#btnVerCierreWeb') as HTMLButtonElement;
     const inputsmediospago = document.querySelectorAll<HTMLInputElement>('.inputmediopago');
     const formArqueocaja = document.querySelector('#formArqueocaja') as HTMLFormElement;
     const formCambiarCaja = document.querySelector('#formCambiarCaja') as HTMLFormElement;
@@ -153,6 +154,11 @@
             setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
           };
         }
+    });
+    ///////// ver detalle cierre en web
+    btnVerCierreWeb?.addEventListener('click', ()=>{
+        const ventana = window.open('/printdetallecierre?id='+idimprimircierrecaja, '_blank');
+        if(ventana)ventana.onload = ()=>ventana?.focus();
     });
 
     //////////////////     Cambio de caja      //////////////////////

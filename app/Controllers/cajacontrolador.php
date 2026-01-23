@@ -75,7 +75,9 @@ class cajacontrolador{
     $alertas = [];
     $idsucursal = id_sucursal();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
-
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+  
     //calcular el id de la caja princial de la sucursal
     $idcajaprincipal = $cajas[0]->id;
     foreach($cajas as $value){
@@ -113,10 +115,13 @@ class cajacontrolador{
       $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $idcajaprincipal, $idsucursal);
       $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
       $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
+      //////////// Indicador de caja //////////////////
+      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
       //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+      
       $sobrantefaltante = $declaracion;
       foreach($discriminarmediospagos as $i => $dis){
-        if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+        if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
         $aux = 0;
         foreach($declaracion as $j => $dec){
           if($dis['idmediopago'] == $dec->id_mediopago){
@@ -135,11 +140,11 @@ class cajacontrolador{
           $sobrantefaltante[] = $newobj;
         }
       }
+      //debuguear($sobrantefaltante);
       foreach($facturas as $value)
         $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
     }
     
-    $conflocal = config_local::getParamGlobal();
     $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -425,6 +430,9 @@ class cajacontrolador{
     $alertas = [];
     $discriminarmediospagos=[];
 
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+
     $separdomediospagoRepo = new separadoMediopagoRepository();
     $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
     $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
@@ -446,9 +454,12 @@ class cajacontrolador{
     $ventasxusuarios = cierrescajas::ventasXusuario($cierreselected->id);
     $mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
+    //////////// Indicador de caja //////////////////
+    $diferencial = $indicadorCaja == 1?($cierreselected->basecaja - $cierreselected->gastoscaja):($indicadorCaja == 2?(-$cierreselected->gastoscaja):($indicadorCaja == 3?($cierreselected->basecaja - $cierreselected->gastoscaja - $cierreselected->domicilios):(- $cierreselected->gastoscaja - $cierreselected->domicilios)));
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
+      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){
@@ -562,6 +573,7 @@ class cajacontrolador{
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
     $sucursal = sucursales::find('id', id_sucursal());
+    /////
     $lineasencabezado = explode("\n", $sucursal->datosencabezados);
     $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
@@ -574,7 +586,9 @@ class cajacontrolador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
-    
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+
     $ultimocierre = cierrescajas::find('id', $id);
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
@@ -582,10 +596,12 @@ class cajacontrolador{
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
+    //////////// Indicador de caja //////////////////
+      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){
@@ -740,17 +756,21 @@ class cajacontrolador{
     isadmin();
     $alertas = [];
 
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+
     $ultimocierre = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     //$mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);  //lo que el usuario declara de forma manual.
+    //////////// Indicador de caja //////////////////
+      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){

@@ -71,8 +71,7 @@
     document.querySelector('#tablaCreditos tbody')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
       if(target?.classList.contains("anularCredito")||(e.target as HTMLElement).parentElement?.classList.contains("anularCredito"))anularCredito(e);
-      //if(target?.classList.contains("bloquearProductos")||target.parentElement?.classList.contains("bloquearProductos"))bloquearProductos(e);
-      //if(target?.classList.contains("eliminarProductos")||target.parentElement?.classList.contains("eliminarProductos"))eliminarProductos(e);
+      if(target?.classList.contains("printPOSSeparado"))printPOSSeparado(target.id);
     });
 
 
@@ -114,6 +113,13 @@
               })();//cierre de async()
           }
       });
+    }
+
+
+    function printPOSSeparado(idcredito:string){
+      console.log(idcredito);
+      if(!isNaN(Number(idcredito)))
+        window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank"); //controlador printcontrolador
     }
 
 

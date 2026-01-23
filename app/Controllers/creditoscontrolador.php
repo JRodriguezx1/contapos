@@ -58,9 +58,10 @@ class creditoscontrolador{
         $id = $_GET['id'];  //id del credito
         if(!is_numeric($id))return;
 
+        $conflocal = config_local::getParamGlobal();
         $datos = creditosService::detallecredito($id);
         
-        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         $router->render('admin/creditos/detallecredito', $viewData);
     }
 
@@ -70,6 +71,7 @@ class creditoscontrolador{
         //session_start();
         isadmin();
 
+        $conflocal = config_local::getParamGlobal();
         $factura = null;
         if(isset($credito->factura_id))$factura = facturas::find('id', $credito->factura_id);
 
@@ -77,7 +79,7 @@ class creditoscontrolador{
             $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
         }
         $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
-        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
     }
@@ -87,11 +89,12 @@ class creditoscontrolador{
         date_default_timezone_set('America/Bogota');
         //session_start();
         isadmin();
+        $conflocal = config_local::getParamGlobal();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
         }
         $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
-        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
     }

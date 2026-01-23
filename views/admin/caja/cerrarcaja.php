@@ -82,12 +82,13 @@
             <button id="btnCerrarcaja" class="btn-command"><span class="material-symbols-outlined">keyboard_lock</span>Cerrar caja</button>
             <button id="btnImprimirDetalleCaja" class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
             <button id="btnCambiarCaja" class="btn-command"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
+            <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
         </div>
     </div> <!-- Fin col 2 -->
   </div>
 
 
-  <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1): ?>
+  <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
     <div class="accordion">
         <input type="checkbox" id="first" checked>
         <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>

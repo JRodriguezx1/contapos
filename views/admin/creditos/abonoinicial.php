@@ -46,6 +46,22 @@
             </div>
         </div>
 
+        
+            <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
+                <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>
+                <input 
+                    id="imprimirComprobanteAbonoinicial" 
+                    name="imprimirComprobanteAbonoinicial" 
+                    value="1" 
+                    type="checkbox" 
+                    class="sr-only peer"
+                    <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?>
+                    >
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                    <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+                </div>
+            </label>
+
         <div class="text-right border-t border-gray-200 pt-12 mt-8">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
             <input id="btnEditarCrearAbono" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">

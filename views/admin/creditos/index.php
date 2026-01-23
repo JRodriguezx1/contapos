@@ -49,6 +49,7 @@
                         <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
                         <button class="btn-xs btn-red anularCredito" title="Eliminar el credito"><i class="fa-solid fa-trash-can"></i></button>
                         <?php endif; ?>
+                        <span id="<?php echo $value->ID;?>" class="printPOSSeparado material-symbols-outlined cursor-pointer">print</span>
                     </div>
                 </td>
             </tr>

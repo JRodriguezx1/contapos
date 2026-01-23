@@ -376,7 +376,7 @@
 
     function printTicketSeparado(idcredito:string){
       setTimeout(() => {
-        window.open("/admin/printPDFPOS?id=" + idcredito, "_blank");
+        window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank");
       }, 700);
     }
 

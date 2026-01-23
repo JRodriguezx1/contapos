@@ -89,6 +89,7 @@
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor cuota</th>
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor pagado</th>
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Medio pago</th>
+            <th class="px-4 py-2 text-base font-semibold text-gray-700">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -103,6 +104,7 @@
                 <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago btn-xs btn-light"><?php echo $element->mediopago;?></button>
                 <?php endforeach; ?>
               </td>
+              <td class="px-4 py-2 text-gray-800 text-center cursor-pointer"><span id="<?php echo $value->id;?>" class="printPOSAbono material-symbols-outlined">print</span></td>
             </tr>
           <?php endforeach; ?>
           

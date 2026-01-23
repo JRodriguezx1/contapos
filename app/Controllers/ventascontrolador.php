@@ -802,7 +802,7 @@ class ventascontrolador{
             $r1 = $cierrecaja->actualizar();
             if($r1){
               ///descuenta los abonos de creditos por caja, si el cierre de caja no se ha cerrado 
-              $anularCredito = creditosService::anularCredito($factura->id);  //me vuelve a actualizar el cierre de caja
+              if($factura->tipoventa=='Credito')$anularCredito = creditosService::anularCredito($factura->id);  //me vuelve a actualizar el cierre de caja
               if(isset($anularCredito['error'])){
                 $tempfactura->actualizar();
                 $tempcierrecaja->actualizar();

@@ -41,7 +41,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasgenerales', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventas/ventasgenerales', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function ventasxtransaccion(Router $router){
@@ -50,7 +50,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasxtransaccion', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventas/ventasxtransaccion', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function vistaVentasxcliente(Router $router){
@@ -59,7 +59,7 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/reportes/ventasxcliente', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventas/ventasxcliente', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function facturaspagas(Router $router){
@@ -302,6 +302,30 @@ class reportescontrolador{
   }
 
 
+  public static function reportesGenerales(){
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT v.idproducto, COUNT(v.idproducto) as cantidadrefencia, v.nombreproducto, SUM(v.cantidad) as totalProductosVendidos, v.valorunidad,  SUM(v.total) as valorTotal
+              FROM facturas f JOIN ventas v ON f.id = v.idfactura
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY v.idproducto;";
+      $productosVendidos = productos::camposJoinObj($sql);
+
+      $sql = "SELECT fm.idmediopago, COUNT(fm.idmediopago) as cantidadMP, m.mediopago, SUM(fm.valor) as valor
+              FROM facturas f JOIN factmediospago fm ON f.id = fm.id_factura
+              JOIN mediospago m ON fm.idmediopago = m.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY fm.idmediopago, m.mediopago;";
+      $mediosPagos = productos::camposJoinObj($sql);
+
+    }
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos]);
+  }
+
+  
   //transacciones acumuladas por mes durante año elegido
   public static function ventasxtransaccionanual(){
     //session_start();
