@@ -311,7 +311,7 @@ class reportescontrolador{
       $sql = "SELECT v.idproducto, COUNT(v.idproducto) as cantidadrefencia, v.nombreproducto, SUM(v.cantidad) as totalProductosVendidos, v.valorunidad,  SUM(v.total) as valorTotal
               FROM facturas f JOIN ventas v ON f.id = v.idfactura
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
-              GROUP BY v.idproducto;";
+              GROUP BY v.idproducto, v.nombreproducto, v.valorunidad;";
       $productosVendidos = productos::camposJoinObj($sql);
 
       $sql = "SELECT fm.idmediopago, COUNT(fm.idmediopago) as cantidadMP, m.mediopago, SUM(fm.valor) as valor
@@ -321,8 +321,13 @@ class reportescontrolador{
               GROUP BY fm.idmediopago, m.mediopago;";
       $mediosPagos = productos::camposJoinObj($sql);
 
+      $sql = "SELECT SUM(f.descuento) AS total_descuentos
+              FROM facturas f
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
+      $totalDescuentos = productos::camposJoinObj($sql);
+
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos]);
   }
 
   

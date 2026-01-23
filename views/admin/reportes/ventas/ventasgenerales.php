@@ -132,6 +132,13 @@
           </tr>
         </thead>
         
+        <tfoot>
+          <tr class="font-semibold text-gray-900">
+            <td></td>
+            <th class="px-6 py-3">Total Descuento:</th>
+            <td id="totalDescto" class="px-4 py-2 border"> - </td>
+        </tr>
+        </tfoot>
       </table>
     </div>
 

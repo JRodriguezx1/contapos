@@ -46,6 +46,7 @@
             mediosPagos = resultado.mediosPagos;
             printProductosVendidos();
             printMediosPagos();
+            document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
             console.log(error);
