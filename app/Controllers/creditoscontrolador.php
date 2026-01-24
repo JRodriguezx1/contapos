@@ -112,7 +112,7 @@ class creditoscontrolador{
     }
 
     
-    public static function crearSeparado(){
+    public static function crearSeparado(){  //llamada desde separado.ts
         //session_start();
         isadmin();
         $alertas = [];

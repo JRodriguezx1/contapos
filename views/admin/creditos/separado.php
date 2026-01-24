@@ -89,6 +89,19 @@
                         <option value="30">30</option>
                     </select>          
                 </div>
+
+                <div class="formulario__campo">
+                    <label class="formulario__label" for="nota">Nota</label>
+                    <input 
+                        id="nota" 
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                        type="text" 
+                        placeholder="nota del separado" 
+                        name="nota"
+                        value="Plazo máximo de entrega: 1 mes"
+                    >    
+                </div>
+
             </div>
 
                 <!-- SELECCIONAR PRODUCTOS -->

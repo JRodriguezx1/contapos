@@ -46,8 +46,17 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$factura->vendedor),0,'C',false);
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Comprobante N°: ".$factura->num_orden)),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("FACTURA: ".$factura->prefijo.''.$factura->num_consecutivo)),0,'C',false);
+
+            if($factura->estado == 'Guardado'){
+                 $this->pdf->Ln(3);
+            }else{
+                $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Comprobante N°: ".$factura->num_orden)),0,'C',false);
+            }
+            //
+            $factura->estado == 'Guardado'
+                ?$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("COTIZACION")),0,'C',false)
+                :$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("FACTURA: ".$factura->prefijo.''.$factura->num_consecutivo)),0,'C',false);
+            
             $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->Ln(1);
@@ -121,29 +130,26 @@
 
             $this->pdf->Ln(5);
 
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+            $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL A PAGAR"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL ".($factura->estado == 'Paga'?'A PAGAR':'COTIZACION:')),0,0,'C');
+            $this->pdf->Cell(48,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->SetFont('Arial','',10);
 
-            $this->pdf->Ln(5);
-            
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL PAGADO"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
-
-            $this->pdf->Ln(5);
-
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","CAMBIO"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
-
-            $this->pdf->Ln(5);
-
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","USTED AHORRA"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
+            if($factura->estado == 'Paga'){
+                $this->pdf->Ln(5);
+                $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+                $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL PAGADO"),0,0,'C');
+                $this->pdf->Cell(48,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
+                $this->pdf->Ln(5);
+                $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+                $this->pdf->Cell(20,5,iconv("UTF-8", "ISO-8859-1","CAMBIO"),0,0,'C');
+                $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
+                $this->pdf->Ln(5);
+                $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+                $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","USTED AHORRA"),0,0,'C');
+                $this->pdf->Cell(42,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
+            }
 
             $this->pdf->Ln(16);
 
@@ -288,7 +294,7 @@
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL PAGADO: "),0,0,'C');
             $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($credito->abonoinicial, '0', ',', '.')." COP"),0,0,'C');
 
-            $this->pdf->Ln(5);
+            $this->pdf->Ln(12);
 
             /*$this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","CAMBIO"),0,0,'C');
@@ -302,7 +308,10 @@
 
             $this->pdf->Ln(16);*/
 
-            $this->pdf->SetFont('Arial','',10);
+            $this->pdf->SetFont('Arial','B',10);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Nota: $credito->nota"),0,'C',false);
+            $this->pdf->Ln(6);
+            $this->pdf->SetFont('Arial','',9);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","*** Precios de productos incluyen impuestos. Para poder realizar un reclamo o devolución debe de presentar este ticket ***"),0,'C',false);
 
             $this->pdf->SetFont('Arial','B',9);

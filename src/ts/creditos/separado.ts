@@ -334,6 +334,7 @@
       valoresCredito.valorimpuestototal = valorTotal.valorimpuestototal+'';
       valoresCredito.dctox100 = valorTotal.dctox100+'';
       valoresCredito.descuento = valorTotal.descuento+'';
+      valoresCredito.nota = (document.querySelector('#nota') as HTMLInputElement).value;
 
       const datos = new FormData();
       datos.append('cliente_id', $('#cliente').val()as string);
@@ -352,8 +353,9 @@
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
       datos.append('dctox100', valorTotal.dctox100+'');
       datos.append('descuento', valorTotal.descuento+'');
+      //datos.append('nota', (document.querySelector('#nota') as HTMLInputElement).value);
       try {
-          const url = "/admin/api/crearSeparado";  //va al controlador ventascontrolador
+          const url = "/admin/api/crearSeparado";  //va al controlador creditoscontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
           if(resultado.exito !== undefined){
@@ -364,7 +366,9 @@
             btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
             
-            if(resultado.idcredito && imprimir.value === '1')printTicketSeparado(resultado.idcredito);
+            if(resultado.idcredito && imprimir.value === '1')
+              await printTicketSeparado(resultado.idcredito);
+            
             setTimeout(() => { window.location.href = "/admin/creditos"; }, 900);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -374,10 +378,13 @@
       }
     }
 
-    function printTicketSeparado(idcredito:string){
-      setTimeout(() => {
-        window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank");
-      }, 700);
+    function printTicketSeparado(idcredito:string): Promise<void>{
+      return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+          window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank");
+          resolve();
+        }, 700);
+      })
     }
 
     function cerrarDialogoExterno(event:Event) {

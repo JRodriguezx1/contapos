@@ -38,6 +38,7 @@ class creditos {
         $this->abonototalantiguo = $args['abonototalantiguo']??'0';
         $this->cantidadcuotasantiguas = $args['cantidadcuotasantiguas']??'0';
         $this->fechaultimoabonoantiguo = $args['fechaultimoabonoantiguo']??'';
+        $this->nota = $args['nota']??'';
         $this->estado = $args['estado']??0; //1 = credito finalizado
         $this->created_at = $args['created_at']??'';
     }
@@ -90,7 +91,8 @@ class creditos {
             'abonototalantiguo' => $this->abonototalantiguo,
             'cantidadcuotasantiguas' => $this->cantidadcuotasantiguas,
             'fechaultimoabonoantiguo' => $this->fechaultimoabonoantiguo,
-            'estado' => $this->estado, 
+            'nota' => $this->nota,
+            'estado' => $this->estado,
             //'created_at' => $this->created_at
         ];
     }
