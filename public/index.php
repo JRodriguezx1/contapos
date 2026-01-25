@@ -23,6 +23,7 @@ use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
 use App\Controllers\creditoscontrolador;
+use App\Controllers\modorapidocontrolador;
 use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
@@ -126,6 +127,8 @@ $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen'
 $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
+///// area de ventas-modorapido /////
+$router->get('/admin/ventas/modorapido', [modorapidocontrolador::class, 'index']);
 ///// print ticket //////
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
 $router->get('/admin/printPDFPOSSeparado', [printcontrolador::class, 'printPDFPOSSeparado']);  //llamada desde separado.ts cuando se realiza un separado exitoso
