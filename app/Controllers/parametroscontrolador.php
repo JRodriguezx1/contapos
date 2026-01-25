@@ -15,7 +15,6 @@ class parametroscontrolador{
     
   //metodo para los inputs radio
   public static function parametrosSistema():void{
-    session_start();
     isadmin();
     $alertas = [];
     $clave = array_key_first($_POST);
@@ -48,7 +47,6 @@ class parametroscontrolador{
 
 
   public static function parametrosSistemaClaves():void{
-    session_start();
     isadmin();
     $alertas = [];
     $clave = array_key_first($_POST);
@@ -92,8 +90,7 @@ class parametroscontrolador{
   }
 
   //metodo para el select del impuesto
-  public static function parametrosSistemaPorcentajeImpuesto():void{
-    session_start();
+  public static function parametrosSistemaTipoSelect():void{
     isadmin();
     $alertas = [];
     $clave = array_key_first($_POST);
@@ -138,7 +135,6 @@ class parametroscontrolador{
 
 
   public static function getPasswords():void{
-    session_start();
     isadmin();
     $alertas = [];
     $r = config_local::getPasseords();

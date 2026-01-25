@@ -23,11 +23,13 @@ use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
 use App\Controllers\creditoscontrolador;
+use App\Controllers\modorapidocontrolador;
 use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
 use App\Controllers\trasladosinvcontrolador;
+use App\Middlewares\MembershipMiddleware;
 // me importa la clase router
 use MVC\Router;
 
@@ -36,6 +38,8 @@ use MVC\Router;
 $router = new Router();
 
 
+$suscripcion = new MembershipMiddleware($router);
+$suscripcion->validarSuscripcion();
 
 // Login
 $router->get('/loginauth', [logincontrolador::class, 'loginauth']);
@@ -123,8 +127,12 @@ $router->get('/admin/caja/ordenresumen', [cajacontrolador::class, 'ordenresumen'
 $router->get('/admin/caja/detalleorden', [cajacontrolador::class, 'detalleorden']); //detalle de la orden
 ///// area de ventas /////
 $router->get('/admin/ventas', [ventascontrolador::class, 'index']);
+///// area de ventas-modorapido /////
+$router->get('/admin/ventas/modorapido', [modorapidocontrolador::class, 'index']);
 ///// print ticket //////
 $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  //llamada desde ventas.ts cuando se realiza una venta exitosa
+$router->get('/admin/printPDFPOSSeparado', [printcontrolador::class, 'printPDFPOSSeparado']);  //llamada desde separado.ts cuando se realiza un separado exitoso
+$router->get('/admin/printPDFAbonoCredito', [printcontrolador::class, 'printPDFAbonoCredito']);  //llamada desde modulo creditos, vista detallecredito
 ///// Creditos /////
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 $router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);
@@ -228,6 +236,7 @@ $router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']
 $router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
 $router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::class, 'cambioMedioPagoSeparado']);
 $router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularSeparado']);
+$router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, 'ajustarCreditoAntiguo']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -270,6 +279,7 @@ $router->get('/admin/api/reporteventamensual', [reportescontrolador::class, 'rep
 $router->get('/admin/api/ventasGraficaMensual', [reportescontrolador::class, 'ventasGraficaMensual']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasGraficaDiario', [reportescontrolador::class, 'ventasGraficaDiario']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/graficaValorInventario', [reportescontrolador::class, 'graficaValorInventario']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/reportesGenerales', [reportescontrolador::class, 'reportesGenerales']);  //fetch llamado desde ventasgenerales.ts
 $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 'ventasxtransaccionanual']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
@@ -287,7 +297,7 @@ $router->post('/admin/api/eliminaringreso', [reportescontrolador::class, 'elimin
 
 $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'parametrosSistema']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
-$router->post('/admin/api/parametrosSistemaPorcentajeImpuesto', [parametroscontrolador::class, 'parametrosSistemaPorcentajeImpuesto']); //fetch llamado en configparametros.js
+$router->post('/admin/api/parametrosSistemaTipoSelect', [parametroscontrolador::class, 'parametrosSistemaTipoSelect']); //fetch llamado en configparametros.js
 $router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
 
 $router->get('/admin/api/citiesXdepartments', [apidiancontrolador::class, 'citiesXdepartments']);  //Consulta municipios segun departamento

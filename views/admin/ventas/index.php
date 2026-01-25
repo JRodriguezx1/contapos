@@ -344,14 +344,14 @@
           <div class="sm:col-span-2">
             <label for="departamento" class="block text-2xl font-medium text-gray-600">Departamento</label>
             <div class="mt-2">
-              <input type="text" name="departamento" id="departamento" autocomplete="address-level1" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
+              <input type="text" name="departamento" id="departamento" autocomplete="address-level1" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
 
           <div class="sm:col-span-2">
             <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad</label>
             <div class="mt-2">
-              <input type="text" name="ciudad" id="ciudad" autocomplete="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
+              <input type="text" name="ciudad" id="ciudad" autocomplete="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
             </div>
           </div>
         </div>
@@ -439,13 +439,13 @@
 
         <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div class="sm:col-start-2 col-span-4">
-            <label for="descuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
+            <label for="inputDescuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
             <div class="mt-2">
               <input id="inputDescuento" type="number" min="0" name="descuento" data-descuento="" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
             </div>
             
             <div class="sm:col-start-2 col-span-4 mt-6">
-              <label for="descuento" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+              <label for="inputDescuentoClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
               <div class="mt-2">
                 <input id="inputDescuentoClave" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
                 <div id="divmsjalertaClaveDcto"></div>

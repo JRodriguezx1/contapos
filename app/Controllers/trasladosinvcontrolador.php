@@ -27,7 +27,7 @@ class trasladosinvcontrolador{
 
 //VER DETALLE DE SOLICITUDES RECIBIDAS DE QUE VIENE MERCANCIA O DE QUE DEBO DESPACHAR
   public static function solicitudesrecibidas(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -62,7 +62,7 @@ class trasladosinvcontrolador{
 
 //TABLA DONDE VEO LOS TRASLADOS O SALIDAS QUE HAGO O SOLICITUDES QUE HAGO A OTRAS SUCURSALES
   public static function trasladarinventario(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -97,7 +97,7 @@ class trasladosinvcontrolador{
 
   //REALIZAR ORDEN TRASLADO DE MERCANCIA
   public static function nuevotrasladoinv(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -110,7 +110,7 @@ class trasladosinvcontrolador{
 
   //REALIZAR ORDEN DE SOLICITUD A OTRA SEDE DE MERCANCIA PARA QUE ME DESPACHEN
   public static function solicitarinventario(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -124,7 +124,7 @@ class trasladosinvcontrolador{
 
   //EDITAR LOS PRODUCTOS A TRASLADAR A OTRA SEDE
   public static function editartrasladoinv(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $id=$_GET['id'];
@@ -145,7 +145,7 @@ class trasladosinvcontrolador{
 
   //---------------------  API  -----------------------//
     /*public static function allordenestrasladoinv(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $ordenes = traslado_inv::
@@ -155,7 +155,7 @@ class trasladosinvcontrolador{
 
     //metodo llamado desde trasladarinv.ts para el detalle de la orden trasnaldo/solicitud
     public static function idOrdenTrasladoSolicitudInv(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $id=$_GET['id'];
@@ -192,7 +192,7 @@ class trasladosinvcontrolador{
 
   ///////  generar orden de solicitar inventario  //////////
     public static function apisolicitarinventario(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $idsucursalorigen = $_POST['idsucursalorigen'];
@@ -241,7 +241,7 @@ class trasladosinvcontrolador{
 
   //////  generar orden de traslado de inventario /////////
     public static function apinuevotrasladoinv(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $idsucursalorigen = $_POST['idsucursalorigen'];
@@ -289,7 +289,7 @@ class trasladosinvcontrolador{
 
 
     public static function editarOrdenTransferencia(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $addproductos = new detalletrasladoinv;
@@ -342,7 +342,7 @@ class trasladosinvcontrolador{
 
 
     public static function confirmarnuevotrasladoinv(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $rsps = true;
@@ -408,7 +408,7 @@ class trasladosinvcontrolador{
 
 
     public static function confirmaringresoinv(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $rsps = true;
@@ -480,7 +480,7 @@ class trasladosinvcontrolador{
 
     //llamada desde trasladarinv.ts / trasladarinventario para anular envio o solicitud de que me despachen
     public static function anularnuevotrasladoinv(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         

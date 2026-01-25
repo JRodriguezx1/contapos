@@ -29,7 +29,7 @@ class apidiancontrolador{
 
   //////////////---------   API   ----------///////////////////
   public static function citiesXdepartments(){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
     $alertas = [];
@@ -49,7 +49,7 @@ class apidiancontrolador{
 
 
   public static function crearCompanyJ2(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     if(userPerfil()>1){
@@ -90,7 +90,7 @@ class apidiancontrolador{
 
 
   public static function getCompaniesAll(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $compañias = diancompanias::all();
@@ -98,7 +98,7 @@ class apidiancontrolador{
   }
 
   public static function eliminarCompanyLocal(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $id = $_GET['id'];
@@ -122,7 +122,7 @@ class apidiancontrolador{
 
   //guardar resolucion invoice cuando se consulta o decarga de la Dian, de forma local.
   public static function guardarResolutionJ2(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     
@@ -179,7 +179,7 @@ class apidiancontrolador{
 
   //guardar resolucion de nota credito invoice, de forma local.
   public static function guardarNCInvoiceJ2(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 
@@ -227,7 +227,7 @@ class apidiancontrolador{
 
 
   public static function filterAdquirientes(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $adquirientes = adquirientes::all();
@@ -235,7 +235,7 @@ class apidiancontrolador{
   }
 
   public static function guardarAdquiriente(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     if($_SERVER['REQUEST_METHOD'] !== 'POST'){
@@ -252,7 +252,7 @@ class apidiancontrolador{
 
   //Metodo usado en ventas.sendinvoice.ts para enviar una factura electronica desde ventas.ts
   public static function sendInvoice(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     
@@ -324,7 +324,7 @@ class apidiancontrolador{
   
   
   public static function sendNc(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $getDB = facturas_electronicas::getDB();
@@ -439,7 +439,7 @@ class apidiancontrolador{
 
   //METODO LLAMADO DESDE VISTA DETALLEINVOICE BTN + NUEVA FACTURA
   public static function crearFacturaPOSaElectronica(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $existeInvoice = null;
@@ -533,7 +533,7 @@ class apidiancontrolador{
 
   //asigna adquiriente a la ultima factura electronica.
   public static function asignarAdquirienteAFactura(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 
@@ -565,7 +565,7 @@ class apidiancontrolador{
 
 
   public static function eliminarFacturaElectronica(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 

@@ -69,6 +69,26 @@
             </label>
         </div>
         
+        <!-- Indicadores de caja -->
+        <div>
+            <label for="indicador_caja" class="block text-xl font-medium text-gray-700 mb-1">
+                Indicador de caja
+            </label>
+            <span class="block mb-1 text-sm text-gray-500">
+                Seleccione el indicador de cuadre de caja en efectivo
+            </span>
+            <select
+                id="indicador_caja"
+                name="indicador_caja"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+            >
+                <option value="1" <?php echo $conflocal['indicador_caja']->valor_final == 1?'selected':''; ?>>Efectivo total</option>
+                <option value="2" <?php echo $conflocal['indicador_caja']->valor_final == 2?'selected':''; ?>>Efectivo total sin base inicial</option>
+                <option value="3" <?php echo $conflocal['indicador_caja']->valor_final == 3?'selected':''; ?>>Efectivo total sin domicilios</option>
+                <option value="4" <?php echo $conflocal['indicador_caja']->valor_final == 4?'selected':''; ?>>Efectivo total sin base y sin domicilios</option>
+            </select>
+        </div>
+
         <!-- Permitir venta de productos sin stock -->
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Permitir venta de productos sin stock</label>
@@ -86,20 +106,20 @@
         </div>
 
         <div class="flex flex-col gap-2">
-            <label for="tasa_interes_por_cuota" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
+            <label for="tasa_de_interes_por_cuota" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
                 Tasa de interes por cuota
             </label>
             <div class="flex items-center gap-3">
                 <input 
                     type="text" 
-                    id="tasa_interes_por_cuota" 
-                    name="tasa_interes_por_cuota" 
+                    id="tasa_de_interes_por_cuota" 
+                    name="tasa_de_interes_por_cuota" 
                     min="0" max="100"
                     class=" keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
                         block w-28 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 
                            "
                     placeholder="0"
-                    value="<?php echo $conflocal['cantidad_de_cierres_de_cajas_permitidos']->valor_final; ?>"
+                    value="<?php echo $conflocal['tasa_de_interes_por_cuota']->valor_final; ?>"
                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                 >
             </div>

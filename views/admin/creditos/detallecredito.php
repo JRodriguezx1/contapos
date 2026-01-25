@@ -22,12 +22,12 @@
 
       <div class="bg-green-50 border border-green-200 rounded-xl p-5 shadow-sm">
         <h3 class="text-xl font-semibold text-green-700 mb-1 uppercase">💰 Credito</h3>
-        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
+        <p id="creditoText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
       </div>
 
       <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
         <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💸 Abono Inicial</h3>
-        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
+        <p id="abonoInicialText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
       </div>
 
       <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 shadow-sm">
@@ -40,7 +40,7 @@
     <div class="grid md:grid-cols-4 gap-6 mb-6">
       <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
         <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💲 Credito Total</h3>
-        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
+        <p id="creditoTotalText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
       </div>
 
       <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-sm">
@@ -67,7 +67,7 @@
           <span class="px-4 py-2 rounded-full text-base font-semibold <?php echo $credito->idestadocreditos==1?' bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':' bg-red-100 text-red-700'); ?>">
             <?php echo $credito->idestadocreditos==1?'Finalizado':($credito->idestadocreditos==2?'En curso':'Anulado'); ?>
           </span>
-          <span class="text-gray-600">Saldo pendiente: <strong>$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
+          <span class="text-gray-600">Saldo pendiente: <strong id="saldopendientetext">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>
         <div>
           <span class="text-gray-600">Cliente: <strong><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
@@ -89,6 +89,7 @@
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor cuota</th>
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor pagado</th>
             <th class="px-4 py-2 text-base font-semibold text-gray-700">Medio pago</th>
+            <th class="px-4 py-2 text-base font-semibold text-gray-700">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -103,6 +104,7 @@
                 <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago btn-xs btn-light"><?php echo $element->mediopago;?></button>
                 <?php endforeach; ?>
               </td>
+              <td class="px-4 py-2 text-gray-800 text-center cursor-pointer"><span id="<?php echo $value->id;?>" class="printPOSAbono material-symbols-outlined">print</span></td>
             </tr>
           <?php endforeach; ?>
           
@@ -112,6 +114,9 @@
 
     <!-- Botones de acción -->
     <div class="flex justify-end gap-4">
+      <button id="ajustarCredito" class="btn-md btn-light mb-4 !py-4 px-6">
+        🔄 Ajustar Credito
+      </button>
       <button id="btnDetalleProductos" class="btn-md btn-blue mb-4 !py-4 px-6">
         📄 Productos
       </button>
@@ -209,5 +214,6 @@
 
   <?php include __DIR__ . "/abonoinicial.php"; ?>
   <?php include __DIR__ . "/abonototal.php"; ?>
+  <?php include __DIR__ . "/ajustarcredito.php"; ?>
 
 </div>

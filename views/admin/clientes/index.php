@@ -67,10 +67,9 @@
                 <div class="formulario__campo">
                     <label class="formulario__label" for="tipodocumento">Tipo de documento</label>
                     <select class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" id="tipodocumento" name="tipodocumento" required>
-                        <option value="" disabled selected>-Seleccionar-</option>
                         <option value="1">Registro civil</option>
                         <option value="2">Tarjeta de identidad</option>
-                        <option value="3">Cedula de ciudadania</option>
+                        <option value="3" selected>Cedula de ciudadania</option>
                         <option value="4">Tarjeta de extranjeria</option>
                         <option value="5">Cedula de extrangeria</option>
                         <option value="6">NIT</option>
@@ -95,7 +94,7 @@
                 <div class="formulario__campo">
                     <label class="formulario__label" for="email">Correo Electrónico</label>
                     <div class="formulario__dato">
-                        <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Ingresa correo electrónico" id="email" name="email" value="<?php echo $crearcliente->email ?? '';?>" required>
+                        <input class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Ingresa correo electrónico" id="email" name="email" value="<?php echo $crearcliente->email ?? '';?>">
                         <!-- <label data-num="50" class="count-charts" for="">50</label> -->
                     </div>
                 </div>
@@ -174,7 +173,7 @@
                         <label class="formulario__label" for="tarifa">Tarifa</label>
                         <div class="mt-2">
                             <select id="tarifa" name="idtarifa" class="bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-                                <option value="" disabled selected>-Seleccionar-</option>
+                                
                                 <?php foreach($tarifas as $tarifa): ?>
                                 <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre;?></option>
                                 <?php endforeach; ?>

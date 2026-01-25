@@ -35,7 +35,7 @@ use stdClass;
 class almacencontrolador{
 
   public static function index(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     //$productosqw = productos::all();
@@ -77,7 +77,7 @@ class almacencontrolador{
 
 
   public static function categorias(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -91,7 +91,7 @@ class almacencontrolador{
   }
 
   public static function crear_categoria(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -119,7 +119,7 @@ class almacencontrolador{
   }
 
   public static function productos(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -143,7 +143,7 @@ class almacencontrolador{
   }
 
   public static function crear_producto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -240,7 +240,7 @@ class almacencontrolador{
 
 
   public static function subproductos(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -256,7 +256,7 @@ class almacencontrolador{
   }
 
   public static function crear_subproducto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -308,7 +308,7 @@ class almacencontrolador{
 
 
   public static function componer(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -334,7 +334,7 @@ class almacencontrolador{
 
 
   public static function ajustarcostos(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -355,7 +355,7 @@ class almacencontrolador{
 
 
   public static function compras(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -375,7 +375,7 @@ class almacencontrolador{
   
 
   public static function distribucion(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -389,7 +389,7 @@ class almacencontrolador{
   }
 
   public static function inventariar(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -403,7 +403,7 @@ class almacencontrolador{
   }
 
   public static function unidadesmedida(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -422,7 +422,7 @@ class almacencontrolador{
   }
 
   public static function crear_unidadmedida(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -444,7 +444,7 @@ class almacencontrolador{
   }
 
   public static function editarunidademedida(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -495,7 +495,7 @@ class almacencontrolador{
 
 
   public static function uploadExcel(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
@@ -554,7 +554,7 @@ class almacencontrolador{
 
   ////////////////////////////   API   //////////////////////////////
   public static function actualizar_categoria(){ //actualizar editar categoria
-    session_start();
+    //session_start();
     $alertas = []; 
     $categoria = categorias::find('id', $_POST['id']);
     
@@ -575,7 +575,7 @@ class almacencontrolador{
   }
 
   public static function eliminarCategoria(){
-    session_start();
+    //session_start();
     $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $categoria = categorias::find('id', $_POST['id']);
@@ -590,7 +590,7 @@ class almacencontrolador{
   }
 
   public static function allproducts(){
-    session_start();
+    //session_start();
     isadmin();
     //$productos = productos::all(); 
     $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
@@ -610,7 +610,7 @@ class almacencontrolador{
 
 
   public static function actualizarproducto(){ //actualizar editar producto
-    session_start();
+    //session_start();
     $alertas = []; 
     $producto = productos::find('id', $_POST['id']);
     $addnewprecios = new precios_personalizados;
@@ -716,7 +716,7 @@ class almacencontrolador{
 
 
   public static function eliminarProducto(){
-    session_start();
+    //session_start();
     $alertas = []; 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $producto = productos::find('id', $_POST['id']);
@@ -744,7 +744,7 @@ class almacencontrolador{
 
 
   public static function actualizarsubproducto(){ //actualizar editar sub-producto
-    session_start();
+    //session_start();
     $alertas = [];
     //$unidadmedida = unidadesmedida::find('id', $_POST['id_unidadmedida']);
     $subproducto = subproductos::find('id', $_POST['id']);
@@ -802,7 +802,7 @@ class almacencontrolador{
 
 
   public static function eliminarSubProducto(){
-    session_start();
+    //session_start();
     $alertas = [];
     $subproducto = subproductos::find('id', $_POST['id']);
     ////// Obtener la suma de los subproductos menos el que se va a eliminar que pertenece a un producto  //////
@@ -833,7 +833,7 @@ class almacencontrolador{
 
   //ESTABLECER RENDIMIENTO ESTANDAR DE LA FORMULA DE SALIDA
   public static function setrendimientoestandar(){
-    session_start();
+    //session_start();
     $alertas = [];
     /*$tipoelemento = $_POST['tipoelemento'];
     if($tipoelemento == 1){  // 1 = subproducto
@@ -860,7 +860,7 @@ class almacencontrolador{
 
 
   public static function ensamblar(){  //asociar un o unos subproductos a un producto principal
-    session_start();
+    //session_start();
     $alertas = [];
     $ensamblar = new productos_sub($_POST);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -897,7 +897,7 @@ class almacencontrolador{
 
 
   public static function desasociarsubproducto(){  //desasociar subproducto de un producto principal
-    session_start();
+    //session_start();
     $alertas = [];
     $idproducto = $_GET['idproducto'];
     $idsubproducto = $_GET['idsubproducto'];
@@ -922,7 +922,7 @@ class almacencontrolador{
 
 
   public static function actualizarcostos(){  //asociar un o unos subproductos a un producto principal
-    session_start();
+    //session_start();
     $alertas = [];
     $tipoelemento = $_POST['tipoelemento'];
     if($tipoelemento == 1){  // 1 = subproducto
@@ -970,7 +970,7 @@ class almacencontrolador{
 
 
   public static function registrarCompra(){  //asociar un o unos subproductos a un producto principal
-    session_start();
+    //session_start();
     $in = '';
     $alertas = [];
     $invpx = true;
@@ -1145,7 +1145,7 @@ class almacencontrolador{
 
 
   public static function descontarstock(){  //descontar cantidad a inventario
-    session_start();
+    //session_start();
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
@@ -1186,7 +1186,7 @@ class almacencontrolador{
   }
 
   public static function aumentarstock(){  //sumar o ingresar cantidad o produccion a inventario
-    session_start();
+    //session_start();
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
@@ -1261,7 +1261,7 @@ class almacencontrolador{
 
 
   public static function ajustarstock(){  //ajustar o reiniciar inventario
-    session_start();
+    //session_start();
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
@@ -1301,7 +1301,7 @@ class almacencontrolador{
 
 
   public static function reiniciarinv(){
-    session_start();
+    //session_start();
     $alertas = [];
     $idsucursal = id_sucursal();
     if(userPerfil()==1){
@@ -1323,7 +1323,7 @@ class almacencontrolador{
 
 
   public static function cambiarestadoproducto(){
-    session_start();
+    //session_start();
     $producto = productos::find('id', $_POST['id']);
     $productostocksucursal = stockproductossucursal::uniquewhereArray(['productoid'=>$_POST['id'], 'sucursalid'=>id_sucursal()]);
 
@@ -1363,7 +1363,7 @@ class almacencontrolador{
     }
 
     public static function crearProveedor(){ //api llamada desde el modulo de gestionproveedores.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $proveedor = new proveedores($_POST);
@@ -1385,7 +1385,7 @@ class almacencontrolador{
     }
 
     public static function actualizarProveedor(){
-        session_start();
+        //session_start();
         $alertas = []; 
         $proveedor = proveedores::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -1405,7 +1405,7 @@ class almacencontrolador{
     }
 
     public static function eliminarProveedor(){
-        session_start();
+        //session_start();
         $proveedor = proveedores::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($proveedor)){

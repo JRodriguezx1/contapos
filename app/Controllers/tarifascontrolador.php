@@ -13,7 +13,7 @@ use App\Models\clientes\direcciones;
 class clientescontrolador{
 
     public static function index(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $buscar = '';
@@ -35,7 +35,7 @@ class clientescontrolador{
     }
 
     public static function crear(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $usuario = new usuarios; //instancia el objeto vacio
         $alertas = [];  
@@ -81,7 +81,7 @@ class clientescontrolador{
 
 
     public static function actualizar(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];  
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -101,7 +101,7 @@ class clientescontrolador{
 
 
     public static function hab_desh(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];  
         $id = $_GET['id'];
@@ -129,7 +129,7 @@ class clientescontrolador{
 
 
     public static function detalle(Router $router){
-        session_start();
+        //session_start();
         isadmin(); 
         $id = $_GET['id'];
         if(!is_numeric($id))return;
@@ -161,7 +161,7 @@ class clientescontrolador{
     
 
     public static function apiCrearCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $cliente = new clientes($_POST);
         $direccion = new direcciones($_POST);

@@ -17,8 +17,11 @@ class cuotas {
         $this->valorpagado = $args['valorpagado']??0;
         $this->fechavencimiento = $args['fechavencimiento']??date('Y-m-d');
         $this->fechapagado = $args['fechapagado']?? date('Y-m-d H:i:s');
-        $this->estado = $args['estado']??0;
         $this->cuotascreditos = $args['cuotascreditos']??NULL;
+        $this->estado = $args['estado']??0;
+        $this->registrarencaja = $args['registrarencaja']??'1';  //1 = si registra en caja
+        $this->cuotaantigua = $args['cuotaantigua']??'0';  //0 = no es cuota antigua
+        $this->fechacuotaantigua = $args['fechacuotaantigua']??NULL;
         $this->created_at = $args['created_at']??'';
     }
 
@@ -45,8 +48,11 @@ class cuotas {
             'valorpagado' => $this->valorpagado, 
             'fechavencimiento' => $this->fechavencimiento, 
             'fechapagado' => $this->fechapagado, 
-            'estado' => $this->estado, 
-            'cuotascreditos' => $this->cuotascreditos, 
+            'cuotascreditos' => $this->cuotascreditos,
+            'registrarencaja' => $this->registrarencaja,
+            'cuotaantigua' => $this->cuotaantigua,
+            'fechacuotaantigua' => $this->fechacuotaantigua,
+            'estado' => $this->estado,
             //'created_at' => $this->created_at
         ];
     }

@@ -25,7 +25,7 @@ use Twilio\Rest\Client;
 class dashboardcontrolador{
 
     public static function index(Router $router) {
-        session_start();
+        //session_start();
         isadmin();
         date_default_timezone_set('America/Bogota');
         $idsucursal = id_sucursal();
@@ -69,7 +69,7 @@ class dashboardcontrolador{
 
     public static function perfil(Router $router) {
         $alertas = [];
-        session_start();
+        //session_start();
         isadmin();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuario = usuarios::find('id', $_SESSION['id']);
@@ -101,7 +101,7 @@ class dashboardcontrolador{
 
     public static function actualizaremail(Router $router) {
         $alertas = [];
-        session_start();
+        //session_start();
         isadmin();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuario = usuarios::find('id', $_SESSION['id']);
@@ -136,7 +136,7 @@ class dashboardcontrolador{
     }
 
     public static function ventasVsGastos(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $idsucursal = id_sucursal();
@@ -169,7 +169,7 @@ class dashboardcontrolador{
 
 
     public static function ultimos7dias(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $idsucursal = id_sucursal();

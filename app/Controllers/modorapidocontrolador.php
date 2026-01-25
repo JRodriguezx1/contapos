@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\sucursales;
 use MVC\Router;  //namespace\clase
  
-class nominaelectcontrolador{
+class modorapidocontrolador{
 
     public static function index(Router $router){
         //session_start();
@@ -13,6 +13,6 @@ class nominaelectcontrolador{
         //if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
 
-        $router->render('admin/nominaelectronica/index', ['titulo'=>'Nomina electronica', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 }

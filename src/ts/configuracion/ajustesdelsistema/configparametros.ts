@@ -4,6 +4,7 @@
     const radios = document.querySelectorAll<HTMLInputElement>('.contenedorsetup input[type="radio"]');
     const claves = document.querySelectorAll<HTMLInputElement>('.keyinput');
     const porcentaje_de_impuesto = document.querySelector('#porcentaje_de_impuesto') as HTMLSelectElement;
+    const indicador_caja = document.querySelector('#indicador_caja') as HTMLSelectElement;
 
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
@@ -12,7 +13,7 @@
         // Obtenemos la opción seleccionada de ese grupo
         const seleccionado = document.querySelector(`input[name="${grupo}"]:checked`) as HTMLInputElement;
 
-        console.log(`${grupo}, Opción seleccionada: ${seleccionado.value}`);
+        //console.log(`${grupo}, Opción seleccionada: ${seleccionado.value}`);
         cambiarparametro(grupo, seleccionado.value);
       });
     });
@@ -66,14 +67,19 @@
 
 
 
-    //////////////////   campo tipo de descuento   /////////////////////
-    porcentaje_de_impuesto?.addEventListener('input', (e)=>{
-      console.log((e.target as HTMLSelectElement).value);
+    //////////////////   campo tipo de impuesto (%)   /////////////////////
+    porcentaje_de_impuesto?.addEventListener('input', parametrosSistemaTipoSelect);
+    //////////////////   Indicadores de caja   /////////////////////
+    indicador_caja?.addEventListener('input', parametrosSistemaTipoSelect);
+
+
+    function parametrosSistemaTipoSelect(e:Event){
+      const select = (e.target as HTMLSelectElement);
       (async ()=>{
           const datos = new FormData();
-          datos.append('porcentaje_de_impuesto', (e.target as HTMLSelectElement).value);
+          datos.append(select.name, select.value);
           try {
-              const url = "/admin/api/parametrosSistemaPorcentajeImpuesto";  //api llamada en parametroscontrolador.php
+              const url = "/admin/api/parametrosSistemaTipoSelect";  //api llamada en parametroscontrolador.php
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();
               if(resultado.exito !== undefined){
@@ -85,8 +91,7 @@
               console.log(error);
           }
       })();
-
-    });
+    }
 
     
   }

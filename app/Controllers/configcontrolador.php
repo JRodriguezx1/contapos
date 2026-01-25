@@ -24,7 +24,7 @@ use MVC\Router;  //namespace\clase
 class configcontrolador{
 
   public static function index(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
     $alertas = [];
@@ -55,7 +55,7 @@ class configcontrolador{
 
 
   public static function editarnegocio(Router $router){ //metodo para el llenado y actualizacion de los datos del negocio
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
         $alertas = [];
@@ -133,7 +133,7 @@ class configcontrolador{
 
 
     public static function crear_empleado(Router $router){ //metodo para crear empleado
-        session_start();
+        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de configuracion')&&userPerfil()>=3)return;
         $alertas = [];
@@ -185,7 +185,7 @@ class configcontrolador{
 
   ///////////////////////////////////  Apis ////////////////////////////////////
     public static function getAllemployee(){ //api llamada desde empleados.ts entrega todos los empleados con sus permisos
-        session_start();
+        //session_start();
         $empleados = usuarios::whereArray(['idsucursal'=>id_sucursal(), 'confirmado'=>1]);
         foreach($empleados as $empleado){
             $empleado->idusuariospermisos = usuarios_permisos::idregistros('usuarioid', $empleado->id);
@@ -195,7 +195,7 @@ class configcontrolador{
     }
 
     public static function actualizarEmpleado(){ //actualizar editar empleado
-        session_start();
+        //session_start();
         $alertas = []; 
         $empleado = usuarios::find('id', $_POST['id']);
        
@@ -255,7 +255,7 @@ class configcontrolador{
 
 
     public static function eliminarEmpleado(){ //api llamada desde empleados.ts 
-        session_start();
+        //session_start();
         $alertas = [];
         $empleado = usuarios::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -279,7 +279,7 @@ class configcontrolador{
 
 
     public static function updatepassword(){ //api llamada desde empleados.ts 
-        session_start();
+        //session_start();
         $alertas = [];
         $empleado = usuarios::find('id', $_POST['id']);
         $empleado->password = $_POST['password'];
@@ -301,14 +301,14 @@ class configcontrolador{
   
   ///////////// procesando la gestion de la caja ////////////////
     public static function allcajas(){  //api llamado desde citas.js
-      session_start();
+      //session_start();
       $cajas = caja::all();
       foreach($cajas as $caja)$caja->nombreconsecutivo = consecutivos::find('id', $caja->idtipoconsecutivo);
       echo json_encode($cajas);
     }
   
     public static function crearCaja(){ //api llamada desde el modulo de gestioncajas.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $caja = new caja($_POST);
@@ -340,7 +340,7 @@ class configcontrolador{
     }
 
     public static function actualizarCaja(){
-        session_start();
+        //session_start();
         $alertas = []; 
         $caja = caja::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -361,7 +361,7 @@ class configcontrolador{
     }
 
     public static function eliminarCaja(){
-        session_start();
+        //session_start();
         $caja = caja::find('id', $_POST['id']);
         $cierrecaja = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$caja->id, 'estado'=>0]);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -398,14 +398,14 @@ class configcontrolador{
     
 ///////////////////procesando la gestion de los facturadores //////////////////////
     public static function allfacturadores(){  //api llamado desde gestionfacturadores.js
-      session_start();
+      //session_start();
       $consecutivos = consecutivos::all();
       foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
       echo json_encode($consecutivos);
     }
   
     public static function crearFacturador(){ //api llamada desde el modulo de gestionfacturadoes.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $consecutivo = new consecutivos($_POST);
@@ -427,7 +427,7 @@ class configcontrolador{
     }
 
     public static function actualizarFacturador(){
-        session_start();
+        //session_start();
         $alertas = []; 
         $consecutivo = consecutivos::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -449,7 +449,7 @@ class configcontrolador{
     }
 
     public static function eliminarFacturador(){
-        session_start();
+        //session_start();
         //$alertas['error'][] = "No es posible eliminar facturador";
         //echo json_encode($alertas); 
         //return;
@@ -498,7 +498,7 @@ class configcontrolador{
     }
 
     public static function crearBanco(){ //api llamada desde el modulo de gestionbancos.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $banco = new bancos($_POST);
@@ -520,7 +520,7 @@ class configcontrolador{
     }
 
     public static function actualizarBanco(){
-        session_start();
+        //session_start();
         $alertas = []; 
         $banco = bancos::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -540,7 +540,7 @@ class configcontrolador{
     }
 
     public static function eliminarBanco(){
-        session_start();
+        //session_start();
         $banco = bancos::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($banco)){
@@ -566,7 +566,7 @@ class configcontrolador{
     }
 
     public static function crearTarifa(){ //api llamada desde el modulo de gestiontarifas.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $tarifa = new tarifas($_POST);
@@ -587,7 +587,7 @@ class configcontrolador{
     }
 
     public static function actualizarTarifa(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = []; 
         $tarifa = tarifas::find('id', $_POST['id']);
@@ -608,7 +608,7 @@ class configcontrolador{
     }
 
     public static function eliminarTarifa(){
-        session_start();
+        //session_start();
         isadmin();
         $tarifa = tarifas::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -630,14 +630,14 @@ class configcontrolador{
 
     ///////////// procesando la gestion de los medios de pago ////////////////
     public static function allmediospago(){  //api llamado desde gestionmediospago.js
-      session_start();
+      //session_start();
       isadmin();
       $mediosdepagos = mediospago::all();
       echo json_encode($mediosdepagos);
     }
 
     public static function crearMedioPago(){ //api llamada desde el modulo de gestiontarifas.ts cuando se crea un cliente
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $mediopago = new mediospago($_POST);
@@ -658,7 +658,7 @@ class configcontrolador{
     }
 
     public static function actualizarMedioPago(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = []; 
         $mediopago = mediospago::find('id', $_POST['id']);
@@ -679,7 +679,7 @@ class configcontrolador{
     }
 
     public static function eliminarMedioPago(){
-        session_start();
+        //session_start();
         isadmin();
         $mediopago = mediospago::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -705,7 +705,7 @@ class configcontrolador{
 
 
     public static function updateStateMedioPago(){
-        session_start();
+        //session_start();
         isadmin();
         $mediopago = mediospago::find('id', $_POST['id']);
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){

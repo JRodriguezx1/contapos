@@ -26,7 +26,7 @@ use App\services\paymentService;
 class creditoscontrolador{
 
     public static function index(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $clientes = clientes::all();
@@ -37,7 +37,7 @@ class creditoscontrolador{
 
 
     public static function separado(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         $idsucursal = id_sucursal();
@@ -51,25 +51,27 @@ class creditoscontrolador{
 
 
     public static function detallecredito(Router $router){
-        session_start();
+        //session_start();
         isadmin();
         //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
         $alertas = [];
         $id = $_GET['id'];  //id del credito
         if(!is_numeric($id))return;
 
+        $conflocal = config_local::getParamGlobal();
         $datos = creditosService::detallecredito($id);
         
-        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         $router->render('admin/creditos/detallecredito', $viewData);
     }
 
 
     public static function registrarAbono(Router $router){
         date_default_timezone_set('America/Bogota');
-        session_start();
+        //session_start();
         isadmin();
 
+        $conflocal = config_local::getParamGlobal();
         $factura = null;
         if(isset($credito->factura_id))$factura = facturas::find('id', $credito->factura_id);
 
@@ -77,7 +79,7 @@ class creditoscontrolador{
             $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
         }
         $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
-        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
     }
@@ -85,13 +87,14 @@ class creditoscontrolador{
 
     public static function pagoTotal(Router $router){
         date_default_timezone_set('America/Bogota');
-        session_start();
+        //session_start();
         isadmin();
+        $conflocal = config_local::getParamGlobal();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
         }
         $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
-        $viewData = array_merge($datos, [ 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
     }
@@ -101,7 +104,7 @@ class creditoscontrolador{
     /////////      API      ///////////
 
     public static function allcredits(){
-        session_start();
+        //session_start();
         isadmin();
         $creditos = new creditosRepository();
         $creditos = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal()]);
@@ -109,8 +112,8 @@ class creditoscontrolador{
     }
 
     
-    public static function crearSeparado(){
-        session_start();
+    public static function crearSeparado(){  //llamada desde separado.ts
+        //session_start();
         isadmin();
         $alertas = [];
         $valoresCredito = (array)json_decode($_POST['valoresCredito']);
@@ -132,7 +135,7 @@ class creditoscontrolador{
 
 
     public static function cambioMedioPagoSeparado(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::cambioMedioPagoSeparado($_POST);
@@ -141,10 +144,19 @@ class creditoscontrolador{
 
 
     public static function anularSeparado(){
-        session_start();
+        //session_start();
         isadmin();
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::anularSeparado($_POST['id']);
+        echo json_encode($alertas);
+    }
+
+
+    public static function ajustarCreditoAntiguo(){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::ajustarCreditoAntiguo($_POST);
         echo json_encode($alertas);
     }
 }

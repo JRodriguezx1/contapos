@@ -32,7 +32,7 @@ use stdClass;
 class cajacontrolador{
 
   public static function index(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -69,13 +69,15 @@ class cajacontrolador{
 
 
   public static function cerrarcaja(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $idsucursal = id_sucursal();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
-
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+  
     //calcular el id de la caja princial de la sucursal
     $idcajaprincipal = $cajas[0]->id;
     foreach($cajas as $value){
@@ -113,10 +115,13 @@ class cajacontrolador{
       $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $idcajaprincipal, $idsucursal);
       $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
       $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
+      //////////// Indicador de caja //////////////////
+      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
       //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
+      
       $sobrantefaltante = $declaracion;
       foreach($discriminarmediospagos as $i => $dis){
-        if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+        if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
         $aux = 0;
         foreach($declaracion as $j => $dec){
           if($dis['idmediopago'] == $dec->id_mediopago){
@@ -135,18 +140,18 @@ class cajacontrolador{
           $sobrantefaltante[] = $newobj;
         }
       }
+      //debuguear($sobrantefaltante);
       foreach($facturas as $value)
         $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
     }
     
-    $conflocal = config_local::getParamGlobal();
     $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   
 //////// ingreso de base o gasto de caja tambien como apertura /////////
   public static function ingresoGastoCaja(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -263,7 +268,7 @@ class cajacontrolador{
 
 
   public static function categoriaGasto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -288,7 +293,7 @@ class cajacontrolador{
 
 
   public static function crear_categoriaGasto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -310,7 +315,7 @@ class cajacontrolador{
 
 
   public static function editarcategoriagasto(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -333,7 +338,7 @@ class cajacontrolador{
 
 
   public static function zetadiario(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -351,7 +356,7 @@ class cajacontrolador{
 
   //cuando se da clic en el btn "zeta diario de hoy" o en el btn "zeta diario por fecha"
   public static function fechazetadiario(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
@@ -406,7 +411,7 @@ class cajacontrolador{
 
 
   public static function ultimoscierres(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -416,7 +421,7 @@ class cajacontrolador{
 
 
   public static function detallecierrecaja(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
@@ -424,6 +429,9 @@ class cajacontrolador{
 
     $alertas = [];
     $discriminarmediospagos=[];
+
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
 
     $separdomediospagoRepo = new separadoMediopagoRepository();
     $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
@@ -446,9 +454,12 @@ class cajacontrolador{
     $ventasxusuarios = cierrescajas::ventasXusuario($cierreselected->id);
     $mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
+    //////////// Indicador de caja //////////////////
+    $diferencial = $indicadorCaja == 1?($cierreselected->basecaja - $cierreselected->gastoscaja):($indicadorCaja == 2?(-$cierreselected->gastoscaja):($indicadorCaja == 3?($cierreselected->basecaja - $cierreselected->gastoscaja - $cierreselected->domicilios):(- $cierreselected->gastoscaja - $cierreselected->domicilios)));
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
+      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){
@@ -471,7 +482,7 @@ class cajacontrolador{
   }
 
   public static function pedidosguardados(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -480,7 +491,7 @@ class cajacontrolador{
   }
 
   public static function ordenresumen(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -512,7 +523,7 @@ class cajacontrolador{
   }
 
   public static function detalleorden(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -524,7 +535,7 @@ class cajacontrolador{
   }
 
   public static function printfacturacarta(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -547,7 +558,7 @@ class cajacontrolador{
   }
 
   public static function printcotizacion(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
@@ -562,19 +573,22 @@ class cajacontrolador{
     $tarifa = tarifas::find('id', $direccion->idtarifa);
     $vendedor = usuarios::find('id', $factura->idvendedor);
     $sucursal = sucursales::find('id', id_sucursal());
+    /////
     $lineasencabezado = explode("\n", $sucursal->datosencabezados);
     $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
-    session_start();
+    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //$alertas = usuarios::getAlertas();
-    
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+
     $ultimocierre = cierrescajas::find('id', $id);
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
     $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
@@ -582,10 +596,12 @@ class cajacontrolador{
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
+    //////////// Indicador de caja //////////////////
+      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){
@@ -616,7 +632,7 @@ class cajacontrolador{
 
   ///////////  API REST llamada desde cerrarcaja.ts cuando se declara dinero  ////////////
   public static function declaracionDinero(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $ax = false;
@@ -649,7 +665,7 @@ class cajacontrolador{
 
 
   public static function arqueocaja(){   
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
     $arqueocaja = new arqueoscajas($_POST);
@@ -682,7 +698,7 @@ class cajacontrolador{
 
 
   public static function cierrecajaconfirmado(){  //// Api llamada desde cerrarcaja.ts
-    session_start();
+    //session_start();
     isauth();
     date_default_timezone_set('America/Bogota');
 
@@ -736,9 +752,12 @@ class cajacontrolador{
 
   // cuando se cambia la caja para ver y cerrar la caja
   public static function datoscajaseleccionada(){ //llamado desde cerrarcaja.ts
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
+
+    $conflocal = config_local::getParamGlobal();
+    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
 
     $ultimocierre = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
@@ -746,11 +765,12 @@ class cajacontrolador{
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
     //$mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);  //lo que el usuario declara de forma manual.
+    //////////// Indicador de caja //////////////////
+      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
     //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    
     $sobrantefaltante = $declaracion;
     foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += ($ultimocierre->basecaja - $ultimocierre->gastoscaja);
+      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
       $aux = 0;
       foreach($declaracion as $j => $dec){
         if($dis['idmediopago'] == $dec->id_mediopago){
@@ -884,7 +904,7 @@ class cajacontrolador{
 
   //Eliminar cotizacion por completo del sistema
   public static function eliminarPedidoGuardado(){ //llamada desde caja/pedidosguardados.ts
-    session_start();
+    //session_start();
       $pedidoguardado = facturas::find('id', $_POST['id']);
       if($_SERVER['REQUEST_METHOD'] === 'POST' ){
           if(!empty($pedidoguardado)){
@@ -906,7 +926,7 @@ class cajacontrolador{
 
   //Enviar orden por email a cliente
   public static function sendOrdenEmailToCustemer(){
-    session_start();
+    //session_start();
     isadmin();
     $alertas = [];
 
