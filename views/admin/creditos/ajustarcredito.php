@@ -27,7 +27,7 @@
                     type="text"
                     placeholder="Recargo de interes al credito"
                     value="<?php echo $credito->valorinterestotal??'';?>"
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
                 >
             </div>
         </div>
@@ -41,7 +41,7 @@
                     type="text"
                     placeholder="Monto antiguo pagado hasta la fecha"
                     value="<?php echo $credito->abonototalantiguo??'';?>"
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
                 >
             </div>
         </div>
