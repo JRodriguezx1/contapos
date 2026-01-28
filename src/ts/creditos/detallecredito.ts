@@ -152,9 +152,11 @@
 
     async function ajustarCreditoAntiguo(){
       const id:string = (document.querySelector('#idcredito') as HTMLInputElement).value;
-      const abonototalantiguo = (document.querySelector('#abonoTotalAntiguo') as HTMLInputElement).value;
+      const abonototalantiguo = (document.querySelector('#abonoTotalAntiguo') as HTMLInputElement).value||'0';
+      const recargo = (document.querySelector('#recargo') as HTMLInputElement).value||'0';
       const datos = new FormData();
       datos.append('id', id);
+      datos.append('recargo', recargo);
       datos.append('abonototalantiguo', abonototalantiguo);
       try {
           const url = "/admin/api/ajustarCreditoAntiguo";  //va al controlador creditoscontrolador
@@ -162,7 +164,7 @@
           const resultado = await respuesta.json();
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-            ajustarIndicadores(abonototalantiguo);
+            ajustarIndicadores(abonototalantiguo, recargo);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
@@ -173,10 +175,15 @@
     }
 
 
-    function ajustarIndicadores(abonototalantiguo:string){
+    function ajustarIndicadores(abonototalantiguo:string, recargo:string){
+      const capital:number = Number((document.querySelector('#capital') as HTMLInputElement).value);
+      const abonoinicial:number = Number((document.querySelector('#abonoinicial') as HTMLInputElement).value);
+      const montototal:number = Number((document.querySelector('#montototal') as HTMLInputElement).value);
       const saldopendiente:number = Number((document.querySelector('#saldopendiente') as HTMLInputElement).value);
-      document.querySelector('#abonoInicialText')!.textContent = abonototalantiguo;
-      document.querySelector('#saldopendientetext')!.textContent = (saldopendiente-Number(abonototalantiguo)).toLocaleString();
+      document.querySelector('#abonoInicialText')!.textContent = '$ '+abonototalantiguo;
+      document.querySelector('#interesText')!.textContent = '$ '+recargo;
+      document.querySelector('#creditoTotalText')!.textContent = '$ '+(capital - abonoinicial + Number(recargo)).toLocaleString();
+      document.querySelector('#saldopendientetext')!.textContent = '$ '+(capital+Number(recargo)-abonoinicial-Number(abonototalantiguo)).toLocaleString();
     }
 
     function cerrarDialogoExterno(event:Event) {

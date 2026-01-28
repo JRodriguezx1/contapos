@@ -427,12 +427,17 @@ class creditosService {
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $idcredito = $datos['id'];
+        $recargo = $datos['recargo'];
         $abonototalantiguo = $datos['abonototalantiguo'];
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($idcredito);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
 
-        $credito->saldopendiente = $credito->capital - $abonototalantiguo;
+        $credito->saldopendiente = $credito->capital + $recargo - $credito->abonoinicial - $abonototalantiguo;
+        $credito->interes = 1;
+        $credito->valorinterestotal = $recargo;
+        $credito->montototal = $credito->capital - $credito->abonoinicial + $credito->valorinterestotal;
+        $credito->abonototalantiguo = $abonototalantiguo;
         $credito->fechaultimoabonoantiguo = date('Y-m-d H:i:s');
 
         $getDB = $creditoRepo->getConexion();
