@@ -103,6 +103,7 @@
           let cantidad = 1, itemselected = carrito.find(x=>x.fk_producto==datos.id);
           if(itemselected != undefined)cantidad += itemselected.cantidad;
           actualizarCarrito(datos.id, cantidad, true);
+          $("#articulo").val('null').trigger('change');
         }
     });
 
