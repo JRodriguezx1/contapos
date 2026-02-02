@@ -485,15 +485,15 @@
           const resultado = await respuesta.json();
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-            /////// reinciar modulo de ventas
-            vaciarventa();
-             btnPagar.disabled = false;
-              btnPagar.value = 'Pagar';
+            btnPagar.disabled = false;
+            btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
+              /////// reinciar modulo de ventas
+              vaciarventa();
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
               POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
               console.log(resDian);
