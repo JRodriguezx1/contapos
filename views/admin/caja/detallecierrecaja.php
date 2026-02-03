@@ -11,6 +11,7 @@
         <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
+    <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ){ ?>
     <div class="accordion pb-20">
        <input type="checkbox" id="first">
        <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>  
@@ -302,4 +303,7 @@
         </div>
       
     </div> <!-- fin accordion-->
+    <?php }else{ ?>
+        <label class="block mt-8 etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Cierre de caja ciego: activado</label>
+     <?php }; ?>
 </div>

@@ -88,6 +88,7 @@
     });
 
 
+    //AÑADOR INPUTS PARA PRECIOS PERSONALIZADOS
     const btnAddNewPrice = document.querySelector('#btnAddNewPrice') as HTMLButtonElement;
     if(btnAddNewPrice){
         let i=1;
@@ -95,6 +96,7 @@
           let clone = (e.target as HTMLButtonElement).previousElementSibling?.cloneNode(true) as HTMLInputElement;  
           //console.log(clone.children[1].name = `niveles[nombrenivel${++i}]`);
           clone.removeAttribute('id');
+          clone.required = false;
           clone.value='';
           clone.name = `nuevosprecios[]`;
           clone.classList.add('nuevosprecios');
@@ -180,7 +182,7 @@
           placeholder="Precio de venta incluido el impuesto" 
           name="nuevosprecios[]" 
           value="${z.precio}" 
-          required>`);
+          >`);
       });
     }
 
@@ -218,7 +220,7 @@
           datos.append('stock', $('#stock').val()as string);
           datos.append('precio_compra', $('#preciocompra').val()as string);
           datos.append('precio_venta', $('#precioventa').val()as string);
-          datos.append('nuevosprecios', JSON.stringify(Array.from(w).map(input=>({id: input.dataset.id, idproductoid: input.dataset.idproductoid, precio: parseFloat(input.value), estado:1 })).filter(x=>x.precio>0)));
+          datos.append('nuevosprecios', JSON.stringify(Array.from(w).map(input=>({id: input.dataset.id, idproductoid: input.dataset.idproductoid, precio: parseFloat(input.value), estado:1 })).filter(x=>x.precio>=0)));
           datos.append('idprecionsadicionales', JSON.stringify(Array.from(w).filter(input => input.dataset.id && parseFloat(input.value) > 0).map( input=>input.dataset.id ))); //solo los ids de la tabla precios_personalizados
           datos.append('sku', $('#sku').val()as string);
           datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
