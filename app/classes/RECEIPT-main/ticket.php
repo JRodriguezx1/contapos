@@ -149,6 +149,16 @@
                 $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
                 $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","USTED AHORRA"),0,0,'C');
                 $this->pdf->Cell(42,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
+
+                //////////////  MEDIO DE PAGO  ////////////
+                $this->pdf->Ln(5);
+                $this->pdf->SetFont('Arial','',8);
+                foreach($factura->mediosdepago as $value){
+                    $this->pdf->Ln(5);
+                    $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+                    $this->pdf->Cell(24,5,iconv("UTF-8", "ISO-8859-1", $value->mediopago),0,0,'C');
+                    $this->pdf->Cell(24,5,iconv("UTF-8", "ISO-8859-1","$".number_format($value->valor, '0', ',', '.')." COP"),0,0,'C');
+                }
             }
 
             $this->pdf->Ln(16);
