@@ -358,10 +358,12 @@ class creditosService {
                     $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
                 }
             }
+            
             //descontar los abonos de los separados en cierre de caja si esta abierta
-            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonosseparados']);
+            if(!empty($arrayCierresCaja))
+                $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonosseparados']);
             //eliminar los medios de pago de las cuotas relacionadas donde el cierre de caja este abierto
-
+            //devolver a inventario
             $alertas['exito'][] = "Separado anulado correctamente";
         } catch (\Throwable $th) {
            $alertas['error'][] = "Error al anular el separado. {$th->getMessage()}"; 
