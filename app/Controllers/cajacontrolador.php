@@ -478,6 +478,10 @@ class cajacontrolador{
         $sobrantefaltante[] = $newobj;
       }
     }
+
+    foreach($facturas as $value)
+        $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
+    
     $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
