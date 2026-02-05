@@ -74,4 +74,67 @@ class ventasService {
 
         return $resultArray;
     }
+
+    public static function reducirIventarioXVenta($carrito):array{
+        //$invSub = true;
+        $invPro = true;
+        //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
+        $resultArray = array_reduce($carrito, function($acumulador, $objeto){
+            $obj = clone $objeto;
+            $obj->id = $objeto->idproducto;
+            //unset($objeto->iditem);
+            if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
+                if(!isset($acumulador['productosSimples'][$objeto->idproducto])){
+                $acumulador['productosSimples'][$objeto->idproducto] = $obj;
+                $acumulador['soloIdproductos'][] = $obj->id;
+                }else{
+                $acumulador['productosSimples'][$objeto->idproducto]->cantidad += $obj->cantidad;
+                }
+            }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
+                if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
+                $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
+                }else{
+                $acumulador['productosCompuestos'][$objeto->idproducto]->cantidad += $obj->cantidad;
+                }
+                $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->cantidad/(float)$objeto->rendimientoestandar, 4);
+            }
+            return $acumulador;
+        }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
+
+        
+        //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
+        $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos']);
+        //////// sumar los subproductos repetidos
+        $reduceSub = [];
+        $soloIdInsumos =[];
+        foreach($descontarSubproductos as $idx => $obj){
+            if(!isset($reduceSub[$obj->id_subproducto])){
+                $obj->id = $obj->id_subproducto;
+                $reduceSub[$obj->id_subproducto] = $obj;
+                $soloIdInsumos[] = $obj->id;
+            }else{
+            $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
+            }
+        }
+
+        //////// sumar del inventario los productos simples ////////
+        if(!empty($resultArray['productosSimples'])){//$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
+            $invPro = stockproductossucursal::addinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+        //registrar suma de movimiento de invnetario
+            $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+            $returnProductos = stockproductossucursal::camposJoinObj($query);
+            stockService::upStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'devolucion', 'retorno de unidades por anulacion de venta');
+        }
+            //////// sumar del inventario la variable reduceSub que es el total de subproductos a descontar
+        if($invPro && !empty($reduceSub)){//$invSub = subproductos::addinv($reduceSub, 'stock');
+            $invSub = stockinsumossucursal::addinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            //registrar suma de movimiento de invnetario
+            $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
+            $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+            stockService::upStock_movimientoInsumos($reduceSub, $returnInsumos, 'devolucion', 'retorno de unidades por anulacion de venta');
+        }
+
+
+        return $resultArray;
+    }
 }

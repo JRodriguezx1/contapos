@@ -109,6 +109,13 @@ abstract class operationRepository extends BaseRepository{
         return self::$db->query("DELETE FROM {$this->table} WHERE id = {$id} LIMIT 1");
     }
 
+
+    public function delete_regs(string $id, $array = []): bool
+    {
+        return self::$db->query("DELETE FROM {$this->table} WHERE {$id} IN (".join(', ', $array).")");
+    }
+
+
     public function all(): array
     {
         $rows = $this->fetchAll("SELECT * FROM {$this->table}");

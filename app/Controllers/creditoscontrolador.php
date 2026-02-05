@@ -66,6 +66,22 @@ class creditoscontrolador{
     }
 
 
+    public static function adicionarProducto(Router $router){
+        //session_start();
+        isadmin();
+        //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+        $alertas = [];
+        $id = $_GET['id'];  //id del credito
+        if(!is_numeric($id))return;
+
+        $conflocal = config_local::getParamGlobal();
+        $datos = creditosService::detallecredito($id);
+        
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $router->render('admin/creditos/adicionarProducto', $viewData);
+    }
+
+
     public static function registrarAbono(Router $router){
         date_default_timezone_set('America/Bogota');
         //session_start();

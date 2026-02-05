@@ -326,20 +326,24 @@ class creditosService {
     //se llama desde creditoscontrolador cuando se anula un separado
     public static function anularSeparado(int $idcredito):array{
         $alertas = [];
-        
         $creditoRepo = new creditosRepository();
+        $separdoMediopago = new separadoMediopagoRepository();
+        $productosRepo = new productsSeparadosRepository();
+        
         $credito = $creditoRepo->find($idcredito);
         if($credito->idestadocreditos != 2 )return ['error'=>['El separado debe estar abierto para anular.']];
         
         try {
             //cambiar estado del separado
-            $creditoRepo->anularCredito($credito->id);
+            //$creditoRepo->anularCredito($credito->id);
             //Anular valores de la cuota de caja abierta
             $cuotasRepo = new cuotasRepository();
             $cuotas = $cuotasRepo->obtenerPorSeparado_cierracajaAbierto($credito->id);
             
             $arrayCierresCaja = [];
+            $idseparadomediopago = [];
             foreach($cuotas as $cuota){
+                $idseparadomediopago[] = $cuota->idseparadomediopago;
                 if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
                     $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
                     //$obj->ventasenefectivo -= $cuota->valorcuota_efectivo;
@@ -363,7 +367,13 @@ class creditosService {
             if(!empty($arrayCierresCaja))
                 $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonosseparados']);
             //eliminar los medios de pago de las cuotas relacionadas donde el cierre de caja este abierto
+            $separdoMediopago->delete_regs('id', $idseparadomediopago);
             //devolver a inventario
+            $productos = $productosRepo->obtenerPorCredito($credito->id);
+            foreach($productos as $obj)
+              $obj->idproducto = $obj->fk_producto;
+            ventasService::reducirIventarioXVenta($productos);
+            
             $alertas['exito'][] = "Separado anulado correctamente";
         } catch (\Throwable $th) {
            $alertas['error'][] = "Error al anular el separado. {$th->getMessage()}"; 
