@@ -1,7 +1,7 @@
 <div class="adicionarProducto box !pb-28">
 
   <!-- Botón Atrás -->
-  <a href="/admin/almacen/detallecredito?id=><?php echo $credito->id;?>"
+  <a href="/admin/creditos/detallecredito?id=<?php echo $credito->id;?>"
     class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
     <svg class="w-6 h-6 rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

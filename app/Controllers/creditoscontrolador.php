@@ -175,4 +175,18 @@ class creditoscontrolador{
         if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::ajustarCreditoAntiguo($_POST);
         echo json_encode($alertas);
     }
+
+    public static function detalleProductosCredito(){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar orden.";
+            echo json_encode($alertas);
+            return;
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::detalleProductosCredito($id);
+        echo json_encode($alertas);
+    }
 }

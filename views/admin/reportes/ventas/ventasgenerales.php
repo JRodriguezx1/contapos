@@ -17,6 +17,9 @@
       <button class="tab-btn px-6 py-3 text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" data-tab="medios">
         Medios de Pago
       </button>
+      <button class="tab-btn px-6 py-3 text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" data-tab="creditosSeparados">
+        Creditos/Separados
+      </button>
       <button class="tab-btn px-6 py-3 text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" data-tab="categorias">
         Categorías
       </button>
@@ -116,7 +119,6 @@
             <th class="px-4 py-2 border">Total Ventas</th>
           </tr>
         </thead>
-        
       </table>
     </div>
 
@@ -131,7 +133,27 @@
             <th class="px-4 py-2 border">Total Ventas</th>
           </tr>
         </thead>
-        
+        <tfoot>
+          <tr class="font-semibold text-gray-900">
+            <td></td>
+            <th class="px-6 py-3">Total Descuento:</th>
+            <td id="totalDescto" class="px-4 py-2 border"> - </td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Creditos/Separados -->
+    <div id="creditosSeparados" class="tab-pane hidden">
+      <h3 class="text-lg font-semibold mb-4">🤝 Creditos/Separados</h3>
+      <table id="tablaMediosPagos" class="display responsive nowrap tabla" width="100%">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 border">Medio de Pago</th>
+            <th class="px-4 py-2 border">Transacciones</th>
+            <th class="px-4 py-2 border">Total Ventas</th>
+          </tr>
+        </thead>
         <tfoot>
           <tr class="font-semibold text-gray-900">
             <td></td>
@@ -153,7 +175,6 @@
             <th class="px-4 py-2 border">Total Ventas</th>
           </tr>
         </thead>
-        
       </table>
     </div>
 
@@ -190,7 +211,7 @@
     <!-- Resumen -->
     <div id="resumen" class="tab-pane hidden">
       <h3 class="text-lg font-semibold mb-4">📈 Resumen General</h3>
-      <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+      <table id="tablaResumen" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
             <th class="px-4 py-2 border">Indicador</th>

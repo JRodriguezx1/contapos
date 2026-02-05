@@ -24,7 +24,7 @@
         if(id!=null && /^\d+$/.test(id) && Number(id) >= 1){
             (async ()=>{
                 try {
-                    const url = "/admin/api/idOrdenTrasladoSolicitudInv?id="+id; //llamado a la API REST y trae el detalle de la orden trasladar/solicitud desde trasladarinvcontrolador.php
+                    const url = "/admin/api/detalleProductosCredito?id="+id; //llamado a la API REST y trae el detalle de los productos de credito/separado
                     const respuesta = await fetch(url); 
                     const resultado = await respuesta.json();
                     const detalleOrden = resultado.orden[0];

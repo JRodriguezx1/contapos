@@ -7,6 +7,7 @@
 
     const tablaProductosVendidos = ($('#tablaProductosVendidos') as any);
     const tablaMediosPagos = ($('#tablaMediosPagos') as any);
+    const tablaResumen = ($('#tablaResumen') as any);
     
     interface i_productosVendidos {
         idproducto:string,
@@ -24,7 +25,13 @@
         valor:string
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [];
+    interface i_resumen {
+        total_ventas:string,
+        total_costo:string,
+        ganancia:string,
+    }
+
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], resumen:i_resumen[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -44,8 +51,10 @@
             console.log(resultado);
             productosVendidos = resultado.productosVendidos;
             mediosPagos = resultado.mediosPagos;
+            resumen = resultado.resumen;
             printProductosVendidos();
             printMediosPagos();
+            printResumen();
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
@@ -66,6 +75,8 @@
                         {title: 'Cantidad Vendida', data: 'totalProductosVendidos'},
                         {title: 'V. Unidad', data: 'valorunidad', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total Ventas', data: 'valorTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Costo Total', data: 'costoTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad', data: 'utilidad', render: (data:number) => `$${Number(data).toLocaleString()}`}
                     ],
         });
     }
@@ -81,6 +92,21 @@
                         {title: 'Medio de Pago', data: 'mediopago'},
                         {title: 'Transacciones', data: 'cantidadMP'},
                         {title: 'Total Ventas', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    ],
+        });
+    }
+
+    printResumen();
+    function printResumen(){
+        tablaResumen.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: resumen,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Total Ventas Productos', data: 'total_ventas', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Total Costo Productos', data: 'total_costo', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Ganancia', data: 'ganancia', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
     }

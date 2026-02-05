@@ -466,4 +466,29 @@ class creditosService {
         
         return $alertas;
     }
+
+
+    //metodo llamado desde adicionarProductos.ts para el detalle de la orden trasnaldo/solicitud
+    public static function detalleProductosCredito(int $id){
+        $alertas = [];
+        //$orden = traslado_inv::find('id', $id);
+    
+        if(1){
+            $sql = "SELECT ps.id, ps.costo, ps.valorunidad, ps.cantidad, ps.subtotal, ps.base, ps.valorimp, ps.descuento, ps.total,
+                           p.id as idproducto, p.nombre, p.sku, p.preciopersonalizado, p.stockminimo, p.impuesto, p.precio_venta,
+                           und.id as idunidadmedida, und.nombre, und.simbolo
+                    FROM productosseparados ps
+                    LEFT JOIN productos p ON ps.fk_producto = p.id
+                    LEFT JOIN unidadesmedida und ON p.idunidadmedida = und.id
+                    WHERE p.visible = 1 AND ps.idcredito = $id;";
+
+
+            //$orden[0]->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql); 
+            $alertas['exito'][] = "Consulta procesada";
+            //$alertas['orden'] = $orden;
+        }else{
+            $alertas['error'][] = "Orden no existe";
+        }
+        echo json_encode($alertas);
+    }
 }

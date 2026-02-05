@@ -308,7 +308,8 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT v.idproducto, COUNT(v.idproducto) as cantidadrefencia, v.nombreproducto, SUM(v.cantidad) as totalProductosVendidos, v.valorunidad,  SUM(v.total) as valorTotal
+      $sql = "SELECT v.idproducto, COUNT(v.idproducto) as cantidadrefencia, v.nombreproducto, SUM(v.cantidad) as totalProductosVendidos, v.valorunidad,
+                    SUM(v.total) as valorTotal, SUM(COALESCE(v.costo, 0) * v.cantidad) AS costoTotal, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS utilidad
               FROM facturas f JOIN ventas v ON f.id = v.idfactura
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
               GROUP BY v.idproducto, v.nombreproducto, v.valorunidad;";
@@ -326,8 +327,15 @@ class reportescontrolador{
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
       $totalDescuentos = productos::camposJoinObj($sql);
 
+      $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia
+              FROM facturas f JOIN ventas v ON f.id = v.idfactura
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
+      $resumen = facturas::camposJoinObj($sql);
+
+      
+
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'resumen'=>$resumen]);
   }
 
   
