@@ -117,10 +117,10 @@
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Cartera Total', data: 'mediopago'},
-                        {title: 'Cartera por cobrar', data: 'cantidadMP'},
-                        {title: 'Abonado', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Cartera Por Cobrar', data: 'cantidadMP'},
+                        {title: 'Total Abonado', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Creditos Activos', data: 'cantidadMP'},
                         {title: 'Creditos Finalizados', data: 'mediopago'},
-                        {title: 'Creditos Pendientes', data: 'cantidadMP'},
                         {title: 'Creditos Anulados', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
