@@ -7,8 +7,9 @@
 
     const tablaProductosVendidos = ($('#tablaProductosVendidos') as any);
     const tablaMediosPagos = ($('#tablaMediosPagos') as any);
-    const tablaResumen = ($('#tablaResumen') as any);
     const tablacreditosSeparados = ($('#tablacreditosSeparados') as any);
+    const tablaGastos = ($('#tablaGastos') as any);
+    const tablaResumen = ($('#tablaResumen') as any);
     
     interface i_productosVendidos {
         idproducto:string,
@@ -35,13 +36,20 @@
         creditosAnulados:string,
     }
 
+    interface i_gastos {
+        descripcion:string,
+        tipogasto:string,
+        valor:string,
+    }
+    
     interface i_resumen {
         total_ventas:string,
         total_costo:string,
         ganancia:string,
+        margenutilidad:string,
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], resumen:i_resumen[]=[];
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_resumen[]=[], resumen:i_resumen[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -58,15 +66,18 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             //facturaselectronicas = resultado;
-            console.log(resultado);
+            //console.log(resultado);
             productosVendidos = resultado.productosVendidos;
             mediosPagos = resultado.mediosPagos;
-            resumen = resultado.resumen;
             //creditosSeparados = resultado.creditosSeparados;
+            gastos = resultado.gastos;
+            console.log(gastos);
+            resumen = resultado.resumen;
             printProductosVendidos();
             printMediosPagos();
-            printResumen();
             //printCreditosSeparados();
+            printGastos();
+            printResumen();
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
@@ -126,6 +137,22 @@
         });
     }
 
+
+    printGastos();
+    function printGastos(){
+        tablaGastos.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: gastos,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Descripcion', data: 'descripcion'},
+                        {title: 'Tipo Gasto', data: 'tipogasto'},
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    ],
+        });
+    }
+
     printResumen();
     function printResumen(){
         tablaResumen.DataTable({
@@ -137,6 +164,7 @@
                         {title: 'Total Ventas Productos', data: 'total_ventas', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total Costo Productos', data: 'total_costo', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Ganancia', data: 'ganancia', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Margen Utilidad', data: 'margenutilidad', render: (data:number) => `${Number(data).toLocaleString()}%`},
                     ],
         });
     }

@@ -493,11 +493,11 @@
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
               /////// reinciar modulo de ventas
-              vaciarventa();
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
               POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
               console.log(resDian);
             }
+            vaciarventa();
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }

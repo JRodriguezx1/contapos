@@ -324,7 +324,7 @@ class reportescontrolador{
       $mediosPagos = productos::camposJoinObj($sql);
 
       //creditos/separados
-      $sql = "SELECT SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraxcobrar FROM creditos c";
+      $sql = "SELECT SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraxcobrar FROM creditos c WHERE c.idestadocreditos = 1";
 
       //calcular descuento
       $sql = "SELECT SUM(f.descuento) AS total_descuentos
@@ -332,8 +332,17 @@ class reportescontrolador{
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
       $totalDescuentos = productos::camposJoinObj($sql);
 
+      //gastos
+      $sql = "SELECT IFNULL(cg.nombre, 'TOTAL GENERAL') AS descripcion, IFNULL(g.operacion, '') AS tipogasto, SUM(g.valor) AS valor
+              FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
+              WHERE g.fecha BETWEEN '$fechainicio' AND '$fechafin' AND g.id_sucursalfk = 1
+              GROUP BY cg.nombre, g.operacion WITH ROLLUP
+              HAVING (cg.nombre IS NOT NULL AND g.operacion IS NOT NULL) OR (cg.nombre IS NULL AND g.operacion IS NULL);";
+      $gastos = gastos::camposJoinObj($sql);
+      
       //resumen
-      $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia
+      $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
+              SUM(v.total) AS margenutilidad
               FROM facturas f JOIN ventas v ON f.id = v.idfactura
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
       $resumen = facturas::camposJoinObj($sql);
@@ -341,7 +350,7 @@ class reportescontrolador{
       
 
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'resumen'=>$resumen]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'gastos'=>$gastos, 'resumen'=>$resumen]);
   }
 
   

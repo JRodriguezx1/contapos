@@ -192,12 +192,12 @@
     <!-- Gastos -->
     <div id="gastos" class="tab-pane hidden">
       <h3 class="text-lg font-semibold mb-4">💸 Gastos</h3>
-      <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+      <table id="tablaGastos" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
-            <th class="px-4 py-2 border">Fecha</th>
-            <th class="px-4 py-2 border">Concepto</th>
-            <th class="px-4 py-2 border">Monto</th>
+            <th class="px-4 py-2 border">Descripcion</th>
+            <th class="px-4 py-2 border">Tipo Gasto</th>
+            <th class="px-4 py-2 border">Valor</th>
           </tr>
         </thead>
         
@@ -210,8 +210,10 @@
       <table id="tablaResumen" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
-            <th class="px-4 py-2 border">Indicador</th>
-            <th class="px-4 py-2 border">Valor</th>
+            <th class="px-4 py-2 border">Total Ventas Productos</th>
+            <th class="px-4 py-2 border">Total Costo Productos</th>
+            <th class="px-4 py-2 border">Ganancia</th>
+            <th class="px-4 py-2 border">Margen Utilidad</th>
           </tr>
         </thead>
         <tbody>
