@@ -102,7 +102,7 @@
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
             const datos = new FormData();
             datos.append('fechainicio', dateinicio);
-            datos.append('fechafin', datefin);
+            datos.append('fechafin', datefin+' 23:59:59');
             datos.append('tipo', tipo);
             datos.append('iditem', iditem);
             try {

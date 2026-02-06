@@ -138,7 +138,7 @@
             <td></td>
             <th class="px-6 py-3">Total Descuento:</th>
             <td id="totalDescto" class="px-4 py-2 border"> - </td>
-        </tr>
+          </tr>
         </tfoot>
       </table>
     </div>
@@ -146,21 +146,17 @@
     <!-- Creditos/Separados -->
     <div id="creditosSeparados" class="tab-pane hidden">
       <h3 class="text-lg font-semibold mb-4">🤝 Creditos/Separados</h3>
-      <table id="tablaMediosPagos" class="display responsive nowrap tabla" width="100%">
+      <table id="tablacreditosSeparados" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
-            <th class="px-4 py-2 border">Medio de Pago</th>
-            <th class="px-4 py-2 border">Transacciones</th>
-            <th class="px-4 py-2 border">Total Ventas</th>
+            <th class="px-4 py-2 border">Cartera Total</th>
+            <th class="px-4 py-2 border">Cartera por cobrar</th>
+            <th class="px-4 py-2 border">Total Abonado</th>
+            <th class="px-4 py-2 border">Creditos Finalizados</th>
+            <th class="px-4 py-2 border">Creditos Pendientes</th>
+            <th class="px-4 py-2 border">Creditos Anulados</th>
           </tr>
         </thead>
-        <tfoot>
-          <tr class="font-semibold text-gray-900">
-            <td></td>
-            <th class="px-6 py-3">Total Descuento:</th>
-            <td id="totalDescto" class="px-4 py-2 border"> - </td>
-        </tr>
-        </tfoot>
       </table>
     </div>
 

@@ -120,7 +120,7 @@
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);
-        datos.append('fechafin', datefin);
+        datos.append('fechafin', datefin+' 23:59:59');
         try {
             const url = "/admin/api/reportecompras"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 

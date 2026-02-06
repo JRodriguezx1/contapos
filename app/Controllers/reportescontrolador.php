@@ -315,6 +315,7 @@ class reportescontrolador{
               GROUP BY v.idproducto, v.nombreproducto, v.valorunidad;";
       $productosVendidos = productos::camposJoinObj($sql);
 
+      //calcular medio de pago
       $sql = "SELECT fm.idmediopago, COUNT(fm.idmediopago) as cantidadMP, m.mediopago, SUM(fm.valor) as valor
               FROM facturas f JOIN factmediospago fm ON f.id = fm.id_factura
               JOIN mediospago m ON fm.idmediopago = m.id
@@ -322,11 +323,16 @@ class reportescontrolador{
               GROUP BY fm.idmediopago, m.mediopago;";
       $mediosPagos = productos::camposJoinObj($sql);
 
+      //creditos/separados
+      $sql = "SELECT SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraxcobrar FROM creditos c";
+
+      //calcular descuento
       $sql = "SELECT SUM(f.descuento) AS total_descuentos
               FROM facturas f
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
       $totalDescuentos = productos::camposJoinObj($sql);
 
+      //resumen
       $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia
               FROM facturas f JOIN ventas v ON f.id = v.idfactura
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
