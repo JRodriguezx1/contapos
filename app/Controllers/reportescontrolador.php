@@ -325,12 +325,12 @@ class reportescontrolador{
       $mediosPagos = productos::camposJoinObj($sql);
 
       //creditos/separados
-      $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraxcobrar,
-              (SUM(c.capital)-SUM(c.saldopendiente)) as totalabono, COUNT(*) AS total
-              FROM creditos c JOIN estadocreditos ec ON c.idestadocreditos = ec.id
+      $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraXCobrar,
+              (SUM(c.capital)-SUM(c.saldopendiente)) as totalAbonado, COUNT(*) AS total
+              FROM creditos c JOIN estadocreditos ec ON c.idestadocreditos = ec.id WHERE c.idtipofinanciacion = 2
               GROUP BY c.idestadocreditos, ec.nombre;";
       $creditoRepo = new creditosRepository();
-
+      $Separados = $creditoRepo->querySQL($sql);
 
       //calcular descuento
       $sql = "SELECT SUM(f.descuento) AS total_descuentos
@@ -356,7 +356,7 @@ class reportescontrolador{
       
 
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'gastos'=>$gastos, 'resumen'=>$resumen]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'gastos'=>$gastos, 'resumen'=>$resumen]);
   }
 
   

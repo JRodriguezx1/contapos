@@ -28,12 +28,12 @@
     }
 
     interface i_creditosSeparados {
+        idestadocreditos:string,
+        estado:string
         carteraTotal:string,
-        carteraxcobrar:string,
+        carteraXCobrar:string,
         totalAbonado:string,
-        reditosFinalizados:string,
-        creditosPendientes:string,
-        creditosAnulados:string,
+        total:string,
     }
 
     interface i_gastos {
@@ -49,7 +49,7 @@
         margenutilidad:string,
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_resumen[]=[], resumen:i_resumen[]=[];
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], resumen:i_resumen[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -65,17 +65,16 @@
             const url = "/admin/api/reportes/reportesGenerales"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            //facturaselectronicas = resultado;
-            //console.log(resultado);
             productosVendidos = resultado.productosVendidos;
             mediosPagos = resultado.mediosPagos;
-            //creditosSeparados = resultado.creditosSeparados;
+            creditosSeparados = resultado.separados;
+            console.log(creditosSeparados);
             gastos = resultado.gastos;
             console.log(gastos);
             resumen = resultado.resumen;
             printProductosVendidos();
             printMediosPagos();
-            //printCreditosSeparados();
+            printCreditosSeparados();
             printGastos();
             printResumen();
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
@@ -127,12 +126,15 @@
             pageLength: 25,
             order: [[ 1, 'desc' ]],
             columns: [
-                        {title: 'Cartera Total', data: 'mediopago'},
-                        {title: 'Cartera Por Cobrar', data: 'cantidadMP'},
-                        {title: 'Total Abonado', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Creditos Activos', data: 'cantidadMP'},
-                        {title: 'Creditos Finalizados', data: 'mediopago'},
-                        {title: 'Creditos Anulados', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {
+                            title: 'Estado', 
+                            data: 'estado', 
+                            render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.estado=='Abierto'?'btn-blue':row.estado=='Finalizado'?'btn-lima':'btn-light'}">${row.estado}</button>`}
+                        },
+                        {title: 'Cartera Total', data: 'carteraTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Cartera Por Cobrar', data: 'carteraXCobrar', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Total Abonado', data: 'totalAbonado', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Total', data: 'total'}
                     ],
         });
     }

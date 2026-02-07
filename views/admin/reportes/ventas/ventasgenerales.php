@@ -149,12 +149,11 @@
       <table id="tablacreditosSeparados" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
+            <th class="px-4 py-2 border">Estado</th>
             <th class="px-4 py-2 border">Cartera Total</th>
             <th class="px-4 py-2 border">Cartera por cobrar</th>
             <th class="px-4 py-2 border">Total Abonado</th>
-            <th class="px-4 py-2 border">Creditos Finalizados</th>
-            <th class="px-4 py-2 border">Creditos Pendientes</th>
-            <th class="px-4 py-2 border">Creditos Anulados</th>
+            <th class="px-4 py-2 border">Total</th>
           </tr>
         </thead>
       </table>

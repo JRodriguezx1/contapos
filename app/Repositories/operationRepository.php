@@ -202,4 +202,7 @@ abstract class operationRepository extends BaseRepository{
         return $rows;
     }
 
+    public function querySQL(string $query):array{
+        return $this->fetchAll($query);
+    }
 }
