@@ -21,6 +21,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\Repositories\creditos\creditosRepository;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{
@@ -324,7 +325,12 @@ class reportescontrolador{
       $mediosPagos = productos::camposJoinObj($sql);
 
       //creditos/separados
-      $sql = "SELECT SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraxcobrar FROM creditos c WHERE c.idestadocreditos = 1";
+      $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraxcobrar,
+              (SUM(c.capital)-SUM(c.saldopendiente)) as totalabono, COUNT(*) AS total
+              FROM creditos c JOIN estadocreditos ec ON c.idestadocreditos = ec.id
+              GROUP BY c.idestadocreditos, ec.nombre;";
+      $creditoRepo = new creditosRepository();
+
 
       //calcular descuento
       $sql = "SELECT SUM(f.descuento) AS total_descuentos
