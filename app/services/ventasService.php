@@ -11,7 +11,7 @@ use App\Models\inventario\stockproductossucursal;
 
 class ventasService {
 
-    public static function ajustarIventarioXVenta($carrito):array{
+    public static function reducirIventarioXVenta($carrito):array{
         //$invSub = true;
         $invPro = true;
         //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
@@ -75,7 +75,7 @@ class ventasService {
         return $resultArray;
     }
 
-    public static function reducirIventarioXVenta($carrito):array{
+    public static function addIventarioXVenta($carrito):array{
         //$invSub = true;
         $invPro = true;
         //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////

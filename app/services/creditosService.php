@@ -90,7 +90,7 @@ class creditosService {
             $repo = new productsSeparadosRepository();
             $repo->crear_varios_reg_arrayobj($carrito);
             //descontar de inventario
-            $a = ventasService::ajustarIventarioXVenta($carrito); //no se ha convertido a repositorio los metodos internos
+            $a = ventasService::reducirIventarioXVenta($carrito); //no se ha convertido a repositorio los metodos internos
 
             //$ultimocierre->ventasenefectivo += $valorefectivo;
             $ultimocierre->creditocapital += $valoresCredito['capital'];
@@ -372,7 +372,7 @@ class creditosService {
             $productos = $productosRepo->obtenerPorCredito($credito->id);
             foreach($productos as $obj)
               $obj->idproducto = $obj->fk_producto;
-            ventasService::reducirIventarioXVenta($productos);
+            ventasService::addIventarioXVenta($productos);
             
             $alertas['exito'][] = "Separado anulado correctamente";
         } catch (\Throwable $th) {
@@ -469,26 +469,97 @@ class creditosService {
 
 
     //metodo llamado desde adicionarProductos.ts para el detalle de la orden trasnaldo/solicitud
-    public static function detalleProductosCredito(int $id){
+    public static function detalleProductosCredito(int $id):array{
         $alertas = [];
         //$orden = traslado_inv::find('id', $id);
-    
-        if(1){
-            $sql = "SELECT ps.id, ps.costo, ps.valorunidad, ps.cantidad, ps.subtotal, ps.base, ps.valorimp, ps.descuento, ps.total,
-                           p.id as idproducto, p.nombre, p.sku, p.preciopersonalizado, p.stockminimo, p.impuesto, p.precio_venta,
-                           und.id as idunidadmedida, und.nombre, und.simbolo
-                    FROM productosseparados ps
-                    LEFT JOIN productos p ON ps.fk_producto = p.id
-                    LEFT JOIN unidadesmedida und ON p.idunidadmedida = und.id
-                    WHERE p.visible = 1 AND ps.idcredito = $id;";
-
-
-            //$orden[0]->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql); 
-            $alertas['exito'][] = "Consulta procesada";
-            //$alertas['orden'] = $orden;
-        }else{
-            $alertas['error'][] = "Orden no existe";
-        }
-        echo json_encode($alertas);
+        $separdoMDRepo = new separadoMediopagoRepository();
+        return $separdoMDRepo->detalleProductosCredito($id);
     }
+
+
+    //metodo llamado desde adicionarproducto.ts
+    public static function editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront){
+        $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = []; $arrayDownInv=[]; $arrayUpInv = []; $arrayProductsEliminar = [];
+        $r1 = true; $r2 = true; $r3 = true;
+        $creditoRepo = new creditosRepository();
+        $credito = $creditoRepo->find($idcredito);
+        $productosRepo = new productsSeparadosRepository();
+        $detalleProductosDB = $productosRepo->findAll('idcredito', $idcredito);
+
+        //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de fk_producto
+        foreach($nuevosproductosFront as $itemfront){
+            $itemfront->idproducto = $itemfront->fk_producto;
+          foreach($detalleProductosDB as $itemDB){
+            if($itemfront->idcredito == $itemDB->idcredito){
+              if($itemfront->fk_producto == $itemDB->fk_producto){
+                $itemfront->id = $itemDB->id;
+                $idsdetalleproductos[] = $itemDB->id;
+                if($itemDB->cantidad < $itemfront->cantidad){ //descontar diferencia a inv
+                    $diferencia = $itemfront->cantidad-$itemDB->cantidad;
+                    $itemClone = clone $itemDB;
+                    $itemClone->idproducto = $itemDB->fk_producto;
+                    $itemClone->cantidad = $diferencia;
+                    $arrayDownInv[] = $itemClone;
+                }elseif ($itemDB->cantidad > $itemfront->cantidad){ //aumentar diferencia a inv
+                    $diferencia = $itemDB->cantidad-$itemfront->cantidad;
+                    $itemClone = clone $itemDB;
+                    $itemClone->idproducto = $itemDB->fk_producto;
+                    $itemClone->cantidad = $diferencia;
+                    $arrayUpInv[] = $itemClone;
+                }
+                break;
+              }
+            }
+          }
+          
+        }
+
+
+        ///IDs a eliminar de la DB
+        foreach($detalleProductosDB as $key => $value){
+            $value->idproducto = $value->fk_producto;
+            if(!in_array($value->id, $idsdetalleproductos)){
+                $arrayIdeliminar[] = $value->id;
+                $arrayProductsEliminar[] = $value;
+            }
+        }
+            //registros a insertar
+        foreach ($nuevosproductosFront as $value){
+            if(is_numeric($value->id))$arrayactualizar[] = $value;
+            if($value->id=='') $nuevosproductos[] = $value;
+        }
+
+        //ACTUALIZAR CREDITO
+        if($arrayIdeliminar)$r1 = $productosRepo->delete_regs('id', $arrayIdeliminar);
+        if($nuevosproductos)$r2 = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
+        if($nuevosproductosFront)$r3 = $productosRepo->updatemultiregobj($arrayactualizar, ['cantidad']);
+
+        //ACTUALIZAR EL INVENTARIO
+        //productos nuevos a descontar de inv
+        if($nuevosproductos)ventasService::reducirIventarioXVenta($nuevosproductos);
+        //productos a actualizar con $arrayDownInv y arrayUpInv actualizar su inventario
+        if($arrayDownInv)ventasService::reducirIventarioXVenta($arrayDownInv);
+        if($arrayUpInv)ventasService::addIventarioXVenta($arrayUpInv);
+        //productos enteros a devolver a inventario
+        if($arrayIdeliminar){
+            //$productsReturnInv = $productosRepo->IN_Where('id', $arrayIdeliminar, ['idcredito', $idcredito]);
+            ventasService::addIventarioXVenta($arrayProductsEliminar);
+        }
+
+        if($r1&&$r2&&$r3){
+            //actualizar el credito en general
+            
+            $alertas['exito'][] = "Credito Orden: $credito->num_orden, actualizada correctamente";
+        }else{
+            $alertas['error'][] = "Error, intenta actualizar la orden dle credito nuevamnete";
+        }
+
+        /*}else{
+          $alertas['exito'][] = "La orden dbe estar en estado 'pendiente'";
+        }*/
+        echo json_encode($alertas);
+        
+    }
+
+
 }

@@ -177,7 +177,6 @@ class creditoscontrolador{
     }
 
     public static function detalleProductosCredito(){
-        //session_start();
         isadmin();
         $alertas = [];
         $id=$_GET['id'];
@@ -186,7 +185,18 @@ class creditoscontrolador{
             echo json_encode($alertas);
             return;
         }
-        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::detalleProductosCredito($id);
+        $alertas = creditosService::detalleProductosCredito($id);
+        echo json_encode($alertas);
+    }
+
+
+    public static function editarOrdenCreditoSeparado(){
+        isadmin();
+        $alertas = [];
+        $idcredito = $_POST['idcredito'];
+        $idsdetalleproductos = json_decode($_POST['ids']);
+        $nuevosproductosFront = json_decode($_POST['nuevosproductos']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront);
         echo json_encode($alertas);
     }
 }

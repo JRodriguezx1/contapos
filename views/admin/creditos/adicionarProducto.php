@@ -122,7 +122,7 @@
 
     <!-- Botón actualizar -->
     <div class="flex justify-end mt-6">
-      <button id="btnUpdateTrasladoInv"
+      <button id="btnUpdateCreditoSeparado"
         class="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium text-base transition">
         Actualizar
       </button>

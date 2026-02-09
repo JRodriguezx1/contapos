@@ -235,9 +235,11 @@ $router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getco
 
 $router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
 $router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
+$router->get('/admin/api/detalleProductosCredito', [creditoscontrolador::class, 'detalleProductosCredito']);
 $router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::class, 'cambioMedioPagoSeparado']);
 $router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularSeparado']);
 $router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, 'ajustarCreditoAntiguo']);
+$router->post('/admin/api/editarOrdenCreditoSeparado', [creditoscontrolador::class, 'editarOrdenCreditoSeparado']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 

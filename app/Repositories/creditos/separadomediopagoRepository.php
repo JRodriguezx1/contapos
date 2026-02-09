@@ -42,10 +42,15 @@ class separadoMediopagoRepository extends operationRepository implements mediosP
         return $array;
     }*/
 
-    /*public function crear_guardar():array{
-
-        return [];
-    }*/
+    public function detalleProductosCredito(int $id):array{
+        $sql = "SELECT ps.id, ps.idcredito, ps.tipoproducto, ps.tipoproduccion, ps.costo, ps.valorunidad, ps.cantidad, ps.subtotal, ps.base, ps.valorimp, ps.descuento, ps.total,
+                       p.id as idproducto, p.nombre, p.sku, p.preciopersonalizado, p.stockminimo, p.impuesto, und.id as idunidadmedida, und.nombre as unidadmedida, und.simbolo
+                FROM productosseparados ps
+                LEFT JOIN productos p ON ps.fk_producto = p.id
+                LEFT JOIN unidadesmedida und ON p.idunidadmedida = und.id
+                WHERE p.visible = 1 AND ps.idcredito = $id;";
+        return $this->querySQL($sql);
+    }
 
     public function allMediospagoXCierrecaja(int $id):array{
         $sql = "SELECT m.id as idmediopago, m.mediopago, smp.valor FROM separadomediopago smp
