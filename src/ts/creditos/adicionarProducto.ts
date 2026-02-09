@@ -4,41 +4,72 @@
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
         const tablaItems = document.querySelector('#tablaItems tbody');
         const btnUpdateCreditoSeparado = document.querySelector('#btnUpdateCreditoSeparado') as HTMLButtonElement;
-        let carrito:{id: string, idcredito:string, fk_producto:string, iditem:string, nombreitem:string, unidadmedida:string, tipoproducto:string, tipoproduccion:string, cantidad: number, factor: number}[]=[];
-        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
 
         interface i_itemDetalle {
-            id:string,
+            id:string, //id del registro de la tabla productosseparados
             idcredito:string,
-            idproducto:string,
+            fk_producto: string,
+            idproducto?:string,
             idunidadmedida:string,
             tipoproducto:string,
             tipoproduccion:string,
-            nombre:string,
+            rendimientoestandar?:string,
+            factor?:number,
+            nombreproducto:string,
             unidadmedida:string,
-            simbolo:string,
             preciopersonalizado:string,
             sku:string,
-            stockminimo:string,
-            costo:string,
-            valorunidad:string,
-            descuento:string,
-            cantidad:number,
-            base:string,
+            stockminimo?:string,
+            costo:number,
+            valorunidad:number,
+            descuento:string,  //se calcula para productos nuevos agregados
+            cantidad:number,   //se calcula para productos nuevos agregados
+            base:number,       //se calcula para productos nuevos agregados
             impuesto:string,
-            valorimp:string,
-            subtotal:string,
-            total:string,
+            valorimp:number,   //se calcula para productos nuevos agregados
+            subtotal:number,   //se calcula para productos nuevos agregados
+            total:number,      //se calcula para productos nuevos agregados
         }
+
+        interface i_allProducts {
+            id:string,  //id del producto
+            idunidadmedida:string, 
+            nombre:string,
+            impuesto:string,
+            tipoproducto:string, 
+            tipoproduccion:string, 
+            sku:string, 
+            unidadmedida:string, 
+            preciopersonalizado:string,
+            rendimientoestandar:string, 
+            stockminimo:string,
+            precio_compra:number,
+            precio_venta:number
+            habilitarventa:string, 
+            visible:string,
+        }
+
+        let carrito:i_itemDetalle[]=[];
+        let allproducts:i_allProducts[] = [];
+        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
+
+        const constImp: {[key:string]: number} = {};
+        constImp['excluido'] = 0;
+        constImp['0'] = 0;  //exento de iva, tarifa 0%
+        constImp['5'] = 0.0476190476190476; //iva, tarifa al 5%,  Bienes/servicios al 5
+        constImp['8'] = 0.0740740740740741; //inc, tarifa al 8%,  impuesto nacional al consumo
+        constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
+        constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
         (async ()=>{
             try {
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
-                const respuesta = await fetch(url); 
-                const resultado:{id:string, habilitarventa:string, visible:string, nombre:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[] = await respuesta.json();
+                const respuesta = await fetch(url);
+                const resultado:i_allProducts[] = await respuesta.json();
                 console.log(resultado);
                 filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida }));
                 activarselect2();
+                allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
             } catch (error) {
                 console.log(error);
             }
@@ -58,17 +89,29 @@
                         return {
                             id: item.id,
                             idcredito: item.idcredito,
-                            fk_producto: item.idproducto,
-                            iditem: item.idproducto,
+                            fk_producto: item.idproducto!,
+                            idproducto:item.idproducto,
+                            idunidadmedida: item.idunidadmedida,
                             tipoproducto: item.tipoproducto, 
                             tipoproduccion: item.tipoproduccion,
-                            nombreitem: item.nombre, 
-                            unidadmedida:item.unidadmedida, 
-                            cantidad: item.cantidad, 
+                            rendimientoestandar: item.rendimientoestandar,
+                            nombreproducto: item.nombreproducto, 
+                            unidadmedida: item.unidadmedida,
+                            preciopersonalizado: item.preciopersonalizado,
+                            sku: item.sku,
+                            costo: item.costo,
+                            valorunidad: item.valorunidad,
+                            descuento: item.descuento,
+                            cantidad: item.cantidad,
+                            base: item.base,
+                            impuesto: item.impuesto,
+                            valorimp: item.valorimp,
+                            subtotal: item.subtotal,
+                            total: item.total,
                             factor: 1
                         }
                     });
-                    carrito.forEach(c =>printItemTable(c.iditem, c.unidadmedida, c.cantidad, c.nombreitem));
+                    carrito.forEach(c =>printItemTable(c.fk_producto, c.unidadmedida, c.cantidad, c.nombreproducto));
                 } catch (error) {
                     console.log(error);
                 }
@@ -96,27 +139,45 @@
             let datos = ($('#articulo') as any).select2('data')[0];
             console.log(datos);
             if(datos){
-                const index = carrito.findIndex(x=>x.iditem==datos.id);
+                const index = carrito.findIndex(x=>x.idproducto==datos.id);
                 if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-                    const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; 
-                    const item:{id:string, idcredito:string, fk_producto:string, iditem: string, nombreitem: string, /*tipo: string,*/tipoproducto:string, tipoproduccion:string, unidadmedida: string, cantidad: number, factor: number} = {
+                    //const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!;
+                    const productSelected = allproducts.find(x=>x.id==datos.id)!;
+
+                    const productototal = Number(productSelected.precio_venta)*cantidad;
+                    const productovalorimp = productototal*constImp[productSelected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+
+                    const item:i_itemDetalle = {
                         id: '',
                         idcredito: idcreditoURL!,
-                        fk_producto: itemselected.id, 
-                        iditem: itemselected.id,
-                        nombreitem: itemselected.text,
+                        fk_producto: productSelected.id, 
+                        idproducto:productSelected.id,
+                        idunidadmedida: productSelected.idunidadmedida,
                         //tipo: itemselected.tipo,  ////tipo = 0 es producto (simple o compuesto produccion),  1 = subproducto
-                        tipoproducto: itemselected.tipoproducto, 
-                        tipoproduccion: itemselected.tipoproduccion,
-                        unidadmedida: itemselected.unidadmedida,
+                        tipoproducto: productSelected.tipoproducto, 
+                        tipoproduccion: productSelected.tipoproduccion,
+                        rendimientoestandar: productSelected.rendimientoestandar,
+                        nombreproducto: productSelected.nombre, 
+                        unidadmedida: productSelected.unidadmedida,
+                        preciopersonalizado: productSelected.preciopersonalizado,
+                        sku: productSelected.sku,
+                        costo: productSelected.precio_compra,
+                        valorunidad: productSelected.precio_venta,
+                        descuento: '0',
                         cantidad: cantidad,
+                        base: 0,
+                        impuesto: productSelected.impuesto,
+                        valorimp: 0,
+                        subtotal: 0,
+                        total: productototal,
                         factor: 1,
                     }
                     carrito = [...carrito, item];
-                    printItemTable(itemselected.id, itemselected.unidadmedida, cantidad, itemselected.text);
+                    printItemTable(productSelected.id, productSelected.unidadmedida, cantidad, productSelected.nombre);
                 }else{
                     carrito[index].cantidad = cantidad;
-                    const tr = document.querySelector(`[data-id="${carrito[index].iditem}"]`)!;
+                    //calcular valores
+                    const tr = document.querySelector(`[data-id="${carrito[index].fk_producto}"]`)!;
                     tr.children[1].textContent = carrito[index].cantidad+'';
                 }
             }
@@ -154,7 +215,7 @@
             //const tipoitem = (elementItem as HTMLElement).dataset.tipo!;
         
             if((e.target as HTMLElement).classList.contains('eliminarItem')){ //se trae todoscon true menos el que coincida con iditem y tipoitem
-                carrito = carrito.filter(x => x.iditem!==iditem);
+                carrito = carrito.filter(x => x.fk_producto!==iditem);
                 tablaItems?.querySelector(`TR[data-id="${iditem}"]`)?.remove();
             }
             //itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;

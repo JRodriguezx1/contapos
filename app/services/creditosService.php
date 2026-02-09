@@ -472,12 +472,12 @@ class creditosService {
     public static function detalleProductosCredito(int $id):array{
         $alertas = [];
         //$orden = traslado_inv::find('id', $id);
-        $separdoMDRepo = new separadoMediopagoRepository();
-        return $separdoMDRepo->detalleProductosCredito($id);
+        $productosSeparados = new productsSeparadosRepository();
+        return $productosSeparados->detalleProductosCredito($id);
     }
 
 
-    //metodo llamado desde adicionarproducto.ts
+    //metodo llamado desde adicionarproducto.ts para editar los productos del credito/separado
     public static function editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront){
         $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = []; $arrayDownInv=[]; $arrayUpInv = []; $arrayProductsEliminar = [];
         $r1 = true; $r2 = true; $r3 = true;
@@ -529,10 +529,13 @@ class creditosService {
             if($value->id=='') $nuevosproductos[] = $value;
         }
 
+        debuguear($nuevosproductos);
         //ACTUALIZAR CREDITO
         if($arrayIdeliminar)$r1 = $productosRepo->delete_regs('id', $arrayIdeliminar);
         if($nuevosproductos)$r2 = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
         if($nuevosproductosFront)$r3 = $productosRepo->updatemultiregobj($arrayactualizar, ['cantidad']);
+
+        debuguear(1);
 
         //ACTUALIZAR EL INVENTARIO
         //productos nuevos a descontar de inv

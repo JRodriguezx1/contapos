@@ -77,7 +77,7 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function updatemultiregobj(array $array=[], array $colums=[]){
+    public function updatemultiregobj(array $array=[], array $colums=[]):bool{
         $query = "UPDATE {$this->table} SET ";
         $in = '';
         foreach($colums as $idx => $col){
@@ -100,7 +100,8 @@ abstract class operationRepository extends BaseRepository{
                 $query .= "ELSE $col END, ";
             }
         }
-        debuguear($query);
+        //debuguear($query);
+        return self::$db->query($query);
     }
 
 
