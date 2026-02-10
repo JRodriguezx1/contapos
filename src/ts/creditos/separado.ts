@@ -8,13 +8,7 @@
     const tablaSeparado = document.querySelector('#tablaSeparado tbody');
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
-    
-    /*interface Item {
-      id_impuesto: number,
-      facturaid: number,
-      basegravable: number,
-      valorimpuesto: number
-    }*/
+
 
     type conversionunidadesapi = {
       id:string,

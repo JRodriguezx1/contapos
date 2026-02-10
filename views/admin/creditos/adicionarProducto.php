@@ -127,5 +127,26 @@
         Actualizar
       </button>
     </div>
+
+    
+    <div class="flex justify-start gap-4 mt-6">
+        <div class="text-end">
+            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Sub Total:</p>
+            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Recargo Interes:</p>
+            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Impuesto:</p>
+            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Abono Inicial:</p>
+            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Descuento:</p>
+            <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
+        </div>
+        <div>
+            <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->capital, 2, ',', '.');?></p>
+            <p id="interes" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->interes, 2, ',', '.');?></p>
+            <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->valorimpuestototal,2, ',', '.');?></p>
+            <p id="abonoinicial" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->abonoinicial,2, ',', '.');?></p>
+            <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->descuento,2, ',', '.');?></p>
+            <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ <?php echo number_format($credito->montototal,2, ',', '.');?></p>
+        </div>
+    </div>
+    
   </section>
 </div>

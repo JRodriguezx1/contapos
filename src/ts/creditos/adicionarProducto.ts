@@ -1,6 +1,6 @@
 (()=>{
     if(document.querySelector('.adicionarProducto')){
-        // EDITAR LOS PRODUCTOS A TRASLADOR A OTRA SEDE
+        
         const btnAddItem = document.querySelector('#btnAddItem') as HTMLButtonElement;
         const tablaItems = document.querySelector('#tablaItems tbody');
         const btnUpdateCreditoSeparado = document.querySelector('#btnUpdateCreditoSeparado') as HTMLButtonElement;
@@ -20,9 +20,13 @@
             preciopersonalizado:string,
             sku:string,
             stockminimo?:string,
+            abonoinicial?:number,      //abono inicial en el credito
+            interes?:string,           // 1 = si interes en el credito, 0 = no interes en el credito
+            valorinterestotal?:number, //valor del interes total de credito
+            descuentocredito?:number,  //descuneto general en el credito
             costo:number,
             valorunidad:number,
-            descuento:string,  //se calcula para productos nuevos agregados
+            descuento:number,  //se calcula para productos nuevos agregados
             cantidad:number,   //se calcula para productos nuevos agregados
             base:number,       //se calcula para productos nuevos agregados
             impuesto:string,
@@ -61,7 +65,7 @@
         let carrito:i_itemDetalle[]=[];
         let allproducts:i_allProducts[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
-        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
+        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, abonoinicial:0, interes:'0', valorinterestotal:0, dctox100: 0, descuentocredito: 0, total: 0}; //datos global de la venta
 
         const constImp: {[key:string]: number} = {};
         constImp['excluido'] = 0;
@@ -76,7 +80,6 @@
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
                 const resultado:i_allProducts[] = await respuesta.json();
-                console.log(resultado);
                 filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida }));
                 activarselect2();
                 allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
@@ -109,19 +112,24 @@
                             unidadmedida: item.unidadmedida,
                             preciopersonalizado: item.preciopersonalizado,
                             sku: item.sku,
-                            costo: item.costo,
-                            valorunidad: item.valorunidad,
-                            descuento: item.descuento,
-                            cantidad: item.cantidad,
-                            base: item.base,
+                            costo: Number(item.costo),
+                            valorunidad: Number(item.valorunidad),
+                            descuento: Number(item.descuento), //descuento del producto
+                            cantidad: Number(item.cantidad),
+                            base: Number(item.base),
                             impuesto: item.impuesto,
-                            valorimp: item.valorimp,
-                            subtotal: item.subtotal,
-                            total: item.total,
+                            valorimp: Number(item.valorimp),
+                            subtotal: Number(item.subtotal),
+                            total: Number(item.total),
                             factor: 1
                         }
                     });
                     carrito.forEach(c =>printItemTable(c.fk_producto, c.unidadmedida, c.cantidad, c.nombreproducto));
+                    //obtener datos del credito
+                    valorTotal.interes = resultado[0].interes!;
+                    valorTotal.valorinterestotal = Number(resultado[0].valorinterestotal!);
+                    valorTotal.descuentocredito = Number(resultado[0].descuentocredito!);
+                    valorTotal.abonoinicial = Number(resultado[0].abonoinicial!);
                 } catch (error) {
                     console.log(error);
                 }
@@ -171,9 +179,9 @@
                         unidadmedida: productSelected.unidadmedida,
                         preciopersonalizado: productSelected.preciopersonalizado,
                         sku: productSelected.sku,
-                        costo: productSelected.precio_compra,
-                        valorunidad: productSelected.precio_venta,
-                        descuento: '0',
+                        costo: Number(productSelected.precio_compra),
+                        valorunidad: Number(productSelected.precio_venta),
+                        descuento: 0,
                         cantidad: cantidad,
                         base: productototal-productovalorimp,
                         impuesto: productSelected.impuesto,
@@ -184,6 +192,7 @@
                     }
                     carrito = [...carrito, item];
                     printItemTable(productSelected.id, productSelected.unidadmedida, cantidad, productSelected.nombre);
+                    valorCarritoTotal();
                 }else{
                     carrito[index].cantidad = cantidad;
                     carrito[index].subtotal = (carrito[index].valorunidad)*carrito[index].cantidad;
@@ -257,13 +266,12 @@
             valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
             valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
             valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
-            valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
+            valorTotal.total = valorTotal.subtotal;
             //console.log(valorTotal);
             //console.log(factimpuestos);
             document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
             (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
-            (document.querySelector('#montocuota') as HTMLInputElement).value = valorTotal.total+'';
+            document.querySelector('#total')!.textContent = '$ '+(valorTotal.total+valorTotal.valorinterestotal-valorTotal.descuentocredito-valorTotal.abonoinicial).toLocaleString(); //+ interes - descuneto - abonoinicial
             
         }
 
@@ -303,7 +311,7 @@
                         datos.append('base', valorTotal.base.toFixed(3));
                         datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
                         datos.append('dctox100', valorTotal.dctox100+'');
-                        datos.append('descuento', valorTotal.descuento+'');
+                        //datos.append('descuento', valorTotal.descuento+'');
                         try {
                             const url = "/admin/api/editarOrdenCreditoSeparado";  //api llamada a trasladosinvcontrolador
                             const respuesta = await fetch(url, {method: 'POST', body: datos}); 

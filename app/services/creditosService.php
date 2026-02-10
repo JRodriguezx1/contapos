@@ -529,7 +529,10 @@ class creditosService {
             if($value->id=='') $nuevosproductos[] = $value;
         }
 
-        debuguear($nuevosproductos);
+
+        //ACTUALIZAR VALORES GLOBALES DEL CREDITO
+        
+        
         //ACTUALIZAR CREDITO
         if($arrayIdeliminar)$r1 = $productosRepo->delete_regs('id', $arrayIdeliminar);
         if($nuevosproductos)$r2 = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
