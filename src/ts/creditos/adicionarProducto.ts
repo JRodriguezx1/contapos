@@ -49,9 +49,19 @@
             visible:string,
         }
 
+        interface Item {
+            id_impuesto: number,
+            facturaid: number,
+            basegravable: number,
+            valorimpuesto: number
+            }
+
+
+        let factimpuestos:Item[] = [];
         let carrito:i_itemDetalle[]=[];
         let allproducts:i_allProducts[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
+        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
 
         const constImp: {[key:string]: number} = {};
         constImp['excluido'] = 0;
@@ -165,10 +175,10 @@
                         valorunidad: productSelected.precio_venta,
                         descuento: '0',
                         cantidad: cantidad,
-                        base: 0,
+                        base: productototal-productovalorimp,
                         impuesto: productSelected.impuesto,
-                        valorimp: 0,
-                        subtotal: 0,
+                        valorimp: productovalorimp,
+                        subtotal: productototal,
                         total: productototal,
                         factor: 1,
                     }
@@ -176,10 +186,17 @@
                     printItemTable(productSelected.id, productSelected.unidadmedida, cantidad, productSelected.nombre);
                 }else{
                     carrito[index].cantidad = cantidad;
+                    carrito[index].subtotal = (carrito[index].valorunidad)*carrito[index].cantidad;
+                    carrito[index].total = carrito[index].subtotal;
+                    //calculo del impuesto y base por producto en el carrito deventas
+                    carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
+                    carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
                     //calcular valores
                     const tr = document.querySelector(`[data-id="${carrito[index].fk_producto}"]`)!;
                     tr.children[1].textContent = carrito[index].cantidad+'';
+                    valorCarritoTotal();
                 }
+
             }
         });
 
@@ -206,6 +223,49 @@
             tablaItems?.appendChild(tr);
         }
 
+
+        function valorCarritoTotal(){
+            //calcular el impuesto discriminado por tarifa
+            const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
+            const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
+
+            const mapImpuesto = new Map();
+            carrito.forEach(x=>{
+                if(x.impuesto){
+                if(mapImpuesto.has(x.impuesto)){
+                    const valor = mapImpuesto.get(x.impuesto) + x.total*constImp[x.impuesto];
+                    mapImpuesto.set(x.impuesto, valor);
+                }else{
+                    mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
+                }
+                }
+                if(x.impuesto == null)x.impuesto = "excluido";
+                objbase[x.impuesto as keyof typeof objbase] += x.base;
+                const impValor = mapImpuesto.get(x.impuesto)??0;
+                const index = factimpuestos.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
+                if(index!=-1){ //si existe remplazar obj
+                    factimpuestos[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor};
+                }else{
+                    factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
+                }
+            });
+
+            //Valor del impuesto total de todos los productos, es decir de la factura;
+            let valorTotalImp:number = 0;
+            for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp;
+            
+            valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
+            valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
+            valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
+            valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
+            //console.log(valorTotal);
+            //console.log(factimpuestos);
+            document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
+            (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
+            (document.querySelector('#montocuota') as HTMLInputElement).value = valorTotal.total+'';
+            
+        }
 
 
         //////////////////////////////////// evento a la tabla de los productos seleccionados  ///////////////////////////////////
@@ -238,6 +298,12 @@
                         datos.append('idcredito', idcreditoURL!);
                         datos.append('ids', JSON.stringify(carrito.map(x=>x.id)));
                         datos.append('nuevosproductos', JSON.stringify(carrito));
+
+                        datos.append('factimpuestos', JSON.stringify(factimpuestos));
+                        datos.append('base', valorTotal.base.toFixed(3));
+                        datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
+                        datos.append('dctox100', valorTotal.dctox100+'');
+                        datos.append('descuento', valorTotal.descuento+'');
                         try {
                             const url = "/admin/api/editarOrdenCreditoSeparado";  //api llamada a trasladosinvcontrolador
                             const respuesta = await fetch(url, {method: 'POST', body: datos}); 

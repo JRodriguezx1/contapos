@@ -6,12 +6,14 @@
     <span class="sr-only">Atrás</span>
     </a>
     <h4 class="text-gray-600 my-2">Detalle del cierre de caja</h4>
+    
+    <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ){ ?>
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
         <button id="btnImprimirDetalleCaja" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
         <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
-    <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ){ ?>
+    
     <div class="accordion pb-20">
        <input type="checkbox" id="first">
        <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>  
