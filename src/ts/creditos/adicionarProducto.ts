@@ -22,6 +22,7 @@
             stockminimo?:string,
             abonoinicial?:number,      //abono inicial en el credito
             interes?:string,           // 1 = si interes en el credito, 0 = no interes en el credito
+            interestotal?:number,      //interes total dlecredito en porcentaje
             valorinterestotal?:number, //valor del interes total de credito
             descuentocredito?:number,  //descuneto general en el credito
             costo:number,
@@ -65,7 +66,7 @@
         let carrito:i_itemDetalle[]=[];
         let allproducts:i_allProducts[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
-        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, abonoinicial:0, interes:'0', valorinterestotal:0, dctox100: 0, descuentocredito: 0, total: 0}; //datos global de la venta
+        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, abonoinicial:0, interes:'0', interestotal:0, valorinterestotal:0, dctox100: 0, descuentocredito: 0, total: 0}; //datos global de la venta
 
         const constImp: {[key:string]: number} = {};
         constImp['excluido'] = 0;
@@ -127,6 +128,7 @@
                     carrito.forEach(c =>printItemTable(c.fk_producto, c.unidadmedida, c.cantidad, c.nombreproducto));
                     //obtener datos del credito
                     valorTotal.interes = resultado[0].interes!;
+                    valorTotal.interestotal = resultado[0].interestotal!;
                     valorTotal.valorinterestotal = Number(resultado[0].valorinterestotal!);
                     valorTotal.descuentocredito = Number(resultado[0].descuentocredito!);
                     valorTotal.abonoinicial = Number(resultado[0].abonoinicial!);
@@ -266,12 +268,12 @@
             valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
             valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
             valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
-            valorTotal.total = valorTotal.subtotal;
+            valorTotal.total = valorTotal.subtotal+valorTotal.valorinterestotal-valorTotal.descuentocredito-valorTotal.abonoinicial;
             //console.log(valorTotal);
             //console.log(factimpuestos);
             document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
             (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.querySelector('#total')!.textContent = '$ '+(valorTotal.total+valorTotal.valorinterestotal-valorTotal.descuentocredito-valorTotal.abonoinicial).toLocaleString(); //+ interes - descuneto - abonoinicial
+            document.querySelector('#total')!.textContent = '$ '+(valorTotal.total).toLocaleString(); //+ interes - descuneto - abonoinicial
             
         }
 
@@ -308,9 +310,16 @@
                         datos.append('nuevosproductos', JSON.stringify(carrito));
 
                         datos.append('factimpuestos', JSON.stringify(factimpuestos));
-                        datos.append('base', valorTotal.base.toFixed(3));
-                        datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
+                        datos.append('capital', valorTotal.subtotal+'');
+                        //datos.append('saldopendiente', );
+                        //datos.append('montocuota', );
+                        datos.append('montototal', valorTotal.total+'');
+                        datos.append('totalunidades', carrito.reduce((total, x)=>x.cantidad+total, 0)+'');
+                        
+                        datos.append('base', valorTotal.base.toFixed(3));  //base global del credito
+                        datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto dle credito. 
                         datos.append('dctox100', valorTotal.dctox100+'');
+                        datos.append('descuento', valorTotal.descuentocredito+''); //descuento global de credito
                         //datos.append('descuento', valorTotal.descuento+'');
                         try {
                             const url = "/admin/api/editarOrdenCreditoSeparado";  //api llamada a trasladosinvcontrolador
