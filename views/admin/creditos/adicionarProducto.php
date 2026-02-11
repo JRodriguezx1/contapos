@@ -111,6 +111,8 @@
             <th class="p-4 border-b border-gray-200 ">Producto</th>
             <th class="p-4 border-b border-gray-200 ">Cantidad</th>
             <th class="p-4 border-b border-gray-200 ">Unidad de medida</th>
+            <th class="p-4 border-b border-gray-200 ">Valor</th>
+            <th class="p-4 border-b border-gray-200 ">Total</th>
             <th class="p-4 border-b border-gray-200  text-center">Acciones</th>
           </tr>
         </thead>

@@ -20,11 +20,17 @@
             preciopersonalizado:string,
             sku:string,
             stockminimo?:string,
+
+            capital?:number,            //DATOS DEL CREDITO
             abonoinicial?:number,      //abono inicial en el credito
+            saldopendiente?:number,
+            cantidadcuotas?:number,
             interes?:string,           // 1 = si interes en el credito, 0 = no interes en el credito
             interestotal?:number,      //interes total dlecredito en porcentaje
             valorinterestotal?:number, //valor del interes total de credito
+            montototal?:number,
             descuentocredito?:number,  //descuneto general en el credito
+            
             costo:number,
             valorunidad:number,
             descuento:number,  //se calcula para productos nuevos agregados
@@ -66,7 +72,8 @@
         let carrito:i_itemDetalle[]=[];
         let allproducts:i_allProducts[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
-        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, abonoinicial:0, interes:'0', interestotal:0, valorinterestotal:0, dctox100: 0, descuentocredito: 0, total: 0}; //datos global de la venta
+        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, total: 0}; //datos global de la venta
+        const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
 
         const constImp: {[key:string]: number} = {};
         constImp['excluido'] = 0;
@@ -125,13 +132,19 @@
                             factor: 1
                         }
                     });
-                    carrito.forEach(c =>printItemTable(c.fk_producto, c.unidadmedida, c.cantidad, c.nombreproducto));
+                    carrito.forEach(c =>printItemTable(c.fk_producto, c.unidadmedida, c.cantidad, c.nombreproducto, c.valorunidad, c.total));
                     //obtener datos del credito
-                    valorTotal.interes = resultado[0].interes!;
-                    valorTotal.interestotal = resultado[0].interestotal!;
-                    valorTotal.valorinterestotal = Number(resultado[0].valorinterestotal!);
-                    valorTotal.descuentocredito = Number(resultado[0].descuentocredito!);
-                    valorTotal.abonoinicial = Number(resultado[0].abonoinicial!);
+
+                    dataCredit.capital = Number(resultado[0].capital);
+                    dataCredit.abonoinicial = Number(resultado[0].abonoinicial!);
+                    dataCredit.saldopendiente = Number(resultado[0].saldopendiente);
+                    dataCredit.cantidadcuotas = Number(resultado[0].cantidadcuotas);
+                    dataCredit.interes = resultado[0].interes!;
+                    dataCredit.interestotal = resultado[0].interestotal!;
+                    dataCredit.valorinterestotal = Number(resultado[0].valorinterestotal!);
+                    dataCredit.montototal = Number(resultado[0].montototal);
+                    dataCredit.descuentocredito = Number(resultado[0].descuentocredito!);
+                    
                 } catch (error) {
                     console.log(error);
                 }
@@ -193,7 +206,7 @@
                         factor: 1,
                     }
                     carrito = [...carrito, item];
-                    printItemTable(productSelected.id, productSelected.unidadmedida, cantidad, productSelected.nombre);
+                    printItemTable(productSelected.id, productSelected.unidadmedida, cantidad, productSelected.nombre, productSelected.precio_venta, item.total);
                     valorCarritoTotal();
                 }else{
                     carrito[index].cantidad = cantidad;
@@ -211,7 +224,7 @@
             }
         });
 
-        function printItemTable(id:string, unidadmedida:string, cantidad:number, nombre:string){
+        function printItemTable(id:string, unidadmedida:string, cantidad:number, nombre:string, valorunidad:number, total:number){
             //let options = `<option data-factor="1" value="" >${unidadmedida}</option>`;
             /*
             options = "";
@@ -225,6 +238,8 @@
                 `<td class="p-4">${nombre}</td>
                 <td class="p-4">${cantidad}</td>
                 <td class="p-4">${unidadmedida}</td>
+                <td class="p-4">$ ${valorunidad.toLocaleString()}</td>
+                <td class="p-4">$ ${total.toLocaleString()}</td>
                 <td class="p-4 flex items-center justify-center gap-2">
                     <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
                         👁 Ver
@@ -268,7 +283,7 @@
             valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
             valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
             valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
-            valorTotal.total = valorTotal.subtotal+valorTotal.valorinterestotal-valorTotal.descuentocredito-valorTotal.abonoinicial;
+            valorTotal.total = valorTotal.subtotal+dataCredit.valorinterestotal-dataCredit.descuentocredito-dataCredit.abonoinicial;
             //console.log(valorTotal);
             //console.log(factimpuestos);
             document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
@@ -288,6 +303,7 @@
                 carrito = carrito.filter(x => x.fk_producto!==iditem);
                 tablaItems?.querySelector(`TR[data-id="${iditem}"]`)?.remove();
             }
+            valorCarritoTotal();
             //itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;
         });
 
@@ -304,6 +320,11 @@
             }).then((result:any) => {
                 if (result.isConfirmed) {
                     (async ()=>{ 
+                        //validar que el montototal no sea menor a lo abonado hasta la fecha
+                        if(valorTotal.total< (dataCredit.montototal-dataCredit.saldopendiente)){
+                            alert('El valor del credito es inferior de lo que se ha abonado.');
+                            return;
+                        }
                         const datos = new FormData();
                         datos.append('idcredito', idcreditoURL!);
                         datos.append('ids', JSON.stringify(carrito.map(x=>x.id)));
@@ -311,16 +332,16 @@
 
                         datos.append('factimpuestos', JSON.stringify(factimpuestos));
                         datos.append('capital', valorTotal.subtotal+'');
-                        //datos.append('saldopendiente', );
-                        //datos.append('montocuota', );
+                        datos.append('saldopendiente', (dataCredit.saldopendiente+valorTotal.total-dataCredit.montototal)+'');
+                        datos.append('montocuota', (Math.ceil((valorTotal.total/dataCredit.cantidadcuotas)*100)/100)+'');
                         datos.append('montototal', valorTotal.total+'');
                         datos.append('totalunidades', carrito.reduce((total, x)=>x.cantidad+total, 0)+'');
                         
                         datos.append('base', valorTotal.base.toFixed(3));  //base global del credito
                         datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto dle credito. 
                         datos.append('dctox100', valorTotal.dctox100+'');
-                        datos.append('descuento', valorTotal.descuentocredito+''); //descuento global de credito
-                        //datos.append('descuento', valorTotal.descuento+'');
+                        datos.append('descuento', dataCredit.descuentocredito+''); //descuento global de credito
+                    
                         try {
                             const url = "/admin/api/editarOrdenCreditoSeparado";  //api llamada a trasladosinvcontrolador
                             const respuesta = await fetch(url, {method: 'POST', body: datos}); 

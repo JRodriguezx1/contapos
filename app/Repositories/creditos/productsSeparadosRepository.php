@@ -42,7 +42,7 @@ class productsSeparadosRepository extends operationRepository{
 
     public function detalleProductosCredito(int $id):array{
         $sql = "SELECT ps.id, ps.idcredito, ps.nombreproducto, ps.tipoproducto, ps.tipoproduccion, ps.costo, ps.valorunidad, ps.cantidad, ps.subtotal, ps.base, ps.valorimp, ps.descuento, ps.total, c.capital, c.abonoinicial, c.saldopendiente, c.cantidadcuotas, c.interes,
-                       c.interestotal c.valorinterestotal, c.montototal, c.descuento as descuentocredito, p.id as idproducto, p.nombre, p.sku, p.preciopersonalizado, p.stockminimo, p.rendimientoestandar, p.impuesto, und.id as idunidadmedida, und.nombre as unidadmedida
+                       c.interestotal, c.valorinterestotal, c.montototal, c.descuento as descuentocredito, p.id as idproducto, p.nombre, p.sku, p.preciopersonalizado, p.stockminimo, p.rendimientoestandar, p.impuesto, und.id as idunidadmedida, und.nombre as unidadmedida
                 FROM productosseparados ps
                 LEFT JOIN creditos c ON ps.idcredito = c.id
                 LEFT JOIN productos p ON ps.fk_producto = p.id

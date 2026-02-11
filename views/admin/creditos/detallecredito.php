@@ -75,9 +75,11 @@
         <div class="flex items-center">
           <span class="text-gray-600">Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
         </div>
-        <div>
-          <a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="btn-md btn-blue">+</a>
-        </div>
+        <?php if($credito->idestadocreditos == 2):?>
+          <div>
+            <a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="btn-md btn-blue">+</a>
+          </div>
+        <?php endif;?>
       </div>
     </div>
 

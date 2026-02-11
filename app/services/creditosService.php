@@ -335,7 +335,7 @@ class creditosService {
         
         try {
             //cambiar estado del separado
-            //$creditoRepo->anularCredito($credito->id);
+            $creditoRepo->anularCredito($credito->id);
             //Anular valores de la cuota de caja abierta
             $cuotasRepo = new cuotasRepository();
             $cuotas = $cuotasRepo->obtenerPorSeparado_cierracajaAbierto($credito->id);
@@ -367,7 +367,8 @@ class creditosService {
             if(!empty($arrayCierresCaja))
                 $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonosseparados']);
             //eliminar los medios de pago de las cuotas relacionadas donde el cierre de caja este abierto
-            $separdoMediopago->delete_regs('id', $idseparadomediopago);
+            if(!empty($idseparadomediopago))
+                $separdoMediopago->delete_regs('id', $idseparadomediopago);
             //devolver a inventario
             $productos = $productosRepo->obtenerPorCredito($credito->id);
             foreach($productos as $obj)
@@ -478,7 +479,7 @@ class creditosService {
 
 
     //metodo llamado desde adicionarproducto.ts para editar los productos del credito/separado
-    public static function editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront){
+    public static function editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit){
         $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = []; $arrayDownInv=[]; $arrayUpInv = []; $arrayProductsEliminar = [];
         $r1 = true; $r2 = true; $r3 = true;
         $creditoRepo = new creditosRepository();
@@ -531,6 +532,12 @@ class creditosService {
 
 
         //ACTUALIZAR VALORES GLOBALES DEL CREDITO
+        $credito->capital = $dataCredit['capital'];
+        $credito->saldopendiente = $dataCredit['saldopendiente'];
+        $credito->montocuota = $dataCredit['montocuota'];
+        $credito->montototal = $dataCredit['montototal'];
+        $credito->totalunidades = $dataCredit['totalunidades'];
+        $ru = $creditoRepo->update($credito);
         
         
         //ACTUALIZAR CREDITO
@@ -538,7 +545,7 @@ class creditosService {
         if($nuevosproductos)$r2 = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
         if($nuevosproductosFront)$r3 = $productosRepo->updatemultiregobj($arrayactualizar, ['cantidad']);
 
-        debuguear(1);
+        //debuguear(1);
 
         //ACTUALIZAR EL INVENTARIO
         //productos nuevos a descontar de inv

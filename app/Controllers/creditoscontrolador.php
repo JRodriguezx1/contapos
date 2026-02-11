@@ -196,7 +196,16 @@ class creditoscontrolador{
         $idcredito = $_POST['idcredito'];
         $idsdetalleproductos = json_decode($_POST['ids']);
         $nuevosproductosFront = json_decode($_POST['nuevosproductos']);
-        if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront);
+
+        $capital = json_decode($_POST['capital']);
+        $saldopendiente = json_decode($_POST['saldopendiente']);
+        $montocuota = json_decode($_POST['montocuota']);
+        $montototal = json_decode($_POST['montototal']);
+        $totalunidades = json_decode($_POST['totalunidades']);
+        $dataCredit = ['capital'=>$capital, 'saldopendiente'=>$saldopendiente, 'montocuota'=>$montocuota, 'montototal'=>$montototal, 'totalunidades'=>$totalunidades];
+        //debuguear($dataCredit);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit);
         echo json_encode($alertas);
     }
 }
