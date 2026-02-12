@@ -309,6 +309,12 @@
 
 
         btnUpdateCreditoSeparado.addEventListener('click', ()=>{
+            //validar que el montototal no sea menor a lo abonado hasta la fecha
+            if(valorTotal.total< (dataCredit.montototal-dataCredit.saldopendiente)){
+                Swal.fire('El valor del credito es inferior de lo que se ha abonado.', '', 'error')
+                return;
+            }
+
             Swal.fire({
                 customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
                 icon: 'question',
@@ -320,11 +326,6 @@
             }).then((result:any) => {
                 if (result.isConfirmed) {
                     (async ()=>{ 
-                        //validar que el montototal no sea menor a lo abonado hasta la fecha
-                        if(valorTotal.total< (dataCredit.montototal-dataCredit.saldopendiente)){
-                            alert('El valor del credito es inferior de lo que se ha abonado.');
-                            return;
-                        }
                         const datos = new FormData();
                         datos.append('idcredito', idcreditoURL!);
                         datos.append('ids', JSON.stringify(carrito.map(x=>x.id)));

@@ -178,7 +178,7 @@ class creditosService {
                     $ultimocierre->actualizar();
 
                     //**generar factura e impuestos cuando se termine de pagar el separado
-                    if($credito->saldopendiente <= 0 && $credito->factura_id == null)
+                    if(($credito->saldopendiente-$cuota->valorpagado) <= 0 && $credito->factura_id == null)
                         $idf = creditosService::registrarFactura($credito, $ultimocierre, $cuota->valorpagado);
 
                     $credito->actualizarCredito($cuota->valorpagado, isset($idf)?$idf:null);
@@ -229,7 +229,7 @@ class creditosService {
                     'recibido' => 0,
                     'cambio' => 0,
                     'transaccion' => null,
-                    'tipoventa' => 'credito',
+                    'tipoventa' => 'Credito',
                     'cotizacion' => 0,
                     'estado' => 'Paga',
                     'cambioaventa' => 0,
@@ -545,7 +545,6 @@ class creditosService {
         if($nuevosproductos)$r2 = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
         if($nuevosproductosFront)$r3 = $productosRepo->updatemultiregobj($arrayactualizar, ['cantidad']);
 
-        //debuguear(1);
 
         //ACTUALIZAR EL INVENTARIO
         //productos nuevos a descontar de inv
@@ -567,11 +566,7 @@ class creditosService {
             $alertas['error'][] = "Error, intenta actualizar la orden dle credito nuevamnete";
         }
 
-        /*}else{
-          $alertas['exito'][] = "La orden dbe estar en estado 'pendiente'";
-        }*/
         echo json_encode($alertas);
-        
     }
 
 

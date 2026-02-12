@@ -19,7 +19,7 @@
             <button id="printcotizacion" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir cotizacion</button>
         <?php endif; ?>
         <?php if($factura->tipoventa=='Credito'):?>
-            <a class="btn-command text-center" href="/admin/creditos/detallecredito?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle credito</a>
+            <a class="btn-command text-center" href="/admin/creditos/detallecredito?id=<?php echo $factura->ref_creditoid;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle credito</a>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
             <button id="enviarEmail" class="btn-command text-center"><span class="material-symbols-outlined">mail</span>Enviar factura</button>
