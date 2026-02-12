@@ -148,6 +148,9 @@ $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
 $router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
+$router->get('/admin/reportes/creditos/cuotas-creditos', [reportescontrolador::class, 'cuotasCreditos']);
+$router->get('/admin/reportes/creditos/creditos-finalizados', [reportescontrolador::class, 'creditosFinalizados']);
+$router->get('/admin/reportes/creditos/creditos-anulados', [reportescontrolador::class, 'creditosAnulados']);
 $router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'facturasanuladas']);
 $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);

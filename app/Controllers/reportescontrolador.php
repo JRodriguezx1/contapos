@@ -80,6 +80,45 @@ class reportescontrolador{
         $alertas = [];
         $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+    public static function cuotasCreditos(Router $router){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        /*$clientes = clientes::all();
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+        $conflocal = config_local::getParamCaja();*/
+        $router->render('admin/reportes/facturas/cuotascreditos', ['titulo'=>'Creditos', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+    public static function creditosFinalizados(Router $router){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        /*$clientes = clientes::all();
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+        $conflocal = config_local::getParamCaja();*/
+        $router->render('admin/reportes/facturas/creditosfinalizadas', ['titulo'=>'Creditos', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+    public static function creditosAnulados(Router $router){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        /*$clientes = clientes::all();
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+        $conflocal = config_local::getParamCaja();*/
+        $router->render('admin/reportes/facturas/creditosanulados', ['titulo'=>'Creditos', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
     
     public static function facturasanuladas(Router $router){
         //session_start();

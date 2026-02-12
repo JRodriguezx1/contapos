@@ -5,22 +5,24 @@
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/creditos/separado"><span class="material-symbols-outlined">add_2</span>Crear Separado</a>
     <!--<button class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="btnGastosingresos"><span class="material-symbols-outlined">paid</span>Gastos</br>Ingresos</button>
     <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
-    <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
     -->
+    <a class="btn-command text-center" href="/admin/reportes/creditos/cuotas-creditos"><span class="material-symbols-outlined">List</span>Reporte Cuotas</a>
+    <a class="btn-command text-center" href="/admin/reportes/creditos/creditos-finalizados"><span class="material-symbols-outlined">folder_check_2</span>Creditos Finalizados</a>
+    <a class="btn-command text-center" href="/admin/reportes/creditos/creditos-anulados"><span class="material-symbols-outlined">folder_check_2</span>Creditos Anulados</a>
   </div>
   <div id="divmsjalerta"></div>
   <table class="display responsive nowrap tabla" width="100%" id="tablaCreditos">
     <thead>
         <tr class="text-xl">
             <th>id</th>
+             <th>Fecha</th>
             <th>Tipo</th>
             <th>Cliente</th>
             <th>Credito</th>
-            <th>Abono Inicial</th>
-            <th>Credito Financiado</th>
+            <!--<th>Abono Inicial</th>
+            <th>Credito Financiado</th>-->
             <th>Interes</th>
             <th>Total Credito</th>
-            <th>Cuota</th>
             <th>Abono total</th>
             <th>Estado</th>
             <th class="accionesth">Acciones</th>
@@ -30,14 +32,14 @@
         <?php foreach($creditos as $value): ?>
             <tr class="text-xl"> 
                 <td class=""><?php echo $value->ID; ?></td>
+                <td class=""><?php echo substr($value->created_at, 0, 10); ?></td>
                 <td class=""><?php echo $value->idtipofinanciacion==1?'Credito':'Separado'; ?></td>
                 <td class=""><?php echo $value->nombre.' '.$value->apellido; ?></td>         
                 <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>
-                <td class="">$<?php echo number_format($value->abonoinicial,'2', ',', '.'); ?></td>
-                <td class="">$<?php echo number_format($value->capital-$value->abonoinicial,'2', ',', '.'); ?></td>
+                <!--<td class="">$<?php // echo number_format($value->abonoinicial,'2', ',', '.'); ?></td>
+                <td class="">$<?php // echo number_format($value->capital-$value->abonoinicial,'2', ',', '.'); ?></td>-->
                 <td class="">$<?php echo number_format($value->valorinterestotal,'2', ',', '.'); ?></td>
                 <td class="">$<?php echo number_format($value->montototal,'2', ',', '.'); ?></td>
-                <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td>
                 <td class="">$<?php echo number_format($value->montototal-$value->saldopendiente,'2', ',', '.'); ?></td>
                 <td class=""><button class="btn-xs <?php echo $value->idestadocreditos==1?'btn-lima':($value->idestadocreditos==2?'Abierto':'btn-red'); ?>">
                                 <?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado'); ?>
