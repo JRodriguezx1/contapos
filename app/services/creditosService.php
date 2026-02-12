@@ -566,7 +566,7 @@ class creditosService {
             $alertas['error'][] = "Error, intenta actualizar la orden dle credito nuevamnete";
         }
 
-        echo json_encode($alertas);
+        return $alertas;
     }
 
 
