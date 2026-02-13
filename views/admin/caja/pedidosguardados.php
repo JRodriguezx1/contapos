@@ -14,6 +14,7 @@
               <th>Fecha</th>
               <th>Orden</th>
               <th>Cliente</th>
+              <th>Zona</th>
               <th>Vendedor</th>
               <th>Estado</th>
               <th>Subtotal</th>
@@ -28,6 +29,7 @@
               <td class="" ><?php echo $value->fechacreacion; ?></td> 
               <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->cliente;?></td>
+              <td class="">Direccion - zona</td>
               <td class=""><?php echo $value->vendedor;?></td>
               <td>
                 <div data-estado="<?php echo $value->estado;?>" id="<?php echo $value->id;?>" class="max-w-full flex flex-wrap gap-2 justify-center">

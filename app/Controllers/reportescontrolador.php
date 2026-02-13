@@ -100,12 +100,9 @@ class reportescontrolador{
         isadmin();
         $alertas = [];
         $idsucursal = id_sucursal();
-        /*$clientes = clientes::all();
-        $mediospago = mediospago::whereArray(['estado'=>1]);
-        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
-        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
-        $conflocal = config_local::getParamCaja();*/
-        $router->render('admin/reportes/facturas/creditosfinalizadas', ['titulo'=>'Reportes', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $creditos = new creditosRepository();
+        $creditosFinalizados = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>1]);
+        $router->render('admin/reportes/facturas/creditosfinalizados', ['titulo'=>'Reportes', 'creditosFinalizados'=>$creditosFinalizados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function creditosAnulados(Router $router){
@@ -113,12 +110,9 @@ class reportescontrolador{
         isadmin();
         $alertas = [];
         $idsucursal = id_sucursal();
-        /*$clientes = clientes::all();
-        $mediospago = mediospago::whereArray(['estado'=>1]);
-        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
-        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
-        $conflocal = config_local::getParamCaja();*/
-        $router->render('admin/reportes/facturas/creditosanulados', ['titulo'=>'Reportes', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $creditos = new creditosRepository();
+        $creditosAnulados = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>3]);
+        $router->render('admin/reportes/facturas/creditosanulados', ['titulo'=>'Reportes', 'creditosAnulados'=>$creditosAnulados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
     
     public static function facturasanuladas(Router $router){
@@ -365,8 +359,8 @@ class reportescontrolador{
       $mediosPagos = productos::camposJoinObj($sql);
 
       //creditos/separados
-      $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital) as carteraTotal, SUM(c.saldopendiente) as carteraXCobrar,
-              (SUM(c.capital)-SUM(c.saldopendiente)) as totalAbonado, COUNT(*) AS total
+      $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital+c.valorinterestotal) as carteraTotal, SUM(c.saldopendiente) as carteraXCobrar,
+              (SUM(c.capital+c.valorinterestotal)-SUM(c.saldopendiente)) as totalAbonado, COUNT(*) AS total
               FROM creditos c JOIN estadocreditos ec ON c.idestadocreditos = ec.id WHERE c.idtipofinanciacion = 2
               GROUP BY c.idestadocreditos, ec.nombre;";
       $creditoRepo = new creditosRepository();
@@ -469,11 +463,13 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, cu.valorpagado, mp.mediopago FROM cuotas cu
-              INNER JOIN mediospago mp ON cu.mediopagoid = mp.id
+      $sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.idtipofinanciacion, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, smp.valor as valorpormedio, mp.mediopago
+              FROM cuotas cu
+              INNER JOIN separadomediopago smp ON cu.id = smp.idcuota
+              INNER JOIN mediospago mp ON smp.mediopago_id = mp.id
               INNER JOIN creditos cr ON cu.id_credito = cr.id
               INNER JOIN clientes cl ON cr.cliente_id = cl.id 
-              WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.id_sucursal_idfk = $idsucursal;";
+              WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.valorpagado>0 AND cu.id_sucursal_idfk = $idsucursal;";
       
       $cuotasRepo = new cuotasRepository();
       $cuotas = $cuotasRepo->querySQL($sql);

@@ -15,7 +15,7 @@
     <thead>
         <tr class="text-xl">
             <th>id</th>
-             <th>Fecha</th>
+            <th>Fecha</th>
             <th>Tipo</th>
             <th>Cliente</th>
             <th>Credito</th>
@@ -32,7 +32,7 @@
         <?php foreach($creditos as $value): ?>
             <tr class="text-xl"> 
                 <td class=""><?php echo $value->ID; ?></td>
-                <td class=""><?php echo substr($value->created_at, 0, 10); ?></td>
+                <td class=""><?php echo $value->fechainicio; ?></td>
                 <td class=""><?php echo $value->idtipofinanciacion==1?'Credito':'Separado'; ?></td>
                 <td class=""><?php echo $value->nombre.' '.$value->apellido; ?></td>         
                 <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>
@@ -40,11 +40,11 @@
                 <td class="">$<?php // echo number_format($value->capital-$value->abonoinicial,'2', ',', '.'); ?></td>-->
                 <td class="">$<?php echo number_format($value->valorinterestotal,'2', ',', '.'); ?></td>
                 <td class="">$<?php echo number_format($value->montototal,'2', ',', '.'); ?></td>
-                <td class="">$<?php echo number_format($value->montototal-$value->saldopendiente,'2', ',', '.'); ?></td>
+                <td class="">$<?php echo number_format($value->montototal+$value->abonoinicial-$value->saldopendiente,'2', ',', '.'); ?></td>
                 <td class=""><button class="btn-xs <?php echo $value->idestadocreditos==1?'btn-lima':($value->idestadocreditos==2?'Abierto':'btn-red'); ?>">
                                 <?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado'); ?>
                             </button>
-                </td>     
+                </td>
                 <td class="accionestd">
                     <div class="acciones-btns" id="<?php echo $value->ID;?>">
                         <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>

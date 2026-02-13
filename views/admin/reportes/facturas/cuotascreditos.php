@@ -3,14 +3,14 @@
 
 
   <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
-  <a href="/admin/reportes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
+  <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
     <span class="sr-only">Atrás</span>
   </a>
   
-  <h4 class="text-gray-600 mb-8 mt-4">Cuotas de creditos</h4>
+  <h4 class="text-gray-600 mb-8 mt-4">Cuotas de separados</h4>
   
   <div class="flex flex-col gap-4">
     <!-- Grupo de botones -->
@@ -45,14 +45,15 @@
 
 
   <div class="mt-4">
-    <p class="text-gray-500 text-xl">Septiembre 2025</p>
+    <p class="text-gray-500 text-xl">2026</p>
     <table id="tablaCuotasCreditos" class="display responsive nowrap tabla" width="100%">
       <thead class=" text-gray-700">
           <tr>
             <th class="px-4 py-2 border">Fecha</th>
+            <th class="px-4 py-2 border">Tipo</th>
             <th class="px-4 py-2 border">Cliente</th>
             <th class="px-4 py-2 border">Credito</th>
-            <th class="px-4 py-2 border">N°</th>
+            <th class="px-4 py-2 border">N° Cuota</th>
             <th class="px-4 py-2 border">Valor</th>
           </tr>
       </thead>

@@ -6,16 +6,18 @@
 
     const tablaCuotasCreditos = ($('#tablaCuotasCreditos') as any);
 
-    interface i_creditosSeparados {
+    interface i_cuotasCreditos {
+        fechapagado:string,
+        idtipofinanciacion:string,
+        cliente:string,
+        credito:string,
+        numerocuota:string,
+        valorpormedio:string,
+        mediopago:string,
         idestadocreditos:string,
-        estado:string
-        carteraTotal:string,
-        carteraXCobrar:string,
-        totalAbonado:string,
-        total:string,
     }
 
-    let creditosSeparados:i_creditosSeparados[] = [];
+    let cuotasCreditos:i_cuotasCreditos[] = [];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -31,8 +33,9 @@
             const url = "/admin/api/reportes/creditos/cuotasCreditos"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            console.log(resultado);
-            //printCreditosSeparados();
+            cuotasCreditos = resultado;
+            console.log(cuotasCreditos);
+            printCuotasCreditos();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
             console.log(error);
@@ -41,24 +44,52 @@
 
     
 
-    printCreditosSeparados();
-    function printCreditosSeparados(){
+    printCuotasCreditos();
+    function printCuotasCreditos(){
         tablaCuotasCreditos.DataTable({
             destroy: true, // importante si recargas la tabla
-            data: creditosSeparados,
+            data: cuotasCreditos,
             pageLength: 25,
             order: [[ 1, 'desc' ]],
             columns: [
+                        {title: 'Fecha', data: 'fechapagado'},
+                        {title: 'Tipo', data: 'idtipofinanciacion', render: (data:number) => `${data==1?'Credito':'Separado'}`},
+                        {title: 'Cliente', data: 'cliente'},
+                        {title: 'Credito', data: 'credito'},
+                        {title: 'N° Cuota', data: 'numerocuota'},
+                        {title: 'Valor', data: 'valorpormedio', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Medio de pago', data: 'mediopago'},
                         {
-                            title: 'Fecha', 
-                            data: 'estado', 
-                            render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.estado=='Abierto'?'btn-blue':row.estado=='Finalizado'?'btn-lima':'btn-light'}">${row.estado}</button>`}
-                        },
-                        {title: 'Cliente', data: 'carteraTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Credito', data: 'carteraXCobrar', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'N°', data: 'totalAbonado', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Valor', data: 'Valor'}
+                            title: 'Estado', 
+                            data: 'idestadocreditos', 
+                            render: (data: any, type: any, row: any) => { 
+                                                                            return `<button class="btn-xs ${row.idestadocreditos=='1'?'btn-lima':row.idestadocreditos=='2'?'btn-blue':'btn-red'}">
+                                                                                        ${row.idestadocreditos=='1'?'Finalizado':row.idestadocreditos=='2'?'Abierto':'Anulado'}
+                                                                                    </button>`
+                                                                        }
+                        }
+            ],
+            language: {
+                search: 'Busqueda',
+                emptyTable: 'No Hay datos disponibles',
+                zeroRecords:    "No se encontraron registros coincidentes",
+                lengthMenu: '_MENU_ Entradas por pagina',
+                info: 'Mostrando pagina _PAGE_ de _PAGES_',
+                infoEmpty: 'No hay entradas a mostrar',
+                infoFiltered: ' (filtrado desde _MAX_ registros)',
+                paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+            },
+            layout: {
+                topStart: {
+                    buttons: [
+                        {extend: 'excelHtml5', title: 'facturas procesadas'},  
+                        {extend: 'pdfHtml5', title: 'facturas procesadas'}, 
+                        {extend: 'print', title: 'facturas procesadas', text: 'Imprimir'},
+                        'colvis'
                     ],
+                    pageLength: 'pageLength'
+                }
+            },
         });
     }
 
