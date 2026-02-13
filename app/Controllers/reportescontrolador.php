@@ -22,6 +22,7 @@ use App\Models\inventario\subproductos;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Repositories\creditos\creditosRepository;
+use App\Repositories\creditos\cuotasRepository;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{
@@ -91,7 +92,7 @@ class reportescontrolador{
         $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $conflocal = config_local::getParamCaja();*/
-        $router->render('admin/reportes/facturas/cuotascreditos', ['titulo'=>'Creditos', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/reportes/facturas/cuotascreditos', ['titulo'=>'Reportes', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function creditosFinalizados(Router $router){
@@ -104,7 +105,7 @@ class reportescontrolador{
         $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $conflocal = config_local::getParamCaja();*/
-        $router->render('admin/reportes/facturas/creditosfinalizadas', ['titulo'=>'Creditos', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/reportes/facturas/creditosfinalizadas', ['titulo'=>'Reportes', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function creditosAnulados(Router $router){
@@ -117,7 +118,7 @@ class reportescontrolador{
         $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $conflocal = config_local::getParamCaja();*/
-        $router->render('admin/reportes/facturas/creditosanulados', ['titulo'=>'Creditos', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/reportes/facturas/creditosanulados', ['titulo'=>'Reportes', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
     
     public static function facturasanuladas(Router $router){
@@ -460,6 +461,24 @@ class reportescontrolador{
       $facturas = facturas::whereArrayBETWEEN('fechapago', $fechainicio, $fechafin, ['estado'=>'Paga', 'id_sucursal'=>$idsucursal]);
     }
     echo json_encode($facturas);
+  }
+
+  public static function apiCuotasCreditos(){
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, cu.valorpagado, mp.mediopago FROM cuotas cu
+              INNER JOIN mediospago mp ON cu.mediopagoid = mp.id
+              INNER JOIN creditos cr ON cu.id_credito = cr.id
+              INNER JOIN clientes cl ON cr.cliente_id = cl.id 
+              WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.id_sucursal_idfk = $idsucursal;";
+      
+      $cuotasRepo = new cuotasRepository();
+      $cuotas = $cuotasRepo->querySQL($sql);
+    }
+    echo json_encode($cuotas);
   }
 
   //Facturas procesadas que luego fueron anuladas

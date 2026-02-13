@@ -290,6 +290,7 @@ $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifacturaspagas']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/creditos/cuotasCreditos', [reportescontrolador::class, 'apiCuotasCreditos']);  //fetch llamado desde cuotascreditoss.ts
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts

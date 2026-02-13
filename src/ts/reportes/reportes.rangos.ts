@@ -1,6 +1,6 @@
 (()=>{
 
-    if(!document.querySelector('.ventasgenerales'))return;
+    if(!document.querySelector('.ventasgenerales') && !document.querySelector('.cuotasCreditos'))return;
 
      const POS = (window as any).POS;
 
