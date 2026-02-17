@@ -5,13 +5,15 @@
     const btnajustarCredito = document.querySelector('#ajustarCredito') as HTMLButtonElement;
     const btnDetalleProductos = document.querySelector('#btnDetalleProductos') as HTMLButtonElement;
     const btnAbonar = document.querySelector('#btnAbonar') as HTMLButtonElement;
+    const btnEditarCrearAbono = document.querySelector('#btnEditarCrearAbono') as HTMLInputElement;
+    const btnEditarCrearPagoTotal = document.querySelector('#btnEditarCrearPagoTotal') as HTMLInputElement;
     const btnPagarTodo = document.querySelector('#btnPagarTodo') as HTMLButtonElement;
     const miDialogoAjustarCredito = document.querySelector('#miDialogoAjustarCredito') as any;
     const miDialogoAbono = document.querySelector('#miDialogoAbono') as any;
     const miDialogoPagoTotal = document.querySelector('#miDialogoPagoTotal') as any;
     const miDialogoDetalleProducto = document.querySelector('#miDialogoDetalleProducto') as any;
     const modalcambioMedioPago:any = document.querySelector("#cambioMedioPago");
-    const pagarTodo = document.querySelector('#pagarTodo') as HTMLButtonElement;
+    //const pagarTodo = document.querySelector('#pagarTodo') as HTMLButtonElement;
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numCuota = document.querySelector('#numCuota') as HTMLLabelElement;
     const selectMediopago = document.querySelector('#selectMediopago') as HTMLSelectElement;
@@ -65,6 +67,16 @@
       miDialogoPagoTotal.showModal();
     });
 
+
+    btnEditarCrearAbono.addEventListener('click', ()=>{
+      btnEditarCrearAbono.disabled = true;
+      (document.querySelector('#formCrearUpdateAbono') as HTMLFormElement).submit();
+    });
+    btnEditarCrearPagoTotal.addEventListener('click', ()=>{
+      btnEditarCrearPagoTotal.disabled = true;
+      (document.querySelector('#formCrearUpdatePagoTotal') as HTMLFormElement).submit();
+    });
+    
 
     const saldopendiente = (document.querySelector('#saldopendiente') as HTMLInputElement).value;
     document.querySelector('#abonoTotalAntiguo')?.addEventListener("input", (e:Event)=>{
