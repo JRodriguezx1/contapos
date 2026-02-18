@@ -88,9 +88,8 @@
             <button id="btnImprimirDetalleCaja" class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
             <?php endif; ?>
             <button id="btnCambiarCaja" class="btn-command"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
-            
             <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
-                <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
+            <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
             <?php endif; ?>
         </div>
     </div> <!-- Fin col 2 -->
