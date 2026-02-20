@@ -1,50 +1,12 @@
 (()=>{
-    if(document.querySelector('.movimientosinventarios')){
+    if(!document.querySelector('.movimientosinventarios'))return;
 
-        interface compras {
-        id:string,
-        formapago:string,
-        nfactura:string,
-        impuesto:string,
-        cantidaditems:string,
-        observacion:string,
-        estado:string,
-        subtotal:string,
-        valortotal:string,
-        fechacompra:string,
-        nombreusuario:string,
-        nombreproveedor:string,
-        nombrecaja:string
-        estadocierrecaja:string
-    } 
+        const POS = (window as any).POS;
 
-        const consultarFechaPersonalizada = document.querySelector('#consultarFechaPersonalizada') as HTMLButtonElement;
-        let fechainicio:string = "", fechafin:string = "", tablaMovimientosInventarios:HTMLElement;
+        let tablaMovimientosInventarios:HTMLElement;
         let datosMovimientosInventarios:[] = [];
-
         const mesyaño:[string, number] = mesyañoactual();
         document.querySelector('#mesañoactual')!.textContent = mesyaño[0]+' '+mesyaño[1];
-
-        // SELECTOR DE FECHAS DEL CALENDARIO
-        ($('input[name="datetimes"]')as any).daterangepicker({
-        timePicker: true,
-        //startDate: moment().startOf('hour'),
-        //endDate: moment().startOf('hour').add(32, 'hour'),
-        startDate: moment().set({ hour: 0, minute: 0, second: 1 }),
-        endDate: moment().set({ hour: 23, minute: 59, second: 59 }),
-        locale: {
-            format: 'M/DD hh:mm A'
-        }
-        });
-
-        $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
-            var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
-            var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
-            fechainicio = startDate;
-            fechafin = endDate;
-            //(document.querySelector('#fechainicio') as HTMLParagraphElement).textContent = fechainicio;
-            //(document.querySelector('#fechafin') as HTMLParagraphElement).textContent = fechafin;
-        });
 
 
         ///////   productos y subproductos en el select
@@ -53,10 +15,9 @@
             try {
                 const url = "/admin/api/totalitems"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
                 const respuesta = await fetch(url); 
-                const resultado:{id:string, nombre:string, tipoproducto:string, sku:string, unidadmedida:string}[] = await respuesta.json(); 
-                filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'1', sku: item.sku, unidadmedida: item.unidadmedida }));
+                const resultado:{id:string, nombre:string, preciopersonalizado:string, tipoproducto:string, sku:string, unidadmedida:string}[] = await respuesta.json();
+                filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.preciopersonalizado?'0':'1', sku: item.sku, unidadmedida: item.unidadmedida }));
                 activarselect2(filteredData);
-                console.log(filteredData);
             } catch (error) {
                 console.log(error);
             }
@@ -82,36 +43,27 @@
         }
 
 
-        ////// consulta por fecha personalizada
-        consultarFechaPersonalizada.addEventListener('click', ()=>{
-            let datos = ($('#item') as any).select2('data')[0];
-            if(fechainicio == '' || fechafin == ''){
-                msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
-                return;
-            }
-            if(datos === undefined){
+        async function callApiReporte(dateinicio:string, datefin:string){
+            
+            let datosItem = ($('#item') as any).select2('data')[0];
+            if(datosItem === undefined){
                 msjalertToast('error', '¡Error!', "Seleccionar un item de la lista");
                 return;
             }
-            console.log(datos);
-            callApiMovimientoInventario(fechainicio, fechafin, datos.tipo, datos.id);
-        });
 
-        async function callApiMovimientoInventario(dateinicio:string, datefin:string, tipo:string, iditem:string){
-            console.log(dateinicio, datefin);
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
             const datos = new FormData();
             datos.append('fechainicio', dateinicio);
             datos.append('fechafin', datefin+' 23:59:59');
-            datos.append('tipo', tipo);
-            datos.append('iditem', iditem);
+            datos.append('tipo', datosItem.tipo);
+            datos.append('iditem', datosItem.id);
             try {
                 const url = "/admin/api/movimientoInventario"; //llama a la api que esta en reportescontrolador.php
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json();
                 datosMovimientosInventarios = resultado;
                 console.log(datosMovimientosInventarios);
-                printTableCompras();
+                printTableMovimientoInventario();
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
             } catch (error) {
                 console.log(error);
@@ -119,8 +71,8 @@
         }
 
 
-        printTableCompras();
-        function printTableCompras(){
+        printTableMovimientoInventario();
+        function printTableMovimientoInventario(){
             tablaMovimientosInventarios = ($('#tablaMovimientosInventarios') as any).DataTable({
                 "responsive": true,
                 pageLength: 25,
@@ -171,7 +123,6 @@
             });
         }
 
-
-    }
-
+        POS.callApiReporte = callApiReporte;
+    
 })();
