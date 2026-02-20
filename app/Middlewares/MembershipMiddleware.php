@@ -21,7 +21,7 @@ class MembershipMiddleware{
 
         $host = $_SERVER['HTTP_HOST'];  //cliente.contapos.test/
         $subdominio = explode('.', $host)[0];
-        if($subdominio == 'demo' || $subdominio == 'cliente'  || $subdominio == 'megatecho'){
+        if($subdominio == 'demo'  || $subdominio == 'megatecho'){
             $this->router->set('Aviso_vencimiento', true);
             $this->router->set('msj_titulo_aviso_vencimiento', 'Aviso de vencimiento de suscripción');
             $this->router->set('msj_texto_aviso_vencimiento', 'Tu suscripción de j2 software POS esta próximo a vencer, te invitamos a renovarla oportunamente');
