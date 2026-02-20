@@ -77,7 +77,7 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function updatemultiregobj(array $array=[], array $colums=[]){
+    public function updatemultiregobj(array $array=[], array $colums=[]):bool{
         $query = "UPDATE {$this->table} SET ";
         $in = '';
         foreach($colums as $idx => $col){
@@ -100,7 +100,8 @@ abstract class operationRepository extends BaseRepository{
                 $query .= "ELSE $col END, ";
             }
         }
-        debuguear($query);
+        //debuguear($query);
+        return self::$db->query($query);
     }
 
 
@@ -108,6 +109,13 @@ abstract class operationRepository extends BaseRepository{
     {
         return self::$db->query("DELETE FROM {$this->table} WHERE id = {$id} LIMIT 1");
     }
+
+
+    public function delete_regs(string $id, $array = []): bool
+    {
+        return self::$db->query("DELETE FROM {$this->table} WHERE {$id} IN (".join(', ', $array).")");
+    }
+
 
     public function all(): array
     {
@@ -176,6 +184,21 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
+    public function whereArrayBETWEEN(string $colum, string $fechaini, string $fechafin, array $array = []):array
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE {$colum} BETWEEN $fechaini AND $fechafin AND";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= " {$key} = '{$value}';";
+            }else{
+                $sql.= " {$key} = '{$value}' AND ";
+            }
+        }
+         $rows = $this->fetchAllStd($sql);
+        return $rows;
+    }
+
+
     public function unJoinWhereArrayObj(string $targetTable, string $fkLocal, string $fkTarget, array $where = []):array{
         $sql = "SELECT {$this->table}.*, {$targetTable}.*, {$this->table}.id AS ID 
                 FROM {$this->table} 
@@ -195,4 +218,7 @@ abstract class operationRepository extends BaseRepository{
         return $rows;
     }
 
+    public function querySQL(string $query):array{
+        return $this->fetchAll($query);
+    }
 }

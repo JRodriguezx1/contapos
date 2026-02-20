@@ -40,6 +40,8 @@ class printcontrolador{
     $direccion = direcciones::find('id', $factura->iddireccion);
     if(!$direccion)$direccion = direcciones::find('id', 1);
     $productos = ventas::idregistros('idfactura', $factura->id);
+    $factura->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $factura->id;");
+    
     $print = new ticketPOS();
     $print->generar($sucursal, $factura, $facturaElectronica, $cliente, $direccion, $productos);
   }

@@ -42,10 +42,6 @@ class separadoMediopagoRepository extends operationRepository implements mediosP
         return $array;
     }*/
 
-    /*public function crear_guardar():array{
-
-        return [];
-    }*/
 
     public function allMediospagoXCierrecaja(int $id):array{
         $sql = "SELECT m.id as idmediopago, m.mediopago, smp.valor FROM separadomediopago smp

@@ -29,10 +29,9 @@ class creditoscontrolador{
         //session_start();
         isadmin();
         $alertas = [];
-        $clientes = clientes::all();
         $creditos = new creditosRepository();
-        $creditos = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal()]);
-        $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'clientes'=>$clientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $creditos = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>2]);
+        $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -63,6 +62,22 @@ class creditoscontrolador{
         
         $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         $router->render('admin/creditos/detallecredito', $viewData);
+    }
+
+
+    public static function adicionarProducto(Router $router){
+        //session_start();
+        isadmin();
+        //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+        $alertas = [];
+        $id = $_GET['id'];  //id del credito
+        if(!is_numeric($id))return;
+
+        $conflocal = config_local::getParamGlobal();
+        $datos = creditosService::detallecredito($id);
+        
+        $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        $router->render('admin/creditos/adicionarProducto', $viewData);
     }
 
 
@@ -157,6 +172,39 @@ class creditoscontrolador{
         isadmin();
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = creditosService::ajustarCreditoAntiguo($_POST);
+        echo json_encode($alertas);
+    }
+
+    public static function detalleProductosCredito(){
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar orden.";
+            echo json_encode($alertas);
+            return;
+        }
+        $alertas = creditosService::detalleProductosCredito($id);
+        echo json_encode($alertas);
+    }
+
+
+    public static function editarOrdenCreditoSeparado(){
+        isadmin();
+        $alertas = [];
+        $idcredito = $_POST['idcredito'];
+        $idsdetalleproductos = json_decode($_POST['ids']);
+        $nuevosproductosFront = json_decode($_POST['nuevosproductos']);
+
+        $capital = json_decode($_POST['capital']);
+        $saldopendiente = json_decode($_POST['saldopendiente']);
+        $montocuota = json_decode($_POST['montocuota']);
+        $montototal = json_decode($_POST['montototal']);
+        $totalunidades = json_decode($_POST['totalunidades']);
+        $dataCredit = ['capital'=>$capital, 'saldopendiente'=>$saldopendiente, 'montocuota'=>$montocuota, 'montototal'=>$montototal, 'totalunidades'=>$totalunidades];
+        //debuguear($dataCredit);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit);
         echo json_encode($alertas);
     }
 }

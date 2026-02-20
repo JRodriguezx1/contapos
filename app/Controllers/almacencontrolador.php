@@ -962,7 +962,8 @@ class almacencontrolador{
 
 
   public static function totalitems(){  //Envia los productos simples y subproductos en un solo arreglo de objetos
-    $productos = productos::idregistros('tipoproducto', 0);
+    //$productos = productos::idregistros('tipoproducto', 0);
+    $productos = productos::camposJoinObj('SELECT * FROM productos WHERE NOT (tipoproducto = 1 AND tipoproduccion = 0) AND visible = 1;');
     $subproductos = subproductos::all();
     $totalitems = array_merge($productos, $subproductos);
     echo json_encode($totalitems);

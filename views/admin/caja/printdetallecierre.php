@@ -31,10 +31,11 @@
     <ul class="space-y-0.5">
       <li>Efectivo Inicial: <span class="font-semibold text-gray-900">+ $<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></span></li>
       <li>Ventas en Efectivo: <span class="font-semibold text-gray-900">+ $<?php echo number_format($ultimocierre->ventasenefectivo??0, "0", ",", ".");?></span></li>
+      <li>Abonos en efectivo: <span class="font-semibold text-gray-900">+ $<?php echo number_format($ultimocierre->abonosenefectivo??0, "0", ",", ".");?></span></li>
       <li>Gastos en Efectivo: <span class="font-semibold text-gray-900">- $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></span></li>
-      <li class="font-semibold text-gray-900">DINERO EN CAJA: $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja??0, "0", ",", ".");?></li>
+      <li class="font-semibold text-gray-900">DINERO EN CAJA: $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo+($ultimocierre->abonosenefectivo??0)-$ultimocierre->gastoscaja??0, "0", ",", ".");?></li>
       <li>Domicilios: $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></li>
-      <li class="font-semibold text-gray-900">REAL EN CAJA: $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></li>
+      <li class="font-semibold text-gray-900">REAL EN CAJA: $<?php echo number_format($ultimocierre->basecaja+$ultimocierre->ventasenefectivo+($ultimocierre->abonosenefectivo??0)-$ultimocierre->gastoscaja-$ultimocierre->domicilios??0, "0", ",", ".");?></li>
     </ul>
   </div>
 
@@ -53,10 +54,11 @@
     <h3 class="font-bold text-gray-900 mb-1.5">Datos de Ventas</h3>
     <ul>
       <li>Ingreso de Ventas Total: + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></li>
+      <li>Abonos totales: + $<?php echo number_format($ultimocierre->abonostotales??0, "0", ",", ".");?></li>
       <li>Total gastos de caja: - $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></li>
       <li>Total Descuentos: - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></li>
       <li>Total Domicilios: - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></li>
-      <li class="font-semibold text-gray-900">Real ingreso de ventas: = $<?php echo number_format(($ultimocierre->ingresoventas??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></li>
+      <li class="font-semibold text-gray-900">Real ingreso de ventas: = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></li>
       <li>Base grabable: = $<?php echo number_format($ultimocierre->basegravable??0, "0", ",", ".");?></li>
       <li>Impuesto Total: - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "0", ",", ".");?></li>
       <li>Gastos otros/bancarios: - $<?php echo number_format($ultimocierre->gastosbanco??0, "0", ",", ".");?></li>

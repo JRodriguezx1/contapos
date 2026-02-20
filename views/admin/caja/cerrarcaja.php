@@ -64,7 +64,9 @@
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Base en caja:</p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Gastos:</p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Domicilios:</p>
+            <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-semibold">Ventas Total:</p>
+            <?php endif; ?>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Nº Facturas:</p>
             <p class="m-0 mb-2 text-slate-600 text-2xl font-normal">Cotizaciones:</p>
           </div>
@@ -73,16 +75,22 @@
             <p id="basecajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->basecaja??0, "0", ",", ".");?></p>
             <p id="gastoscajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></p>
             <p id="domiciliosResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></p>
+            <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
             <p id="ingresoventasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></p>
+            <?php endif; ?>
             <p id="totalfacturasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalfacturas??0;?></p>
             <p id="totalcotizacionesResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalcotizaciones??0;?></p>
           </div>
         </div>
         <div class="flex flex-wrap gap-4 max-w-96">
             <button id="btnCerrarcaja" class="btn-command"><span class="material-symbols-outlined">keyboard_lock</span>Cerrar caja</button>
+            <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
             <button id="btnImprimirDetalleCaja" class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
+            <?php endif; ?>
             <button id="btnCambiarCaja" class="btn-command"><span class="material-symbols-outlined">change_circle</span>Cambiar caja</button>
+            <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
             <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
+            <?php endif; ?>
         </div>
     </div> <!-- Fin col 2 -->
   </div>

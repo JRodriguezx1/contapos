@@ -67,7 +67,7 @@
           </dt>
           <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
               id="sponsorsCount">
-            <?php echo number_format($bajoStock??0, "0", ",", ".");?>
+              <a href="/admin/reportes"><?php echo number_format($bajoStock??0, "0", ",", ".");?></a>
           </dd>
         </div>
 

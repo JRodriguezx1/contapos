@@ -8,13 +8,7 @@
     const tablaSeparado = document.querySelector('#tablaSeparado tbody');
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
-    
-    /*interface Item {
-      id_impuesto: number,
-      facturaid: number,
-      basegravable: number,
-      valorimpuesto: number
-    }*/
+
 
     type conversionunidadesapi = {
       id:string,
@@ -35,7 +29,7 @@
     }
 
     let allConversionUnidades:conversionunidadesapi[] = [];
-    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
+    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_compra:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
     let carrito:{id:string, fk_producto:string,  tipoproducto: string, tipoproduccion:string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let factimpuestos:Item[] = [], tipoventa:string="Contado";
@@ -58,8 +52,8 @@
         try {
             const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
             const respuesta = await fetch(url); 
-            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_venta:string, visible:string, habilitarventa:string}[] = await respuesta.json();
-            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, rendimientoestandar: item.rendimientoestandar, precio_venta: item.precio_venta }));
+            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_compra:string, precio_venta:string, visible:string, habilitarventa:string}[] = await respuesta.json();
+            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, rendimientoestandar: item.rendimientoestandar, precio_compra: item.precio_compra, precio_venta: item.precio_venta }));
             activarselect2(filteredData);
         } catch (error) {
             console.log(error);
@@ -103,6 +97,7 @@
           let cantidad = 1, itemselected = carrito.find(x=>x.fk_producto==datos.id);
           if(itemselected != undefined)cantidad += itemselected.cantidad;
           actualizarCarrito(datos.id, cantidad, true);
+          $("#articulo").val('null').trigger('change');
         }
     });
 
@@ -120,7 +115,7 @@
               tipoproducto: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
               tipoproduccion: itemselected.tipoproduccion,
               foto: '',
-              costo: 0,
+              costo: Number(itemselected.precio_compra),
               valorunidad: itemselected.precio_venta,
               nombreproducto: itemselected.text,
               rendimientoestandar: itemselected.rendimientoestandar,
@@ -134,7 +129,7 @@
               valorimp: productovalorimp,
               descuento: 0,
               total: Number(itemselected.precio_venta),
-              precio_compra: 0,
+              precio_compra: Number(itemselected.precio_compra),
           }
           carrito = [...carrito, item];
           POS.carrito = carrito;

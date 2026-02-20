@@ -27,7 +27,7 @@
                     <td class=""><?php echo $value->idcaja?$value->nombrecaja:'Caja eliminada';?></td> 
                     <td class="" ><?php echo $value->fechainicio;?></td> 
                     <td class=""><?php echo $value->fechacierre;?></td>
-                    <td class="">$<?php echo number_format($value->ingresoventas, "0", ",", ".");?></td>
+                    <td class="">$<?php echo number_format($value->ingresoventas+$value->abonostotales, "0", ",", ".");?></td>
                     <td class=""><?php echo $value->nombreusuario;?></td>
                     <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><a class="btn-xs btn-turquoise" href="/admin/caja/detallecierrecaja?id=<?php echo $value->id;?>">Ver</a></div></td>
                 </tr>

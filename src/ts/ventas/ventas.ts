@@ -419,7 +419,7 @@
     ////////////////// evento al bton pagar del modal facturar //////////////////////
     document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
       e.preventDefault();
-      if(valorTotal.total <= 0 || valorTotal.subtotal <= 0){
+      if(valorTotal.total <0 || valorTotal.subtotal <0){
         msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
@@ -485,19 +485,19 @@
           const resultado = await respuesta.json();
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-            /////// reinciar modulo de ventas
-            vaciarventa();
-             btnPagar.disabled = false;
-              btnPagar.value = 'Pagar';
+            btnPagar.disabled = false;
+            btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
+              /////// reinciar modulo de ventas
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
               POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
               console.log(resDian);
             }
+            vaciarventa();
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }

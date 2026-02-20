@@ -110,9 +110,7 @@
                     <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
                     <div class="mt-2 grid grid-cols-1">
                         <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
-                            <?php foreach($totalitems as $value): ?>
-                                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                            <?php endforeach; ?>
+                           
                         </select>
                     </div>
                 </div>

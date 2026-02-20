@@ -9,10 +9,10 @@
   
   <h4 class="text-gray-600 mb-8 mt-4">Movimientos de inventarios</h4>
   
-  <div class="flex flex-col gap-4">
+  <!--<div class="flex flex-col gap-4">-->
 
     <!-- Input y botón consultar -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 mb-4">
       <input 
         id="item"
         type="text" 
@@ -21,18 +21,37 @@
         placeholder="Seleccionar item"
         multiple="multiple"
       />
-
-      <input 
-        type="text" 
-        name="datetimes" 
-        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-60 p-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        placeholder="Seleccionar fecha"
-      />
-      <button id="consultarFechaPersonalizada" class="px-6 py-3 text-base font-medium bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-md transition">
-        Consultar
-      </button>
     </div>
-  </div>
+
+    <div class="flex flex-col gap-4">
+    <!-- Grupo de botones -->
+      <div class="inline-flex rounded-2xl shadow-md overflow-hidden border border-gray-300 self-start">
+        <button id="btnmesactual" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+          Mes actual
+        </button>
+        <button id="btnmesanterior" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
+          Mes anterior
+        </button>
+        <button id="btnhoy" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
+          Hoy
+        </button>
+        <button id="btnayer" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
+          Ayer
+        </button>
+      </div>
+      <!-- Input y botón consultar -->
+      <div class="flex items-center gap-3 mb-6">
+        <input 
+          type="text" 
+          name="datetimes" 
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-60 p-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder="Seleccionar fecha"
+        />
+        <button id="consultarFechaPersonalizada" class="px-6 py-3 text-base font-medium bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-md transition">
+          Consultar
+        </button>
+      </div>
+    </div>
 
 
   <div class="mt-4">

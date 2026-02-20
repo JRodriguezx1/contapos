@@ -21,6 +21,8 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\Repositories\creditos\creditosRepository;
+use App\Repositories\creditos\cuotasRepository;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{
@@ -78,6 +80,39 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
         $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function cuotasCreditos(Router $router){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        /*$clientes = clientes::all();
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
+        $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+        $conflocal = config_local::getParamCaja();*/
+        $router->render('admin/reportes/facturas/cuotascreditos', ['titulo'=>'Reportes', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+    public static function creditosFinalizados(Router $router){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        $creditos = new creditosRepository();
+        $creditosFinalizados = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>1]);
+        $router->render('admin/reportes/facturas/creditosfinalizados', ['titulo'=>'Reportes', 'creditosFinalizados'=>$creditosFinalizados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+    public static function creditosAnulados(Router $router){
+        //session_start();
+        isadmin();
+        $alertas = [];
+        $idsucursal = id_sucursal();
+        $creditos = new creditosRepository();
+        $creditosAnulados = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>3]);
+        $router->render('admin/reportes/facturas/creditosanulados', ['titulo'=>'Reportes', 'creditosAnulados'=>$creditosAnulados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
     
     public static function facturasanuladas(Router $router){
@@ -308,12 +343,14 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT v.idproducto, COUNT(v.idproducto) as cantidadrefencia, v.nombreproducto, SUM(v.cantidad) as totalProductosVendidos, v.valorunidad,  SUM(v.total) as valorTotal
+      $sql = "SELECT v.idproducto, COUNT(v.idproducto) as cantidadrefencia, v.nombreproducto, SUM(v.cantidad) as totalProductosVendidos, v.valorunidad,
+                    SUM(v.total) as valorTotal, SUM(COALESCE(v.costo, 0) * v.cantidad) AS costoTotal, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS utilidad
               FROM facturas f JOIN ventas v ON f.id = v.idfactura
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
               GROUP BY v.idproducto, v.nombreproducto, v.valorunidad;";
       $productosVendidos = productos::camposJoinObj($sql);
 
+      //calcular medio de pago
       $sql = "SELECT fm.idmediopago, COUNT(fm.idmediopago) as cantidadMP, m.mediopago, SUM(fm.valor) as valor
               FROM facturas f JOIN factmediospago fm ON f.id = fm.id_factura
               JOIN mediospago m ON fm.idmediopago = m.id
@@ -321,13 +358,39 @@ class reportescontrolador{
               GROUP BY fm.idmediopago, m.mediopago;";
       $mediosPagos = productos::camposJoinObj($sql);
 
+      //creditos/separados
+      $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital+c.valorinterestotal) as carteraTotal, SUM(c.saldopendiente) as carteraXCobrar,
+              (SUM(c.capital+c.valorinterestotal)-SUM(c.saldopendiente)) as totalAbonado, COUNT(*) AS total
+              FROM creditos c JOIN estadocreditos ec ON c.idestadocreditos = ec.id WHERE c.idtipofinanciacion = 2
+              GROUP BY c.idestadocreditos, ec.nombre;";
+      $creditoRepo = new creditosRepository();
+      $Separados = $creditoRepo->querySQL($sql);
+
+      //calcular descuento
       $sql = "SELECT SUM(f.descuento) AS total_descuentos
               FROM facturas f
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
       $totalDescuentos = productos::camposJoinObj($sql);
 
+      //gastos
+      $sql = "SELECT IFNULL(cg.nombre, 'TOTAL GENERAL') AS descripcion, IFNULL(g.operacion, '') AS tipogasto, SUM(g.valor) AS valor
+              FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
+              WHERE g.fecha BETWEEN '$fechainicio' AND '$fechafin' AND g.id_sucursalfk = 1
+              GROUP BY cg.nombre, g.operacion WITH ROLLUP
+              HAVING (cg.nombre IS NOT NULL AND g.operacion IS NOT NULL) OR (cg.nombre IS NULL AND g.operacion IS NULL);";
+      $gastos = gastos::camposJoinObj($sql);
+      
+      //resumen
+      $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
+              ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
+              FROM facturas f JOIN ventas v ON f.id = v.idfactura
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
+      $resumen = facturas::camposJoinObj($sql);
+
+      
+
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'gastos'=>$gastos, 'resumen'=>$resumen]);
   }
 
   
@@ -392,6 +455,26 @@ class reportescontrolador{
       $facturas = facturas::whereArrayBETWEEN('fechapago', $fechainicio, $fechafin, ['estado'=>'Paga', 'id_sucursal'=>$idsucursal]);
     }
     echo json_encode($facturas);
+  }
+
+  public static function apiCuotasCreditos(){
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.idtipofinanciacion, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, smp.valor as valorpormedio, mp.mediopago
+              FROM cuotas cu
+              INNER JOIN separadomediopago smp ON cu.id = smp.idcuota
+              INNER JOIN mediospago mp ON smp.mediopago_id = mp.id
+              INNER JOIN creditos cr ON cu.id_credito = cr.id
+              INNER JOIN clientes cl ON cr.cliente_id = cl.id 
+              WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.valorpagado>0 AND cu.id_sucursal_idfk = $idsucursal;";
+      
+      $cuotasRepo = new cuotasRepository();
+      $cuotas = $cuotasRepo->querySQL($sql);
+    }
+    echo json_encode($cuotas);
   }
 
   //Facturas procesadas que luego fueron anuladas

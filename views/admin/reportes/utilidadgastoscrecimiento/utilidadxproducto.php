@@ -25,7 +25,7 @@
                     <td class="" ><strong>$ </strong><?php echo $value->precio_compra;?></td> 
                     <td class=""><strong>$ </strong><?php echo number_format($value->precio_venta, '0', ',', '.');?></td>
                     <td class="text-blue-600 text-xl bg-blue-50 px-3 py-1.5 tracking-wide rounded-lg">$<?php echo number_format($value->precio_venta - $value->precio_compra, '0', ',', '.');?></td>
-                    <td class=" flex items-center justify-center text-purple-600 text-xl bg-purple-50 px-3 py-1.5 tracking-wide rounded-lg">%<?php echo number_format((($value->precio_venta - $value->precio_compra)/$value->precio_venta)*100, '1', ',', '.')?></td>
+                    <td class=" flex items-center justify-center text-purple-600 text-xl bg-purple-50 px-3 py-1.5 tracking-wide rounded-lg">%<?php echo number_format($value->precio_venta> 0 ?(($value->precio_venta - $value->precio_compra)/$value->precio_venta)*100:0, '1', ',', '.')?></td>
                     
                 </tr>
                 <?php endif; endforeach; ?>

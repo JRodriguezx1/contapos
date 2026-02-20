@@ -6,11 +6,14 @@
     <span class="sr-only">Atrás</span>
     </a>
     <h4 class="text-gray-600 my-2">Detalle del cierre de caja</h4>
+    
+    <?php if($conflocal['permitir_ver_resumen_cierre_de_caja_confirmado']->valor_final == 1 || userPerfil() < 3 ){ ?>
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
         <button id="btnImprimirDetalleCaja" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
         <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
+    
     <div class="accordion pb-20">
        <input type="checkbox" id="first">
        <label class="etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Resumen</label>  
@@ -183,7 +186,7 @@
                         </tr>
                         <tr>        
                             <td class="text-blue-400 font-medium">Real ingreso de ventas</td> 
-                            <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
+                            <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                         </tr>
                         
                         <tr>        
@@ -275,6 +278,7 @@
                         <th class="p-2">Fecha</th>
                         <th class="p-2">Cliente</th>
                         <th class="p-2">Factura</th>
+                        <th class="p-2">Medios pago</th>
                         <th class="p-2">Estado</th>
                         <th class="p-2">Subtotal</th>
                         <th class="p-2">Total</th>
@@ -288,6 +292,13 @@
                         <td class=""><?php echo $value->fechapago;?></td> 
                         <td class=""><?php echo $value->cliente;?></td> 
                         <td class=""><?php echo $value->id;?></td>
+                        <td>
+                            <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
+                                <?php foreach($value->mediosdepago as $idx => $element): ?>
+                                <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                                <?php endforeach; ?>
+                            </div>
+                        </td>
                         <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&&$value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':'btn-light'));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
                         <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                         <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
@@ -302,4 +313,7 @@
         </div>
       
     </div> <!-- fin accordion-->
+    <?php }else{ ?>
+        <label class="block mt-8 etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Cierre de caja realizado</label>
+     <?php }; ?>
 </div>

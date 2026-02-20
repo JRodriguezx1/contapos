@@ -137,6 +137,7 @@ $router->get('/admin/printPDFAbonoCredito', [printcontrolador::class, 'printPDFA
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 $router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);
 $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
+$router->get('/admin/creditos/adicionarProducto', [creditoscontrolador::class, 'adicionarProducto']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 $router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
 
@@ -147,6 +148,9 @@ $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
 $router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
+$router->get('/admin/reportes/creditos/cuotas-creditos', [reportescontrolador::class, 'cuotasCreditos']);
+$router->get('/admin/reportes/creditos/creditos-finalizados', [reportescontrolador::class, 'creditosFinalizados']);
+$router->get('/admin/reportes/creditos/creditos-anulados', [reportescontrolador::class, 'creditosAnulados']);
 $router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'facturasanuladas']);
 $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);
@@ -177,6 +181,7 @@ $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 
 //// Descargas /////
 $router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
 $router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
+$router->get('/admin/descarga/logo', [archivocontroller::class, 'descargarLogo']);
 
 
 /////////////////////////////////////--   API'S   --////////////////////////////////////////
@@ -234,9 +239,11 @@ $router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getco
 
 $router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
 $router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
+$router->get('/admin/api/detalleProductosCredito', [creditoscontrolador::class, 'detalleProductosCredito']);
 $router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::class, 'cambioMedioPagoSeparado']);
 $router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularSeparado']);
 $router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, 'ajustarCreditoAntiguo']);
+$router->post('/admin/api/editarOrdenCreditoSeparado', [creditoscontrolador::class, 'editarOrdenCreditoSeparado']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -284,6 +291,7 @@ $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifacturaspagas']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/creditos/cuotasCreditos', [reportescontrolador::class, 'apiCuotasCreditos']);  //fetch llamado desde cuotascreditoss.ts
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts

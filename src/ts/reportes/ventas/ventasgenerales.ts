@@ -7,6 +7,9 @@
 
     const tablaProductosVendidos = ($('#tablaProductosVendidos') as any);
     const tablaMediosPagos = ($('#tablaMediosPagos') as any);
+    const tablacreditosSeparados = ($('#tablacreditosSeparados') as any);
+    const tablaGastos = ($('#tablaGastos') as any);
+    const tablaResumen = ($('#tablaResumen') as any);
     
     interface i_productosVendidos {
         idproducto:string,
@@ -24,7 +27,29 @@
         valor:string
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [];
+    interface i_creditosSeparados {
+        idestadocreditos:string,
+        estado:string
+        carteraTotal:string,
+        carteraXCobrar:string,
+        totalAbonado:string,
+        total:string,
+    }
+
+    interface i_gastos {
+        descripcion:string,
+        tipogasto:string,
+        valor:string,
+    }
+    
+    interface i_resumen {
+        total_ventas:string,
+        total_costo:string,
+        ganancia:string,
+        margenutilidad:string,
+    }
+
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], resumen:i_resumen[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -35,17 +60,23 @@
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);
-        datos.append('fechafin', datefin);
+        datos.append('fechafin', datefin+' 23:59:59');
         try {
             const url = "/admin/api/reportes/reportesGenerales"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            //facturaselectronicas = resultado;
-            console.log(resultado);
             productosVendidos = resultado.productosVendidos;
             mediosPagos = resultado.mediosPagos;
+            creditosSeparados = resultado.separados;
+            console.log(creditosSeparados);
+            gastos = resultado.gastos;
+            console.log(gastos);
+            resumen = resultado.resumen;
             printProductosVendidos();
             printMediosPagos();
+            printCreditosSeparados();
+            printGastos();
+            printResumen();
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
@@ -66,6 +97,8 @@
                         {title: 'Cantidad Vendida', data: 'totalProductosVendidos'},
                         {title: 'V. Unidad', data: 'valorunidad', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total Ventas', data: 'valorTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Costo Total', data: 'costoTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad', data: 'utilidad', render: (data:number) => `$${Number(data).toLocaleString()}`}
                     ],
         });
     }
@@ -81,6 +114,59 @@
                         {title: 'Medio de Pago', data: 'mediopago'},
                         {title: 'Transacciones', data: 'cantidadMP'},
                         {title: 'Total Ventas', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    ],
+        });
+    }
+
+    printCreditosSeparados();
+    function printCreditosSeparados(){
+        tablacreditosSeparados.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: creditosSeparados,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {
+                            title: 'Estado', 
+                            data: 'estado', 
+                            render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.estado=='Abierto'?'btn-blue':row.estado=='Finalizado'?'btn-lima':'btn-light'}">${row.estado}</button>`}
+                        },
+                        {title: 'Cartera Total', data: 'carteraTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Cartera Por Cobrar', data: 'carteraXCobrar', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Total Abonado', data: 'totalAbonado', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Total', data: 'total'}
+                    ],
+        });
+    }
+
+
+    printGastos();
+    function printGastos(){
+        tablaGastos.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: gastos,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Descripcion', data: 'descripcion'},
+                        {title: 'Tipo Gasto', data: 'tipogasto'},
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    ],
+        });
+    }
+
+    printResumen();
+    function printResumen(){
+        tablaResumen.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: resumen,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Total Ventas Productos', data: 'total_ventas', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Total Costo Productos', data: 'total_costo', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Ganancia', data: 'ganancia', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Margen Utilidad', data: 'margenutilidad', render: (data:number) => `${Number(data).toLocaleString()}%`},
                     ],
         });
     }

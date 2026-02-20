@@ -32,7 +32,7 @@
 
       <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 shadow-sm">
         <h3 class="text-xl font-semibold text-yellow-700 mb-1 uppercase">💷 Interes Total</h3>
-        <p class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
+        <p id="interesText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
       </div>
     </div>
 
@@ -69,12 +69,17 @@
           </span>
           <span class="text-gray-600">Saldo pendiente: <strong id="saldopendientetext">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>
-        <div>
+        <div class="flex items-center">
           <span class="text-gray-600">Cliente: <strong><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
         </div>
-        <div>
+        <div class="flex items-center">
           <span class="text-gray-600">Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
         </div>
+        <?php if($credito->idestadocreditos == 2):?>
+          <div>
+            <a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="btn-md btn-blue">+</a>
+          </div>
+        <?php endif;?>
       </div>
     </div>
 

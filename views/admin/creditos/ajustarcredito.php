@@ -10,11 +10,29 @@
     <form id="formCrearUpdateAjustarCredito" class="formulario" >
         
         <input id="idcredito" class="hidden" type="text" name="idcredito_ajustarcredito" value="<?php echo $credito->id;?>">
+        <input id="capital" class="hidden" type="text" name="capital" value="<?php echo $credito->capital??'';?>">
+        <input id="abonoinicial" class="hidden" type="text" name="abonoinicial" value="<?php echo $credito->abonoinicial??'';?>">
         <input id="saldopendiente" class="hidden" type="text" name="saldopendiente" value="<?php echo $credito->saldopendiente??'';?>">
+        <input id="montototal" class="hidden" type="text" name="montototal" value="<?php echo $credito->montototal??'';?>">
 
         <p class="text-gray-600 text-3xl text-center font-light mb-10">Credito $: <span class="text-gray-700 font-semibold"><?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?></span></p>
         
-         <div class="formulario__campo">
+        <div class="recargo"></div>
+        <div class="formulario__campo">
+            <label class="formulario__label" for="recargo">Recargo interes</label>
+            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+                <input 
+                    id="recargo" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                    type="text"
+                    placeholder="Recargo de interes al credito"
+                    value="<?php echo $credito->valorinterestotal??'';?>"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
+                >
+            </div>
+        </div>
+
+        <div class="formulario__campo">
             <label class="formulario__label" for="abonoTotalAntiguo">Abono total antiguo</label>
             <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
                 <input 
@@ -22,10 +40,8 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text"
                     placeholder="Monto antiguo pagado hasta la fecha"
-                    name="valorpagado"
-                    value="<?php echo $cuota->valorpagado??'';?>"
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';"
-                    required
+                    value="<?php echo $credito->abonototalantiguo??'';?>"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
                 >
             </div>
         </div>
