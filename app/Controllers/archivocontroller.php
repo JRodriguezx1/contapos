@@ -64,14 +64,9 @@ class archivocontroller{
             echo "Archivo no encontrado.";
             return;
         }
-
         if(ob_get_level())ob_end_clean();
-
         header("Content-Type: image/png");
-        //header("Content-Disposition: attachment; filename=\"" . basename($ruta) . "\"");
         header("Content-Length: " . filesize($ruta));
-        //header("Cache-Control: no-cache");
-        
         readfile($ruta);
         exit;
     }
