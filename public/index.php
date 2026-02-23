@@ -181,6 +181,7 @@ $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 
 //// Descargas /////
 $router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
 $router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
+$router->get('/admin/descarga/logo', [archivocontroller::class, 'descargarLogo']);
 
 
 /////////////////////////////////////--   API'S   --////////////////////////////////////////

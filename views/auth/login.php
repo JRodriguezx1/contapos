@@ -46,7 +46,7 @@
   <!-- Fondo desenfocado / Light Glass Effect -->
   <div class="absolute inset-0 bg-gradient-to-br from-blue-100/20 via-purple-100/20 to-indigo-200/20 backdrop-blur-md"></div>
 
-  <div class="relative z-10 grid gap-0 w-full xsp:w-[38rem] xlg:w-[42rem] mx-auto">
+  <div class="relative z-10 grid gap-0 w-full max-w-[560px] md:max-w-xl mx-auto">
 
     <?php include __DIR__. "/../templates/alertas.php"; ?>
 
@@ -55,36 +55,32 @@
       <img src="/build/img/Logoj2blanco.png" class="w-56 sm:w-72 md:w-80 mx-auto mt-6 transition-transform duration-500 hover:scale-105" alt="logoj2">
 
       <!-- Formulario con efecto glass y sombras internas -->
-      <div class="border-[10px] border-transparent rounded-[24px] bg-white/90 shadow-lg xl:p-10 2xl:p-10 lg:p-10 md:p-10 sm:p-4 m-2 backdrop-blur-md transition-colors duration-300">
-        <h1 class="pt-8 pb-6 font-bold text-3xl md:text-4xl text-center text-gray-800 uppercase">
+      <div class="border-[10px] border-transparent rounded-[24px] bg-white/90 shadow-lg p-4 md:p-6 lg:p-8 m-2 backdrop-blur-md transition-colors duration-300">
+        <h1 class="pt-8 pb-6 font-bold text-2xl md:text-3xl text-center text-gray-800 uppercase">
           Iniciar Sesión
         </h1>
 
         <form action="/login" method="post" class="space-y-4">
 
           <div>
-            <label for="nickname" class="mb-2 block text-xl text-gray-700">Usuario</label>
+            <label for="nickname" class="mb-2 block text-base md:text-lg text-gray-700">Usuario</label>
             <input
               id="nickname"
               name="nickname"
               type="text"
               required
               placeholder="Ingresa tu usuario"
-              class="w-full h-[4.7rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl
-                     shadow-inner placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-                     transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
+              class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             />
           </div>
 
           <div>
-            <label for="sucursal" class="block text-xl font-medium mb-1 text-gray-700">Sede</label>
+            <label for="sucursal" class="block text-base md:text-lg font-medium mb-1 text-gray-700">Sede</label>
             <span class="block mb-1 text-base text-gray-500 ">Seleccione una sede</span>
             <select 
               id="sucursal"
               name="idsucursal"
-              class="w-full h-[4.7rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
-                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out
-                     hover:scale-[1.02] focus:scale-[1.03]"
+              class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             >
               <?php foreach($sucursales as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -93,14 +89,14 @@
           </div>
 
           <div>
-            <label for="password" class="mb-2 block text-xl text-gray-700">Contraseña</label>
+            <label for="password" class="mb-2 block text-base md:text-lg text-gray-700">Contraseña</label>
             <input
               id="password"
               name="password"
               type="password"
               required
               placeholder="Ingresa tu contraseña"
-              class="w-full h-[4.7rem] p-3 text-xl text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
+              class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
                      placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
                      transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
             />
@@ -112,8 +108,8 @@
 
           <button
             type="submit"
-            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white  shadow-lg mt-6 p-2 text-xl rounded-2xl w-full
-                   hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4.7rem]"
+            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white  shadow-lg mt-6 p-2 text-base md:text-lg rounded-2xl w-full
+                   hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4rem] md:h-[4.2rem]"
           >
             INICIAR SESIÓN
           </button>
