@@ -13,7 +13,12 @@
               body: JSON.stringify({id: x}) 
             });
             
-            const responseDian = await respuesta.json(); 
+            const responseDian = await respuesta.json();
+            /*return new Promise(resolve => {
+              setTimeout(() => {
+                  resolve('ok');
+              }, 4000);
+            }); */
             return responseDian;
         } catch (error) {
             console.log(error);

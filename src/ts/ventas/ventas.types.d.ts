@@ -29,3 +29,23 @@ type productsapi = {
       visible: string,
       preciosadicionales:{id:string, idproducto:string, precio:string, estado:string, created_at:string}[]
     };
+
+interface datainvoice {
+  cliente: string;
+  vendedor: string;
+  caja: string;
+  tipofacturador: string;
+  direccion: string;
+
+  recibido: string;
+  tipoventa: string;
+  estado: string;
+  subtotal: number
+  base: number;
+  valorimpuestototal: number;
+  descuento: number;
+  total: number;
+  observacion: string;
+  ciudad: string;
+  valortarifa: number;
+}

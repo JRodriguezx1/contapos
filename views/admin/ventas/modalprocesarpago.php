@@ -25,12 +25,12 @@
           </div>
 
           <?php if($conflocal['habilitar_canal_de_venta']->valor_final): ?>
-          <div class=" grid grid-cols-1 xsp:grid-cols-2 gap-12 gap-y-0">
+          <div id="contenedorCanalVenta" class=" grid grid-cols-1 xsp:grid-cols-2 gap-12 gap-y-0">
             <div class=" max-w-96 mx-auto xsp:mx-0">
-              <label class="formulario__label" for="canalventa">Canal venta</label>
+              <label class="formulario__label" for="canalventa">Canal de venta</label>
               <select id="canalVenta" class="bg-gray-50 border border-gray-300 w-full mt-2 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1" name="canalventa" required>
-                <?php foreach($consecutivos as $index => $value):?>
-                  <option data-idtipofacturador="<?php echo $value->idtipofacturador;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php foreach($canalesVenta as $index => $value):?>
+                  <option data-idCanalVenta="<?php echo $value->id;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
               </select>
             </div>
