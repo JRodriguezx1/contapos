@@ -360,6 +360,39 @@ class ventascontrolador{
 
                     $alertas['exito'][] = "Pago procesado con exito";
                     $alertas['idfactura'] = $r[1];
+                     $customer = [
+                        "identification_number" => $datosAdquiriente->identification_number??"222222222222",  //obligatorio
+                        "name" => $datosAdquiriente->business_name??"Consumidor Final",  //obligatorio
+                        "phone" => $datosAdquiriente->phone??null,
+                        "address" => $datosAdquiriente->address??null,
+                        "email" => $datosAdquiriente->email??null,
+                        "municipality_id" => $datosAdquiriente->municipality_id??null
+                    ];
+                    //$cliente = clientes::find('id', $factura->idcliente);
+                    $alertas['dataInvoice'] = [
+                      'negocio' => negocionSucursal()->negocio,
+                      'nit' => negocionSucursal()->nit,
+                      'direccion' => negocionSucursal()->direccion.' - '.negocionSucursal()->ciudad,
+                      'telefono' => negocionSucursal()->telefono.' '.negocionSucursal()->movil,
+                      'email' => negocionSucursal()->email,
+                      'num_orden' => $factura->num_orden,
+                      'textFactura' => $consecutivo->idtipofacturador == 1?'FACTURA ELECTRONICA DE VENTA':'COMPROBANTE DE VENTA',
+                      'prefijo' => $factura->prefijo,
+                      'consecutivo' => $factura->consecutivo,
+                      'fechaPago' => $factura->fechapago,
+                      'caja' => $factura->caja,
+                      'vendedor' => $factura->vendedor,
+                      'cliente' =>$consecutivo->idtipofacturador == 1?$customer:clientes::find('id', $factura->idcliente),
+                      //'items' =>
+                      'tipoventa' =>$factura->tipoventa,
+                      'subtotal' =>$factura->subtotal,
+                      'base' => $factura->base,
+                      'valorimpuestototal' =>$factura->valorimpuestototal,
+                      'descuento' =>$factura->descuento,
+                      'total' =>$factura->total,
+                      'observacion' =>$factura->observacion,
+                    ];
+
                   }else{
                     $alertas['error'][] = "Error en sistema intentalo nuevamente";
                     //ELIMINAR FACTURA por error en actualizar inventario
@@ -390,7 +423,8 @@ class ventascontrolador{
               $facturadelete->eliminar_registro();
             }
 
-          }else{  
+          }else{
+
       ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
             if($factura->cotizacion == 1 && $factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id']) && $_POST['estado']=='Guardado'){
               //algoritmo si se cambia la cotizacion como productos, cantidades valores etc.
