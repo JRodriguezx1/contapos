@@ -52,6 +52,10 @@
     let products:productsapi[]=[], unproducto:productsapi;
     const mapMediospago = new Map();
 
+    const mediosPagoDBMAP = new Map<string, string>( 
+      mediosPagoDB.map(m => [m.id, m.mediopago]) //mediosPagoDB se declara en app.ts el cual viene del <script> en index.php que convierte el array de medios de pago de php a js.
+    );
+
     (async ()=>{
       products = await POS.productosAPI.getProductosAPI();
       POS.products = products;  //Se expone globalmente
@@ -485,6 +489,14 @@
           const url = "/admin/api/facturar";  //va al controlador ventascontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
+
+          resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
+          resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
+            idmediopago,
+            mediopago: mediosPagoDBMAP.get(idmediopago),
+            valor,
+          }));
+
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             btnPagar.disabled = false;
@@ -492,7 +504,7 @@
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
-            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
+            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
               /////// reinciar modulo de ventas
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
@@ -509,13 +521,13 @@
     }
 
 
-    async function printTicketPOS(idfactura:string, datainvoice:any = null){
+    async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
       try {
         const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php
         const respuesta = await fetch(url, {
           method: 'POST',
           headers: { "Accept": "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({id: '1'}) 
+          body: JSON.stringify(datainvoice)
         });
         const resultado = await respuesta.json();
         console.log(resultado);

@@ -245,16 +245,16 @@
 
   <!-- MODAL DEL CARRITO MOVIL-->
   <dialog id="miDialogoCarritoMovil" class="midialog-sm p-5 w-full max-w-sm overflow-x-hidden">
-  <div class="flex justify-between items-center">
-    <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">
-      Lista de productos
-    </h4>
-    <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
-  </div>
-</dialog>
+    <div class="flex justify-between items-center">
+      <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">
+        Lista de productos
+      </h4>
+      <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
+    </div>
+  </dialog>
 
   <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
   <dialog id="miDialogoAddCliente" class="midialog-sm p-5">
@@ -488,4 +488,9 @@
   <?php include __DIR__. "/modalotrosproductos.php"; ?>
   <!-- MODAL PRECIOS ADICIONALES -->
   <?php include __DIR__. "/modalpreciosadicionales.php"; ?>
+
+  <script>
+   const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
+  </script>
+
 </div>

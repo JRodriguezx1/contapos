@@ -7,6 +7,7 @@ declare let Chart:any; //declare le indica a typescript que la variable chart vi
 declare const Swal: any;
 declare var moment: any;
 declare let List: any; 
+declare const mediosPagoDB: MedioPago[];  //interfaz en ventas.type.ts
 
 (window as any).POS = (window as any).POS || {};
 

@@ -360,7 +360,7 @@ class ventascontrolador{
 
                     $alertas['exito'][] = "Pago procesado con exito";
                     $alertas['idfactura'] = $r[1];
-                     $customer = [
+                    $customer = [
                         "identification_number" => $datosAdquiriente->identification_number??"222222222222",  //obligatorio
                         "name" => $datosAdquiriente->business_name??"Consumidor Final",  //obligatorio
                         "phone" => $datosAdquiriente->phone??null,
@@ -378,12 +378,11 @@ class ventascontrolador{
                       'num_orden' => $factura->num_orden,
                       'textFactura' => $consecutivo->idtipofacturador == 1?'FACTURA ELECTRONICA DE VENTA':'COMPROBANTE DE VENTA',
                       'prefijo' => $factura->prefijo,
-                      'consecutivo' => $factura->consecutivo,
+                      'consecutivo' => $factura->num_consecutivo,
                       'fechaPago' => $factura->fechapago,
                       'caja' => $factura->caja,
                       'vendedor' => $factura->vendedor,
                       'cliente' =>$consecutivo->idtipofacturador == 1?$customer:clientes::find('id', $factura->idcliente),
-                      //'items' =>
                       'tipoventa' =>$factura->tipoventa,
                       'subtotal' =>$factura->subtotal,
                       'base' => $factura->base,
