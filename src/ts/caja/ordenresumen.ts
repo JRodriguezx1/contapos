@@ -22,24 +22,24 @@
       const mapMediospago = new Map();
 
       interface clavesApi {
-      clave:string,
-      valor_default:string|null,
-      valor_final:string|null,
-      valor_local:string|null
-    };
+        clave:string,
+        valor_default:string|null,
+        valor_final:string|null,
+        valor_local:string|null
+      };
 
-    let claveEliminarOrden:clavesApi[];
+      let claveEliminarOrden:clavesApi[];
 
-    (async ()=>{
-      try {
-          const url = "/admin/api/getPasswords"; //llamado a la API REST
-          const respuesta = await fetch(url); 
-          const resultado = await respuesta.json(); 
-          claveEliminarOrden = resultado;
-      } catch (error) {
-          console.log(error);
-      }
-    })();
+      (async ()=>{
+        try {
+            const url = "/admin/api/getPasswords"; //llamado a la API REST
+            const respuesta = await fetch(url); 
+            const resultado = await respuesta.json(); 
+            claveEliminarOrden = resultado;
+        } catch (error) {
+            console.log(error);
+        }
+      })();
 
   
       valorTotal.subtotal = Number(document.querySelector('#subTotal')?.textContent);
@@ -353,13 +353,13 @@
 
 
       function validarPasswordDcto():number{
-      const clave = claveEliminarOrden.find(c => c.clave=='clave_para_eliminar_factura');
-      if(clave?.valor_final!==null && inputEliminarClave.value !== clave?.valor_final){
-        msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalerta1') as HTMLElement));
-        return 0;
+        const clave = claveEliminarOrden.find(c => c.clave=='clave_para_eliminar_factura');
+        if(clave?.valor_final!==null && inputEliminarClave.value !== clave?.valor_final){
+          msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalerta1') as HTMLElement));
+          return 0;
+        }
+        return 1;
       }
-      return 1;
-    }
 
     }
   

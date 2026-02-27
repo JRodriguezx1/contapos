@@ -278,6 +278,8 @@ class apidiancontrolador{
 
       if(!$res['success']){
         $alertas['error'][] = $res['error'];
+        $alertas['cufe'] = "fe9c733f32770f5fcc4ef954f9ef663c54c752e6c07bdc144bb00627faadf9f648818da3e96ef8293547140fb1970d22";
+        $alertas['link'] = "https://catalogo-vpfe.dian.gov.co/User/SearchDocument";
         echo json_encode($alertas);
         return;
       }
@@ -297,6 +299,7 @@ class apidiancontrolador{
         $facturaDian->fecha_ultimo_intento = date('Y-m-d H:i:s');
         $r = $facturaDian->actualizar();
         $alertas['exito'][] = "Factura electronica procesadamente exitosamente.";
+        $alertas['cufe'] = $facturaDian->cufe;
         $alertas['link'] = $facturaDian->link;
         echo json_encode($alertas);
         return;

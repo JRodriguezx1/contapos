@@ -504,13 +504,17 @@
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
-            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
-            if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
-              /////// reinciar modulo de ventas
+          
+            //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
+            if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
               POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
+              resultado.dataInvoice.cufe = resDian.cufe;
+              resultado.dataInvoice.link = resDian.link;
               console.log(resDian);
             }
+            //IMPRIMIR TICKET POS
+            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
             vaciarventa();
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);

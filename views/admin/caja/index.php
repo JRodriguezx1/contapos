@@ -10,7 +10,7 @@
     <?php if($conflocal['permitir_ver_cierres_de_cajas_anteriores']->valor_final == 1):?>
         <a class="btn-command text-center" href="/admin/caja/ultimoscierres"><span class="material-symbols-outlined">list_alt</span>Ultimos Cierres</a>
      <?php endif; ?>
-    <button class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
+    <button id="btnAbrirCajon" class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
   </div>
     <h5 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-4">
@@ -213,6 +213,24 @@
         });
     </script>
 
+
+    <dialog class="midialog-sm px-8 pb-8" id="miDialogoAbrirCaja">
+        <div><p class="text-3xl font-semibold text-gray-500">Abrir cajon monedero</p></div>
+        <div id="divmsjalerta3"></div>
+        <div class="text-center mb-4">
+            <p class="mt-2 text-xl text-gray-600">Desea abrir el cajon monedero.</p>
+            <div class="sm:col-start-2 col-span-4 mt-6">
+              <label for="inputAbrirCaja" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+              <div class="mt-2">
+                <input id="inputAbrirCaja" type="password" min="0" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+              </div>
+            </div>
+        </div>
+        <div class="flex justify-around border-t-gray-300 pt-4">
+            <div class="siAbrirCajon flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Confirmar</p></div>
+            <div class="noAbrirCajon flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">Cancelar</p></div>
+        </div>
+    </dialog>
 
 
     <!-- MODAL CAMBIO MEDIO DE PAGO -->

@@ -127,4 +127,6 @@ interface DataInvoice {
     total: string;
     observacion: string;
     resolucion: Resolution;
+    cufe?: string;
+    link?: string;
 }
