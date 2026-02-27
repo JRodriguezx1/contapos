@@ -376,13 +376,15 @@ class ventascontrolador{
                       'telefono' => negocionSucursal()->telefono.' '.negocionSucursal()->movil,
                       'email' => negocionSucursal()->email,
                       'num_orden' => $factura->num_orden,
+                      'tipoFactura' => $consecutivo->idtipofacturador,
                       'textFactura' => $consecutivo->idtipofacturador == 1?'FACTURA ELECTRONICA DE VENTA':'COMPROBANTE DE VENTA',
                       'prefijo' => $factura->prefijo,
                       'consecutivo' => $factura->num_consecutivo,
                       'fechaPago' => $factura->fechapago,
                       'caja' => $factura->caja,
                       'vendedor' => $factura->vendedor,
-                      'cliente' =>$consecutivo->idtipofacturador == 1?$customer:clientes::find('id', $factura->idcliente),
+                      'consumidorFinal' => $customer,
+                      'cliente' =>clientes::find('id', $factura->idcliente),
                       'tipoventa' =>$factura->tipoventa,
                       'subtotal' =>$factura->subtotal,
                       'base' => $factura->base,
@@ -390,6 +392,7 @@ class ventascontrolador{
                       'descuento' =>$factura->descuento,
                       'total' =>$factura->total,
                       'observacion' =>$factura->observacion,
+                      'resolucion' => $consecutivo,
                     ];
 
                   }else{
