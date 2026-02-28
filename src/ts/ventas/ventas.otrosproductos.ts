@@ -72,6 +72,7 @@
             POS.actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false, otrosproductos!.valorunidad+'');
             miDialogoOtrosProductos.close();
             document.removeEventListener("click", POS.cerrarDialogoExterno);
+            (e.target as HTMLFormElement).reset();
         });
 
       }

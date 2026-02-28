@@ -490,12 +490,14 @@
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
 
-          resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
-          resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
-            idmediopago,
-            mediopago: mediosPagoDBMAP.get(idmediopago),
-            valor,
-          }));
+          if(estado == "Paga"){
+            resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
+            resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
+              idmediopago,
+              mediopago: mediosPagoDBMAP.get(idmediopago),
+              valor,
+            }));
+          }
 
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
