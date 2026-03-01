@@ -52,14 +52,16 @@ class cajacontrolador{
     }
 
     $facturas = [];
-    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
-    //debuguear($facturas);
-    $bancos = bancos::all();
+    /*if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
+    */
     
-
+    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    foreach($facturas as $value)$value->mediosdepago = json_decode($value->mediosdepago);
     //debuguear($facturas);
+    $bancos = bancos::all();
 
     $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
     $categoriasgastos = categoriagastos::all();

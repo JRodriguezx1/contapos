@@ -55,7 +55,9 @@ class printcontrolador{
     if(!is_numeric($id))return;
     $sucursal = sucursales::find('id', id_sucursal());
     $repoCredito = new creditosRepository();
+    $cuotasRepo = new cuotasRepository();
     $credito = $repoCredito->find($id);
+    $cuotas = $cuotasRepo->obtenerPorCredito_Mediopago($credito->id);
     $usuario = usuarios::find('id', $credito->usuariofk);
     $cliente = clientes::find('id', $credito->cliente_id);
     $direccion = direcciones::find('idcliente', $cliente->id);
@@ -63,7 +65,7 @@ class printcontrolador{
     $repoProductsSep = new productsSeparadosRepository();
     $productos = $repoProductsSep->findAll('idcredito', $credito->id);
     $print = new ticketPOS();
-    $print->generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos);
+    $print->generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos, $cuotas);
   }
 
 
