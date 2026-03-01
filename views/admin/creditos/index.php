@@ -59,4 +59,8 @@
     </tbody>
   </table>
 
+  <script>
+   const creditosDB = <?= json_encode($creditos) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
+  </script>
+
 </div>

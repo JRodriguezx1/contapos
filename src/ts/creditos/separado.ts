@@ -70,6 +70,9 @@
         }
     })();
 
+    //DESACTIVADO EL CANAL DE VENTA
+    document.querySelector('#contenedorCanalVenta')?.classList.add('hidden');
+    document.querySelector('#canalVenta')?.removeAttribute('required');
 
     function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string}[]){
       ($('#articulo') as any).select2({ 

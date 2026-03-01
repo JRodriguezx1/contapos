@@ -1,13 +1,6 @@
 (()=>{
   if(document.querySelector('.creditos')){
 
-    //const POS = (window as any).POS;
-     
-    //const btnCrearCredito = document.querySelector('#btnCrearCredito') as HTMLButtonElement;
-    const btnXCerrarModalCredito = document.querySelector('#btnXCerrarModalCredito') as HTMLButtonElement;
-    const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
-    //let tablaCreditos = document.querySelector('#tablaCreditos tbody');
-
     type creditsapi = {
       id:string,
       id_fksucursal: string,
@@ -59,7 +52,7 @@
 
 
 
-
+    console.log(creditosDB);
 
     
     //////////////////  TABLA //////////////////////
@@ -117,11 +110,26 @@
 
 
     function printPOSSeparado(idcredito:string){
+      //printTicketPOS(resultado.idfactura, resultado.dataInvoice);
       console.log(idcredito);
       if(!isNaN(Number(idcredito)))
         window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank"); //controlador printcontrolador
     }
 
+    async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      try {
+        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php
+        const respuesta = await fetch(url, {
+          method: 'POST',
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify(datainvoice)
+        });
+        const resultado = await respuesta.json();
+        console.log(resultado);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   }
 

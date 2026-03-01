@@ -873,6 +873,10 @@ video {
   margin-right: 1rem;
 }
 
+.mr-8 {
+  margin-right: 2rem;
+}
+
 .ms-3 {
   -webkit-margin-start: 0.75rem;
           margin-inline-start: 0.75rem;
@@ -936,6 +940,14 @@ video {
 
 .mt-\[0\.8rem\] {
   margin-top: 0.8rem;
+}
+
+.mt-20 {
+  margin-top: 5rem;
+}
+
+.mt-28 {
+  margin-top: 7rem;
 }
 
 .block {
@@ -1296,9 +1308,14 @@ video {
   width: 100vw;
 }
 
+<<<<<<< HEAD
 .w-max {
   width: -moz-max-content;
   width: max-content;
+=======
+.w-64 {
+  width: 16rem;
+>>>>>>> b790d9a5851d96effe104d6b87ab8ad27b7dbc4b
 }
 
 .\!min-w-0 {
@@ -1532,6 +1549,10 @@ video {
 
 .\!flex-row {
   flex-direction: row !important;
+}
+
+.flex-row {
+  flex-direction: row;
 }
 
 .flex-col {
@@ -4321,6 +4342,7 @@ video {
     overflow-x: visible;
   }
 
+<<<<<<< HEAD
   .md\:rounded-2xl {
     border-radius: 1rem;
   }
@@ -4334,6 +4356,8 @@ video {
     border-color: rgb(209 213 219 / var(--tw-border-opacity));
   }
 
+=======
+>>>>>>> b790d9a5851d96effe104d6b87ab8ad27b7dbc4b
   .md\:p-6 {
     padding: 1.5rem;
   }
@@ -4393,6 +4417,7 @@ video {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
+<<<<<<< HEAD
 
   .md\:text-base {
     font-size: 1rem;
@@ -4404,6 +4429,8 @@ video {
     --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
+=======
+>>>>>>> b790d9a5851d96effe104d6b87ab8ad27b7dbc4b
 }
 
 @media (min-width: 1024px) {
@@ -4461,10 +4488,13 @@ video {
     margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
+<<<<<<< HEAD
   .lg\:overflow-visible {
     overflow: visible;
   }
 
+=======
+>>>>>>> b790d9a5851d96effe104d6b87ab8ad27b7dbc4b
   .lg\:p-8 {
     padding: 2rem;
   }
@@ -4583,9 +4613,27 @@ video {
   }
 }
 
+<<<<<<< HEAD
+=======
+@media (min-width: 530px) {
+  .xsp\:mx-0 {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  .xsp\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+>>>>>>> b790d9a5851d96effe104d6b87ab8ad27b7dbc4b
 @media (min-width: 480px) {
   .xxs\:col-span-1 {
     grid-column: span 1 / span 1;
+  }
+
+  .xxs\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .xxs\:gap-20 {

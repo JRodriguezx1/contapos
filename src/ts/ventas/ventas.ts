@@ -31,6 +31,7 @@
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
+    const promesas: Promise<any>[] = [];
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -50,6 +51,10 @@
 
     let products:productsapi[]=[], unproducto:productsapi;
     const mapMediospago = new Map();
+
+    const mediosPagoDBMAP = new Map<string, string>( 
+      mediosPagoDB.map(m => [m.id, m.mediopago]) //mediosPagoDB se declara en app.ts el cual viene del <script> en index.php que convierte el array de medios de pago de php a js.
+    );
 
     (async ()=>{
       products = await POS.productosAPI.getProductosAPI();
@@ -448,6 +453,7 @@
       datos.append('idconsecutivo', btnTipoFacturador.value);
       datos.append('iddireccion', dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
+      datos.append('idcanaldeventa', (document.querySelector('#canalVenta') as HTMLSelectElement)?.value??'1');
       datos.append('cliente', selectCliente.value=='1'?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
       datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
@@ -483,6 +489,16 @@
           const url = "/admin/api/facturar";  //va al controlador ventascontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
+
+          if(estado == "Paga"){
+            resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
+            resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
+              idmediopago,
+              mediopago: mediosPagoDBMAP.get(idmediopago),
+              valor,
+            }));
+          }
+
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             btnPagar.disabled = false;
@@ -490,13 +506,17 @@
             miDialogoFacturar.close();
             (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
-            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
-            if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
-              /////// reinciar modulo de ventas
+          
+            //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
+            if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
               POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
+              resultado.dataInvoice.cufe = resDian.cufe;
+              resultado.dataInvoice.link = resDian.link;
               console.log(resDian);
             }
+            //IMPRIMIR TICKET POS
+            if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
             vaciarventa();
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -507,7 +527,20 @@
     }
 
 
-    function printTicketPOS(idfactura:string){
+    async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      try {
+        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php
+        const respuesta = await fetch(url, {
+          method: 'POST',
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify(datainvoice)
+        });
+        const resultado = await respuesta.json();
+        console.log(resultado);
+      } catch (error) {
+        console.log(error);
+      }
+
       setTimeout(() => {
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
       }, 1200);

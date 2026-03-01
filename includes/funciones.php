@@ -49,6 +49,11 @@ function id_sucursal():int
     }
 }
 
+function negocionSucursal():object{
+    return $_SESSION['sucursal'];
+    //$lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+}
+
 function tienePermiso(string $permiso): bool {
     return in_array($permiso, $_SESSION['permisos'] ?? []);
 }

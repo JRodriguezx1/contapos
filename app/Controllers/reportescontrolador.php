@@ -539,6 +539,7 @@ class reportescontrolador{
     $fechafin = $_POST['fechafin'];
     $tipo = $_POST['tipo'];
     $iditem = $_POST['iditem'];
+    
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       if($tipo == 0){ //productos
         $sql = "SELECT m.id, m.tipo, m.referencia, m.cantidad, m.stockanterior, m.stocknuevo, m.comentario, m.created_at,

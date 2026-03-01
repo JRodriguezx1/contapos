@@ -28,6 +28,7 @@ use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
+use App\Repositories\ventas\canalVentaRepository;
 use App\services\creditosService;
 use App\services\stockService;
 //use App\Models\configuraciones\negocio;
@@ -79,7 +80,11 @@ class ventascontrolador{
 
     $conflocal = config_local::getParamCaja();
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $canalesVentaRepo = new canalVentaRepository();
+    $canalesVenta = $canalesVentaRepo->all();
+    //debuguear($canalesVenta);
+
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -355,6 +360,41 @@ class ventascontrolador{
 
                     $alertas['exito'][] = "Pago procesado con exito";
                     $alertas['idfactura'] = $r[1];
+                    $customer = [
+                        "identification_number" => $datosAdquiriente->identification_number??"222222222222",  //obligatorio
+                        "name" => $datosAdquiriente->business_name??"Consumidor Final",  //obligatorio
+                        "phone" => $datosAdquiriente->phone??null,
+                        "address" => $datosAdquiriente->address??null,
+                        "email" => $datosAdquiriente->email??null,
+                        "municipality_id" => $datosAdquiriente->municipality_id??null
+                    ];
+                    //$cliente = clientes::find('id', $factura->idcliente);
+                    $alertas['dataInvoice'] = [
+                      'negocio' => negocionSucursal()->negocio,
+                      'nit' => negocionSucursal()->nit,
+                      'direccion' => negocionSucursal()->direccion.' - '.negocionSucursal()->ciudad,
+                      'telefono' => negocionSucursal()->telefono.' '.negocionSucursal()->movil,
+                      'email' => negocionSucursal()->email,
+                      'num_orden' => $factura->num_orden,
+                      'tipoFactura' => $consecutivo->idtipofacturador,
+                      'textFactura' => $consecutivo->idtipofacturador == 1?'FACTURA ELECTRONICA DE VENTA':'COMPROBANTE DE VENTA',
+                      'prefijo' => $factura->prefijo,
+                      'consecutivo' => $factura->num_consecutivo,
+                      'fechaPago' => $factura->fechapago,
+                      'caja' => $factura->caja,
+                      'vendedor' => $factura->vendedor,
+                      'consumidorFinal' => $customer,
+                      'cliente' =>clientes::find('id', $factura->idcliente),
+                      'tipoventa' =>$factura->tipoventa,
+                      'subtotal' =>$factura->subtotal,
+                      'base' => $factura->base,
+                      'valorimpuestototal' =>$factura->valorimpuestototal,
+                      'descuento' =>$factura->descuento,
+                      'total' =>$factura->total,
+                      'observacion' =>$factura->observacion,
+                      'resolucion' => $consecutivo,
+                    ];
+
                   }else{
                     $alertas['error'][] = "Error en sistema intentalo nuevamente";
                     //ELIMINAR FACTURA por error en actualizar inventario
@@ -385,7 +425,8 @@ class ventascontrolador{
               $facturadelete->eliminar_registro();
             }
 
-          }else{  
+          }else{
+
       ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
             if($factura->cotizacion == 1 && $factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id']) && $_POST['estado']=='Guardado'){
               //algoritmo si se cambia la cotizacion como productos, cantidades valores etc.

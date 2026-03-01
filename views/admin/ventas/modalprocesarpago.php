@@ -5,18 +5,18 @@
       <form id="formfacturar" class="formulario" method="POST">
           <div id="divmsjalertaprocesarpago"></div>
           <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: </br><span id="totalPagar" class="text-gray-700 font-semibold">$0</span></p>
-          <div class="flex justify-center gap-12 mt-8">
-            <div class="formulario__campo w-1/2">
+          <div class="flex justify-start gap-12 mt-8">
+            <div class="formulario__campo w-96">
               <label class="formulario__label" for="caja">Caja</label>
-              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="caja" required>
+              <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1" name="caja" required>
                   <?php foreach($cajas as $index => $value):?>
                     <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>"><?php echo $value->nombre;?></option>
                   <?php endforeach; ?>
               </select>
             </div>
-            <div class="formulario__campo w-1/2">
+            <div class="formulario__campo w-96">
               <label class="formulario__label" for="facturador">Facturador</label>
-              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="facturador" required>
+              <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1 w-full" name="facturador" required>
                 <?php foreach($consecutivos as $index => $value):?>
                   <option data-idtipofacturador="<?php echo $value->idtipofacturador;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -24,6 +24,19 @@
             </div>
           </div>
 
+          <?php if($conflocal['habilitar_canal_de_venta']->valor_final): ?>
+          <div id="contenedorCanalVenta" class=" grid grid-cols-1 xsp:grid-cols-2 gap-12 gap-y-0">
+            <div class=" max-w-96 mx-auto xsp:mx-0">
+              <label class="formulario__label" for="canalventa">Canal de venta</label>
+              <select id="canalVenta" class="bg-gray-50 border border-gray-300 w-full mt-2 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1" name="canalventa" required>
+                <?php foreach($canalesVenta as $index => $value):?>
+                  <option data-idCanalVenta="<?php echo $value->id;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+          <?php endif; ?>
+          
           <div id="inputscreditos" class="grid grid-cols-1 md:grid-cols-2 gap-8 gap-y-0 mt-6">
             <!-- Abono inicial -->
             <div class="formulario__campo">

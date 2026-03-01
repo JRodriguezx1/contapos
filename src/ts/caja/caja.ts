@@ -2,12 +2,15 @@
   if(document.querySelector('.caja')){
     const modalGastosIngresos:any = document.querySelector("#gastosIngresos");
     const modalcambioMedioPago:any = document.querySelector("#cambioMedioPago");
+    const miDialogoAbrirCaja:any = document.querySelector("#miDialogoAbrirCaja");
     const btnGastosingresos = document.querySelector<HTMLButtonElement>("#btnGastosingresos");
+    const btnAbrirCajon = document.querySelector<HTMLButtonElement>("#btnAbrirCajon");
     const operacion = document.querySelector('#operacion') as HTMLSelectElement;
     const origengasto = document.querySelectorAll<HTMLInputElement>('input[name="origengasto"]');
     const mediosPago = document.querySelectorAll<HTMLInputElement>('.mediopago'); //todos los medios de pago del modal
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numfactura = document.querySelector('#numfactura') as HTMLLabelElement;
+    const inputAbrirCaja = document.querySelector('#inputAbrirCaja') as HTMLInputElement;
 
     let tablaListaPedidos:HTMLElement;
     let estadofactura:string, contentMP:HTMLElement, idfactura:string = '0';
@@ -19,12 +22,33 @@
 
     tablaListaPedidos = ($('#tablaListaPedidos') as any).DataTable(configdatatablescaja);
 
+
+    interface clavesApi {
+      clave:string,
+      valor_default:string|null,
+      valor_final:string|null,
+      valor_local:string|null
+    };
+
+    let claveAbrirCajon:clavesApi[];
+
+    (async ()=>{
+      try {
+          const url = "/admin/api/getPasswords"; //llamado a la API REST
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json(); 
+          claveAbrirCajon = resultado;
+      } catch (error) {
+          console.log(error);
+      }
+    })();
+
+
     //////// clic al btn gastos/ingresos
     btnGastosingresos?.addEventListener('click', ():void=>{
       modalGastosIngresos.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
-
 
     ///////// cambio de tipo de operacion si ingreso o gasto, si es gasto habilita el select de los tipos de gastos
     operacion?.addEventListener('change', (e:Event)=>{
@@ -69,6 +93,39 @@
         document.querySelector('#banco')?.setAttribute("required", "");
       }
     }
+
+
+    //////// clic al btn abrir cajon monedero
+    btnAbrirCajon?.addEventListener('click', ():void=>{
+      miDialogoAbrirCaja.showModal();
+      document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    //evento al boton confirmar para eliminar orden
+    document.querySelector('.siAbrirCajon')?.addEventListener('click', (event:Event)=>{
+      const v:number = validarPasswordDcto();
+      if(!v)return;
+      if((event.target as HTMLInputElement).closest('.siAbrirCajon'))abrirCajonMonedero();
+    });
+
+    const abrirCajonMonedero = async():Promise<void>=>{
+        try {
+            const url = "http://localhost:3100/api/printPOS/openCashDrawer/CAJA";  //api llama servidor de impresion local.
+            const respuesta = await fetch(url);
+            const resultado = await respuesta.json();
+            console.log(resultado);
+            if(resultado){
+              msjalertToast('success', '¡Éxito!', 'Apertura de cajon enviada');
+              miDialogoAbrirCaja.close();
+              document.removeEventListener("click", cerrarDialogoExterno);
+            }else{
+              msjalertToast('error', '¡Error!', 'Error en el cajon monedero');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     ////////////// Evento a la tabla lista de pedidos ///////////////
     document.querySelector('#tablaListaPedidos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
@@ -245,11 +302,22 @@
     }
 
     function cerrarDialogoExterno(event:Event) {
-      if (event.target === modalGastosIngresos || event.target === modalcambioMedioPago || (event.target as HTMLInputElement).value === 'cancelar') {
+      const f = event.target;
+      if (f === modalGastosIngresos || f === modalcambioMedioPago || f === miDialogoAbrirCaja || (f as HTMLInputElement).closest('.noAbrirCajon') || (f as HTMLInputElement).value === 'cancelar') {
           modalGastosIngresos.close();
           modalcambioMedioPago.close();
+          miDialogoAbrirCaja.close();
           document.removeEventListener("click", cerrarDialogoExterno);
       }
+    }
+    
+    function validarPasswordDcto():number{
+      const clave = claveAbrirCajon.find(c => c.clave=='clave_para_abrir_cajón_monedero');
+      if(clave?.valor_final!==null && inputAbrirCaja.value !== clave?.valor_final){
+        msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalerta3') as HTMLElement));
+        return 0;
+      }
+      return 1;
     }
   }
 

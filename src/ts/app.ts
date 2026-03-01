@@ -7,6 +7,8 @@ declare let Chart:any; //declare le indica a typescript que la variable chart vi
 declare const Swal: any;
 declare var moment: any;
 declare let List: any; 
+declare const mediosPagoDB: MedioPago[];  //mediosPagoDB inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
+declare const creditosDB: any;  //mediosPagoDB inyectada por medio de json desde la vista creditos/index.php interfaz en ventas.type.ts
 
 (window as any).POS = (window as any).POS || {};
 
