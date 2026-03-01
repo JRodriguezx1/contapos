@@ -71,7 +71,7 @@
               required
               placeholder="Ingresa tu usuario"
               class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
-            />
+            /> 
           </div>
 
           <div>

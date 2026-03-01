@@ -2,40 +2,56 @@
   <div class="flex flex-col tlg:flex-row">
     <div class="basis-2/3 px-4 pb-4 pt-0">
       <div id="divmsjalerta1"></div>
-      <div class="xs:flex xs:flex-wrap gap-4">
-        <div class="formulario__campo flex-1">
-          <label class="formulario__label" for="selectCliente">Cliente</label>
-          <div class="formulario__dato">
-            <select id="selectCliente" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="selectCliente" required>
-                <option value="1" disabled selected>-Seleccionar-</option>
-                <?php foreach($clientes as $cliente): ?>
-                  <option data-tipoID="<?php echo $cliente->tipodocumento;?>" data-identidad="<?php echo $cliente->identificacion;?>" value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option> 
-                <?php endforeach ?>
-            </select>
-            <div class="grid place-items-center  rounded-r-lg   hover:cursor-pointer">
-              <span id="addcliente" class="material-symbols-outlined text-blue-500 hover:text-blue-800">add_circle</span>
+      <!-- RESUMEN CLIENTE PRO CON CRÉDITO -->
+      <div class="mb-6">
+        <button id="addcliente"
+          class="w-full bg-white border border-gray-200 rounded-2xl px-6 py-5 shadow-sm hover:shadow-md hover:border-indigo-500 transition-all flex items-center justify-between">
+
+          <!-- IZQUIERDA -->
+          <div class="flex items-center gap-5">
+
+            <div id="iconCliente"
+              class="bg-indigo-100 text-indigo-600 p-3 rounded-xl">
+              <span class="material-symbols-outlined text-4xl">
+                person
+              </span>
             </div>
-          </div> <!-- fin formulario dato-->
-          <div class="formulario__campo flex-1 xs:flex-none">
-            <label class="formulario__label" for="documento">N. Documento</label>
-            <input id="documento" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Documento del cliente" name="documento" readonly>
-          </div>
-        </div>
-        <div class="formulario__campo flex-1">
-            <label class="formulario__label" for="direccionEntrega">Direccion</label>
-            <div class="formulario__dato">
-              <select id="direccionEntrega" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="direccionEntrega" required>
-                  <option value="1" disabled selected>-Seleccionar-</option>
-              </select>
-              <div class="grid place-items-center hover:cursor-pointer">
-                <span id="adddir" class="material-symbols-outlined text-blue-500 hover:text-blue-800">add_circle</span>
+
+            <div class="text-left">
+              <p class="text-sm text-gray-500">Cliente</p>
+
+              <p id="resumenCliente" class="text-xl font-semibold text-gray-800 leading-tight">
+                Seleccionar cliente
+              </p>
+
+              <div class="flex flex-wrap gap-4 text-sm text-gray-500 mt-1">
+                <span id="resumenDocumento"></span>
+                <span id="resumenTipo"></span>
               </div>
-            </div> <!-- fin formulario dato-->
-        </div>
-        <div class="formulario__campo flex-1">
-            <label class="formulario__label" for="ciudad">Ciudad</label>
-            <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Ciudad de entrega" name="ciudadEntrega" value="" readonly>
-        </div>
+
+              <div id="bloqueCredito" class="hidden mt-2 text-sm">
+                <div class="flex gap-6">
+                  <span>Cupo: <strong id="resumenCupo">$0</strong></span>
+                  <span>Saldo: <strong id="resumenSaldo">$0</strong></span>
+                  <span>Disponible: <strong id="resumenDisponible">$0</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BADGE ESTADO -->
+          <div class="flex items-center gap-3">
+            <span id="badgeEstado"
+              class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-600">
+              SIN CLIENTE
+            </span>
+
+            <span class="material-symbols-outlined text-gray-400 text-3xl">
+              chevron_right
+            </span>
+          </div>
+
+        </button>
       </div>
 
       <div id="hacker-list" class="paginadorventas">
@@ -256,113 +272,172 @@
     </div>
   </dialog>
 
-  <!-- MODAL PARA CREAR O AÑADIR CLIENTE-->
-  <dialog id="miDialogoAddCliente" class="midialog-sm p-5">
-      <h4 class=" text-gray-700 font-semibold">Crear Cliente</h4>
-      <form id="formAddCliente" class="formulario" action="/" enctype="multipart/form-data" method="POST">
+<!-- MODAL PARA CREAR O AÑADIR CLIENTE -->
+<dialog id="miDialogoAddCliente"
+  class="midialog-sm rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
-      <div class="border-b border-gray-900/10 pb-10 mb-3">
-        
-        <p class="mt-2 text-xl text-gray-600">Información Personal.</p>
+  <!-- Encabezado -->
+  <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+    <h4 class="text-2xl font-bold text-indigo-700">
+      👤 Cliente
+    </h4>
+    <button class="p-2 rounded-lg hover:bg-gray-100 transition salir">
+      <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
+    </button>
+  </div>
 
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div class="sm:col-span-3">
-            <label for="nombreclientenuevo" class="block text-2xl font-medium text-gray-600">Nombre</label>
-            <div class="mt-2">
-              <input type="text" name="nombreclientenuevo" id="nombreclientenuevo" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div> 
-          </div>
+  <!-- ================= BUSCAR CLIENTE EXISTENTE ================= -->
+  <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
+    <h5 class="text-lg font-semibold text-gray-700 mb-4">
+      🔎 Buscar cliente existente
+    </h5>
 
-          <div class="sm:col-span-3">
-            <label for="clientenuevoapellido" class="block text-2xl font-medium text-gray-600">Apellido</label>
-            <div class="mt-2">
-              <input type="text" name="clientenuevoapellido" id="clientenuevoapellido" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div>
-          </div>
+    <div class="flex gap-3">
+      <input
+        type="text"
+        id="buscarCliente"
+        placeholder="Buscar por nombre, teléfono o documento..."
+        class="flex-1 bg-white border border-gray-300 text-gray-900 rounded-lg p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+      >
 
-          <div class="sm:col-span-3">
-            <label for="tipodocumento" class="block text-2xl font-medium text-gray-600">Tipo de documento</label>
-            <div class="mt-2 grid grid-cols-1">
-              <select id="tipodocumento" name="tipodocumento" autocomplete="tipodocumento-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-                <option value="CC">CC</option>
-                <option value="NIT">NIT</option>
-                <option value="PASAPORTE">PASAPORTE</option>
-                <option value="PERMISO TEMPORAL">PERMISO TEMPORAL</option>
-                <option value="PERMISO ESPECIAL DE PERMANENCIA">PERMISO ESPECIAL DE PERMANENCIA</option>
-                <option value="TARJETA DE INDENTIDAD">TARJETA DE INDENTIDAD</option>
-                <option value="CEDULA DE EXTRANJERIA">CEDULA DE EXTRANJERIA</option>
-                <option value="VISA">VISA</option>
-              </select>
-              <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
-                <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-              </svg> -->
-            </div>
-          </div>
+      <button
+        type="button"
+        id="btnBuscarCliente"
+        class="btn-md btn-indigo !px-6 !py-3">
+        Buscar
+      </button>
+    </div>
 
-          <div class="sm:col-span-3">
-            <label for="identificacion" class="block text-2xl font-medium text-gray-600">Documento</label>
-            <div class="mt-2">
-              <input id="identificacion" name="identificacion" type="text" autocomplete="documento ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div>
-          </div>
+    <!-- Aquí puedes cargar resultados dinámicamente -->
+    <div id="resultadoBusquedaCliente" class="mt-4"></div>
+  </div>
 
-          <div class="sm:col-span-4">
-            <label for="clientenuevoemail" class="block text-2xl font-medium text-gray-600">Email</label>
-            <div class="mt-2">
-              <input id="clientenuevoemail" name="clientenuevoemail" type="email" autocomplete="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-            </div>
-          </div>
+  <div id="divmsjalerta1"></div>
 
-          <div class="sm:col-span-2">
-            <label for="tarifa" class="block text-2xl font-medium text-gray-600">Tarifa</label>
-            <div class="mt-2 grid grid-cols-1">
-              <select id="clientenuevotarifa" name="tarifa" autocomplete="tarifa-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-                <?php foreach($tarifas as $tarifa): ?>
-                  <option value="<?php echo $tarifa->id;?>"><?php echo $tarifa->nombre;?></option>
-                <?php endforeach; ?>
-              </select>
-              <!-- <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
-                <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-              </svg> -->
-            </div>
-          </div>
+  <form id="formAddCliente" class="formulario space-y-6" action="/" enctype="multipart/form-data" method="POST">
 
-          <div class="col-span-full">
-            <label for="clientenuevodireccion" class="block text-2xl font-medium text-gray-600">Dirección</label>
-            <div class="mt-2">
-              <input type="text" name="clientenuevodireccion" id="clientenuevodireccion" autocomplete="clientenuevodireccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div>
-          </div>
+    <!-- ================= CREAR NUEVO CLIENTE ================= -->
 
-          <div class="sm:col-span-2 sm:col-start-1">
-            <label for="telefono" class="block text-2xl font-medium text-gray-600">Teléfono</label>
-            <div class="mt-2">
-              <input type="text" name="telefono" id="telefono" autocomplete="address-level2" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div>
-          </div>
+    <div class="border-t border-gray-200 pt-6">
+      <h5 class="text-lg font-semibold text-gray-700 mb-6">
+        ➕ Crear nuevo cliente
+      </h5>
 
-          <div class="sm:col-span-2">
-            <label for="departamento" class="block text-2xl font-medium text-gray-600">Departamento</label>
-            <div class="mt-2">
-              <input type="text" name="departamento" id="departamento" autocomplete="address-level1" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-            </div>
-          </div>
+      <div class="formulario__campo">
+        <label class="formulario__label text-lg font-medium text-gray-700" for="nombreclientenuevo">Nombre</label>
+        <input type="text"
+          name="nombreclientenuevo"
+          id="nombreclientenuevo"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+          required>
+      </div>
 
-          <div class="sm:col-span-2">
-            <label for="ciudad" class="block text-2xl font-medium text-gray-600">Ciudad</label>
-            <div class="mt-2">
-              <input type="text" name="ciudad" id="ciudad" autocomplete="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
+      <div class="formulario__campo">
+        <label class="formulario__label text-lg font-medium text-gray-700" for="clientenuevoapellido">Apellido</label>
+        <input type="text"
+          name="clientenuevoapellido"
+          id="clientenuevoapellido"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+          required>
+      </div>
+
+      <div class="formulario__campo">
+        <label class="formulario__label text-lg font-medium text-gray-700" for="telefono">Teléfono</label>
+        <input type="text"
+          name="telefono"
+          id="telefono"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+          required>
+      </div>
+
+      <div class="formulario__campo">
+        <label class="formulario__label text-lg font-medium text-gray-700" for="clientenuevodireccion">Dirección</label>
+        <input type="text"
+          name="clientenuevodireccion"
+          id="clientenuevodireccion"
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+          required>
+      </div>
+
+    </div>
+
+    <!-- ================= MOSTRAR / OCULTAR MÁS OPCIONES ================= -->
+
+    <div class="border-t border-gray-200 pt-6">
+      <div class="accordion">
+
+        <input type="checkbox" id="opcionesCliente">
+
+        <label class="etiqueta flex items-center justify-center gap-2 cursor-pointer text-indigo-600 font-medium hover:text-indigo-800 select-none"
+          for="opcionesCliente">
+          Mostrar / Ocultar más opciones
+        </label>
+
+        <div class="wrapper">
+          <div class="wrapper-content">
+            <div class="content space-y-6 mt-6">
+
+              <!-- Campos secundarios (los dejo igual que ya los tenías) -->
+
+              <div class="formulario__campo">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="ciudad">Ciudad</label>
+                <input type="text" name="ciudad" id="ciudad"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+                  required>
+              </div>
+
+              <div class="formulario__campo">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="identificacion">Documento</label>
+                <input id="identificacion" name="identificacion" type="text"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+                  required>
+              </div>
+
+              <div class="formulario__campo">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="tipodocumento">Tipo documento</label>
+                <select id="tipodocumento" name="tipodocumento"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600"
+                  required>
+                  <option value="CC">CC</option>
+                  <option value="NIT">NIT</option>
+                  <option value="PASAPORTE">PASAPORTE</option>
+                  <option value="CEDULA DE EXTRANJERIA">CEDULA DE EXTRANJERIA</option>
+                </select>
+              </div>
+
+              <div class="formulario__campo">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="clientenuevoemail">Email</label>
+                <input id="clientenuevoemail" name="clientenuevoemail" type="email"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+              </div>
+
+              <div class="formulario__campo">
+                <label class="formulario__label text-lg font-medium text-gray-700" for="departamento">Departamento</label>
+                <input type="text" name="departamento" id="departamento"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+              </div>
+
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="text-right space-x-4 mt-6">
-        <button class="btn-md btn-turquoise !py-4 !px-6 !w-[180px] rounded-lg salir" type="button" value="salir">Salir</button>
-        <input id="btnCrearAddCliente" class="btn-md btn-indigo !py-4 !px-6 !w-[180px] rounded-lg" type="submit" value="Crear">
-      </div>
-    </form>
-  </dialog>
+    <!-- Botones -->
+    <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+      <button type="button"
+        class="btn-md btn-turquoise !py-4 !px-6 !w-[135px] salir">
+        Cancelar
+      </button>
+
+      <input id="btnCrearAddCliente"
+        type="submit"
+        value="Guardar"
+        class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
+    </div>
+
+  </form>
+</dialog>
 
   <!-- MODAL PARA CREAR NUEVA DIRECCION A CLIENTE-->
   <dialog id="miDialogoAddDir" class="midialog-sm p-5">
@@ -418,6 +493,56 @@
       </div>
     </form>
   </dialog>
+
+  <!-- MODAL DATOS CLIENTE VENTA -->
+<dialog id="miDialogoDatosCliente" class="midialog-lg p-6 w-full max-w-4xl">
+
+  <div class="flex justify-between items-center mb-4">
+    <h4 class="text-2xl font-semibold text-gray-700">
+      Datos del Cliente
+    </h4>
+    <button id="btnCerrarDatosCliente" class="btn-md btn-indigo">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- AQUÍ VA TU BLOQUE ORIGINAL SIN CAMBIAR IDS -->
+  <div class="xs:flex xs:flex-wrap gap-4">
+      
+      <div class="formulario__campo flex-1">
+        <label class="formulario__label" for="selectCliente">Cliente</label>
+        <div class="formulario__dato">
+          <!-- TU SELECT ORIGINAL -->
+          <!-- NO MODIFIQUÉ NINGÚN ID -->
+        </div>
+
+        <div class="formulario__campo flex-1 xs:flex-none">
+          <label class="formulario__label" for="documento">N. Documento</label>
+          <input id="documento" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" name="documento" readonly>
+        </div>
+      </div>
+
+      <div class="formulario__campo flex-1">
+          <label class="formulario__label" for="direccionEntrega">Direccion</label>
+          <div class="formulario__dato">
+              <!-- TU SELECT direccionEntrega ORIGINAL -->
+          </div>
+      </div>
+
+      <div class="formulario__campo flex-1">
+          <label class="formulario__label" for="ciudadEntrega">Ciudad</label>
+          <input id="ciudadEntrega" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" name="ciudadEntrega" readonly>
+      </div>
+
+  </div>
+
+  <div class="text-right mt-6">
+      <button id="btnGuardarDatosCliente" class="btn-md btn-turquoise !py-4 !px-6">
+        Guardar
+      </button>
+  </div>
+
+</dialog>
 
   <!-- MODAL PARA AGREGAR DESCUENTO -->
   <dialog id="miDialogoDescuento" class="midialog-xs p-8">
@@ -488,9 +613,13 @@
   <?php include __DIR__. "/modalotrosproductos.php"; ?>
   <!-- MODAL PRECIOS ADICIONALES -->
   <?php include __DIR__. "/modalpreciosadicionales.php"; ?>
+<<<<<<< HEAD
+</div>
+=======
 
   <script>
    const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
   </script>
 
 </div>
+>>>>>>> b790d9a5851d96effe104d6b87ab8ad27b7dbc4b
