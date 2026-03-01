@@ -8,8 +8,19 @@
   </a>
   
   <h4 class="text-gray-600 mb-8 mt-4">Gastos e ingresos</h4>
+
+   <!-- Descripción rango de fecha -->
+  <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
+    <span class="text-lg">📅</span>
+    <span class="text-sm md:text-base font-medium">
+      Mostrando información del período:
+      <span class="font-semibold">01 de Junio 2025</span>
+      al
+      <span class="font-semibold">30 de Junio 2025</span>
+    </span>
+  </div>
   
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col lg:flex-row lg:items-center gap-4">
     <!-- Grupo de botones -->
     <div class="inline-flex rounded-2xl shadow-md overflow-hidden border border-gray-300 self-start">
       <button id="btnmesactual" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
@@ -31,7 +42,7 @@
       <input 
         type="text" 
         name="datetimes" 
-        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-60 p-3 text-base dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-60 lg:w-80 p-3 text-base dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
         placeholder="Seleccionar fecha"
       />
       <button id="consultarFechaPersonalizada" class="px-6 py-3 text-base font-medium bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-md transition">
