@@ -15,7 +15,7 @@
     const btnfacturar = document.querySelector('#btnfacturar');
     const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
     const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
-    const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
+    //const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
     const miDialogoPreciosAdicionales = POS.gestionarPreciosAdicionales.miDialogoPreciosAdicionales;
     const miDialogoFacturarA = POS.gestionarAdquiriente.miDialogoFacturarA;
@@ -67,10 +67,6 @@
         console.log(producto.dataset.id);
       });
     });*/
-
-    /////select 2 a btn selectCliente
-    //selectCliente.select2  multiple="multiple" maximumSelectionLength: 1,
-    ($('#selectCliente') as any).select2();
     
 
 
@@ -340,7 +336,7 @@
     });
 
     btnaplicarcredito?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value) || selectCliente.value =='1'){
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='' || !dirEntrega.value) || selectCliente.value ==''){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
@@ -362,7 +358,7 @@
     });
 
     btnfacturar?.addEventListener('click', ()=>{
-      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='1' || !dirEntrega.value)){
+      if(modalidadEntrega.textContent === ": Domicilio" && (selectCliente.value =='' || !dirEntrega.value)){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
@@ -381,13 +377,13 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || f === miDialogoAddDir || f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
         miDialogoDescuento.close();
         //miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
         miDialogoAddCliente.close();
-        miDialogoAddDir.close();
+        //miDialogoAddDir.close();
         miDialogoFacturarA.close();
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicionales.close();
@@ -447,14 +443,14 @@
       const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
-      datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
+      datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
       datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
       datos.append('idcaja', btnCaja.value);
       datos.append('idconsecutivo', btnTipoFacturador.value);
       datos.append('iddireccion', dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
       datos.append('idcanaldeventa', (document.querySelector('#canalVenta') as HTMLSelectElement)?.value??'1');
-      datos.append('cliente', selectCliente.value=='1'?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
+      datos.append('cliente', selectCliente.value==''?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
       datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
@@ -479,7 +475,7 @@
       datos.append('total', valorTotal.total.toString());
       datos.append('observacion', document.querySelector<HTMLTextAreaElement>('#observacion')!.value);
       datos.append('departamento', '');
-      datos.append('ciudad', (document.querySelector('#ciudadEntrega') as HTMLInputElement).value);
+      datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
       datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
       datos.append('valortarifa', valorTotal.valortarifa+'');
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));

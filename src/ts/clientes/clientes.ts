@@ -114,7 +114,7 @@
           
           (async ()=>{ 
             const datos = new FormData();
-            datos.append('id', uncliente!.id);
+            datos.append('idcliente', uncliente!.id);
             datos.append('nombre', $('#nombre').val()as string);
             datos.append('apellido', $('#apellido').val()as string);
             datos.append('tipodocumento', $('#tipodocumento').val()as string);

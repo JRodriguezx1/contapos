@@ -10,7 +10,7 @@ class clientes extends \App\Models\ActiveRecord {
         $this->id = $args['id'] ?? null;
         $this->nombre = $args['nombre'] ?? '';
         $this->apellido = $args['apellido'] ?? '';
-        $this->tipodocumento = $args['tipodocumento'] ?? '';
+        $this->tipodocumento = $args['tipodocumento'] ?? '3';
         $this->identificacion = $args['identificacion'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
         $this->email = $args['email'] ?? '';
