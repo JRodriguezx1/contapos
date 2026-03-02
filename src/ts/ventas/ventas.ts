@@ -410,9 +410,10 @@
       while(tablaventa?.firstChild)tablaventa.removeChild(tablaventa?.firstChild);
       (document.querySelector('#npedido') as HTMLInputElement).value = '';
       document.querySelector('#subTotal')!.textContent = '$'+0;
+      document.querySelector('#impuesto')!.textContent = '$'+0;
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+0;
       document.querySelector('#total')!.textContent = '$'+0;
-      $('#selectCliente').val(1).trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
+      $('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
     }
 
@@ -539,7 +540,7 @@
 
       setTimeout(() => {
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
-      }, 1200);
+      }, 1100);
     }
 
     
