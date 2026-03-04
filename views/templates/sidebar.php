@@ -69,7 +69,7 @@
             <a class="<?php echo ($titulo === 'Caja')?'activo':''; ?>" href="/admin/caja"><span class="material-symbols-outlined">point_of_sale</span> <label class="btnav"> Caja</label></a>
          <?php endif; ?>
         <?php if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
-            <a class="<?php echo ($titulo === 'Ventas')?'activo':''; ?>" href="/admin/ventas"><span class="material-symbols-outlined">storefront</span> <label class="btnav"> Ventas</label></a>
+            <a class="<?php echo ($titulo === 'Ventas')?'activo':''; ?>" href="/admin/ventas<?php echo (getConfigLocal()['habilitar_venta_modo_rapido']??null)?->valor_final == 1?'/modorapido':''; ?>"><span class="material-symbols-outlined">storefront</span> <label class="btnav"> Ventas</label></a>
         <?php endif; ?>
         <?php //if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Creditos')?'activo':''; ?>" href="/admin/creditos"><span class="material-symbols-outlined">swap_horiz</span> <label class="btnav"> Creditos</label></a>

@@ -97,3 +97,8 @@ function buscarClaveArray(array $array, string $clave): bool|string|int|float|nu
     }
     return false;
 }
+
+
+function getConfigLocal(): array {
+    return $_SESSION['configLocal'] ?? [];
+}
