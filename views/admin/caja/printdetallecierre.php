@@ -5,8 +5,8 @@
       <?php echo $ultimocierre->estado==1?'CIERRE CONFIRMADO':'CIERRE PARCIAL';?>
     </h2>
     <p class="text-black"><?php echo $ultimocierre->nombrecaja??'';?></p>
-    <p class="mt-1 font-semibold text-gray-900"><?php echo $negocio[0]->nombre??'';?></p>
-    <p class="text-black"><?php echo $negocio[0]->nit;?></p>
+    <p class="mt-1 font-semibold text-gray-900"><?php echo ($sucursal??null)?->nombre??'';?></p>
+    <p class="text-black"><?php echo ($sucursal??null)?->nit;?></p>
     <?php foreach($lineasencabezado as $value):?>
       <p><?php echo $value;?></p>
     <?php endforeach;?>
