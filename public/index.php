@@ -28,6 +28,7 @@ use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
+use App\Controllers\suscripcioncontrolador;
 use App\Controllers\trasladosinvcontrolador;
 use App\Middlewares\MembershipMiddleware;
 // me importa la clase router
@@ -322,6 +323,7 @@ $router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::cla
 $router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::class, 'asignarAdquirienteAFactura']);
 $router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
 
+$router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
 
 
 //////***************************/***NO**************************//////

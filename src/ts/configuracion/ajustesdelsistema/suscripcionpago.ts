@@ -20,6 +20,7 @@
                 estado: data.estado,
                 fecha_corte: data.fecha_corte,
                 valor_pagado: Number(data.valor_pagado)||0,
+                medio_pago: data.medio_pago,
                 descuento: Number(data.descuento)||0,
                 detalle_descuento: data.detalle_descuento,
                 cargo: Number(data.cargo)||0,
@@ -27,11 +28,11 @@
                 descripcion: data.descripcion,
             }
             try {
-                const url = "/admin/api/registrarPago"; //llamado a la API REST suscripcioncontrolador.php
+                const url = "/admin/api/suscripcion/registrarPago"; //llamado a la API REST suscripcioncontrolador.php
                 const respuesta = await fetch(url, {
                                             method: 'POST', 
                                             headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                                            body: JSON.stringify({}) 
+                                            body: JSON.stringify(pago) 
                                         });
                 const resultado = await respuesta.json();
                 console.log(resultado);

@@ -16,7 +16,7 @@
       
       <div>
         <p class="text-lg text-gray-700 font-medium">Cuenta</p>
-        <p class="text-xl font-semibold">MegaTecho SAS</p>
+        <p class="text-xl font-semibold"><?php echo $negocio->negocio??''; ?><small> - <?php echo $negocio->nombre??''; ?></small></p>
       </div>
 
       <div>
@@ -143,6 +143,15 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                     type="text" placeholder="Ingresa el monto" name="valor_pagado" value=""
                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                    required>
+            </div>
+
+            <div>
+                <label class="formulario__label text-lg font-medium text-gray-700" for="medio_pago">Medio de pago</label>
+                <input 
+                    id="medio_pago"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                    type="text" placeholder="Descripcion del medio de pago" name="medio_pago" value=""
                     required>
             </div>
 

@@ -3,33 +3,34 @@
 namespace App\Controllers;
 
 use App\Models\sucursales;
+use App\Models\suscripcioncuenta\suscripcion_pagos;
+use App\Repositories\suscripcioncuenta\suscripcionPagosRepository;
 use MVC\Router;  //namespace\clase
  
 class suscripcioncontrolador{
-
-    public static function index(Router $router){
-        //session_start();
-        isadmin();
-        //if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
-        $alertas = [];
-
-        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
-    }
-
 
     public static function registrarPago(){
         //session_start();
         isadmin();
         $alertas = [];
+        $suscripcionRepo = new suscripcionPagosRepository(); 
 
         if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-        http_response_code(405); // Método no permitido
-        echo json_encode(['error' => 'Método no permitido']);
-        exit;
+            http_response_code(405); // Método no permitido
+            echo json_encode(['error' => 'Método no permitido']);
+            exit;
         }
-        $idfactura = json_decode(file_get_contents('php://input'), true);
-    
-        $alertas['error'][] = "Error factura no se encuentra como pendiente de enviar a Dian o no esta paga.";
+        $pago = json_decode(file_get_contents('php://input'), true);
+        $entity = new suscripcion_pagos($pago);
+        $alertas = $entity->validar();
+        if(empty($alertas)){
+            $r = $suscripcionRepo->insert($entity);
+            if($r[0]){
+                $alertas['exito'][] = "Pago registrado con exito";
+            }else{
+                $alertas['error'][] = "Error, intente nuevamente.";
+            }
+        }
         echo json_encode($alertas);
         return;
     }

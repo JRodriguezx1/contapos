@@ -15,7 +15,7 @@ class suscripcion_pagos {
         $this->fecha_corte = $args['fecha_corte']??date('Y-m-d');
         $this->fecha_pago = $args['fecha_pago']??date('Y-m-d');
         $this->cantidad_plan = $args['cantidad_plan']??1;
-        $this->mediopago = $args['mediopago']??'';
+        $this->medio_pago = $args['medio_pago']??'';
         $this->descuento = $args['descuento']??0;
         $this->detalle_descuento = $args['detalle_descuento']?? '';
         $this->cargo = $args['cargo']??0;
@@ -31,7 +31,7 @@ class suscripcion_pagos {
         $alertas = [];
         if(!$this->valor_pagado || $this->medio_pago<0)$alertas['error'][] = "Valor pagado no es valido, verificar nuevamente.";
         if($this->cantidad_plan<=0)$alertas['error'][] = "Cantidad del plan no es valido, verificar nuevamente.";
-        if(!$this->mediopago || strlen($this->mediopago)<2)$alertas['error'][] = "Medio de pago no es valido, verificar nuevamente.";
+        if(!$this->medio_pago || strlen($this->medio_pago)<2)$alertas['error'][] = "Medio de pago no es valido, verificar nuevamente.";
         return $alertas;
     }
 
@@ -46,7 +46,7 @@ class suscripcion_pagos {
             'fecha_corte' => $this->fecha_corte,
             'fecha_pago' => $this->fecha_pago,
             'cantidad_plan' => $this->cantidad_plan, 
-            'mediopago' => $this->mediopago, 
+            'medio_pago' => $this->medio_pago, 
             'descuento' => $this->descuento, 
             'detalle_descuento' => $this->detalle_descuento, 
             'cargo' => $this->cargo,
