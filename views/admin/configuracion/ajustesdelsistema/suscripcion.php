@@ -48,9 +48,7 @@
 
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-lg font-semibold text-gray-800"></h2>
-    <button 
-      class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent"
-      onclick="document.getElementById('modal-ajustes').classList.remove('hidden')">
+    <button class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
       Aplicar Descuento/Cargo
     </button>
   </div>
@@ -114,10 +112,8 @@
             <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
                 💰 Detalles de la Suscripción
             </h4>
-            <button id="btnCerrarGastosIngresos"
-                class="p-2 rounded-lg hover:bg-gray-100 transition"
-                onclick="document.getElementById('gastosIngresos').close()">
-                <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
+            <button class="p-2 rounded-lg hover:bg-gray-100 transition btnXCerrarRegistroPago">
+                <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
             </button>
         </div>
         <div id="divmsjalerta1"></div>
@@ -125,7 +121,6 @@
             <div class="formulario__campo">
                 <label class="formulario__label text-lg font-medium text-gray-700" for="estado">Estado</label>
                 <select id="estado" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
-                    <option value="" disabled selected>-Seleccionar-</option>
                     <option value="1">Activa</option>
                     <option value="0">Suspendida</option>
                 </select>
@@ -147,7 +142,7 @@
                     id="valor_pagado"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                     type="text" placeholder="Ingresa el monto" name="valor_pagado" value=""
-                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString('es-CO')"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                     required>
             </div>
 
@@ -157,7 +152,7 @@
                     id="descuento"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                     type="text" placeholder="Ingresa monto de descuento" name="descuento" value=""
-                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString('es-CO')"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                 >
             </div>
 
@@ -179,7 +174,7 @@
                     id="cargo"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                     type="text" placeholder="Ingresa monto de cargo" name="cargo" value=""
-                    oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString('es-CO')"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                 >
             </div>
 
@@ -203,7 +198,7 @@
 
             <!-- Botones -->
             <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]">Cancelar</button>
+                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
                 <input id="btnEnviarRegistrarPago" type="submit" value="Aplicar" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
             </div>
         </form>
