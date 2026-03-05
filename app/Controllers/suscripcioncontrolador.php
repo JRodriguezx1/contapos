@@ -15,4 +15,23 @@ class suscripcioncontrolador{
 
         $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+
+    public static function registrarPago(){
+        //session_start();
+        isadmin();
+        $alertas = [];
+
+        if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+        http_response_code(405); // Método no permitido
+        echo json_encode(['error' => 'Método no permitido']);
+        exit;
+        }
+        $idfactura = json_decode(file_get_contents('php://input'), true);
+    
+        $alertas['error'][] = "Error factura no se encuentra como pendiente de enviar a Dian o no esta paga.";
+        echo json_encode($alertas);
+        return;
+    }
+  
 }
