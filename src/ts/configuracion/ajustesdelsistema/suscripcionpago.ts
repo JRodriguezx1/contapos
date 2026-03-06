@@ -1,11 +1,16 @@
 (()=>{
 
     if(document.querySelector('.configsuscripcion')){
-        const btnRegistrarPago = document.getElementById('btnRegistrarPago');
+        const btnDetalleSuscriptor = document.getElementById('btnDetalleSuscriptor') as HTMLButtonElement;
+        const btnRegistrarPago = document.getElementById('btnRegistrarPago') as HTMLButtonElement;
         const miDialogoRegistrarPago:any = document.querySelector("#miDialogoRegistrarPago");
+        const miDialogoDetalleSuscripcion:any = document.querySelector("#miDialogoDetalleSuscripcion");
 
         document.addEventListener("click", cerrarDialogoExterno);
 
+        btnDetalleSuscriptor?.addEventListener('click',()=>{
+            miDialogoDetalleSuscripcion.showModal();
+        });
         btnRegistrarPago?.addEventListener('click',()=>{
             miDialogoRegistrarPago.showModal();
         });

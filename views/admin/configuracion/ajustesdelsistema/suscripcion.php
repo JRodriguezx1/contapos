@@ -1,10 +1,13 @@
 <div class="contenido9 configsuscripcion accordion_tab_content p-6 rounded-lg w-full space-y-6">
 
   <!-- Botón que abre el modal -->
-  <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-semibold text-gray-800 "></h2>
-    <button id="btnRegistrarPago" class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
+  <div class="flex justify-end gap-4 items-center mb-6">
+      
+    <button id="btnDetalleSuscriptor" class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
       Información del suscriptor
+    </button>
+    <button id="btnRegistrarPago" class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
+      Registrar pago
     </button>
   </div>
 
@@ -105,113 +108,165 @@
 
 
   <!-- MODAL DETALLE DE LA SUSCRIPCION -->
-    <dialog id="miDialogoRegistrarPago" class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
+  <dialog id="miDialogoDetalleSuscripcion" class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
-        <!-- Encabezado -->
-        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
-                💰 Detalles de la Suscripción
-            </h4>
-            <button class="p-2 rounded-lg hover:bg-gray-100 transition btnXCerrarRegistroPago">
-                <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
-            </button>
-        </div>
-        <div id="divmsjalerta1"></div>
-        <form id="formRegistrarPago" class="formulario space-y-6">
-            <div class="formulario__campo">
-                <label class="formulario__label text-lg font-medium text-gray-700" for="estado">Estado</label>
-                <select id="estado" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
-                    <option value="1">Activa</option>
-                    <option value="0">Suspendida</option>
-                </select>
-            </div>
+      <!-- Encabezado -->
+      <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+          <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">Detalles de la Suscripción</h4>
+          <button class="p-2 rounded-lg hover:bg-gray-100 transition btnXCerrarRegistroPago">
+              <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
+          </button>
+      </div>
+      <div id="divmsjalerta1"></div>
+      <form id="formDetalleSuscripcion" class="formulario space-y-6">
+          <div class="formulario__campo">
+              <label class="formulario__label text-lg font-medium text-gray-700" for="estado">Estado</label>
+              <select id="estado" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
+                  <option value="1">Activa</option>
+                  <option value="0">Suspendida</option>
+              </select>
+          </div>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="fecha_corte">Fecha de corte</label>
-                <input 
-                    id="fecha_corte"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="date"  
-                    name="fecha_corte" 
-                >
-            </div>
+          <div class="formulario__campo">
+              <label class="formulario__label text-lg font-medium text-gray-700" for="id_plan">Plan</label>
+              <select id="id_plan" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
+                  <option value="2">Plan mensual</option>
+                  <option value="1">Plan anual</option>
+                  <option value="2">Plan diario</option>
+              </select>
+          </div>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="valor_pagado">Valor a registrar</label>
-                <input 
-                    id="valor_pagado"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="text" placeholder="Ingresa el monto" name="valor_pagado" value=""
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                    required>
-            </div>
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="fecha_corte">Fecha de corte</label>
+              <input 
+                  id="fecha_corte"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="date"  
+                  name="fecha_corte" 
+              >
+          </div>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="medio_pago">Medio de pago</label>
-                <input 
-                    id="medio_pago"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="text" placeholder="Descripcion del medio de pago" name="medio_pago" value=""
-                    required>
-            </div>
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="valor">Valor del plan</label>
+              <input 
+                  id="valor"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" placeholder="Ingresa el monto" name="valor" value=""
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                  required>
+          </div>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="descuento">Descuento</label>
-                <input 
-                    id="descuento"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="text" placeholder="Ingresa monto de descuento" name="descuento" value=""
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                >
-            </div>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="detalle_descuento">Detalle descuento</label>
-                <input 
-                    id="detalle_descuento"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="text" 
-                    placeholder="Descripcion del descuento" 
-                    name="detalle_descuento" 
-                    value="" 
-                >
-            </div>
+          <!-- Botones -->
+          <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
+              <input id="btnEnviarDetalleSuscripcion" type="submit" value="Aplicar" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
+          </div>
+      </form>
+  </dialog>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="cargo">Cargo</label>
-                <input 
-                    id="cargo"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="text" placeholder="Ingresa monto de cargo" name="cargo" value=""
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                >
-            </div>
 
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="detalle_cargo">Detalle cargo</label>
-                <input 
-                    id="detalle_cargo"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                    type="text" 
-                    placeholder="Descripcion del cargo" 
-                    name="detalle_cargo" 
-                    value="" 
-                >
-            </div>
+  <!-- MODAL REGISTRAR EL PAGO -->
+  <dialog id="miDialogoRegistrarPago" class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
-            <!-- Descripción -->
-            <div>
-                <label class="formulario__label text-lg font-medium text-gray-700" for="descripcion">Observacion</label>
-                <textarea id="descripcion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-40 text-lg focus:outline-none focus:ring-1" name="descripcion" rows="4"></textarea>
-            </div>
+      <!-- Encabezado -->
+      <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+          <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
+              💰 Registrar pago de la suscripcion
+          </h4>
+          <button class="p-2 rounded-lg hover:bg-gray-100 transition btnXCerrarRegistroPago">
+              <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
+          </button>
+      </div>
+      <div id="divmsjalerta1"></div>
+      <form id="formRegistrarPago" class="formulario space-y-6">
 
-            <!-- Botones -->
-            <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
-                <input id="btnEnviarRegistrarPago" type="submit" value="Aplicar" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
-            </div>
-        </form>
-    </dialog>
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="valor_pagado">Valor a registrar</label>
+              <input 
+                  id="valor_pagado"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" placeholder="Ingresa el monto" name="valor_pagado" value=""
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                  required>
+          </div>
+
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="cantidad_plan">Cantidad del plan pago</label>
+              <input 
+                  id="cantidad_plan"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" placeholder="Ingresa el monto" name="cantidad_plan" value="1"
+                  oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
+                  required>
+          </div>
+
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="medio_pago">Medio de pago</label>
+              <input 
+                  id="medio_pago"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" placeholder="Descripcion del medio de pago" name="medio_pago" value=""
+                  required>
+          </div>
+
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="descuento">Descuento</label>
+              <input 
+                  id="descuento"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" placeholder="Ingresa monto de descuento" name="descuento" value=""
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+              >
+          </div>
+
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="detalle_descuento">Detalle descuento</label>
+              <input 
+                  id="detalle_descuento"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" 
+                  placeholder="Descripcion del descuento" 
+                  name="detalle_descuento" 
+                  value="" 
+              >
+          </div>
+
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="cargo">Cargo</label>
+              <input 
+                  id="cargo"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" placeholder="Ingresa monto de cargo" name="cargo" value=""
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+              >
+          </div>
+
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="detalle_cargo">Detalle cargo</label>
+              <input 
+                  id="detalle_cargo"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                  type="text" 
+                  placeholder="Descripcion del cargo" 
+                  name="detalle_cargo" 
+                  value="" 
+              >
+          </div>
+
+          <!-- Descripción -->
+          <div>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="descripcion">Observacion</label>
+              <textarea id="descripcion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-40 text-lg focus:outline-none focus:ring-1" name="descripcion" rows="4"></textarea>
+          </div>
+
+          <!-- Botones -->
+          <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
+              <input id="btnEnviarRegistrarPago" type="submit" value="Aplicar" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
+          </div>
+      </form>
+  </dialog>
   
   <!-- //------------Información del botón descuento/cargos--------------// -->
   <!-- Modal Ajustes -->

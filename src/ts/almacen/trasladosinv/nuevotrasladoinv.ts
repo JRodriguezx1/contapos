@@ -204,7 +204,7 @@
         function resumen(){
             const tablaproductosresumen = document.querySelector('#tablaproductosresumen tbody');
             while(tablaproductosresumen?.firstChild)tablaproductosresumen.removeChild(tablaproductosresumen.firstChild);
-            resumenSedeDestino.textContent = (document.querySelector('#sucursaldestino') as HTMLSelectElement).textContent;
+            resumenSedeDestino.textContent = (document.querySelector('#sucursaldestino') as HTMLSelectElement).selectedOptions[0].text;
             resumenFecha.textContent = inputFecha.value;
             resumenObservaciones.textContent = (document.querySelector('#observaciones') as HTMLTextAreaElement).value;
 
