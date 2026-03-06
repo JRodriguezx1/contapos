@@ -5,7 +5,7 @@ namespace App\Repositories\suscripcioncuenta;
 use App\Models\suscripcioncuenta\suscripcion_sucursal;
 use App\Repositories\operationRepository;
 
-class suscripcionPagosRepository extends operationRepository{
+class suscripcionSucursalRepository extends operationRepository{
 
     //private $db;
     protected string $table = 'suscripcion_sucursal';

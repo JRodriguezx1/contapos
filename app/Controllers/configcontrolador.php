@@ -20,6 +20,7 @@ use App\Models\configuraciones\usuarios_permisos;
 use App\Models\felectronicas\diancompanias;
 use App\Models\sucursales;
 use App\Repositories\suscripcioncuenta\suscripcionPagosRepository;
+use App\Repositories\suscripcioncuenta\suscripcionSucursalRepository;
 use MVC\Router;  //namespace\clase
  
 class configcontrolador{
@@ -42,8 +43,10 @@ class configcontrolador{
     $companias = diancompanias::all();
     $empleado = new \stdClass();
     $empleado->perfil = '';
-    $suscripcionRepo = new suscripcionPagosRepository;
-    $suscripcion = $suscripcionRepo->all();
+    $suscripcionSucursalRepo = new suscripcionSucursalRepository;
+    $suscripcionPagoRepo = new suscripcionPagosRepository;
+    $suscripcionSucursal = $suscripcionSucursalRepo->uniqueWhere(['sucursalfkid'=>id_sucursal()]);
+    $suscripcionPagos = $suscripcionPagoRepo->all();
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
@@ -53,7 +56,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'suscripcion'=>$suscripcion, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);   //  'autenticacion/login' = carpeta/archivo
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'suscripcionSucursal'=>$suscripcionSucursal, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 

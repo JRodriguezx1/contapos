@@ -208,7 +208,7 @@ const configdatatablesajustarcostos = {
 const configdatatablescaja = {
   "paging": false,
   "order": [[ 3, 'desc' ]],
-  "searching": true,
+  "searching": false,
   "ordering": true,
   "info": true,
   "autoWidth": true,

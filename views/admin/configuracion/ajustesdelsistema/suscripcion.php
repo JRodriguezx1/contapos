@@ -24,27 +24,27 @@
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Estado</p>
-        <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-base font-medium">Activo</span>
+        <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-base font-medium"><?php echo ($suscripcionSucursal??null)?->estado; ?></span>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Fecha de inicio</p>
-        <p class="text-xl font-semibold">01/09/2025</p>
+        <p class="text-xl font-semibold"><?php echo ($suscripcionSucursal??null)?->created_at; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Próximo pago</p>
-        <p class="text-xl font-semibold">01/10/2025</p>
+        <p class="text-xl font-semibold"><?php echo ($suscripcionSucursal??null)?->fecha_corte; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Monto mensual</p>
-        <p class="text-xl font-semibold">$100.000</p>
+        <p class="text-xl font-semibold">$<?php echo ($suscripcionSucursal??null)?->valor; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Días restantes</p>
-        <p class="text-xl font-semibold text-indigo-600">12 días</p>
+        <p class="text-xl font-semibold text-indigo-600"> - </p>
       </div>
     </div>
   </div>
