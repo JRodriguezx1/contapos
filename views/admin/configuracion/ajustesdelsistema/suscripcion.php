@@ -34,17 +34,17 @@
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Próximo pago</p>
-        <p class="text-xl font-semibold"><?php echo $negocio->fecha_corte; ?></p>
+        <p id="fecha_corteText" class="text-xl font-semibold"><?php echo $negocio->fecha_corte; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Monto mensual</p>
-        <p class="text-xl font-semibold">$<?php echo $negocio->valorplan; ?></p>
+        <p id="valorplanText" class="text-xl font-semibold">$<?php echo $negocio->valorplan; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Días restantes</p>
-        <p class="text-xl font-semibold text-indigo-600"> - </p>
+        <p id="diasRestantesText" class="text-xl font-semibold text-indigo-600"> - </p>
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@
     <h2 class="text-3xl font-bold mb-4">Resumen de cobros</h2>
     <div class="space-y-2 text-lg">
       <div class="flex justify-between">
-        <span class="font-medium text-gray-700">Valor base</span><span class="text-gray-800">$<?php echo $negocio->valorplan; ?></span>
+        <span class="font-medium text-gray-700">Valor base</span><span id="valorplanResumen" class="text-gray-800">$<?php echo $negocio->valorplan; ?></span>
       </div>
       <div class="flex justify-between">
         <span class="font-medium text-green-600">Descuento aplicado</span><span class="text-green-600">- $<?php echo $negocio->descuento; ?></span>
@@ -139,7 +139,8 @@
                   id="fecha_corte"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                   type="date"  
-                  name="fecha_corte" 
+                  name="fecha_corte"
+                  required
               >
           </div>
 
@@ -148,8 +149,11 @@
               <input 
                   id="valorplan"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresa el monto" name="valorplan" value=""
+                  type="text" 
+                  placeholder="Ingresa el monto" 
+                  name="valorplan"
                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                  value="0"
                   required>
           </div>
 
@@ -165,7 +169,6 @@
 
   <!-- MODAL REGISTRAR EL PAGO -->
   <dialog id="miDialogoRegistrarPago" class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
-
       <!-- Encabezado -->
       <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
           <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
@@ -193,7 +196,7 @@
               <input 
                   id="cantidad_plan"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresa el monto" name="cantidad_plan" value="1"
+                  type="text" placeholder="Ingresar la cantidad de renovaciones del plan" name="cantidad_plan" value="1"
                   oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
                   required>
           </div>
@@ -205,50 +208,6 @@
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                   type="text" placeholder="Descripcion del medio de pago" name="medio_pago" value=""
                   required>
-          </div>
-
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="descuento">Descuento</label>
-              <input 
-                  id="descuento"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresa monto de descuento" name="descuento" value=""
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-              >
-          </div>
-
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="detalle_descuento">Detalle descuento</label>
-              <input 
-                  id="detalle_descuento"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" 
-                  placeholder="Descripcion del descuento" 
-                  name="detalle_descuento" 
-                  value="" 
-              >
-          </div>
-
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="cargo">Cargo</label>
-              <input 
-                  id="cargo"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresa monto de cargo" name="cargo" value=""
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-              >
-          </div>
-
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="detalle_cargo">Detalle cargo</label>
-              <input 
-                  id="detalle_cargo"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" 
-                  placeholder="Descripcion del cargo" 
-                  name="detalle_cargo" 
-                  value="" 
-              >
           </div>
 
           <!-- Descripción -->
@@ -285,16 +244,14 @@
         <!-- Monto -->
         <div>
           <label class="block text-xl font-medium text-gray-700 ">Monto</label>
-          <input type="number" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
+          <input type="number" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
         </div>
       </div>
   
       <!-- Detalle -->
       <div class="mt-6">
         <label class="block text-xl font-medium text-gray-700 ">Detalle</label>
-        <textarea rows="3" 
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-32 text-xl focus:outline-none focus:ring-1"></textarea>
+        <textarea rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-32 text-xl focus:outline-none focus:ring-1"></textarea>
       </div>
   
       <!-- Acciones -->

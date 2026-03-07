@@ -7,7 +7,7 @@ class suscripcion_pagos {
     public function __construct($args = [])
     {
         $this->id = $args['id']??null;
-        $this->idsuscripcion_sucursal = $args['idsuscripcion_sucursal']??'';
+        $this->sucursalfkid = $args['sucursalfkid']??'';
         $this->valor_pagado = $args['valor_pagado']??0;
         $this->fecha_pago = $args['fecha_pago']??date('Y-m-d');
         $this->cantidad_plan = $args['cantidad_plan']??1;
@@ -34,7 +34,7 @@ class suscripcion_pagos {
     public function toArray():array {
         return [
             //'id' => $this->id, 
-            'idsuscripcion_sucursal' => $this->idsuscripcion_sucursal,
+            'sucursalfkid' => $this->sucursalfkid,
             'valor_pagado' => $this->valor_pagado,
             'fecha_pago' => $this->fecha_pago,
             'cantidad_plan' => $this->cantidad_plan, 

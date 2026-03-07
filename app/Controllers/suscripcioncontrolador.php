@@ -13,20 +13,21 @@ class suscripcioncontrolador{
         //session_start();
         isadmin();
         $alertas = [];
-        $suscripcionRepo = new suscripcionPagosRepository(); 
+        $sucursal = sucursales::find('id', id_sucursal());
 
         if($_SERVER['REQUEST_METHOD'] !== 'POST'){
             http_response_code(405); // Método no permitido
             echo json_encode(['error' => 'Método no permitido']);
             exit;
         }
-        $pago = json_decode(file_get_contents('php://input'), true);
-        $entity = new suscripcion_pagos($pago);
-        $alertas = $entity->validar();
+        $detalleSuscrip = json_decode(file_get_contents('php://input'), true);
+        $sucursal->compara_objetobd_post($detalleSuscrip);
+        $alertas = $sucursal->validar();
         if(empty($alertas)){
-            $r = $suscripcionRepo->insert($entity);
-            if($r[0]){
-                $alertas['exito'][] = "Pago registrado con exito";
+
+            $r = $sucursal->actualizar();
+            if($r){
+                $alertas['exito'][] = "Datos suscripcion actualizados";
             }else{
                 $alertas['error'][] = "Error, intente nuevamente.";
             }
@@ -34,6 +35,7 @@ class suscripcioncontrolador{
         echo json_encode($alertas);
         return;
     }
+
 
     public static function registrarPago(){
         //session_start();
@@ -48,8 +50,10 @@ class suscripcioncontrolador{
         }
         $pago = json_decode(file_get_contents('php://input'), true);
         $entity = new suscripcion_pagos($pago);
+        debuguear($entity);
         $alertas = $entity->validar();
         if(empty($alertas)){
+            //fecha_corte = date('Y-m-d', strtotime('+1 month'));
             $r = $suscripcionRepo->insert($entity);
             if($r[0]){
                 $alertas['exito'][] = "Pago registrado con exito";

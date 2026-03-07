@@ -27,7 +27,7 @@ class clientes extends \App\Models\ActiveRecord {
     public function validar_nuevo_cliente():array {
         if(!$this->nombre)self::$alertas['error'][] = 'El Nombre del cliente es Obligatorio';
         
-        if(strlen($this->nombre)>32)self::$alertas['error'][] = 'Has excecido el limite de caracteres';
+        if(strlen($this->nombre)>45)self::$alertas['error'][] = 'Has excecido el limite de caracteres';
         
         if(!$this->apellido || strlen($this->apellido)>32)self::$alertas['error'][] = 'El apellido del cliente no debe ir vacio o ser mayor a 32 digitos';
         
