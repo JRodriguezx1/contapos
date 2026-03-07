@@ -4,10 +4,17 @@ namespace App\Models;
 
 class sucursales extends \App\Models\ActiveRecord{
     protected static $tabla = 'sucursales';
-    protected static $columnasDB = ['id', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'timezone'];
+    protected static $columnasDB = ['id', 'idplan', 'valorplan', 'fecha_corte', 'descuento', 'detalledescuento', 'cargo', 'detallecargo', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'timezone'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->idplan = $args['idplan']??'';
+        $this->valorplan = $args['valorplan']??'';
+        $this->fecha_corte = $args['fecha_corte']??'';
+        $this->descuento = $args['descuento']??0;
+        $this->detalledescuento = $args['detalledescuento']??'';
+        $this->cargo = $args['cargo']??0;
+        $this->detallecargo = $args['detallecargo']??'';
         $this->negocio = $args['negocio']??'';
         $this->nombre = $args['nombre']??'';
         $this->nit = $args['nit'] ?? '';
@@ -33,6 +40,7 @@ class sucursales extends \App\Models\ActiveRecord{
 
     public function validar():array
     {
+        
         if(!$this->negocio)self::$alertas['error'][] = "negocio no especificado";
         if(strlen($this->negocio)>34)self::$alertas['error'][] = "Has excecido el limite de caracteres del nombre del negocio";
         if(!$this->nombre)self::$alertas['error'][] = "Nombre de la sucursal no especificado";

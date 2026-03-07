@@ -16,6 +16,37 @@
         });
 
 
+        document.querySelector('#formDetalleSuscripcion')?.addEventListener('submit', async(e:Event)=>{
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            const pago = {
+                idplan: data.idplan,
+                valorplan: Number(data.valorplan)||0,
+                fecha_corte: data.fecha_corte,
+                estado: data.estado,
+                descuento: Number(data.descuento)||0,
+                detalle_descuento: data.detalle_descuento,
+                cargo: Number(data.cargo)||0,
+                detalle_cargo: data.detalle_cargo,
+            }
+            try {
+                const url = "/admin/api/suscripcion/DetalleSuscripcion"; //llamado a la API REST suscripcioncontrolador.php actualiza la sucursal
+                const respuesta = await fetch(url, {
+                                            method: 'POST', 
+                                            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                            body: JSON.stringify(pago) 
+                                        });
+                const resultado = await respuesta.json();
+                console.log(resultado);
+            } catch (error) {
+                console.log(error);
+            }
+           
+        });
+
+
         document.querySelector('#formRegistrarPago')?.addEventListener('submit', async(e:Event)=>{
             e.preventDefault();
             const form = e.target as HTMLFormElement;

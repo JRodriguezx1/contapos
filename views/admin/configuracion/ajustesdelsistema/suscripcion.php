@@ -24,22 +24,22 @@
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Estado</p>
-        <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-base font-medium"><?php echo ($suscripcionSucursal??null)?->estado; ?></span>
+        <span class="px-3 py-1 rounded-full text-base font-medium <?php echo $negocio->estado==1?'bg-green-100 text-green-700':'bg-red-100 text-red-700'; ?>"><?php echo $negocio->estado==1?'Activo':'Suspendido'; ?></span>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Fecha de inicio</p>
-        <p class="text-xl font-semibold"><?php echo ($suscripcionSucursal??null)?->created_at; ?></p>
+        <p class="text-xl font-semibold"><?php echo $negocio->created_at; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Próximo pago</p>
-        <p class="text-xl font-semibold"><?php echo ($suscripcionSucursal??null)?->fecha_corte; ?></p>
+        <p class="text-xl font-semibold"><?php echo $negocio->fecha_corte; ?></p>
       </div>
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Monto mensual</p>
-        <p class="text-xl font-semibold">$<?php echo ($suscripcionSucursal??null)?->valor; ?></p>
+        <p class="text-xl font-semibold">$<?php echo $negocio->valorplan; ?></p>
       </div>
 
       <div>
@@ -61,19 +61,19 @@
     <h2 class="text-3xl font-bold mb-4">Resumen de cobros</h2>
     <div class="space-y-2 text-lg">
       <div class="flex justify-between">
-        <span class="font-medium text-gray-700">Valor base</span><span class="text-gray-800">$100.000</span>
+        <span class="font-medium text-gray-700">Valor base</span><span class="text-gray-800">$<?php echo $negocio->valorplan; ?></span>
       </div>
       <div class="flex justify-between">
-        <span class="font-medium text-green-600">Descuento aplicado</span><span class="text-green-600">- $10.000</span>
+        <span class="font-medium text-green-600">Descuento aplicado</span><span class="text-green-600">- $<?php echo $negocio->descuento; ?></span>
       </div>
       <div class="flex justify-between">
-        <span class="font-medium text-red-600">Cargo adicional</span><span class="text-red-600">+ $5.000</span>
+        <span class="font-medium text-red-600">Cargo adicional</span><span class="text-red-600">+ $<?php echo $negocio->cargo; ?></span>
       </div>
     </div>
 
     <div class="flex justify-between items-center border-t pt-4 mt-4">
       <span class="text-xl font-bold">Total a pagar</span>
-      <span class="text-xl font-bold text-indigo-700">$95.000</span>
+      <span class="text-xl font-bold text-indigo-700">$<?php echo $negocio->valorplan+$negocio->cargo-$negocio->descuento; ?></span>
     </div>
 
     <div class="mt-6 flex gap-3">
@@ -92,16 +92,13 @@
         </tr>
       </thead>
       <tbody class="text-base">
-        <tr class="border-b">
-          <td class="py-2">01/09/2025</td>
-          <td class="py-2 font-semibold">$100.000</td>
-          <td class="py-2">Tarjeta</td>
-        </tr>
-        <tr>
-          <td class="py-2">01/08/2025</td>
-          <td class="py-2 font-semibold">$100.000</td>
-          <td class="py-2">Transferencia</td>
-        </tr>
+        <?php foreach($suscripcionPagos as $value): ?>
+          <tr class="border-b">
+            <td class="py-2"><?php echo $value->fecha_pago; ?></td>
+            <td class="py-2 font-semibold">$<?php echo $value->valor_pagado; ?></td>
+            <td class="py-2"><?php echo $value->mediopago; ?></td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
   </div>
@@ -128,8 +125,8 @@
           </div>
 
           <div class="formulario__campo">
-              <label class="formulario__label text-lg font-medium text-gray-700" for="id_plan">Plan</label>
-              <select id="id_plan" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="idplan">Plan</label>
+              <select id="idplan" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="idplan" required>
                   <option value="2">Plan mensual</option>
                   <option value="1">Plan anual</option>
                   <option value="2">Plan diario</option>
@@ -147,11 +144,11 @@
           </div>
 
           <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="valor">Valor del plan</label>
+              <label class="formulario__label text-lg font-medium text-gray-700" for="valorplan">Valor del plan</label>
               <input 
-                  id="valor"
+                  id="valorplan"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresa el monto" name="valor" value=""
+                  type="text" placeholder="Ingresa el monto" name="valorplan" value=""
                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                   required>
           </div>

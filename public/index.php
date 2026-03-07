@@ -324,6 +324,7 @@ $router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::clas
 $router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
 
 $router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
+$router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts
 
 
 //////***************************/***NO**************************//////
