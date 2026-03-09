@@ -90,9 +90,7 @@ class apidiancontrolador{
 
 
   public static function getCompaniesAll(){
-    //session_start();
     isadmin();
-    $alertas = [];
     $compañias = diancompanias::all();
     echo json_encode($compañias);
   }

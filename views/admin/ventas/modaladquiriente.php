@@ -11,6 +11,8 @@
       </div>
     </div>
 
+    <div id="divmsjalertanoclienteDian"></div>
+
     <!-- <h4 class="text-gray-700 font-semibold">Facturar A:</h4> -->
     <form id="formFacturarA" class="formulario">
       <div class="border-b border-gray-900/10 pb-10 mb-3">
