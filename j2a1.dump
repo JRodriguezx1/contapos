@@ -1956,7 +1956,7 @@ CREATE TABLE `planes` (
   `nombre` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `duracion` int NOT NULL,
-  `tipo_duracion` enum('dias','meses','anios') COLLATE utf8mb4_unicode_ci DEFAULT 'meses',
+  `tipo_duracion` enum('day','month','year') COLLATE utf8mb4_unicode_ci DEFAULT 'month',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1968,7 +1968,7 @@ CREATE TABLE `planes` (
 
 LOCK TABLES `planes` WRITE;
 /*!40000 ALTER TABLE `planes` DISABLE KEYS */;
-INSERT INTO `planes` VALUES (1,'Plan anual',800000.00,1,'anios','2026-03-03 06:22:31'),(2,'Plan mensual',80000.00,1,'meses','2026-03-03 06:22:31'),(3,'Plan diario',3000.00,1,'dias','2026-03-03 06:22:31');
+INSERT INTO `planes` VALUES (1,'Plan anual',800000.00,1,'year','2026-03-03 06:22:31'),(2,'Plan mensual',80000.00,1,'month','2026-03-03 06:22:31'),(3,'Plan diario',3000.00,1,'day','2026-03-03 06:22:31');
 /*!40000 ALTER TABLE `planes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2764,4 +2764,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-07  0:40:37
+-- Dump completed on 2026-03-09  0:26:16

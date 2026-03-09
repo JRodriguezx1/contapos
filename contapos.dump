@@ -511,7 +511,7 @@ CREATE TABLE `config_local` (
 
 LOCK TABLES `config_local` WRITE;
 /*!40000 ALTER TABLE `config_local` DISABLE KEYS */;
-INSERT INTO `config_local` VALUES (17,1,'tipo_costo_inventario','costo_promedio','2025-09-17 05:04:50'),(19,1,'mostrar_nombre_del_negocio_en_factura','0','2025-09-17 05:05:12'),(21,1,'mostrar_cufe_en_factura_electronica','0','2025-09-17 05:05:19'),(29,1,'limite_de_descuento_permitido','100','2025-09-19 05:46:43'),(39,2,'discriminar_impuesto_por_producto','0','2025-10-20 06:16:12'),(40,2,'porcentaje_de_impuesto','19','2025-10-20 06:25:34'),(46,1,'discriminar_impuesto_por_producto','0','2025-11-06 04:17:50'),(53,1,'cantidad_de_zeta_diarios_permitidos','0','2026-01-04 22:42:17'),(54,1,'cantidad_de_cierres_de_cajas_permitidos','0','2026-01-04 22:42:22'),(65,1,'porcentaje_de_impuesto','5','2026-01-20 21:42:40'),(67,1,'tasa_de_interes_por_cuota','1.2','2026-01-20 21:46:10'),(72,1,'permitir_ver_resumen_cierre_de_caja','0','2026-02-03 01:09:12'),(73,1,'habilitar_canal_de_venta','1','2026-02-26 05:33:15'),(74,1,'habilitar_venta_modo_rapido','1','2026-03-04 06:25:12');
+INSERT INTO `config_local` VALUES (17,1,'tipo_costo_inventario','costo_promedio','2025-09-17 05:04:50'),(19,1,'mostrar_nombre_del_negocio_en_factura','0','2025-09-17 05:05:12'),(21,1,'mostrar_cufe_en_factura_electronica','0','2025-09-17 05:05:19'),(29,1,'limite_de_descuento_permitido','100','2025-09-19 05:46:43'),(39,2,'discriminar_impuesto_por_producto','0','2025-10-20 06:16:12'),(40,2,'porcentaje_de_impuesto','19','2025-10-20 06:25:34'),(46,1,'discriminar_impuesto_por_producto','0','2025-11-06 04:17:50'),(53,1,'cantidad_de_zeta_diarios_permitidos','0','2026-01-04 22:42:17'),(54,1,'cantidad_de_cierres_de_cajas_permitidos','0','2026-01-04 22:42:22'),(65,1,'porcentaje_de_impuesto','5','2026-01-20 21:42:40'),(67,1,'tasa_de_interes_por_cuota','1.2','2026-01-20 21:46:10'),(72,1,'permitir_ver_resumen_cierre_de_caja','0','2026-02-03 01:09:12'),(73,1,'habilitar_canal_de_venta','1','2026-02-26 05:33:15');
 /*!40000 ALTER TABLE `config_local` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1976,7 +1976,7 @@ CREATE TABLE `planes` (
   `nombre` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `duracion` int NOT NULL,
-  `tipo_duracion` enum('dias','meses','anios') COLLATE utf8mb4_unicode_ci DEFAULT 'meses',
+  `tipo_duracion` enum('day','month','year') COLLATE utf8mb4_unicode_ci DEFAULT 'month',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1988,7 +1988,7 @@ CREATE TABLE `planes` (
 
 LOCK TABLES `planes` WRITE;
 /*!40000 ALTER TABLE `planes` DISABLE KEYS */;
-INSERT INTO `planes` VALUES (1,'Plan anual',800000.00,1,'anios','2026-03-03 06:18:16'),(2,'Plan mensual',80000.00,1,'meses','2026-03-03 06:20:05'),(3,'Plan diario',3000.00,1,'dias','2026-03-03 06:20:05');
+INSERT INTO `planes` VALUES (1,'Plan anual',800000.00,1,'year','2026-03-03 06:18:16'),(2,'Plan mensual',80000.00,1,'month','2026-03-03 06:20:05'),(3,'PLan diario',3000.00,1,'day','2026-03-08 00:29:04');
 /*!40000 ALTER TABLE `planes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2401,7 +2401,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro x','901155054','Quindio','Armenia','centro cr 19','3158863520','3158863520','contabilidad@innovatech.com.co','MALORI ELIENNE CEPEDA MATEUS\r\nNo responsable de IVA\r\nRegimen Simple','www.innovatech.com','3158863520',NULL,NULL,NULL,NULL,'cliente/690010e46fa7dLogoj2indigo1.png',1,'America/Bogota','2025-09-08 00:26:46'),(2,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede Av centenario',NULL,'Quindio','Armenia','Av centenario N 18','3169856621',NULL,'contabilidad@innovatech.com.co',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,2,80000.00,'2026-03-10',0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro x','901155054','Quindio','Armenia','centro cr 19','3158863520','3158863520','contabilidad@innovatech.com.co','MALORI ELIENNE CEPEDA MATEUS\r\nNo responsable de IVA\r\nRegimen Simple','www.innovatech.com','3158863520',NULL,NULL,NULL,NULL,'cliente/690010e46fa7dLogoj2indigo1.png',1,'America/Bogota','2025-09-08 00:26:46'),(2,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede Av centenario',NULL,'Quindio','Armenia','Av centenario N 18','3169856621',NULL,'contabilidad@innovatech.com.co',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2465,7 +2465,7 @@ CREATE TABLE `suscripcion_pagos` (
   PRIMARY KEY (`id`),
   KEY `sucursalfkid_idx` (`sucursalfkid`),
   CONSTRAINT `sucursalfkid` FOREIGN KEY (`sucursalfkid`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2474,6 +2474,7 @@ CREATE TABLE `suscripcion_pagos` (
 
 LOCK TABLES `suscripcion_pagos` WRITE;
 /*!40000 ALTER TABLE `suscripcion_pagos` DISABLE KEYS */;
+INSERT INTO `suscripcion_pagos` VALUES (2,1,50000.00,'2026-03-08 00:00:00',1,'Nequi',0.00,NULL,0.00,NULL,NULL,1,'2026-03-08 03:34:08');
 /*!40000 ALTER TABLE `suscripcion_pagos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2703,7 +2704,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,1,'Julian','Rodriguez','1094552023','soportej2','3042029683','julianlink123@hotmail.com',NULL,'$2y$10$TmSbBtfQLZZwrDZDNT9XN.l8MgkhGfkB2g89qocNSFew2Msb93era',1,NULL,'1','Armenia','Calle 26 # 50-21 Barrio primero',NULL,'avatar.png','2024-03-25','2024-03-25 15:03:02'),(2,2,'Christian Manuel','Ramirez Heano','43887625','usuario1','3223356020','chramirez80@gmail.com',NULL,'$2y$10$GmxqvuIoX9tx2hSgPjGzu.aapEe9kChA.CY3AsQnM6WRpgjUGBIu6',1,NULL,'2','4','1',NULL,'','2024-01-08','2024-01-08 13:36:48'),(3,1,'David',NULL,NULL,'davidd','3042029684',NULL,NULL,'$2y$10$g8cb1.Hoc1HEEM6FhQRP.esqFmcHBqRspN5nuTAfLu7jOZBSH3Sy.',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c372e2c39e7jdrrperfil2020.jpg',NULL,NULL),(4,1,'Erika S','Sandoval',NULL,'erica',NULL,NULL,NULL,'$2y$10$I7M.OJwGwtGh2tzCFSB44eZFBEgDf7dB5sxW/31nycx51Eah0wItq',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c39913171dbmodelperilshock.jpg',NULL,NULL),(5,2,'Alicia',NULL,NULL,'aliciaa',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'null',NULL,NULL),(7,1,'Erika',NULL,NULL,'Erika',NULL,NULL,NULL,'$2y$10$.2guUwmipZgi8DegzDSZ4.JdjRFmlimEaxsXSJ1V2AwXJTeYYGgKK',1,NULL,'4',NULL,NULL,NULL,'null',NULL,NULL),(10,2,'Erika',NULL,NULL,'erica',NULL,NULL,NULL,'$2y$10$1IP4Zb/7jO7IuDEYh3pD/eiJX8EXKJvyd29s1gsm.Q7BeZ5kN4RIG',1,NULL,'4',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `usuarios` VALUES (1,1,'Julian','Rodriguez','1094552023','soportej2','3042029683','julianlink123@hotmail.com',NULL,'$2y$10$TmSbBtfQLZZwrDZDNT9XN.l8MgkhGfkB2g89qocNSFew2Msb93era',1,NULL,'1','Armenia','Calle 26 # 50-21 Barrio primero',NULL,'avatar.png','2024-03-25','2024-03-25 15:03:02'),(2,2,'Christian Manuel','Ramirez Heano','43887625','usuario1','3223356020','chramirez80@gmail.com',NULL,'$2y$10$GmxqvuIoX9tx2hSgPjGzu.aapEe9kChA.CY3AsQnM6WRpgjUGBIu6',1,NULL,'2','4','1',NULL,'','2024-01-08','2024-01-08 13:36:48'),(3,1,'David',NULL,NULL,'davidd','3042029684',NULL,NULL,'$2y$10$aCqf.1mTZxK5A5KstbpUeeAK6OkTQMGhST01NVhSsx3R8sHE9qlDS',1,NULL,'3',NULL,NULL,NULL,'cliente1/avatar/68c372e2c39e7jdrrperfil2020.jpg',NULL,NULL),(4,1,'Erika S','Sandoval',NULL,'erica',NULL,NULL,NULL,'$2y$10$I7M.OJwGwtGh2tzCFSB44eZFBEgDf7dB5sxW/31nycx51Eah0wItq',1,NULL,'4',NULL,NULL,NULL,'cliente1/avatar/68c39913171dbmodelperilshock.jpg',NULL,NULL),(5,2,'Alicia',NULL,NULL,'aliciaa',NULL,NULL,NULL,'1234',1,NULL,'4',NULL,NULL,NULL,'null',NULL,NULL),(7,1,'Erika',NULL,NULL,'Erika',NULL,NULL,NULL,'$2y$10$.2guUwmipZgi8DegzDSZ4.JdjRFmlimEaxsXSJ1V2AwXJTeYYGgKK',1,NULL,'4',NULL,NULL,NULL,'null',NULL,NULL),(10,2,'Erika',NULL,NULL,'erica',NULL,NULL,NULL,'$2y$10$1IP4Zb/7jO7IuDEYh3pD/eiJX8EXKJvyd29s1gsm.Q7BeZ5kN4RIG',1,NULL,'4',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2795,4 +2796,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-07  0:40:27
+-- Dump completed on 2026-03-09  0:26:06

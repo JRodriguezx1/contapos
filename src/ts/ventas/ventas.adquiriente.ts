@@ -30,6 +30,7 @@
   const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
   const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
   const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
+  const btnBuscarAdquiriente = document.querySelector('#btnBuscarAdquiriente') as HTMLButtonElement;
   const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
   const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
   let customers:adquirientes[] = [];
@@ -43,6 +44,48 @@
     customers = resultado;
     //formatearponentes(resultado);
   })();
+
+
+  btnBuscarAdquiriente.addEventListener('click', (e:Event)=>{
+    if(documentinput.value.trim().length > 4){
+      console.log(documentinput.value.trim());
+      GetAcquirerDian(documentinput.value.trim());
+    }
+  });
+
+
+  const companiesAll = POS.companiesAll as companiesDian[];
+  console.log(companiesAll);
+  //consultar token
+
+  const GetAcquirerDian = async (identificationnumber: string)=>{
+    try {
+          const url = "https://apidianj2.com/api/ubl2.1/getAcquirer/13/"+identificationnumber;  //va al controlador ventascontrolador
+          const respuesta = await fetch(url, {
+                                    method: 'POST',
+                                    headers: { 
+                                      "Accept": "application/json", 
+                                      "Content-Type": "application/json",
+                                      "Authorization": "Bearer "+'token'
+                                    },
+                                  }); 
+          const resultado = await respuesta.json();
+          console.log(resultado);
+          /*
+          //añadir o actualizar al arreglo customers
+          if(resultado.tipo == "crear"){
+            customers = [...customers, resultado.obj];
+          }else{
+            /// actualizar el arregle del adquiriente o customers ///
+            customers.forEach(a=>{if(a.identification_number == resultado.obj.identification_number)a = Object.assign(a, resultado.obj);});
+          }
+          datosAdquiriente.id = resultado.obj.id;*/
+
+      } catch (error) {
+          console.log(error);
+      }
+  }
+
 
 
   //buscar adquiriente

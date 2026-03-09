@@ -16,7 +16,7 @@
       const oneC = companiesAll.find(x=>x.id == id)!;
       const token = oneC.token;
 
-      const date = new Date().toISOString().split("T")[0];
+      const date = new Date().toLocaleDateString('sv-SE');
       const number = 992500000 + (Math.floor(Math.random()*500000)+1);  //rango de 1 a 500000
 
       const factura = {
