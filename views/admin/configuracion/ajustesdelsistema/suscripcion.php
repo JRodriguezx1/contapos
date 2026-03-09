@@ -24,7 +24,7 @@
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Estado</p>
-        <span class="px-3 py-1 rounded-full text-base font-medium <?php echo $negocio->estado==1?'bg-green-100 text-green-700':'bg-red-100 text-red-700'; ?>"><?php echo $negocio->estado==1?'Activo':'Suspendido'; ?></span>
+        <span id="estadoText" class="px-3 py-1 rounded-full text-base font-medium <?php echo $negocio->estado==1?'bg-green-100 text-green-700':'bg-red-100 text-red-700'; ?>"><?php echo $negocio->estado==1?'Activo':'Suspendido'; ?></span>
       </div>
 
       <div>
@@ -39,7 +39,7 @@
 
       <div>
         <p class="text-lg text-gray-700 font-medium">Monto mensual</p>
-        <p id="valorplanText" class="text-xl font-semibold">$<?php echo $negocio->valorplan; ?></p>
+        <p id="valorplanText" class="text-xl font-semibold">$<?php echo number_format($negocio->valorplan, '0', ',', '.'); ?></p>
       </div>
 
       <div>
@@ -49,31 +49,25 @@
     </div>
   </div>
 
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-lg font-semibold text-gray-800"></h2>
-    <button class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
-      Aplicar Descuento/Cargo
-    </button>
-  </div>
 
   <!-- Sección Resumen -->
   <div class="bg-white p-6 rounded-xl shadow-md">
     <h2 class="text-3xl font-bold mb-4">Resumen de cobros</h2>
     <div class="space-y-2 text-lg">
       <div class="flex justify-between">
-        <span class="font-medium text-gray-700">Valor base</span><span id="valorplanResumen" class="text-gray-800">$<?php echo $negocio->valorplan; ?></span>
+        <span class="font-medium text-gray-700">Valor base</span><span id="valorplanResumen" class="text-gray-800">$<?php echo number_format($negocio->valorplan, '0', ',', '.'); ?></span>
       </div>
       <div class="flex justify-between">
-        <span class="font-medium text-green-600">Descuento aplicado</span><span class="text-green-600">- $<?php echo $negocio->descuento; ?></span>
+        <span class="font-medium text-green-600">Descuento aplicado</span><span class="text-green-600">- $<?php echo number_format($negocio->descuento, '0', ',', '.'); ?></span>
       </div>
       <div class="flex justify-between">
-        <span class="font-medium text-red-600">Cargo adicional</span><span class="text-red-600">+ $<?php echo $negocio->cargo; ?></span>
+        <span class="font-medium text-red-600">Cargo adicional</span><span class="text-red-600">+ $<?php echo number_format($negocio->cargo, '0', ',', '.'); ?></span>
       </div>
     </div>
 
     <div class="flex justify-between items-center border-t pt-4 mt-4">
       <span class="text-xl font-bold">Total a pagar</span>
-      <span class="text-xl font-bold text-indigo-700">$<?php echo $negocio->valorplan+$negocio->cargo-$negocio->descuento; ?></span>
+      <span class="text-xl font-bold text-indigo-700">$<?php echo number_format($negocio->valorplan+$negocio->cargo-$negocio->descuento, '0', ',', '.'); ?></span>
     </div>
 
     <div class="mt-6 flex gap-3">
@@ -95,7 +89,7 @@
         <?php foreach($suscripcionPagos as $value): ?>
           <tr class="border-b">
             <td class="py-2"><?php echo $value->fecha_pago; ?></td>
-            <td class="py-2 font-semibold">$<?php echo $value->valor_pagado; ?></td>
+            <td class="py-2 font-semibold">$<?php echo number_format($value->valor_pagado, '0', ',', '.'); ?></td>
             <td class="py-2"><?php echo $value->mediopago; ?></td>
           </tr>
         <?php endforeach; ?>
@@ -119,17 +113,17 @@
           <div class="formulario__campo">
               <label class="formulario__label text-lg font-medium text-gray-700" for="estado">Estado</label>
               <select id="estado" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
-                  <option value="1">Activa</option>
-                  <option value="0">Suspendida</option>
+                  <option value="1" <?php echo $negocio->estado==1?'selected':'';?>>Activa</option>
+                  <option value="0" <?php echo $negocio->estado==0?'selected':'';?>>Suspendida</option>
               </select>
           </div>
 
           <div class="formulario__campo">
               <label class="formulario__label text-lg font-medium text-gray-700" for="idplan">Plan</label>
               <select id="idplan" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="idplan" required>
-                  <option value="2">Plan mensual</option>
-                  <option value="1">Plan anual</option>
-                  <option value="2">Plan diario</option>
+                  <option value="2" <?php echo $negocio->idplan==2?'selected':'';?>>Plan mensual</option>
+                  <option value="1" <?php echo $negocio->idplan==1?'selected':'';?>>Plan anual</option>
+                  <option value="3" <?php echo $negocio->idplan==3?'selected':'';?>>Plan diario</option>
               </select>
           </div>
 
@@ -140,6 +134,8 @@
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                   type="date"  
                   name="fecha_corte"
+                  value="<?php echo $negocio->fecha_corte; ?>"
+                  min="<?php echo date('Y-m-d');?>"
                   required
               >
           </div>
@@ -153,7 +149,7 @@
                   placeholder="Ingresa el monto" 
                   name="valorplan"
                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                  value="0"
+                  value="<?php echo $negocio->valorplan; ?>"
                   required>
           </div>
 
@@ -224,49 +220,6 @@
       </form>
   </dialog>
   
-  <!-- //------------Información del botón descuento/cargos--------------// -->
-  <!-- Modal Ajustes -->
-  <div id="modal-ajustes" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 !mt-0 px-4">
-    <div class="bg-white  rounded-2xl shadow-lg w-full max-w-md md:max-w-2xl p-4 md:p-8 max-h-[90vh] overflow-y-auto">
-      <!-- Título -->
-      <h3 class="text-2xl font-semibold text-gray-800  mb-6">Aplicar Ajustes</h3>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Tipo de ajuste -->
-        <div>
-          <label class="block text-xl font-medium text-gray-700 ">Tipo de ajuste</label>
-          <select class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-            <option value="descuento">Descuento</option>
-            <option value="cargo">Cargo</option>
-          </select>
-        </div>
-  
-        <!-- Monto -->
-        <div>
-          <label class="block text-xl font-medium text-gray-700 ">Monto</label>
-          <input type="number" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-        </div>
-      </div>
-  
-      <!-- Detalle -->
-      <div class="mt-6">
-        <label class="block text-xl font-medium text-gray-700 ">Detalle</label>
-        <textarea rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-32 text-xl focus:outline-none focus:ring-1"></textarea>
-      </div>
-  
-      <!-- Acciones -->
-      <div class="flex justify-end gap-4 mt-8">
-        <!-- Botón cancelar que cierra el modal -->
-        <button onclick="document.getElementById('modal-ajustes').classList.add('hidden')" 
-                class="px-8 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg    text-xl uppercase">
-          Cancelar
-        </button>
-        <button class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-xl uppercase">
-          Guardar
-        </button>
-      </div>
-    </div>
-  </div>
 </div>
 
 

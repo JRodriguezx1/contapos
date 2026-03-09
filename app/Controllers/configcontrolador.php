@@ -131,7 +131,9 @@ class configcontrolador{
         $empleado = new \stdClass();
          $empleado->perfil = '';
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $suscripcionPagoRepo = new suscripcionPagosRepository;
+        $suscripcionPagos = $suscripcionPagoRepo->all();
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -183,7 +185,9 @@ class configcontrolador{
         $mediospago = mediospago::all();
         $dapartments = departments::all();
         $conflocal = config_local::getParamGlobal();
-        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $suscripcionPagoRepo = new suscripcionPagosRepository;
+        $suscripcionPagos = $suscripcionPagoRepo->all();
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'suscripcionPagos'=>$suscripcionPagos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
   ///////////////////////////////////  Apis ////////////////////////////////////

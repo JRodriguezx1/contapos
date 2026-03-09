@@ -9,12 +9,20 @@ use MVC\Router;  //namespace\clase
  
 class suscripcioncontrolador{
 
+
+public static function suspendido(Router $router){
+    $sucursal = sucursales::find('id', id_sucursal());
+    $plan = sucursales::camposJoinObj("SELECT * FROM planes WHERE id = {$sucursal->idplan} LIMIT 1");
+    $sucursal->plan = end($plan);
+    $router->render('suspension/index', ['sucursal'=>$sucursal, 'titulo'=>'Suspendido']);
+}
+
+//////////////////////////    API     /////////////////////////////
+
     public static function detalleSuscripcion(){
-        //session_start();
         isadmin();
         $alertas = [];
         $sucursal = sucursales::find('id', id_sucursal());
-
         if($_SERVER['REQUEST_METHOD'] !== 'POST'){
             http_response_code(405); // Método no permitido
             echo json_encode(['error' => 'Método no permitido']);
@@ -24,9 +32,9 @@ class suscripcioncontrolador{
         $sucursal->compara_objetobd_post($detalleSuscrip);
         $alertas = $sucursal->validar();
         if(empty($alertas)){
-
             $r = $sucursal->actualizar();
             if($r){
+                $_SESSION['sucursal'] = $sucursal;  //actualizar variable de session que se incializa en el login
                 $alertas['exito'][] = "Datos suscripcion actualizados";
             }else{
                 $alertas['error'][] = "Error, intente nuevamente.";
@@ -38,10 +46,12 @@ class suscripcioncontrolador{
 
 
     public static function registrarPago(){
-        //session_start();
         isadmin();
         $alertas = [];
-        $suscripcionRepo = new suscripcionPagosRepository(); 
+        $sucursal = sucursales::find('id', id_sucursal());
+        $suscripcionRepo = new suscripcionPagosRepository();
+        $getDB = $suscripcionRepo->getConexion();
+        $plan = $suscripcionRepo->getPlan($sucursal->idplan);
 
         if($_SERVER['REQUEST_METHOD'] !== 'POST'){
             http_response_code(405); // Método no permitido
@@ -50,19 +60,37 @@ class suscripcioncontrolador{
         }
         $pago = json_decode(file_get_contents('php://input'), true);
         $entity = new suscripcion_pagos($pago);
-        debuguear($entity);
         $alertas = $entity->validar();
         if(empty($alertas)){
-            //fecha_corte = date('Y-m-d', strtotime('+1 month'));
-            $r = $suscripcionRepo->insert($entity);
-            if($r[0]){
-                $alertas['exito'][] = "Pago registrado con exito";
-            }else{
-                $alertas['error'][] = "Error, intente nuevamente.";
+            $sucursal->fecha_corte = date('Y-m-d', strtotime("+$entity->cantidad_plan {$plan->tipo_duracion}"));
+            $sucursal->estado = 1;
+            $sucursal->descuento = 0;
+            $sucursal->cargo = 0;
+            $sucursal->detalledescuento = '';
+            $sucursal->detallecargo = '';
+            $getDB->begin_transaction();
+            try {
+                $r = $suscripcionRepo->insert($entity);
+                if($r[0]){
+                    $rs = $sucursal->actualizar();
+                    if($rs){
+                        $getDB->commit();
+                        $alertas['exito'][] = "Pago registrado con exito";
+                        $alertas['sucursal'] = $sucursal;
+                        $_SESSION['sucursal'] = $sucursal; //actualizar variable de session que se incializa en el login
+                    }else{
+                        $alertas['error'][] = "Error, intente nuevamente.";
+                        $getDB->rollback();
+                    }
+                }
+            } catch (\Throwable $th) {
+                $getDB->rollback();
+                $alertas['error'][] = "Error al registrar el pago. {$th->getMessage()}";
             }
         }
         echo json_encode($alertas);
         return;
     }
+
   
 }

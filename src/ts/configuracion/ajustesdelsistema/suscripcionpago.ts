@@ -5,6 +5,7 @@
         const btnRegistrarPago = document.getElementById('btnRegistrarPago') as HTMLButtonElement;
         const miDialogoRegistrarPago:any = document.querySelector("#miDialogoRegistrarPago");
         const miDialogoDetalleSuscripcion:any = document.querySelector("#miDialogoDetalleSuscripcion");
+        const estadoText = document.querySelector('#estadoText') as HTMLParagraphElement;
 
         document.addEventListener("click", cerrarDialogoExterno);
 
@@ -27,9 +28,9 @@
                 fecha_corte: data.fecha_corte,
                 estado: data.estado,
                 descuento: Number(data.descuento)||0,
-                detalle_descuento: data.detalle_descuento,
+                detalledescuento: data.detalle_descuento,
                 cargo: Number(data.cargo)||0,
-                detalle_cargo: data.detalle_cargo,
+                detallecargo: data.detalle_cargo,
             }
             try {
                 const url = "/admin/api/suscripcion/detalleSuscripcion"; //llamado a la API REST suscripcioncontrolador.php actualiza la sucursal
@@ -54,13 +55,6 @@
         });
 
 
-        function actualizarDetalleSuscripcion(detalleSuscrip:{idplan: FormDataEntryValue, valorplan: number, fecha_corte: FormDataEntryValue, estado: FormDataEntryValue, descuento: number, detalle_descuento: FormDataEntryValue, cargo: number, detalle_cargo: FormDataEntryValue}){
-            (document.querySelector('#fecha_corteText') as HTMLParagraphElement).textContent = detalleSuscrip.fecha_corte as string;
-            (document.querySelector('#valorplanText') as HTMLParagraphElement).textContent = detalleSuscrip.valorplan.toLocaleString();
-            (document.querySelector('#valorplanResumen') as HTMLParagraphElement).textContent = '$'+detalleSuscrip.valorplan.toLocaleString();
-        }
-
-
         document.querySelector('#formRegistrarPago')?.addEventListener('submit', async(e:Event)=>{
             e.preventDefault();
             const form = e.target as HTMLFormElement;
@@ -69,7 +63,7 @@
             const pago = {
                 cantidad_plan: data.cantidad_plan,
                 valor_pagado: Number(data.valor_pagado)||0,
-                medio_pago: data.medio_pago,
+                mediopago: data.medio_pago,
                 descripcion: data.descripcion,
             }
             try {
@@ -81,11 +75,33 @@
                                         });
                 const resultado = await respuesta.json();
                 console.log(resultado);
+                if(resultado.exito != undefined){
+                    msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                    actualizarDetalleSuscripcion(resultado.sucursal);
+                }else{
+                    msjalertToast('error', '¡Error!', resultado.error[0]);
+                }
+                miDialogoRegistrarPago.close();
             } catch (error) {
                 console.log(error);
             }
     
         });
+
+
+        function actualizarDetalleSuscripcion(detalleSuscrip:{valorplan: number, fecha_corte: FormDataEntryValue, estado: FormDataEntryValue, descuento: number, detalledescuento: FormDataEntryValue, cargo: number, detallecargo: FormDataEntryValue}){
+            (document.querySelector('#fecha_corteText') as HTMLParagraphElement).textContent = detalleSuscrip.fecha_corte as string;
+            (document.querySelector('#valorplanText') as HTMLParagraphElement).textContent = detalleSuscrip.valorplan.toLocaleString();
+            (document.querySelector('#valorplanResumen') as HTMLParagraphElement).textContent = '$'+detalleSuscrip.valorplan.toLocaleString();
+            estadoText.textContent = detalleSuscrip.estado == '1'?"Activo":"Suspendido";
+            if (detalleSuscrip.estado === '1') {
+                estadoText.classList.replace('bg-red-100', 'bg-green-100');
+                estadoText.classList.replace('text-red-700', 'text-green-700');
+            } else {
+                estadoText.classList.replace('bg-green-100', 'bg-red-100');
+                estadoText.classList.replace('text-green-700', 'text-red-700');
+            }
+        }
 
 
         function cerrarDialogoExterno(event:Event) {

@@ -24,13 +24,7 @@ class suscripcionPagosRepository extends operationRepository{
     public function getConexion(){ return self::getDB(); }
 
 
-    /*public function suspendido() {
-        $this->estado = 'suspendido';
-         $entity = new $this->entityClass($array);
-        $entity->usuariofk = $idvendedor;
-        $entity->idtipofinanciacion = 1;
-    }
-
+    /*
     public function activar() {
         $this->estado = 'activo';
     }
@@ -38,6 +32,12 @@ class suscripcionPagosRepository extends operationRepository{
     public function actualizarFechaCorte($cantidad, $tipo = 'mes') {
         $this->fecha_corte = date('Y-m-d', strtotime("+$cantidad $tipo"));
     }*/
+
+    public function getPlan(int $id){
+        $sql = "SELECT * FROM planes WHERE id = {$id} LIMIT 1";
+        $rows = $this->fetchAllStd($sql);
+        return end($rows);
+    }
     
     public function getEntityClass():string{
         return $this->entityClass;

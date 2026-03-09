@@ -179,6 +179,8 @@ $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear
 $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
 $router->post('/admin/configuracion/editarnegocio', [configcontrolador::class, 'editarnegocio']);
 $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 'crear_empleado']);
+//// Suscripcion /////
+$router->get('/suspendido', [suscripcioncontrolador::class, 'suspendido']);
 //// Descargas /////
 $router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
 $router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);

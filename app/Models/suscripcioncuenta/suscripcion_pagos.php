@@ -7,11 +7,11 @@ class suscripcion_pagos {
     public function __construct($args = [])
     {
         $this->id = $args['id']??null;
-        $this->sucursalfkid = $args['sucursalfkid']??'';
+        $this->sucursalfkid = $args['sucursalfkid']??id_sucursal();
         $this->valor_pagado = $args['valor_pagado']??0;
         $this->fecha_pago = $args['fecha_pago']??date('Y-m-d');
         $this->cantidad_plan = $args['cantidad_plan']??1;
-        $this->medio_pago = $args['medio_pago']??'';
+        $this->mediopago = $args['mediopago']??'';
         $this->descuento = $args['descuento']??0;
         $this->detalle_descuento = $args['detalle_descuento']?? '';
         $this->cargo = $args['cargo']??0;
@@ -27,7 +27,7 @@ class suscripcion_pagos {
         $alertas = [];
         if(!$this->valor_pagado || $this->valor_pagado<0)$alertas['error'][] = "Valor pagado no es valido, verificar nuevamente.";
         if($this->cantidad_plan<=0)$alertas['error'][] = "Cantidad del plan no es valido, verificar nuevamente.";
-        if(!$this->medio_pago || strlen($this->medio_pago)<2)$alertas['error'][] = "Medio de pago no es valido, verificar nuevamente.";
+        if(!$this->mediopago || strlen($this->mediopago)<2)$alertas['error'][] = "Medio de pago no es valido, verificar nuevamente.";
         return $alertas;
     }
 
@@ -38,7 +38,7 @@ class suscripcion_pagos {
             'valor_pagado' => $this->valor_pagado,
             'fecha_pago' => $this->fecha_pago,
             'cantidad_plan' => $this->cantidad_plan, 
-            'medio_pago' => $this->medio_pago, 
+            'mediopago' => $this->mediopago, 
             'descuento' => $this->descuento, 
             'detalle_descuento' => $this->detalle_descuento, 
             'cargo' => $this->cargo,

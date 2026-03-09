@@ -94,15 +94,15 @@ class logincontrolador{
                             $_SESSION['configLocal'] = config_local::getParamGlobal();
 
                             //redireccion al dashboard del superior-admin-empleado o cliente
-                            if($usuario->perfil){
+                            //if($usuario->perfil){
                                 if(tienePermiso('Mostrar dashboard') || $usuario->perfil<4){
                                     header('Location: /admin/dashboard');
                                 }else{
                                     header('Location: /admin/perfil');
                                 }
-                            }else{
+                            /*}else{
                                 header('Location: /Cliente/app');
-                            }
+                            }*/
 
                         }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado.'); }
                     }else{
