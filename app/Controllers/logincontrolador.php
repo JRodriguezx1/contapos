@@ -7,6 +7,7 @@ use App\Models\configuraciones\permisos;
 use App\Models\sucursales;
 use App\Models\configuraciones\usuarios; //namespace\clase hija
 use App\Models\configuraciones\usuarios_permisos;
+use App\Models\parametrizacion\config_local;
 //use Model\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
  
@@ -81,7 +82,7 @@ class logincontrolador{
                                 $listapermisos[] = permisos::find('id', $value->permisoid)->nombre;
                             
                             //autenticar usuario         
-                            session_start();
+                            //session_start();
                             $_SESSION['id'] = $usuario->id;
                             $_SESSION['idsucursal'] = $usuario->nickname =="soportej2"?$_POST['idsucursal']:$usuario->idsucursal;
                             $_SESSION['sucursal'] = sucursales::find('id', $usuario->nickname =="soportej2"?$_POST['idsucursal']:$usuario->idsucursal);
@@ -90,17 +91,18 @@ class logincontrolador{
                             $_SESSION['login'] = true;
                             $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
                             $_SESSION['permisos'] = $listapermisos;
+                            $_SESSION['configLocal'] = config_local::getParamGlobal();
 
                             //redireccion al dashboard del superior-admin-empleado o cliente
-                            if($usuario->perfil){
+                            //if($usuario->perfil){
                                 if(tienePermiso('Mostrar dashboard') || $usuario->perfil<4){
                                     header('Location: /admin/dashboard');
                                 }else{
                                     header('Location: /admin/perfil');
                                 }
-                            }else{
+                            /*}else{
                                 header('Location: /Cliente/app');
-                            }
+                            }*/
 
                         }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado.'); }
                     }else{

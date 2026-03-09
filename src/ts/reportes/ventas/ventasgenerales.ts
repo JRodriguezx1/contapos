@@ -55,7 +55,8 @@
 
 
     async function callApiReporte(dateinicio:string, datefin:string){
-        console.log(dateinicio, datefin);
+        document.querySelector('#fecha1')!.textContent = dateinicio;
+        document.querySelector('#fecha2')!.textContent = datefin;
         
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
@@ -68,9 +69,7 @@
             productosVendidos = resultado.productosVendidos;
             mediosPagos = resultado.mediosPagos;
             creditosSeparados = resultado.separados;
-            console.log(creditosSeparados);
             gastos = resultado.gastos;
-            console.log(gastos);
             resumen = resultado.resumen;
             printProductosVendidos();
             printMediosPagos();

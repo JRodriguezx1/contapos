@@ -10,7 +10,7 @@ use App\Models\empleados;
 use App\Models\clientes\direcciones;
 
  
-class clientescontrolador{
+class tarifascontrolador{
 
     public static function index(Router $router){
         //session_start();

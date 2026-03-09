@@ -81,7 +81,7 @@
           <div class="formulario__campo">
               <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
               <div class="formulario__dato">
-                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
+                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
               </div>
           </div>
 

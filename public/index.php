@@ -28,6 +28,7 @@ use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
 use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
+use App\Controllers\suscripcioncontrolador;
 use App\Controllers\trasladosinvcontrolador;
 use App\Middlewares\MembershipMiddleware;
 // me importa la clase router
@@ -178,6 +179,8 @@ $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear
 $router->get('/admin/configuracion', [configcontrolador::class, 'index']);
 $router->post('/admin/configuracion/editarnegocio', [configcontrolador::class, 'editarnegocio']);
 $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 'crear_empleado']);
+//// Suscripcion /////
+$router->get('/suspendido', [suscripcioncontrolador::class, 'suspendido']);
 //// Descargas /////
 $router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
 $router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
@@ -322,6 +325,8 @@ $router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::cla
 $router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::class, 'asignarAdquirienteAFactura']);
 $router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
 
+$router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
+$router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts
 
 
 //////***************************/***NO**************************//////

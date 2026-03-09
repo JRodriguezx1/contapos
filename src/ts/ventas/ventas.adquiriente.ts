@@ -3,6 +3,12 @@
 
   const POS = (window as any).POS;
 
+  interface getAdquirienteDian {
+    ReceiverEmail:string, 
+    ReceiverName:string, 
+    StatusCode:string
+  }
+
   interface adquirientes {
     id?:string,
     type_document_identification_id:string,
@@ -30,10 +36,11 @@
   const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
   const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
   const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
+  const btnBuscarAdquiriente = document.querySelector('#btnBuscarAdquiriente') as HTMLButtonElement;
   const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
   const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
   let customers:adquirientes[] = [];
-  let customersfiltrados:adquirientes[] = [];
+  let customersfiltrados:adquirientes[] = [], token:string|undefined;
 
 
   (async ()=>{
@@ -43,6 +50,46 @@
     customers = resultado;
     //formatearponentes(resultado);
   })();
+
+  //consultar token
+  (async ()=>{
+    const url = `/admin/api/getCompaniesAll`; 
+    const respuesta = await fetch(url);
+    const resultado:{id:string, identification_number:string, business_name:string, idsoftware:string, token:string, estado:string}[] = await respuesta.json();
+    token = resultado.find(x=>x.estado==='1')?.token;
+  })();
+
+  btnBuscarAdquiriente.addEventListener('click', (e:Event)=>{
+    if(documentinput.value.trim().length > 4 && token!=undefined){
+      console.log(documentinput.value.trim());
+      GetAcquirerDian(documentinput.value.trim());
+    }
+  });
+
+  const GetAcquirerDian = async (identificationnumber: string)=>{
+    try {
+          const url = "https://apidianj2.com/api/ubl2.1/getAcquirer/13/"+identificationnumber;  //va al controlador ventascontrolador
+          const respuesta = await fetch(url, {
+                                    method: 'GET',
+                                    headers: { 
+                                      "Accept": "application/json", 
+                                      "Content-Type": "application/json",
+                                      "Authorization": "Bearer "+token
+                                    },
+                                  }); 
+          const resultado = await respuesta.json();
+          const {ReceiverEmail, ReceiverName, StatusCode}:getAdquirienteDian = resultado.data.GetAcquirerResult;
+          if(StatusCode === '200'){
+            (formFacturarA['business_name'] as HTMLInputElement).value = ReceiverName;
+            (formFacturarA['email'] as HTMLInputElement).value = ReceiverEmail;
+          }else{
+            msjAlert('error', 'No se encontro cliente en base de datos de la Dian', document.querySelector('#divmsjalertanoclienteDian') as HTMLElement);
+          }
+      } catch (error) {
+          console.log(error);
+      }
+  }
+
 
 
   //buscar adquiriente

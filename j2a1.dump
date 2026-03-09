@@ -1945,6 +1945,34 @@ INSERT INTO `permisos` VALUES (1,'Habilitar modulo de venta','Modulo de venta\r'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `planes`
+--
+
+DROP TABLE IF EXISTS `planes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `planes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `precio` decimal(10,2) NOT NULL,
+  `duracion` int NOT NULL,
+  `tipo_duracion` enum('day','month','year') COLLATE utf8mb4_unicode_ci DEFAULT 'month',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `planes`
+--
+
+LOCK TABLES `planes` WRITE;
+/*!40000 ALTER TABLE `planes` DISABLE KEYS */;
+INSERT INTO `planes` VALUES (1,'Plan anual',800000.00,1,'year','2026-03-03 06:22:31'),(2,'Plan mensual',80000.00,1,'month','2026-03-03 06:22:31'),(3,'Plan diario',3000.00,1,'day','2026-03-03 06:22:31');
+/*!40000 ALTER TABLE `planes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `precios_personalizados`
 --
 
@@ -2306,28 +2334,37 @@ DROP TABLE IF EXISTS `sucursales`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sucursales` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `negocio` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `nombre` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `nit` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `departamento` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `ciudad` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `direccion` varchar(145) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `telefono` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `movil` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `email` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `datosencabezados` varchar(512) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `www` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `ws` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `facebook` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `instagram` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `tiktok` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `youtube` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `logo` varchar(99) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `idplan` int NOT NULL,
+  `valorplan` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `fecha_corte` date DEFAULT NULL,
+  `descuento` decimal(10,2) DEFAULT '0.00',
+  `detalledescuento` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `cargo` decimal(10,2) DEFAULT '0.00',
+  `detallecargo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `negocio` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `nombre` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `nit` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `departamento` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `ciudad` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `direccion` varchar(145) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `telefono` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `movil` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `email` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `datosencabezados` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `www` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `ws` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `facebook` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `instagram` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tiktok` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `youtube` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `logo` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `estado` tinyint(1) DEFAULT '1',
-  `timezone` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT 'America/Bogota',
+  `timezone` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT 'America/Bogota',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  PRIMARY KEY (`id`),
+  KEY `idplan_idx` (`idplan`),
+  CONSTRAINT `idplan` FOREIGN KEY (`idplan`) REFERENCES `planes` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2336,7 +2373,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2385,25 +2422,22 @@ DROP TABLE IF EXISTS `suscripcion_pagos`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `suscripcion_pagos` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `idsucursalid_fk` int NOT NULL,
-  `fk_transaccion` int DEFAULT NULL,
-  `descripcion` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `valor` int NOT NULL,
-  `cantidad_meses` int NOT NULL DEFAULT '1',
-  `medio_pago` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
-  `fecha` datetime NOT NULL,
-  `precio_suscripcion` int NOT NULL DEFAULT '0',
-  `total_descuentos` int DEFAULT '0',
-  `detalle_descuentos` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT '',
-  `total_cargos` int DEFAULT '0',
-  `detalle_cargos` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT '',
-  `is_available` int NOT NULL DEFAULT '1',
+  `sucursalfkid` int NOT NULL,
+  `valor_pagado` decimal(10,2) NOT NULL,
+  `fecha_pago` datetime DEFAULT NULL,
+  `cantidad_plan` int NOT NULL DEFAULT '1',
+  `mediopago` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `descuento` decimal(10,2) DEFAULT '0.00',
+  `detalle_descuento` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cargo` decimal(10,2) DEFAULT '0.00',
+  `detalle_cargo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `estado` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `fk_transaccion` (`fk_transaccion`),
-  KEY `idsucursalid_fk_idx` (`idsucursalid_fk`),
-  CONSTRAINT `idsucursalid_fk` FOREIGN KEY (`idsucursalid_fk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  KEY `sucursalfkid_idx` (`sucursalfkid`),
+  CONSTRAINT `sucursalfkid` FOREIGN KEY (`sucursalfkid`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2730,4 +2764,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-23  1:45:41
+-- Dump completed on 2026-03-09  0:26:16

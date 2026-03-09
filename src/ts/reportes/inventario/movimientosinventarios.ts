@@ -44,7 +44,8 @@
 
 
         async function callApiReporte(dateinicio:string, datefin:string){
-            
+            document.querySelector('#fecha1')!.textContent = dateinicio;
+            document.querySelector('#fecha2')!.textContent = datefin;
             let datosItem = ($('#item') as any).select2('data')[0];
             if(datosItem === undefined){
                 msjalertToast('error', '¡Error!', "Seleccionar un item de la lista");

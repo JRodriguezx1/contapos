@@ -49,7 +49,7 @@
                 <p class="text-base my-0 text-gray-500">Caja</p>
             </a>
 
-            <a href="/admin/ventas" data-tooltip-target="tooltip-venta" class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50  group">
+            <a href="/admin/ventas<?php echo (getConfigLocal()['habilitar_venta_modo_rapido']??null)?->valor_final == 1?'/modorapido':''; ?>" data-tooltip-target="tooltip-venta" class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50  group">
                 <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-indigo-600 " 
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 

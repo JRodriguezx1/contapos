@@ -52,8 +52,6 @@
 
 
 
-    console.log(creditosDB);
-
     
     //////////////////  TABLA //////////////////////
     Object.assign(configdatatablesgenerico, {order: [[ 0, 'desc' ]]});
@@ -116,6 +114,7 @@
         window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank"); //controlador printcontrolador
     }
 
+    
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
       try {
         const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php

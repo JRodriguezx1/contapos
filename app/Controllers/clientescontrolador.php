@@ -151,6 +151,7 @@ class clientescontrolador{
         $cliente = new clientes($_POST);
         $direccion = new direcciones($_POST);
         $alertas = [];
+       
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $alertas = $cliente->validar_nuevo_cliente();
             $documentID = $cliente->validar_regDinamic('identificacion');
@@ -159,14 +160,19 @@ class clientescontrolador{
                 //guardar cliente recien creado en bd  
                 $resultado = $cliente->crear_guardar();  
                 if($resultado[0]){
-                    $direccion->idcliente =  $resultado[1];
-                    $r1 = $direccion->crear_guardar();
-                    if($r1[0]){
+                    if(strlen($direccion->direccion)>3){
+                        $direccion->idcliente =  $resultado[1];
+                        $r1 = $direccion->crear_guardar();
+                        if($r1[0]){
+                            $alertas['exito'][] = 'Cliente Registrado correctamente';
+                            $alertas['nextID'] = $resultado[1];
+                        }else{
+                            $cliente->eliminar_idregistros('id', [$resultado[1]]);
+                            $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                        }
+                    }else{
                         $alertas['exito'][] = 'Cliente Registrado correctamente';
                         $alertas['nextID'] = $resultado[1];
-                    }else{
-                        $cliente->eliminar_idregistros('id', [$resultado[1]]);
-                        $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
                     }
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
@@ -182,21 +188,55 @@ class clientescontrolador{
 
     public static function apiActualizarcliente(){
         //session_start();
-        $alertas = []; 
-        $cliente = clientes::find('id', $_POST['id']);
+        $alertas = [];
+        $cliente = clientes::find('id', $_POST['idcliente']);
+        if(isset($_POST['iddireccion']))$direccion = direcciones::uniquewhereArray(['id'=>$_POST['iddireccion'], 'idcliente'=>$cliente->id]);
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $cliente->compara_objetobd_post($_POST);
             $alertas = $cliente->validar_nuevo_cliente();
+            $getDB = clientes::getDB();
             if(empty($alertas)){
-                $r = $cliente->actualizar();
-                if($r){
+                $getDB->begin_transaction();
+                try {
+                    $r = $cliente->actualizar();
+                    if(isset($_POST['direccion']) && strlen($_POST['direccion'])>3){
+                        if($direccion){  //actualizar direccion
+                            $direccion->compara_objetobd_post($_POST);
+                            $alertas = $direccion->validarDireccion();
+                            if(!empty($alertas)){
+                                $getDB->rollback();
+                                $alertas['error'][] = "Error al actualizar cliente";
+                                $alertas['cliente'][] = $cliente;
+                                echo json_encode($alertas);
+                                return;
+                            }
+                            $direccion->actualizar();
+                        }
+                        if(is_null($direccion)){ //crear direccion para el cliente a actualizar
+                            $direccion = new direcciones($_POST);
+                            $alertas = $direccion->validarDireccion();
+                            if(!empty($alertas)){
+                                $getDB->rollback();
+                                $alertas['error'][] = "Error al actualizar cliente";
+                                $alertas['cliente'][] = $cliente;
+                                echo json_encode($alertas);
+                                return;
+                            }
+                            $direccion->crear_guardar();
+                        }
+                    }
+                    $getDB->commit();
                     $alertas['exito'][] = "Datos del cliente actualizados";
-                }else{
-                    $alertas['error'][] = "Error al actualizar cliente";
+                } catch (\Throwable $th) {
+                    $getDB->rollback();
+                    $alerta['error'][] = "Error al actualizar el cliente >>".$th->getMessage();
+                    //throw $th;
                 }
             }
         }
         $alertas['cliente'][] = $cliente;
+        $alertas['nextID'] = $cliente->id;
         echo json_encode($alertas);  
     }
 

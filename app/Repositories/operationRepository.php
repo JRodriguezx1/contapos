@@ -124,6 +124,11 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
+    public function get(int $cantidad):array{
+        return $this->fetchAllStd("SELECT * FROM {$this->table} LIMIT $cantidad");
+    }
+
+
     public function find(int $id): ?object
     {
         $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE id = {$id} LIMIT 1");
@@ -153,7 +158,7 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function uniqueWhere(array $array = [], string $orden = "ASC"):object
+    public function uniqueWhere(array $array = []):object|null
     {
         $sql = "SELECT * FROM {$this->table} WHERE ";
         foreach($array as $key => $value){
@@ -163,9 +168,8 @@ abstract class operationRepository extends BaseRepository{
                 $sql.= " {$key} = '{$value}' AND ";
             }
         }
-        $sql .= " ORDER BY id $orden;";
         $rows = $this->fetchAll($sql);
-        return new $this->entityClass($rows[0]);
+        return $rows? new $this->entityClass($rows[0]): null;
     }
 
 

@@ -138,165 +138,37 @@ class facturas extends \App\Models\ActiveRecord {
     }
 
 
+    //metodo usado para consultar las facturas con sus medios de pago
+    public static function facturasConMediosPago($colum, $array = [], $filter=[]){
+        $sql = "SELECT f.*, JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id', mp.id,
+                        'cierrecajaid', sm.cierrecajaid,
+                        'id_factura', sm.id_factura,
+                        'idmediopago', sm.idmediopago,
+                        'valor', sm.valor,
+                        'mediopago', mp.mediopago,
+                        'estado', mp.estado,
+                        'nick', mp.nick
+                    )
+                ) AS mediosdepago FROM facturas f
+                LEFT JOIN factmediospago sm ON sm.id_factura = f.id
+                LEFT JOIN mediospago mp ON mp.id = sm.idmediopago
+                WHERE f.$colum IN(";
 
-
-
-
-
-    /////////////////////////////////// NO //////////////////////////////////
-    public static function rangoentre2R_Factura($fecha, $totalventa, $fechaini, $fechafin, $asc_desc="ASC"){
-        $sql = "SELECT DATE($fecha) AS fecha, COUNT(*) AS numventasxdia, SUM($totalventa) AS totalventasxdia, ";
-        foreach(self::$arrayMetodosPago as $key=>$value){
-            if(array_key_last(self::$arrayMetodosPago) == $key){
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN 1 ELSE 0 END) AS ${value},";
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN totalventa ELSE 0 END) AS total_${value}";
-            }else{
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN 1 ELSE 0 END) AS ${value},";
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN totalventa ELSE 0 END) AS total_${value},";
-            }
-        }
-        $sql.= " FROM ".static::$tabla." WHERE $fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59' GROUP BY DATE($fecha) ORDER BY '$fecha' $asc_desc;";
-        
-        /*SELECT DATE(fechapago) AS fecha, COUNT(*) AS numventas, SUM(totalventa) AS totalventas,
-        SUM(CASE WHEN metodopago = 'Efectivo' THEN 1 ELSE 0 END) AS Efectivo,
-        SUM(CASE WHEN metodopago = 'Efectivo' THEN totalventa ELSE 0 END) AS total_Efectivo,
-        SUM(CASE WHEN metodopago = 'Daviplata' THEN 1 ELSE 0 END) AS Daviplata,
-        SUM(CASE WHEN metodopago = 'Daviplata' THEN totalventa ELSE 0 END) AS total_Daviplata
-        FROM facturas WHERE fechapago BETWEEN '2024-01-29' AND '2024-02-03 23:59:59'
-        GROUP BY DATE(fechapago) ORDER BY 'fechapago' ASC;*/
-
-        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
+                foreach($array as $key => $value){
+                    if(array_key_last($array) == $key){
+                        $sql.= "{$value}) AND $filter[0] = $filter[1] GROUP BY f.id;;";
+                    }else{
+                        $sql.= "{$value}, ";
+                    }
+                }
+        $resultado = self::$db->query($sql);
         $array = [];
-        while($row = $resultado->fetch_assoc())
-        $array[] = $row;
+        while($row = $resultado->fetch_object())$array[] = $row;
         $resultado->free();
         return $array;
     }
 
-
-    public static function rangoFechadeventas($fecha, $totalventa, $fechaini, $fechafin, $usuarios=[], $asc_desc="ASC"){
-        $sql = "SELECT DATE($fecha) AS fecha, 
-        ventasXfecha.numVentasXfecha,
-        ventasXfecha.totalventasXdia,
-        vtProduct.productsVendidosXdia,
-        vtProduct.referenciasVendidasXdia,
-        MaxProduct.idProductMxVendidoXdia,
-        MaxProduct.cantidadproductMxVendidoXdia, 
-        MaxProduct.nombreProductoXdia,
-
-        totalProductos AS totalReferenciasVendidas,
-        productosMasVendido.idProductoMxvendido,
-        productosMasVendido.cantidadProductMxVen,
-        productosMasVendido.nombreProductMxVen,
-
-        ventasXfecha.Efectivo,
-        ventasXfecha.totalEfectivo,
-        ventasXfecha.Daviplata,
-        ventasXfecha.totalDaviplata,
-        ventasXfecha.Nequi,
-        ventasXfecha.totalNequi,
-        ventasXfecha.TD,
-        ventasXfecha.totalTD,
-        ventasXfecha.TC,
-        ventasXfecha.totalTC,
-        ventasXfecha.QR,
-        ventasXfecha.totalQR,
-        ventasXfecha.TB,
-        ventasXfecha.totalTB,";
-        foreach($usuarios as $key=>$value){
-            if(array_key_last($usuarios) == $key){
-                $sql.=" ventasXfecha.V_$value,";
-                $sql.=" ventasXfecha.Vtotal$value";
-            }else{
-                $sql.=" ventasXfecha.V_$value,";
-                $sql.=" ventasXfecha.Vtotal$value,";
-            }
-        }
-
-        $sql.= " FROM facturas LEFT JOIN ventas ON facturas.id = ventas.idfactura";
-
-        ///calcula el numero de ventas X dia y su total $ X dia ///
-        $sql.= " LEFT JOIN (SELECT DATE($fecha) AS fecha, COUNT(*) AS numVentasXfecha, SUM($totalventa) AS totalventasXdia, ";
-        foreach(self::$arrayMetodosPago as $key=>$value){
-            if(array_key_last(self::$arrayMetodosPago) == $key){
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN 1 ELSE 0 END) AS ${value},";
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN $totalventa ELSE 0 END) AS total${value},";
-            }else{
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN 1 ELSE 0 END) AS ${value},";
-                $sql.=" SUM(CASE WHEN metodopago = '$value' THEN $totalventa ELSE 0 END) AS total${value},";
-            }
-        }
-        foreach($usuarios as $key=>$value){
-            if(array_key_last($usuarios) == $key){
-                $sql.=" SUM(CASE WHEN idvendedor = '$key' THEN 1 ELSE 0 END) AS V_${value},";
-                $sql.=" SUM(CASE WHEN idvendedor = '$key' THEN $totalventa ELSE 0 END) AS Vtotal${value}";
-            }else{
-                $sql.=" SUM(CASE WHEN idvendedor = '$key' THEN 1 ELSE 0 END) AS V_${value},";
-                $sql.=" SUM(CASE WHEN idvendedor = '$key' THEN $totalventa ELSE 0 END) AS Vtotal${value},";
-            }
-        }
-        $sql.= " FROM facturas WHERE ${fecha} BETWEEN '$fechaini' AND '$fechafin 23:59:59'
-        GROUP BY DATE($fecha)) AS ventasXfecha ON DATE(facturas.$fecha) = ventasXfecha.fecha";
-        ///calcula el idproducto mas vendido por dia y su cantidad y nombre ///
-        $sql.= " LEFT JOIN (SELECT 
-            DATE(facturas.${fecha}) AS fecha,
-            idproducto AS idProductMxVendidoXdia, ventas.producto AS nombreProductoXdia,  SUM(cantidad) AS cantidadproductMxVendidoXdia
-        FROM ventas JOIN facturas ON ventas.idfactura = facturas.id
-        WHERE facturas.$fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59'
-        GROUP BY DATE(facturas.$fecha), idproducto
-        ORDER BY SUM(cantidad) DESC) AS MaxProduct ON DATE(facturas.$fecha) = MaxProduct.fecha";
-        ///calcula cuantos productos y cuantas referencias distintas en total X dia se vendieron en el rango ///
-        $sql.= " LEFT JOIN (SELECT 
-            DATE($fecha) AS fecha,
-            SUM(cantidad) AS productsVendidosXdia,
-            COUNT(DISTINCT ventas.idproducto) AS referenciasVendidasXdia
-        FROM ventas JOIN facturas ON ventas.idfactura = facturas.id
-        WHERE facturas.$fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59'
-        GROUP BY DATE(facturas.$fecha)) AS vtProduct ON DATE(facturas.$fecha) = vtProduct.fecha";
-        /// calcula el total de idprodutos distintos vendidos de todo el rango ///
-        $sql.= " CROSS JOIN (SELECT 
-            COUNT(DISTINCT idproducto) AS totalProductos
-        FROM ventas
-        WHERE ventas.idfactura IN (
-        SELECT id FROM facturas WHERE $fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59')
-        LIMIT 1) AS totalReferenciasVendidas";
-        /// calcula el idproducto mas vendido de todo el rango y su cantidad y nombre ///
-        $sql.= " LEFT JOIN (SELECT 
-            idproducto AS idProductoMxvendido, 
-            SUM(cantidad) AS cantidadProductMxVen,
-            producto AS nombreProductMxVen
-        FROM ventas
-        WHERE idfactura IN (
-        SELECT id FROM facturas WHERE $fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59')
-        GROUP BY idproducto ORDER BY cantidadProductMxVen DESC LIMIT 1) AS productosMasVendido ON 1=1";
- 
-        $sql.= " WHERE $fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59'
-        GROUP BY DATE($fecha) ORDER BY DATE($fecha) $asc_desc;";
-
-        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
-        $array = [];
-        while($row = $resultado->fetch_assoc())
-        $array[] = $row;
-        $resultado->free();
-        return $array;
-    }
-
-
-    public static function rangoFechadeproductos($fecha, $fechaini, $fechafin, $asc_desc="ASC"){
-
-        $sql = "SELECT productos.id, productos.nombre, SUM(ventas.cantidad) AS Total_Vendido FROM productos 
-        JOIN ventas ON productos.id = ventas.idproducto 
-        JOIN facturas ON ventas.idfactura = facturas.id 
-        WHERE facturas.$fecha BETWEEN '$fechaini' AND '$fechafin 23:59:59' 
-        GROUP BY productos.id, productos.nombre
-        ORDER BY Total_Vendido $asc_desc LIMIT 10;";
-
-        $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
-        $array = [];
-        while($row = $resultado->fetch_assoc())
-        $array[] = $row;
-        $resultado->free();
-        return $array;
-    }
     
 }

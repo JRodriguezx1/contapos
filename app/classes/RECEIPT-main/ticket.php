@@ -192,7 +192,7 @@
         }
 
 
-        public function generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos=[]){
+        public function generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[]){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -264,59 +264,42 @@
             /*----------  Fin Detalles de la tabla  ----------*/
 
 
-
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
-
             $this->pdf->Ln(5);
 
             # Impuestos, descuentos & totales #
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","CREDITO"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital, '0', ',', '.')." COP"),0,0,'C');
-
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","CREDITO TOTAL"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","ABONO INICIAL"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($credito->abonoinicial, '0', ',', '.')." COP"),0,0,'C');
-
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL ABONOS"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital-$credito->saldopendiente, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Descuento"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($credito->descuento, '0', ',', '.')." COP"),0,0,'C');
-
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","Descuento"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($credito->descuento, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
-
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL A PAGAR: "),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($credito->saldopendiente, '0', ',', '.')." COP"),0,0,'C');
-            $this->pdf->SetFont('Arial','',10);
+            $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1","SALDO PENDIENTE: "),0,0,'C');
+            $this->pdf->Cell(46,5,iconv("UTF-8", "ISO-8859-1","$".number_format($credito->saldopendiente, '0', ',', '.')." COP"),0,0,'C');
 
-            $this->pdf->Ln(5);
+            $this->pdf->Ln(7);
+            $this->pdf->SetFont('Arial','',9);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","PAGOS"),0,'C',false);
+            foreach($cuotas as $value)
+                foreach($value->mediosdepago as $mp)
+                    $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value->fechapagado.' '.$mp->mediopago.' $'.number_format($mp->valor, '0', ',', '.')),0,'C',false);
             
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL PAGADO: "),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$".number_format($credito->abonoinicial, '0', ',', '.')." COP"),0,0,'C');
-
             $this->pdf->Ln(12);
 
-            /*$this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","CAMBIO"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
-
-            $this->pdf->Ln(5);*/
-
-            /*$this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","USTED AHORRA"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","$0.00 COP"),0,0,'C');
-
-            $this->pdf->Ln(16);*/
 
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Nota: $credito->nota"),0,'C',false);
@@ -326,15 +309,6 @@
 
             $this->pdf->SetFont('Arial','B',9);
             $this->pdf->Cell(0,7,iconv("UTF-8", "ISO-8859-1","Gracias por su compra"),'',0,'C');
-
-            $this->pdf->Ln(9);
-
-            # Codigo de barras #
-            $this->pdf->Code128(5,$this->pdf->GetY(),"COD000001V0001",70,20);
-            $this->pdf->SetXY(0,$this->pdf->GetY()+21);
-            $this->pdf->SetFont('Arial','',14);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","COD000001V0001"),0,'C',false);
-            
             # Nombre del archivo PDF #
             $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
         }
@@ -376,13 +350,10 @@
              $this->pdf->Ln(7);
              # Impuestos, descuentos & totales #
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Abono N°: ".$cuota->numerocuota),0,'C',false);
-
             $this->pdf->Ln(5);
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Valor pagado: ".$cuota->valorpagado),0,'C',false);
-
             $this->pdf->Ln(5);
-
             # Nombre del archivo PDF #
             $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
          }
