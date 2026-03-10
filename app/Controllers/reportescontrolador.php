@@ -372,10 +372,17 @@ class reportescontrolador{
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
       $totalDescuentos = productos::camposJoinObj($sql);
 
+      //canal de venta
+      $sql = "SELECT IFNULL(cv.nombre, 'TOTAL GENERAL') AS canalVenta, COUNT(cv.id) as transacciones, SUM(f.total) AS valor
+              FROM facturas f JOIN canaldeventa cv ON f.idcanaldeventa = cv.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY cv.nombre WITH ROLLUP";
+      $canalVenta = facturas::camposJoinObj($sql);
+
       //gastos
       $sql = "SELECT IFNULL(cg.nombre, 'TOTAL GENERAL') AS descripcion, IFNULL(g.operacion, '') AS tipogasto, SUM(g.valor) AS valor
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
-              WHERE g.fecha BETWEEN '$fechainicio' AND '$fechafin' AND g.id_sucursalfk = 1
+              WHERE g.fecha BETWEEN '$fechainicio' AND '$fechafin' AND g.id_sucursalfk = $idsucursal
               GROUP BY cg.nombre, g.operacion WITH ROLLUP
               HAVING (cg.nombre IS NOT NULL AND g.operacion IS NOT NULL) OR (cg.nombre IS NULL AND g.operacion IS NULL);";
       $gastos = gastos::camposJoinObj($sql);
@@ -390,7 +397,7 @@ class reportescontrolador{
       
 
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'gastos'=>$gastos, 'resumen'=>$resumen]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'canalVenta'=>$canalVenta, 'gastos'=>$gastos, 'resumen'=>$resumen]);
   }
 
   

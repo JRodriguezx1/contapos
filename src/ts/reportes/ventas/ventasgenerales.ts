@@ -9,6 +9,7 @@
     const tablaMediosPagos = ($('#tablaMediosPagos') as any);
     const tablacreditosSeparados = ($('#tablacreditosSeparados') as any);
     const tablaGastos = ($('#tablaGastos') as any);
+    const tablaIngresoCanalventa = ($('#tablaIngresoCanalventa') as any);
     const tablaResumen = ($('#tablaResumen') as any);
     
     interface i_productosVendidos {
@@ -36,6 +37,12 @@
         total:string,
     }
 
+    interface i_canaldeVenta {
+        canaldeventa:string,
+        transacciones:string,
+        valor:string,
+    }
+
     interface i_gastos {
         descripcion:string,
         tipogasto:string,
@@ -49,7 +56,7 @@
         margenutilidad:string,
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], resumen:i_resumen[]=[];
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumen:i_resumen[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -70,11 +77,13 @@
             mediosPagos = resultado.mediosPagos;
             creditosSeparados = resultado.separados;
             gastos = resultado.gastos;
+            canalVenta = resultado.canalVenta;
             resumen = resultado.resumen;
             printProductosVendidos();
             printMediosPagos();
             printCreditosSeparados();
             printGastos();
+            printCanalVenta();
             printResumen();
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
@@ -134,6 +143,22 @@
                         {title: 'Cartera Por Cobrar', data: 'carteraXCobrar', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total Abonado', data: 'totalAbonado', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total', data: 'total'}
+                    ],
+        });
+    }
+
+
+    printCanalVenta();
+    function printCanalVenta(){
+        tablaIngresoCanalventa.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: canalVenta,
+            pageLength: 25,
+            order: [[ 1, 'asc' ]],
+            columns: [
+                        {title: 'Canal De Venta', data: 'canalVenta'},
+                        {title: 'Transacciones', data: 'transacciones'},
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
     }

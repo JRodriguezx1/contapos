@@ -39,6 +39,11 @@
         </button>
 
         <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          data-tab="ingresoCanalventa">
+          Ingreso canal de venta
+        </button>
+
+        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
           data-tab="categorias">
           Categorías
         </button>
@@ -180,6 +185,20 @@
             <th class="px-4 py-2 border">Cartera por cobrar</th>
             <th class="px-4 py-2 border">Total Abonado</th>
             <th class="px-4 py-2 border">Total</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <!-- Ingreso de canal de venta -->
+    <div id="ingresoCanalventa" class="tab-pane hidden">
+      <h3 class="text-lg font-semibold mb-4">💸 Ingresos por canal de venta</h3>
+      <table id="tablaIngresoCanalventa" class="display responsive nowrap tabla" width="100%">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 border">Canal de venta</th>
+            <th class="px-4 py-2 border">Transacciones</th>
+            <th class="px-4 py-2 border">Valor</th>
           </tr>
         </thead>
       </table>
