@@ -74,17 +74,18 @@ class creditosRepository extends operationRepository{
     //estado financiero solo de separados
     public function estadosFinancierosCreditos(string $fechainicio, string $fechafin, int $idsucursal):array{
 
-        $sql = "SELECT c.id, c.num_orden, c.fechainicio, ps.costo_total, ps.venta_total,
-                    ps.venta_total - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
+        $sql = "SELECT c.id, c.num_orden, c.fechainicio, ps.costo_total, c.capital+ c.valorinterestotal as capitalTotal,
+                    c.capital as capital - ps.costo_total AS utilidad_comercial,
+                    c.capital as capital - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
                     IFNULL(ct.pagado, 0) AS valor_pagado,
                     LEAST(
-                        (ps.venta_total - ps.costo_total + c.valorinterestotal),
+                        (c.capital - ps.costo_total + c.valorinterestotal),
                         GREATEST(0, IFNULL(ct.pagado,0) - ps.costo_total)
                     ) AS utilidad_realizada
                 FROM $this->table c
 
                 LEFT JOIN (
-                    SELECT idcredito, SUM(costo * cantidad) AS costo_total, SUM(total) AS venta_total
+                    SELECT idcredito, SUM(costo * cantidad) AS costo_total
                     FROM productosseparados GROUP BY idcredito
                 ) ps ON ps.idcredito = c.id
 
