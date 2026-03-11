@@ -95,7 +95,6 @@ class creditosRepository extends operationRepository{
 
                 WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
         $rows = $this->fetchAllStd($sql);
-        debuguear($rows);
         return $rows;
     }
     
