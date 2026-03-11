@@ -464,6 +464,17 @@ class reportescontrolador{
     echo json_encode($facturas);
   }
 
+  //estado financiero solo de separados
+  public static function estadosFinancierosCreditos(){
+     isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $creditosRepo = new creditosRepository;
+    $estadosFinancierosCreditos = $creditosRepo->estadosFinancierosCreditos($fechainicio, $fechafin, $idsucursal);
+    echo json_encode($estadosFinancierosCreditos);
+  }
+
   public static function apiCuotasCreditos(){
     isadmin();
     $idsucursal = id_sucursal();
@@ -680,7 +691,7 @@ class reportescontrolador{
               JOIN usuarios u ON i.idusuario = u.id
               JOIN caja c ON i.id_caja = c.id
               JOIN cierrescajas cj ON i.id_cierrecaja = cj.id
-              WHERE  i.idsucursal_idfk = 1 AND i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
+              WHERE  i.idsucursal_idfk = $idsucursal AND i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
       $getingresos = ingresoscajas::camposJoinObj($sql);
     }
 

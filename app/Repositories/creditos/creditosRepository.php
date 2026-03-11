@@ -68,5 +68,35 @@ class creditosRepository extends operationRepository{
         $resultado = self::$db->query($sql);
         return $resultado;
     }
+
+
+
+    //estado financiero solo de separados
+    public function estadosFinancierosCreditos(string $fechainicio, string $fechafin, int $idsucursal):array{
+
+        $sql = "SELECT c.id, c.num_orden, c.fechainicio, ps.costo_total, ps.venta_total,
+                    ps.venta_total - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
+                    IFNULL(ct.pagado, 0) AS valor_pagado,
+                    LEAST(
+                        (ps.venta_total - ps.costo_total + c.valorinterestotal),
+                        GREATEST(0, IFNULL(ct.pagado,0) - ps.costo_total)
+                    ) AS utilidad_realizada
+                FROM $this->table c
+
+                LEFT JOIN (
+                    SELECT idcredito, SUM(costo * cantidad) AS costo_total, SUM(total) AS venta_total
+                    FROM productosseparados GROUP BY idcredito
+                ) ps ON ps.idcredito = c.id
+
+                LEFT JOIN (
+                    SELECT id_credito, SUM(valorpagado) AS pagado
+                    FROM cuotas WHERE estado = 1 GROUP BY id_credito
+                ) ct ON ct.id_credito = c.id
+
+                WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
+        $rows = $this->fetchAllStd($sql);
+        debuguear($rows);
+        return $rows;
+    }
     
 }
