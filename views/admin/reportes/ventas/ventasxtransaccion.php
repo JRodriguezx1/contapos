@@ -22,20 +22,6 @@
 
 
   <div class="mt-4">
-    <p class="text-gray-500 text-xl">Septiembre 2024</p>
-    <!--<table class="display responsive nowrap tabla" width="100%" id="">
-        <thead>
-            <tr>
-                <th>Nº</th>
-                <th>Fecha</th>
-                <th>Total Venta</th>
-                <th>Numero de Transacciones</th>
-                <th>Promedio por Transacción</th>
-                <th>Transacción mas alta</th>
-                <th>Transacción mas baja</th>
-            </tr>
-        </thead>
-    </table>-->
     <table id="tablaTransaccioneXVenta" class="display responsive nowrap tabla" width="100%"></table>
   </div>
 

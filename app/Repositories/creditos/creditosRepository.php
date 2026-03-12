@@ -74,9 +74,9 @@ class creditosRepository extends operationRepository{
     //estado financiero solo de separados
     public function estadosFinancierosCreditos(string $fechainicio, string $fechafin, int $idsucursal):array{
 
-        $sql = "SELECT c.id, c.num_orden, c.fechainicio, ps.costo_total, c.capital+ c.valorinterestotal as capitalTotal,
-                    c.capital as capital - ps.costo_total AS utilidad_comercial,
-                    c.capital as capital - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
+        $sql = "SELECT c.id, c.idestadocreditos as estado, c.num_orden, c.fechainicio, ps.costo_total, c.capital+c.valorinterestotal as capitalTotal,
+                    c.capital - ps.costo_total AS utilidad_comercial,
+                    c.capital - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
                     IFNULL(ct.pagado, 0) AS valor_pagado,
                     LEAST(
                         (c.capital - ps.costo_total + c.valorinterestotal),
@@ -91,7 +91,7 @@ class creditosRepository extends operationRepository{
 
                 LEFT JOIN (
                     SELECT id_credito, SUM(valorpagado) AS pagado
-                    FROM cuotas WHERE estado = 1 GROUP BY id_credito
+                    FROM cuotas GROUP BY id_credito
                 ) ct ON ct.id_credito = c.id
 
                 WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";

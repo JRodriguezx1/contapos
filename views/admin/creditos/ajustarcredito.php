@@ -46,6 +46,18 @@
             </div>
         </div>
 
+        <div class="formulario__campo">
+            <label class="formulario__label" for="ajustarFechaInicio">Ajustar fecha de inicio</label>
+            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+                <input 
+                    id="ajustarFechaInicio" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                    type="date"
+                    value="<?php echo $credito->fechainicio??'';?>"
+                >
+            </div>
+        </div>
+
         <label for="inputDescuentoAjustarCredito" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
         <div class="mt-2">
             <input id="inputDescuentoAjustarCredito" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">

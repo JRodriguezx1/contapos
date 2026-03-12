@@ -1,14 +1,14 @@
 (()=>{
     if(!document.querySelector('.estadosfinancierosCreditos'))return;
-
         const POS = (window as any).POS;
 
         let tablaEstdosFinancierosCreditos:HTMLElement;
         let estadosFinancierosCreditos:[] = [];
 
 
-
         async function callApiReporte(dateinicio:string, datefin:string){
+            document.querySelector('#fecha1')!.textContent = dateinicio;
+            document.querySelector('#fecha2')!.textContent = datefin;
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
             const datos = new FormData();
             datos.append('fechainicio', dateinicio);
@@ -16,10 +16,8 @@
             try {
                 const url = "/admin/api/reportes/creditos/estadosFinancieros"; //llama a la api que esta en reportescontrolador.php
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-                const resultado = await respuesta.json();
-                estadosFinancierosCreditos = resultado;
-                console.log(estadosFinancierosCreditos);
-                //printTableEstadosFinancierosCreditos();
+                estadosFinancierosCreditos = await respuesta.json();
+                printTableEstadosFinancierosCreditos();
             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
             } catch (error) {
                 console.log(error);
@@ -34,16 +32,20 @@
                 pageLength: 25,
                 destroy: true, // importante si recargas la tabla
                 data: estadosFinancierosCreditos,
-                //order: [[8, "desc"]],
                 columns: [
-                    {title: 'N°', data: 'Num_orden'}, 
-                    {title: 'Credito', data: 'credito'},
-                    {title: 'Costo', data: 'costo'},
-                    {title: 'Pagado', data: 'pagado'},
-                    {title: 'Utilidad Realizada', data: 'utilidad_realizada'},
-                    {title: 'Utilidad Proyectada', data: 'utilidad_proyectada'},
-                    {title: 'Estado', data: 'estado'},
-                    {title: 'Fecha', data: 'created_at'},
+                    {title: 'N°', data: 'num_orden'},
+                    {title: 'Fecha', data: 'fechainicio'},
+                    {title: 'Credito', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Costo', data: 'costo_total', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Utilidad Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Utilidad Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Pagado', data: 'valor_pagado', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {
+                        title: 'Estado',
+                        data: 'estado',
+                        render: (data: any, type: any, row: any) => {return `<a class="btn-xs ${row.estado=='2'?'btn-blue':row.estado=='1'?'btn-lima':'btn-light'}" target="_blank" href="/admin/creditos/detallecredito?id=${row.id}">${row.estado=='1'?'Finalizado':'Abierto'}</a>`}
+                    },
                 ],
                 
                 
