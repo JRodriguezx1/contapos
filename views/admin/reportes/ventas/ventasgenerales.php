@@ -261,9 +261,23 @@
           </tr>
         </thead>
         <tbody>
-          <!--<tr><td class="px-4 py-2 border">Total Ventas</td><td class="px-4 py-2 border">$8,000,000</td></tr>
-          <tr><td class="px-4 py-2 border">Total Gastos</td><td class="px-4 py-2 border">$1,570,000</td></tr>
-          <tr><td class="px-4 py-2 border">Utilidad Neta</td><td class="px-4 py-2 border">$6,430,000</td></tr>-->
+        </tbody>
+      </table>
+
+      
+      <table id="tablaResumenCreditos" class="display responsive nowrap tabla" width="100%">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            th class="px-4 py-2 border">Creditos</th>
+            <th class="px-4 py-2 border">Capital Total</th>
+            <th class="px-4 py-2 border">Costo Total</th>
+            <th class="px-4 py-2 border">Utilidad Comercial</th>
+            <th class="px-4 py-2 border">Utilidad Proyectada</th>
+            <th class="px-4 py-2 border">Pago total</th>
+            <th class="px-4 py-2 border">Utilidad Realizada</th>
+          </tr>
+        </thead>
+        <tbody>
         </tbody>
       </table>
     </div>

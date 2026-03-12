@@ -388,11 +388,15 @@ class reportescontrolador{
       $gastos = gastos::camposJoinObj($sql);
       
       //resumen
-      $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
-              ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
-              FROM facturas f JOIN ventas v ON f.id = v.idfactura
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
-      $resumen = facturas::camposJoinObj($sql);
+        //creditos
+        $resumenCreditos = $creditoRepo->estadosFinancierosCreditosTotales($fechainicio, $fechafin, $idsucursal);
+        debuguear($resumenCreditos);
+        //ventas
+        $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
+                ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
+                FROM facturas f JOIN ventas v ON f.id = v.idfactura
+                WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
+        $resumen = facturas::camposJoinObj($sql);
 
       
 
