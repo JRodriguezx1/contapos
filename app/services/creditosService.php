@@ -442,6 +442,7 @@ class creditosService {
         $idcredito = $datos['id'];
         $recargo = $datos['recargo'];
         $abonototalantiguo = $datos['abonototalantiguo'];
+        $ajustarFechaInicio = $datos['fechainicio'];
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($idcredito);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
@@ -451,6 +452,7 @@ class creditosService {
         $credito->valorinterestotal = $recargo;
         $credito->montototal = $credito->capital - $credito->abonoinicial + $credito->valorinterestotal;
         $credito->abonototalantiguo = $abonototalantiguo;
+        $credito->fechainicio = $ajustarFechaInicio;
         $credito->fechaultimoabonoantiguo = date('Y-m-d H:i:s');
 
         $getDB = $creditoRepo->getConexion();

@@ -7,7 +7,7 @@
         </button>
     </div>
     <div id="divmsjalerta3"></div>
-    <form id="formCrearUpdateAjustarCredito" class="formulario" >
+    <form id="formAjustarCredito" class="formulario" >
         
         <input id="idcredito" class="hidden" type="text" name="idcredito_ajustarcredito" value="<?php echo $credito->id;?>">
         <input id="capital" class="hidden" type="text" name="capital" value="<?php echo $credito->capital??'';?>">

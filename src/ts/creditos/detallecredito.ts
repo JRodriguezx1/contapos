@@ -145,7 +145,7 @@
 
 
 
-    document.querySelector('#formCrearUpdateAjustarCredito')?.addEventListener('submit', e=>{
+    document.querySelector('#formAjustarCredito')?.addEventListener('submit', e=>{
       e.preventDefault();
       const v:number = validarPasswordDcto();
       if(!v)return;
