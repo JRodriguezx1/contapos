@@ -77,10 +77,10 @@ class creditosRepository extends operationRepository{
         $sql = "SELECT c.id, c.idestadocreditos as estado, c.num_orden, c.fechainicio, ps.costo_total, c.capital+c.valorinterestotal as capitalTotal,
                     c.capital - ps.costo_total AS utilidad_comercial,
                     c.capital - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
-                    IFNULL(ct.pagado, 0) AS valor_pagado,
+                    IFNULL(ct.pagado, 0)+ c.abonototalantiguo AS valor_pagado,
                     LEAST(
                         (c.capital - ps.costo_total + c.valorinterestotal),
-                        GREATEST(0, IFNULL(ct.pagado,0) - ps.costo_total)
+                        GREATEST(0, IFNULL(ct.pagado,0)+ c.abonototalantiguo - ps.costo_total)
                     ) AS utilidad_realizada
                 FROM $this->table c
 
@@ -101,13 +101,13 @@ class creditosRepository extends operationRepository{
 
 
     public function estadosFinancierosCreditosTotalesFinalizados(string $fechainicio, string $fechafin, int $idsucursal):array{
-        $sql = "SELECT COUNT(c.id) as creditos, c.idestadocreditos as estado, c.fechainicio, 
+        $sql = "SELECT COUNT(c.id) as creditos,
                     SUM(c.capital+c.valorinterestotal) as capitalTotal,
                     SUM(ps.costo_total) as costo_total,
                     SUM(c.capital - ps.costo_total) AS utilidad_comercial,
                     SUM(c.capital - ps.costo_total + c.valorinterestotal) AS utilidad_proyectada,
-                    SUM(IFNULL(ct.pagado, 0)) AS valor_pagado,
-                    GREATEST(0, SUM(ct.pagado) - SUM(ps.costo_total)) AS utilidad_realizada
+                    SUM(IFNULL(ct.pagado, 0) + c.abonototalantiguo) AS valor_pagado,
+                    GREATEST(0, SUM(IFNULL(ct.pagado, 0) + c.abonototalantiguo) - SUM(ps.costo_total)) AS utilidad_realizada
                 FROM $this->table c
 
                 LEFT JOIN (
