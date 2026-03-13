@@ -9,7 +9,9 @@
     const tablaMediosPagos = ($('#tablaMediosPagos') as any);
     const tablacreditosSeparados = ($('#tablacreditosSeparados') as any);
     const tablaGastos = ($('#tablaGastos') as any);
-    const tablaResumen = ($('#tablaResumen') as any);
+    const tablaIngresoCanalventa = ($('#tablaIngresoCanalventa') as any);
+    const tablaResumenVentas = ($('#tablaResumenVentas') as any);
+    const tablaResumenCreditos = ($('#tablaResumenCreditos') as any);
     
     interface i_productosVendidos {
         idproducto:string,
@@ -36,20 +38,37 @@
         total:string,
     }
 
+    interface i_canaldeVenta {
+        canaldeventa:string,
+        transacciones:string,
+        valor:string,
+    }
+
     interface i_gastos {
         descripcion:string,
         tipogasto:string,
         valor:string,
     }
     
-    interface i_resumen {
+    interface i_resumenVentas {
+        ventas:string,
         total_ventas:string,
         total_costo:string,
         ganancia:string,
         margenutilidad:string,
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], resumen:i_resumen[]=[];
+    interface i_resumenCreditos {
+        creditos:string,
+        capitalTotal:string,
+        costo_total:string,
+        utilidad_comercial:string,
+        utilidad_proyectada:string,
+        valor_pagado:string,
+        utilidad_realizada:string
+    }
+
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -70,11 +89,14 @@
             mediosPagos = resultado.mediosPagos;
             creditosSeparados = resultado.separados;
             gastos = resultado.gastos;
-            resumen = resultado.resumen;
+            canalVenta = resultado.canalVenta;
+            resumenCreditos = resultado.resumenCreditos;
+            resumenVentas = resultado.resumenVentas;
             printProductosVendidos();
             printMediosPagos();
             printCreditosSeparados();
             printGastos();
+            printCanalVenta();
             printResumen();
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
@@ -139,6 +161,22 @@
     }
 
 
+    printCanalVenta();
+    function printCanalVenta(){
+        tablaIngresoCanalventa.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: canalVenta,
+            pageLength: 25,
+            order: [[ 1, 'asc' ]],
+            columns: [
+                        {title: 'Canal De Venta', data: 'canalVenta'},
+                        {title: 'Transacciones', data: 'transacciones'},
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    ],
+        });
+    }
+
+
     printGastos();
     function printGastos(){
         tablaGastos.DataTable({
@@ -156,16 +194,35 @@
 
     printResumen();
     function printResumen(){
-        tablaResumen.DataTable({
+        //resumen financiero total de ventas
+        tablaResumenVentas.DataTable({
             destroy: true, // importante si recargas la tabla
-            data: resumen,
+            data: resumenVentas,
             pageLength: 25,
             order: [[ 1, 'desc' ]],
             columns: [
+                        {title: 'Ventas', data: 'ventas'},
                         {title: 'Total Ventas Productos', data: 'total_ventas', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total Costo Productos', data: 'total_costo', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Ganancia', data: 'ganancia', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Margen Utilidad', data: 'margenutilidad', render: (data:number) => `${Number(data).toLocaleString()}%`},
+                    ],
+        });
+
+        //resumen financiero total creditos
+        tablaResumenCreditos.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: resumenCreditos,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Creditos', data: 'creditos'},
+                        {title: 'Capital Total', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Costo Total', data: 'costo_total', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Pago total', data: 'valor_pagado', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
     }

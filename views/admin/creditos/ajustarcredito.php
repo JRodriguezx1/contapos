@@ -7,7 +7,7 @@
         </button>
     </div>
     <div id="divmsjalerta3"></div>
-    <form id="formCrearUpdateAjustarCredito" class="formulario" >
+    <form id="formAjustarCredito" class="formulario" >
         
         <input id="idcredito" class="hidden" type="text" name="idcredito_ajustarcredito" value="<?php echo $credito->id;?>">
         <input id="capital" class="hidden" type="text" name="capital" value="<?php echo $credito->capital??'';?>">
@@ -42,6 +42,18 @@
                     placeholder="Monto antiguo pagado hasta la fecha"
                     value="<?php echo $credito->abonototalantiguo??'';?>"
                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
+                >
+            </div>
+        </div>
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="ajustarFechaInicio">Ajustar fecha de inicio</label>
+            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+                <input 
+                    id="ajustarFechaInicio" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                    type="date"
+                    value="<?php echo $credito->fechainicio??'';?>"
                 >
             </div>
         </div>

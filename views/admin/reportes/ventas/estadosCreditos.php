@@ -1,4 +1,4 @@
-<div class="box facturasprocesadas relative">
+<div class="box estadosfinancierosCreditos relative">
   <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
   <a href="/admin/reportes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
     <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -7,7 +7,7 @@
     <span class="sr-only">Atrás</span>
   </a>
   
-  <h4 class="text-gray-600 mb-8 mt-4">Facturas procesadas</h4>
+  <h4 class="text-gray-600 mb-8 mt-4">Estados de creditos/separados</h4>
   <!-- Descripción rango de fecha -->
   <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
     <span class="text-lg">📅</span>
@@ -49,9 +49,9 @@
 
 
   <div class="mt-4">
-    <table id="tablaFacturasProcesadas" class="display responsive nowrap tabla" width="100%">
-        <thead></thead>
-    <tbody></tbody>
+    
+    <table id="tablaEstdosFinancierosCreditos" class="display responsive nowrap tabla" width="100%">
+
     </table>
   </div>
 </div>

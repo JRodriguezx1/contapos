@@ -145,7 +145,7 @@
 
 
 
-    document.querySelector('#formCrearUpdateAjustarCredito')?.addEventListener('submit', e=>{
+    document.querySelector('#formAjustarCredito')?.addEventListener('submit', e=>{
       e.preventDefault();
       const v:number = validarPasswordDcto();
       if(!v)return;
@@ -170,6 +170,7 @@
       datos.append('id', id);
       datos.append('recargo', recargo);
       datos.append('abonototalantiguo', abonototalantiguo);
+      datos.append('fechainicio', (document.querySelector('#ajustarFechaInicio') as HTMLInputElement).value);
       try {
           const url = "/admin/api/ajustarCreditoAntiguo";  //va al controlador creditoscontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 

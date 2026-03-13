@@ -39,6 +39,11 @@
         </button>
 
         <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          data-tab="ingresoCanalventa">
+          Ingreso canal de venta
+        </button>
+
+        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
           data-tab="categorias">
           Categorías
         </button>
@@ -185,6 +190,20 @@
       </table>
     </div>
 
+    <!-- Ingreso de canal de venta -->
+    <div id="ingresoCanalventa" class="tab-pane hidden">
+      <h3 class="text-lg font-semibold mb-4">💸 Ingresos por canal de venta</h3>
+      <table id="tablaIngresoCanalventa" class="display responsive nowrap tabla" width="100%">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 border">Canal de venta</th>
+            <th class="px-4 py-2 border">Transacciones</th>
+            <th class="px-4 py-2 border">Valor</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
     <!-- Categorías -->
     <div id="categorias" class="tab-pane hidden">
       <h3 class="text-lg font-semibold mb-4">📂 Ventas por Categoría</h3>
@@ -231,10 +250,11 @@
 
     <!-- Resumen -->
     <div id="resumen" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">📈 Resumen General</h3>
-      <table id="tablaResumen" class="display responsive nowrap tabla" width="100%">
+      <h3 class="text-lg font-semibold mb-4 mt-10">📈 Resumen Financiero De Ventas</h3>
+      <table id="tablaResumenVentas" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
+            <th class="px-4 py-2 border">Ventas</th>
             <th class="px-4 py-2 border">Total Ventas Productos</th>
             <th class="px-4 py-2 border">Total Costo Productos</th>
             <th class="px-4 py-2 border">Ganancia</th>
@@ -242,9 +262,23 @@
           </tr>
         </thead>
         <tbody>
-          <!--<tr><td class="px-4 py-2 border">Total Ventas</td><td class="px-4 py-2 border">$8,000,000</td></tr>
-          <tr><td class="px-4 py-2 border">Total Gastos</td><td class="px-4 py-2 border">$1,570,000</td></tr>
-          <tr><td class="px-4 py-2 border">Utilidad Neta</td><td class="px-4 py-2 border">$6,430,000</td></tr>-->
+        </tbody>
+      </table>
+
+       <h3 class="text-lg font-semibold mb-4 mt-12">📈 Resumen Financiero De creditos</h3>
+      <table id="tablaResumenCreditos" class="display responsive nowrap tabla" width="100%">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 border">Creditos</th>
+            <th class="px-4 py-2 border">Capital Total</th>
+            <th class="px-4 py-2 border">Costo Total</th>
+            <th class="px-4 py-2 border">Utilidad Comercial</th>
+            <th class="px-4 py-2 border">Utilidad Proyectada</th>
+            <th class="px-4 py-2 border">Pago total</th>
+            <th class="px-4 py-2 border">Utilidad Realizada</th>
+          </tr>
+        </thead>
+        <tbody>
         </tbody>
       </table>
     </div>

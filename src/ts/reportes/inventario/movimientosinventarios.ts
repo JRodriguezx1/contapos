@@ -5,8 +5,7 @@
 
         let tablaMovimientosInventarios:HTMLElement;
         let datosMovimientosInventarios:[] = [];
-        const mesyaño:[string, number] = mesyañoactual();
-        document.querySelector('#mesañoactual')!.textContent = mesyaño[0]+' '+mesyaño[1];
+        //const mesyaño:[string, number] = mesyañoactual();
 
 
         ///////   productos y subproductos en el select

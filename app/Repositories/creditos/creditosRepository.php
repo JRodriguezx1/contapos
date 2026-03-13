@@ -68,5 +68,61 @@ class creditosRepository extends operationRepository{
         $resultado = self::$db->query($sql);
         return $resultado;
     }
+
+
+
+    //estado financiero solo de separados
+    public function estadosFinancierosCreditos(string $fechainicio, string $fechafin, int $idsucursal):array{
+
+        $sql = "SELECT c.id, c.idestadocreditos as estado, c.num_orden, c.fechainicio, ps.costo_total, c.capital+c.valorinterestotal as capitalTotal,
+                    c.capital - ps.costo_total AS utilidad_comercial,
+                    c.capital - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
+                    IFNULL(ct.pagado, 0)+ c.abonototalantiguo AS valor_pagado,
+                    LEAST(
+                        (c.capital - ps.costo_total + c.valorinterestotal),
+                        GREATEST(0, IFNULL(ct.pagado,0)+ c.abonototalantiguo - ps.costo_total)
+                    ) AS utilidad_realizada
+                FROM $this->table c
+
+                LEFT JOIN (
+                    SELECT idcredito, SUM(costo * cantidad) AS costo_total
+                    FROM productosseparados GROUP BY idcredito
+                ) ps ON ps.idcredito = c.id
+
+                LEFT JOIN (
+                    SELECT id_credito, SUM(valorpagado) AS pagado
+                    FROM cuotas GROUP BY id_credito
+                ) ct ON ct.id_credito = c.id
+
+                WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
+        $rows = $this->fetchAllStd($sql);
+        return $rows;
+    }
+
+
+    public function estadosFinancierosCreditosTotalesFinalizados(string $fechainicio, string $fechafin, int $idsucursal):array{
+        $sql = "SELECT COUNT(c.id) as creditos,
+                    SUM(c.capital+c.valorinterestotal) as capitalTotal,
+                    SUM(ps.costo_total) as costo_total,
+                    SUM(c.capital - ps.costo_total) AS utilidad_comercial,
+                    SUM(c.capital - ps.costo_total + c.valorinterestotal) AS utilidad_proyectada,
+                    SUM(IFNULL(ct.pagado, 0) + c.abonototalantiguo) AS valor_pagado,
+                    GREATEST(0, SUM(IFNULL(ct.pagado, 0) + c.abonototalantiguo) - SUM(ps.costo_total)) AS utilidad_realizada
+                FROM $this->table c
+
+                LEFT JOIN (
+                    SELECT idcredito, SUM(costo * cantidad) AS costo_total
+                    FROM productosseparados GROUP BY idcredito
+                ) ps ON ps.idcredito = c.id
+
+                LEFT JOIN (
+                    SELECT id_credito, SUM(valorpagado) AS pagado
+                    FROM cuotas GROUP BY id_credito
+                ) ct ON ct.id_credito = c.id
+
+                WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
+        $rows = $this->fetchAllStd($sql);
+        return $rows;
+    }
     
 }

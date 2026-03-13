@@ -44,6 +44,9 @@
         <a href="/admin/reportes/ventasgenerales" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md   ">
           <span class="material-symbols-outlined">payments</span>Ventas generales
         </a>
+        <a href="/admin/reportes/creditos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
+          <span class="material-symbols-outlined">speaker_notes</span>Estados Creditos
+        </a>
         <a href="/admin/caja/ultimoscierres" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md   ">
           <span class="material-symbols-outlined">attach_money</span>Cierres de caja
         </a>
@@ -65,9 +68,6 @@
         </a>
         <a href="/admin/caja/pedidosguardados" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">receipt_long</span>Cotizaciones
-        </a>
-        <a href="/admin/reportes/creditos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Creditos
         </a>
         <a href="/admin/reportes/facturasanuladas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">contract_delete</span>Facturas anuladas

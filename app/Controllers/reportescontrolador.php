@@ -79,7 +79,7 @@ class reportescontrolador{
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $router->render('admin/reportes/facturas/creditos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+        $router->render('admin/reportes/ventas/estadosCreditos', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function cuotasCreditos(Router $router){
@@ -372,25 +372,34 @@ class reportescontrolador{
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
       $totalDescuentos = productos::camposJoinObj($sql);
 
+      //canal de venta
+      $sql = "SELECT IFNULL(cv.nombre, 'TOTAL GENERAL') AS canalVenta, COUNT(cv.id) as transacciones, SUM(f.total) AS valor
+              FROM facturas f JOIN canaldeventa cv ON f.idcanaldeventa = cv.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY cv.nombre WITH ROLLUP";
+      $canalVenta = facturas::camposJoinObj($sql);
+
       //gastos
       $sql = "SELECT IFNULL(cg.nombre, 'TOTAL GENERAL') AS descripcion, IFNULL(g.operacion, '') AS tipogasto, SUM(g.valor) AS valor
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
-              WHERE g.fecha BETWEEN '$fechainicio' AND '$fechafin' AND g.id_sucursalfk = 1
+              WHERE g.fecha BETWEEN '$fechainicio' AND '$fechafin' AND g.id_sucursalfk = $idsucursal
               GROUP BY cg.nombre, g.operacion WITH ROLLUP
               HAVING (cg.nombre IS NOT NULL AND g.operacion IS NOT NULL) OR (cg.nombre IS NULL AND g.operacion IS NULL);";
       $gastos = gastos::camposJoinObj($sql);
       
       //resumen
-      $sql = "SELECT SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
-              ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
-              FROM facturas f JOIN ventas v ON f.id = v.idfactura
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
-      $resumen = facturas::camposJoinObj($sql);
-
+        //ventas
+        $sql = "SELECT COUNT(f.id) as ventas, SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
+                ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
+                FROM facturas f JOIN ventas v ON f.id = v.idfactura
+                WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
+        $resumenVentas = facturas::camposJoinObj($sql);
+        //creditos
+        $resumenCreditos = $creditoRepo->estadosFinancierosCreditosTotalesFinalizados($fechainicio, $fechafin, $idsucursal);
       
 
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'gastos'=>$gastos, 'resumen'=>$resumen]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'canalVenta'=>$canalVenta, 'gastos'=>$gastos, 'resumenCreditos'=>$resumenCreditos, 'resumenVentas'=>$resumenVentas]);
   }
 
   
@@ -455,6 +464,17 @@ class reportescontrolador{
       $facturas = facturas::whereArrayBETWEEN('fechapago', $fechainicio, $fechafin, ['estado'=>'Paga', 'id_sucursal'=>$idsucursal]);
     }
     echo json_encode($facturas);
+  }
+
+  //estado financiero solo de separados
+  public static function estadosFinancierosCreditos(){
+     isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $creditosRepo = new creditosRepository;
+    $estadosFinancierosCreditos = $creditosRepo->estadosFinancierosCreditos($fechainicio, $fechafin, $idsucursal);
+    echo json_encode($estadosFinancierosCreditos);
   }
 
   public static function apiCuotasCreditos(){
@@ -673,7 +693,7 @@ class reportescontrolador{
               JOIN usuarios u ON i.idusuario = u.id
               JOIN caja c ON i.id_caja = c.id
               JOIN cierrescajas cj ON i.id_cierrecaja = cj.id
-              WHERE  i.idsucursal_idfk = 1 AND i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
+              WHERE  i.idsucursal_idfk = $idsucursal AND i.fecha BETWEEN '$fechainicio' AND '$fechafin' ORDER BY i.fecha DESC;";
       $getingresos = ingresoscajas::camposJoinObj($sql);
     }
 

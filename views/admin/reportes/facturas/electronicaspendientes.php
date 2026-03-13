@@ -12,9 +12,7 @@
   <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
     <span class="text-lg">📅</span>
     <span class="text-sm md:text-base font-medium">Mostrando información del período:
-      <span id="fecha1" class="font-semibold"> - </span>
-      al
-      <span id="fecha2" class="font-semibold"> - </span>
+      <span id="fecha1" class="font-semibold text-lg"> - </span>  -  <span id="fecha2" class="font-semibold text-lg"> - </span>
     </span>
   </div>
   
@@ -51,7 +49,6 @@
 
 
   <div class="mt-4">
-    <p class="text-gray-500 text-xl">Septiembre 2025</p>
     <table id="tablaelectronicasPendientes" class="display responsive nowrap tabla" width="100%"></table>
   </div>
 </div>
