@@ -21,6 +21,7 @@
     <input type="radio" name="radio" id="sedes">
     <input type="radio" name="radio" id="proveedores">
     <input type="radio" name="radio" id="ordenproduccion">
+    <input type="radio" name="radio" id="codigobarras">
 
     <div class="text-center border border-gray-300 p-3 tlg:w-40 btn_inv_info_rapido">
       <span class="text-xl text-gray-600">Informacion Inventario</span>
@@ -31,6 +32,7 @@
         <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btnsedes" for="sedes">Sedes</label>
         <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btnproveedores" for="proveedores">Proveedores</label>
         <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btnordenproduccion" for="ordenproduccion">Orden Produccion</label>
+        <label class="btn-xs btn-indigo !py-4 mt-4 tlg:!w-full btncodigobarras" for="codigobarras">Codigo de barras</label>
       </div>
     </div>
     
@@ -63,6 +65,10 @@
 
       <div class="ordenproduccion accordion_tab_content pt-12 bg-gray-50  sm:pt-20 pb-12 sm:pb-16">
         <?php include __DIR__. "/ordenproduccion.php"; ?>
+      </div>
+
+      <div class="codigobarras accordion_tab_content pt-12 bg-gray-50  sm:pt-20 pb-12 sm:pb-16">
+        <?php include __DIR__. "/codigoBarras.php"; ?>
       </div>
 
   </div> <!-- fin accordion_inv -->

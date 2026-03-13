@@ -96,6 +96,11 @@
       color: v.$gris80;
       border-color: lighten(v.$gris80, 10);
     }
+    #codigobarras:checked ~ .btn_inv_info_rapido .btncodigobarras{
+      background-color: darken(v.$gris20, 0);
+      color: v.$gris80;
+      border-color: lighten(v.$gris80, 10);
+    }
     .accordion_tab_content{
       display: none;
     }
@@ -118,6 +123,9 @@
       display: block;
     }
     #ordenproduccion:checked ~ .tablas_inv_rapido .ordenproduccion{
+      display: block;
+    }
+    #codigobarras:checked ~ .tablas_inv_rapido .codigobarras{
       display: block;
     }
 }
