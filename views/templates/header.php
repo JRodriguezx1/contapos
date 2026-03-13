@@ -4,7 +4,65 @@
 <!-- <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script> -->
 
 <div class="barra-mobile">
+    <div class="flex flex-col items-center w-full">
     <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2blanco.png" alt="logoj2">
+
+    <!-- aviso de vencimiento centrado -->
+    <?php if(isset($this->getData()['Aviso_vencimiento'])): ?>
+        <div class="flex justify-center w-full px-4 mt-4">
+
+            <div class="flex items-center gap-3
+                        bg-red-50 border border-red-200
+                        text-red-800
+                        px-5 py-2
+                        rounded-full
+                        text-lg
+                        shadow-sm
+                        max-w-4xl w-full
+                        transition-all duration-300
+                        hover:shadow-md">
+
+                <!-- Icono -->
+                <span class="material-symbols-outlined 
+                            text-red-600 
+                            text-[22px] 
+                            animate-pulse 
+                            flex-shrink-0">
+                    warning
+                </span>
+
+                <!-- Contenedor -->
+                <div class="overflow-hidden w-full">
+
+                    <!-- Texto animado -->
+                    <div class="whitespace-nowrap animate-tickerMobile hover:[animation-play-state:paused]">
+
+                        <span class="font-semibold mr-3">
+                            <?php echo $this->data['msj_titulo_aviso_vencimiento']; ?>
+                        </span>
+
+                        <span class="mr-20">
+                            <?php echo $this->data['msj_texto_aviso_vencimiento']; ?>
+                        </span>
+
+                        <!-- duplicado para loop -->
+                        <span class="font-semibold mr-3">
+                            <?php echo $this->data['msj_titulo_aviso_vencimiento']; ?>
+                        </span>
+
+                        <span>
+                            <?php echo $this->data['msj_texto_aviso_vencimiento']; ?>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    <?php endif; ?>
+</div>
     <!-- <div class="menu">
         <img id="mobile-menu" src="/build/img/menu.svg" alt="imagen menu">
     </div> -->
@@ -69,14 +127,81 @@
     </div>
 </div>
 
-<div class="barra">
-    <div class="toggleanduser">
+<div class="barra flex items-center justify-between">
+    <!-- izquierda -->
+    <div class="toggleanduser flex items-center gap-3">
         <span class="sidebartoggle material-symbols-outlined">menu</span>
-        <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide"><?php echo nombreSucursal(); ?></span>
+
+        <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide">
+            <?php echo nombreSucursal(); ?>
+        </span>
     </div>
 
+
+    <!-- aviso de vencimiento centrado -->
+    <?php if(isset($this->getData()['Aviso_vencimiento'])): ?>
+        <div class="flex-1 flex justify-center px-4 hidden tlg:flex">
+
+            <div class="flex items-center gap-3
+                        bg-red-50 border border-red-200
+                        text-red-800
+                        px-5 py-2
+                        rounded-full
+                        text-lg
+                        shadow-sm
+                        tlg:max-w-2xl 2xlg:max-w-4xl w-full
+                        transition-all duration-300
+                        hover:shadow-md">
+
+                <!-- Icono -->
+                <span class="material-symbols-outlined 
+                            text-red-600 
+                            text-[22px] 
+                            animate-pulse 
+                            flex-shrink-0">
+                    warning
+                </span>
+
+                <!-- Contenedor -->
+                <div class="overflow-hidden w-full
+                            [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+
+                    <!-- Texto animado -->
+                    <div class="whitespace-nowrap animate-ticker hover:[animation-play-state:paused]">
+
+                        <span class="font-semibold mr-2">
+                            <?php echo $this->data['msj_titulo_aviso_vencimiento']; ?>
+                        </span>
+
+                        <span class="mr-40">
+                            <?php echo $this->data['msj_texto_aviso_vencimiento']; ?>
+                        </span>
+
+                        <!-- duplicado -->
+                        <span class="font-semibold mr-2">
+                            <?php echo $this->data['msj_titulo_aviso_vencimiento']; ?>
+                        </span>
+
+                        <span>
+                            <?php echo $this->data['msj_texto_aviso_vencimiento']; ?>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    <?php endif; ?>
+
+
+    <!-- derecha -->
     <div class="flex items-center gap-4 mr-4">
-        <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">Cerrar Sesión</a>
+
+        <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">
+            Cerrar Sesión
+        </a>
 
         <button type="button" data-dropdown-toggle="notification-dropdown"
             class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-300">
@@ -84,40 +209,46 @@
         </button>
 
         <button id="notification-dropdown" type="button"
-            class="group relative flex rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false"
+            class="group relative flex rounded-full focus:ring-4 focus:ring-gray-300"
+            aria-expanded="false"
             data-dropdown-toggle="dropdown">
+
             <img class="w-14 h-14 rounded-full" src="/build/img/avatar/avatar9.jpg" alt="user" />
+
             <div
                 class="absolute z-10 bg-white flex flex-col items-start top-full right-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
 
-                <!-- Nombre de sucursal actual -->
-                <!-- <span
-                    class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"><?php echo nombreSucursal(); ?></span> -->
-
-                <!-- 🔹 Selector de sucursal -->
-                <div class="px-3 py-2  w-full">
-                    <label for="selectSucursal" class="block text-lg font-medium mb-2 w-full text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3">
-                        <span class="text-indigo-600 uppercase font-semibold"><?php echo $user['nombre']; ?></span>
+                <div class="px-3 py-2 w-full">
+                    <label for="selectSucursal"
+                        class="block text-lg font-medium mb-2 w-full text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3">
+                        <span class="text-indigo-600 uppercase font-semibold">
+                            <?php echo $user['nombre']; ?>
+                        </span>
                     </label>
+
                     <select id="selectSucursal"
-                        class=" h-14 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 transition duration-200 shadow-sm text-xl">
+                        class="h-14 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-600 transition duration-200 shadow-sm text-xl">
+
                         <option value="" selected disabled>Cambiar de Sede</option>
+
                         <?php foreach($sucursales as $val): ?>
-                            <option value="<?php echo $val->id;?>"><?php echo $val->nombre;?></option>
+                            <option value="<?php echo $val->id;?>">
+                                <?php echo $val->nombre;?>
+                            </option>
                         <?php endforeach; ?>
+
                     </select>
                 </div>
 
-
-                <!-- <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
-                    href="/admin/dashboard">name@j2software.com</a> -->
                 <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
                     href="/admin/dashboard">Inicio</a>
+
                 <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
                     href="/admin/perfil">Mi Perfil</a>
-                <!-- <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
-                    href="/admin/configuracion">Ajuste</a> -->
-                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3" href="/logout">Cerrar sesión</a>
+
+                <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+                    href="/logout">Cerrar sesión</a>
+
             </div>
         </button>
     </div>

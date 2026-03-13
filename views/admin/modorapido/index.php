@@ -1,4 +1,4 @@
-<div class="h-screen modorapido">
+<div class="h-full overflow-hidden modorapido">
   <div class="h-full flex bg-gray-100 overflow-hidden">
 
     <!-- ================= COLUMNA IZQUIERDA ================= -->
@@ -20,13 +20,13 @@
                 focus:outline-none focus:ring-2 focus:ring-indigo-300"
           autofocus
         >
-        <select id="articulo" name=""
+        <!-- <select id="articulo" name=""
           class="w-full rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600    h-14 text-base px-2"
           multiple="multiple">
           <?php foreach($totalitems as $value): ?>
             <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
           <?php endforeach; ?>  
-        </select>
+        </select> -->
         
       </section>
 
@@ -50,9 +50,9 @@
     </div>
 
     <!-- ================= RESUMEN ================= -->
-    <aside class="w-[28rem] bg-white m-3 rounded shadow flex flex-col flex-none">
+    <aside class="w-[28rem] bg-white ml-3 rounded shadow flex flex-col h-full">
 
-      <div class="border-b px-4 py-2 font-semibold">Resumen</div>
+      <div class="border-b px-4 py-3 font-semibold">Resumen</div>
 
       <div class="flex-1 px-4 py-4 space-y-3 text-lg">
         <div class="flex justify-between">
@@ -69,12 +69,16 @@
         </div>
       </div>
 
-      <div class="border-t px-4 py-4 space-y-3">
-        <div class="flex justify-between text-2xl font-bold">
+      <div class="border-t px-4 py-4 mt-auto flex flex-col gap-3">
+        <div class="flex justify-between items-center text-2xl font-bold">
           <span>TOTAL</span>
           <span id="totalVenta">$0</span>
         </div>
-        <buttonid="btnCobrar" class="w-full btn-lima black-white py-3 rounded text-[20px] font-semibold hover:btn-lima">F8 · COBRAR</button>
+
+        <button id="btnCobrar"
+          class="w-full btn-lima black-white py-3 rounded text-[20px] font-semibold hover:btn-lima">
+          F8 · COBRAR
+        </button>
       </div>
     </aside>
   </div>
@@ -234,7 +238,15 @@
     ivaEl.textContent = '$' + iva.toLocaleString();
     totalEl.textContent = '$' + (subtotal + iva).toLocaleString();
     unidadesEl.textContent = unidades;
+
+     // ⭐ aquí se ejecuta
+      resaltarTotal();
   }
+
+  function resaltarTotal() {
+      totalEl.classList.add('bg-yellow-200');
+      setTimeout(() => totalEl.classList.remove('bg-yellow-200'), 200);
+    }
 
   function flashCantidad(td, color) {
     const clase = color === 'up'

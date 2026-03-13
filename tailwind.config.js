@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./views/**/*.{html,php}"], //busca en la raiz del proyecto la carpeta view y en todas las carpetas adentro los archivos de extension .html y .php
+  content: ["./views/**/*.{html,php}"], // busca en la raiz del proyecto la carpeta view y en todas las carpetas adentro los archivos de extension .html y .php
   theme: {
     extend: {
+
       screens: {
         'xsp': '530px',
         'xxs': '480px',
@@ -12,8 +13,23 @@ module.exports = {
         '2xlg': '1280px',
         'between1200and1600': { 'raw': '(min-width: 1200px) and (max-width: 1600px)' },
       },
+
+      keyframes: {
+        ticker: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        tickerMobile: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-200%)' },
+        }
+      },
+
+      animation: {
+        ticker: 'ticker 18s linear infinite',
+        tickerMobile: 'tickerMobile 41s linear infinite',
+      },
     },
   },
   plugins: [],
 }
-
