@@ -250,10 +250,11 @@
 
     <!-- Resumen -->
     <div id="resumen" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">📈 Resumen General</h3>
-      <table id="tablaResumen" class="display responsive nowrap tabla" width="100%">
+      <h3 class="text-lg font-semibold mb-4 mt-10">📈 Resumen Financiero De Ventas</h3>
+      <table id="tablaResumenVentas" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
+            <th class="px-4 py-2 border">Ventas</th>
             <th class="px-4 py-2 border">Total Ventas Productos</th>
             <th class="px-4 py-2 border">Total Costo Productos</th>
             <th class="px-4 py-2 border">Ganancia</th>
@@ -264,11 +265,11 @@
         </tbody>
       </table>
 
-      
+       <h3 class="text-lg font-semibold mb-4 mt-12">📈 Resumen Financiero De creditos</h3>
       <table id="tablaResumenCreditos" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
-            th class="px-4 py-2 border">Creditos</th>
+            <th class="px-4 py-2 border">Creditos</th>
             <th class="px-4 py-2 border">Capital Total</th>
             <th class="px-4 py-2 border">Costo Total</th>
             <th class="px-4 py-2 border">Utilidad Comercial</th>

@@ -100,19 +100,14 @@ class creditosRepository extends operationRepository{
     }
 
 
-    public function estadosFinancierosCreditosTotales(string $fechainicio, string $fechafin, int $idsucursal):array{
+    public function estadosFinancierosCreditosTotalesFinalizados(string $fechainicio, string $fechafin, int $idsucursal):array{
         $sql = "SELECT COUNT(c.id) as creditos, c.idestadocreditos as estado, c.fechainicio, 
                     SUM(c.capital+c.valorinterestotal) as capitalTotal,
                     SUM(ps.costo_total) as costo_total,
                     SUM(c.capital - ps.costo_total) AS utilidad_comercial,
                     SUM(c.capital - ps.costo_total + c.valorinterestotal) AS utilidad_proyectada,
                     SUM(IFNULL(ct.pagado, 0)) AS valor_pagado,
-                    SUM(
-                        LEAST(
-                            (c.capital - ps.costo_total + c.valorinterestotal),
-                            GREATEST(0, IFNULL(ct.pagado,0) - ps.costo_total)
-                        )
-                    ) AS utilidad_realizada
+                    GREATEST(0, SUM(ct.pagado) - SUM(ps.costo_total)) AS utilidad_realizada
                 FROM $this->table c
 
                 LEFT JOIN (

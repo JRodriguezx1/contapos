@@ -10,7 +10,8 @@
     const tablacreditosSeparados = ($('#tablacreditosSeparados') as any);
     const tablaGastos = ($('#tablaGastos') as any);
     const tablaIngresoCanalventa = ($('#tablaIngresoCanalventa') as any);
-    const tablaResumen = ($('#tablaResumen') as any);
+    const tablaResumenVentas = ($('#tablaResumenVentas') as any);
+    const tablaResumenCreditos = ($('#tablaResumenCreditos') as any);
     
     interface i_productosVendidos {
         idproducto:string,
@@ -49,14 +50,25 @@
         valor:string,
     }
     
-    interface i_resumen {
+    interface i_resumenVentas {
+        ventas:string,
         total_ventas:string,
         total_costo:string,
         ganancia:string,
         margenutilidad:string,
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumen:i_resumen[]=[];
+    interface i_resumenCreditos {
+        creditos:string,
+        capitalTotal:string,
+        costo_total:string,
+        utilidad_comercial:string,
+        utilidad_proyectada:string,
+        valor_pagado:string,
+        utilidad_realizada:string
+    }
+
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -78,7 +90,8 @@
             creditosSeparados = resultado.separados;
             gastos = resultado.gastos;
             canalVenta = resultado.canalVenta;
-            resumen = resultado.resumen;
+            resumenCreditos = resultado.resumenCreditos;
+            resumenVentas = resultado.resumenVentas;
             printProductosVendidos();
             printMediosPagos();
             printCreditosSeparados();
@@ -181,16 +194,35 @@
 
     printResumen();
     function printResumen(){
-        tablaResumen.DataTable({
+        //resumen financiero total de ventas
+        tablaResumenVentas.DataTable({
             destroy: true, // importante si recargas la tabla
-            data: resumen,
+            data: resumenVentas,
             pageLength: 25,
             order: [[ 1, 'desc' ]],
             columns: [
+                        {title: 'Ventas', data: 'ventas'},
                         {title: 'Total Ventas Productos', data: 'total_ventas', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Total Costo Productos', data: 'total_costo', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Ganancia', data: 'ganancia', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Margen Utilidad', data: 'margenutilidad', render: (data:number) => `${Number(data).toLocaleString()}%`},
+                    ],
+        });
+
+        //resumen financiero total creditos
+        tablaResumenCreditos.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: resumenCreditos,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Creditos', data: 'creditos'},
+                        {title: 'Capital Total', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Costo Total', data: 'costo_total', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Pago total', data: 'valor_pagado', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
     }
