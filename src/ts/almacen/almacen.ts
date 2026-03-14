@@ -441,6 +441,32 @@
         }
 
 
+        ///////////////////////////// INGRESAR ORDEN DE PRODUCCION /////////////////////////////////
+        
+        //SELECT2 DE itemAproducir
+        ($('#itemCodeBar') as any).select2({
+            width: '100%',
+            placeholder: "Selecciona un item",
+            maximumSelectionLength: 1,
+        });
+
+        ////// evento al select del producto a producir ////// 
+        /*$("#itemCodeBar").on('change', (e)=>{
+            const idproducto = (e.target as HTMLOptionElement).value;
+            const selectedOption = $("#itemCodeBar option:selected");
+            if(idproducto){
+                const prodund = allConversionUnidades.filter(x =>x.idproducto == idproducto);
+                mostrarSelectUnidades(prodund);
+                let producto: datosProducto; //inicializamos el objeto de tipo interfaz 
+                producto = {
+                    stock: selectedOption.data('stock'),
+                    precio_compra: selectedOption.data('precio_compra'),
+                    precio_venta: selectedOption.data('precio_venta')
+                }
+                mostrarInfoItem(producto);
+            }
+        });*/
+
     }
 
 })();

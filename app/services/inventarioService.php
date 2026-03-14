@@ -203,4 +203,13 @@ class inventarioService {
         return ['status'=>true];
     }
 
+
+    public static function generarBarCode($date){
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        
+    }
 }
