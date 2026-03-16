@@ -59,33 +59,33 @@ $estaVencido = $hoy > $fechaVencimiento;
                 <!-- ESTADO DE CUENTA -->
                 <div>
 
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">
                         Estado de cuenta
                     </h2>
 
-                    <div class="mb-4 text-sm text-gray-500">
+                    <div class="mb-4 text-base text-gray-500">
                         Tu acceso al sistema está temporalmente suspendido hasta recibir el pago.
                     </div>
 
                     <div class="bg-gray-50 rounded-xl border border-gray-200 p-6 space-y-4 text-lg">
 
                         <div class="flex justify-between border-b pb-2">
-                            <span class="text-gray-500">Sucursal</span>
+                            <span class="text-gray-600">Sucursal</span>
                             <span class="font-semibold text-gray-800"><?= $sucursal->nombre; ?></span>
                         </div>
 
                         <div class="flex justify-between border-b pb-2">
-                            <span class="text-gray-500">Plan</span>
+                            <span class="text-gray-600">Plan</span>
                             <span class="font-semibold text-gray-800"><?= $sucursal->plan->nombre; ?></span>
                         </div>
 
                         <div class="border-b pb-4">
 
-    <span class="text-gray-500 text-sm">Precio del plan</span>
+    <span class="text-gray-600 text-lg">Precio del plan</span>
 
     <div class="flex items-center justify-between mt-2">
 
-        <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-lg">
+        <span class="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-lg">
             <?= $sucursal->plan->nombre; ?>
         </span>
 
@@ -98,14 +98,14 @@ $estaVencido = $hoy > $fechaVencimiento;
 </div>
 
                         <div class="flex justify-between border-b pb-2">
-                            <span class="text-gray-500">Fecha vencimiento</span>
+                            <span class="text-gray-600">Fecha vencimiento</span>
                             <span class="font-semibold text-red-500">
                                 <?= $sucursal->fecha_corte; ?>
                             </span>
                         </div>
 
                         <div class="flex justify-between">
-                            <span class="text-gray-500">Días vencidos</span>
+                            <span class="text-gray-600">Días vencidos</span>
                             <span class="bg-red-100 text-red-600 px-3 py-1 rounded-lg font-bold">
                                 <?= $estaVencido ? $diasVencidos : 0; ?>
                             </span>
@@ -118,7 +118,7 @@ $estaVencido = $hoy > $fechaVencimiento;
                 <!-- MEDIOS DE PAGO -->
                 <div>
 
-                    <h2 class="text-xl font-bold text-gray-800 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
                         Medios de pago
                     </h2>
 
@@ -126,19 +126,19 @@ $estaVencido = $hoy > $fechaVencimiento;
 
                         <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-md transition">
 
-                            <p class="font-semibold text-gray-800 mb-3">
+                            <p class="font-semibold text-gray-800 mb-3 text-xl">
                                 Transferencia Bancaria
                             </p>
 
                             <p class="text-gray-600">Banco: Bancolombia</p>
-                            <p class="text-gray-600">Cuenta: 123456789</p>
-                            <p class="text-gray-600">Titular: Tu Empresa SAS</p>
+                            <p class="text-gray-600">Cuenta: -</p>
+                            <p class="text-gray-600">Titular: -</p>
 
                         </div>
 
                         <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-md transition">
 
-                            <p class="font-semibold text-gray-800 mb-3">
+                            <p class="font-semibold text-gray-800 mb-3 text-xl">
                                 Nequi / Daviplata
                             </p>
 
@@ -148,7 +148,7 @@ $estaVencido = $hoy > $fechaVencimiento;
 
                         <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-md transition">
 
-                            <p class="font-semibold text-gray-800 mb-3">
+                            <p class="font-semibold text-gray-800 mb-3 text-xl">
                                 Bre-B
                             </p>
 
@@ -163,9 +163,9 @@ $estaVencido = $hoy > $fechaVencimiento;
             </div>
 
             <!-- AVISO REACTIVACIÓN -->
-            <div class="text-center text-sm text-gray-500 px-6 pb-2">
+            <div class="text-center text-base text-gray-500 px-6 pb-2">
                 Tu sistema se reactivará automáticamente después de validar el pago. <br>
-                Tiempo estimado: <span class="font-semibold text-gray-700">5 minutos</span>.
+                Tiempo estimado: <span class="font-semibold text-gray-700">3 minutos</span>.
             </div>
 
             <!-- BOTONES -->
