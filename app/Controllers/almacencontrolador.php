@@ -70,9 +70,9 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $conflocal = config_local::getParamGlobal();
+    //$conflocal = config_local::getParamGlobal();
     //debuguear(userPerfil());
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, '$conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -658,7 +658,13 @@ class almacencontrolador{
 
             //$stockproducto = stockproductossucursal::uniquewhereArray(['productoid'=>$producto->id, 'sucursalid'=>id_sucursal()]);
             //$stockproducto->stock = $_POST['stockminimo'];
-            $r = $producto->actualizar();
+            try {
+              $r = $producto->actualizar();
+            } catch (\Throwable $th) {
+              $alertas['error'][] = "Error, intenta nuevamente. Error >> {$th->getMessage()}";
+              echo json_encode($alertas);
+              return;
+            }
             
             if($r){
 

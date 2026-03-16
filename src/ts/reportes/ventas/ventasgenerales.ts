@@ -217,7 +217,7 @@
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Creditos', data: 'creditos'},
-                        {title: 'Capital Total', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Credito Total', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Costo Total', data: 'costo_total', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Utilidad Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Utilidad Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
@@ -225,6 +225,18 @@
                         {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
+
+        const totalIngreso = Number(resumenVentas[0]?.total_ventas??0)+Number(resumenCreditos[0]?.valor_pagado??0);
+        const totalEgreso = Number(gastos.at(-1)?.valor ?? 0);
+        const utilidadTotal = totalIngreso - totalEgreso;
+        const margenUtilidadTotal = totalIngreso > 0 ? (utilidadTotal / totalIngreso) * 100 : 0;
+        const rentabilidadTotal = totalEgreso > 0 ? (utilidadTotal / totalEgreso) * 100 : 0;
+
+        (document.querySelector('#ingresoTotal') as HTMLElement).textContent = '$'+totalIngreso.toLocaleString();
+        (document.querySelector('#egreso') as HTMLElement).textContent = '$'+totalEgreso.toLocaleString();
+        (document.querySelector('#utilidadTotal') as HTMLElement).textContent = '$'+utilidadTotal.toLocaleString();
+        (document.querySelector('#margenUtilidadTotal') as HTMLElement).textContent = margenUtilidadTotal.toFixed(2) + '%';
+        (document.querySelector('#rentabilidadTotal') as HTMLElement).textContent = rentabilidadTotal.toFixed(2) + '%';
     }
 
     POS.callApiReporte = callApiReporte;

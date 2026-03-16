@@ -18,7 +18,7 @@
     
         const sedes = document.querySelector('#sedes');
 
-        interface datosProducto { stock: string, precio_compra: string, precio_venta: string }
+        interface datosProducto { stock?: string, sku?:string, precio_compra: string, precio_venta: string }
 
         type conversionunidadesapi = {
             id:string,
@@ -396,7 +396,7 @@
         });
 
 
-        function mostrarInfoItem(producto:{stock:string, precio_compra:string, precio_venta:string}){
+        function mostrarInfoItem(producto:{stock?:string, precio_compra:string, precio_venta:string}){
             document.querySelector('#stock')!.textContent = Number(producto.stock).toLocaleString();
             document.querySelector('#costoProduccion')!.textContent = "$"+Number(producto.precio_compra).toLocaleString();
             document.querySelector('#precioVenta')!.textContent = "$"+Number(producto.precio_venta).toLocaleString();
@@ -441,31 +441,113 @@
         }
 
 
-        ///////////////////////////// INGRESAR ORDEN DE PRODUCCION /////////////////////////////////
-        
-        //SELECT2 DE itemAproducir
+        ///////////////////////////// GENERAR CODIGOS DE BARRAS /////////////////////////////////
+        let productoCodeBar: datosProducto|undefined;
+        let imagenBarcode: string | undefined;
+
         ($('#itemCodeBar') as any).select2({
             width: '100%',
-            placeholder: "Selecciona un item",
             maximumSelectionLength: 1,
         });
 
         ////// evento al select del producto a producir ////// 
-        /*$("#itemCodeBar").on('change', (e)=>{
-            const idproducto = (e.target as HTMLOptionElement).value;
+        $("#itemCodeBar").on('change', (e)=>{
+            const idproducto = (e.target as HTMLSelectElement).value;
             const selectedOption = $("#itemCodeBar option:selected");
             if(idproducto){
-                const prodund = allConversionUnidades.filter(x =>x.idproducto == idproducto);
-                mostrarSelectUnidades(prodund);
-                let producto: datosProducto; //inicializamos el objeto de tipo interfaz 
-                producto = {
-                    stock: selectedOption.data('stock'),
+                productoCodeBar = {
+                    sku: selectedOption.data('sku'),
                     precio_compra: selectedOption.data('precio_compra'),
-                    precio_venta: selectedOption.data('precio_venta')
-                }
-                mostrarInfoItem(producto);
+                    precio_venta: selectedOption.data('precio_venta'),
+                };
+                (document.querySelector('#codigoBarras') as HTMLInputElement).value = productoCodeBar.sku??'';
             }
-        });*/
+        });
+
+        ///////btn para generar codigo de barras
+        document.querySelector('#formGenerarCodeBar')?.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            
+            if(!productoCodeBar){
+                alert('Producto no seleccionado');
+                return;
+            }
+
+            const printPrecio = document.querySelector('#precioCodeBar') as HTMLSelectElement;
+
+            const canvas = document.querySelector('#barcode') as HTMLCanvasElement;
+            const options:any = {
+                bcid: 'code128',       // tipo de código
+                text: productoCodeBar.sku,     // valor (SKU o código)
+                scale: 3,
+                height: 10,
+                includetext: false,
+                textsize: 8,
+                textyoffset: 2,
+                textxalign: 'center'
+            }
+
+            if(printPrecio.value == '1'){
+                 options.alttext = '$'+Number(productoCodeBar.precio_venta).toLocaleString();
+            }else{
+                delete options.alttext;
+            }
+
+            bwipjs.toCanvas(canvas, options);
+            imagenBarcode = canvas.toDataURL("image/png");
+
+        });
+        
+
+        document.querySelector('#btnImprimir')?.addEventListener('click', () => {
+            if(!imagenBarcode){
+                alert('Primero genere el código de barras');
+                return;
+            }
+            const ventana = window.open('', '_blank');
+            if(ventana){
+                ventana?.document.write(`
+                    <html>
+                    <head>
+                        <title>Etiqueta</title>
+                        <style>
+                            @page {
+                                size: 60mm 40mm;
+                                margin: 0;
+                            }
+                            body{
+                                margin:0;
+                                
+                            }
+
+                            .etiqueta{
+                                text-align:center;
+                                width:60mm;
+                                height:40mm;
+                            }
+
+                            img{
+                                width:100%;
+                            }
+                        </style>
+                    </head>
+
+                    <body>
+                        <div class="etiqueta">
+                            <img src="${imagenBarcode}" />
+                        </div>
+                    </body>
+                    </html>
+                `);
+                ventana.document.close();
+                ventana.onload = ()=>{
+                    ventana?.focus();
+                    ventana?.print();
+                    setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+                };
+            }
+        });
+
 
     }
 

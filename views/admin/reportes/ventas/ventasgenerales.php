@@ -270,7 +270,7 @@
         <thead class="bg-gray-100 text-gray-700">
           <tr>
             <th class="px-4 py-2 border">Creditos</th>
-            <th class="px-4 py-2 border">Capital Total</th>
+            <th class="px-4 py-2 border">Credito Total</th>
             <th class="px-4 py-2 border">Costo Total</th>
             <th class="px-4 py-2 border">Utilidad Comercial</th>
             <th class="px-4 py-2 border">Utilidad Proyectada</th>
@@ -279,6 +279,28 @@
           </tr>
         </thead>
         <tbody>
+        </tbody>
+      </table>
+      
+      <h3 class="text-lg font-semibold mb-4 mt-12">💸 Rentabilidad</h3>
+      <table id="tablaRentabilidad" class="display responsive nowrap tabla" width="100%">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 border">Ingreso total</th>
+            <th class="px-4 py-2 border">Egreso</th>
+            <th class="px-4 py-2 border">Utilidad</th>
+            <th class="px-4 py-2 border">Margen Utilidad</th>
+            <th class="px-4 py-2 border">Rentabilidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="ingresoTotal" class=""></td>
+            <td id="egreso" class=""></td>
+            <td id="utilidadTotal" class=""></td>
+            <td id="margenUtilidadTotal" class=""></td>
+            <td id="rentabilidadTotal" class=""></td>
+          </tr>
         </tbody>
       </table>
     </div>

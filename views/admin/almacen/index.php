@@ -67,7 +67,7 @@
         <?php include __DIR__. "/ordenproduccion.php"; ?>
       </div>
 
-      <div class="codigobarras accordion_tab_content pt-12 bg-gray-50  sm:pt-20 pb-12 sm:pb-16">
+      <div class="codigobarras accordion_tab_content pt-12">
         <?php include __DIR__. "/codigoBarras.php"; ?>
       </div>
 
