@@ -17,6 +17,7 @@ use App\Models\gastos;
 use App\Models\caja\cierrescajas;
 use App\Models\compras;
 use App\Models\detallecompra;
+use App\Models\inventario\costos;
 use App\Models\inventario\detalletrasladoinv;
 use App\Models\inventario\movimientos_insumos;
 use App\Models\inventario\movimientos_productos;
@@ -1063,6 +1064,8 @@ class almacencontrolador{
                 $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
                 $returnProductos = stockproductossucursal::camposJoinObj($query);
                 stockService::upStock_movimientoProductos($resultArray['productos'], $returnProductos, 'compra', 'ingreso de unidades por compra');
+                //registrar el historial de costos
+                costos::camposaddinv($resultArray['productos'], ['precio_compra']);
               }
               if(!empty($resultArray['subproductos']) && $invpx && $invpxs){
                 $invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
@@ -1432,7 +1435,7 @@ class almacencontrolador{
             }
         }
         $alertas = ActiveRecord::getAlertas();
-        echo json_encode($alertas); 
+        echo json_encode($alertas);
     }
 
 
