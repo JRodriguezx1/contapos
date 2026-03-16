@@ -216,6 +216,7 @@ $router->get('/admin/api/allproveedores', [almacencontrolador::class, 'allprovee
 $router->post('/admin/api/crearProveedor', [almacencontrolador::class, 'crearProveedor']); //api llamada desde gestionproveedores.js para crear proveedores
 $router->post('/admin/api/actualizarProveedor', [almacencontrolador::class, 'actualizarProveedor']); //api llamada desde gestionproveedores.js para actualizar proveedores
 $router->post('/admin/api/eliminarProveedor', [almacencontrolador::class, 'eliminarProveedor']); //api llamada desde gestionproveedores.js para eliminar proveedores
+$router->post('/admin/api/generarBarCode', [almacencontrolador::class, 'generarBarCode']); // me trae todos los proveedores desde gestionproveedores.js
 
 //$router->get('/admin/api/allordenestrasladoinv', [trasladosinvcontrolador::class, 'allordenestrasladoinv']); //trae todos las ordenes de traslados
 $router->get('/admin/api/idOrdenTrasladoSolicitudInv', [trasladosinvcontrolador::class, 'idOrdenTrasladoSolicitudInv']); //trae todos las ordenes de traslados

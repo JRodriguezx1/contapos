@@ -46,4 +46,9 @@ class MembershipMiddleware{
     }
 
 
+    public function estadoConsecutivos():void{
+        
+    }
+
+
 }

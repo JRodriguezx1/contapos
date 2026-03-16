@@ -70,9 +70,9 @@ class almacencontrolador{
             
     }
     //$alertas = usuarios::getAlertas();
-    $conflocal = config_local::getParamGlobal();
+    //$conflocal = config_local::getParamGlobal();
     //debuguear(userPerfil());
-    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, '$conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/almacen/index', ['titulo'=>'Almacen', 'proveedores'=>$proveedores, 'productos'=>$productos, 'subproductos'=>$subproductos, 'valorInv'=>$valorInv, 'cantidadProductos'=>$cantidadProductos, 'cantidadReferencias'=>$cantidadReferencias, 'cantidadCategorias'=>$cantidadCategorias, 'bajoStock'=>$bajoStock, 'productosAgotados'=>$productosAgotados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -169,6 +169,9 @@ class almacencontrolador{
           move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
         }
         $producto->categoria = $categoria->nombre;//categorias::uncampo('id', $producto->idcategoria, 'nombre');
+        //generar SKU
+        $idx = $producto->ultimoindice();
+        $producto->sku = str_pad($idx, 6, '0', STR_PAD_LEFT);
         try {
           $r = $producto->crear_guardar();
         } catch (\Throwable $th) {
@@ -655,7 +658,13 @@ class almacencontrolador{
 
             //$stockproducto = stockproductossucursal::uniquewhereArray(['productoid'=>$producto->id, 'sucursalid'=>id_sucursal()]);
             //$stockproducto->stock = $_POST['stockminimo'];
-            $r = $producto->actualizar();
+            try {
+              $r = $producto->actualizar();
+            } catch (\Throwable $th) {
+              $alertas['error'][] = "Error, intenta nuevamente. Error >> {$th->getMessage()}";
+              echo json_encode($alertas);
+              return;
+            }
             
             if($r){
 
@@ -1424,5 +1433,13 @@ class almacencontrolador{
         echo json_encode($alertas); 
     }
 
+
+    public static function generarBarCode(){
+        $alertas = []; 
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = inventarioService::generarBarCode($_POST);
+        }
+        echo json_encode($alertas);  
+    }
 
 }

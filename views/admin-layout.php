@@ -58,9 +58,7 @@
     <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.0.3/b-3.2.4/b-colvis-3.2.4/b-html5-3.2.4/r-3.0.1/datatables.min.js"></script> <!-- funciones requeridaas para datatables -->
     <script src="https://cdn.datatables.net/buttons/3.2.4/js/buttons.print.min.js"></script> <!-- para habilitar btn de imprimir -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
-
-    <!--<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/2.0.10/bwip-js-min.js" integrity="sha512-5uGnKj8h56cEozQZHq09metdJx1V6UM8qs7M+bG7EJMKYAKBl+CWo1SdmqU9RZTTlzIIa4xTCR5LWBY3spP9zw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     
