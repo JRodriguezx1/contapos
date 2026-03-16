@@ -468,8 +468,8 @@
         document.querySelector('#formGenerarCodeBar')?.addEventListener('submit', (e)=>{
             e.preventDefault();
             
-            if(!productoCodeBar){
-                alert('Producto no seleccionado');
+            if(!productoCodeBar || !productoCodeBar.sku){
+                alert('Producto no seleccionado o no tiene codigo de barras');
                 return;
             }
 
@@ -478,7 +478,7 @@
             const canvas = document.querySelector('#barcode') as HTMLCanvasElement;
             const options:any = {
                 bcid: 'code128',       // tipo de código
-                text: productoCodeBar.sku,     // valor (SKU o código)
+                text: productoCodeBar.sku+'',     // valor (SKU o código)
                 scale: 3,
                 height: 10,
                 includetext: false,

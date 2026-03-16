@@ -169,9 +169,11 @@ class almacencontrolador{
           move_uploaded_file($url_temp, $_SERVER['DOCUMENT_ROOT']."/build/img/".$producto->foto);
         }
         $producto->categoria = $categoria->nombre;//categorias::uncampo('id', $producto->idcategoria, 'nombre');
-        //generar SKU
-        $idx = $producto->ultimoindice();
-        $producto->sku = str_pad($idx, 6, '0', STR_PAD_LEFT);
+        //generar SKU si no se especifica
+        if(!$producto->sku){
+          $idx = $producto->ultimoindice();
+          $producto->sku = str_pad($idx, 6, '0', STR_PAD_LEFT);
+        }
         try {
           $r = $producto->crear_guardar();
         } catch (\Throwable $th) {
