@@ -191,7 +191,7 @@ $estaVencido = $hoy > $fechaVencimiento;
 
         </div>
 
-        <p class="text-center text-sm text-gray-500 mt-10">
+        <p class="text-center text-base text-gray-500 mt-10">
             © <?= date('Y') ?> J2 SOFTWARE MULTISUCURSAL
         </p>
 
