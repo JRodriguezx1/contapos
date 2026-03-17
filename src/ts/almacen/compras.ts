@@ -260,16 +260,27 @@
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json();
                 if(resultado.exito !== undefined){
-                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                /////// reinciar campos de la compra
-                vaciarcompra();
-                (document.querySelector('#formComprar') as HTMLFormElement)?.reset();
+                    msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                    /////// reinciar campos de la compra
+                    vaciarcompra();
+                    (document.querySelector('#formComprar') as HTMLFormElement)?.reset();
+                    //imprimir detalle de compra
+                    if((document.querySelector('#imprimirComprobanteCompra')as HTMLInputElement).checked){
+                        printComprobanteCompra(resultado.idcompra);
+                    }
                 }else{
-                msjalertToast('error', '¡Error!', resultado.error[0]);
+                    msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
             } catch (error) {
                 console.log(error);
             }
+        }
+
+
+        function printComprobanteCompra(idcompra:string){
+            setTimeout(() => {
+                window.open("/admin/printComprobanteCompraPDF?id=" + idcompra, "_blank");  //llama a printcontrolador
+            }, 1000);
         }
 
         function validarValorCompra():boolean{

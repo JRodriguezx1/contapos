@@ -526,7 +526,7 @@
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
       try {
-        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php
+        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
         const respuesta = await fetch(url, {
           method: 'POST',
           headers: { "Accept": "application/json", "Content-Type": "application/json" },

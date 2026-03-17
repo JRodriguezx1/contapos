@@ -314,7 +314,7 @@
         }
 
 
-         public function generarComptobanteAono($sucursal, $credito, $cuota, $cliente,  $productos=[]){
+        public function generarComptobanteAbono($sucursal, $credito, $cuota, $cliente,  $productos=[]){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -356,5 +356,83 @@
             $this->pdf->Ln(5);
             # Nombre del archivo PDF #
             $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
-         }
+        }
+
+
+        public function generarComprobanteCompra($sucursal, $compra, $proveedor, $productos=[]){
+            $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
+            if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
+            $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
+            $this->pdf->Ln(25);
+            # Encabezado y datos de la empresa #
+             $this->pdf->SetFont('Arial','B',10);
+            $this->pdf->SetTextColor(0,0,0);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
+            $this->pdf->SetFont('Arial','',9);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$sucursal->email),0,'C',false);
+            
+            $this->pdf->SetFont('Arial','',9);
+
+            $this->pdf->Ln(1);
+            $this->pdf->Line(4, $this->pdf->GetY(), 76, $this->pdf->GetY());
+            $this->pdf->Ln(3);
+
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Proveedor: ".$proveedor->nombre),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".$proveedor->identificacion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$proveedor->telefono),0,'C',false);
+
+            $this->pdf->SetFont('Arial','B',9);
+            $this->pdf->MultiCell(0,5, iconv("UTF-8","ISO-8859-1","COMPROBANTE DE COMPRA"),0,'C');
+
+            $this->pdf->SetFont('Arial','',8);
+            $this->pdf->Cell(0,5,"No: ".$compra->id,0,1,'C');
+            $this->pdf->Cell(0,5,"Fecha: ".$compra->fecha,0,1,'C');
+
+            $this->pdf->Ln(2);
+            $this->pdf->Line(4, $this->pdf->GetY(), 76, $this->pdf->GetY());
+            $this->pdf->Ln(3);
+
+            $this->pdf->SetFont('Arial','B',8);
+
+            //PRODUCTOS
+            // Encabezados
+            $this->pdf->Cell(30,5,'Producto',0,0);
+            $this->pdf->Cell(10,5,'Cant',0,0,'C');
+            $this->pdf->Cell(15,5,'Precio',0,0,'R');
+            $this->pdf->Cell(15,5,'Total',0,1,'R');
+
+            $this->pdf->SetFont('Arial','',8);
+
+            foreach($productos as $producto){
+
+                $nombre = iconv("UTF-8","ISO-8859-1",$producto->nombre);
+
+                // Nombre en varias líneas si es largo
+                $this->pdf->MultiCell(30,4,$nombre,0);
+                
+                $y = $this->pdf->GetY() - 4;
+
+                $this->pdf->SetXY(34, $y);
+                $this->pdf->Cell(10,4,$producto->cantidad,0,0,'C');
+
+                $this->pdf->Cell(15,4,number_format($producto->precio,0),0,0,'R');
+
+                $this->pdf->Cell(15,4,number_format($producto->total,0),0,1,'R');
+            }
+
+            //TOTALES
+            $this->pdf->Ln(2);
+            $this->pdf->Line(4, $this->pdf->GetY(), 76, $this->pdf->GetY());
+            $this->pdf->Ln(3);
+
+            $this->pdf->SetFont('Arial','B',9);
+
+            $this->pdf->Cell(45,5,'TOTAL:',0,0,'R');
+            $this->pdf->Cell(25,5,number_format($compra->total,0),0,1,'R');
+
+
+        }
     }

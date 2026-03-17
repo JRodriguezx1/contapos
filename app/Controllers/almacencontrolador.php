@@ -1117,6 +1117,7 @@ class almacencontrolador{
                         $ruc = $ultimocierre->actualizar();
                         if($ruc){
                           $alertas['exito'][] = "Gasto de compra registrado correctamente";
+                          $alertas['idcompra'] = $r[1];
                         }else{
                           $alertas['error'][] = "error al actualizar los gastos de compra en el cierre de caja actual";
                           /// borrar ultimo registro guardado de $ingresocaja

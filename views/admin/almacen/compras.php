@@ -156,11 +156,11 @@
                     </div>
                 </div>
                 <div class=" flex-1 mb-4 sm:m-0">
-                    <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
+                    <label for="imprimirComprobanteCompra" class="flex flex-col items-center cursor-pointer">
                         <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>
-                        <input 
-                            id="imprimirComprobanteAbonoinicial" 
-                            name="imprimirComprobanteAbonoinicial" 
+                        <input
+                            id="imprimirComprobanteCompra" 
+                            name="imprimirComprobanteCompra"
                             value="1" 
                             type="checkbox" 
                             class="sr-only peer"
