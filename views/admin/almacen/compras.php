@@ -144,8 +144,8 @@
                 </div>
             </div>
 
-            <div class="">
-                <div class="mb-4 md:w-1/2">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div class="mb-4 sm:w-1/2">
                     <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
                     <div class="mt-2 grid grid-cols-1">
                         <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
@@ -155,8 +155,21 @@
                         </select>
                     </div>
                 </div>
-                <div>
-                    
+                <div class=" flex-1 mb-4 sm:m-0">
+                    <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
+                        <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>
+                        <input 
+                            id="imprimirComprobanteAbonoinicial" 
+                            name="imprimirComprobanteAbonoinicial" 
+                            value="1" 
+                            type="checkbox" 
+                            class="sr-only peer"
+                            <?php //echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?>
+                            >
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+                        </div>
+                    </label>
                 </div>
             </div>
 

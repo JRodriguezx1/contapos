@@ -17,7 +17,7 @@ use App\Models\gastos;
 use App\Models\caja\cierrescajas;
 use App\Models\compras;
 use App\Models\detallecompra;
-use App\Models\inventario\costos;
+use App\Models\inventario\costosproductos;
 use App\Models\inventario\detalletrasladoinv;
 use App\Models\inventario\movimientos_insumos;
 use App\Models\inventario\movimientos_productos;
@@ -1001,10 +1001,12 @@ class almacencontrolador{
       $objeto->id = $objeto->iditem;
       //unset($objeto->iditem);
       if($objeto->tipo == 0){
+        $objeto->productofk = $objeto->iditem;
         $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
         $acumulador['soloIdproductos'][] = $objeto->id;
       }
       else{
+        $objeto->idsubproductoid = $objeto->iditem;
         $acumulador['subproductos'][] = $objeto;
         $acumulador['soloIdinsumos'][] = $objeto->id;
       }
@@ -1065,7 +1067,7 @@ class almacencontrolador{
                 $returnProductos = stockproductossucursal::camposJoinObj($query);
                 stockService::upStock_movimientoProductos($resultArray['productos'], $returnProductos, 'compra', 'ingreso de unidades por compra');
                 //registrar el historial de costos
-                costos::camposaddinv($resultArray['productos'], ['precio_compra']);
+                //costosproductos::
               }
               if(!empty($resultArray['subproductos']) && $invpx && $invpxs){
                 $invsx = subproductos::camposaddinv($resultArray['subproductos'], ['stock', 'precio_compra']);
