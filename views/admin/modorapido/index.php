@@ -20,13 +20,13 @@
                 focus:outline-none focus:ring-2 focus:ring-indigo-300"
           autofocus
         >
-        <!-- <select id="articulo" name=""
+         <select id="articulo" name=""
           class="w-full rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600    h-14 text-base px-2"
           multiple="multiple">
-          <?php foreach($totalitems as $value): ?>
+          <?php foreach($productos as $value): ?>
             <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
           <?php endforeach; ?>  
-        </select> -->
+        </select> 
         
       </section>
 

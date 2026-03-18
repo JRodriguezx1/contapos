@@ -27,7 +27,7 @@
         //idservicios:{idempleado:string, idservicio:string}[]
         };
 
-        let carrito:{iditem:string, idpx:string, idsx:string, tipo: string, nombreitem:string, unidad:string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
+        let carrito:{iditem:string, idpx:string, idsx:string, tipocosto:string, tipo: string, nombreitem:string, unidad:string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
         let allConversionUnidades:conversionunidadesapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
@@ -96,10 +96,11 @@
                 const index = carrito.findIndex(x=>x.iditem==datos.id&&x.tipo==datos.tipo);
                 if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
                     const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; //products es el arreglo de todos los productos traido por api
-                    const item:{iditem: string, idpx: string, idsx: string, tipo: string, nombreitem: string, unidad: string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
+                    const item:{iditem: string, idpx: string, idsx: string, tipocosto:string, tipo: string, nombreitem: string, unidad: string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
                         iditem: itemselected?.id!,
                         idpx: itemselected.tipo=='0'?itemselected.id:'NULL',
                         idsx: itemselected.tipo=='1'?itemselected.id:'NULL',
+                        tipocosto: '1',
                         tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
                         nombreitem: itemselected.text,
                         unidad: itemselected.unidadmedida,
@@ -229,6 +230,7 @@
         document.querySelector('#formComprar')?.addEventListener('submit', e=>{
             e.preventDefault();
             miDialogoRegistrarcompra.showModal();
+            (document.querySelector('#numOrden') as HTMLSpanElement).textContent = nfactura.value;
             document.addEventListener("click", cerrarDialogoExterno);
         });
 
