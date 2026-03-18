@@ -261,13 +261,13 @@
                 const resultado = await respuesta.json();
                 if(resultado.exito !== undefined){
                     msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                    //imprimir detalle de compra
+                    if((document.querySelector('#imprimirComprobanteCompra') as HTMLInputElement).checked){
+                        printComprobanteCompra(resultado.idcompra);
+                    }
                     /////// reinciar campos de la compra
                     vaciarcompra();
                     (document.querySelector('#formComprar') as HTMLFormElement)?.reset();
-                    //imprimir detalle de compra
-                    if((document.querySelector('#imprimirComprobanteCompra')as HTMLInputElement).checked){
-                        printComprobanteCompra(resultado.idcompra);
-                    }
                 }else{
                     msjalertToast('error', '¡Error!', resultado.error[0]);
                 }

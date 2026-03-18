@@ -188,7 +188,7 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","COD000001V0001"),0,'C',false);
             
             # Nombre del archivo PDF #
-            $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
+            $this->pdf->Output("I","factura $factura->prefijo $factura->num_consecutivo.pdf",true);
         }
 
 
@@ -310,7 +310,7 @@
             $this->pdf->SetFont('Arial','B',9);
             $this->pdf->Cell(0,7,iconv("UTF-8", "ISO-8859-1","Gracias por su compra"),'',0,'C');
             # Nombre del archivo PDF #
-            $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
+            $this->pdf->Output("I","Credito $credito->num_orden.pdf",true);
         }
 
 
@@ -381,15 +381,15 @@
             $this->pdf->Ln(3);
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Proveedor: ".$proveedor->nombre),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".$proveedor->identificacion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".$proveedor->nit),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$proveedor->telefono),0,'C',false);
 
             $this->pdf->SetFont('Arial','B',9);
             $this->pdf->MultiCell(0,5, iconv("UTF-8","ISO-8859-1","COMPROBANTE DE COMPRA"),0,'C');
 
             $this->pdf->SetFont('Arial','',8);
-            $this->pdf->Cell(0,5,"No: ".$compra->id,0,1,'C');
-            $this->pdf->Cell(0,5,"Fecha: ".$compra->fecha,0,1,'C');
+            $this->pdf->Cell(0,5,"No: ".$compra->nfactura,0,1,'C');
+            $this->pdf->Cell(0,5,"Fecha: ".$compra->fechacompra,0,1,'C');
 
             $this->pdf->Ln(2);
             $this->pdf->Line(4, $this->pdf->GetY(), 76, $this->pdf->GetY());
@@ -408,8 +408,7 @@
 
             foreach($productos as $producto){
 
-                $nombre = iconv("UTF-8","ISO-8859-1",$producto->nombre);
-
+                $nombre = iconv("UTF-8","ISO-8859-1",$producto->nombreitem);
                 // Nombre en varias líneas si es largo
                 $this->pdf->MultiCell(30,4,$nombre,0);
                 
@@ -418,9 +417,9 @@
                 $this->pdf->SetXY(34, $y);
                 $this->pdf->Cell(10,4,$producto->cantidad,0,0,'C');
 
-                $this->pdf->Cell(15,4,number_format($producto->precio,0),0,0,'R');
+                $this->pdf->Cell(15,4,number_format($producto->valorunidad,0),0,0,'R');
 
-                $this->pdf->Cell(15,4,number_format($producto->total,0),0,1,'R');
+                $this->pdf->Cell(15,4,number_format($producto->valorcompra,0),0,1,'R');
             }
 
             //TOTALES
@@ -431,8 +430,10 @@
             $this->pdf->SetFont('Arial','B',9);
 
             $this->pdf->Cell(45,5,'TOTAL:',0,0,'R');
-            $this->pdf->Cell(25,5,number_format($compra->total,0),0,1,'R');
+            $this->pdf->Cell(25,5,number_format($compra->valortotal,0),0,1,'R');
 
+            # Nombre del archivo PDF #
+            $this->pdf->Output("I","comprobante $compra->nfactura - $compra->id.pdf",true);
 
         }
     }
