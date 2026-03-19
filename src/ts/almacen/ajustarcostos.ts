@@ -55,17 +55,17 @@
 
         //tablaAjustarCostos = ($('#tablaAjustarCostos') as any).DataTable(configdatatables);
         
-        document.querySelector('#tablaAjustarCostos')?.addEventListener('input', (e:Event)=>{
+        document.querySelector('#tablaAjustarCostos')?.addEventListener('focusout', (e:Event)=>{
             var input = e.target as HTMLInputElement;
             let tipoelemento:string = '', idelemento:string = '';
-            if((input as HTMLInputElement).classList.contains('inputAjustarCosto')){
+            if(input.classList.contains('inputAjustarCosto')){
                 
                 var tr = input.closest('tr');
                 const selectUnidad = tr?.querySelector('.formulario__select') as HTMLSelectElement;
                 const factor:number = Number(selectUnidad.options[selectUnidad.selectedIndex].dataset.factor);
                 
-                var trx = input.closest('.fila') as HTMLElement;
-                if(!trx)trx = input.closest('tr')?.previousSibling as HTMLElement;
+                var trx = input.closest('.fila') as HTMLElement;  //fila padre
+                if(!trx)trx = tr?.previousSibling as HTMLElement;
 
                 if(trx.classList.contains('producto')){
                     idelemento = trx.dataset.idproducto!;
@@ -77,6 +77,7 @@
                 }
 
                 ////////////// enviar datos por api para actualizar costos /////////////
+                if(Number(input.value) != Number(trx.dataset?.costo||0))
                 actualizarcostos(tipoelemento, idelemento, factor, input);
             }
         });

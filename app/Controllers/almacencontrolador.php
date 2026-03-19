@@ -651,20 +651,22 @@ class almacencontrolador{
             ///// si de simple paso a compuesto, validar que el producto existe en productos_sub
             ///// si producto existe en productos_sub, realizar sumatoria en la tabla productos_sub para el precio de compra
             ///// si no existe, establer valor de compra en 0
+            $costo = $producto->precio_compra;
             if($tipo == 0 && $producto->tipoproducto == 1){
-              $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo');
+              $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo')??0;
               if($costo){
                 $producto->precio_compra = $costo;
-                //actualizar historico de costo
-
               }else{
-                $producto->precio_compra = 0;
+                $producto->precio_compra = $costo;
               }
             }
+            //actualizar historico de costo
+            $costoProducto = new costosproductos(['productofk'=>$producto->id, 'precio_compra'=>$costo]);
 
             //$stockproducto = stockproductossucursal::uniquewhereArray(['productoid'=>$producto->id, 'sucursalid'=>id_sucursal()]);
             //$stockproducto->stock = $_POST['stockminimo'];
             try {
+              $costoProducto->crear_guardar();
               $r = $producto->actualizar();
             } catch (\Throwable $th) {
               $alertas['error'][] = "Error, intenta nuevamente. Error >> {$th->getMessage()}";
@@ -762,6 +764,7 @@ class almacencontrolador{
     //session_start();
     $alertas = [];
     //$unidadmedida = unidadesmedida::find('id', $_POST['id_unidadmedida']);
+    $costosProductos = new costosproductos();
     $subproducto = subproductos::find('id', $_POST['id']);
     $idunidadmedidaDB = $subproducto->id_unidadmedida;  //obtener el id de unidad de medida actual del subproducto
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
@@ -793,18 +796,22 @@ class almacencontrolador{
             }
             
             //&& $subproducto->precio_compra!=$_POST['precio_compra']
-            if(isset($alertas['exito'])){
+            if(isset($alertas['exito'])&& $subproducto->precio_compra!=$_POST['precio_compra']){
               ///// actualizar costo en tabla emsanblaje 'productos_sub'  //////
-              $ubcostoEnsambla = productos_sub::actualizarLibre("UPDATE productos_sub SET costo = cantidadsubproducto*$subproducto->precio_compra WHERE id_subproducto = $subproducto->id;"); 
+              $subcostoEnsambla = productos_sub::actualizarLibre("UPDATE productos_sub SET costo = cantidadsubproducto*$subproducto->precio_compra WHERE id_subproducto = $subproducto->id;"); 
+              //actualizar historial de costo insumo
+              $costosInsumos = new costosinsumos(['idsubproductoid'=>$subproducto->id, 'precio_compra'=>$subproducto->precio_compra]);
+              $costosInsumos->crear_guardar();
               ////// Obtener la suma de los subproductos que pertenece a un producto  //////
-              $sql = "SELECT SUM(costo) AS precio_compra, id_producto AS id FROM productos_sub 
+              $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto as productofk, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id
                       WHERE id_producto IN (SELECT id_producto FROM productos_sub WHERE id_subproducto = $subproducto->id) 
                       GROUP BY id_producto;";
               $costos = productos_sub::camposJoinObj($sql); //costos = [{id:1, valor: 44}, {}]
               //////// actualizar costo (precio de compra) de productos compuestos  /////
               if(!empty($costos))
               $costoproduct = productos::updatemultiregobj($costos, ['precio_compra']);
-            //actualizar historico de costo
+              //actualizar historico de costo producto compuesto
+              $costosProductos->crear_varios_reg_arrayobj($costos);
             }
           
           }else{
@@ -820,9 +827,10 @@ class almacencontrolador{
   public static function eliminarSubProducto(){
     //session_start();
     $alertas = [];
+    $costosProductos = new costosproductos();
     $subproducto = subproductos::find('id', $_POST['id']);
     ////// Obtener la suma de los subproductos menos el que se va a eliminar que pertenece a un producto  //////
-    $sql = "SELECT SUM(costo) AS precio_compra, id_producto AS id FROM productos_sub 
+    $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto as productofk, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id
     WHERE id_producto IN (SELECT id_producto FROM productos_sub WHERE id_subproducto = $subproducto->id) AND id_subproducto != $subproducto->id 
     GROUP BY id_producto;";
     $costos = productos_sub::camposJoinObj($sql); //costos = [{id:1, valor: 44}, {}]
@@ -832,7 +840,8 @@ class almacencontrolador{
             //////// actualizar costo (precio de compra) de productos compuestos  /////
             if(!empty($costos)){
               $costoproduct = productos::updatemultiregobj($costos, ['precio_compra']);
-              //actualizar historico de costo
+              //actualizar historico de costo de producto compuesto
+              $costosProductos->crear_varios_reg_arrayobj($costos);
               if($costoproduct){
                 $alertas['exito'][] = "subproducto eliminado.";
               }else{
@@ -905,8 +914,11 @@ class almacencontrolador{
       if(isset($alertas['exito'])){
         $producto = productos::find('id', $ensamblar->id_producto);
         $costo = productos_sub::sumcolum('id_producto', $producto->id, 'costo');
-        $producto->precio_compra = $costo;
+        $producto->precio_compra = $costo/$producto->rendimientoestandar;
         $rap = $producto->actualizar();
+        //actualizar historico de producto compuesto
+        $costosProductos = new costosproductos(['productofk'=>$producto->id, 'precio_compra'=>$producto->precio_compra]);
+        $costosProductos->crear_guardar();
       }
     }
     echo json_encode($alertas);
@@ -941,6 +953,7 @@ class almacencontrolador{
 
   public static function actualizarcostos(){  //asociar un o unos subproductos a un producto principal
     //session_start();
+    $costosProductos = new costosproductos();
     $alertas = [];
     $tipoelemento = $_POST['tipoelemento'];
     if($tipoelemento == 1){  // 1 = subproducto
@@ -955,11 +968,13 @@ class almacencontrolador{
         if($r){
           $alertas['exito'][] = 1;
           if($tipoelemento == 1){ //si el item es subproducto
+            //actualizar historial de costo de insumo
+            $costosInsumos = new costosinsumos(['idsubproductoid'=>$element->id, 'precio_compra'=>$element->precio_compra]);
+            $costosInsumos->crear_guardar();
             ///// actualizar costo en tabla ensamblaje productos_sub  //////
-            $ubcostoEnsambla = productos_sub::actualizarLibre("UPDATE productos_sub SET costo = cantidadsubproducto*$element->precio_compra WHERE id_subproducto = $element->id;");
-            
+            $s = productos_sub::actualizarLibre("UPDATE productos_sub SET costo = cantidadsubproducto*$element->precio_compra WHERE id_subproducto = $element->id;");
             ////// Obtener la suma de los subproductos que pertenece a un producto  //////
-            $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id
+            $sql = "SELECT SUM(costo)/productos.rendimientoestandar AS precio_compra, id_producto as productofk, id_producto AS id FROM productos_sub JOIN productos ON productos_sub.id_producto = productos.id
                     WHERE id_producto IN (SELECT id_producto FROM productos_sub WHERE id_subproducto = $element->id) 
                     GROUP BY id_producto;";
             $costos = productos_sub::camposJoinObj($sql); //costos = [{id:1, valor: 44}, {}]
@@ -967,6 +982,8 @@ class almacencontrolador{
             //////// actualizar costo (precio de compra) de productos compuestos  /////
             if(!empty($costos))
             $costoproduct = productos::updatemultiregobj($costos, ['precio_compra']);
+            //actualizar historico de costos de productos compuestos
+            $costosProductos->crear_varios_reg_arrayobj($costos);
           }
         }else{
           $alertas['error'][] = "Error, intenta nuevamente";
