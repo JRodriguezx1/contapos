@@ -119,9 +119,10 @@ class ActiveRecord {
         foreach($arrays as $key => $value){
             ////// este ciclo se hace por lo que no se esta instanciando el objeto, con esto tomo el objeto y le cargo valores
             foreach(static::$columnasDB as $columdb){
-                if($columdb == 'id')continue;
+                if($columdb == 'id' || !property_exists($value, $columdb))continue;
                 $this->$columdb = $value->$columdb;
             }/////ya se lleno la primera vez el objeto no instanciado !primer registro¡////
+
             $atributos = $this->sanitizar_datos();
             if(array_key_last($arrays) == $key){
                 $string2 .= "('".join("', '", array_values($atributos))."');";
@@ -129,6 +130,7 @@ class ActiveRecord {
                 $string2 .= "('".join("', '", array_values($atributos))."'), ";
             }
         }
+
         $string2 = str_replace("'NULL'", 'NULL', $string2);
         $string1 = join(', ', array_keys($atributos));
         $sql = "INSERT INTO ".static::$tabla."(".$string1.") VALUES".$string2;
