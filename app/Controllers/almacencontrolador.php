@@ -559,6 +559,24 @@ class almacencontrolador{
   }
 
 
+  public static function cambioPrecios(Router $router){
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    
+    $router->render('admin/almacen/cambioPrecios', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'sucursales'=>sucursales::all()]);
+  }
+
+
+  public static function estadisticas(Router $router){
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    
+    $router->render('admin/almacen/estadisticas', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'sucursales'=>sucursales::all()]);
+  }
+
+
   ////////////////////////////   API   //////////////////////////////
   public static function actualizar_categoria(){ //actualizar editar categoria
     //session_start();

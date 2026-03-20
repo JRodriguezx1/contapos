@@ -1,8 +1,9 @@
 (()=>{
     if(document.querySelector('.almacen')){
         const btntrasladoinvnetario = document.querySelector('#btntrasladoinvnetario') as HTMLInputElement;
-        const btnXCerrarTrasladoInvnetario = document.querySelector('#btnXCerrarTrasladoInvnetario') as HTMLButtonElement;
+        const btnMasOpciones = document.querySelector('#btnMasOpciones') as HTMLInputElement;
         const miDialogoTrasladoInvnetario = document.querySelector('#miDialogoTrasladoInvnetario') as any;
+        const miDialogoMasOpciones = document.querySelector('#miDialogoMasOpciones') as any;
         const reinciarinv = document.querySelector('#reinciarinv') as HTMLButtonElement;
         const miDialogoStock = document.querySelector('#miDialogoStock') as any;
         const modalStock = document.querySelector('#modalStock') as HTMLElement;
@@ -51,9 +52,15 @@
             }
         })();
 
-        //apertura de la venta modal para las opcionesde traslado de inventario
+        //apertura de la ventana modal para las opcionesde traslado de inventario
         btntrasladoinvnetario.addEventListener('click', ()=>{
             miDialogoTrasladoInvnetario.showModal();
+            document.addEventListener("click", cerrarDialogoExterno);
+        });
+
+        //apertura de la ventana modal para las opcionesde traslado de inventario
+        btnMasOpciones.addEventListener('click', ()=>{
+            miDialogoMasOpciones.showModal();
             document.addEventListener("click", cerrarDialogoExterno);
         });
 
@@ -431,11 +438,12 @@
 
 
         function cerrarDialogoExterno(event:Event) {
-            const btnxcerrartrasInv = (event.target as HTMLElement).parentElement?.id;
-            if (event.target === miDialogoTrasladoInvnetario || btnxcerrartrasInv == "btnXCerrarTrasladoInvnetario" || event.target === btnXCerrarTrasladoInvnetario || event.target === miDialogoStock || event.target === miDialogoIngresarProduccion || (event.target as HTMLInputElement).value === 'salir') {
+            const f = event.target;
+            if (f === miDialogoTrasladoInvnetario || f === miDialogoMasOpciones || f === miDialogoStock || f === miDialogoIngresarProduccion || (f as HTMLInputElement).value === 'salir' || (f as HTMLElement).id == 'btnXCerrarTrasladoInvnetario' || (f as HTMLElement).id == 'btnXCerrarMasOpciones') {
                 miDialogoStock.close();
                 miDialogoIngresarProduccion.close();
                 miDialogoTrasladoInvnetario.close();
+                miDialogoMasOpciones.close();
                 document.removeEventListener("click", cerrarDialogoExterno);
             }
         }

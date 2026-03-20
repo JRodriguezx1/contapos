@@ -1,5 +1,5 @@
 (()=>{
-    if(document.querySelector('modorapido')){
+    if(document.querySelector('.modorapido')){
 
         interface i_itemDetalle {
             id:string, //id del registro de la tabla productosseparados
@@ -80,7 +80,7 @@
         constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
 
-        (async ()=>{
+        /*(async ()=>{
             try {
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
@@ -91,12 +91,13 @@
             } catch (error) {
                 console.log(error);
             }
-        })();
+        })();*/
 
+        activarselect2();
         function activarselect2(){
             ($('#articulo') as any).select2({ 
                 width: '100%',
-                data: filteredData,
+                //data: filteredData,
                 placeholder: "Selecciona un item",
                 maximumSelectionLength: 1,
             });  
