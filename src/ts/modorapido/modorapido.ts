@@ -45,7 +45,8 @@
             impuesto:string,
             tipoproducto:string, 
             tipoproduccion:string, 
-            sku:string, 
+            sku:string,
+            stock:string,
             unidadmedida:string, 
             preciopersonalizado:string,
             rendimientoestandar:string, 
@@ -64,6 +65,8 @@
             }
 
 
+        const tablaMR = document.getElementById('tablaVenta') as HTMLBodyElement;
+
         let factimpuestos:Item[] = [];
         let carrito:i_itemDetalle[]=[];
         let allproducts:i_allProducts[] = [];
@@ -80,27 +83,110 @@
         constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
 
-        /*(async ()=>{
+        (async ()=>{
             try {
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
                 const resultado:i_allProducts[] = await respuesta.json();
+                //console.log(resultado);
                 filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida }));
                 activarselect2();
                 allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
             } catch (error) {
                 console.log(error);
             }
-        })();*/
+        })();
 
         activarselect2();
         function activarselect2(){
             ($('#articulo') as any).select2({ 
                 width: '100%',
-                //data: filteredData,
+                data: filteredData,
                 placeholder: "Selecciona un item",
                 maximumSelectionLength: 1,
             });  
+        }
+
+        ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
+        $("#articulo").on('change', (e)=>{
+            let datos = ($('#articulo') as any).select2('data')[0];
+            if(datos){
+            let cantidad = 1, itemselected = carrito.find(x=>x.fk_producto==datos.id);
+            if(itemselected != undefined)cantidad += itemselected.cantidad;
+            agregarProducto(datos.id, datos.text);
+            $("#articulo").val('null').trigger('change');
+            }
+        });
+
+
+
+        function agregarProducto(cod:string, nom:string, precio=9) {
+            /*const ex = tabla.querySelector(`tr[data-codigo="${cod}"]`);
+            if (ex) {
+            ex.dataset.cantidad++;
+            recalcularTotales();
+            return;
+            }*/
+
+            const tr = document.createElement('tr');
+            /*tr.dataset.codigo = cod;
+            tr.dataset.precio = precio;
+            tr.dataset.cantidad = 1;*/
+
+            tr.innerHTML = `
+            <td class="py-2 pl-4">${nom}</td>
+            <td class="py-2 text-center cantidad" tabindex="0">1</td>
+            <td class="py-2 text-right">$${precio.toLocaleString()}</td>
+            <td class="py-2 text-right totalFila">$${precio.toLocaleString()}</td>
+            <td class="text-center text-red-600 cursor-pointer">✖</td>
+            `;
+
+            /*const tdCantidad = tr.querySelector('.cantidad');
+            tdCantidad.classList.add('cursor-pointer');*/
+
+            /* ===== SOLO DOBLE ENTER ===== */
+            /*tdCantidad.onkeydown = e => {
+                const ahora = Date.now();
+
+                // ⬆️ SUBIR
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
+                    beep(900);
+                    flashCantidad(tdCantidad, 'up');
+                    recalcularTotales();
+                    return;
+                }
+
+                // ⬇️ BAJAR
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    tr.dataset.cantidad = Math.max(1, Number(tr.dataset.cantidad) - 1);
+                    beep(500);
+                    flashCantidad(tdCantidad, 'down');
+                    recalcularTotales();
+                    return;
+                }
+
+                // ⏎ ENTER
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+
+                    if (ahora - ultimoEnterTiempo < DOBLE_ENTER_MS) {
+                        // 🔓 DOBLE ENTER → editar manual
+                        activarEdicionCantidad(tdCantidad, tr);
+                        ultimoEnterTiempo = 0;
+                    } else {
+                        // ➕ ENTER SIMPLE → sumar
+                        ultimoEnterTiempo = ahora;
+                        tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
+                        beep(900);
+                        flashCantidad(tdCantidad, 'up');
+                        recalcularTotales();
+                    }
+                }
+            };*/
+            tablaMR.prepend(tr);
         }
 
     }

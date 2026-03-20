@@ -12,20 +12,20 @@
 
       <!-- INPUT -->
       <section class="bg-white px-6 py-3 border-b flex-none">
-        <input
+        <!--<input
           id="inputScanner"
           type="text"
           placeholder="Escanee código de barras o escriba SKU"
           class="w-full h-14 text-2xl px-4 border-2 border-indigo-600 rounded-lg
                 focus:outline-none focus:ring-2 focus:ring-indigo-300"
           autofocus
-        >
+        >-->
          <select id="articulo" name=""
           class="w-full rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600    h-14 text-base px-2"
           multiple="multiple">
-          <?php foreach($productos as $value): ?>
-            <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-          <?php endforeach; ?>  
+          <?php //foreach($productos as $value): ?>
+            <!--<option value="<?php //echo $value->id;?>"><?php //echo $value->nombre;?></option>-->
+          <?php //endforeach; ?>
         </select> 
         
       </section>
@@ -150,7 +150,7 @@
   </div>
 
   <!-- ================= JS ================= -->
-  <script>
+  <!--<script>
 
   let audioCtx;
 
@@ -246,7 +246,7 @@
   function resaltarTotal() {
       totalEl.classList.add('bg-yellow-200');
       setTimeout(() => totalEl.classList.remove('bg-yellow-200'), 200);
-    }
+  }
 
   function flashCantidad(td, color) {
     const clase = color === 'up'
@@ -318,56 +318,56 @@
 
     /* ===== SOLO DOBLE ENTER ===== */
     tdCantidad.onkeydown = e => {
-    const ahora = Date.now();
+      const ahora = Date.now();
 
-    // ⬆️ SUBIR
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
-      beep(900);
-      flashCantidad(tdCantidad, 'up');
-      recalcularTotales();
-      return;
-    }
-
-    // ⬇️ BAJAR
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      tr.dataset.cantidad = Math.max(1, Number(tr.dataset.cantidad) - 1);
-      beep(500);
-      flashCantidad(tdCantidad, 'down');
-      recalcularTotales();
-      return;
-    }
-
-    // ⏎ ENTER
-    if (e.key === 'Enter') {
-      e.preventDefault();
-
-      if (ahora - ultimoEnterTiempo < DOBLE_ENTER_MS) {
-        // 🔓 DOBLE ENTER → editar manual
-        activarEdicionCantidad(tdCantidad, tr);
-        ultimoEnterTiempo = 0;
-      } else {
-        // ➕ ENTER SIMPLE → sumar
-        ultimoEnterTiempo = ahora;
+      // ⬆️ SUBIR
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
         tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
         beep(900);
         flashCantidad(tdCantidad, 'up');
         recalcularTotales();
+        return;
       }
-    }
-  };
+
+      // ⬇️ BAJAR
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        tr.dataset.cantidad = Math.max(1, Number(tr.dataset.cantidad) - 1);
+        beep(500);
+        flashCantidad(tdCantidad, 'down');
+        recalcularTotales();
+        return;
+      }
+
+      // ⏎ ENTER
+      if (e.key === 'Enter') {
+        e.preventDefault();
+
+        if (ahora - ultimoEnterTiempo < DOBLE_ENTER_MS) {
+          // 🔓 DOBLE ENTER → editar manual
+          activarEdicionCantidad(tdCantidad, tr);
+          ultimoEnterTiempo = 0;
+        } else {
+          // ➕ ENTER SIMPLE → sumar
+          ultimoEnterTiempo = ahora;
+          tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
+          beep(900);
+          flashCantidad(tdCantidad, 'up');
+          recalcularTotales();
+        }
+      }
+    };
 
 
 
 
     tr.querySelector('td:last-child').onclick = () => {
-    beepDelete();               // 🔊 sonido grave
-    tr.remove();
-    recalcularTotales();
-    input.focus();
-  };
+      beepDelete();               // 🔊 sonido grave
+      tr.remove();
+      recalcularTotales();
+      input.focus();
+    };
 
     tabla.prepend(tr);
     recalcularTotales();
@@ -456,5 +456,5 @@
     }
     if (e.key === 'F8') abrirModalCobro();
   };
-  </script>
+  </script>-->
 </div>

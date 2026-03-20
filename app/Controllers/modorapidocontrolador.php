@@ -29,7 +29,6 @@ class modorapidocontrolador{
         //if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
         $idsucursal = id_sucursal();
-        $productos = productos::SelectProducts_Category_StockXsucursal(); //filtra habilitarventa = 1
         $categorias = categorias::all();
         $mediospago = mediospago::whereArray(['estado'=>1]);
         $clientes = clientes::all();
@@ -43,6 +42,6 @@ class modorapidocontrolador{
         $canalesVentaRepo = new canalVentaRepository();
         $canalesVenta = $canalesVentaRepo->all();
 
-        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'categorias'=>$categorias, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 }
