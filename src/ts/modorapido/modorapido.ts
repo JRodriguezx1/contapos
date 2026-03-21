@@ -110,17 +110,18 @@
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
+            //console.log(datos);
             if(datos){
             let cantidad = 1, itemselected = carrito.find(x=>x.fk_producto==datos.id);
             if(itemselected != undefined)cantidad += itemselected.cantidad;
-            agregarProducto(datos.id, datos.text);
+            agregarProducto(datos.id, datos.text, datos.precio_venta);
             $("#articulo").val('null').trigger('change');
             }
         });
 
 
 
-        function agregarProducto(cod:string, nom:string, precio=9) {
+        function agregarProducto(id:string, nombre:string, precio:number) {
             /*const ex = tabla.querySelector(`tr[data-codigo="${cod}"]`);
             if (ex) {
             ex.dataset.cantidad++;
@@ -128,13 +129,44 @@
             return;
             }*/
 
+            const index = carrito.findIndex(x=>x.fk_producto==id);
+            if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
+                const cantidad = 1;
+                const itemselected = allproducts.find(x=>x.id==id)!;
+                const productototal = Number(itemselected.precio_venta)*cantidad;
+                const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+                const item:{id: string, fk_producto: string, tipoproducto: string, tipoproduccion:string, foto:string, costo:number, valorunidad:number, nombreproducto: string, rendimientoestandar:string, unidad: string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
+                    id: '',
+                    idproducto: itemselected?.id!,
+                    tipoproducto: itemselected.tipoproducto,
+                    tipoproduccion: itemselected.tipoproduccion,
+                    foto: '',
+                    costo: Number(itemselected.precio_compra),
+                    valorunidad: itemselected.precio_venta,
+                    nombreproducto: itemselected.nombre,
+                    rendimientoestandar: itemselected.rendimientoestandar,
+                    unidad: itemselected.unidadmedida,
+                    cantidad: 1,
+                    factor: 1,
+                    impuesto: itemselected.impuesto,
+                    precio_venta: productototal,
+                    subtotal: productototal,
+                    base: productototal-productovalorimp,
+                    valorimp: productovalorimp,
+                    descuento: 0,
+                    total: Number(itemselected.precio_venta),
+                    precio_compra: Number(itemselected.precio_compra),
+                }
+                carrito = [...carrito, item];
+            }
+
             const tr = document.createElement('tr');
             /*tr.dataset.codigo = cod;
             tr.dataset.precio = precio;
             tr.dataset.cantidad = 1;*/
 
             tr.innerHTML = `
-            <td class="py-2 pl-4">${nom}</td>
+            <td class="py-2 pl-4">${nombre}</td>
             <td class="py-2 text-center cantidad" tabindex="0">1</td>
             <td class="py-2 text-right">$${precio.toLocaleString()}</td>
             <td class="py-2 text-right totalFila">$${precio.toLocaleString()}</td>
