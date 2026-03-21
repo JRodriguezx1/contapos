@@ -4,6 +4,7 @@ type productsapi = {
       idunidadmedida: string,
       nombre: string,
       foto: string,
+      habilitarventa: string,
       impuesto: string,  //porcentaje(%) de impuesto
       marca: string,
       tipoproducto: string, // 0 = simple,  1 = compuesto
@@ -22,6 +23,7 @@ type productsapi = {
       stockminimo: string,
       categoria: string,
       rendimientoestandar: string,
+      sku:string,
       precio_compra: string,
       precio_venta: string,
       fecha_ingreso: string,
@@ -71,7 +73,7 @@ interface CarritoItem {
     nombreproducto: string;
     rendimientoestandar: string;
     costo: string;
-    valorunidad: string;
+    valorunidad: number;
     cantidad: number;
     subtotal: number;
     base: number;
