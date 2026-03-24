@@ -33,7 +33,9 @@
       </div>
 
       <!-- INPUT -->
-      <section class="bg-white px-6 py-3 border-b flex-none">
+      <section class="bg-white px-6 py-3 border-b flex gap-4">
+        <button type="button" id="btnScanner" class="btn-xs btn-blue whitespace-nowrap">Ctl . Escáner</button>
+        
         <!--<input
           id="inputScanner"
           type="text"

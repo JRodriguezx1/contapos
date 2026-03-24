@@ -116,6 +116,7 @@
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
+            console.log(datos);
             if(datos){
             let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
             if(itemselected != undefined)cantidad += itemselected.cantidad;
@@ -249,6 +250,7 @@
         });
 
         document.addEventListener('keydown', (e:KeyboardEvent)=>{
+            if (e.key === 'Control')(document.querySelector('#articulo') as HTMLSelectElement).focus();
             if (e.key === 'F8')(document.querySelector('#facturarA') as HTMLButtonElement).click();
         });
 
