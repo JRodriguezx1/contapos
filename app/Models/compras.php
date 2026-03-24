@@ -37,7 +37,7 @@ class compras extends \App\Models\ActiveRecord{
         if(!is_numeric($this->impuesto))self::$alertas['error'][] = 'Error en valor del impuesto.';
         if(!is_numeric($this->cantidaditems))self::$alertas['error'][] = 'La cantidad debe ser tipo numero.';
         if(is_numeric($this->cantidaditems)){
-            if((int)$this->cantidaditems==0)self::$alertas['error'][] = 'Debe de haber minimo un item para comprar.';
+            if((float)$this->cantidaditems==0)self::$alertas['error'][] = 'Debe de haber minimo un item para comprar.';
         }
         if(!is_numeric($this->valortotal))self::$alertas['error'][] = 'Error en el valor total de la compra.';
         if(is_numeric($this->valortotal)){

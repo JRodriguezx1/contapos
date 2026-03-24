@@ -24,7 +24,7 @@
       <tbody>
           <?php foreach($productos as $index => $value): ?>
             <?php if($value->tipoproducto == 0): ?> <!-- tipoproducto=0 es simple -->
-            <tr class="fila producto" data-idproducto="<?php echo $value->id;?>"> 
+            <tr class="fila producto" data-idproducto="<?php echo $value->id;?>" data-costo="<?php echo $value->precio_compra;?>"> 
                 <td class=""><?php echo $index+1;?></td>
                 <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria;?></td>
@@ -50,7 +50,7 @@
 
           <!-- subproductos -->
           <?php foreach($subproductos as $index => $value): ?>  
-            <tr class="fila subproducto" data-idsubproducto="<?php echo $value->id;?>"> 
+            <tr class="fila subproducto" data-idsubproducto="<?php echo $value->id;?>" data-costo="<?php echo $value->precio_compra;?>"> 
                 <td class=""><?php echo $index+1;?></td>        
                 <td class=""><div class="w-80 whitespace-normal">(s) <?php echo $value->nombre;?></div></td> 
                 <td class="" ><?php echo $value->categoria??'';?></td> 

@@ -202,8 +202,8 @@
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
       if (f=== miDialogoAjustarCredito || f === miDialogoAbono || f === miDialogoDetalleProducto || f === modalcambioMedioPago || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' 
-          || (f as HTMLButtonElement).id == 'btnXCerrarModalDetalleProducto' || (f as HTMLButtonElement).id == 'btnXCerrarModalAbono' || f === miDialogoPagoTotal
-          || (f as HTMLButtonElement).id == 'btnXCerrarModalPagoTotal' ) {
+          || (f as HTMLElement).id == 'btnXCerrarModalDetalleProducto' || (f as HTMLElement).id == 'btnXCerrarModalAbono' || f === miDialogoPagoTotal
+          || (f as HTMLElement).id == 'btnXCerrarModalPagoTotal' ) {
         miDialogoAbono.close();
         miDialogoPagoTotal.close();
         miDialogoDetalleProducto.close();

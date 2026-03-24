@@ -9,6 +9,7 @@ use App\Models\configuraciones\mediospago;
 use App\Models\caja\factmediospago;
 use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
+use App\Models\compras;
 use App\Models\configuraciones\consecutivos;
 use App\Models\ventas\facturas;
 use App\Models\configuraciones\negocio;
@@ -16,7 +17,9 @@ use App\Models\ventas\ventas;
 use App\Models\configuraciones\tarifas;
 use App\Models\configuraciones\usuarios;
 use App\Models\creditos\cuotas;
+use App\Models\detallecompra;
 use App\Models\felectronicas\facturas_electronicas;
+use App\Models\inventario\proveedores;
 use App\Models\sucursales;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
@@ -86,8 +89,19 @@ class printcontrolador{
       $productos = $repoProductsSep->findAll('idcredito', $credito->id);
     }
     $print = new ticketPOS();
-    $print->generarComptobanteAono($sucursal, $credito, $cuota, $cliente, $productos);
+    $print->generarComptobanteAbono($sucursal, $credito, $cuota, $cliente, $productos);
   }
 
+
+  public static function printComprobanteCompraPDF():void{
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    $sucursal = sucursales::find('id', id_sucursal());
+    $compra = compras::find('id', $id);
+    $proveedor = proveedores::find('id', $compra->idproveedor);
+    $productos = detallecompra::idregistros('idcompra', $compra->id);
+    $print = new ticketPOS();
+    $print->generarComprobanteCompra($sucursal, $compra, $proveedor, $productos);
+  }
 
 }

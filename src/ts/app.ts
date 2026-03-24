@@ -311,3 +311,27 @@ function getDgv(nit: number): number {
     return modulo > 1 ?(11 - modulo):modulo;
 }
 
+
+let audioCtx: AudioContext;
+function beep(frecuencia = 800, duracion = 60) {
+  if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.frequency.value = frecuencia;
+  osc.type = 'square';
+  gain.gain.value = 0.08;
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + duracion / 1000);
+}
+
+
+function flashCantidad(element:HTMLElement, color:string) {
+    const clase = color === 'up'? 'bg-green-200': 'bg-red-200';
+    element.classList.add(clase);
+    setTimeout(() => element.classList.remove(clase), 120);
+  }

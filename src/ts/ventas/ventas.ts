@@ -52,7 +52,7 @@
     let products:productsapi[]=[], unproducto:productsapi;
     const mapMediospago = new Map();
 
-    const mediosPagoDBMAP = new Map<string, string>( 
+    const mediosPagoDBMAP = new Map<string, string>(  //se usa para imprimir los medios de pago en el servidor de impresion
       mediosPagoDB.map(m => [m.id, m.mediopago]) //mediosPagoDB se declara en app.ts el cual viene del <script> en index.php que convierte el array de medios de pago de php a js.
     );
 
@@ -526,7 +526,7 @@
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
       try {
-        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php
+        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
         const respuesta = await fetch(url, {
           method: 'POST',
           headers: { "Accept": "application/json", "Content-Type": "application/json" },

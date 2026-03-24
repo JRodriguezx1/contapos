@@ -12,6 +12,7 @@
         <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/unidadesmedida"><span class="material-symbols-outlined">square_foot</span>Unidades de Medida</a>
         <!--<a class="btn-command text-center" href="/admin/almacen/trasladoinventario"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</a>-->
         <button id="btntrasladoinvnetario" class="btn-command text-center"><span class="material-symbols-outlined">switch_right</span>Traslado de inventario</button>
+        <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
   </div>
 
   <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
@@ -74,47 +75,77 @@
   </div> <!-- fin accordion_inv -->
 
   <!-- MODAL DE OPCIONES DE TRASLADO DE INVENTARIOS -->
-<dialog id="miDialogoTrasladoInvnetario" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
-  <!-- Encabezado -->
-  <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-    <h4 id="modalTrasladoInvnetario" class="text-2xl font-bold text-gray-900">
-      Gestión de traslado de inventario
-    </h4>
-    <button id="btnXCerrarTrasladoInvnetario" class="p-2 rounded-lg hover:bg-gray-100 transition">
-      <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
-    </button>
-  </div>
+  <dialog id="miDialogoTrasladoInvnetario" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+      <h4 id="modalTrasladoInvnetario" class="text-2xl font-bold text-gray-900">
+        Gestión de traslado de inventario
+      </h4>
+      <button class="rounded-lg hover:bg-gray-100 transition">
+        <i id="btnXCerrarTrasladoInvnetario" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
+      </button>
+    </div>
 
-  <!-- Opciones -->
-  <div class="grid gap-4">
-    <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
-       href="/admin/almacen/solicitudesrecibidas">
-       <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-         <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-         Solicitudes recibidas
-       </span>
-       <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-    </a>
+    <!-- Opciones -->
+    <div class="grid gap-4">
+      <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
+        href="/admin/almacen/solicitudesrecibidas">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+          Solicitudes recibidas
+        </span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </a>
 
-    <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
-       href="/admin/almacen/trasladarinventario">
-       <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-         <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-         Trasladar inventario
-       </span>
-       <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-    </a>
-    
-    <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
-       href="/admin/almacen/solicitarinventario">
-       <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-         <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-         Solicitar inventario
-       </span>
-       <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-    </a>
-  </div>
-</dialog>
+      <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
+        href="/admin/almacen/trasladarinventario">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+          Trasladar inventario
+        </span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </a>
+      
+      <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
+        href="/admin/almacen/solicitarinventario">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+          Solicitar inventario
+        </span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </a>
+    </div>
+  </dialog>
+
+
+   <!-- MODAL DE MAS OPCIONES -->
+  <dialog id="miDialogoMasOpciones" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+      <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Mas opciones</h4>
+      <button class="rounded-lg hover:bg-gray-100 transition">
+        <i id="btnXCerrarMasOpciones" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
+      </button>
+    </div>
+
+    <!-- Opciones -->
+    <div class="grid gap-4">
+      <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
+        href="/admin/almacen/cambioPrecios">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>Cambio de precios</span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </a>
+
+      <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
+        href="/admin/almacen/estadisticas">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>Estadisticas</span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </a>
+      
+    </div>
+  </dialog>
 
 
 </div>
