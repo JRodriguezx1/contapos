@@ -50,10 +50,15 @@
             }
 
 
+        const selectCliente = POS.gestionClientes.selectCliente;
+        const dirEntrega = POS.gestionClientes.dirEntrega;
         const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
         const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
         const btnfacturar = document.querySelector('#btnfacturar');
+        const btnguardar = document.querySelector('#btnguardar');
         const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
+        const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
+        const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
         const miDialogoFacturarA = POS.gestionarAdquiriente.miDialogoFacturarA;
         const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
         const totalUnidades = document.querySelector('#totalUnidades') as HTMLSpanElement;
@@ -81,6 +86,7 @@
             mediosPagoDB.map(m => [m.id, m.mediopago]) //mediosPagoDB se declara en app.ts el cual viene del <script> en index.php que convierte el array de medios de pago de php a js.
         );
 
+        POS.gestionClientes.clientes();  //inicializa modulo de clientes
         document.addEventListener("click", cerrarDialogoExterno);
 
         (async ()=>{
@@ -304,6 +310,7 @@
         }
 
 
+        btnguardar?.addEventListener('click', ()=>{if(carrito.length)miDialogoGuardar.showModal();});
         btnfacturar?.addEventListener('click', ()=>{
             if(carrito.length){
                 document.querySelector('.Efectivo')?.setAttribute('readonly', 'true');
@@ -313,7 +320,6 @@
                 POS.tipoventa = tipoventa;
                 POS.gestionSubirModalPagar.subirModalPagar();
                 miDialogoFacturar.showModal();
-                document.addEventListener("click", cerrarDialogoExterno);
             }
         });
 
@@ -437,7 +443,7 @@
 
             setTimeout(() => {
                 window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
-            }, 1100);
+            }, 1000);
         }
 
 
@@ -451,7 +457,7 @@
             carrito.length = 0;
             factimpuestos.length = 0;
 
-            history.replaceState({}, "", "/admin/modorapido");  //modificar la URL sin recargar la página.
+            history.replaceState({}, "", "/admin/ventas/modorapido");  //modificar la URL sin recargar la página.
             while(tablaMR?.firstChild)tablaMR.removeChild(tablaMR?.firstChild);
             //(document.querySelector('#npedido') as HTMLInputElement).value = '';
             document.querySelector('#subTotal')!.textContent = '$'+0;
@@ -466,9 +472,15 @@
 
         function cerrarDialogoExterno(event:Event) {
             const f = event.target;
-            if (f=== miDialogoFacturarA || f === miDialogoFacturar || (f as HTMLInputElement).value === 'Cancelar' ) {
+            if (f=== miDialogoAddCliente || f=== miDialogoFacturarA || f === miDialogoGuardar || f === miDialogoFacturar || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar')) {
                 miDialogoFacturarA.close();
                 miDialogoFacturar.close();
+                miDialogoAddCliente.close();
+                miDialogoGuardar.close();
+                if((f as HTMLInputElement).closest('.siguardar')){
+                    tipoventa = "";
+                    //procesarpedido('Guardado', '1');
+                }
             }
         }
 

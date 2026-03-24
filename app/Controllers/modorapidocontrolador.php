@@ -30,9 +30,10 @@ class modorapidocontrolador{
 
     public static function index(Router $router){
         isadmin();
-        //if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
         $alertas = [];
         $idsucursal = id_sucursal();
+        $num_orden = facturas::calcularNumOrden(id_sucursal());
         $categorias = categorias::all();
         $mediospago = mediospago::whereArray(['estado'=>1]);
         $clientes = clientes::all();
@@ -46,7 +47,7 @@ class modorapidocontrolador{
         $canalesVentaRepo = new canalVentaRepository();
         $canalesVenta = $canalesVentaRepo->all();
 
-        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'categorias'=>$categorias, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'categorias'=>$categorias, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -160,7 +161,8 @@ class modorapidocontrolador{
 
       //Si es cotizacion
       }else{
-         $alertas['exito'][] = "Cotizacion guardada con exito";
+        
+        $alertas['exito'][] = "Cotizacion guardada con exito";
       }
 
       $getDB->commit();

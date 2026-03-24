@@ -10,6 +10,28 @@
         <div class="text-base">Cajero: <strong id="vendedor" data-idvendedor="<?php echo $user['id']; ?>"><?php echo $user['nombre']; ?></strong></div>
       </header>
 
+      <div class="my-4">
+        <button id="addcliente" class="w-full bg-white border border-gray-200 rounded-2xl px-6 py-5 shadow-sm hover:shadow-md hover:border-indigo-500 transition-all flex items-center justify-between">
+
+          <!-- IZQUIERDA -->
+          <div class="flex items-center gap-5">
+            <div id="iconCliente" class="bg-indigo-100 text-indigo-600 p-3 rounded-xl">
+              <span class="material-symbols-outlined text-4xl">person</span>
+            </div>
+
+            <div class="text-left">
+              <p class="text-base text-gray-500 m-0 mb-3">Cliente</p>
+              <p id="resumenCliente" class="m-0 text-xl font-semibold text-gray-800 leading-tight">Seleccionar cliente</p>
+            </div>
+          </div>
+          <!-- BADGE ESTADO -->
+          <div class="flex items-center gap-3">
+            <span id="badgeEstado" class="text-base font-semibold px-4 py-2 rounded-full bg-gray-100 text-gray-700">SIN CLIENTE</span>
+            <span class="material-symbols-outlined text-gray-400 text-3xl">chevron_right</span>
+          </div>
+        </button>
+      </div>
+
       <!-- INPUT -->
       <section class="bg-white px-6 py-3 border-b flex-none">
         <!--<input
@@ -68,9 +90,11 @@
           <span id="totalUnidades">0</span>
         </div>
       </div>
-
       
       <div class="border-t px-4 py-4 mt-auto flex flex-col gap-3">
+        <button id="btnguardar" class="w-full btn-turquoise py-3 text-2xl font-semibold">
+          Generar Cotizacion
+        </button>
         <button id="facturarA" class="w-full btn-bluedark py-3 text-2xl font-semibold mb-4">
           F8 · Factura Electronica
         </button>
@@ -87,6 +111,10 @@
     </aside>
   </div>
 
+  <!-- MODAL PARA CREAR AÑADIR CLIENTE-->
+  <?php include __DIR__. "/../ventas/modalCreateAddCli.php"; ?>
+  <!-- MODAL PARA GUARDAR EL PEDIDO-->
+  <?php include __DIR__. "/../ventas/modalguardarpedido.php"; ?>
   <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
   <?php include __DIR__. "/../ventas/modalprocesarpago.php"; ?>
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
