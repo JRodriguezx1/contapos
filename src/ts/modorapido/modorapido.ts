@@ -249,6 +249,11 @@
             }
         });
 
+
+        document.querySelector('#btnScanner')?.addEventListener('click', ()=>
+            (document.querySelector('#articulo') as HTMLSelectElement).focus()
+        );
+
         document.addEventListener('keydown', (e:KeyboardEvent)=>{
             if (e.key === 'Control')(document.querySelector('#articulo') as HTMLSelectElement).focus();
             if (e.key === 'F8')(document.querySelector('#facturarA') as HTMLButtonElement).click();
@@ -352,22 +357,21 @@
             const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
             const datos = new FormData();
             //datos.append('id', datosfactura?.id??'');
-            //datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
+            datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
             datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLParagraphElement).dataset.idvendedor!);
             datos.append('idcaja', btnCaja.value);
             datos.append('idconsecutivo', btnTipoFacturador.value);
-            //datos.append('iddireccion', dirEntrega.value);
+            datos.append('iddireccion', dirEntrega.value);
             datos.append('idtarifazona', valorTotal.idtarifa+'');
             datos.append('idcanaldeventa', (document.querySelector('#canalVenta') as HTMLSelectElement)?.value??'1');
-            //datos.append('cliente', selectCliente.value==''?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
+            datos.append('cliente', selectCliente.value==''?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
             datos.append('vendedor', (document.querySelector('#vendedor') as HTMLParagraphElement).textContent!);
             datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
             datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
-            //datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
+            datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
             //datos.append('tarifazona', nombretarifa||'');
             datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
             datos.append('totalunidades', totalUnidades.textContent!);
-            //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
             datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
             datos.append('factimpuestos', JSON.stringify(factimpuestos));
             datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);

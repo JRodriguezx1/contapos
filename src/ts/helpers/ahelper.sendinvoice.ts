@@ -1,5 +1,5 @@
 (()=>{
-  if(document.querySelector('.ventas') || document.querySelector('.ordenresumen') || document.querySelector('.detalleinvoice')){
+  if(document.querySelector('.ventas') || document.querySelector('.ordenresumen') || document.querySelector('.detalleinvoice') || document.querySelector('.modorapido')){
 
     const sendInvoiceAPI = {
 
