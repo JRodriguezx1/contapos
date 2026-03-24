@@ -1,6 +1,8 @@
 (()=>{
     if(document.querySelector('.modorapido')){
 
+        const POS = (window as any).POS;
+
         interface i_itemDetalle {
             id:string, //id del registro de la tabla productosseparados
             idproducto: string,
@@ -48,13 +50,20 @@
             }
 
 
+        const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
+        const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
+        const btnfacturar = document.querySelector('#btnfacturar');
+        const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
+        const miDialogoFacturarA = POS.gestionarAdquiriente.miDialogoFacturarA;
+        const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
+        const totalUnidades = document.querySelector('#totalUnidades') as HTMLSpanElement;
         const tablaMR = document.getElementById('tablaVenta') as HTMLBodyElement;
 
         let factimpuestos:Item[] = [];
         let carrito:CarritoItem[]=[];
         let allproducts:productsapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
-        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, total: 0}; //datos global de la venta
+        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
         const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
 
         const constImp: {[key:string]: number} = {};
@@ -65,6 +74,14 @@
         constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
         constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
+        let  tipoventa:string="Contado";
+        const mapMediospago = new Map();
+
+        const mediosPagoDBMAP = new Map<string, string>(  //se usa para imprimir los medios de pago en el servidor de impresion
+            mediosPagoDB.map(m => [m.id, m.mediopago]) //mediosPagoDB se declara en app.ts el cual viene del <script> en index.php que convierte el array de medios de pago de php a js.
+        );
+
+        document.addEventListener("click", cerrarDialogoExterno);
 
         (async ()=>{
             try {
@@ -93,7 +110,6 @@
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
-            //console.log(datos);
             if(datos){
             let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
             if(itemselected != undefined)cantidad += itemselected.cantidad;
@@ -103,15 +119,7 @@
         });
 
 
-
         function agregarProducto(id:string, nombre:string, cantidad:number) {
-            /*const ex = tabla.querySelector(`tr[data-codigo="${cod}"]`);
-            if (ex) {
-            ex.dataset.cantidad++;
-            recalcularTotales();
-            return;
-            }*/
-
             const index = carrito.findIndex(x=>x.idproducto==id);
             if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
                 const cantidad = 1;
@@ -145,37 +153,29 @@
                     //carrito = carrito.filter(x=>x.iditem != id);
                 }
                     
-                    carrito[index].cantidad = cantidad;
-                    /*const total:number = carrito[index].cantidad*carrito[index].precio_venta;
-                    carrito[index].subtotal = total;
-                    carrito[index].total = total;*/
-                    carrito[index].subtotal = (carrito[index].valorunidad)*carrito[index].cantidad;
-                    carrito[index].total = carrito[index].subtotal;
-                    //calculo del impuesto y base por producto en el carrito deventas
-                    carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
-                    carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
+                carrito[index].cantidad = cantidad;
+                carrito[index].subtotal = (carrito[index].valorunidad)*carrito[index].cantidad;
+                carrito[index].total = carrito[index].subtotal;
+                carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
+                carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
             }
             
-
-            /*tr.dataset.codigo = cod;
-            tr.dataset.precio = precio;tabindex="0"
-            tr.dataset.cantidad = 1;*/
             while(tablaMR.firstChild)tablaMR.removeChild(tablaMR.firstChild);
 
             carrito.forEach(item=>{
                 const tr = document.createElement('tr') as HTMLTableRowElement;
                 tr.classList.add('productselect');
-                tr.dataset.id = `${item.id}`;
+                tr.dataset.idproducto = `${item.idproducto}`;
                 tr.innerHTML = `
                     <td class="py-2 pl-4">${item.nombreproducto}</td>
                     <td class="py-2 text-center cursor-pointer cantidad"><input type="text" class="inputcantidad w-20 p-2 text-center" value="${item.cantidad}"></td>
                     <td class="py-2 text-right">${item.valorunidad}</td>
                     <td class="py-2 text-right totalFila">${item.total}</td>
-                    <td class="text-center text-red-600 cursor-pointer">✖</td>`;
+                    <td class="text-center"><div class="btn-xs btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></div></td>`;
                 tablaMR.prepend(tr);
                 
             });
-
+            valorCarritoTotal();
         }
 
 
@@ -183,11 +183,10 @@
             const input = e.target as HTMLInputElement;
             if (!input.classList.contains('inputcantidad')) return;
             const fila = input?.closest('.productselect') as HTMLTableRowElement;
-            const idProduct = fila.dataset.id!;
+            const idProduct = fila.dataset.idproducto!;
             const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
-            if(productoCarrito==undefined)return;
             
-                //if((e.target as HTMLElement).dataset.event != "eventInput"){
+            if(productoCarrito==undefined)return;
                 
             let val = input.value;
             val = val.replace(/[^0-9.]/g, '');
@@ -197,11 +196,6 @@
             if (val === '' || isNaN(parseFloat(val))) val = '';
 
             input.value = val;
-            //actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
-        
-                //(e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
-                //}
-
             let cantidad = Number(val);
             
             if(cantidad <= 0){
@@ -211,18 +205,276 @@
             }
                 
             productoCarrito.cantidad = cantidad;
-            /*const total:number = carrito[index].cantidad*carrito[index].precio_venta;
-            carrito[index].subtotal = total;
-            carrito[index].total = total;*/
             productoCarrito.subtotal = (productoCarrito.valorunidad)*productoCarrito.cantidad;
             productoCarrito.total = productoCarrito.subtotal;
             //calculo del impuesto y base por producto en el carrito deventas
             productoCarrito.valorimp = parseFloat((productoCarrito.total*constImp[productoCarrito.impuesto??0]).toFixed(3));
             productoCarrito.base = parseFloat((productoCarrito.total-productoCarrito.valorimp).toFixed(3));
-
+            valorCarritoTotal();
         });
 
 
+        tablaMR.addEventListener('keydown', (e: KeyboardEvent) => {
+            const target = e.target as HTMLElement;
+            if (target.classList.contains('inputcantidad')) {
+                const input = target as HTMLInputElement;
+
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    input.value = String((Number(input.value) || 0) + 1);
+                    beep(900);
+                    flashCantidad(input, 'up');
+                    input.dispatchEvent(new Event('input', { bubbles: true })); // 🔥 reutiliza lógica
+                }
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    input.value = String(Math.max(0, (Number(input.value) || 0) - 1));
+                    beep(500);
+                    flashCantidad(input, 'down');
+                    input.dispatchEvent(new Event('input', { bubbles: true })); // 🔥 reutiliza lógica
+                }
+
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    btnfacturar?.dispatchEvent( new Event('click'));
+                }
+            }
+        });
+
+        document.addEventListener('keydown', (e:KeyboardEvent)=>{
+            if (e.key === 'F8')(document.querySelector('#facturarA') as HTMLButtonElement).click();
+        });
+
+
+        /////////////////////// evento a la tabla de productos de venta (carrito) //////////////////////////
+        tablaMR?.addEventListener('click', (e:Event)=>{
+            if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
+                const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
+                const idProduct = (elementProduct as HTMLElement).dataset.idproducto!;
+                carrito = carrito.filter(x=>x.idproducto != idProduct);
+                valorCarritoTotal();
+                tablaMR?.querySelector(`TR[data-idproducto="${idProduct}"]`)?.remove();
+            }
+        });
+
+        
+        ////////////////////// valores finales subtotal y total ////////////////////////
+        function valorCarritoTotal(){
+            //calcular el impuesto discriminado por tarifa
+            const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
+            const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
+
+            const mapImpuesto = new Map();
+            carrito.forEach(x=>{
+                if(x.impuesto){
+                if(mapImpuesto.has(x.impuesto)){
+                    const valor = mapImpuesto.get(x.impuesto) + x.total*constImp[x.impuesto];
+                    mapImpuesto.set(x.impuesto, valor);
+                }else{
+                    mapImpuesto.set(x.impuesto, x.total*constImp[x.impuesto]);
+                }
+                }
+                if(x.impuesto == null)x.impuesto = "excluido";
+                objbase[x.impuesto as keyof typeof objbase] += x.base;
+                const impValor = mapImpuesto.get(x.impuesto)??0;
+                const index = factimpuestos.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
+                if(index!=-1){ //si existe remplazar obj
+                    factimpuestos[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor};
+                }else{
+                    factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
+                }
+            });
+            
+            //Valor del impuesto total de todos los productos, es decir de la factura;
+            let valorTotalImp:number = 0;
+            for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp;
+            valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
+            valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
+            valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
+            valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
+            document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
+            (document.querySelector('#impuesto') as HTMLElement).textContent = '$'+valorTotalImp.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            //(document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+valorTotal.valortarifa.toLocaleString();
+            document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
+            // cantidad total de productos
+            totalUnidades.textContent = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
+
+            POS.carrito = carrito;
+        }
+
+
+        btnfacturar?.addEventListener('click', ()=>{
+            if(carrito.length){
+                document.querySelector('.Efectivo')?.setAttribute('readonly', 'true');
+                document.querySelector('#inputscreditos')?.classList.add('hidden');
+                document.querySelector('#inputscreditos')?.classList.remove('flex');
+                tipoventa = "Contado";
+                POS.tipoventa = tipoventa;
+                POS.gestionSubirModalPagar.subirModalPagar();
+                miDialogoFacturar.showModal();
+                document.addEventListener("click", cerrarDialogoExterno);
+            }
+        });
+
+
+        ////////////////// evento al bton pagar del modal facturar //////////////////////
+        document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
+            e.preventDefault();
+            if(valorTotal.total <0 || valorTotal.subtotal <0){
+                msjAlert('error', 'No se puede procesar pago con $0', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+                return;
+            }
+
+            //calcular si el totoal de los medios de pago es menor al abono inicial, abortar pago...
+            let totalMediosPago:number = 0;
+            for(let value of mapMediospago.values())totalMediosPago+=value;
+            if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
+                msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+                return;
+            }
+        
+            btnPagar.disabled = true;
+            btnPagar.value = 'Procesando...';
+            procesarpedido('Paga', '0');
+        });
+
+        async function procesarpedido(estado:string, ctz:string){
+            const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
+            const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
+            const datos = new FormData();
+            //datos.append('id', datosfactura?.id??'');
+            //datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
+            datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLParagraphElement).dataset.idvendedor!);
+            datos.append('idcaja', btnCaja.value);
+            datos.append('idconsecutivo', btnTipoFacturador.value);
+            //datos.append('iddireccion', dirEntrega.value);
+            datos.append('idtarifazona', valorTotal.idtarifa+'');
+            datos.append('idcanaldeventa', (document.querySelector('#canalVenta') as HTMLSelectElement)?.value??'1');
+            //datos.append('cliente', selectCliente.value==''?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
+            datos.append('vendedor', (document.querySelector('#vendedor') as HTMLParagraphElement).textContent!);
+            datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
+            datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
+            //datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
+            //datos.append('tarifazona', nombretarifa||'');
+            datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
+            datos.append('totalunidades', totalUnidades.textContent!);
+            //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
+            datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
+            datos.append('factimpuestos', JSON.stringify(factimpuestos));
+            datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
+            datos.append('transaccion', '');
+            datos.append('tipoventa', tipoventa);
+            datos.append('valoresCredito', JSON.stringify(valoresCredito));
+            datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
+            datos.append('estado', estado);
+            datos.append('subtotal', valorTotal.subtotal+'');
+            datos.append('base', valorTotal.base.toFixed(3));
+            datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
+            datos.append('dctox100',valorTotal.dctox100+'');
+            datos.append('descuento',valorTotal.descuento+'');
+            datos.append('total', valorTotal.total.toString());
+            datos.append('observacion', document.querySelector<HTMLTextAreaElement>('#observacion')!.value);
+            datos.append('departamento', '');
+            //datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
+            //datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
+            datos.append('valortarifa', valorTotal.valortarifa+'');
+            datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
+            datos.append('opc1', '');
+            datos.append('opc2', '');
+            try {
+                const url = "/admin/api/facturarModorapido";  //va al controlador ventascontrolador
+                const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                const resultado = await respuesta.json();
+
+                if(estado == "Paga"){
+                    resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
+                    resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
+                    idmediopago,
+                    mediopago: mediosPagoDBMAP.get(idmediopago),
+                    valor,
+                    }));
+                }
+
+                if(resultado.exito !== undefined){
+                    msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                    btnPagar.disabled = false;
+                    btnPagar.value = 'Pagar';
+                    miDialogoFacturar.close();
+                
+                    //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
+                    if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
+                    const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
+                    POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
+                    resultado.dataInvoice.cufe = resDian.cufe;
+                    resultado.dataInvoice.link = resDian.link;
+                    console.log(resDian);
+                    }
+                    //IMPRIMIR TICKET POS
+                    if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
+                    vaciarventa();
+                }else{
+                    msjalertToast('error', '¡Error!', resultado.error[0]);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+
+        async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+            try {
+                const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
+                const respuesta = await fetch(url, {
+                method: 'POST',
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify(datainvoice)
+                });
+                const resultado = await respuesta.json();
+            } catch (error) {
+                console.log(error);
+            }
+
+            setTimeout(() => {
+                window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+            }, 1100);
+        }
+
+
+        function vaciarventa():void
+        {
+            //if(datosfactura?.id)datosfactura.id = '';
+            (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
+            (document.querySelector('#formfacturar') as HTMLFormElement)?.reset();
+            mapMediospago.clear();
+            $('.mediopago').val(0);
+            carrito.length = 0;
+            factimpuestos.length = 0;
+
+            history.replaceState({}, "", "/admin/modorapido");  //modificar la URL sin recargar la página.
+            while(tablaMR?.firstChild)tablaMR.removeChild(tablaMR?.firstChild);
+            //(document.querySelector('#npedido') as HTMLInputElement).value = '';
+            document.querySelector('#subTotal')!.textContent = '$'+0;
+            document.querySelector('#impuesto')!.textContent = '$'+0;
+            //(document.querySelector('#descuento') as HTMLElement).textContent = '$'+0;
+            totalUnidades.textContent = '0';
+            document.querySelector('#total')!.textContent = '$'+0;
+            //$('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
+            for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
+        }
+
+
+        function cerrarDialogoExterno(event:Event) {
+            const f = event.target;
+            if (f=== miDialogoFacturarA || f === miDialogoFacturar || (f as HTMLInputElement).value === 'Cancelar' ) {
+                miDialogoFacturarA.close();
+                miDialogoFacturar.close();
+            }
+        }
+
+
+        POS.valorTotal = valorTotal;
+        POS.mapMediospago = mapMediospago;
 
             /*const tdCantidad = tr.querySelector('.cantidad');
             tdCantidad.classList.add('cursor-pointer');*/

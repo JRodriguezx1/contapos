@@ -10,9 +10,9 @@ use stdClass;
 
 class stockService {
 
-    public static function upDate_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia){
+    public static function upDate_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia):bool{
         $movInv = new movimientos_productos;
-        //registrar descuento de movimiento de inventario de insumos de forma masiva
+        //registrar ajuste de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
         $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
         foreach($returnInsumos as $value){
@@ -30,12 +30,13 @@ class stockService {
             $arrayMovInv[] = $obj;
         }
         $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
+        return $rmov[0];
     }
 
 
-    public static function upStock_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia){
+    public static function upStock_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia):bool{
         $movInv = new movimientos_productos;
-        //registrar descuento de movimiento de inventario de insumos de forma masiva
+        //registrar aumento de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
         $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
         foreach($returnInsumos as $value){
@@ -53,11 +54,12 @@ class stockService {
             $arrayMovInv[] = $obj;
         }
         $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
+        return $rmov[0];
     }
 
-    public static function downStock_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia){
+    public static function downStock_movimientoProductos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia):bool{
          $movInv = new movimientos_productos;
-        //registrar descuento de movimiento de inventario de insumos de forma masiva
+        //registrar descuento de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
         $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
         foreach($returnInsumos as $value){
@@ -75,12 +77,13 @@ class stockService {
             $arrayMovInv[] = $obj;
         }
         $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
+        return $rmov[0];
     }
 
 
-    public static function upStock_movimientoInsumos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia){
+    public static function upStock_movimientoInsumos(array $sumarSubproductos, array $returnInsumos, $tipo, $referencia):bool{
          $movInv = new movimientos_insumos;
-        //registrar descuento de movimiento de inventario de insumos de forma masiva
+        //registrar aumento de movimiento de inventario de insumos de forma masiva
         $arrayMovInv = [];
         $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
         foreach($returnInsumos as $value){
@@ -98,11 +101,12 @@ class stockService {
             $arrayMovInv[] = $obj;
         }
         $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
+        return $rmov[0];
     }
 
 
     //registrar descuento de movimiento de inventario de insumos de forma masiva
-    public static function downStock_movimientoInsumos(array $descontarSubproductos, array $returnInsumos, $tipo, $referencia){
+    public static function downStock_movimientoInsumos(array $descontarSubproductos, array $returnInsumos, $tipo, $referencia):bool{
         
         $movInv = new movimientos_insumos;
         //registrar descuento de movimiento de inventario de insumos de forma masiva
@@ -123,6 +127,7 @@ class stockService {
             $arrayMovInv[] = $obj;
         }
         $rmov = $movInv->crear_varios_reg_arrayobj($arrayMovInv);
+        return $rmov[0];
         
     }
     

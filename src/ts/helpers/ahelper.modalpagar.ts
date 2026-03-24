@@ -1,5 +1,5 @@
 (()=>{
-  if(!document.querySelector('.ventas')&&!document.querySelector('.crearseparado'))return;
+  if(!document.querySelector('.ventas')&&!document.querySelector('.crearseparado')&&!document.querySelector('.modorapido'))return;
 
     const POS = (window as any).POS;
 

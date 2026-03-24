@@ -82,6 +82,7 @@ class ActiveRecord {
         $sql .= "');";
         $sql = str_replace("''", 'NULL', $sql);
         $resultado = self::$db->query($sql);
+        if(!$resultado)throw new \Exception("Error al crear registro");
         return [$resultado, self::$db->insert_id];  //insert_id retorna el ultimo registro insertado en la bd
            //  [true/false, id=1,2,3...00] = [0,1] 
     }
@@ -112,7 +113,7 @@ class ActiveRecord {
         return [$resultado, self::$db->insert_id];
     }
 
-    public function crear_varios_reg_arrayobj($arrays = []){ //guardar varios registros a la vez
+    public function crear_varios_reg_arrayobj($arrays = []):array{ //guardar varios registros a la vez
                                   // $arrays = [{'colum11':a, 'colum12':b,...}, {'colum21':q, 'colum22':e,..}, ...] arrays de objetos que contiene las columnas y su valor, registros a guardar
         $string2 = '';
 
@@ -136,6 +137,7 @@ class ActiveRecord {
         $sql = "INSERT INTO ".static::$tabla."(".$string1.") VALUES".$string2;
         $resultado = self::$db->query($sql); 
         //INSERT INTO empserv(idempleado, idservicio) VALUES('3', '3'), ('3', '1');
+        if(!$resultado)throw new \Exception("Error al crear registros");
         return [$resultado, self::$db->insert_id];
     }
 
@@ -156,6 +158,7 @@ class ActiveRecord {
         $query .= " WHERE id = '".self::$db->escape_string($this->id)."'";
         $query .= " LIMIT 1;";
         $resultado = self::$db->query($query);
+        if(!$resultado)throw new \Exception("Error al actualizar el registro");
         return $resultado;
     }
 
@@ -273,6 +276,7 @@ class ActiveRecord {
         }
         //UPDATE productos SET stock = CASE WHEN id = 2 THEN stock - 2 WHEN id = 3 THEN stock - 1 ELSE stock END WHERE id IN (2, 3) AND sucursalid = 1;
         $resultado = self::$db->query($query);
+        if(!$resultado)throw new \Exception("Error al descontar stock");
         return $resultado;
     }
 
@@ -326,6 +330,7 @@ class ActiveRecord {
         }
         //UPDATE productos SET stock = CASE WHEN id = 2 THEN stock + 2 WHEN id = 3 THEN stock + 1 WHEN id = 4 THEN stock + 3 ELSE stock END WHERE id IN (2, 3, 4) AND sucursalid = 1;
         $resultado = self::$db->query($query);
+        if(!$resultado)throw new \Exception("Error al descontar stock");
         return $resultado;
     }
 

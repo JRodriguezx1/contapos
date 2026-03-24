@@ -442,7 +442,7 @@
   <?php include __DIR__. "/modalpreciosadicionales.php"; ?>
 
   <script>
-   const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
+    const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
   </script>
 
 </div>
