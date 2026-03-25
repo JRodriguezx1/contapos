@@ -104,7 +104,7 @@
           </div>
         <?php } ?>
       </div>
-      <!-- RESUMEN CLIENTE PRO CON CRÉDITO -->
+      
       <div class="mb-6">
         <button id="addcliente" class="w-full bg-white border border-gray-200 rounded-2xl px-6 py-5 shadow-sm hover:shadow-md hover:border-indigo-500 transition-all flex items-center justify-between">
 

@@ -3,51 +3,12 @@
 
         const POS = (window as any).POS;
 
-        interface i_itemDetalle {
-            id:string, //id del registro de la tabla productosseparados
-            idproducto: string,
-            tipoproducto:string,
-            tipoproduccion:string,
-            idcategoria:string,
-            foto:string,
-            nombreproducto?:string,
-            rendimientoestandar?:number,
-            costo:string,
-            valorunidad:string,
-            cantidad:number,
-            subtotal:number,
-            base:number,
-            impuesto:string,
-            valorimp:number,
-            descuento:number,
-            total:number,
-        }
-
-        interface i_allProducts {
-            id:string,  //id del producto
-            idunidadmedida:string, 
-            nombre:string,
-            impuesto:string,
-            tipoproducto:string, 
-            tipoproduccion:string, 
-            sku:string,
-            stock:string,
-            unidadmedida:string, 
-            preciopersonalizado:string,
-            rendimientoestandar:string, 
-            stockminimo:string,
-            precio_compra:number,
-            precio_venta:number
-            habilitarventa:string, 
-            visible:string,
-        }
-
         interface Item {
             id_impuesto: number,
             facturaid: number,
             basegravable: number,
             valorimpuesto: number
-            }
+        }
 
 
         const selectCliente = POS.gestionClientes.selectCliente;
@@ -94,7 +55,6 @@
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
                 const resultado:productsapi[] = await respuesta.json();
-                //console.log(resultado);
                 filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida }));
                 activarselect2();
                 allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
@@ -108,25 +68,73 @@
             ($('#articulo') as any).select2({ 
                 width: '100%',
                 data: filteredData,
-                placeholder: "Selecciona un item",
+                placeholder: "Buscar producto...",
                 maximumSelectionLength: 1,
             });  
         }
 
+
+        let barcode = "";
+        let lastKeyTime = Date.now();
+        window.addEventListener('keydown', (e: any) => {
+            let estado = true;
+            const currentTime = Date.now();
+            const target = e.target;
+
+            // 1. FILTRO DE ENTRADA mejorado
+            // Si el foco está en un input que NO sea el de búsqueda de Select2, ignoramos.
+            // El buscador de Select2 suele tener la clase 'select2-search__field'
+            const isSelect2Input = $(target).hasClass('select2-search__field');
+            const isBody = target.tagName === 'BODY';
+            const isButton = target.tagName === 'BUTTON' || $(target).hasClass('btn');
+
+            // Si está escribiendo en un input normal (ej: Notas) y NO es el de Select2, salimos
+            if (!isSelect2Input && !isBody && !isButton && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+                if (barcode.length >= 3 && e.key === 'Enter'){
+                    e.preventDefault();
+                    return;
+                }
+                estado = false;
+            }
+
+            if(estado){
+            // 2. LÓGICA DE VELOCIDAD
+            if (currentTime - lastKeyTime > 43)barcode = ""; 
+    
+            lastKeyTime = currentTime;
+            }
+
+            // 3. CAPTURA DEL ENTER
+            if (e.key === 'Enter') {
+                if (barcode.length >= 3) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation(); // <--- CRITICO: Detiene a Select2 y a cualquier botón
+                    console.log(123);
+                    barcode = "";
+                    return false;
+                }
+                barcode = "";
+            } else {
+                // 4. ACUMULACIÓN
+                barcode += e.key;
+            }
+        }, true); // <--- El "true" activa el modo CAPTURA
+
+
+
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
-            console.log(datos);
             if(datos){
-            let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
-            if(itemselected != undefined)cantidad += itemselected.cantidad;
-            agregarProducto(datos.id, datos.text, cantidad);
-            $("#articulo").val('null').trigger('change');
+                let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
+                if(itemselected != undefined)cantidad += itemselected.cantidad;
+                agregarProducto(datos.id, cantidad);
+                $("#articulo").val('null').trigger('change');
             }
         });
 
 
-        function agregarProducto(id:string, nombre:string, cantidad:number) {
+        function agregarProducto(id:string, cantidad:number) {
             const index = carrito.findIndex(x=>x.idproducto==id);
             if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
                 const cantidad = 1;
@@ -153,18 +161,13 @@
                     total: productototal //valorunidad x cantidad
                 }
                 carrito = [...carrito, item];
-            }else{
+            }else{ //sumar cantidad cuando el item ya existe 
                 if(cantidad <= 0){
                     cantidad = 0;
                     carrito[index].total = 0;
                     //carrito = carrito.filter(x=>x.iditem != id);
                 }
-                    
-                carrito[index].cantidad = cantidad;
-                carrito[index].subtotal = (carrito[index].valorunidad)*carrito[index].cantidad;
-                carrito[index].total = carrito[index].subtotal;
-                carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
-                carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
+                sumarcantidad(carrito[index], cantidad);
             }
             
             while(tablaMR.firstChild)tablaMR.removeChild(tablaMR.firstChild);
@@ -173,16 +176,13 @@
                 const tr = document.createElement('tr') as HTMLTableRowElement;
                 tr.classList.add('productselect');
                 tr.dataset.idproducto = `${item.idproducto}`;
-                tr.innerHTML = `
-                    <td class="py-2 pl-4">${item.nombreproducto}</td>
-                    <td class="py-2 text-center cursor-pointer cantidad"><input type="text" class="inputcantidad w-20 p-2 text-center" value="${item.cantidad}"></td>
-                    <td class="py-2 text-right">${item.valorunidad}</td>
-                    <td class="py-2 text-right totalFila">${item.total}</td>
-                    <td class="text-center"><div class="btn-xs btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></div></td>`;
+                tr.innerHTML = `<td class="py-2 pl-4">${item.nombreproducto}</td>
+                                <td class="py-2 text-center cursor-pointer cantidad"><input type="text" class="inputcantidad w-20 p-2 text-center" value="${item.cantidad}"></td>
+                                <td class="py-2 text-right">${item.valorunidad}</td>
+                                <td class="py-2 text-right totalFila">${item.total}</td>
+                                <td class="text-center"><div class="btn-xs btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></div></td>`;
                 tablaMR.prepend(tr);
-                
             });
-            valorCarritoTotal();
         }
 
 
@@ -211,6 +211,10 @@
                 //carrito = carrito.filter(x=>x.iditem != id);
             }
                 
+            sumarcantidad(productoCarrito, cantidad);
+        });
+
+        function sumarcantidad(productoCarrito:CarritoItem, cantidad:number){
             productoCarrito.cantidad = cantidad;
             productoCarrito.subtotal = (productoCarrito.valorunidad)*productoCarrito.cantidad;
             productoCarrito.total = productoCarrito.subtotal;
@@ -218,13 +222,17 @@
             productoCarrito.valorimp = parseFloat((productoCarrito.total*constImp[productoCarrito.impuesto??0]).toFixed(3));
             productoCarrito.base = parseFloat((productoCarrito.total-productoCarrito.valorimp).toFixed(3));
             valorCarritoTotal();
-        });
+        }
 
 
         tablaMR.addEventListener('keydown', (e: KeyboardEvent) => {
             const target = e.target as HTMLElement;
             if (target.classList.contains('inputcantidad')) {
                 const input = target as HTMLInputElement;
+                const currentTime = Date.now();
+                // Calculamos la velocidad: ¿Es un humano o un escáner?
+                const isScanner = (currentTime - lastKeyTime < 43);
+                lastKeyTime = currentTime;
 
                 if (e.key === 'ArrowUp') {
                     e.preventDefault();
@@ -243,6 +251,16 @@
                 }
 
                 if (e.key === 'Enter') {
+                    if (isScanner) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        
+                        // Opcional: Limpiar el input de cantidad si el lector alcanzó a escribir algo
+                        // Aunque con el preventDefault en el evento global (Capture) esto no debería pasar.
+                        
+                        console.log("Enter de escáner bloqueado en inputcantidad");
+                        return false;
+                    }
                     e.preventDefault();
                     btnfacturar?.dispatchEvent( new Event('click'));
                 }
@@ -493,52 +511,6 @@
 
         POS.valorTotal = valorTotal;
         POS.mapMediospago = mapMediospago;
-
-            /*const tdCantidad = tr.querySelector('.cantidad');
-            tdCantidad.classList.add('cursor-pointer');*/
-
-            /* ===== SOLO DOBLE ENTER ===== */
-            /*tdCantidad.onkeydown = e => {
-                const ahora = Date.now();
-
-                // ⬆️ SUBIR
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
-                    beep(900);
-                    flashCantidad(tdCantidad, 'up');
-                    recalcularTotales();
-                    return;
-                }
-
-                // ⬇️ BAJAR
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    tr.dataset.cantidad = Math.max(1, Number(tr.dataset.cantidad) - 1);
-                    beep(500);
-                    flashCantidad(tdCantidad, 'down');
-                    recalcularTotales();
-                    return;
-                }
-
-                // ⏎ ENTER
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-
-                    if (ahora - ultimoEnterTiempo < DOBLE_ENTER_MS) {
-                        // 🔓 DOBLE ENTER → editar manual
-                        activarEdicionCantidad(tdCantidad, tr);
-                        ultimoEnterTiempo = 0;
-                    } else {
-                        // ➕ ENTER SIMPLE → sumar
-                        ultimoEnterTiempo = ahora;
-                        tr.dataset.cantidad = Number(tr.dataset.cantidad) + 1;
-                        beep(900);
-                        flashCantidad(tdCantidad, 'up');
-                        recalcularTotales();
-                    }
-                }
-            };*/
         
 
     }
