@@ -76,10 +76,14 @@
 
         let barcode = "";
         let lastKeyTime = Date.now();
-        window.addEventListener('keydown', (e: any) => {
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
             let estado = true;
             const currentTime = Date.now();
-            const target = e.target;
+            const target = e.target as HTMLElement;
+            const cobrar:boolean = miDialogoFacturar?.open;
+
+            if (e.key === 'Control')(document.querySelector('#articulo') as HTMLSelectElement).focus();
+            if (e.key === 'F8')(document.querySelector('#facturarA') as HTMLButtonElement).click();
 
             // 1. FILTRO DE ENTRADA mejorado
             // Si el foco está en un input que NO sea el de búsqueda de Select2, ignoramos.
@@ -90,28 +94,38 @@
 
             // Si está escribiendo en un input normal (ej: Notas) y NO es el de Select2, salimos
             if (!isSelect2Input && !isBody && !isButton && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
-                if (barcode.length >= 3 && e.key === 'Enter'){
+                if (currentTime - lastKeyTime < 43 && e.key === 'Enter'){
                     e.preventDefault();
+                    if(target.classList.contains('inputcantidad')){
+                        const inputcantidad = (target as HTMLInputElement);
+                        inputcantidad.value = '1';
+                        inputcantidad.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
                     return;
                 }
-                estado = false;
+                if(target.classList.contains('inputcantidad')&& e.key === 'Enter'){
+                    e.preventDefault();
+                    btnfacturar?.dispatchEvent( new Event('click'));
+                }
             }
 
-            if(estado){
             // 2. LÓGICA DE VELOCIDAD
             if (currentTime - lastKeyTime > 43)barcode = ""; 
-    
             lastKeyTime = currentTime;
-            }
 
             // 3. CAPTURA DEL ENTER
             if (e.key === 'Enter') {
                 if (barcode.length >= 3) {
                     e.preventDefault();
                     e.stopImmediatePropagation(); // <--- CRITICO: Detiene a Select2 y a cualquier botón
-                    console.log(123);
+                    console.log(barcode);
+                    searchBarCode(barcode);
                     barcode = "";
                     return false;
+                }
+                if(cobrar){
+                    e.preventDefault();
+                    btnPagar.click();
                 }
                 barcode = "";
             } else {
@@ -121,6 +135,11 @@
         }, true); // <--- El "true" activa el modo CAPTURA
 
 
+        function searchBarCode(barcode:string){
+            console.log(barcode);
+            const itemselected = allproducts.find(x=>x.sku==barcode);
+            console.log(itemselected);
+        }
 
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
         $("#articulo").on('change', (e)=>{
@@ -183,6 +202,7 @@
                                 <td class="text-center"><div class="btn-xs btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></div></td>`;
                 tablaMR.prepend(tr);
             });
+            valorCarritoTotal();
         }
 
 
@@ -212,6 +232,7 @@
             }
                 
             sumarcantidad(productoCarrito, cantidad);
+            valorCarritoTotal();
         });
 
         function sumarcantidad(productoCarrito:CarritoItem, cantidad:number){
@@ -221,19 +242,14 @@
             //calculo del impuesto y base por producto en el carrito deventas
             productoCarrito.valorimp = parseFloat((productoCarrito.total*constImp[productoCarrito.impuesto??0]).toFixed(3));
             productoCarrito.base = parseFloat((productoCarrito.total-productoCarrito.valorimp).toFixed(3));
-            valorCarritoTotal();
         }
 
 
+        ////// EVENTO POR TECLADO DE LA TABLA MODO RAPIDO DE ITEMS SELECCIONADOS
         tablaMR.addEventListener('keydown', (e: KeyboardEvent) => {
             const target = e.target as HTMLElement;
-            if (target.classList.contains('inputcantidad')) {
+            if (target.classList.contains('inputcantidad')) { //Delegation al inputcantidad de la tabla
                 const input = target as HTMLInputElement;
-                const currentTime = Date.now();
-                // Calculamos la velocidad: ¿Es un humano o un escáner?
-                const isScanner = (currentTime - lastKeyTime < 43);
-                lastKeyTime = currentTime;
-
                 if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     input.value = String((Number(input.value) || 0) + 1);
@@ -249,21 +265,6 @@
                     flashCantidad(input, 'down');
                     input.dispatchEvent(new Event('input', { bubbles: true })); // 🔥 reutiliza lógica
                 }
-
-                if (e.key === 'Enter') {
-                    if (isScanner) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        
-                        // Opcional: Limpiar el input de cantidad si el lector alcanzó a escribir algo
-                        // Aunque con el preventDefault en el evento global (Capture) esto no debería pasar.
-                        
-                        console.log("Enter de escáner bloqueado en inputcantidad");
-                        return false;
-                    }
-                    e.preventDefault();
-                    btnfacturar?.dispatchEvent( new Event('click'));
-                }
             }
         });
 
@@ -271,11 +272,6 @@
         document.querySelector('#btnScanner')?.addEventListener('click', ()=>
             (document.querySelector('#articulo') as HTMLSelectElement).focus()
         );
-
-        document.addEventListener('keydown', (e:KeyboardEvent)=>{
-            if (e.key === 'Control')(document.querySelector('#articulo') as HTMLSelectElement).focus();
-            if (e.key === 'F8')(document.querySelector('#facturarA') as HTMLButtonElement).click();
-        });
 
 
         /////////////////////// evento a la tabla de productos de venta (carrito) //////////////////////////
@@ -344,8 +340,7 @@
                 tipoventa = "Contado";
                 POS.tipoventa = tipoventa;
                 POS.gestionSubirModalPagar.subirModalPagar();
-                (document.querySelector('.wrapper-content') as HTMLElement).style.removeProperty('max-height');
-                //document.querySelector('#mediospagos')?.classList.add('h-full');
+                (document.querySelector('#formfacturar #first') as HTMLInputElement).checked = true;
                 miDialogoFacturar.showModal();
             }
         });
