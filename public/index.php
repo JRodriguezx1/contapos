@@ -240,9 +240,10 @@ $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eli
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
-$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //aip llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
+$router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //api llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
 $router->post('/admin/api/eliminarOrden', [ventascontrolador::class, 'eliminarOrden']);  //aip llamada desde ordenresumen.ts cuando se se elimina orden ya sea cotizacion o factura paga
 $router->get('/admin/api/getcotizacion_venta', [ventascontrolador::class, 'getcotizacion_venta']); //api llamada desde ventas.ts para traer la cotizacion y cargarla en el modulo de venta
+$router->get('/admin/api/ventas/detalleProductoCompuesto', [ventascontrolador::class, 'detalleProductoCompuesto']);  //llamada desde ordenresumen.ts para el detalle del producto compuesto vendido
 
 $router->post('/admin/api/facturarModorapido', [modorapidocontrolador::class, 'facturarModorapido']);  //aip llamada desde modorapido.ts cuando se factura en modo rapido
 

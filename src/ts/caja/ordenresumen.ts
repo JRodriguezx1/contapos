@@ -16,6 +16,7 @@
       const referenciaFactura = document.querySelector('#referenciaFactura');
       const enviarEmail = document.querySelector('#enviarEmail') as HTMLButtonElement;
       const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
+      const miDialogoProductoCompuesto = document.querySelector('#miDialogoProductoCompuesto') as any;
       const inputEliminarClave = document.querySelector('#inputEliminarClave') as HTMLInputElement;
 
       const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
@@ -350,6 +351,24 @@
           }
         })();
       }
+
+
+      document.querySelector('#tablaDetalleProductos')?.addEventListener('click', async(e:Event)=>{
+        const target = e.target as HTMLElement;
+        if(target.classList.contains('productoCompuesto')){
+          const parametrosURL = new URLSearchParams(window.location.search);
+          const idventa = parametrosURL.get('id');
+          const idproducto = target.id;
+          miDialogoProductoCompuesto.showModal();
+          try {
+            const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
+            const respuesta = await fetch(url); 
+            const resultado = await respuesta.json();
+          } catch (error) {
+              console.log(error);
+          }
+        }
+      });
 
 
       function validarPasswordDcto():number{

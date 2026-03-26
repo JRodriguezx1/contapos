@@ -89,7 +89,8 @@
                     <label class="btn-xs btn-indigo !w-[83px] !py-4 mt-4 tlg:!w-full btn6" for="btn6">Impuesto</label>
                     <label class="btn-xs btn-indigo !w-[83px] !py-4 mt-4 tlg:!w-full btn7" for="btn7">Facturación</label>
                     <label class="btn-xs btn-indigo !w-[83px] !py-4 mt-4 tlg:!w-full btn8" for="btn8">Sismeta</label>
-                    <label class="btn-xs btn-indigo !w-[83px] !py-4 mt-4 tlg:!w-full btn9" for="btn9">Suscripcion</label> 
+                    <label class="btn-xs btn-indigo !w-[83px] !py-4 mt-4 tlg:!w-full btn9" for="btn9">Whatsapp</label>
+                    <label class="btn-xs btn-indigo !w-[83px] !py-4 mt-4 tlg:!w-full btn10" for="btn10">Suscripcion</label> 
                 </div>
             </div>
         
@@ -104,6 +105,7 @@
                     <?php include __DIR__. "/ajustesdelsistema/impuestos.php"; ?>
                     <?php include __DIR__. "/ajustesdelsistema/facturacion.php"; ?>
                     <?php include __DIR__. "/ajustesdelsistema/sistema.php"; ?>
+                    <?php include __DIR__. "/ajustesdelsistema/whatsapp.php"; ?>
                 <?php endif; ?>
                 <?php include __DIR__. "/ajustesdelsistema/suscripcion.php"; ?>
             </div>

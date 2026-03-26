@@ -29,7 +29,7 @@
             <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
-        <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
+            <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
         <?php endif; ?>
     </div>
     
@@ -84,7 +84,7 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tablaDetalleProductos">
                         <?php foreach($productos as $index=>$value): ?>
                             <tr class="bg-white">
                                 <td scope="row" class="px-6 py-4 font-medium text-gray-900">
@@ -95,7 +95,11 @@
                                             onerror="this.onerror=null;this.src='/build/img/default-product.png';"
                                             alt="J2SoftwarePOS" 
                                         />
-                                        <span> <?php echo $value->nombreproducto??'';?></span>
+                                        <?php if($value->tipoproducto == 0): ?> 
+                                            <span><?php echo $value->nombreproducto ?? ''; ?></span>
+                                        <?php else: ?>
+                                            <button id="<?php echo $value->id;?>" class="productoCompuesto btn-xs btn-light"><?php echo $value->nombreproducto ?? ''; ?></button>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -169,6 +173,11 @@
         </div>
         <div></div>
     </div>
+
+    <dialog id="miDialogoProductoCompuesto" class="midialog-md p-8">
+        <h4 class="text-3xl font-semibold m-0 text-neutral-800">Producto compuesto</h4>
+
+    </dialog>
 
 
     <dialog id="miDialogoFacturar" class="midialog-md !p-12">

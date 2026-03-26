@@ -100,7 +100,6 @@ class modorapidocontrolador{
         }
       }
     }
-    
 
     if($_SERVER['REQUEST_METHOD'] !== 'POST' ){
       $alertas['error'][] = "Metodo del Endpoint no es valido";
@@ -161,7 +160,20 @@ class modorapidocontrolador{
 
       //Si es cotizacion
       }else{
-        
+        $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
+        //////////// Guardar los productos de la venta en tabla ventas //////////////
+        foreach($carrito as $obj){
+          $obj->dato1 = '';
+          $obj->dato2 = '';
+          $obj->idfactura = $r[1];
+          if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
+            $obj->id = 1;  //este es el id de Otros.
+            $obj->idproducto = 1;
+            $obj->idcategoria = 1;
+          }
+        }
+        $venta->crear_varios_reg_arrayobj($carrito);
+        $ultimocierre->actualizar();
         $alertas['exito'][] = "Cotizacion guardada con exito";
       }
 

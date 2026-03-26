@@ -954,4 +954,19 @@ class ventascontrolador{
     echo json_encode($alertas);
   }
 
+
+
+  public static function detalleProductoCompuesto(){
+      isadmin();
+      $idproducto = $_GET['idproducto'];
+      $idfactura = $_GET['idfactura'];
+      if(!is_numeric($idproducto) || !is_numeric($idfactura))return;
+      $productoCompuesto = ventas::uniquewhereArray(['idfactura'=>$idfactura, 'idproducto'=>$idproducto, 'tipoproducto'=>1]);
+      
+      $detalleProducto = productos_sub::unJoinWhereArrayObj();
+
+      echo json_encode('lupe ..');
+      return;
+    }
+
 }

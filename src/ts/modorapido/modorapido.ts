@@ -30,7 +30,8 @@
         let allproducts:productsapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
         const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
-        const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
+        let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
+        //const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
 
         const constImp: {[key:string]: number} = {};
         constImp['excluido'] = 0;
@@ -118,7 +119,6 @@
                 if (barcode.length >= 3) {
                     e.preventDefault();
                     e.stopImmediatePropagation(); // <--- CRITICO: Detiene a Select2 y a cualquier botón
-                    console.log(barcode);
                     searchBarCode(barcode);
                     barcode = "";
                     return false;
@@ -136,9 +136,8 @@
 
 
         function searchBarCode(barcode:string){
-            console.log(barcode);
             const itemselected = allproducts.find(x=>x.sku==barcode);
-            console.log(itemselected);
+            if(itemselected != undefined)agregarProducto(itemselected.id, 1);
         }
 
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
@@ -285,6 +284,12 @@
             }
         });
 
+
+        function printTarifaEnvio():void{
+            tarifas = POS.tarifas;
+            const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
+        
+        }
         
         ////////////////////// valores finales subtotal y total ////////////////////////
         function valorCarritoTotal(){
@@ -506,9 +511,11 @@
         }
 
 
+        POS.valorCarritoTotal = valorCarritoTotal;
         POS.valorTotal = valorTotal;
         POS.mapMediospago = mapMediospago;
-        
+        POS.tarifas = tarifas;
+        POS.printTarifaEnvio = printTarifaEnvio;
 
     }
 

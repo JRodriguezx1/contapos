@@ -1,4 +1,4 @@
-<div class="contenido9 configsuscripcion accordion_tab_content p-6 rounded-lg w-full space-y-6">
+<div class="contenido10 configsuscripcion accordion_tab_content p-6 rounded-lg w-full space-y-6">
 
   <!-- Botón que abre el modal -->
   <div class="flex justify-end gap-4 items-center mb-6">
