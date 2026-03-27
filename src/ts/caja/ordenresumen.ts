@@ -18,6 +18,7 @@
       const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
       const miDialogoProductoCompuesto = document.querySelector('#miDialogoProductoCompuesto') as any;
       const inputEliminarClave = document.querySelector('#inputEliminarClave') as HTMLInputElement;
+      const tablaDetalleInsumos = document.querySelector('#tablaDetalleInsumos tbody') as HTMLBodyElement;
 
       const valorTotal = {subtotal: 0, impuesto: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
       const mapMediospago = new Map();
@@ -298,10 +299,11 @@
   
       function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (event.target === miDialogoFacturar || event.target === miDialogoEliminarOrden || event.target === miDialogoEnviarEmailCliente || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar')) {
+        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoProductoCompuesto || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLElement).id == 'btnXCerrarModalProductoCompuesto') {
             miDialogoFacturar.close();
             miDialogoEliminarOrden.close();
             miDialogoEnviarEmailCliente.close();
+            miDialogoProductoCompuesto.close();
             document.removeEventListener("click", cerrarDialogoExterno);
         }
       }
@@ -354,22 +356,40 @@
 
 
       document.querySelector('#tablaDetalleProductos')?.addEventListener('click', async(e:Event)=>{
+        while(tablaDetalleInsumos.firstChild)tablaDetalleInsumos.removeChild(tablaDetalleInsumos.firstChild);
         const target = e.target as HTMLElement;
         if(target.classList.contains('productoCompuesto')){
+          const nombreProductoCompuesto = target.textContent;
           const parametrosURL = new URLSearchParams(window.location.search);
           const idventa = parametrosURL.get('id');
           const idproducto = target.id;
+          document.querySelector('#nombreProducto')!.textContent = nombreProductoCompuesto;
           miDialogoProductoCompuesto.showModal();
+          document.addEventListener("click", cerrarDialogoExterno);
           try {
             const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
             const respuesta = await fetch(url); 
             const resultado = await respuesta.json();
-            
+            detalleInsumos(resultado);
           } catch (error) {
               console.log(error);
           }
         }
       });
+
+
+      function detalleInsumos(resultado:{cantidadcalculada:string, costo:string, disponibilidad:string, nombre:string, precio_compra:string, simbolo:string, sku:string, stockminimo:string, unidadmedida:string}[]){
+        resultado.forEach(ins=>{
+          const tr = document.createElement('tr') as HTMLTableRowElement;
+          //tr.classList.add('productselect');
+          //tr.dataset.idproducto = `${item.idproducto}`;
+          tr.innerHTML = `<td class="text-center">${ins.nombre}</td>
+                          <td class="text-center">${ins.cantidadcalculada}</td>
+                          <td class="text-center">${ins.unidadmedida}</td>
+                          <td class="text-center">${ins.disponibilidad} ${ins.simbolo}</td>`;
+          tablaDetalleInsumos.prepend(tr);
+        });
+      }
 
 
       function validarPasswordDcto():number{
