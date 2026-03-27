@@ -962,10 +962,16 @@ class ventascontrolador{
       $idfactura = $_GET['idfactura'];
       if(!is_numeric($idproducto) || !is_numeric($idfactura))return;
       $productoCompuesto = ventas::uniquewhereArray(['idfactura'=>$idfactura, 'idproducto'=>$idproducto, 'tipoproducto'=>1]);
-      
-      $detalleProducto = productos_sub::unJoinWhereArrayObj();
-
-      echo json_encode('lupe ..');
+      debuguear($productoCompuesto);
+      $sql = "SELECT x.id, x.id_producto, x.id_subproducto, TRUNCATE((x.cantidadsubproducto*$productoCompuesto->cantidad)/$productoCompuesto->rendimientoestandar, 3) as cantidadcalculada, x.costo, 
+              sp.nombre, sp.sku, sp.precio_compra, u.nombre as unidadmedida, u.simbolo, si.stock as disponibilidad, si.stockminimo 
+              FROM productos_sub x 
+              INNER JOIN subproductos sp ON x.id_subproducto = sp.id
+              INNER JOIN unidadesmedida u ON sp.id_unidadmedida = u.id
+              INNER JOIN stockinsumossucursal si ON sp.id = si.subproductoid
+              WHERE x.id_producto = 2 AND si.sucursalid = 1;";
+      $detalleProducto = productos_sub::camposJoinObj($sql);
+      echo json_encode($detalleProducto);
       return;
     }
 

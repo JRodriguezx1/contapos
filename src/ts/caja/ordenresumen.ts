@@ -364,6 +364,7 @@
             const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
             const respuesta = await fetch(url); 
             const resultado = await respuesta.json();
+            
           } catch (error) {
               console.log(error);
           }
