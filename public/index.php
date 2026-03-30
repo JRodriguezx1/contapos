@@ -332,6 +332,7 @@ $router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
 $router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::class, 'crearFacturaPOSaElectronica']);
 $router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::class, 'asignarAdquirienteAFactura']);
 $router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
+$router->POST('/admin/api/editarResolutionFE', [apidiancontrolador::class, 'editarResolutionFE']);
 
 $router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
 $router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts

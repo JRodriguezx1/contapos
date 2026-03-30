@@ -2,7 +2,7 @@
   <div class="flex flex-col tlg:flex-row">
     <div class="basis-2/3 px-4 pb-4 pt-0">
       <div id="divmsjalerta1">
-        <?php
+        <?php /*
           // 🔥 ESTE ARRAY LO REEMPLAZA BACKEND DESPUÉS
           $resolucion = [
             "tipo" => "electronica", // pos | electronica
@@ -102,7 +102,7 @@
 
             </div>
           </div>
-        <?php } ?>
+        <?php }*/ ?>
       </div>
       
       <div class="mb-6">

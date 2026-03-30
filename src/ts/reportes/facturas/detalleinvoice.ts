@@ -12,11 +12,12 @@
     const facturarA = document.querySelector('#facturarA') as HTMLButtonElement;  //btn para asignar adquiriente
     const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
     const modalNuevaFactura = document.querySelector('#modalNuevaFactura') as HTMLDialogElement;
+    const modalEditarResolution = document.querySelector('#modalEditarResolution') as HTMLDialogElement;
     const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
     const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
     const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
     const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
-    let isElectronica = false;
+    let isElectronica = false, idfeEditarResolution:string;
     let customers:adquirientes[] = [];
     let customersfiltrados:adquirientes[] = [];
 
@@ -425,11 +426,32 @@
     /////////  ENVENTO A LA TABLA DE DETALLE DE DOCUMENTOS  ///////////
     document.querySelector('#detalleDocumento')?.addEventListener('click', e=>{
       const evento = e.target;
-      if((evento as HTMLSpanElement).classList.contains('eliminarFactura')){
-        const tr:string|undefined = (evento as HTMLSpanElement).closest('tr')?.dataset.idfe;
+      const tr:string|undefined = (evento as HTMLSpanElement).closest('tr')?.dataset.idfe;
+      if((evento as HTMLSpanElement).classList.contains('eliminarFactura'))
         if(tr != undefined)eliminarFacturaElectronica(tr);
+      if((evento as HTMLSpanElement).classList.contains('editarResolution'))
+        if(tr != undefined){
+          idfeEditarResolution = tr;
+          modalEditarResolution.showModal();
+          document.addEventListener("click", cerrarDialogoExterno);
+        }
+    });
+
+    document.querySelector('#formEditarResolution')?.addEventListener('submit', async e=>{
+        e.preventDefault();
+        try {
+        const url = "/admin/api/editarResolutionFE"; //llamado a la API REST apidiancontrolador.php
+        const respuesta = await fetch(url, {
+            method: 'POST', 
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({id: idfeEditarResolution})
+        });
+        const resultado = await respuesta.json();
+        
+      } catch (error) {
+        console.log(error);
       }
-    })
+    });
 
     async function eliminarFacturaElectronica(idfe:string){
       try {
@@ -455,10 +477,12 @@
     }
 
     function cerrarDialogoExterno(event:Event) {
-      if( event.target === miDialogoNC || event.target === modalNuevaFactura || event.target === miDialogoFacturarA || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
+      const f = event.target;
+      if( f === miDialogoNC || f === modalNuevaFactura || f === miDialogoFacturarA || f === modalEditarResolution || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).value === 'Cancelar') {
         miDialogoNC.close();
         modalNuevaFactura.close();
         miDialogoFacturarA.close();
+        modalEditarResolution.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

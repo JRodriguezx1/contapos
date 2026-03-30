@@ -589,4 +589,20 @@ class apidiancontrolador{
   }
 
 
+  public static function editarResolutionFE(){
+    isadmin();
+    $alertas = [];
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $idfe = $data['id'];
+    echo json_encode('lupelulu');
+    return;
+  }
+
 }

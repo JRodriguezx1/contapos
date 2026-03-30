@@ -5,7 +5,6 @@
 
     <!-- ENCABEZADO -->
     <div class="bg-white shadow rounded-xl p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-8 mb-5">
-
         <!-- Izquierda -->
         <div>
              <!-- id de la factura electronica de venta -->
@@ -153,7 +152,10 @@
                                 <?php echo $value->id_estadonota==2&&$value->nota_credito==1?'Aceptada NC':($value->id_estadonota==1&&$value->nota_credito==1?'Pendiente NC':($value->id_estadonota==3&&$value->nota_credito==1?'Error NC':''));?>
                             </a>
                         </td>
-                        <td class="text-center"><?php echo $value->id_estadoelectronica!=2?'<span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span>':''?></td>
+                        <td class="text-center">
+                            <?php if($value->id_estadoelectronica): ?><span class="editarResolution material-symbols-outlined cursor-pointer">app_registration</span><?php endif; ?>
+                            <?php if($value->id_estadoelectronica!=2): ?><span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span><?php endif; ?>
+                        </td>
                     </tr>
                 <?php endif; endforeach;  ?>
             </tbody>
@@ -247,9 +249,7 @@
         backdrop:backdrop-blur-sm">
 
         <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h4 class="text-2xl font-bold text-red-700 flex items-center gap-2">
-                🧾 Generar Nota Crédito
-            </h4>
+            <h4 class="text-2xl font-bold text-red-700 flex items-center gap-2">🧾 Generar Nota Crédito</h4>
 
             <button id="btnCerrarNotaCredito"
                 class="p-2 rounded-lg hover:bg-gray-100 transition"
@@ -353,7 +353,6 @@
             <!-- Tipo de consecutivo -->
             <div>
                 <label class="font-medium text-gray-800 block">Tipo de consecutivo</label>
-
                 <div class="space-y-3 mt-2">
 
                     <label class="flex items-center gap-3 bg-gray-50 border border-gray-300 p-3 rounded-lg cursor-pointer hover:border-indigo-600 transition">
@@ -406,12 +405,8 @@
 
             <!-- Header -->
             <div class="flex items-center gap-4 pb-4 border-b">
-                <div class="text-indigo-600 mt-1">
-                    <i class="fas fa-user-circle text-[4rem] leading-[2.5rem]"></i>
-                </div>
-                <h3 class="text-3xl font-bold text-indigo-800">
-                    Datos Factura Electrónica
-                </h3> 
+                <div class="text-indigo-600 mt-1"><i class="fas fa-user-circle text-[4rem] leading-[2.5rem]"></i></div>
+                <h3 class="text-3xl font-bold text-indigo-800">Datos Factura Electrónica</h3> 
             </div>
             <p class="text-lg text-gray-600">Ingresar datos del adquiriente</p>
 
@@ -559,18 +554,63 @@
 
             <!-- Botones -->
             <div class="flex justify-end gap-4 pt-6 border-t">
-                <button type="button"
-                    class="px-6 py-4 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-                    onclick="miDialogoFacturarA.close()">
+                <button type="button" class="px-6 py-4 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium" onclick="miDialogoFacturarA.close()">Cancelar</button>
+                <button type="submit" class="px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md">Confirmar</button>
+            </div>
+
+        </form>
+    </dialog>
+
+
+    <!-- MODAL EDITAR RESOLUCION DE FE -->
+    <dialog 
+        id="modalEditarResolution"
+        class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-10 bg-white backdrop:bg-black/40 shadow-2xl
+                transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out backdrop:backdrop-blur-sm"
+        >
+
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-3"><i class="fa-solid fa-file-pen text-indigo-700 text-3xl"></i>Datos de resolucion</h4>
+
+            <button id="btnCerrarEditarResolution"
+                class="p-2 rounded-lg hover:bg-gray-100 transition"
+                onclick="document.getElementById('modalEditarResolution').close()">
+                <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
+            </button>
+        </div>
+
+        <form id="formEditarResolution" method="POST" class="grid grid-cols-1 gap-6">
+            <!-- Seleccionar Resolución -->
+            
+            <label class="font-medium text-gray-800">Resolución en uso</label>
+            <select id="selectEditarResolucion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" required>
+                <option value="" selected disabled>- Seleccionar -</option>
+                <?php foreach($resoluciones as $value): ?>
+                    <option value="<?= $value->id ?>" data-prefijo="<?= $value->prefijo ?>" data-actual="<?= $value->siguientevalor ?>"><?= $value->nombre; ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <!-- Nombre -->
+            <div>
+                <label class="font-semibold text-gray-700">Consecutivo</label>
+                <input id="business_name" name="business_name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2" value="">
+            </div>
+
+            <!-- Botones -->
+            <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
+                <button type="button" id="btnEditarResolution"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg px-6 py-4 font-medium"
+                    onclick="document.getElementById('modalEditarResolution').close()">
                     Cancelar
                 </button>
 
-                <button type="submit"
-                    class="px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md">
-                    Confirmar
+                <button id="btnGenerarEditarResolution"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-6 py-4 font-semibold shadow-md">
+                    Aplicar
                 </button>
             </div>
-
+            
         </form>
     </dialog>
 
