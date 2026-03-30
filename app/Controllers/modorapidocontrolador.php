@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Classes\Traits\DocumentTrait;
+use App\classes\Traits\DocumentTrait;
 use App\Models\inventario\productos;
 use App\Models\inventario\categorias;
 use App\Models\configuraciones\mediospago;

@@ -166,7 +166,7 @@
       (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
       if(idfeState != '2'){
         const resDian = await POS.sendInvoiceAPI.sendInvoice(idfactura);
-        const filaDoc = document.querySelector(`#detalleDocumento tr[data-idfe="${idfe}"]`);
+        const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfe}"]`);
         if(resDian.exito !== undefined){
           document.querySelector('#estadoFactura')!.textContent = 'Aceptada DIAN';
           document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'text-gray-700', 'bg-yellow-100', 'text-yellow-700');
@@ -255,7 +255,7 @@
     });
 
     function printDocumentInTable(facturaelectronica:document){
-      document.querySelector('#detalleDocumento')?.insertAdjacentHTML('beforeend', `
+      document.querySelector('#detalleDocumentos')?.insertAdjacentHTML('beforeend', `
         <tr data-idfe="${facturaelectronica.id}">
           <td class="py-3 px-4">${facturaelectronica.id}</td>
           <td class="text-center">N° ${facturaelectronica.id_facturaid}</td> 
@@ -382,7 +382,7 @@
               });
               const responseDian = await respuesta.json(); 
               console.log(responseDian);
-              const filaDoc = document.querySelector(`#detalleDocumento tr[data-idfe="${idInvoice}"]`);
+              const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idInvoice}"]`);
               if(filaDoc)filaDoc.children[2].textContent = filaDoc.children[2].textContent+' / '+responseDian.notacredito.prefixnc+' - '+responseDian.notacredito.num_nota;
               if(responseDian.exito !== undefined){
                 msjalertToast('success', '¡Éxito!', responseDian.exito[0]);
@@ -424,7 +424,7 @@
 
 
     /////////  ENVENTO A LA TABLA DE DETALLE DE DOCUMENTOS  ///////////
-    document.querySelector('#detalleDocumento')?.addEventListener('click', e=>{
+    document.querySelector('#detalleDocumentos')?.addEventListener('click', e=>{
       const evento = e.target;
       const tr:string|undefined = (evento as HTMLSpanElement).closest('tr')?.dataset.idfe;
       if((evento as HTMLSpanElement).classList.contains('eliminarFactura'))
@@ -444,10 +444,20 @@
         const respuesta = await fetch(url, {
             method: 'POST', 
             headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify({id: idfeEditarResolution})
+            body: JSON.stringify({
+                                    idfe: idfeEditarResolution,
+                                    idresolution: (document.querySelector('#selectEditarResolucion') as HTMLInputElement).value,
+                                    consecutivo: (document.querySelector('#consecutivoEditarResolution') as HTMLInputElement).value
+                                  })
         });
         const resultado = await respuesta.json();
-        
+        if(resultado.exito !== undefined){
+            msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfeEditarResolution}"]`) as HTMLTableRowElement;
+            //filaDoc.children[2].textContent
+          }else{
+            msjalertToast('error', '¡Error!', resultado.error[0]);
+          }
       } catch (error) {
         console.log(error);
       }
@@ -463,7 +473,7 @@
           });
           const resultado = await respuesta.json(); 
           console.log(resultado);
-          const filaDoc = document.querySelector(`#detalleDocumento tr[data-idfe="${idfe}"]`);
+          const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfe}"]`);
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             if(filaDoc)filaDoc.remove();

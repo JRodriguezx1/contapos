@@ -131,10 +131,10 @@
                     <th class="py-3 px-4 text-center">Acciones</th>
                 </tr>
             </thead>
-            <tbody id="detalleDocumento" class="divide-y">
+            <tbody id="detalleDocumentos" class="divide-y">
                 <?php foreach($facturasElectronicas as $value): 
                     if($value->id_estadoelectronica != 4): ?>
-                    <tr data-idfe="<?php echo $value->id;?>">
+                    <tr class="detalleDocumento" data-idfe="<?php echo $value->id;?>">
                         <td class="py-3 px-4"><?php echo $value->id;?></td>
                         <td class="text-center">N° <?php echo $value->id_facturaid;?></td>
                         <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
@@ -591,10 +591,10 @@
                 <?php endforeach; ?>
             </select>
 
-            <!-- Nombre -->
+            <!-- Consecutivo -->
             <div>
                 <label class="font-semibold text-gray-700">Consecutivo</label>
-                <input id="business_name" name="business_name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2" value="">
+                <input id="consecutivoEditarResolution" name="consecutivoEditarResolution" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1 mt-2" value="">
             </div>
 
             <!-- Botones -->
@@ -605,10 +605,7 @@
                     Cancelar
                 </button>
 
-                <button id="btnGenerarEditarResolution"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-6 py-4 font-semibold shadow-md">
-                    Aplicar
-                </button>
+                <button id="btnGenerarEditarResolution" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-6 py-4 font-semibold shadow-md">Aplicar</button>
             </div>
             
         </form>
