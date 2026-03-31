@@ -7,6 +7,7 @@ use App\Models\felectronicas\facturas_electronicas;
 use App\Models\sucursales;
 
 use App\services\facturaElectronicaService;
+use GreenApi\RestApi\GreenApiClient;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -15,6 +16,7 @@ class notificationwscontrolador{
 
   public static function editarResolutionFE():void{
     isadmin();
+    //new GreenApiClient()
     //header('Content-Type: application/json');
     $alertas = [];
     $getDB = facturas_electronicas::getDB();
