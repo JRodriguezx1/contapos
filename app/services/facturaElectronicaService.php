@@ -70,7 +70,7 @@ class facturaElectronicaService {
     }
 
     //actualizar datos de la resolucion de la FE
-    public static function actualizarResolutionFE(array $data){
+    public static function actualizarResolutionFE(array $data):string{
       date_default_timezone_set('America/Bogota');
       $idfe = $data['idfe'];
       $idresolution = $data['idresolution'];
@@ -95,5 +95,6 @@ class facturaElectronicaService {
       $json_envio->payment_form->payment_due_date = date('Y-m-d');
       $facturaElectronica->json_envio = json_encode($json_envio, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
       $facturaElectronica->actualizar();
+      return $facturaElectronica->num_factura;
     }
 }

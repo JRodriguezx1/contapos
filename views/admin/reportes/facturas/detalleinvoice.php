@@ -125,7 +125,7 @@
             <thead class="bg-gray-100 text-gray-600 font-semibold">
                 <tr>
                     <th class="py-3 px-4 text-left">Id</th>
-                    <th class="py-3 px-4 text-center">Factura</th>
+                    <th class="py-3 px-4 text-center">Id Factura</th>
                     <th class="py-3 px-4 text-center">F. Electronica/NC</th>
                     <th class="py-3 px-4 text-center">Estado</th>
                     <th class="py-3 px-4 text-center">Acciones</th>
@@ -136,7 +136,7 @@
                     if($value->id_estadoelectronica != 4): ?>
                     <tr class="detalleDocumento" data-idfe="<?php echo $value->id;?>">
                         <td class="py-3 px-4"><?php echo $value->id;?></td>
-                        <td class="text-center">N° <?php echo $value->id_facturaid;?></td>
+                        <td class="text-center"><?php echo $value->id_facturaid;?></td>
                         <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
                         <td class="text-center">
                             <a 
@@ -153,7 +153,7 @@
                             </a>
                         </td>
                         <td class="text-center">
-                            <?php if($value->id_estadoelectronica): ?><span class="editarResolution material-symbols-outlined cursor-pointer">app_registration</span><?php endif; ?>
+                            <?php if($value->id_estadoelectronica!=2): ?><span class="editarResolution material-symbols-outlined cursor-pointer">app_registration</span><?php endif; ?>
                             <?php if($value->id_estadoelectronica!=2): ?><span class="cursor-pointer material-symbols-outlined eliminarFactura">delete</span><?php endif; ?>
                         </td>
                     </tr>

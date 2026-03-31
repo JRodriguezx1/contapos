@@ -609,9 +609,9 @@ class apidiancontrolador{
     }
     $getDB->begin_transaction();
     try {
-      facturaElectronicaService::actualizarResolutionFE($data);
-       $getDB->commit();
-       $alertas['exito'] = 'Cambio de datos de resolucion de factura electronica.';
+      $alertas['prefijoNum'] = facturaElectronicaService::actualizarResolutionFE($data);
+      $getDB->commit();
+      $alertas['exito'][] = 'Cambio de datos de resolucion de factura electronica.';
     } catch (\Throwable $th) {
       $getDB->rollback();
       $alertas['error'][] = "Error al actualizar los datos de la resolucion de la factura electronica. ".$th->getMessage();
@@ -619,5 +619,6 @@ class apidiancontrolador{
     echo json_encode($alertas);
     return;
   }
+  
 
 }

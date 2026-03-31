@@ -454,7 +454,8 @@
         if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfeEditarResolution}"]`) as HTMLTableRowElement;
-            //filaDoc.children[2].textContent
+            filaDoc.children[2].textContent = resultado.prefijoNum;
+             document.querySelector('#prefixNumber')!.textContent = `Factura #${resultado.prefijoNum}`;
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
