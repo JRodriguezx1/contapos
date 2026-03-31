@@ -36,6 +36,7 @@
   const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
   const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
   const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
+  const businessNameInput = document.querySelector('#business_name') as HTMLInputElement;
   const btnBuscarAdquiriente = document.querySelector('#btnBuscarAdquiriente') as HTMLButtonElement;
   const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
   const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;

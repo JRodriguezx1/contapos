@@ -23,6 +23,7 @@ use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
+use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{
@@ -233,6 +234,16 @@ class reportescontrolador{
         $router->render('admin/reportes/facturas/detalleinvoice', ['titulo'=>'Reportes', 'idfe'=>$id, 'factura'=>$factura, 'facturasElectronicas'=>$facturasElectronicas, 'ultimaFacturaElectronica'=>$ultimaFacturaElectronica, 'adquiriente'=>$adquiriente, 'resoluciones'=>$resoluciones, 'departments'=>$departments, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+
+    public static function utilidadRentabilidad(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        /*$ws = new whatsAppService();
+        $ws->sendMessage('', '');*/
+
+        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadRentabilidad', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
 
     public static function utilidadxproducto(Router $router){
         //session_start();

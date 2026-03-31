@@ -271,7 +271,7 @@
 
                     <label for="habilitarmoduloinicio" class="flex items-center justify-between cursor-pointer mb-3">
                     <span class="text-gray-600 text-xl ">Habilitar módulo de inicio</span>
-                    <input id="habilitarmoduloinicio" name="permisos[]" value="18" type="checkbox" class="sr-only peer">
+                    <input id="habilitarmoduloinicio" name="permisos[]" value="9" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
                         </div>
@@ -375,6 +375,35 @@
                     <label for="verreportescaja" class="flex items-center justify-between cursor-pointer">
                         <span class="text-gray-600 ">Ver reportes de caja</span>
                         <input id="verreportescaja" name="permisos[]" value="15" type="checkbox" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Módulo de Credito-->
+                <div class="p-4 border border-gray-200 rounded-lg moduloventas mb-4">
+                    <p class="text-slate-600 text-xl font-bold mb-4">Módulo de Credito</p>
+
+                    <label for="habilitarmodulocredito" class="flex items-center justify-between cursor-pointer mb-3">
+                        <span class="text-gray-600  text-xl">Habilitar módulo de credito</span>
+                        <input id="habilitarmodulocredito" name="permisos[]" value="19" type="checkbox" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+                        </div>
+                    </label>
+
+                    <label for="editarcreditos" class="flex items-center justify-between cursor-pointer mb-3">
+                        <span class="text-gray-600  text-xl">Editar creditos activos</span>
+                        <input id="editarcreditos" name="permisos[]" value="20" type="checkbox" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+                        </div>
+                    </label>
+
+                    <label for="eliminarcredito" class="flex items-center justify-between cursor-pointer mb-3">
+                        <span class="text-gray-600  text-xl">Eliminar credito</span>
+                        <input id="eliminarcredito" name="permisos[]" value="21" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
                         </div>

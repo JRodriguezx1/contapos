@@ -756,6 +756,7 @@ class cajacontrolador{
           if($ra){
             $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
             $alertas['ultimocierre'][] = $ultimocierre->id;
+            //enviar cierre de caja por ws
           }else{
             $ultimocierrecaja = cierrescajas::find('id', $r[1]);
             $ultimocierrecaja->eliminar_registro();
