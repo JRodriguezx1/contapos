@@ -30,6 +30,7 @@ use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
 use App\Controllers\suscripcioncontrolador;
 use App\Controllers\trasladosinvcontrolador;
+use App\Controllers\whatsAppControlador;
 use App\Middlewares\MembershipMiddleware;
 // me importa la clase router
 use MVC\Router;
@@ -337,6 +338,8 @@ $router->POST('/admin/api/editarResolutionFE', [apidiancontrolador::class, 'edit
 
 $router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
 $router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts
+
+$router->get('/admin/api/ws/sendtextDetalleCierreCaja', [whatsAppControlador::class, 'sendtextDetalleCierreCaja']); 
 
 
 //////***************************/***NO**************************//////
