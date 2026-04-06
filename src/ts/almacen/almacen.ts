@@ -2,9 +2,11 @@
     if(document.querySelector('.almacen')){
         const btntrasladoinvnetario = document.querySelector('#btntrasladoinvnetario') as HTMLInputElement;
         const btnMasOpciones = document.querySelector('#btnMasOpciones') as HTMLInputElement;
+        const btnviewProductsBajoStock = document.querySelector('#btnviewProductsBajoStock') as HTMLButtonElement;
         const miDialogoTrasladoInvnetario = document.querySelector('#miDialogoTrasladoInvnetario') as any;
         const miDialogoMasOpciones = document.querySelector('#miDialogoMasOpciones') as any;
         const reinciarinv = document.querySelector('#reinciarinv') as HTMLButtonElement;
+        const miDialogoBajoStock = document.querySelector('#miDialogoBajoStock') as HTMLDialogElement;
         const miDialogoStock = document.querySelector('#miDialogoStock') as any;
         const modalStock = document.querySelector('#modalStock') as HTMLElement;
         const selectStockRapidoUndmedida = document.querySelector('#selectStockRapidoUndmedida') as HTMLSelectElement;
@@ -64,6 +66,10 @@
             document.addEventListener("click", cerrarDialogoExterno);
         });
 
+
+        btnviewProductsBajoStock.addEventListener('click', ()=>{
+            miDialogoBajoStock.showModal();
+        })
 
         reinciarinv.addEventListener('click', (e)=>{
             Swal.fire({

@@ -15,6 +15,7 @@
                 <tr>
                     <th>id</th>
                     <th>Fecha</th>
+                    <th>Fecha Fin</th>
                     <th>Tipo</th>
                     <th>Cliente</th>
                     <th>Credito</th>
@@ -29,6 +30,7 @@
                 <tr> 
                     <td class=""><?php echo $value->ID; ?></td>
                     <td class=""><?php echo $value->fechainicio; ?></td>
+                    <td class=""><?php echo $value->fechafin; ?></td>
                     <td class=""><?php echo $value->idtipofinanciacion==1?'Credito':'Separado'; ?></td>
                     <td class=""><?php echo $value->nombre.' '.$value->apellido; ?></td>         
                     <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>

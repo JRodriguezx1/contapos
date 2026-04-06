@@ -699,8 +699,11 @@ class cajacontrolador{
         $ultimocierre->realventas = $ultimocierre->ingresoventas-$ultimocierre->totaldescuentos;
         $ultimocierre->totalbruto = $ultimocierre->ingresoventas;
         $ultimocierre->estado = 1; //cerrar caja
+        
+        //**obtener base automatica establecida en los parametros del sistema, solo para la caja principal
+        $baseAuto = $conflocal['base_de_caja_automatico_constante']->valor_final??0;
         // crear el siguiente cierre de caja
-        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'fechacierre'=>$ultimocierre->fechacierre]);
+        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'fechacierre'=>$ultimocierre->fechacierre, 'basecaja'=>$ultimocierre->idcaja==1?$baseAuto:0]);
         $r = $crearcierrecaja->crear_guardar();
         if($r[0]){
           $ra = $ultimocierre->actualizar();

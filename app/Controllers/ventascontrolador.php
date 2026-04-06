@@ -31,6 +31,7 @@ use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
 use App\services\creditosService;
 use App\services\stockService;
+use App\services\whatsAppService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -891,6 +892,8 @@ class ventascontrolador{
                   if($invSub){
                     $alertas['exito'][] = "Orden eliminada correctamente";
                     //enviar notificacion por ws
+                    //$ws = new whatsAppService();
+                    //$ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, true, $resultArray['productosSimples']);
                   }else{
                     $alertas['error'][] = "Error, intenta nuevamente";
                     $tempfactura->actualizar();
@@ -921,6 +924,8 @@ class ventascontrolador{
               }else{
                 $alertas['exito'][] = "Orden eliminada correctamente";
                 //enviar notificacion por ws
+                //$ws = new whatsAppService();
+                //$ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, false);
               }
             }else{
               $alertas['error'][] = "Error, intenta nuevamente";

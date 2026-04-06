@@ -143,7 +143,7 @@
                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                 >
             </div>
-            <p class="mt-1 text-sm text-gray-500">Ingrso automatico de la base de caja constante</p>
+            <p class="mt-1 text-sm text-gray-500">Ingrso automatico de la base en caja principal</p>
         </div>
     </div>
 </div> <!-- End Caja -->
