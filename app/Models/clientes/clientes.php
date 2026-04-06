@@ -17,7 +17,7 @@ class clientes extends \App\Models\ActiveRecord {
         $this->fecha_nacimiento = $args['fecha_nacimiento'] ?? '';
         $this->total_compras = $args['total_compras '] ?? '';
         $this->ultima_compra = $args['ultima_compra'] ?? '';
-        $this->totaldebe = $args['totaldebe '] ?? '';
+        $this->totaldebe = $args['totaldebe '] ?? 0;
         $this->limitecredito = $args['limitecredito'] ?? 100000;
         $this->data1 = $args['data1'] ?? '';
         $this->created_at = $args['created_at']??'';

@@ -16,12 +16,14 @@ class creditos {
         $this->nombrecliente = $args['nombrecliente']??'cliente';
         $this->capital = $args['capital']??0;
         $this->abonoinicial = $args['abonoinicial']??0;
+        $this->abonodecuotas = $args['abonodecuotas']??0;
         $this->saldopendiente = $args['saldopendiente']??0;
         $this->numcuota = $args['numcuota']??0;
         $this->cantidadcuotas = $args['cantidadcuotas']??0;
         $this->montocuota = $args['montocuota']??0;
         $this->frecuenciapago = $args['frecuenciapago']??'';
         $this->fechainicio = $args['fechainicio']??date('Y-m-d');
+        $this->fechafin = $args['fechafin']??date('Y-m-d H:i:s');
         $this->interes = $args['interes']??'';
         $this->interesxcuota = $args['interesxcuota']??0;
         $this->interestotal = $args['interestotal']??0;
@@ -68,13 +70,15 @@ class creditos {
             'num_orden' =>$this->num_orden,
             'nombrecliente' => $this->nombrecliente, 
             'capital' => $this->capital, 
-            'abonoinicial' => $this->abonoinicial, 
+            'abonoinicial' => $this->abonoinicial,
+            'abonodecuotas' => $this->abonodecuotas,
             'saldopendiente' => $this->saldopendiente, 
             'numcuota' => $this->numcuota, 
             'cantidadcuotas' => $this->cantidadcuotas, 
             'montocuota' => $this->montocuota,
             'frecuenciapago' => $this->frecuenciapago, 
             'fechainicio' => $this->fechainicio, 
+            'fechafin' => $this->fechafin,
             'interes' => $this->interes, 
             'interesxcuota' => $this->interesxcuota, 
             'interestotal' => $this->interestotal, 
@@ -99,11 +103,13 @@ class creditos {
 
     public function actualizarCredito($valorpagadoCuota, int|null $idf) {
         $this->numcuota += 1;
+        $this->abonodecuotas += $valorpagadoCuota;
         $this->saldopendiente -= $valorpagadoCuota;
         if($this->saldopendiente<=0){
             $this->factura_id = $idf;
             $this->estado = 1;  //credito cerrado
             $this->idestadocreditos = 1; //credito finalizado
+            $this->fechafin = date('Y-m-d H:i:s');
             $this->productoentregado = 1;  //producto entregado
         }
     }

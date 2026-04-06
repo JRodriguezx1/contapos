@@ -265,7 +265,6 @@
             const url = "/admin/api/facturarCotizacion";  //va al controlador ventascontrolador
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            console.log(resultado);
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               /////// reinciar modulo de ventas
@@ -335,7 +334,7 @@
           datos.append('devolverinv', (document.querySelector('input[name="devolverinventario"]:checked') as HTMLInputElement).value);
           //datos.append('domicilio', 0);
           try {
-              const url = "/admin/api/eliminarOrden";  //api llamada en cajacontrolador.php
+              const url = "/admin/api/eliminarOrden";  //api llamada en ventascontrolador.php
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();
               if(resultado.exito !== undefined){

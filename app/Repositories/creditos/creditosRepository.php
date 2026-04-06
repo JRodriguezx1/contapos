@@ -26,6 +26,7 @@ class creditosRepository extends operationRepository{
 
     public function generarSeparado(object $entity):array{
         if(!isset($entity->frecuenciapago))$entity->frecuenciapago = date('j');
+        $entity->abonodecuotas = $entity->abonoinicial;
         $entity->saldopendiente = $entity->montototal;
         $entity->num_orden = $this->calcularNumOrden($entity->id_fksucursal);
         $array = $this->insert($entity);
@@ -43,6 +44,7 @@ class creditosRepository extends operationRepository{
         $entity->idestadocreditos = 2;  //credito abierto
         $entity->num_orden = $this->calcularNumOrden($entity->id_fksucursal);
         $entity->frecuenciapago = date('j');
+        $entity->abonodecuotas = $entity->abonoinicial;
         $entity->saldopendiente = $entity->montototal;
         $entity->productoentregado = 1;
         $entity->totalunidades = $totalunidades;
@@ -122,6 +124,15 @@ class creditosRepository extends operationRepository{
 
                 WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
         $rows = $this->fetchAllStd($sql);
+        return $rows;
+    }
+
+
+    public function totalCuotasXcliente(int $idcliente, int $idsucursal):array{
+        $sql = "SELECT cr.num_orden, cr.capital, cr.fechainicio, cr.fechafin, cr.interestotal, cr.idestadocreditos, cu.numerocuota, cu.valorpagado, cu.fechapagado FROM {$this->table} cr
+                INNER JOIN cuotas cu ON cr.id = cu.id_credito
+                WHERE cr.cliente_id = $idcliente AND cr.id_fksucursal = $idsucursal;";
+        $rows = $this->fetchAllStd($sql);        
         return $rows;
     }
     

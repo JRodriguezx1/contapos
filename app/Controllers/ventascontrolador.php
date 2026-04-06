@@ -82,9 +82,24 @@ class ventascontrolador{
 
     $canalesVentaRepo = new canalVentaRepository();
     $canalesVenta = $canalesVentaRepo->all();
-    //debuguear($canalesVenta);
+    //validar resoluciiones por rango y por fecha
+    $hoy = new \DateTime();
+    $resolucionesVencidas = [];
+    foreach($consecutivos as $item){
+      $diferencia = (int) $item->rangofinal - (int) $item->siguientevalor;
+      $condicionRango = $diferencia <= 50;
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+      $fechaFin = new \DateTime($item->fechafin);
+      $diasRestantes = (int) $hoy->diff($fechaFin)->format('%r%a');
+      $condicionFecha = $diasRestantes <= 10;
+
+      if($condicionRango || $condicionFecha){
+        $resolucionesVencidas[] = $item;
+        if($diferencia<=0 || $diasRestantes<=0)$item->vencido = 1;
+      }
+    }
+
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -875,6 +890,7 @@ class ventascontrolador{
                 if($invPro){
                   if($invSub){
                     $alertas['exito'][] = "Orden eliminada correctamente";
+                    //enviar notificacion por ws
                   }else{
                     $alertas['error'][] = "Error, intenta nuevamente";
                     $tempfactura->actualizar();
@@ -904,6 +920,7 @@ class ventascontrolador{
 
               }else{
                 $alertas['exito'][] = "Orden eliminada correctamente";
+                //enviar notificacion por ws
               }
             }else{
               $alertas['error'][] = "Error, intenta nuevamente";

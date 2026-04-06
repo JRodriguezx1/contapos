@@ -256,6 +256,7 @@ $router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::
 $router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularSeparado']);
 $router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, 'ajustarCreditoAntiguo']);
 $router->post('/admin/api/editarOrdenCreditoSeparado', [creditoscontrolador::class, 'editarOrdenCreditoSeparado']);
+$router->get('/admin/api/totalCuotasXcliente', [creditoscontrolador::class, 'totalCuotasXcliente']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -320,6 +321,7 @@ $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'pa
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaTipoSelect', [parametroscontrolador::class, 'parametrosSistemaTipoSelect']); //fetch llamado en configparametros.js
 $router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
+$router->get('/admin/api/getParamGlobal', [parametroscontrolador::class, 'getParamGlobal']); //obtener los parametros del sistema
 
 $router->get('/admin/api/citiesXdepartments', [apidiancontrolador::class, 'citiesXdepartments']);  //Consulta municipios segun departamento
 $router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCompanyJ2']);  // crear la compañia en j2

@@ -46,6 +46,10 @@ class creditosService {
                 $cuotasRepo = new cuotasRepository();
                 $rc = $cuotasRepo->insert(new cuotas((array)$valoresCredito));
                 $alertas['exito'][] = "Credito creado con exito";
+                //acatualizar deuda de cliente
+                $cliente = clientes::find('id', $idcliente);
+                $cliente->totaldebe += $valoresCredito->abonoinicial;
+                $cliente->actualizar();
             }else{
                 $alertas['error'][] = "Credito creado con exito";
             }
@@ -71,7 +75,7 @@ class creditosService {
                 $ultimocierre->id = $ruc[1];
             }
             
-            $r = $separado->generarSeparado(new creditos($valoresCredito));
+            $r = $separado->generarSeparado(new creditos($valoresCredito)); //internamente se realiza el insert en db
             // registrar abono inicial en tabla cuotas
             if($valoresCredito['abonoinicial'] > 0){
                 $valoresCredito = [ 'id_credito'=>$r['1'], 'cierrecaja_id' => $ultimocierre->id ] + $valoresCredito;
@@ -100,6 +104,10 @@ class creditosService {
             $ultimocierre->abonosseparados += $valoresCredito['abonoinicial'];
             //$ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + $valoresCredito['abonoinicial'];
             $ultimocierre->actualizar();
+            //actualizar deuda de cliente
+            $cliente = clientes::find('id', $valoresCredito['cliente_id']);
+            $cliente->totaldebe += $valoresCredito['montototal'];
+            $cliente->actualizar();
 
             $getDB->commit();
             $alertas['exito'][] = "Credito de tipo separado creado correctamente.";
@@ -186,6 +194,10 @@ class creditosService {
 
                     $getDB->commit();
                     $alertas['exito'][] = "Cuota procesada";
+                    //acatualizar deuda de cliente
+                    $cliente = clientes::find('id', $credito->cliente_id);
+                    $cliente->totaldebe -= $cuota->valorpagado;
+                    $cliente->actualizar();
                 } catch (\Throwable $th) {
                     $getDB->rollback();
                     $alertas['error'][] = "Error al procesar el abono {$th->getMessage()}";
@@ -374,6 +386,11 @@ class creditosService {
             foreach($productos as $obj)
               $obj->idproducto = $obj->fk_producto;
             ventasService::addIventarioXVenta($productos);
+
+            //acatualizar deuda de cliente
+            $cliente = clientes::find('id', $credito->cliente_id);
+            $cliente->totaldebe -= $credito->saldopendiente;
+            $cliente->actualizar();
             
             $alertas['exito'][] = "Separado anulado correctamente";
         } catch (\Throwable $th) {
@@ -424,6 +441,10 @@ class creditosService {
             //debuguear($r);
             if($r){
                 $alertas['exito'][] = "Credito anulado correctamente";
+                //acatualizar deuda de cliente
+                $cliente = clientes::find('id', $credito->cliente_id);
+                $cliente->totaldebe -= $credito->saldopendiente;
+                $cliente->actualizar();
             }else{
                 $alertas['error'][] = "Error al anular el credito.";
             }
@@ -447,7 +468,7 @@ class creditosService {
         $credito = $creditoRepo->find($idcredito);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
 
-        $credito->saldopendiente = $credito->capital + $recargo - $credito->abonoinicial - $abonototalantiguo;
+        $credito->saldopendiente = $credito->capital + $recargo - $credito->abonodecuotas - $abonototalantiguo;
         $credito->interes = 1;
         $credito->valorinterestotal = $recargo;
         $credito->montototal = $credito->capital - $credito->abonoinicial + $credito->valorinterestotal;
@@ -461,6 +482,11 @@ class creditosService {
             $creditoRepo->update($credito);
             $getDB->commit();
             $alertas['exito'][] = "Credito actualizado correctamente";
+
+            //acatualizar deuda de cliente
+            $cliente = clientes::find('id', $credito->cliente_id);
+            $cliente->totaldebe += (-$abonototalantiguo+$recargo);
+            $cliente->actualizar();
         } catch (\Throwable $th) {
             //throw $th;
             $getDB->rollback();
@@ -531,6 +557,11 @@ class creditosService {
             if(is_numeric($value->id))$arrayactualizar[] = $value;
             if($value->id=='') $nuevosproductos[] = $value;
         }
+
+        //acatualizar deuda de cliente
+        $cliente = clientes::find('id', $credito->cliente_id);
+        $cliente->totaldebe += ($dataCredit['saldopendiente'] - $credito->saldopendiente);
+        $cliente->actualizar();
 
 
         //ACTUALIZAR VALORES GLOBALES DEL CREDITO

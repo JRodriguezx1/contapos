@@ -19,6 +19,7 @@ use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\productsSeparadosRepository;
 use App\Repositories\creditos\separadomediopagoRepository;
+use App\Repositories\ventas\canalVentaRepository;
 use App\Request\separadoRequest;
 use App\services\creditosService;
 use App\services\paymentService;
@@ -29,6 +30,8 @@ class creditoscontrolador{
         //session_start();
         isadmin();
         $alertas = [];
+        //validar permisso de usuario
+        if(!tienePermiso('Habilitar módulo de credito/separados')&&userPerfil()>3)return;
         $creditos = new creditosRepository();
         $creditos = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>2]);
         $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
@@ -45,7 +48,9 @@ class creditoscontrolador{
         $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
         $conflocal = config_local::getParamCaja();
-        $router->render('admin/creditos/separado', ['titulo'=>'Creditos', 'clientes'=>$clientes, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $canalesVentaRepo = new canalVentaRepository();
+        $canalesVenta = $canalesVentaRepo->all();
+        $router->render('admin/creditos/separado', ['titulo'=>'Creditos', 'clientes'=>$clientes, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'canalesVenta'=>$canalesVenta, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -68,7 +73,7 @@ class creditoscontrolador{
     public static function adicionarProducto(Router $router){
         //session_start();
         isadmin();
-        //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+        if(!tienePermiso('Editar separados activos')&&userPerfil()>3)return;
         $alertas = [];
         $id = $_GET['id'];  //id del credito
         if(!is_numeric($id))return;
@@ -206,5 +211,21 @@ class creditoscontrolador{
         if($_SERVER['REQUEST_METHOD'] === 'POST' )
             $alertas = creditosService::editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit);
         echo json_encode($alertas);
+    }
+
+
+    public static function totalCuotasXcliente(){
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar solicitud.";
+            echo json_encode($alertas);
+            return;
+        }
+        $creditos = new creditosRepository();
+        $creditos = $creditos->totalCuotasXcliente($id, id_sucursal());
+        echo json_encode($creditos);
+        return;
     }
 }

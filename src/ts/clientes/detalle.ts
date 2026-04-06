@@ -2,6 +2,12 @@
 
     if(document.querySelector('.detallecliente')){
 
+        const btnTotalCuotas = document.querySelector('#btnTotalCuotas') as HTMLButtonElement;
+        const miDialogoTotalCuotas = document.querySelector('#miDialogoTotalCuotas') as HTMLDialogElement;
+        const tablaCuotas = document.querySelector('#tablaCuotas tbody') as HTMLBodyElement;
+
+        document.addEventListener("click", cerrarDialogoExterno);
+
         const parametrosURL = new URLSearchParams(window.location.search);
         const id = parametrosURL.get('id');
 
@@ -55,17 +61,57 @@
                 data: {
                     labels: resultado.map(x=>x.categoria),
                     datasets: [{
-                    data: resultado.map(x=>x.unidades_vendidas),
-                    backgroundColor: [
-                        "rgba(99, 102, 241, 0.8)",   // Indigo
-                        "rgba(16, 185, 129, 0.8)",   // Emerald
-                        "rgba(249, 115, 22, 0.8)",   // Orange
-                        "rgba(107, 114, 128, 0.8)"   // Gray
-                    ],
+                        data: resultado.map(x=>x.unidades_vendidas),
+                        backgroundColor: [
+                            "rgba(99, 102, 241, 0.8)",   // Indigo
+                            "rgba(16, 185, 129, 0.8)",   // Emerald
+                            "rgba(249, 115, 22, 0.8)",   // Orange
+                            "rgba(107, 114, 128, 0.8)"   // Gray
+                        ],
                     }]
                 },
                 options: { responsive: true }
                 });
+            }
+        }
+
+
+        btnTotalCuotas.addEventListener('click', ()=>{
+            miDialogoTotalCuotas.showModal();
+            imprimirTotalCuotasXcliente();
+        });
+
+
+        async function imprimirTotalCuotasXcliente(){
+            if(id!=null&&!Number.isNaN(id)){
+                try {
+                    const url = `/admin/api/totalCuotasXcliente?id=${id}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
+                    const respuesta = await fetch(url); 
+                    const resultado:{capital:string, fechafin:string, fechainicio:string, fechapagado:string, idestadocreditos:string, interestotal:string, num_orden:string, numerocuota:string, valorpagado:string}[] = await respuesta.json();
+
+                    while(tablaCuotas.firstChild)tablaCuotas.removeChild(tablaCuotas.firstChild);
+                    resultado.forEach(c=>{
+                        const tr = document.createElement('tr') as HTMLTableRowElement;
+                        tr.innerHTML = `<td class="text-center">${c.num_orden}</td>
+                                        <td class="text-center">$ ${(Number(c.capital)+Number(c.interestotal)).toLocaleString()}</td>
+                                        <td class="text-center">${c.numerocuota}</td>
+                                        <td class="text-center">$ ${Number(c.valorpagado).toLocaleString()}</td>
+                                        <td class="text-center">${c.fechapagado}</td>
+                                        <td class="text-center">${c.idestadocreditos=='1'?'Finalizado':c.idestadocreditos=='2'?'Abierto':'Anulado'}</td>`;
+                        tablaCuotas.prepend(tr);
+                    });
+
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+
+
+        function cerrarDialogoExterno(event:Event) {
+            const f = event.target;
+            if (f=== miDialogoTotalCuotas || (f as HTMLInputElement).id === 'btnCerrarTotalCuotas'){
+                miDialogoTotalCuotas.close();
             }
         }
 

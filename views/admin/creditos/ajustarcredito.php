@@ -58,11 +58,13 @@
             </div>
         </div>
 
-        <label for="inputDescuentoAjustarCredito" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
-        <div class="mt-2">
-            <input id="inputDescuentoAjustarCredito" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-            <div id="divmsjalertaClaveAjustarCredito"></div>
-        </div>
+        <?php if(userPerfil()>3):  ?>
+            <label for="inputPasswordAjustarCredito" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
+            <div class="mt-2">
+                <input id="inputPasswordAjustarCredito" type="password" name="ajustarCreditoClave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
+                <div id="divmsjalertaClaveAjustarCredito"></div>
+            </div>
+        <?php endif;  ?>
 
         <div class="text-right border-t border-gray-200 pt-12 mt-8">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>

@@ -17,7 +17,7 @@ class whatsAppService{
     }
 
     public function sendMessage(string $number, string $text){
-        $result = $this->client->sending->sendMessage('573022016786@c.us', $text);
+        $result = $this->client->sending->sendMessage('573003520420@c.us', $text);
         debuguear($result);
     }
 }

@@ -47,7 +47,24 @@ class modorapidocontrolador{
         $canalesVentaRepo = new canalVentaRepository();
         $canalesVenta = $canalesVentaRepo->all();
 
-        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'categorias'=>$categorias, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        //validar resoluciiones por rango y por fecha
+        $hoy = new \DateTime();
+        $resolucionesVencidas = [];
+        foreach($consecutivos as $item){
+          $diferencia = (int) $item->rangofinal - (int) $item->siguientevalor;
+          $condicionRango = $diferencia <= 50;
+
+          $fechaFin = new \DateTime($item->fechafin);
+          $diasRestantes = (int) $hoy->diff($fechaFin)->format('%r%a');
+          $condicionFecha = $diasRestantes <= 10;
+
+          if($condicionRango || $condicionFecha){
+            $resolucionesVencidas[] = $item;
+            if($diferencia<=0 || $diasRestantes<=0)$item->vencido = 1;
+          }
+        }
+
+        $router->render('admin/modorapido/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'categorias'=>$categorias, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
