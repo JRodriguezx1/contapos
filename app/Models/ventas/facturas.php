@@ -158,7 +158,7 @@ class facturas extends \App\Models\ActiveRecord {
 
                 foreach($array as $key => $value){
                     if(array_key_last($array) == $key){
-                        $sql.= "{$value}) AND $filter[0] = $filter[1] GROUP BY f.id;;";
+                        $sql.= "{$value}) AND $filter[0] = $filter[1] AND f.idvendedor = $filter[2] GROUP BY f.id;;";
                     }else{
                         $sql.= "{$value}, ";
                     }

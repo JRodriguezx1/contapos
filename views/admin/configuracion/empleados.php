@@ -89,11 +89,10 @@
                         Usuario
                         <!-- icono obligatorio -->
                         <span class="text-red-500 font-bold cursor-help">⚠️</span>
-
                         <!-- tooltip -->
                         <span
-                        class="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                        Campo obligatorio
+                            class="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                            Campo obligatorio
                         </span>
                     </label>
 
@@ -156,7 +155,7 @@
                     <div class="formulario__dato">
                         <input
                         id="passwordempleado2"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                         type="password"
                         placeholder="Confirmar contraseña"
                         name="password2"
@@ -169,7 +168,23 @@
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="movil">Teléfono</label>
                     <div class="formulario__dato">
-                        <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
+                        <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
+                    </div>
+                </div>
+
+                <div class="formulario__campo sm:col-span-3">
+                    <label class="formulario__label" for="porcentajeganancia">Porcentaje de ganancia</label>
+                    <div class="formulario__dato">
+                        <input 
+                            id="porcentajeganancia" 
+                            class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                            type="number" 
+                            min="00" 
+                            max="100" 
+                            placeholder="Porcentaje de ganancia por venta" 
+                            name="porcentajeganancia" 
+                            value="<?php echo $empleado->porcentajeganancia??'';?>"
+                        >
                     </div>
                 </div>
                 <!--<div class="formulario__campo sm:col-span-3">

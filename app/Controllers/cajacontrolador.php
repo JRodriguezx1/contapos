@@ -58,8 +58,8 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     */
-    
-    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    //debuguear($_SESSION['perfil']);
+    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal(), $_SESSION['perfil']]);
     foreach($facturas as $value)$value->mediosdepago = json_decode($value->mediosdepago);
     //debuguear($facturas);
     $bancos = bancos::all();
