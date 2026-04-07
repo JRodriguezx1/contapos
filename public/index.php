@@ -210,8 +210,9 @@ $router->post('/admin/api/ensamblar', [almacencontrolador::class, 'ensamblar']);
 $router->get('/admin/api/desasociarsubproducto', [almacencontrolador::class, 'desasociarsubproducto']);
 $router->get('/admin/api/allConversionesUnidades', [almacencontrolador::class, 'allConversionesUnidades']); //trae todos los sub-productos con todas las unidades equivalentes
 $router->post('/admin/api/actualizarcostos', [almacencontrolador::class, 'actualizarcostos']);  //actualizar costos, api llamada desde ajustarcostos.ts
+$router->post('/admin/api/actualizarPreciosVenta', [almacencontrolador::class, 'actualizarPreciosVenta']);  //actualizar precios, api llamada desde ajustarprecios.ts
 $router->get('/admin/api/totalitems', [almacencontrolador::class, 'totalitems']);  //api llamada desde compras.ts para obtener los productos simples y subproductos
-$router->post('/admin/api/registrarCompra', [almacencontrolador::class, 'registrarCompra']);  //actualizar costos, api llamada desde ajustarcostos.ts
+$router->post('/admin/api/registrarCompra', [almacencontrolador::class, 'registrarCompra']);  //
 $router->post('/admin/api/descontarstock', [almacencontrolador::class, 'descontarstock']);  //descontar unidades de inventario
 $router->post('/admin/api/aumentarstock', [almacencontrolador::class, 'aumentarstock']);  //ingresar o aumentar unidades de inventario
 $router->post('/admin/api/ajustarstock', [almacencontrolador::class, 'ajustarstock']);  //reiniciar o ajustar inventario
