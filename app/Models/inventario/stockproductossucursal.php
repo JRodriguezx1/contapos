@@ -42,4 +42,20 @@ class stockproductossucursal extends \App\Models\ActiveRecord{
       $array = self::camposJoinObj($sql);
       return $array;
     }
+    
+
+    //////////////  ITEMS EN BAJO STOCK  /////////////////
+    ///////////////// llamada por api en /admin/api/getItemsBajoStock en almacen.ts
+    public static function getProductosBajoStock(int $idsucursal = 1){
+      $query="SELECT p.nombre, p.tipoproducto, p.tipoproduccion, p.sku, sps.productoid, sps.stock, sps.stockminimo, p.idunidadmedida, und.nombre as unidadmedida, p.visible
+              FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id 
+              JOIN unidadesmedida und ON p.idunidadmedida = und.id
+              WHERE ( p.tipoproducto = 0 OR (p.tipoproducto = 1 AND p.tipoproduccion = 1) ) AND sps.sucursalid = $idsucursal AND p.visible = 1 AND ( sps.stock = 0 OR sps.stock <= sps.stockminimo );";
+      $array = self::camposJoinObj($query);
+      return $array;
+    }
+
+    public static function getInsumosBajoStock(){
+      
+    }
 }

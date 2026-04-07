@@ -120,6 +120,7 @@ $router->get('/admin/caja/zetadiario', [cajacontrolador::class, 'zetadiario']);
 $router->get('/admin/caja/fechazetadiario', [cajacontrolador::class, 'fechazetadiario']); ////--------pasar a controlador de reportes
 $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscierres']);
 $router->get('/admin/caja/pedidosguardados', [cajacontrolador::class, 'pedidosguardados']);
+$router->get('/admin/caja/trasladosRetirosDinero', [cajacontrolador::class, 'trasladosRetirosDinero']);
 $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
 $router->get('/admin/caja/categoriaGasto', [cajacontrolador::class, 'categoriaGasto']);
@@ -222,6 +223,7 @@ $router->post('/admin/api/crearProveedor', [almacencontrolador::class, 'crearPro
 $router->post('/admin/api/actualizarProveedor', [almacencontrolador::class, 'actualizarProveedor']); //api llamada desde gestionproveedores.js para actualizar proveedores
 $router->post('/admin/api/eliminarProveedor', [almacencontrolador::class, 'eliminarProveedor']); //api llamada desde gestionproveedores.js para eliminar proveedores
 $router->post('/admin/api/generarBarCode', [almacencontrolador::class, 'generarBarCode']); // me trae todos los proveedores desde gestionproveedores.js
+$router->get('/admin/api/getItemsBajoStock', [almacencontrolador::class, 'getItemsBajoStock']);
 
 //$router->get('/admin/api/allordenestrasladoinv', [trasladosinvcontrolador::class, 'allordenestrasladoinv']); //trae todos las ordenes de traslados
 $router->get('/admin/api/idOrdenTrasladoSolicitudInv', [trasladosinvcontrolador::class, 'idOrdenTrasladoSolicitudInv']); //trae todos las ordenes de traslados

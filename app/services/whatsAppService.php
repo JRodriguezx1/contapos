@@ -64,6 +64,13 @@ class whatsAppService{
         $usuario = usuarios::find('id', $_SESSION['id']);
         $fechaAnulacion = date('Y-m-d H:i:s');
         $this->msg = '';
+        $this->msg .= "🔹*PRODUCTOS CON BAJO STOCK*\n";
+        $this->msg .= "Sucursal: " . (($sucursal ?? null)->nombre ?? '') . "\n\n";
+        $this->msg .= "*PRODUCTOS*\n";
+        $this->msg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+        foreach ($productos as $value) {
+            $this->msg .= "id: {$value->id}, {$value->nombre}: Cant: " . number_format($value->cantidad??0, 0, ',', '.') . "\n";
+        }
         
         // 🔹 Pie de pagina
         $this->msg .= "\n*J2 SOFTWARE POS*\n";

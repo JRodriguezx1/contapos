@@ -1498,4 +1498,12 @@ class almacencontrolador{
         echo json_encode($alertas);  
     }
 
+
+    public static function getItemsBajoStock(){
+      isadmin();
+      $items = stockproductossucursal::getProductosBajoStock(id_sucursal());
+      echo json_encode($items);
+      return; 
+    }
+
 }
