@@ -4,7 +4,7 @@ namespace App\Models\configuraciones;
 
 class usuarios extends \App\Models\ActiveRecord {
     protected static $tabla = 'usuarios';
-    protected static $columnasDB = ['id', 'idsucursal', 'nombre', 'apellido', 'cedula', 'nickname', 'movil', 'email', 'ws', 'password', 'confirmado', 'token', 'perfil', 'ciudad', 'direccion', 'fecha_nacimiento', 'img', 'fechacreacion', 'ultimologin'];
+    protected static $columnasDB = ['id', 'idsucursal', 'nombre', 'apellido', 'cedula', 'nickname', 'movil', 'email', 'ws', 'password', 'confirmado', 'token', 'perfil', 'ciudad', 'direccion', 'fecha_nacimiento', 'porcentajeganancia', 'img', 'fechacreacion', 'ultimologin'];
     
     public function __construct($args = [])
     {
@@ -25,6 +25,7 @@ class usuarios extends \App\Models\ActiveRecord {
         $this->ciudad = $args['ciudad'] ?? '';
         $this->direccion = $args['direccion'] ?? '';
         $this->fecha_nacimiento = $args['fecha_nacimiento'] ?? null;
+        $this->porcentajeganancia = $args['porcentajeganancia']??0;
         $this->img = $args['img'] ?? '';
         $this->fechacreacion = $args['fechacreacion'] ?? null;
         $this->ultimologin = $args['ultimologin'] ?? null;

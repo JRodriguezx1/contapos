@@ -14,6 +14,7 @@
     const inputpassword = document.querySelector('#passwordempleado') as HTMLInputElement;
     const inputpassword2 = document.querySelector('#passwordempleado2 ') as HTMLInputElement;
     const inputMovil = document.querySelector('#movilempleado ') as HTMLInputElement;
+    const porcentajeganancia = document.querySelector('#porcentajeganancia ') as HTMLInputElement;
     //const inputEmail = document.querySelector('#emailempleado') as HTMLInputElement;
     //const inputDepartamento = document.querySelector('#departamentoempleado') as HTMLInputElement;
     //const inputCiudad = document.querySelector('#ciudadempleado') as HTMLInputElement;
@@ -21,24 +22,8 @@
     const inputPerfil = document.querySelector('#perfilempleado') as HTMLInputElement;
 
     let indiceFila=0, control=0, tablaempleados:HTMLElement;
-    let empleadosapi: {
-      id:string, 
-      nombre: string,
-      apellido: string,
-      nickname: string,
-      cedula: string,
-      movil: string,
-      email: string,
-      departamento: string,
-      ciudad: string,
-      direccion: string,
-      perfil: string,
-      img:string,
-      idusuariospermisos:{id:string, usuarioid:string, permisoid:string}[]
-      permisos:{id:string, nombre:string}[]
-    }[] =[];
       
-    let unempleado:{
+    interface empleadoApi {
       id:string,
       nombre: string,
       apellido: string,
@@ -50,10 +35,13 @@
       ciudad: string,
       direccion: string,
       perfil: string, 
+      porcentajeganancia:string,
       img:string,
       idusuariospermisos:{id:string, usuarioid:string, permisoid:string}[]
       permisos:{id:string, nombre:string}[]
-    }|undefined;
+    };
+
+    let unempleado:empleadoApi|undefined, empleadosapi:empleadoApi[];
 
     /////////////////  traer todos los empleados con sus skills  ///////////////////
     (async ()=>{
@@ -142,6 +130,7 @@
       inputnickname.value = unempleado?.nickname??'';
       //inputcedula.value = unempleado?.cedula??'';
       inputMovil.value = unempleado?.movil??'';
+      porcentajeganancia.value = unempleado?.porcentajeganancia??'0';
       //inputEmail.value = unempleado?.email??'';
       //inputDepartamento.value = unempleado?.departamento??'';
       //inputCiudad.value = unempleado?.ciudad??'';
@@ -209,6 +198,7 @@
           datos.append('password', inputpassword.value);
           datos.append('password2', inputpassword2.value);
           datos.append('movil', inputMovil.value);
+          datos.append('porcentajeganancia', porcentajeganancia.value);
           //datos.append('email', inputEmail.value);
           //datos.append('departamento', inputDepartamento.value);
           //datos.append('ciudad', inputCiudad.value);
@@ -227,13 +217,20 @@
                 /*img*/datosActuales[2] = `<div class="text-center"><img style="width: 40px;" src="/build/img/${resultado.rutaimg}" alt=""></div>`;
                 /*USER*/datosActuales[3] = inputnickname.value;
                 /*PERFIL*/datosActuales[6] = inputPerfil.value==='1'?'root':inputPerfil.value=='2'?'Superior':inputPerfil.value == '3'?'Admin':'Asesor';
-                //actualizar arreglo de permisos
+                //actualizar el empleado y arreglo de permisos
                 empleadosapi.forEach(a=>{
                   if(a.id == unempleado?.id){
-                    a.permisos = arraypermisos;
+                    a.nombre = inputNombre.value;
+                    a.apellido = inputApellido.value;
+                    a.nickname = inputnickname.value;
+                    a.movil = inputMovil.value;
+                    a.porcentajeganancia = porcentajeganancia.value;
+                    a.perfil = inputPerfil.value;
+                    a.permisos = arraypermisos; //arreglo de permisos
                     a.img = resultado.rutaimg;
                   }
                 });
+
                 (tablaempleados as any).row(indiceFila).data(datosActuales).draw();
                 (tablaempleados as any).page(info.page).draw('page'); //me mantiene la pagina actual
               }else{

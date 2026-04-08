@@ -253,6 +253,7 @@
                             <th>Ventas por usuario</th>
                             <th>N°</th>
                             <th>Total</th>
+                            <th>Ganancia</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -261,6 +262,7 @@
                             <td class=""><?php echo $value['Nombre'];?></td> 
                             <td class=""><?php echo $value['N_ventas'];?></td>
                             <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], "0", ",", ".");?></td>
+                            <td class=""><?php echo 0;?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
