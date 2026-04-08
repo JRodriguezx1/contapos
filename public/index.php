@@ -23,6 +23,7 @@ use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
 use App\Controllers\creditoscontrolador;
+use App\Controllers\reservascontrolador;
 use App\Controllers\modorapidocontrolador;
 use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
@@ -107,6 +108,7 @@ $router->post('/admin/almacen/uploadExcel', [almacencontrolador::class, 'uploadE
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 $router->get('/admin/almacen/cambioPrecios', [almacencontrolador::class, 'cambioPrecios']);
 $router->get('/admin/almacen/estadisticas', [almacencontrolador::class, 'estadisticas']);
+$router->get('/admin/almacen/productosParaFormulas', [almacencontrolador::class, 'productosParaFormulas']);
 ////// area de traslados de inventario  //////
 $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
 $router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);
@@ -146,6 +148,8 @@ $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'det
 $router->get('/admin/creditos/adicionarProducto', [creditoscontrolador::class, 'adicionarProducto']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 $router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
+////// Reservas //////
+$router->get('/admin/reservas', [reservascontrolador::class, 'index']);
 
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);

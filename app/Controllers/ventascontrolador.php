@@ -262,6 +262,8 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->abono = $valoresCredito->abonoinicial??0;
+              $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+              //$factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
@@ -276,6 +278,8 @@ class ventascontrolador{
               $getDB->rollback();
               $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
               $alerta['error'][] = $th->getMessage();
+              $r[0] = false;
+              $Ctz = false;
             }
             //procesar si es credito....
             if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);

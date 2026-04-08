@@ -49,7 +49,7 @@ class cajacontrolador{
       if($value->ingresoventas>0 || $value->totalcotizaciones>0 || $value->totalfacturas>0){
         $datacierrescajas['ids'][] = $value->id;
         $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
-      } 
+      }
     }
 
     $facturas = [];
@@ -58,7 +58,6 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     */
-    //debuguear($_SESSION['perfil']);
     if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal(), $_SESSION['perfil']]);
     foreach($facturas as $value)$value->mediosdepago = json_decode($value->mediosdepago);
     //debuguear($facturas);
