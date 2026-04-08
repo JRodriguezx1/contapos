@@ -10,6 +10,7 @@
     const tablacreditosSeparados = ($('#tablacreditosSeparados') as any);
     const tablaGastos = ($('#tablaGastos') as any);
     const tablaIngresoCanalventa = ($('#tablaIngresoCanalventa') as any);
+    const tablaVentasXUsuario = ($('#tablaVentasXUsuario') as any);
     const tablaResumenVentas = ($('#tablaResumenVentas') as any);
     const tablaResumenCreditos = ($('#tablaResumenCreditos') as any);
     
@@ -44,6 +45,15 @@
         valor:string,
     }
 
+
+    interface i_ventasEmpleados {
+        empleados:string,
+        ventasRealizadas:string,
+        totalVentas:string,
+        porcentaje:string,
+        valorComision:string,
+    }
+
     interface i_gastos {
         descripcion:string,
         tipogasto:string,
@@ -68,7 +78,7 @@
         utilidad_realizada:string
     }
 
-    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
+    let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], ventasEmpleados:i_ventasEmpleados[]=[], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
 
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
@@ -95,6 +105,7 @@
             printProductosVendidos();
             printMediosPagos();
             printCreditosSeparados();
+            printVentasUsuarios();
             printGastos();
             printCanalVenta();
             printResumen();
@@ -177,6 +188,24 @@
     }
 
 
+    printVentasUsuarios();
+    function printVentasUsuarios(){
+        tablaVentasXUsuario.DataTable({
+            destroy: true, // importante si recargas la tabla
+            data: ventasEmpleados,
+            pageLength: 25,
+            order: [[ 1, 'desc' ]],
+            columns: [
+                        {title: 'Empleado', data: 'descripcion'},
+                        {title: 'Ventas Realizadas', data: 'tipogasto'},
+                        {title: 'Total Ventas', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Porcentaje', data: 'tipogasto'},
+                        {title: 'Valor comision', data: 'tipogasto'},
+                    ],
+        });
+    }
+
+
     printGastos();
     function printGastos(){
         tablaGastos.DataTable({
@@ -191,6 +220,7 @@
                     ],
         });
     }
+
 
     printResumen();
     function printResumen(){

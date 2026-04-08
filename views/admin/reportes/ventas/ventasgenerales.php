@@ -221,12 +221,14 @@
     <!-- Empleados -->
     <div id="empleados" class="tab-pane hidden">
       <h3 class="text-lg font-semibold mb-4">👨‍💼 Ventas por Empleados</h3>
-      <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+      <table id="tablaVentasXUsuario" class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
             <th class="px-4 py-2 border">Empleado</th>
             <th class="px-4 py-2 border">Ventas Realizadas</th>
             <th class="px-4 py-2 border">Total Ventas</th>
+            <th class="px-4 py-2 border">Porcentaje</th>
+            <th class="px-4 py-2 border">Valor comision</th>
           </tr>
         </thead>
         
