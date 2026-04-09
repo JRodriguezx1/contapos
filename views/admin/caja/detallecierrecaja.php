@@ -257,12 +257,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($ventasxusuarios as $index => $value): ?>
+                        <?php foreach($ventasxusuarios as $index => $value):
+                            $comision = "comision";
+                            if(array_key_last($ventasxusuarios) == $index)$comision = "comision_negocio";
+                        ?>
                         <tr>
                             <td class=""><?php echo $value['Nombre'];?></td> 
                             <td class=""><?php echo $value['N_ventas'];?></td>
                             <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], 0, ",", ".");?></td>
-                            <td class=""><strong>$ </strong><?php echo number_format($value['comision'], 0, ",", ".");?></td>
+                            <td class=""><strong>$ </strong><?php echo number_format($value[$comision], 0, ",", ".");?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

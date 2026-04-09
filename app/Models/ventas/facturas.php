@@ -163,7 +163,7 @@ class facturas extends \App\Models\ActiveRecord {
                         if($filter[2]<=3){ // mostrar todas las facturas para soporte, supervisor, administrador
                             $sql.= "{$value}) AND $filter[0] = $filter[1] GROUP BY f.id;";
                         }else{ //las facturas del asesor logueado
-                            $sql.= "{$value}) AND $filter[0] = $filter[1] AND f.idvendedor = $filter[2] GROUP BY f.id;";
+                            $sql.= "{$value}) AND $filter[0] = $filter[1] AND f.idvendedor = $filter[3] GROUP BY f.id;";
                         }
                     }else{
                         $sql.= "{$value}, ";
