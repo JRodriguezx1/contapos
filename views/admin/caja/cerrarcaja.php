@@ -321,7 +321,7 @@
                                         <th>Ventas por usuario</th>
                                         <th>N°</th>
                                         <th>Total</th>
-                                        <th>Ganacia</th>
+                                        <th>Comision</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -329,8 +329,8 @@
                                     <tr>        
                                         <td class=""><?php echo $value['Nombre'];?></td> 
                                         <td class=""><?php echo $value['N_ventas'];?></td>
-                                        <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], "0", ",", ".");?></td>
-                                        <td class=""><?php echo 0;?></td>
+                                        <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], 0, ",", ".");?></td>
+                                        <td class=""><strong>$ </strong><?php echo number_format($value['comision'], 0, ",", ".");?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>

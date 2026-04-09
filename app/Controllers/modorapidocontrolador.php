@@ -144,6 +144,8 @@ class modorapidocontrolador{
         $factura->num_consecutivo = $consecutivo->siguientevalor;
         $factura->prefijo = $consecutivo->prefijo;
         $factura->abono = $valoresCredito->abonoinicial??0;
+        $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+        $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
         $factura->habilitada = 1;
         $r = $factura->crear_guardar();
         $consecutivo->siguientevalor += 1;

@@ -99,7 +99,6 @@
             mediosPagos = resultado.mediosPagos;
             creditosSeparados = resultado.separados;
             ventasEmpleados = resultado.ventasXusuario;
-            console.log(ventasEmpleados);
             gastos = resultado.gastos;
             canalVenta = resultado.canalVenta;
             resumenCreditos = resultado.resumenCreditos;

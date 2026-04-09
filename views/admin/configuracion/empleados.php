@@ -173,7 +173,7 @@
                 </div>
 
                 <div class="formulario__campo sm:col-span-3">
-                    <label class="formulario__label" for="porcentajeganancia">Porcentaje de ganancia</label>
+                    <label class="formulario__label" for="porcentajeganancia">Porcentaje de ganancia (%)</label>
                     <div class="formulario__dato">
                         <input 
                             id="porcentajeganancia" 

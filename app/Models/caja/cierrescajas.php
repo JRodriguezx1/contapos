@@ -94,7 +94,7 @@ class cierrescajas extends \App\Models\ActiveRecord {
     }
 
     public static function ventasXusuario(string $id): array{
-        $sql = "SELECT CONCAT(usuarios.nombre, ' ', COALESCE(usuarios.apellido, '')) as Nombre, COUNT(facturas.idvendedor) as N_ventas, SUM(facturas.subtotal) as ventas FROM usuarios 
+        $sql = "SELECT CONCAT(usuarios.nombre, ' ', COALESCE(usuarios.apellido, '')) as Nombre, COUNT(facturas.idvendedor) as N_ventas, SUM(facturas.subtotal) as ventas, SUM(facturas.valorgananciauser) as comision FROM usuarios 
         JOIN facturas ON usuarios.id = facturas.idvendedor
         WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY facturas.idvendedor;";
 
@@ -103,7 +103,7 @@ class cierrescajas extends \App\Models\ActiveRecord {
         while($row = $resultado->fetch_assoc())
         $array[] = $row;
         $resultado->free();
-        return $array;  
+        return $array;
     }
 
 
