@@ -31,6 +31,7 @@ use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
 use App\services\creditosService;
 use App\services\stockService;
+use App\services\whatsAppService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -82,9 +83,24 @@ class ventascontrolador{
 
     $canalesVentaRepo = new canalVentaRepository();
     $canalesVenta = $canalesVentaRepo->all();
-    //debuguear($canalesVenta);
+    //validar resoluciiones por rango y por fecha
+    $hoy = new \DateTime();
+    $resolucionesVencidas = [];
+    foreach($consecutivos as $item){
+      $diferencia = (int) $item->rangofinal - (int) $item->siguientevalor;
+      $condicionRango = $diferencia <= 50;
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+      $fechaFin = new \DateTime($item->fechafin);
+      $diasRestantes = (int) $hoy->diff($fechaFin)->format('%r%a');
+      $condicionFecha = $diasRestantes <= 10;
+
+      if($condicionRango || $condicionFecha){
+        $resolucionesVencidas[] = $item;
+        if($diferencia<=0 || $diasRestantes<=0)$item->vencido = 1;
+      }
+    }
+
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -246,6 +262,8 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->abono = $valoresCredito->abonoinicial??0;
+              $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+              $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
@@ -260,6 +278,8 @@ class ventascontrolador{
               $getDB->rollback();
               $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
               $alerta['error'][] = $th->getMessage();
+              $r[0] = false;
+              $Ctz = false;
             }
             //procesar si es credito....
             if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
@@ -598,6 +618,8 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->habilitada = 1;
+              $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+              $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
@@ -875,6 +897,9 @@ class ventascontrolador{
                 if($invPro){
                   if($invSub){
                     $alertas['exito'][] = "Orden eliminada correctamente";
+                    //enviar notificacion por ws
+                    //$ws = new whatsAppService();
+                    //$ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, true, $resultArray['productosSimples']);
                   }else{
                     $alertas['error'][] = "Error, intenta nuevamente";
                     $tempfactura->actualizar();
@@ -904,6 +929,9 @@ class ventascontrolador{
 
               }else{
                 $alertas['exito'][] = "Orden eliminada correctamente";
+                //enviar notificacion por ws
+                //$ws = new whatsAppService();
+                //$ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, false);
               }
             }else{
               $alertas['error'][] = "Error, intenta nuevamente";

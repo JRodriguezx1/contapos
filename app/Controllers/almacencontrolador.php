@@ -562,9 +562,9 @@ class almacencontrolador{
   public static function cambioPrecios(Router $router){
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $alertas = [];
-    
-    $router->render('admin/almacen/cambioPrecios', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'sucursales'=>sucursales::all()]);
+    $productos = [];
+    $productos = productos::all();
+    $router->render('admin/almacen/cambioPrecios', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all()]);
   }
 
 
@@ -572,8 +572,15 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    
     $router->render('admin/almacen/estadisticas', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'sucursales'=>sucursales::all()]);
+  }
+
+
+  public static function productosParaFormulas(Router $router){
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $productos = productos::all();
+    $router->render('admin/almacen/productosParaFormulas', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all()]);
   }
 
 
@@ -1011,6 +1018,31 @@ class almacencontrolador{
       }
     }
     echo json_encode($alertas);
+  }
+
+
+  public static function actualizarPreciosVenta(){
+    $alertas = [];
+    $element = productos::find('id', $_POST['idelemento']);
+    $getDB = productos::getDB();
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      if(!empty($element)){
+        $getDB->begin_transaction();
+        try {
+          $element->precio_venta = $_POST['precio_venta'];
+          $element->actualizar();   //se actualiza el precio de venta
+          $getDB->commit();
+          $alertas['exito'][] = 1;
+        } catch (\Throwable $th) {
+          $getDB->rollback();
+          $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
+        }
+      }else{
+        $alertas['error'][] = "Error, intenta nuevamente";
+      }
+    }
+    echo json_encode($alertas);
+    return;
   }
 
 
@@ -1496,6 +1528,14 @@ class almacencontrolador{
             $alertas = inventarioService::generarBarCode($_POST);
         }
         echo json_encode($alertas);  
+    }
+
+
+    public static function getItemsBajoStock(){
+      isadmin();
+      $items = stockproductossucursal::getProductosBajoStock(id_sucursal());
+      echo json_encode($items);
+      return; 
     }
 
 }

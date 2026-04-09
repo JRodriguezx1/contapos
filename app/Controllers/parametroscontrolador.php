@@ -136,9 +136,16 @@ class parametroscontrolador{
 
   public static function getPasswords():void{
     isadmin();
-    $alertas = [];
     $r = config_local::getPasseords();
     echo json_encode($r);
+  }
+
+
+  public static function getParamGlobal():void{
+    isadmin();
+    $conflocal = config_local::getParamGlobal();
+    echo json_encode($conflocal);
+    return;
   }
 
 }

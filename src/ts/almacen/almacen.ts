@@ -2,9 +2,11 @@
     if(document.querySelector('.almacen')){
         const btntrasladoinvnetario = document.querySelector('#btntrasladoinvnetario') as HTMLInputElement;
         const btnMasOpciones = document.querySelector('#btnMasOpciones') as HTMLInputElement;
+        const btnviewProductsBajoStock = document.querySelector('#btnviewProductsBajoStock') as HTMLButtonElement;
         const miDialogoTrasladoInvnetario = document.querySelector('#miDialogoTrasladoInvnetario') as any;
         const miDialogoMasOpciones = document.querySelector('#miDialogoMasOpciones') as any;
         const reinciarinv = document.querySelector('#reinciarinv') as HTMLButtonElement;
+        const miDialogoBajoStock = document.querySelector('#miDialogoBajoStock') as HTMLDialogElement;
         const miDialogoStock = document.querySelector('#miDialogoStock') as any;
         const modalStock = document.querySelector('#modalStock') as HTMLElement;
         const selectStockRapidoUndmedida = document.querySelector('#selectStockRapidoUndmedida') as HTMLSelectElement;
@@ -18,6 +20,7 @@
         let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement, tablaInventarioSedes:HTMLTableElement;
     
         const sedes = document.querySelector('#sedes');
+        const tablaBajoStock = document.querySelector('#tablaBajoStock tbody') as HTMLBodyElement;
 
         interface datosProducto { stock?: string, sku?:string, precio_compra: string, precio_venta: string }
 
@@ -64,6 +67,32 @@
             document.addEventListener("click", cerrarDialogoExterno);
         });
 
+
+        btnviewProductsBajoStock.addEventListener('click', ()=>{
+            miDialogoBajoStock.showModal();
+            document.addEventListener("click", cerrarDialogoExterno);
+            getItemsBajoStock();
+        })
+
+        async function getItemsBajoStock(){
+            try {
+                const url = "/admin/api/getItemsBajoStock";
+                const respuesta = await fetch(url); 
+                const resultado:{productoid:string, nombre:string, idunidadmedida:string, sku:string, stock:string, stockminimo:string, tipoproducto:string, tipoproduccion:string, unidadmedida:string, visible:string}[] = await respuesta.json();
+                while(tablaBajoStock.firstChild)tablaBajoStock.removeChild(tablaBajoStock.firstChild);
+                resultado.forEach(c=>{
+                    const tr = document.createElement('tr') as HTMLTableRowElement;
+                    tr.innerHTML = `<td class="text-center">${c.productoid}</td>
+                                    <td class="text-center">${c.nombre}</td>
+                                    <td class="text-center">${c.tipoproducto == '1'?'Compuesto':'Simple'}</td>
+                                    <td class="text-center">${c.stock}</td>
+                                    <td class="text-center">${c.stockminimo}</td>`;
+                    tablaBajoStock.prepend(tr);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
         reinciarinv.addEventListener('click', (e)=>{
             Swal.fire({
@@ -439,11 +468,12 @@
 
         function cerrarDialogoExterno(event:Event) {
             const f = event.target;
-            if (f === miDialogoTrasladoInvnetario || f === miDialogoMasOpciones || f === miDialogoStock || f === miDialogoIngresarProduccion || (f as HTMLInputElement).value === 'salir' || (f as HTMLElement).id == 'btnXCerrarTrasladoInvnetario' || (f as HTMLElement).id == 'btnXCerrarMasOpciones') {
+            if (f === miDialogoTrasladoInvnetario || f === miDialogoMasOpciones || f === miDialogoStock || f === miDialogoIngresarProduccion || f===miDialogoBajoStock || (f as HTMLInputElement).value === 'salir' || (f as HTMLElement).id == 'btnXCerrarTrasladoInvnetario' || (f as HTMLElement).id == 'btnXCerrarMasOpciones' || (f as HTMLElement).id == 'btnCerrarTotalBajoStock') {
                 miDialogoStock.close();
                 miDialogoIngresarProduccion.close();
                 miDialogoTrasladoInvnetario.close();
                 miDialogoMasOpciones.close();
+                miDialogoBajoStock.close();
                 document.removeEventListener("click", cerrarDialogoExterno);
             }
         }

@@ -5,12 +5,63 @@
     <div class="flex-1 flex flex-col overflow-hidden">
 
       <!-- HEADER -->
-      <header class="bg-indigo-600 text-white px-6 py-3 flex justify-between items-center flex-none rounded">
+      <header class="bg-indigo-600 text-white px-6 py-3 mb-2 flex justify-between items-center flex-none rounded">
         <h1 class="text-xl font-semibold">Venta Rápida · Supermercado</h1>
         <div class="text-base">Cajero: <strong id="vendedor" data-idvendedor="<?php echo $user['id']; ?>"><?php echo $user['nombre']; ?></strong></div>
       </header>
 
-      <div class="my-4">
+      <?php
+        // =========================
+        // MOSTRAR ALERTA (UI PRO)
+        // =========================
+          $estilos = [
+            "warning" => [
+              "bg" => "bg-gradient-to-r from-yellow-50 to-yellow-100",
+              "border" => "border-yellow-300",
+              "iconBg" => "bg-yellow-200",
+              "iconColor" => "text-yellow-700",
+              "text" => "text-yellow-900",
+              "badge" => "bg-yellow-200 text-yellow-800"
+            ],
+            "danger" => [
+              "bg" => "bg-gradient-to-r from-red-50 to-red-100",
+              "border" => "border-red-300",
+              "iconBg" => "bg-red-200",
+              "iconColor" => "text-red-700",
+              "text" => "text-red-900",
+              "badge" => "bg-red-200 text-red-800"
+            ]
+          ];
+
+      ?>
+      
+      <?php foreach($resolucionesVencidas as $value): 
+        ($value->vencido??null)?$tipoAlerta = "danger":$tipoAlerta = "warning";
+        $ui = $estilos[$tipoAlerta];
+      ?>
+        <div class="mb-2 animate-fadeSlide">
+          <div class="flex items-center gap-4 border <?= $ui["border"] ?> <?= $ui["bg"] ?> rounded-2xl p-4 shadow-sm">
+
+            <!-- ICONO -->
+            <div class="flex items-center justify-center w-12 h-12 rounded-xl <?= $ui["iconBg"] ?>">
+              <span class="material-symbols-outlined <?= $ui["iconColor"] ?> text-3xl"><?= $tipoAlerta === "danger" ? "error" : "warning" ?></span>
+            </div>
+            <!-- CONTENIDO -->
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-semibold px-3 py-1 rounded-full <?= $ui["badge"] ?>"><?= $tipoAlerta === "danger" ? "VENCIDO" : "POR VENCER" ?></span>
+                <span class="text-base text-gray-500 uppercase tracking-wide"><?= strtoupper($value->nombre) ?></span>
+              </div>
+              <p class="text-lg font-semibold mb-0 <?= $ui["text"] ?>">Tu resolución de facturación <?php echo $value->idtipofacturador == 1?'Electronica':'Pos'; ?> está <?= $tipoAlerta === "danger" ? "VENCIDA" : "POR VENCER" ?></p>
+            </div>
+
+          </div>
+        </div>
+        
+      <?php endforeach; ?>
+      <!-- FIN MENSALE DE VENCIMIENTO DE RESOLUCION -->
+
+      <div class="my-2">
         <button id="addcliente" class="w-full bg-white border border-gray-200 rounded-2xl px-6 py-5 shadow-sm hover:shadow-md hover:border-indigo-500 transition-all flex items-center justify-between">
 
           <!-- IZQUIERDA -->
@@ -124,6 +175,7 @@
 
   <script>
     const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
+    const getParamCaja = <?= json_encode($conflocal) ?>;  //se inyecta el array de parametros de caja desde PHP a JavaScript y se utiliza en separados.ts junto con ahelper.modalpagar.ts
   </script>
   
 </div>

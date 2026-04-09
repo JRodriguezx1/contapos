@@ -17,6 +17,7 @@
         num_orden:string,
         num_consecutivo:string,
         vendedor:string,
+        valorgananciauser:string,
         caja:string,
         tipofacturador:string,
         totalunidades:string,
@@ -164,7 +165,8 @@
                 {title: 'Imp', data: 'valorimpuestototal'}, 
                 {title: 'Descuento', data: 'descuento'}, 
                 {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
-                {title: 'Vendedor', data: 'vendedor'}, 
+                {title: 'Vendedor', data: 'vendedor'},
+                {title: 'Comision', data: 'valorgananciauser', render: (data:number) => `$${Number(data).toLocaleString()}`},
                 {title: 'Caja', data: 'caja'}],
             pageLength: 25,
             language: {

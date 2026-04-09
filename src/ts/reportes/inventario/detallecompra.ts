@@ -9,17 +9,17 @@
     const id:string = parametrosURL.get('id')??'';
     ///////// imprimir detalle de compra
     btnPrintCompra.addEventListener('click', ()=>{
-        if(id!='' || !isNaN(Number(id))){
-          const ventana = window.open('/printDetalleCompra?id='+id, '_blank');
-          if(ventana){
-              ventana.onload = ()=>{
-                  ventana?.focus();
-                  ventana?.print();
-                  setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
-              };
-          }
+      if(id!='' || !isNaN(Number(id))){
+        //const ventana = window.open('/printDetalleCompra?id='+id, '_blank');
+        const ventana = window.open('/admin/printComprobanteCompraPDF?id='+id, '_blank');
+        if(ventana){
+            ventana.onload = ()=>{
+                ventana?.focus();
+                ventana?.print();
+            };
+        }
       }else{
-        //alerta
+        msjalertToast('error', '¡Error!', 'Error al generar impresion.');
       }
     });
 

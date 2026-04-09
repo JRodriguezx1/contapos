@@ -110,9 +110,9 @@
     <div class="col-span-2">
       <h5 class="mb-5 mt-14">Utilidad Gastos y Crecimiento</h5>
       <div class="flex flex-wrap gap-4 mb-4">
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
+        <a href="/admin/reportes/utilidadRentabilidad" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">monitoring</span>Utilidad Rentabilidad
-        </button>
+        </a>
         <a href="/admin/reportes/utilidadxproducto" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">chart_data</span>Utilidad por producto
         </a>

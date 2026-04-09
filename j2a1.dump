@@ -469,7 +469,7 @@ CREATE TABLE `config_global` (
   `descripcion` tinytext CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -478,7 +478,7 @@ CREATE TABLE `config_global` (
 
 LOCK TABLES `config_global` WRITE;
 /*!40000 ALTER TABLE `config_global` DISABLE KEYS */;
-INSERT INTO `config_global` VALUES (1,'Caja','mensaje_para_factura','',NULL,'2025-09-13 03:57:58'),(2,'Caja','limite_de_descuento_permitido','50',NULL,'2025-09-13 03:57:58'),(3,'Caja','permitir_venta_de_productos_sin_stock','1',NULL,'2025-09-13 03:57:58'),(4,'Caja','imprimir_factura_automaticamente','1',NULL,'2025-09-13 03:57:58'),(5,'Caja','permitir_cierre_de_caja_con_ordenes_sin_pagar','1',NULL,'2025-09-13 03:57:58'),(6,'Inventario','tipo_costo_inventario','ultimo_costo',NULL,'2025-09-13 05:26:58'),(7,'Claves','clave_para_eliminar_factura',NULL,NULL,'2025-09-13 06:12:50'),(8,'Claves','clave_para_eliminar_un_gasto/base',NULL,NULL,'2025-09-13 06:12:50'),(9,'Claves','clave_para_agregar_descuento',NULL,NULL,'2025-09-13 06:12:50'),(10,'Claves','clave_para_abrir_cajón_monedero',NULL,NULL,'2025-09-13 06:12:50'),(11,'Permisos','permitir_ver_cierres_de_cajas_anteriores','1',NULL,'2025-09-13 06:15:19'),(12,'Permisos','cantidad_de_cierres_de_cajas_permitidos','',NULL,'2025-09-13 06:15:19'),(13,'Permisos','permitir_ver_zeta_diario','1',NULL,'2025-09-13 06:15:19'),(14,'Permisos','permitir_ver_resumen_cierre_de_caja','1',NULL,'2025-09-13 06:15:19'),(15,'Permisos','cantidad_de_zeta_diarios_permitidos','',NULL,'2025-09-13 06:20:15'),(16,'Impresion','mostrar_nombre_del_negocio_en_factura','1',NULL,'2025-09-13 06:20:15'),(17,'Impresion','mensaje_final_en_factura','',NULL,'2025-09-13 06:20:15'),(18,'Impresion','titulo_para_el_nombre_del_documento','',NULL,'2025-09-13 06:20:15'),(19,'Impresion','habilitar_subtotal_en_factura','1',NULL,'2025-09-13 06:20:15'),(20,'Impresion','mostrar_numero_de_factura','1',NULL,'2025-09-13 06:20:15'),(21,'Impresion','mostrar_nombre_del_documento_en_factura','0',NULL,'2025-09-14 15:12:25'),(22,'Impresion','mostrar_observacion_en_factura','0',NULL,'2025-09-14 15:12:25'),(23,'Impresion','mostrar_cambio_de_efectivo_en_factura','0',NULL,'2025-09-14 15:12:25'),(24,'Impresion','espaciado_de_papel',NULL,NULL,'2025-09-14 15:12:25'),(25,'Impresion','mostrar_metodo_de_pago_en_factura','1',NULL,'2025-09-14 15:12:25'),(26,'Impresion','mostrar_logo_en_factura','1',NULL,'2025-09-14 15:15:12'),(27,'Impresion','nombre_del_impuesto',NULL,NULL,'2025-09-14 15:15:12'),(28,'Impresion','titulo_para_el_nombre_del_cliente',NULL,NULL,'2025-09-14 15:15:12'),(29,'Impresion','simbolo_moneda',NULL,NULL,'2025-09-14 15:15:12'),(30,'Impuesto','porcentaje_de_impuesto',NULL,NULL,'2025-09-14 15:32:28'),(31,'Impuesto','mostrar_impuesto_en_factura','1',NULL,'2025-09-14 15:32:28'),(32,'Impuesto','discriminar_impuesto_por_producto','1',NULL,'2025-09-14 15:32:28'),(33,'Impuesto','mostrar_subtotales_en_factura_sin_impuesto','0',NULL,'2025-09-14 15:32:28'),(34,'FacturacionFE','Texto_factura_electrónica_QR',NULL,NULL,'2025-09-14 15:36:31'),(35,'FacturacionFE','mostrar_codigo_qr_en_factura_electronica','1',NULL,'2025-09-14 15:36:31'),(36,'FacturacionFE','mostrar_cufe_en_factura_electronica','1',NULL,'2025-09-14 15:36:31'),(37,'Caja','tasa_de_interes_por_cuota','0',NULL,'2026-01-07 06:37:31'),(38,'Sistema','convertir_a_POS_factura_no_impresa','0',NULL,'2026-01-07 06:50:25'),(39,'Claves','clave_para_ajustar_credito',NULL,NULL,'2026-01-18 05:56:30'),(40,'Caja','indicador_caja','1',NULL,'2026-01-20 16:24:17'),(41,'Permisos','permitir_ver_resumen_cierre_de_caja_confirmado','1',NULL,'2026-02-18 04:38:31'),(42,'Sistema','habilitar_canal_de_venta','0',NULL,'2026-02-23 06:42:51'),(43,'Sistema','habilitar_venta_modo_rapido','0',NULL,'2026-02-23 06:42:51');
+INSERT INTO `config_global` VALUES (1,'Caja','mensaje_para_factura','',NULL,'2025-09-13 03:57:58'),(2,'Caja','limite_de_descuento_permitido','50',NULL,'2025-09-13 03:57:58'),(3,'Caja','permitir_venta_de_productos_sin_stock','1',NULL,'2025-09-13 03:57:58'),(4,'Caja','imprimir_factura_automaticamente','1',NULL,'2025-09-13 03:57:58'),(5,'Caja','permitir_cierre_de_caja_con_ordenes_sin_pagar','1',NULL,'2025-09-13 03:57:58'),(6,'Inventario','tipo_costo_inventario','ultimo_costo',NULL,'2025-09-13 05:26:58'),(7,'Claves','clave_para_eliminar_factura',NULL,NULL,'2025-09-13 06:12:50'),(8,'Claves','clave_para_eliminar_un_gasto/base',NULL,NULL,'2025-09-13 06:12:50'),(9,'Claves','clave_para_agregar_descuento',NULL,NULL,'2025-09-13 06:12:50'),(10,'Claves','clave_para_abrir_cajón_monedero',NULL,NULL,'2025-09-13 06:12:50'),(11,'Permisos','permitir_ver_cierres_de_cajas_anteriores','1',NULL,'2025-09-13 06:15:19'),(12,'Permisos','cantidad_de_cierres_de_cajas_permitidos','',NULL,'2025-09-13 06:15:19'),(13,'Permisos','permitir_ver_zeta_diario','1',NULL,'2025-09-13 06:15:19'),(14,'Permisos','permitir_ver_resumen_cierre_de_caja','1',NULL,'2025-09-13 06:15:19'),(15,'Permisos','cantidad_de_zeta_diarios_permitidos','',NULL,'2025-09-13 06:20:15'),(16,'Impresion','mostrar_nombre_del_negocio_en_factura','1',NULL,'2025-09-13 06:20:15'),(17,'Impresion','mensaje_final_en_factura','',NULL,'2025-09-13 06:20:15'),(18,'Impresion','titulo_para_el_nombre_del_documento','',NULL,'2025-09-13 06:20:15'),(19,'Impresion','habilitar_subtotal_en_factura','1',NULL,'2025-09-13 06:20:15'),(20,'Impresion','mostrar_numero_de_factura','1',NULL,'2025-09-13 06:20:15'),(21,'Impresion','mostrar_nombre_del_documento_en_factura','0',NULL,'2025-09-14 15:12:25'),(22,'Impresion','mostrar_observacion_en_factura','0',NULL,'2025-09-14 15:12:25'),(23,'Impresion','mostrar_cambio_de_efectivo_en_factura','0',NULL,'2025-09-14 15:12:25'),(24,'Impresion','espaciado_de_papel',NULL,NULL,'2025-09-14 15:12:25'),(25,'Impresion','mostrar_metodo_de_pago_en_factura','1',NULL,'2025-09-14 15:12:25'),(26,'Impresion','mostrar_logo_en_factura','1',NULL,'2025-09-14 15:15:12'),(27,'Impresion','nombre_del_impuesto',NULL,NULL,'2025-09-14 15:15:12'),(28,'Impresion','titulo_para_el_nombre_del_cliente',NULL,NULL,'2025-09-14 15:15:12'),(29,'Impresion','simbolo_moneda',NULL,NULL,'2025-09-14 15:15:12'),(30,'Impuesto','porcentaje_de_impuesto',NULL,NULL,'2025-09-14 15:32:28'),(31,'Impuesto','mostrar_impuesto_en_factura','1',NULL,'2025-09-14 15:32:28'),(32,'Impuesto','discriminar_impuesto_por_producto','1',NULL,'2025-09-14 15:32:28'),(33,'Impuesto','mostrar_subtotales_en_factura_sin_impuesto','0',NULL,'2025-09-14 15:32:28'),(34,'FacturacionFE','Texto_factura_electrónica_QR',NULL,NULL,'2025-09-14 15:36:31'),(35,'FacturacionFE','mostrar_codigo_qr_en_factura_electronica','1',NULL,'2025-09-14 15:36:31'),(36,'FacturacionFE','mostrar_cufe_en_factura_electronica','1',NULL,'2025-09-14 15:36:31'),(37,'Caja','tasa_de_interes_por_cuota','0',NULL,'2026-01-07 06:37:31'),(38,'Sistema','convertir_a_POS_factura_no_impresa','0',NULL,'2026-01-07 06:50:25'),(39,'Claves','clave_para_ajustar_credito',NULL,NULL,'2026-01-18 05:56:30'),(40,'Caja','indicador_caja','1',NULL,'2026-01-20 16:24:17'),(41,'Permisos','permitir_ver_resumen_cierre_de_caja_confirmado','1',NULL,'2026-02-18 04:38:31'),(42,'Sistema','habilitar_canal_de_venta','0',NULL,'2026-02-23 06:42:51'),(43,'Sistema','habilitar_venta_modo_rapido','0',NULL,'2026-02-23 06:42:51'),(44,'Caja','base_de_caja_automatico_constante',NULL,NULL,'2026-04-06 05:54:37');
 /*!40000 ALTER TABLE `config_global` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -678,12 +678,14 @@ CREATE TABLE `creditos` (
   `nombrecliente` varchar(70) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
   `capital` decimal(12,2) NOT NULL,
   `abonoinicial` decimal(10,2) DEFAULT '0.00',
+  `abonodecuotas` decimal(12,2) DEFAULT '0.00',
   `saldopendiente` decimal(12,2) NOT NULL DEFAULT '0.00',
   `numcuota` int DEFAULT '0',
   `cantidadcuotas` int NOT NULL DEFAULT '0',
   `montocuota` decimal(12,2) NOT NULL DEFAULT '0.00',
   `frecuenciapago` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `fechainicio` date DEFAULT NULL,
+  `fechafin` datetime DEFAULT NULL,
   `interes` tinyint(1) NOT NULL,
   `interesxcuota` decimal(6,2) DEFAULT '0.00',
   `interestotal` decimal(6,2) DEFAULT '0.00',
@@ -1235,6 +1237,7 @@ CREATE TABLE `facturas` (
   `referencia` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `abono` decimal(12,2) DEFAULT '0.00',
   `abonofinal` decimal(12,2) DEFAULT '0.00',
+  `porcentgananciauser` decimal(5,2) DEFAULT '0.00',
   `subtotal` decimal(12,2) DEFAULT NULL,
   `base` decimal(13,3) DEFAULT NULL,
   `valorimpuestototal` decimal(12,3) DEFAULT NULL,
@@ -1248,9 +1251,11 @@ CREATE TABLE `facturas` (
   `valortarifa` varchar(9) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `fechacreacion` datetime DEFAULT NULL,
   `fechapago` datetime DEFAULT NULL,
+  `fechaanulacion` datetime DEFAULT NULL,
   `habilitada` tinyint(1) DEFAULT '0',
   `opc1` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `opc2` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `valorgananciauser` decimal(12,2) DEFAULT '0.00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_num_orden` (`id_sucursal`,`num_orden`),
   KEY `idcierrecaja_idx` (`idcierrecaja`),
@@ -2004,7 +2009,7 @@ CREATE TABLE `permisos` (
 
 LOCK TABLES `permisos` WRITE;
 /*!40000 ALTER TABLE `permisos` DISABLE KEYS */;
-INSERT INTO `permisos` VALUES (1,'Habilitar modulo de venta','Modulo de venta\r',NULL,'2025-09-11 06:15:04'),(2,'Registrar nueva venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(3,'Anular una venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(4,'Aplicar descuentos','Modulo de venta',NULL,'2025-09-11 06:15:04'),(5,'Habilitar modulo de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(6,'Consultar stock','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(7,'Hacer ajustes de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(8,'Actualizar precios o datos','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(9,'Habilitar modulo de facturacion','Modulo de Facturación','','2025-09-12 03:32:43'),(10,'Emitir facturas electrónicas','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(11,'Anular facturas y notas creditos','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(12,'Habilitar modulo de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(13,'Abrir caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(14,'Cerrar caja y generar arqueo','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(15,'Ver reportes de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(16,'Habilitar modulo de reportes','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(17,'Habilitar modulo de configuracion','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(18,'Mostrar dashboard','Modulo dashboard',NULL,'2025-10-20 06:53:33'),(19,'Mostrar area de creditos','Modulo de Creditos',NULL,'2026-01-07 06:42:46'),(20,'Facturar creditos','Modulo de Creditos',NULL,'2026-01-07 06:42:46'),(21,'Crear separados','Modulo de Creditos',NULL,'2026-01-07 06:42:46');
+INSERT INTO `permisos` VALUES (1,'Habilitar modulo de venta','Modulo de venta\r',NULL,'2025-09-11 06:15:04'),(2,'Registrar nueva venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(3,'Anular una venta','Modulo de venta',NULL,'2025-09-11 06:15:04'),(4,'Aplicar descuentos','Modulo de venta',NULL,'2025-09-11 06:15:04'),(5,'Habilitar modulo de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(6,'Consultar stock','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(7,'Hacer ajustes de inventario','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(8,'Actualizar precios o datos','Modulo de Inventario',NULL,'2025-09-11 06:15:04'),(9,'Habilitar modulo de facturacion','Modulo de Facturación','','2025-09-12 03:32:43'),(10,'Emitir facturas electrónicas','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(11,'Anular facturas y notas creditos','Modulo de Facturación',NULL,'2025-09-12 03:32:43'),(12,'Habilitar modulo de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(13,'Abrir caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(14,'Cerrar caja y generar arqueo','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(15,'Ver reportes de caja','Modulo de Caja',NULL,'2025-09-22 00:57:04'),(16,'Habilitar modulo de reportes','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(17,'Habilitar modulo de configuracion','Modulos Administrativos ',NULL,'2025-09-22 01:00:57'),(18,'Mostrar dashboard','Modulo dashboard',NULL,'2025-10-20 06:53:33'),(19,'Habilitar módulo de credito/separados','Modulo de Separados',NULL,'2026-01-07 06:42:46'),(20,'Editar separados activos','Modulo de Separados',NULL,'2026-01-07 06:42:46'),(21,'Anular separados','Modulo de Separados',NULL,'2026-01-07 06:42:46');
 /*!40000 ALTER TABLE `permisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2721,6 +2726,7 @@ CREATE TABLE `usuarios` (
   `ciudad` varchar(44) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `direccion` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
+  `porcentajeganancia` decimal(5,2) DEFAULT '0.00',
   `img` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `fechacreacion` date DEFAULT NULL,
   `ultimologin` datetime DEFAULT NULL,
@@ -2729,7 +2735,7 @@ CREATE TABLE `usuarios` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `idsucursal_idx` (`idsucursal`),
   CONSTRAINT `idsucursal` FOREIGN KEY (`idsucursal`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2738,7 +2744,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,1,'Julian','Rodriguez','1094552023','soportej2','3042029683','julianlink123@hotmail.com',NULL,'$2y$10$TmSbBtfQLZZwrDZDNT9XN.l8MgkhGfkB2g89qocNSFew2Msb93era',1,NULL,'1','Armenia','Calle 26 # 50-21 Barrio primero',NULL,'avatar.png','2024-03-25','2024-03-25 15:03:02');
+INSERT INTO `usuarios` VALUES (1,1,'Julian','Rodriguez','1094552023','soportej2','3042029683','julianlink123@hotmail.com',NULL,'$2y$10$TmSbBtfQLZZwrDZDNT9XN.l8MgkhGfkB2g89qocNSFew2Msb93era',1,NULL,'1','Armenia','Calle 26 # 50-21 Barrio primero',NULL,0.00,'avatar.png','2024-03-25','2024-03-25 15:03:02');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2828,4 +2834,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-18  1:45:46
+-- Dump completed on 2026-04-08 19:16:08

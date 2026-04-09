@@ -11,6 +11,7 @@
     <div class="flex flex-wrap gap-2 mb-6 pt-6 border-t-2 border-blue-600">
         <button id="btnImprimirDetalleCaja" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir cierre</button>
         <button id="btnVerCierreWeb" class="btn-command"><span class="material-symbols-outlined">developer_mode_tv</span>Visualizar cierre</button>
+        <button id="btnVerCierreWs" class="btn-command"><i class=" text-5xl fa-brands fa-whatsapp"></i>Whatsapp</button>
         <button class="btn-command"><span class="material-symbols-outlined">email</span>Enviar notificacion</button>
     </div>
     
@@ -252,14 +253,16 @@
                             <th>Ventas por usuario</th>
                             <th>N°</th>
                             <th>Total</th>
+                            <th>Comision</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($ventasxusuarios as $index => $value): ?>
-                        <tr>        
+                        <tr>
                             <td class=""><?php echo $value['Nombre'];?></td> 
                             <td class=""><?php echo $value['N_ventas'];?></td>
-                            <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], "0", ",", ".");?></td>
+                            <td class=""><strong>$ </strong><?php echo number_format($value['ventas'], 0, ",", ".");?></td>
+                            <td class=""><strong>$ </strong><?php echo number_format($value['comision'], 0, ",", ".");?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

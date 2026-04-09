@@ -29,7 +29,7 @@
                 </p>
                 <p class="flex items-center gap-3">
                     <span class="font-semibold text-base text-gray-500">Teléfono:</span>
-                    <span class="text-lg font-medium text-gray-900"><?php echo $cliente->telefono ?></span>
+                    <span class="text-lg font-medium text-gray-900"><?php echo $cliente->telefono??'NA'; ?></span>
                 </p>
             </div>
 
@@ -37,7 +37,7 @@
             <div class="space-y-2">
                 <p class="flex items-center gap-3 mb-0">
                     <span class="font-semibold text-base text-gray-500">Última compra:</span>
-                    <span class="text-lg font-medium text-gray-900"><?php echo $cliente->ultima_compra;?></span>
+                    <span class="text-lg font-medium text-gray-900"> - </span>
                 </p>
                 <p class="flex items-center gap-3">
                     <span class="font-semibold text-base text-gray-500">Cliente desde:</span>
@@ -94,6 +94,18 @@
         </div>
     </div>
 
+    <div class="flex justify-start gap-4">
+        <button id="btnDeudaTotal" class=" text-gray-800 rounded-md border-2 border-indigo-400 shadow-sm hover:bg-gray-100 focus:ring-1 focus:ring-indigo-400 !py-4 !px-6 flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-2xl text-blue-400">payments</span>
+            <span class="font-medium text-2xl uppercase text-blue-400">Deuda total: <span class="text-gray-800">$<?php echo number_format($cliente->totaldebe, 0, ',', '.'); ?></span></span>
+          </button>
+          <button id="btnTotalCuotas" class=" text-gray-800 rounded-md border-2 border-indigo-400 shadow-sm hover:bg-gray-100 focus:ring-1 focus:ring-indigo-400 !py-4 !px-6 flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-2xl">payments</span>
+            <span class="font-medium text-2xl uppercase">Cuotas</span>
+          </button>
+
+    </div>
+
     <!-- Historial de creditos -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
         <h2 class="text-2xl font-bold mb-4">Historial de creditos</h2>
@@ -133,4 +145,34 @@
             </tbody>
         </table>
     </div>
+
+    
 </div>
+
+<dialog id="miDialogoTotalCuotas" class="midialog-md p-12">
+    <div class="flex justify-between items-center mb-4">
+        <h4 id="modalTotalCuotas" class="font-semibold text-gray-700 mb-4">Todas las cuotas</h4>
+        <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarTotalCuotas" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
+    </div>
+    <div id="divmsjalerta"></div>
+    <!-- TABLA DE INSUMOS -->
+    <div class="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
+        <table id="tablaCuotas"
+            class="w-full text-left border-collapse">
+            <thead
+                class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
+                <tr>
+                    <th class="px-5 py-3 border-b border-gray-200">N° Credito</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Credito total</th>
+                    <th class="px-5 py-3 border-b border-gray-200">N° Cuota</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Valor cuota</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Fecha pago</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Estado credito</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
+                <!-- Filas dinámicas -->
+            </tbody>
+        </table>
+    </div>
+</dialog>

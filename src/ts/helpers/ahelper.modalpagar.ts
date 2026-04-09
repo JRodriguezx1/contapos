@@ -3,6 +3,20 @@
 
     const POS = (window as any).POS;
 
+    //obtener valor porcentual del interes por cuota
+    let tasaInteresDB:number = 0;
+    /*(async ()=>{
+      try {
+          const url = "/admin/api/getParamGlobal"; //llamado a la API REST
+          const respuesta = await fetch(url); 
+          const resultado = await respuesta.json(); 
+          tasaInteresDB = Number(resultado.tasa_de_interes_por_cuota.valor_final);
+      } catch (error) {
+          console.log(error);
+      }
+    })();*/
+    tasaInteresDB = Number(getParamCaja.tasa_de_interes_por_cuota.valor_final);
+
     const mediospago = document.querySelectorAll<HTMLInputElement>('.mediopago');
     const interes = document.querySelector('#interes') as HTMLSelectElement;
     const abonoinicial = (document.querySelector('#abonoinicial') as HTMLInputElement);
@@ -64,10 +78,10 @@
       valoresCredito.cantidadcuotas=1;
       valoresCredito.montocuota=0;
       valoresCredito.frecuenciapago=1,
-      valoresCredito.interes=0;
-      valoresCredito.interestotal=0;
-      valoresCredito.valorinterestotal=0;
-      valoresCredito.valorinteresxcuota=0;
+      valoresCredito.interes=0;  //No aplicar interes
+      valoresCredito.interestotal=0;  // 0% de interes
+      valoresCredito.valorinterestotal=0;  //0$ de interes total de la factura
+      valoresCredito.valorinteresxcuota=0;  //0$ de interes de cada cuota
       valoresCredito.montototal=0;
     }
 
@@ -130,7 +144,7 @@
         valoresCredito.montototal = creditofinal;
       }
       if(cantidadcuotas.value !== '1'&&interes.value === '1'){
-        const valorInteres = creditofinal*0.02*valoresCredito.cantidadcuotas;
+        const valorInteres = creditofinal*(tasaInteresDB/100)*valoresCredito.cantidadcuotas;
         const total = creditofinal + valorInteres;
         const valorxcuota = Math.ceil((total/valoresCredito.cantidadcuotas)*100)/100;
         (document.querySelector('#montocuota') as HTMLInputElement).value = valorxcuota+'';
@@ -140,7 +154,7 @@
         //(document.querySelector('#montototal') as HTMLInputElement).value = total.toLocaleString();  //valor total del credito
         valoresCredito.interes = 1;
         valoresCredito.montocuota = valorxcuota;
-        valoresCredito.interestotal = 2*valoresCredito.cantidadcuotas;
+        valoresCredito.interestotal = tasaInteresDB*valoresCredito.cantidadcuotas;
         valoresCredito.valorinteresxcuota = valorInteres/valoresCredito.cantidadcuotas;
         valoresCredito.valorinterestotal = valorInteres;
         valoresCredito.montototal = total;

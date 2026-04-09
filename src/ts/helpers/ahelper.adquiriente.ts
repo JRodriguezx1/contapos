@@ -36,11 +36,12 @@
   const miDialogoFacturarA = document.querySelector('#miDialogoFacturarA') as any;
   const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
   const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
+  const businessNameInput = document.querySelector('#business_name') as HTMLInputElement;
   const btnBuscarAdquiriente = document.querySelector('#btnBuscarAdquiriente') as HTMLButtonElement;
   const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
   const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
   let customers:adquirientes[] = [];
-  let customersfiltrados:adquirientes[] = [], token:string|undefined;
+  let customersfiltrado:adquirientes|undefined, token:string|undefined;
 
 
   (async ()=>{
@@ -94,39 +95,48 @@
 
   //buscar adquiriente
   documentinput.addEventListener('input', buscarAquiriente);
+  businessNameInput.addEventListener('input', buscarAquiriente);
 
   function buscarAquiriente(e:Event){
-      const busqueda:string = (e.target as HTMLInputElement).value;
-      if(busqueda.length > 3 && /^\d+$/.test(busqueda)){
-          //const expresionregular = new RegExp(busqueda, "i");
-          customersfiltrados = customers.filter(document => { 
-              if(document.identification_number.trim() === busqueda.trim()){
-                  return document;
-              }
-          });   
-      }else{
-          customersfiltrados = [];
+      const input = e.target as HTMLInputElement;
+      const busqueda:string = input.value.toLowerCase();
+
+      if(busqueda.length<3){
+        customersfiltrado = undefined;
+        //mostrarAdquiriente();
+        return;
       }
+
+      customersfiltrado = customers.find(adq =>{
+        if(input.id==='identification_number'){
+          return adq.identification_number.trim() === busqueda.trim();
+        }else{
+          const nombre = adq.business_name.toLowerCase();
+          return nombre.trim() === busqueda.trim();
+        }
+      });
+      
       mostrarAdquiriente();
   }
 
   function mostrarAdquiriente(){
-    if(customersfiltrados.length>0){
-      $('#type_document_identification_id').val(customersfiltrados[0].type_document_identification_id);
-      (document.querySelector('#business_name') as HTMLInputElement).value = customersfiltrados[0].business_name;
-      (document.querySelector('#email') as HTMLInputElement).value = customersfiltrados[0].email;
-      (document.querySelector('#address') as HTMLInputElement).value = customersfiltrados[0].address;
-      if(customersfiltrados[0].department_id){
-        $('#department_id').val(customersfiltrados[0].department_id);
-        imprimirCiudades(customersfiltrados[0].department_id);
+    if(customersfiltrado != undefined){
+      $('#type_document_identification_id').val(customersfiltrado.type_document_identification_id);
+      documentinput.value = customersfiltrado.identification_number;
+      (document.querySelector('#business_name') as HTMLInputElement).value = customersfiltrado.business_name;
+      (document.querySelector('#email') as HTMLInputElement).value = customersfiltrado.email;
+      (document.querySelector('#address') as HTMLInputElement).value = customersfiltrado.address;
+      if(customersfiltrado.department_id){
+        $('#department_id').val(customersfiltrado.department_id);
+        imprimirCiudades(customersfiltrado.department_id);
       }
-      //$('#municipality_id').val(customersfiltrados[0].municipality_id);
-      $('#type_organization_id').val(customersfiltrados[0].type_organization_id);
-      $('#type_regime_id').val(customersfiltrados[0].type_regime_id);
-      (document.querySelector('#phone') as HTMLInputElement).value = customersfiltrados[0].phone;
+      //$('#municipality_id').val(customersfiltrado.municipality_id);
+      $('#type_organization_id').val(customersfiltrado.type_organization_id);
+      $('#type_regime_id').val(customersfiltrado.type_regime_id);
+      (document.querySelector('#phone') as HTMLInputElement).value = customersfiltrado.phone;
     }else{
       $('#type_document_identification_id').val("");
-      (document.querySelector('#business_name') as HTMLInputElement).value = '';
+      //(document.querySelector('#business_name') as HTMLInputElement).value = '';
       (document.querySelector('#email') as HTMLInputElement).value = '';
       (document.querySelector('#address') as HTMLInputElement).value = '';
       $('#department_id').val("");
@@ -173,7 +183,7 @@
       option.dataset.department_id = x.department_id;
       selectdCities.appendChild(option);
     });
-    if(customersfiltrados.length>0&&customersfiltrados[0].municipality_id)$('#municipality_id').val(customersfiltrados[0].municipality_id);
+    if(customersfiltrado!=undefined&&customersfiltrado.municipality_id)$('#municipality_id').val(customersfiltrado.municipality_id);
   }
 
 

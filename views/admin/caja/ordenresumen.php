@@ -342,7 +342,8 @@
                         </td>
                         <td class="px-6 py-4" data-qty="<?php echo $value->cantidad??0;?>">
                             <input 
-                            id="<?php echo $value->idproducto;?>" 
+                            id="<?php echo $value->idproducto;?>"
+                            data-nombre="<?php echo $value->nombreproducto??'';?>"
                             data-tipoproducto = "<?php echo $value->tipoproducto;?>";
                             data-tipoproduccion = "<?php echo $value->tipoproduccion;?>";
                             data-rendimientoestandar = "<?php echo $value->rendimientoestandar;?>";

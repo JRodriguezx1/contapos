@@ -96,18 +96,18 @@
         
             <!-- Contenido con scroll -->
             <div class="flex-1 tlg:overflow-y-scroll tlg:pl-4 contenedorsetup">
-                <?php if(1): //esta activo cuando la suscripcion esta al dia ?>   
-                    <?php include __DIR__. "/ajustesdelsistema/caja.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/inventario.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/claves.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/permisos.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/impresion.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/impuestos.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/facturacion.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/sistema.php"; ?>
-                    <?php include __DIR__. "/ajustesdelsistema/whatsapp.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/caja.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/inventario.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/claves.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/permisos.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/impresion.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/impuestos.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/facturacion.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/sistema.php"; ?>
+                <?php include __DIR__. "/ajustesdelsistema/whatsapp.php"; ?>
+                <?php if(userPerfil()==1): //solo visible para usuario soporte ?>
+                    <?php include __DIR__. "/ajustesdelsistema/suscripcion.php"; ?>
                 <?php endif; ?>
-                <?php include __DIR__. "/ajustesdelsistema/suscripcion.php"; ?>
             </div>
         </div>
     </div>

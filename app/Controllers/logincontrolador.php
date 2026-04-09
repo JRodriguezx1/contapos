@@ -90,6 +90,7 @@ class logincontrolador{
                             $_SESSION['email'] = $usuario->email;
                             $_SESSION['login'] = true;
                             $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
+                            $_SESSION['porcentajeganancia'] = $usuario->porcentajeganancia;
                             $_SESSION['permisos'] = $listapermisos;
                             $_SESSION['configLocal'] = config_local::getParamGlobal();
 

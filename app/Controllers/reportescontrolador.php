@@ -23,6 +23,7 @@ use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
+use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
  
 class reportescontrolador{
@@ -234,6 +235,16 @@ class reportescontrolador{
     }
 
 
+    public static function utilidadRentabilidad(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        /*$ws = new whatsAppService();
+        $ws->sendMessage('', '');*/
+
+        $router->render('admin/reportes/utilidadgastoscrecimiento/utilidadRentabilidad', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
     public static function utilidadxproducto(Router $router){
         //session_start();
         isadmin();
@@ -379,6 +390,13 @@ class reportescontrolador{
               GROUP BY cv.nombre WITH ROLLUP";
       $canalVenta = facturas::camposJoinObj($sql);
 
+      //calcular ventas por usuario
+      $sql = "SELECT COUNT(f.id) as ventasRealizadas, CONCAT(u.nombre, COALESCE(u.apellido, '')) as empleado, SUM(f.total) as totalVentas, ROUND((SUM(f.porcentgananciauser)/COUNT(f.id)), 2) as porcentaje, SUM(f.valorgananciauser) as valorComision
+              FROM facturas f JOIN usuarios u ON f.idvendedor = u.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY u.id;";
+      $ventasXusuario = productos::camposJoinObj($sql);
+
       //gastos
       $sql = "SELECT IFNULL(cg.nombre, 'TOTAL GENERAL') AS descripcion, IFNULL(g.operacion, '') AS tipogasto, SUM(g.valor) AS valor
               FROM gastos g JOIN categoriagastos cg ON g.idcategoriagastos = cg.id
@@ -399,7 +417,7 @@ class reportescontrolador{
       
 
     }
-    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'canalVenta'=>$canalVenta, 'gastos'=>$gastos, 'resumenCreditos'=>$resumenCreditos, 'resumenVentas'=>$resumenVentas]);
+    echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'canalVenta'=>$canalVenta, 'ventasXusuario'=>$ventasXusuario, 'gastos'=>$gastos, 'resumenCreditos'=>$resumenCreditos, 'resumenVentas'=>$resumenVentas]);
   }
 
   

@@ -125,5 +125,25 @@
             </div>
             <p class="mt-1 text-sm text-gray-500">Indica el porcentaje de interes que tendra cada cuota.</p>
         </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="base_de_caja_automatico_constante" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
+                Base de caja
+            </label>
+            <div class="flex items-center gap-3">
+                <input 
+                    type="text" 
+                    id="base_de_caja_automatico_constante" 
+                    name="base_de_caja_automatico_constante" 
+                    class=" keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 
+                        block w-32 p-2.5 h-14 text-xl focus:outline-none focus:ring-1 
+                           "
+                    placeholder="0"
+                    value="<?php echo $conflocal['base_de_caja_automatico_constante']->valor_final; ?>"
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                >
+            </div>
+            <p class="mt-1 text-sm text-gray-500">Ingrso automatico de la base en caja principal</p>
+        </div>
     </div>
 </div> <!-- End Caja -->

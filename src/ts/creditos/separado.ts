@@ -287,7 +287,10 @@
       }
       if(carrito.length){
         document.querySelector('.Efectivo')?.removeAttribute('readonly');
-        document.querySelector('#inputscreditos')?.remove();  //elimina los inputs de credito en el modal de procesar pago.
+        //document.querySelector('#inputscreditos')?.remove();  //elimina los inputs de credito en el modal de procesar pago.
+        document.querySelector('#campoabonoinicial')?.remove();
+        document.querySelector('#campocantidadcuotas')?.remove();
+        document.querySelector('#campomontocuota')?.remove();
         document.querySelector('#abonoTotal')?.classList.remove('hidden');
         document.querySelector('#textPrint')!.textContent = '¿Desea imprimir comprobante?';
         tipoventa = "Credito";

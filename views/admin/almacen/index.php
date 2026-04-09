@@ -143,6 +143,13 @@
           <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>Estadisticas</span>
         <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
       </a>
+
+      <a class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition"
+        href="/admin/almacen/productosParaFormulas">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>Motor de formulas</span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </a>
       
     </div>
   </dialog>

@@ -20,8 +20,7 @@
           <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 " id="item-1">
             Valor inventario
           </dt>
-          <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
-              aria-describedby="item-1" id="starsCount">
+          <dd id="starsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600" aria-describedby="item-1">
             $<?php echo $valorInv;?>
           </dd>
         </div>
@@ -31,8 +30,7 @@
           <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
             Stock total productos de venta
           </dt>
-          <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
-              id="downloadsCount">
+          <dd id="downloadsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600">
             <?php echo number_format($cantidadProductos??0, "0", ",", ".");?>
           </dd>
         </div>
@@ -43,8 +41,7 @@
             <p class="mb-0">Cantidad de referencias</p>
             <span class="text-base text-gray-400">(productos e insumos)</span>
           </dt>
-          <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
-              id="sponsorsCount">
+          <dd id="sponsorsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600">
             <?php echo number_format($cantidadReferencias??0, "0", ",", ".");?>
           </dd>
         </div>
@@ -54,8 +51,7 @@
           <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
             Categorías
           </dt>
-          <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
-              id="sponsorsCount">
+          <dd id="sponsorsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600">
             <?php echo $cantidadCategorias;?>
           </dd>
         </div>
@@ -65,9 +61,8 @@
           <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
             Productos con bajo stock
           </dt>
-          <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
-              id="sponsorsCount">
-              <a href="/admin/reportes"><?php echo number_format($bajoStock??0, "0", ",", ".");?></a>
+          <dd id="sponsorsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600">
+              <button id="btnviewProductsBajoStock"><?php echo number_format($bajoStock??0, "0", ",", ".");?></button>
           </dd>
         </div>
 
@@ -76,8 +71,7 @@
           <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
             Productos agotados
           </dt>
-          <dd class="order-1 text-5xl font-extrabold leading-none text-indigo-600"
-              id="sponsorsCount">
+          <dd id="sponsorsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600">
             <?php echo number_format($productosAgotados??0, "0", ",", ".");?>
           </dd>
         </div>
@@ -86,3 +80,30 @@
     </div>
   </div>
 </div>
+
+<dialog id="miDialogoBajoStock" class="midialog-lg p-12">
+    <div class="flex justify-between items-center mb-4">
+        <h4 id="modalTotalBajoStock" class="font-semibold text-gray-700 mb-4">Productos con bajo stock</h4>
+        <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarTotalBajoStock" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
+    </div>
+    <div id="divmsjalerta"></div>
+    <!-- TABLA DE INSUMOS -->
+    <div class="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
+        <table id="tablaBajoStock"
+            class="w-full text-left border-collapse">
+            <thead
+                class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
+                <tr>
+                    <th class="px-5 py-3 border-b border-gray-200">Id</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Nombre</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Tipo</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Stock Actual</th>
+                    <th class="px-5 py-3 border-b border-gray-200">Stock Min</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
+                <!-- Filas dinámicas -->
+            </tbody>
+        </table>
+    </div>
+</dialog>

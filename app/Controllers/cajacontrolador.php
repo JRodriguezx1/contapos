@@ -26,6 +26,7 @@ use App\Models\parametrizacion\config_local;
 use App\Models\configuraciones\negocio;
 use App\Models\sucursales;
 use App\Repositories\creditos\separadoMediopagoRepository;
+use App\services\cajaService;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -48,7 +49,7 @@ class cajacontrolador{
       if($value->ingresoventas>0 || $value->totalcotizaciones>0 || $value->totalfacturas>0){
         $datacierrescajas['ids'][] = $value->id;
         $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
-      } 
+      }
     }
 
     $facturas = [];
@@ -57,8 +58,7 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
     */
-    
-    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
+    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal(), $_SESSION['perfil']]);
     foreach($facturas as $value)$value->mediosdepago = json_decode($value->mediosdepago);
     //debuguear($facturas);
     $bancos = bancos::all();
@@ -496,6 +496,14 @@ class cajacontrolador{
     $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
+
+  public static function trasladosRetirosDinero(Router $router){
+    isadmin();
+    //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+    $alertas = [];
+    $router->render('admin/caja/trasladosRetiros', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
   public static function ordenresumen(Router $router){
     //session_start();
     isadmin();
@@ -588,63 +596,13 @@ class cajacontrolador{
     //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $discriminarmediospagos = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    //$alertas = usuarios::getAlertas();
-    $conflocal = config_local::getParamGlobal();
-    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
-
-    $separadomediospagoRepo = new separadoMediopagoRepository();
-    $ultimocierre = cierrescajas::find('id', $id);
-    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-
-    $factmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
-    $sepMediosPago = $separadomediospagoRepo->allMediospagoXCierrecaja($ultimocierre->id);
-    foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
-        $id = $item['idmediopago'];
-        if (!isset($discriminarmediospagos[$id])) {
-            $discriminarmediospagos[$id] = $item;
-            $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
-        } else {
-            $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
-        }
-    }
-
-    $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
-    $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
-    $mediospagos = mediospago::all();  //se usa para la declaracion de valores.
-    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
-    //////////// Indicador de caja //////////////////
-      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
-    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    $sobrantefaltante = $declaracion;
-    foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
-      $aux = 0;
-      foreach($declaracion as $j => $dec){
-        if($dis['idmediopago'] == $dec->id_mediopago){
-          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
-          $aux = 1;
-          break;
-        }
-      }
-      if($aux == 0){
-        $newobj = new stdClass();
-        $newobj->id_mediopago = $dis['idmediopago'];
-        $newobj->idcierrecajaid = $ultimocierre->id;
-        $newobj->nombremediopago = $dis['mediopago'];
-        $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
-        $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
-        $sobrantefaltante[] = $newobj;
-      }
-    }
-    
+    $datos = cajaService::printdetallecierre($id);
     $sucursal = sucursales::find('id', id_sucursal());
     $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
-    
-    $router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    //$router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/caja/printdetallecierre', $datos+['titulo'=>'detalle cierre Caja', 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -748,14 +706,19 @@ class cajacontrolador{
         $ultimocierre->realventas = $ultimocierre->ingresoventas-$ultimocierre->totaldescuentos;
         $ultimocierre->totalbruto = $ultimocierre->ingresoventas;
         $ultimocierre->estado = 1; //cerrar caja
+        
+        //**obtener base automatica establecida en los parametros del sistema, solo para la caja principal
+        $baseAuto = $conflocal['base_de_caja_automatico_constante']->valor_final??0;
         // crear el siguiente cierre de caja
-        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'fechacierre'=>$ultimocierre->fechacierre]);
+        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'fechacierre'=>$ultimocierre->fechacierre, 'basecaja'=>$ultimocierre->idcaja==1?$baseAuto:0]);
         $r = $crearcierrecaja->crear_guardar();
         if($r[0]){
           $ra = $ultimocierre->actualizar();
           if($ra){
             $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
             $alertas['ultimocierre'][] = $ultimocierre->id;
+            //enviar cierre de caja por ws
+            
           }else{
             $ultimocierrecaja = cierrescajas::find('id', $r[1]);
             $ultimocierrecaja->eliminar_registro();

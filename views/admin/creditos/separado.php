@@ -201,4 +201,9 @@
 
     <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
     <?php include __DIR__. "/../ventas/modalprocesarpago.php"; ?>
+
+
+    <script>
+        const getParamCaja = <?= json_encode($conflocal) ?>;  //se inyecta el array de parametros de caja desde PHP a JavaScript y se utiliza en separados.ts junto con ahelper.modalpagar.ts
+    </script>
 </div>

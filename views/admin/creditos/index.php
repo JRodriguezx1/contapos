@@ -49,8 +49,9 @@
                     <div class="acciones-btns" id="<?php echo $value->ID;?>">
                         <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
                         <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
-                        <button class="btn-xs btn-red anularCredito" title="Eliminar el credito"><i class="fa-solid fa-trash-can"></i></button>
-                        <?php endif; ?>
+                            <?php if(tienePermiso('Anular separados')&&userPerfil()>3 || userPerfil()<4){ ?>
+                                <button class="btn-xs btn-red anularCredito" title="Eliminar el credito"><i class="fa-solid fa-trash-can"></i></button>
+                        <?php } endif; ?>
                         <span id="<?php echo $value->ID;?>" class="printPOSSeparado material-symbols-outlined cursor-pointer">print</span>
                     </div>
                 </td>
@@ -58,9 +59,5 @@
         <?php endforeach; ?>
     </tbody>
   </table>
-
-  <script>
-   const creditosDB = <?= json_encode($creditos) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
-  </script>
 
 </div>

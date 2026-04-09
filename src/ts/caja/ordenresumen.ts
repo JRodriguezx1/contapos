@@ -265,7 +265,6 @@
             const url = "/admin/api/facturarCotizacion";  //va al controlador ventascontrolador
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            console.log(resultado);
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               /////// reinciar modulo de ventas
@@ -317,7 +316,7 @@
 
       function eliminarorden():void{
         ///////*** crear arreglo de obj de los productos y sus cantidades ***///////
-        type producto = {id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string };
+        type producto = {id:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string };
         var products:producto[] = [];
 
         const v:number = validarPasswordDcto();
@@ -325,7 +324,7 @@
 
         inputsInv.forEach(inputinv =>{
           const v = inputinv as HTMLInputElement;
-          products = [...products, {id: v.id, idproducto: v.id, tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: v.value}];
+          products = [...products, {id: v.id, idproducto: v.id, nombre: v.dataset.nombre??'', tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: v.value}];
         });
 
         (async ()=>{
@@ -335,7 +334,7 @@
           datos.append('devolverinv', (document.querySelector('input[name="devolverinventario"]:checked') as HTMLInputElement).value);
           //datos.append('domicilio', 0);
           try {
-              const url = "/admin/api/eliminarOrden";  //api llamada en cajacontrolador.php
+              const url = "/admin/api/eliminarOrden";  //api llamada en ventascontrolador.php
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();
               if(resultado.exito !== undefined){

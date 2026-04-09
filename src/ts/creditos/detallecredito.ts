@@ -17,7 +17,7 @@
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numCuota = document.querySelector('#numCuota') as HTMLLabelElement;
     const selectMediopago = document.querySelector('#selectMediopago') as HTMLSelectElement;
-    const inputDescuentoAjustarCredito = document.querySelector('#inputDescuentoAjustarCredito') as HTMLInputElement;
+    const inputPasswordAjustarCredito = document.querySelector('#inputPasswordAjustarCredito') as HTMLInputElement;
     let contentMP:HTMLButtonElement, idcuota:string = '0', idcredito:string = '0', totalpagado:string = '0', idmediopago:string = '0', mediopagado:string = '0';
     
     let indiceFila=0, tablacuotas:HTMLElement;
@@ -29,14 +29,14 @@
       valor_local:string|null
     };
 
-    let clavedcto:clavesApi[];
+    let password:clavesApi[];
 
     (async ()=>{
       try {
           const url = "/admin/api/getPasswords"; //llamado a la API REST
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json(); 
-          clavedcto = resultado;
+          password = resultado;
       } catch (error) {
           console.log(error);
       }
@@ -153,8 +153,8 @@
     });
 
     function validarPasswordDcto():number{
-      const clave = clavedcto.find(c => c.clave=='clave_para_ajustar_credito');
-      if(clave?.valor_final!==null && inputDescuentoAjustarCredito.value !== clave?.valor_final){
+      const clave = password.find(c => c.clave=='clave_para_ajustar_credito');
+      if(inputPasswordAjustarCredito && clave?.valor_final!==null && inputPasswordAjustarCredito.value !== clave?.valor_final){
         msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalertaClaveAjustarCredito') as HTMLElement));
         return 0;
       }

@@ -2,7 +2,7 @@
   <!-- Encabezado -->
   <div class="text-center border-b border-gray-200 pb-4">
     <h2 class="font-bold text-xl text-gray-900">
-      <?php echo $ultimocierre->estado==1?'CIERRE CONFIRMADO':'CIERRE PARCIAL';?>
+      <?php echo $ultimocierre->estado==1?'CIERRE DE CAJA':'CIERRE PARCIAL';?>
     </h2>
     <p class="text-black"><?php echo $ultimocierre->nombrecaja??'';?></p>
     <p class="mt-1 font-semibold text-gray-900"><?php echo ($sucursal??null)?->nombre??'';?></p>
@@ -53,15 +53,15 @@
   <div class="mt-3">
     <h3 class="font-bold text-gray-900 mb-1.5">Datos de Ventas</h3>
     <ul>
-      <li>Ingreso de Ventas Total: + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></li>
+      <li>Ingreso Total de Ventas: + $<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></li>
       <li>Abonos totales: + $<?php echo number_format($ultimocierre->abonostotales??0, "0", ",", ".");?></li>
       <li>Total gastos de caja: - $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></li>
+      <li>Gastos otros/bancarios: - $<?php echo number_format($ultimocierre->gastosbanco??0, "0", ",", ".");?></li>
       <li>Total Descuentos: - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></li>
       <li>Total Domicilios: - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></li>
-      <li class="font-semibold text-gray-900">Real ingreso de ventas: = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></li>
+      <li class="font-semibold text-gray-900">GANANCIA HOY: = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0)-($ultimocierre->gastosbanco??0), "0", ",", ".");?></li>
       <li>Base grabable: = $<?php echo number_format($ultimocierre->basegravable??0, "0", ",", ".");?></li>
       <li>Impuesto Total: - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "0", ",", ".");?></li>
-      <li>Gastos otros/bancarios: - $<?php echo number_format($ultimocierre->gastosbanco??0, "0", ",", ".");?></li>
     </ul>
   </div>
 

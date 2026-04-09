@@ -132,7 +132,6 @@ class clientescontrolador{
         $indicadores = clientes::indicadoresVentasXcliente($cliente->id, id_sucursal());
         $creditos = new creditosRepository;
         $creditos = $creditos->findAll('cliente_id', $cliente->id);
-
         $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
      

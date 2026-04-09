@@ -118,7 +118,7 @@ class apidiancontrolador{
   }
 
 
-  //guardar resolucion invoice cuando se consulta o decarga de la Dian, de forma local.
+  //guardar resolucion invoice cuando se consulta o se descarga de la Dian, de forma local.
   public static function guardarResolutionJ2(){
     //session_start();
     isadmin();
@@ -394,7 +394,7 @@ class apidiancontrolador{
             return;
           } catch (\Throwable $th) {
             $getDB->rollback();
-            $alerta['error'][] = "Error en base de datos al generar la nota credito. ".$th->getMessage();
+            $alertas['error'][] = "Error en base de datos al generar la nota credito. ".$th->getMessage();
             $alertas['notacredito'] = $facturaDian;
             echo json_encode($alertas);
             return;
@@ -588,5 +588,37 @@ class apidiancontrolador{
     return;
   }
 
+
+  public static function editarResolutionFE():void{
+    isadmin();
+    //header('Content-Type: application/json');
+    $alertas = [];
+    $getDB = facturas_electronicas::getDB();
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405); // Método no permitido
+      echo json_encode(['error' => 'Método no permitido']);
+      exit;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (!$data) {
+        http_response_code(400);
+        echo json_encode(['error' => 'JSON inválido']);
+        exit;
+    }
+    $getDB->begin_transaction();
+    try {
+      $alertas['prefijoNum'] = facturaElectronicaService::actualizarResolutionFE($data);
+      $getDB->commit();
+      $alertas['exito'][] = 'Cambio de datos de resolucion de factura electronica.';
+    } catch (\Throwable $th) {
+      $getDB->rollback();
+      $alertas['error'][] = "Error al actualizar los datos de la resolucion de la factura electronica. ".$th->getMessage();
+    }
+    echo json_encode($alertas);
+    return;
+  }
+  
 
 }

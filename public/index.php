@@ -23,6 +23,7 @@ use App\Controllers\clientescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
 use App\Controllers\creditoscontrolador;
+use App\Controllers\reservascontrolador;
 use App\Controllers\modorapidocontrolador;
 use App\Controllers\nominaelectcontrolador;
 use App\Controllers\paginacontrolador;
@@ -30,6 +31,7 @@ use App\Controllers\parametroscontrolador;
 use App\Controllers\printcontrolador;
 use App\Controllers\suscripcioncontrolador;
 use App\Controllers\trasladosinvcontrolador;
+use App\Controllers\whatsAppControlador;
 use App\Middlewares\MembershipMiddleware;
 // me importa la clase router
 use MVC\Router;
@@ -106,6 +108,7 @@ $router->post('/admin/almacen/uploadExcel', [almacencontrolador::class, 'uploadE
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 $router->get('/admin/almacen/cambioPrecios', [almacencontrolador::class, 'cambioPrecios']);
 $router->get('/admin/almacen/estadisticas', [almacencontrolador::class, 'estadisticas']);
+$router->get('/admin/almacen/productosParaFormulas', [almacencontrolador::class, 'productosParaFormulas']);
 ////// area de traslados de inventario  //////
 $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
 $router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);
@@ -119,6 +122,7 @@ $router->get('/admin/caja/zetadiario', [cajacontrolador::class, 'zetadiario']);
 $router->get('/admin/caja/fechazetadiario', [cajacontrolador::class, 'fechazetadiario']); ////--------pasar a controlador de reportes
 $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscierres']);
 $router->get('/admin/caja/pedidosguardados', [cajacontrolador::class, 'pedidosguardados']);
+$router->get('/admin/caja/trasladosRetirosDinero', [cajacontrolador::class, 'trasladosRetirosDinero']);
 $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
 $router->get('/admin/caja/categoriaGasto', [cajacontrolador::class, 'categoriaGasto']);
@@ -144,6 +148,8 @@ $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'det
 $router->get('/admin/creditos/adicionarProducto', [creditoscontrolador::class, 'adicionarProducto']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 $router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
+////// Reservas //////
+$router->get('/admin/reservas', [reservascontrolador::class, 'index']);
 
 ///// area de reportes /////
 $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
@@ -162,6 +168,7 @@ $router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class,
 $router->get('/admin/reportes/movimientosinventarios', [reportescontrolador::class, 'movimientosinventarios']);
 $router->get('/admin/reportes/compras', [reportescontrolador::class, 'compras']);
 $router->get('/admin/reportes/detallecompra', [reportescontrolador::class, 'detallecompra']);
+$router->get('/admin/reportes/utilidadRentabilidad', [reportescontrolador::class, 'utilidadRentabilidad']);
 $router->get('/admin/reportes/utilidadxproducto', [reportescontrolador::class, 'utilidadxproducto']);
 $router->get('/admin/reportes/gastoseingresos', [reportescontrolador::class, 'gastoseingresos']);
 $router->get('/admin/reportes/clientesnuevos', [reportescontrolador::class, 'clientesnuevos']);
@@ -207,8 +214,9 @@ $router->post('/admin/api/ensamblar', [almacencontrolador::class, 'ensamblar']);
 $router->get('/admin/api/desasociarsubproducto', [almacencontrolador::class, 'desasociarsubproducto']);
 $router->get('/admin/api/allConversionesUnidades', [almacencontrolador::class, 'allConversionesUnidades']); //trae todos los sub-productos con todas las unidades equivalentes
 $router->post('/admin/api/actualizarcostos', [almacencontrolador::class, 'actualizarcostos']);  //actualizar costos, api llamada desde ajustarcostos.ts
+$router->post('/admin/api/actualizarPreciosVenta', [almacencontrolador::class, 'actualizarPreciosVenta']);  //actualizar precios, api llamada desde ajustarprecios.ts
 $router->get('/admin/api/totalitems', [almacencontrolador::class, 'totalitems']);  //api llamada desde compras.ts para obtener los productos simples y subproductos
-$router->post('/admin/api/registrarCompra', [almacencontrolador::class, 'registrarCompra']);  //actualizar costos, api llamada desde ajustarcostos.ts
+$router->post('/admin/api/registrarCompra', [almacencontrolador::class, 'registrarCompra']);  //
 $router->post('/admin/api/descontarstock', [almacencontrolador::class, 'descontarstock']);  //descontar unidades de inventario
 $router->post('/admin/api/aumentarstock', [almacencontrolador::class, 'aumentarstock']);  //ingresar o aumentar unidades de inventario
 $router->post('/admin/api/ajustarstock', [almacencontrolador::class, 'ajustarstock']);  //reiniciar o ajustar inventario
@@ -220,6 +228,7 @@ $router->post('/admin/api/crearProveedor', [almacencontrolador::class, 'crearPro
 $router->post('/admin/api/actualizarProveedor', [almacencontrolador::class, 'actualizarProveedor']); //api llamada desde gestionproveedores.js para actualizar proveedores
 $router->post('/admin/api/eliminarProveedor', [almacencontrolador::class, 'eliminarProveedor']); //api llamada desde gestionproveedores.js para eliminar proveedores
 $router->post('/admin/api/generarBarCode', [almacencontrolador::class, 'generarBarCode']); // me trae todos los proveedores desde gestionproveedores.js
+$router->get('/admin/api/getItemsBajoStock', [almacencontrolador::class, 'getItemsBajoStock']);
 
 //$router->get('/admin/api/allordenestrasladoinv', [trasladosinvcontrolador::class, 'allordenestrasladoinv']); //trae todos las ordenes de traslados
 $router->get('/admin/api/idOrdenTrasladoSolicitudInv', [trasladosinvcontrolador::class, 'idOrdenTrasladoSolicitudInv']); //trae todos las ordenes de traslados
@@ -254,6 +263,7 @@ $router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::
 $router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularSeparado']);
 $router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, 'ajustarCreditoAntiguo']);
 $router->post('/admin/api/editarOrdenCreditoSeparado', [creditoscontrolador::class, 'editarOrdenCreditoSeparado']);
+$router->get('/admin/api/totalCuotasXcliente', [creditoscontrolador::class, 'totalCuotasXcliente']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -318,6 +328,7 @@ $router->post('/admin/api/parametrosSistema', [parametroscontrolador::class, 'pa
 $router->post('/admin/api/parametrosSistemaClaves', [parametroscontrolador::class, 'parametrosSistemaClaves']); //fetch llamado en configparametros.js
 $router->post('/admin/api/parametrosSistemaTipoSelect', [parametroscontrolador::class, 'parametrosSistemaTipoSelect']); //fetch llamado en configparametros.js
 $router->get('/admin/api/getPasswords', [parametroscontrolador::class, 'getPasswords']); //obtener los password del sistema
+$router->get('/admin/api/getParamGlobal', [parametroscontrolador::class, 'getParamGlobal']); //obtener los parametros del sistema
 
 $router->get('/admin/api/citiesXdepartments', [apidiancontrolador::class, 'citiesXdepartments']);  //Consulta municipios segun departamento
 $router->post('/admin/api/crearCompanyJ2', [apidiancontrolador::class, 'crearCompanyJ2']);  // crear la compañia en j2
@@ -332,9 +343,12 @@ $router->POST('/admin/api/sendNc', [apidiancontrolador::class, 'sendNc']);
 $router->POST('/admin/api/crearFacturaPOSaElectronica', [apidiancontrolador::class, 'crearFacturaPOSaElectronica']);
 $router->POST('/admin/api/asignarAdquirienteAFactura', [apidiancontrolador::class, 'asignarAdquirienteAFactura']);
 $router->POST('/admin/api/eliminarFacturaElectronica', [apidiancontrolador::class, 'eliminarFacturaElectronica']);
+$router->POST('/admin/api/editarResolutionFE', [apidiancontrolador::class, 'editarResolutionFE']);
 
 $router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
 $router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts
+
+$router->get('/admin/api/ws/sendtextDetalleCierreCaja', [whatsAppControlador::class, 'sendtextDetalleCierreCaja']); 
 
 
 //////***************************/***NO**************************//////
