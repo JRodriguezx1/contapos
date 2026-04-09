@@ -3,7 +3,7 @@ namespace App\Models\ventas;
 
 class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'departamento', 'ciudad', 'entrega', 'valortarifa', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -41,6 +41,7 @@ class facturas extends \App\Models\ActiveRecord {
         $this->abono = $args['abono']??0;
         $this->abonofinal = $args['abonofinal']??0;
         $this->porcentgananciauser = $args['porcentgananciauser']??0;
+        $this->valorgananciauser = $args['valorgananciauser']??0;
         $this->subtotal = $args['subtotal'] ?? 0;
         $this->base = $args['base'] ?? 0;
         $this->valorimpuestototal = $args['valorimpuestototal'] ?? 0;

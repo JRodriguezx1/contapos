@@ -47,7 +47,7 @@
 
 
     interface i_ventasEmpleados {
-        empleados:string,
+        empleado:string,
         ventasRealizadas:string,
         totalVentas:string,
         porcentaje:string,
@@ -98,6 +98,8 @@
             productosVendidos = resultado.productosVendidos;
             mediosPagos = resultado.mediosPagos;
             creditosSeparados = resultado.separados;
+            ventasEmpleados = resultado.ventasXusuario;
+            console.log(ventasEmpleados);
             gastos = resultado.gastos;
             canalVenta = resultado.canalVenta;
             resumenCreditos = resultado.resumenCreditos;
@@ -196,11 +198,11 @@
             pageLength: 25,
             order: [[ 1, 'desc' ]],
             columns: [
-                        {title: 'Empleado', data: 'descripcion'},
-                        {title: 'Ventas Realizadas', data: 'tipogasto'},
-                        {title: 'Total Ventas', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Porcentaje', data: 'tipogasto'},
-                        {title: 'Valor comision', data: 'tipogasto'},
+                        {title: 'Empleado', data: 'empleado'},
+                        {title: 'Ventas Realizadas', data: 'ventasRealizadas'},
+                        {title: 'Total Ventas', data: 'totalVentas', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Porcentaje', data: 'porcentaje'},
+                        {title: 'Valor comision', data: 'valorComision', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
     }

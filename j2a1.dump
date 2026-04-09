@@ -1237,6 +1237,7 @@ CREATE TABLE `facturas` (
   `referencia` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `abono` decimal(12,2) DEFAULT '0.00',
   `abonofinal` decimal(12,2) DEFAULT '0.00',
+  `porcentgananciauser` decimal(5,2) DEFAULT '0.00',
   `subtotal` decimal(12,2) DEFAULT NULL,
   `base` decimal(13,3) DEFAULT NULL,
   `valorimpuestototal` decimal(12,3) DEFAULT NULL,
@@ -1254,7 +1255,7 @@ CREATE TABLE `facturas` (
   `habilitada` tinyint(1) DEFAULT '0',
   `opc1` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `opc2` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `porcentgananciauser` decimal(5,2) DEFAULT '0.00',
+  `valorgananciauser` decimal(12,2) DEFAULT '0.00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_num_orden` (`id_sucursal`,`num_orden`),
   KEY `idcierrecaja_idx` (`idcierrecaja`),
@@ -2833,4 +2834,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-07 23:59:57
+-- Dump completed on 2026-04-08 19:16:08
