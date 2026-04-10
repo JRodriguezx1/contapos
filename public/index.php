@@ -156,6 +156,7 @@ $router->get('/admin/reportes', [reportescontrolador::class, 'index']);
 $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 'ventasgenerales']);
 $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 'ventasxtransaccion']);
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
+$router->get('/admin/reportes/ventaProductosUsuarios', [reportescontrolador::class, 'ventaProductosUsuarios']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
 $router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
 $router->get('/admin/reportes/creditos/cuotas-creditos', [reportescontrolador::class, 'cuotasCreditos']);

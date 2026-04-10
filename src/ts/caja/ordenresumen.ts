@@ -144,7 +144,14 @@
 
       document.querySelector('#btnEditarCrearSelectUser')?.addEventListener('submit', (e:Event)=>{
         e.preventDefault();
-        
+        /*try {
+            const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
+            const respuesta = await fetch(url); 
+            const resultado = await respuesta.json();
+            detalleInsumos(resultado);
+          } catch (error) {
+              console.log(error);
+          }*/
       });
 
       ///////////////////// Logica botones devolver inventario ////////////////////////

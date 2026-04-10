@@ -718,8 +718,16 @@ video {
   grid-column-start: 1;
 }
 
+.col-start-3 {
+  grid-column-start: 3;
+}
+
 .col-end-3 {
   grid-column-end: 3;
+}
+
+.col-end-4 {
+  grid-column-end: 4;
 }
 
 .row-start-1 {
@@ -4826,8 +4834,20 @@ video {
     grid-row-start: 2;
   }
 
+  .tlg\:row-start-3 {
+    grid-row-start: 3;
+  }
+
   .tlg\:row-end-3 {
     grid-row-end: 3;
+  }
+
+  .tlg\:row-end-4 {
+    grid-row-end: 4;
+  }
+
+  .tlg\:row-end-2 {
+    grid-row-end: 2;
   }
 
   .tlg\:block {
