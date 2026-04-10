@@ -177,15 +177,40 @@
             <label class="formulario__label" for="vendedor">vendedor</label>
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">person</span>
-              <input id="vendedor" data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>
+              <select 
+                id="vendedor" 
+                data-idVendedor="<?php echo $user['id'];?>"
+                class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                <?php  if($user['id']>3)echo 'disabled';?>
+              >
+                <?php foreach($usuarios as $value): ?>
+                  <option value="<?php echo $value->id;?>"<?php if($value->id === $user['id'])echo 'selected'; ?> > 
+                    <?php echo $value->nombre.' '.$value->apellido;?> 
+                  </option>
+                <?php endforeach;  ?>
+              </select>
+
+              <!--<input id="vendedor" data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>-->
             </div>
         </div>
-        <div class="formulario__campo">
-            <label class="formulario__label" for="npedido">N. Orden/Pedido</label>
-            <div class="formulario__dato flex items-center gap-2">
-              <span class="material-symbols-outlined">arrow_right</span>
-              <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="<?php echo $num_orden;?>" readonly>
-            </div>
+        <div class="flex gap-4">
+          <div class="formulario__campo">
+              <label class="formulario__label" for="npedido">N. Orden/Pedido</label>
+              <div class="formulario__dato flex items-center gap-2">
+                <span class="material-symbols-outlined">arrow_right</span>
+                <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="<?php echo $num_orden;?>" readonly>
+              </div>
+          </div>
+          <div class="formulario__campo">
+            <label class="formulario__label" for="npedido">Comision</label>
+            <input 
+                class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                type="text" 
+                placeholder="Porcentaje del empleado"  
+                value=""
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+            >
+          </div>
         </div>
 
         <div class="px-4 mb-4 flex items-center justify-between">
