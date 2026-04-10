@@ -6,6 +6,7 @@
     const selectCliente = POS.gestionClientes.selectCliente;
     const dirEntrega = POS.gestionClientes.dirEntrega;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
+    const porcentgananciauser = document.querySelector('#percentComision') as HTMLInputElement;
     const contentproducts = document.querySelector('#productos');
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
@@ -445,14 +446,14 @@
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
-      datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
+      datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLSelectElement).value);
       datos.append('idcaja', btnCaja.value);
       datos.append('idconsecutivo', btnTipoFacturador.value);
       datos.append('iddireccion', dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
       datos.append('idcanaldeventa', (document.querySelector('#canalVenta') as HTMLSelectElement)?.value??'1');
       datos.append('cliente', selectCliente.value==''?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
-      datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
+      datos.append('vendedor', $('#vendedor option:selected').text());
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
       datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
@@ -468,6 +469,8 @@
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
+      datos.append('porcentgananciauser', porcentgananciauser.value);
+      datos.append('valorgananciauser', ((valorTotal.total*Number(porcentgananciauser.value))/100).toFixed(2));
       datos.append('subtotal', valorTotal.subtotal+'');
       datos.append('base', valorTotal.base.toFixed(3));
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 

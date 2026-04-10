@@ -55,7 +55,7 @@
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
             <p class="font-bold">Vendedor</p>
-            <p><?php echo $factura->vendedor??'';?></p>
+            <button id="btnSelectVendedor" class="btn-xs btn-light"><?php echo $factura->vendedor??'';?></button>
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
             <p class="font-bold">Estado Orden</p>
@@ -174,38 +174,6 @@
         <div></div>
     </div>
 
-    <dialog id="miDialogoProductoCompuesto" class="midialog-md p-8">
-        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h4 class="text-3xl font-semibold m-0 text-neutral-800">Producto compuesto</h4>
-            <button class="rounded-lg hover:bg-gray-100 transition">
-                <i id="btnXCerrarModalProductoCompuesto" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
-            </button>
-        </div>
-        <div class="flex justify-between">
-            <p id="nombreProducto" class="mt-2 text-xl text-gray-600"></p>
-            <span id="" class=" material-symbols-outlined cursor-pointer">print</span>
-        </div>
-        <hr class="my-4 border-t border-neutral-300">
-        <!-- TABLA DE INSUMOS -->
-        <div class="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
-            <table id="tablaDetalleInsumos"
-                class="w-full text-left border-collapse">
-                <thead
-                    class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
-                    <tr>
-                        <th class="px-5 py-3 border-b border-gray-200">Insumo</th>
-                        <th class="px-5 py-3 border-b border-gray-200">Cantidad</th>
-                        <th class="px-5 py-3 border-b border-gray-200">Unidad de medida</th>
-                        <th class="px-5 py-3 border-b border-gray-200">Disponibilidad</th>
-                    </tr>
-                </thead>
-                <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
-                    <!-- Filas dinámicas -->
-                </tbody>
-            </table>
-        </div>
-    </dialog>
-
 
     <dialog id="miDialogoFacturar" class="midialog-md !p-12">
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
@@ -287,98 +255,13 @@
       </form>
     </dialog>
 
-    <!-- MODAL PARA ELIMINAR LA ORDEN-->
-    <dialog class="midialog-sm px-8 pb-8" id="miDialogoEliminarOrden">
-        <div>
-            <p class="text-3xl font-semibold text-gray-500">Desea eliminar la orden de venta?</p>
-        </div>
+    <!-- MODAL PARA ELIMINAR ORDEN-->
+    <?php include __DIR__. "/modalEliminarOrden.php"; ?>
+    <!-- MODAL DETALLE DE PRODUCTO COMPUESTO-->
+    <?php include __DIR__. "/modalProductoCompuesto.php"; ?>
+    <!-- MODAL PARA CAMBIAR USUARIO Y COMSION DE VENTA -->
+    <?php include __DIR__. "/modalCambiarUsuario.php"; ?>
+    <!-- MODAL PARA ENVIAR FACTURA POR EMAIL -->
+    <?php include __DIR__. "/modalSendInvoiceEmail.php"; ?>
 
-        <div id="divmsjalerta1"></div>
-
-        <div class="text-center mb-4">
-            <p class="mt-2 text-xl text-gray-600">Desea devolver los productos al inventario.</p>
-            <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">  
-                <label class="flex  p-1 cursor-pointer">
-                    <input type="radio" name="devolverinventario" value="1" class="peer hidden"/>
-                    <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 px-6 py-3 rounded-lg transition duration-300 ease-in-out text-xl"> Si </span>
-                </label>
-                <label class="flex  p-1 cursor-pointer">
-                    <input type="radio" name="devolverinventario" value="0" class="peer hidden" checked />
-                    <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 px-6 py-3 rounded-lg transition duration-300 ease-in-out text-xl"> No </span>
-                </label>
-            </div>
-
-            <div class="sm:col-start-2 col-span-4 mt-6">
-              <label for="inputEliminarClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
-              <div class="mt-2">
-                <input id="inputEliminarClave" type="password" min="0" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
-              </div>
-            </div>
-
-        </div>
-
-        <table id="productsInv" class="w-full text-xl text-left rtl:text-right text-gray-500 hidden">
-            <thead class=" text-gray-700 uppercase bg-gray-100">
-                <tr>
-                    <th scope="col" class="px-6 py-3 rounded-s-lg">
-                        Nombre producto
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Qty
-                    </th>
-                    <th scope="col" class="px-6 py-3 rounded-e-lg">
-                        Devolver
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($productos as $index=>$value): ?>
-                    <tr class="bg-white">
-                        <td class="px-6 py-4">
-                            <?php echo $value->nombreproducto??'';?>
-                        </td>
-                        <td class="px-6 py-4">
-                            <?php echo $value->cantidad??0;?>
-                        </td>
-                        <td class="px-6 py-4" data-qty="<?php echo $value->cantidad??0;?>">
-                            <input 
-                            id="<?php echo $value->idproducto;?>"
-                            data-nombre="<?php echo $value->nombreproducto??'';?>"
-                            data-tipoproducto = "<?php echo $value->tipoproducto;?>";
-                            data-tipoproduccion = "<?php echo $value->tipoproduccion;?>";
-                            data-rendimientoestandar = "<?php echo $value->rendimientoestandar;?>";
-                            class="inputInv block w-full rounded-md px-3 py-1.5 text-xl text-gray-500 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600" 
-                            type="text" 
-                            name="" 
-                            value="<?php echo $value->cantidad??0;?>" oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||0)" 
-                            required
-                            >  
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <div class="flex justify-around border-t-gray-300 pt-4">
-            <div class="sieliminar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Confirmar</p></div>
-            <div class="noeliminar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">Cancelar</p></div>
-        </div>
-    </dialog>
-
-    <dialog id="miDialogoEnviarEmailCliente" class="midialog-xs p-8 rounded-lg shadow-lg">
-        <h4 id="modalEnviarEmail" class="font-semibold text-gray-700 mb-4 mt-4">Enviar orden por email</h4>
-        <div id="divmsjalertaEnviarEmail"></div>
-        <form id="formEnviarEmailCliente" class="formulario" method="POST">
-            <h5 class="my-2 text-lg text-gray-500">Enviar detalle de la orden por correo electronico</h5>
-            <div class="formulario__campo">
-                <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
-                    <input id="inputEmail" class="formulario__input !border-0" type="email" placeholder="Email"  required>
-                </div>
-            </div>
-            <div class="text-right">
-                <button class="btn-md btn-turquoise !py-4  !w-[100px]" type="button" value="Salir">Salir</button>
-                <input id="btnEnviarEmailCliente" class="btn-md btn-indigo !py-4  !w-[100px]" type="submit" value="Enviar">
-            </div>
-        </form>
-    </dialog><!--fin enviar email a cliente-->
 </div>

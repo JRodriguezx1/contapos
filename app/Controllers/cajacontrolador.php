@@ -531,9 +531,10 @@ class cajacontrolador{
     $mediospago = mediospago::all();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+    $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
 
     $conflocal = config_local::getParamCaja();
-    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
   public static function detalleorden(Router $router){

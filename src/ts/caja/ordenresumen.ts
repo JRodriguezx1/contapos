@@ -5,6 +5,7 @@
       const miDialogoEliminarOrden = document.querySelector('#miDialogoEliminarOrden') as any;
       const btnfacturar = document.querySelector<HTMLButtonElement>("#btnfacturar");
       const btneliminarorden = document.querySelector('#btneliminarorden') as HTMLButtonElement;
+      const btnSelectVendedor = document.querySelector('#btnSelectVendedor') as HTMLButtonElement;
       const btnCaja = document.querySelector('#caja') as HTMLSelectElement;
       const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement;
       const mediospago = document.querySelectorAll('.mediopago');
@@ -14,6 +15,7 @@
       const printcotizacion = document.querySelector('#printcotizacion');
       const numOrden = document.querySelector('#numOrden');
       const referenciaFactura = document.querySelector('#referenciaFactura');
+      const miDialogoSelectUser = document.querySelector('#miDialogoSelectUser') as HTMLDialogElement;
       const enviarEmail = document.querySelector('#enviarEmail') as HTMLButtonElement;
       const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
       const miDialogoProductoCompuesto = document.querySelector('#miDialogoProductoCompuesto') as any;
@@ -132,6 +134,17 @@
             }
           })();
         }
+      });
+
+
+      /////////  CAMBIAR USUARIO VENDEDOR Y COMISION  /////////////
+      btnSelectVendedor.addEventListener('click', (e)=>{
+        miDialogoSelectUser.showModal();
+      });
+
+      document.querySelector('#btnEditarCrearSelectUser')?.addEventListener('submit', (e:Event)=>{
+        e.preventDefault();
+        
       });
 
       ///////////////////// Logica botones devolver inventario ////////////////////////

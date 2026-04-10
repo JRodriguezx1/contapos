@@ -127,6 +127,13 @@ class ventascontrolador{
     $invPro = true;
     $c = true;
 
+
+    //si del modulo de venta no se establece comision, se verifica el porcentaje del empleado
+    if($factura->porcentgananciauser == 0 && $_SESSION['porcentajeganancia']>0){
+      $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+      $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
+    }
+
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
@@ -263,8 +270,8 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->abono = $valoresCredito->abonoinicial??0;
-              $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-              $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
+              //$factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+              //$factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
@@ -619,8 +626,8 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->habilitada = 1;
-              $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-              $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
+              //$factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+              //$factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();

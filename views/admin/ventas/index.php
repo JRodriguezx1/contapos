@@ -178,8 +178,7 @@
             <div class="formulario__dato flex items-center gap-2">
               <span class="material-symbols-outlined">person</span>
               <select 
-                id="vendedor" 
-                data-idVendedor="<?php echo $user['id'];?>"
+                id="vendedor"
                 class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                 <?php  if($user['id']>3)echo 'disabled';?>
               >
@@ -194,20 +193,22 @@
             </div>
         </div>
         <div class="flex gap-4">
-          <div class="formulario__campo">
+          <div class="formulario__campo w-2/5">
               <label class="formulario__label" for="npedido">N. Orden/Pedido</label>
               <div class="formulario__dato flex items-center gap-2">
                 <span class="material-symbols-outlined">arrow_right</span>
                 <input id="npedido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero de orden o pedido" name="pedido" value="<?php echo $num_orden;?>" readonly>
               </div>
           </div>
-          <div class="formulario__campo">
+          <div class="formulario__campo flex-1">
             <label class="formulario__label" for="npedido">Comision</label>
-            <input 
+            <input
+                id="percentComision"
                 class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
-                type="text" 
+                type="text"
                 placeholder="Porcentaje del empleado"  
-                value=""
+                value="<?php echo $user['porcentajeganancia'];?>"
+                <?php if($user['id']>3)echo 'disabled';?>
                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
             >
           </div>
