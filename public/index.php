@@ -20,6 +20,7 @@ use App\Controllers\cajacontrolador;
 use App\Controllers\ventascontrolador;
 use App\Controllers\reportescontrolador;
 use App\Controllers\clientescontrolador;
+use App\Controllers\comisionescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
 use App\Controllers\creditoscontrolador;
@@ -148,6 +149,9 @@ $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'det
 $router->get('/admin/creditos/adicionarProducto', [creditoscontrolador::class, 'adicionarProducto']); //detalle del credito
 $router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 $router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
+///// area de comisiones /////
+$router->get('/admin/comisiones', [comisionescontrolador::class, 'index']);
+
 ////// Reservas //////
 $router->get('/admin/reservas', [reservascontrolador::class, 'index']);
 

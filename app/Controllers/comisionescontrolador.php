@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Controllers;
+
+use App\classes\Email;
+use App\classes\Traits\DocumentTrait;
+use App\Models\ActiveRecord;
+use App\Models\configuraciones\usuarios; //namespace\clase hija
+use App\Models\inventario\productos;
+use App\Models\inventario\categorias;
+use App\Models\configuraciones\mediospago;
+use App\Models\caja\factmediospago;
+use App\Models\clientes\clientes;
+use App\Models\ventas\facturas;
+use App\Models\ventas\ventas;
+use App\Models\configuraciones\tarifas;
+use App\Models\caja\cierrescajas;
+use App\Models\clientes\departments;
+use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\caja;
+use App\Models\configuraciones\tipofacturador;
+use App\Models\factimpuestos;
+use App\Models\felectronicas\adquirientes;
+use App\Models\impuestos;
+use App\Models\parametrizacion\config_local;
+use App\Models\inventario\productos_sub;
+use App\Models\inventario\stockinsumossucursal;
+use App\Models\inventario\stockproductossucursal;
+use App\Models\inventario\subproductos;
+use App\Models\sucursales;
+use App\Repositories\ventas\canalVentaRepository;
+use App\services\creditosService;
+use App\services\stockService;
+use App\services\whatsAppService;
+//use App\Models\configuraciones\negocio;
+use MVC\Router;  //namespace\clase
+use stdClass;
+
+class comisionescontrolador{
+
+  use DocumentTrait;
+
+  public static function index(Router $router):void{
+    //session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
+    $alertas = [];
+    $idsucursal = id_sucursal();
+
+    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
+}
