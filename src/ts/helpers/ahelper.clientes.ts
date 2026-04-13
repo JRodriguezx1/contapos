@@ -8,6 +8,7 @@
     const miDialogoAddCliente = document.querySelector('#miDialogoAddCliente') as any;
     //const miDialogoAddDir = document.querySelector('#miDialogoAddDir') as any;
     const selectCliente = document.querySelector('#selectCliente') as HTMLSelectElement;
+    const tel = document.querySelector('#telefono')! as HTMLInputElement;
     const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
 
   const gestionClientes = {
@@ -141,6 +142,17 @@
             (document.querySelector('#departamento') as HTMLInputElement).value = addrs.direcciones[0]?.departamento??'No especificado';
             (document.querySelector('#ciudad') as HTMLInputElement).value = addrs.direcciones[0]?.ciudad??'No especificado';
         }
+
+
+        ///////// Evento al input de telefono para buscar cliente ////////////
+        tel?.addEventListener('input', (e:Event)=>{
+            const contact = (e.target as HTMLInputElement).value.trim();
+            if (contact.length < 6) return;
+            const cli = clientesDB.find(c => c.telefono === contact);
+            console.log(cli);
+            if(cli!=undefined)$('#selectCliente').val(cli.id).trigger('change'); 
+        });
+        
 
         ///////// Evento al select de direcciones ////////////
         dirEntrega?.addEventListener('change', (e)=>{

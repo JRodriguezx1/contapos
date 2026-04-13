@@ -405,6 +405,43 @@ INSERT INTO `clientes` VALUES (1,'N/a','N/a','6','N/a','N/a','N/a',NULL,NULL,NUL
 UNLOCK TABLES;
 
 --
+-- Table structure for table `comisiones`
+--
+
+DROP TABLE IF EXISTS `comisiones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comisiones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fk_idsucursal` int NOT NULL,
+  `idfacturaid` int NOT NULL,
+  `idusuariofk` int NOT NULL,
+  `percentcomision` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `valorcomision` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `valorentregado` decimal(12,2) DEFAULT '0.00',
+  `fecha` datetime DEFAULT NULL,
+  `estado` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_idsucursal_idx` (`fk_idsucursal`),
+  KEY `idfacturaid_idx` (`idfacturaid`),
+  KEY `idusuariofk_idx` (`idusuariofk`),
+  CONSTRAINT `fk_idsucursal` FOREIGN KEY (`fk_idsucursal`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idfacturaid` FOREIGN KEY (`idfacturaid`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idusuariofk` FOREIGN KEY (`idusuariofk`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comisiones`
+--
+
+LOCK TABLES `comisiones` WRITE;
+/*!40000 ALTER TABLE `comisiones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comisiones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `compras`
 --
 
@@ -1987,6 +2024,40 @@ LOCK TABLES `ordenes_produccion` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pagos_comisiones`
+--
+
+DROP TABLE IF EXISTS `pagos_comisiones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pagos_comisiones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fkusuarioid` int NOT NULL,
+  `idmediopagoid` int DEFAULT NULL,
+  `valor` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `mediopago` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `tipo` enum('anticipo','pago') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `referencia` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fkusuarioid_idx` (`fkusuarioid`),
+  KEY `idmediopagoid_idx` (`idmediopagoid`),
+  CONSTRAINT `fkusuarioid` FOREIGN KEY (`fkusuarioid`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idmediopagoid` FOREIGN KEY (`idmediopagoid`) REFERENCES `mediospago` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pagos_comisiones`
+--
+
+LOCK TABLES `pagos_comisiones` WRITE;
+/*!40000 ALTER TABLE `pagos_comisiones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pagos_comisiones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `permisos`
 --
 
@@ -2102,8 +2173,9 @@ CREATE TABLE `productos` (
   `categoria` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `merma` decimal(5,2) DEFAULT NULL,
   `rendimientoestandar` decimal(11,2) DEFAULT '1.00',
-  `precio_compra` decimal(13,2) DEFAULT NULL,
-  `precio_venta` decimal(13,2) NOT NULL,
+  `precio_compra` decimal(13,2) DEFAULT '0.00',
+  `precio_venta` decimal(13,2) NOT NULL DEFAULT '0.00',
+  `percentcomision` decimal(5,2) DEFAULT '0.00',
   `fecha_ingreso` datetime DEFAULT NULL,
   `estado` tinyint(1) DEFAULT NULL,
   `visible` tinyint(1) DEFAULT NULL,
@@ -2123,7 +2195,7 @@ CREATE TABLE `productos` (
 
 LOCK TABLES `productos` WRITE;
 /*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` VALUES (1,1,1,'Otros',NULL,0,NULL,0,0,NULL,'Unidades',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.00,0.00,'Categoria_Otros',NULL,1.00,0.00,0.00,NULL,1,0);
+INSERT INTO `productos` VALUES (1,1,1,'Otros',NULL,0,NULL,0,0,NULL,'Unidades',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.00,0.00,'Categoria_Otros',NULL,1.00,0.00,0.00,0.00,NULL,1,0);
 /*!40000 ALTER TABLE `productos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2796,6 +2868,8 @@ CREATE TABLE `ventas` (
   `costo` decimal(12,2) DEFAULT NULL,
   `valorunidad` decimal(12,2) DEFAULT NULL,
   `cantidad` decimal(10,2) NOT NULL,
+  `percentcomision` decimal(5,2) DEFAULT '0.00',
+  `valorcomision` decimal(12,2) DEFAULT '0.00',
   `subtotal` decimal(13,2) DEFAULT NULL,
   `base` decimal(12,3) DEFAULT NULL,
   `impuesto` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
@@ -2803,7 +2877,7 @@ CREATE TABLE `ventas` (
   `descuento` decimal(12,2) DEFAULT NULL,
   `total` decimal(13,2) DEFAULT NULL,
   `dato1` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
-  `dato2` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `dato2` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idproducto_idx` (`idproducto`),
   KEY `idfactura_idx` (`idfactura`),
@@ -2834,4 +2908,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-08 19:16:08
+-- Dump completed on 2026-04-13  1:14:48

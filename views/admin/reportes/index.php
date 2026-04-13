@@ -38,7 +38,7 @@
     </div>
 
     <!-- Reportes de Ventas -->
-    <div class="tlg:row-start-2 tlg:row-end-3 col-start-1 col-end-3">
+    <div class="tlg:row-start-2 tlg:row-end-2 col-start-1 col-end-4">
       <h5 class="mb-5">Reportes de Ventas</h5>
       <div class="flex flex-wrap gap-4 mb-4">
         <a href="/admin/reportes/ventasgenerales" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md   ">
@@ -59,8 +59,13 @@
         <a href="/admin/reportes/ventasxcliente" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">speaker_notes</span>Ventas por cliente
         </a>
+        <a href="/admin/reportes/ventaProductosUsuarios" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
+          <span class="material-symbols-outlined">package_2</span>Productos por usuario
+        </a>
       </div>
+    </div>
 
+    <div class="tlg:row-start-3 tlg:row-end-3 col-start-1 col-end-3">
       <h5 class="mb-5 mt-14">Reportes de Facturas</h5>
       <div class="flex flex-wrap gap-4 mb-4">
         <a href="/admin/reportes/facturaspagas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
@@ -105,6 +110,8 @@
         </button>
       </div>
     </div>
+
+    
 
     <!-- Utilidad Gastos y Crecimiento -->
     <div class="col-span-2">

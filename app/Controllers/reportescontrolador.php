@@ -65,6 +65,13 @@ class reportescontrolador{
         $router->render('admin/reportes/ventas/ventasxcliente', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
+    public static function ventaProductosUsuarios(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $router->render('admin/reportes/ventas/ventaProductosUsuarios', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
     public static function facturaspagas(Router $router){
         //session_start();
         isadmin();
@@ -455,6 +462,22 @@ class reportescontrolador{
 
   //Ventas acumuladas por cliente en un periodo determinado
   public static function ventasxcliente(){
+    //session_start();
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT c.id, CONCAT(c.nombre,' ',c.apellido) AS nombre, COUNT(f.id) AS cantidad_facturas, SUM(f.total) AS total_ventas
+              FROM facturas f JOIN clientes c ON f.idcliente = c.id
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              GROUP BY c.id, c.nombre;";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+  }
+
+  public static function ventaProductsUsers(){
     //session_start();
     isadmin();
     $idsucursal = id_sucursal();

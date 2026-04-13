@@ -6,6 +6,7 @@
     const selectCliente = POS.gestionClientes.selectCliente;
     const dirEntrega = POS.gestionClientes.dirEntrega;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
+    const porcentgananciauser = document.querySelector('#percentComision') as HTMLInputElement;
     const contentproducts = document.querySelector('#productos');
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
@@ -27,7 +28,7 @@
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
@@ -186,6 +187,7 @@
         
         carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
         carrito[index].total = carrito[index].subtotal;
+        carrito[index].valorcomision = (carrito[index].subtotal*carrito[index].percentcomision)/100;
         //calculo del impuesto y base por producto en el carrito deventas
         carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
         carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
@@ -194,13 +196,14 @@
         if(stateinput)
         (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
         (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
-      }else{  //agregar a carrito si el producto no esta agregado en carrito, cuando se agrega por primera vez
+      }else{  //agregar a carrito si el producto no esta agregado en carrito, se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         
         const productovalorimp = (Number(precio)*cantidad)*constImp[producto.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
         const productototal = Number(precio)*cantidad;
+        const valorcomision:number = (productototal*producto.percentcomision)/100;
         
-        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
+        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
           id: '',
           idproducto: producto?.id!,
           tipoproducto: producto.tipoproducto,
@@ -212,6 +215,8 @@
           costo: producto.precio_compra,
           valorunidad: precio,
           cantidad: cantidad,
+          percentcomision: producto.percentcomision,
+          valorcomision: valorcomision,
           subtotal: productototal, //este es el subtotal del producto
           base: productototal-productovalorimp,
           impuesto: producto.impuesto, //porcentaje de impuesto, es null si es excluido de iva
@@ -401,6 +406,11 @@
       if(datosfactura?.id)datosfactura.id = '';
       (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
       (document.querySelector('#formfacturar') as HTMLFormElement)?.reset();
+      (document.querySelector('#formAddCliente') as HTMLFormElement).reset();
+      (document.querySelector('#badgeEstado') as HTMLParagraphElement).textContent = 'SIN CLIENTE';
+      (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.remove('bg-green-100', 'text-green-600');
+      (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.add('bg-gray-100', 'text-gray-700');
+      (document.querySelector('#resumenCliente') as HTMLParagraphElement).textContent = "Seleccionar cliente";
       mapMediospago.clear();
       $('.mediopago').val(0);
       carrito.length = 0;
@@ -445,14 +455,14 @@
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
-      datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
+      datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLSelectElement).value);
       datos.append('idcaja', btnCaja.value);
       datos.append('idconsecutivo', btnTipoFacturador.value);
       datos.append('iddireccion', dirEntrega.value);
       datos.append('idtarifazona', valorTotal.idtarifa+'');
       datos.append('idcanaldeventa', (document.querySelector('#canalVenta') as HTMLSelectElement)?.value??'1');
       datos.append('cliente', selectCliente.value==''?'N/A':selectCliente.options[selectCliente.selectedIndex].textContent!);
-      datos.append('vendedor', (document.querySelector('#vendedor') as HTMLInputElement).value);
+      datos.append('vendedor', $('#vendedor option:selected').text());
       datos.append('caja', (document.querySelector('#caja option:checked') as HTMLSelectElement).textContent!);
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
       datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
@@ -468,6 +478,8 @@
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
+      datos.append('porcentgananciauser', porcentgananciauser.value);
+      datos.append('valorgananciauser', ((valorTotal.total*Number(porcentgananciauser.value))/100).toFixed(2));
       datos.append('subtotal', valorTotal.subtotal+'');
       datos.append('base', valorTotal.base.toFixed(3));
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 

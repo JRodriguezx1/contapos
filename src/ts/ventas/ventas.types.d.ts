@@ -26,6 +26,7 @@ type productsapi = {
       sku:string,
       precio_compra: string,
       precio_venta: string,
+      percentcomision: number,
       fecha_ingreso: string,
       estado: string,
       visible: string,
@@ -75,6 +76,8 @@ interface CarritoItem {
     costo: string;
     valorunidad: number;
     cantidad: number;
+    percentcomision: number; 
+    valorcomision: number;
     subtotal: number;
     base: number;
     impuesto: string;

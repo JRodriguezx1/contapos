@@ -94,9 +94,24 @@ class cierrescajas extends \App\Models\ActiveRecord {
     }
 
     public static function ventasXusuario(string $id): array{
-        $sql = "SELECT CONCAT(usuarios.nombre, ' ', COALESCE(usuarios.apellido, '')) as Nombre, COUNT(facturas.idvendedor) as N_ventas, SUM(facturas.subtotal) as ventas, SUM(facturas.valorgananciauser) as comision FROM usuarios 
+        /*$sql = "SELECT CONCAT(usuarios.nombre, ' ', COALESCE(usuarios.apellido, '')) as Nombre, COUNT(facturas.idvendedor) as N_ventas, SUM(facturas.subtotal) as ventas, 
+                SUM(facturas.valorgananciauser) as comision, (SUM(facturas.subtotal) - SUM(facturas.valorgananciauser)) as comision_negocio FROM usuarios 
         JOIN facturas ON usuarios.id = facturas.idvendedor
-        WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY facturas.idvendedor;";
+        WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY facturas.idvendedor;";*/
+
+        $sql = "SELECT
+                CASE 
+                    WHEN GROUPING(u.id) = 1 THEN 'NEGOCIO'
+                    ELSE CONCAT(MAX(u.nombre), ' ', COALESCE(MAX(u.apellido), '')) END as Nombre,
+                COUNT(f.idvendedor) as N_ventas, 
+                SUM(f.subtotal) as ventas, 
+                SUM(f.valorgananciauser) as comision,
+                (SUM(f.subtotal) - SUM(f.valorgananciauser)) as comision_negocio,
+                GROUPING(u.id) as es_total
+            FROM usuarios u
+            JOIN facturas f ON u.id = f.idvendedor
+            WHERE f.idcierrecaja = $id AND f.estado = 'Paga'
+            GROUP BY u.id WITH ROLLUP;";
 
         $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
         $array = [];

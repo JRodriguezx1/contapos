@@ -21,6 +21,7 @@ use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
 use App\Models\inventario\stockproductossucursal;
+use App\services\comisionesService;
 use App\services\ventasService;
 use MVC\Router;  //namespace\clase
  
@@ -70,6 +71,7 @@ class modorapidocontrolador{
 
   ///////////  API REST llamada desde ventas.ts cuando se procesa un pago  ////////////
   public static function facturarModorapido(){
+    $comisionServicio = new comisionesService();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     date_default_timezone_set('America/Bogota');
@@ -86,6 +88,12 @@ class modorapidocontrolador{
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
 
+
+    //si del modulo de venta no se establece comision, se verifica el porcentaje del empleado
+    if($factura->porcentgananciauser == 0 && $_SESSION['porcentajeganancia']>0){
+      $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
+      $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
+    }
 
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
@@ -144,8 +152,6 @@ class modorapidocontrolador{
         $factura->num_consecutivo = $consecutivo->siguientevalor;
         $factura->prefijo = $consecutivo->prefijo;
         $factura->abono = $valoresCredito->abonoinicial??0;
-        $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-        $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
         $factura->habilitada = 1;
         $r = $factura->crear_guardar();
         $consecutivo->siguientevalor += 1;
@@ -197,6 +203,11 @@ class modorapidocontrolador{
       }
 
       $getDB->commit();
+
+      //validar si hay comision y es pago
+      if($factura->valorgananciauser>0 && $factura->estado == "Paga")
+        $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->porcentgananciauser, $factura->valorgananciauser);
+
       echo json_encode($alertas);
       return;
     } catch (\Throwable $th) {

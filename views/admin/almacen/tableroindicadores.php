@@ -84,7 +84,10 @@
 <dialog id="miDialogoBajoStock" class="midialog-lg p-12">
     <div class="flex justify-between items-center mb-4">
         <h4 id="modalTotalBajoStock" class="font-semibold text-gray-700 mb-4">Productos con bajo stock</h4>
-        <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarTotalBajoStock" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
+        <div class="flex items-center gap-8">
+          <span id="printBajostock" class=" material-symbols-outlined cursor-pointer">print</span>
+          <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarTotalBajoStock" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
+        </div>
     </div>
     <div id="divmsjalerta"></div>
     <!-- TABLA DE INSUMOS -->

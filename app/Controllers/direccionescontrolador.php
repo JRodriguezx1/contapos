@@ -57,10 +57,7 @@ class direccionescontrolador{
     public static function direccionesXcliente(){  //api llamado desde ventas.js me trae todas las direcciones segun cliente elegido
         $id = $_GET['id'];
         $cliente = clientes::find('id', $id);
-        $cliente->direcciones = direcciones::idregistros('idcliente', $id);
-        foreach($cliente->direcciones as $direccion){
-            $direccion->tarifa = tarifas::find('id', $direccion->idtarifa);
-        }
+        $cliente->direcciones = clientes::direccionesANDTarifas($id);
         echo json_encode($cliente);
     }
     
