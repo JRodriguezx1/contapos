@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\classes\Email;
-use App\classes\Traits\DocumentTrait;
 use App\Models\ActiveRecord;
 use App\Models\configuraciones\usuarios; //namespace\clase hija
 use App\Models\inventario\productos;
@@ -29,6 +28,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
+use App\services\comisionesService;
 use App\services\creditosService;
 use App\services\stockService;
 use App\services\whatsAppService;
@@ -38,16 +38,16 @@ use stdClass;
 
 class comisionescontrolador{
 
-  use DocumentTrait;
 
   public static function index(Router $router):void{
-    //session_start();
+    $comisionServicio = new comisionesService();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     $alertas = [];
     $idsucursal = id_sucursal();
-
-    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
+    $widgets = $comisionServicio->getWidgets($idsucursal);
+    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 }

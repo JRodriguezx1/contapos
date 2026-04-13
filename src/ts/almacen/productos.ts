@@ -38,6 +38,7 @@
       categoria: string,
       precio_compra: string,
       precio_venta: string,
+      percentcomision: string,
       fecha_ingreso: string,
       preciosadicionales: {id:string, idproductoid:string, precio:string, estado:string, created_at:string}[]
       //idservicios:{idempleado:string, idservicio:string}[]
@@ -160,6 +161,7 @@
       (document.querySelector('#preciocompra')as HTMLInputElement).value = unproducto?.precio_compra??'';
       (document.querySelector('#precioventa')as HTMLInputElement).value = unproducto?.precio_venta??'';
       (document.querySelector('#precioventa')as HTMLInputElement).dataset.idproductoid = unproducto.id;
+      (document.querySelector('#percentcomision')as HTMLInputElement).value = unproducto.percentcomision;
       imprimirpreciosadicionales(unproducto.preciosadicionales);
       (document.querySelector('#sku')as HTMLInputElement).value = unproducto?.sku??'';
       (document.querySelector('#impuesto')as HTMLInputElement).value = unproducto?.impuesto??'';
@@ -226,6 +228,7 @@
           datos.append('tipoproduccion', ($('#tipoproduccion').val()as string)==null?'0':($('#tipoproduccion').val()as string));
           datos.append('impuesto', $('#impuesto').val()as string);
           datos.append('stockminimo', $('#stockminimo').val()as string);
+          datos.append('percentcomision', $('#percentcomision').val()as string);
           try {
               const url = "/admin/api/actualizarproducto";
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -291,7 +294,7 @@
           } catch (error) {
               console.log(error);
           }
-      })();//cierre de async()
+      })();
     }
 
     function eliminarProductos(e:Event){

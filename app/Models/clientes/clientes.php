@@ -88,5 +88,34 @@ class clientes extends \App\Models\ActiveRecord {
         $array = self::camposJoinObj($query);
         return $array;
     }
+
+    public static function direccionesANDTarifas($id):array{
+        $query = "SELECT 
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id', d.id,
+                        'idcliente', d.idcliente,
+                        'idtarifa', d.idtarifa,
+                        'direccion', d.direccion,
+                        'departamento', d.departamento,
+                        'ciudad', d.ciudad,
+                        'tarifa', IF(t.id IS NOT NULL,
+                            JSON_OBJECT(
+                                'id', t.id,
+                                'nombre', t.nombre,
+                                'valor', t.valor
+                            ),
+                            NULL
+                        )
+                    )
+                ) AS direcciones
+                FROM direcciones d
+                LEFT JOIN tarifas t ON t.id = d.idtarifa
+                WHERE d.idcliente = $id";
+
+        $array = self::$db->query($query);
+        $result = $array->fetch_assoc();
+        return json_decode($result['direcciones']);
+    }
     
 }

@@ -1,6 +1,11 @@
 (()=>{
 
-    if(!document.querySelector('.ventasgenerales') && !document.querySelector('.cuotasCreditos') && !document.querySelector('.movimientosinventarios') && !document.querySelector('.estadosfinancierosCreditos'))return;
+    if(
+        !document.querySelector('.ventasgenerales') && 
+        !document.querySelector('.cuotasCreditos') && 
+        !document.querySelector('.movimientosinventarios') && 
+        !document.querySelector('.estadosfinancierosCreditos') &&
+        !document.querySelector('.comisiones'))return;
 
      const POS = (window as any).POS;
 
@@ -32,7 +37,7 @@
         //(document.querySelector('#fechafin') as HTMLParagraphElement).textContent = fechafin;
     });
 
-    btnmesactual.addEventListener('click', (e:Event)=>{
+    btnmesactual?.addEventListener('click', (e:Event)=>{
         const hoy = new Date();
         // Primer día del mes actual
         const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
@@ -44,7 +49,7 @@
     });
 
 
-    btnmesanterior.addEventListener('click', (e:Event)=>{
+    btnmesanterior?.addEventListener('click', (e:Event)=>{
         // Fecha actual
         const hoy = new Date();
         // Primer día del mes anterior
@@ -56,7 +61,7 @@
         POS.callApiReporte(fechainiciobtn, fechafinbtn);
     });
 
-    btnhoy.addEventListener('click', (e:Event)=>{
+    btnhoy?.addEventListener('click', (e:Event)=>{
         const hoy = new Date();
         const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
         const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
@@ -65,7 +70,7 @@
         POS.callApiReporte(fechainiciobtn, fechafinbtn);
     });
 
-    btnayer.addEventListener('click', (e:Event)=>{
+    btnayer?.addEventListener('click', (e:Event)=>{
         // Fecha actual
         const hoy = new Date();
         // Día anterior

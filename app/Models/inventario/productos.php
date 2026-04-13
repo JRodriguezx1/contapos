@@ -4,7 +4,7 @@ namespace App\Models\inventario;
 
 class productos extends \App\Models\ActiveRecord {
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'preciopersonalizado', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'merma', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'fecha_ingreso', 'estado', 'visible'];
+    protected static $columnasDB = ['id', 'idcategoria', 'idunidadmedida', 'nombre', 'foto', 'impuesto', 'marca', 'tipoproducto', 'tipoproduccion', 'sku', 'unidadmedida', 'preciopersonalizado', 'descripcion', 'peso', 'medidas', 'color', 'funcion', 'uso', 'fabricante', 'garantia', 'stock', 'stockminimo', 'categoria', 'merma', 'rendimientoestandar', 'precio_compra', 'precio_venta', 'percentcomision', 'fecha_ingreso', 'estado', 'visible'];
     
     //public $id;
     public function __construct($args = [])
@@ -36,6 +36,7 @@ class productos extends \App\Models\ActiveRecord {
         $this->rendimientoestandar = $args['rendimientoestandar'] ?? 1;
         $this->precio_compra = !empty($args['precio_compra']) ? $args['precio_compra']:  0;
         $this->precio_venta = $args['precio_venta'] ?? '';
+        $this->percentcomision = $args['percentcomision'] ?? 0;
         $this->fecha_ingreso = $args['fecha_ingreso'] ?? date('Y-m-d H:i:s');
         $this->estado = $args['estado']??1;  // 0 = inactivo,  1 = activo
         $this->visible = $args['visible']??1;  // 0 = no visible,  1 = visible

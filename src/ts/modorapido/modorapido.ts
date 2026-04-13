@@ -159,7 +159,8 @@
                 const itemselected = allproducts.find(x=>x.id==id)!;
                 const productototal = Number(itemselected.precio_venta)*cantidad;
                 const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
-                const item:{id: string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: number, cantidad: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
+                const valorcomision:number = (productototal*itemselected.percentcomision)/100;
+                const item:CarritoItem = {
                     id: '',
                     idproducto: itemselected?.id!,
                     tipoproducto: itemselected.tipoproducto,
@@ -171,6 +172,8 @@
                     costo: itemselected.precio_compra,
                     valorunidad: Number(itemselected.precio_venta),
                     cantidad: cantidad,
+                    percentcomision: itemselected.percentcomision,
+                    valorcomision: valorcomision,
                     subtotal: productototal, //este es el subtotal del producto
                     base: productototal-productovalorimp,
                     impuesto: itemselected.impuesto, //porcentaje de impuesto, es null si es excluido de iva
@@ -238,6 +241,7 @@
             productoCarrito.cantidad = cantidad;
             productoCarrito.subtotal = (productoCarrito.valorunidad)*productoCarrito.cantidad;
             productoCarrito.total = productoCarrito.subtotal;
+            productoCarrito.valorcomision = (productoCarrito.subtotal*productoCarrito.percentcomision)/100;
             //calculo del impuesto y base por producto en el carrito deventas
             productoCarrito.valorimp = parseFloat((productoCarrito.total*constImp[productoCarrito.impuesto??0]).toFixed(3));
             productoCarrito.base = parseFloat((productoCarrito.total-productoCarrito.valorimp).toFixed(3));
@@ -478,6 +482,11 @@
             //if(datosfactura?.id)datosfactura.id = '';
             (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
             (document.querySelector('#formfacturar') as HTMLFormElement)?.reset();
+            (document.querySelector('#formAddCliente') as HTMLFormElement).reset();
+            (document.querySelector('#badgeEstado') as HTMLParagraphElement).textContent = 'SIN CLIENTE';
+            (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.remove('bg-green-100', 'text-green-600');
+            (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.add('bg-gray-100', 'text-gray-700');
+            (document.querySelector('#resumenCliente') as HTMLParagraphElement).textContent = "Seleccionar cliente";
             mapMediospago.clear();
             $('.mediopago').val(0);
             carrito.length = 0;

@@ -84,6 +84,7 @@ class ventascontrolador{
 
     $canalesVentaRepo = new canalVentaRepository();
     $canalesVenta = $canalesVentaRepo->all();
+    
     //validar resoluciiones por rango y por fecha
     $hoy = new \DateTime();
     $resolucionesVencidas = [];
