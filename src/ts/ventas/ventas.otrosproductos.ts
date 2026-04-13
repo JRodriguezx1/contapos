@@ -64,6 +64,7 @@
                 rendimientoestandar: '1',
                 precio_compra: '0',
                 precio_venta: otrosproductos!.valorunidad+'',
+                percentcomision: 0,
                 fecha_ingreso: '',
                 estado: '1',
                 visible: '1'

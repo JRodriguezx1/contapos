@@ -15,7 +15,7 @@ class direcciones extends \App\Models\ActiveRecord{
         $this->pais = $args['pais']??'';
         $this->departamento = $args['departamento']??' ';
         $this->ciudad = $args['ciudad']??' ';
-        $this->direccion = $args['direccion']??' ';
+        $this->direccion = $args['direccion']??'Tienda';
         $this->codigopostal = $args['codigopostal']??'';
         $this->observacion = $args['observacion']??'';
         $this->created_at = $args['created_at']??'';
@@ -28,6 +28,7 @@ class direcciones extends \App\Models\ActiveRecord{
         //if(!$this->ciudad)self::$alertas['error'][] = "ciudad no especificada";
         if(strlen($this->ciudad)>34)self::$alertas['error'][] = 'Has excecido el limite de caracteres';
         //if(!$this->direccion)self::$alertas['error'][] = "Direccion no especificada";
+        if(isset($this->direccion) && trim($this->direccion) == '')$this->direccion = 'Tienda';
         if(strlen($this->direccion)>72)self::$alertas['error'][] = 'Has excecido el limite de caracteres';
         return self::$alertas;
     }

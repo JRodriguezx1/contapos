@@ -22,7 +22,7 @@
         <div class="mb-6 flex flex-wrap items-end gap-4">
             <div class="w-full xs:w-1/2">
                 <label class="block text-base font-semibold text-slate-500 uppercase mb-1">Empleado</label>
-                <select class="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block p-3 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select id="selectEmpleado" class="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block p-3 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="">Seleccionar empleado...</option>
                     <?php foreach($usuarios as $value): ?>
                         <option value="<?php echo $value->id;?>"><?php echo $value->nombre.' '.$value->apellido;?></option>

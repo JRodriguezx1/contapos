@@ -30,6 +30,11 @@ class comisionesService{
     public function getWidgets(int $idsucursal):stdClass{
        return $this->repoComisiones->getWidgets($idsucursal)[0];
     }
+
+
+    public function comisionesXUser(int $idsucursal, int $idusuario):stdClass{
+       return $this->repoComisiones->getWidgets($idsucursal)[0];
+    }
     
 
     

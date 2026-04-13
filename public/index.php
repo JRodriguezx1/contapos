@@ -270,6 +270,8 @@ $router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, '
 $router->post('/admin/api/editarOrdenCreditoSeparado', [creditoscontrolador::class, 'editarOrdenCreditoSeparado']);
 $router->get('/admin/api/totalCuotasXcliente', [creditoscontrolador::class, 'totalCuotasXcliente']);
 
+$router->post('/admin/comisiones/comisionesXUser', [comisionescontrolador::class, 'comisionesXUser']);
+
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
 $router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts

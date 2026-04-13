@@ -3,6 +3,7 @@
 
         const POS = (window as any).POS;
 
+        const selectEmpleado = document.querySelector('#selectEmpleado') as HTMLSelectElement;
         const btnLiquidar = document.querySelector('#btnLiquidar') as HTMLButtonElement;
         const miDialogoLiquidar = document.querySelector('#miDialogoLiquidar') as HTMLDialogElement;
         let tablaMovimientosInventarios:HTMLElement;
@@ -10,14 +11,14 @@
         //const mesyaño:[string, number] = mesyañoactual();
 
 
-         document.addEventListener("click", cerrarDialogoExterno);
+        document.addEventListener("click", cerrarDialogoExterno);
 
         async function callApiReporte(dateinicio:string, datefin:string){
             document.querySelector('#fecha1')!.textContent = dateinicio;
             document.querySelector('#fecha2')!.textContent = datefin;
-            let datosItem = ($('#item') as any).select2('data')[0];
-            if(datosItem === undefined){
-                msjalertToast('error', '¡Error!', "Seleccionar un item de la lista");
+
+            if(selectEmpleado.value === ''){
+                msjalertToast('error', '¡Error!', "Seleccionar un empleado de la lista");
                 return;
             }
 
@@ -25,8 +26,7 @@
             const datos = new FormData();
             datos.append('fechainicio', dateinicio);
             datos.append('fechafin', datefin+' 23:59:59');
-            datos.append('tipo', datosItem.tipo);
-            datos.append('iditem', datosItem.id);
+            datos.append('idempleado', selectEmpleado.value);
             try {
                 const url = "/admin/api/comisiones/comisionesXUser"; //llama a la api que esta en comisionescontrolador.php
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 

@@ -42,12 +42,23 @@ class comisionescontrolador{
   public static function index(Router $router):void{
     $comisionServicio = new comisionesService();
     isadmin();
-    if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
-    $alertas = [];
     $idsucursal = id_sucursal();
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $widgets = $comisionServicio->getWidgets($idsucursal);
-    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
+
+  //////////////////////    API     /////////////////////
+  public static function comisionesXUser():void{
+    $comisionServicio = new comisionesService();
+    isadmin();
+    $fechainicio = $_POST['fechainicio']; 
+    $fechafin = $_POST['fechafin'];
+    $idempleado = $_POST['idempleado'];
+
+    $comisionesUser = $comisionServicio->comisionesXUser(id_sucursal(), $idempleado);
+
   }
 
 }
