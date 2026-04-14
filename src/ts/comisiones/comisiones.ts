@@ -13,6 +13,7 @@
 
         document.addEventListener("click", cerrarDialogoExterno);
 
+        //api para traer valores del usuario a consultar
         async function callApiReporte(dateinicio:string, datefin:string){
             if(selectEmpleado.value === ''){
                 msjalertToast('error', '¡Error!', "Seleccionar un empleado de la lista");
@@ -32,7 +33,7 @@
                 const resultado = await respuesta.json();
                 comisionUser = resultado;
                 console.log(comisionUser);
-                //printTableMovimientoInventario();
+                printWidgetsUser();
                 //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
             } catch (error) {
                 console.log(error);
@@ -40,10 +41,34 @@
         }
 
 
-        btnLiquidar.addEventListener('click', ()=>{
+        btnLiquidar.addEventListener('click', async()=>{
             miDialogoLiquidar.showModal();
+            const datos = new FormData();
+            
+            datos.append('idempleado', selectEmpleado.value);
+            try {
+                const url = "/admin/api/comisiones/comisionesXUser"; //llama a la api que esta en comisionescontrolador.php
+                const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                const resultado = await respuesta.json();
+                comisionUser = resultado;
+                console.log(comisionUser);
+                //printTableMovimientoInventario();
+                //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+
+        document.querySelector('#formCrearUpdateLiquidar')?.addEventListener('submit', (e:Event)=>{
+            e.preventDefault();
 
         });
+
+
+        function printWidgetsUser(){
+
+        }
 
         /*printTableMovimientoInventario();
         function printTableMovimientoInventario(){

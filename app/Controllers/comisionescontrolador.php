@@ -44,7 +44,9 @@ class comisionescontrolador{
     isadmin();
     $idsucursal = id_sucursal();
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
-    $widgets = $comisionServicio->getWidgets($idsucursal);
+    //$widgets = $comisionServicio->getWidgets($idsucursal);
+    //debuguear($widgets);
+    $widgets = 0;
     $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 

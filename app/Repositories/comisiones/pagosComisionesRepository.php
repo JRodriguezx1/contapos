@@ -23,8 +23,22 @@ class pagosComisionesRepository extends operationRepository{
     
     public function getConexion(){ return self::getDB(); }
 
+
     public function historialPagosXUser(int $idusuario, string $fechainicio, string $fechafin):array{
-        $sql = "SELECT *FROM $this->table pc WHERE pc.fkusuarioid = $idusuario AND pc.fecha BETWEEN '$fechainicio' AND '$fechafin';";
+        $sql = "SELECT *FROM $this->table WHERE fkusuarioid = $idusuario AND fecha BETWEEN '$fechainicio' AND '$fechafin';";
+        $rows = $this->fetchAllStd($sql);
+
+        $totalPagado = 0;
+        foreach ($rows as $obj)$totalPagado += $obj->valor;
+
+        return ['pagos'=>$rows, 'totalPagado'=>$totalPagado];
+    }
+
+
+    public function totalPagadoAllUsers(int $idsucursal):array{
+        $sql = "SELECT 
+                    COALESCE(SUM(pc.valor), 0) as comisiontotalpagada
+                FROM $this->table pc WHERE pc.fksucursalid = $idsucursal;";
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }
