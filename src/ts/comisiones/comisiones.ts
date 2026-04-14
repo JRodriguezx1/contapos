@@ -34,6 +34,7 @@
                 comisionUser = resultado;
                 console.log(comisionUser);
                 printWidgetsUser();
+                
                 //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
             } catch (error) {
                 console.log(error);
