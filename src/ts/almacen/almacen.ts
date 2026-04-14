@@ -69,26 +69,33 @@
 
 
         btnviewProductsBajoStock.addEventListener('click', ()=>{
-            miDialogoBajoStock.showModal();
-            document.addEventListener("click", cerrarDialogoExterno);
             getItemsBajoStock();
-        })
+            miDialogoBajoStock.showModal();
+            document.addEventListener("click", cerrarDialogoExterno); 
+        });
 
         async function getItemsBajoStock(){
             try {
                 const url = "/admin/api/getItemsBajoStock";
                 const respuesta = await fetch(url); 
                 const resultado:{productoid:string, nombre:string, idunidadmedida:string, sku:string, stock:string, stockminimo:string, tipoproducto:string, tipoproduccion:string, unidadmedida:string, visible:string}[] = await respuesta.json();
-                while(tablaBajoStock.firstChild)tablaBajoStock.removeChild(tablaBajoStock.firstChild);
-                resultado.forEach(c=>{
-                    const tr = document.createElement('tr') as HTMLTableRowElement;
-                    tr.innerHTML = `<td class="text-center">${c.productoid}</td>
-                                    <td class="text-center">${c.nombre}</td>
-                                    <td class="text-center">${c.tipoproducto == '1'?'Compuesto':'Simple'}</td>
-                                    <td class="text-center">${c.stock}</td>
-                                    <td class="text-center">${c.stockminimo}</td>`;
-                    tablaBajoStock.prepend(tr);
+                Object.assign(configdatatablesstockbajo, {
+                    data: resultado,
+                    columns: [
+                        {title: 'ID', data: 'productoid'},
+                        {title: 'NOMBRE', data: 'nombre'},
+                        {
+                            title: 'TIPO', 
+                            data: null,
+                            orderable: false,
+                            searchable: false,
+                            render: (data: any, type: any, row: any) => {return row.tipoproducto== 1?'Compuesto':'Simple'}
+                        },
+                        {title: 'STOCK ACTUAL', data: 'stock'},
+                        {title: 'STOCK MIN', data: 'stockminimo'},
+                    ],
                 });
+                ($('#tablaBajoStock') as any).DataTable(configdatatablesstockbajo); 
             } catch (error) {
                 console.log(error);
             }

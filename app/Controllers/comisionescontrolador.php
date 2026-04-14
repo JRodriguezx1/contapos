@@ -57,8 +57,8 @@ class comisionescontrolador{
     $fechafin = $_POST['fechafin'];
     $idempleado = $_POST['idempleado'];
 
-    $comisionesUser = $comisionServicio->comisionesXUser(id_sucursal(), $idempleado);
-
+    $comisionesUser = $comisionServicio->comisionesXUser(id_sucursal(), $idempleado, $fechainicio, $fechafin);
+    debuguear($comisionesUser);
   }
 
 }

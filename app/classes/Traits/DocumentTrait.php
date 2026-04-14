@@ -18,6 +18,7 @@ trait DocumentTrait
         $invoice_lines = [];
         $tax_summary = []; // para agrupar impuestos
         $line_extension_total = 0;
+        $tax_exclusive_amount = 0;
         $tax_inclusive_total = 0;
         $tax_total = 0;
         $metodoPago = 10;  //contado
@@ -88,6 +89,7 @@ trait DocumentTrait
                     }
                     $tax_summary[$percent]["taxable_amount"] += $value->base;
                     $tax_summary[$percent]["tax_amount"] += $value->valorimp;
+                    $tax_exclusive_amount += $value->base;
                 }   
 
 
@@ -130,7 +132,7 @@ trait DocumentTrait
             // Totales monetarios
             $legal_monetary_totals = [
                 "line_extension_amount" => number_format($line_extension_total, 2, '.', ''),  //sin impuesto
-                "tax_exclusive_amount" => number_format(empty($tax_totals)?0:$line_extension_total, 2, '.', ''),  //sin impuesto, ó '0' si es excluido de impuesto
+                "tax_exclusive_amount" => number_format(empty($tax_totals)?0:$tax_exclusive_amount, 2, '.', ''),  //sin impuesto, ó '0' si es excluido de impuesto
                 "tax_inclusive_amount" => number_format($tax_inclusive_total, 2, '.', ''),  //con impuesto
                 "allowance_total_amount" => number_format($descgeneral, 2, '.', ''),
                 "charge_total_amount" => number_format($cargo, 2, '.', ''),

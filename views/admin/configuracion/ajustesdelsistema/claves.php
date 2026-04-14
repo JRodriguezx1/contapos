@@ -13,7 +13,7 @@
                 name="clave_para_eliminar_factura" 
                 placeholder="Ingrese la clave eliminar factura"
                 value="<?php echo $conflocal['clave_para_eliminar_factura']->valor_final;?>"
-                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
             >
         </div>
         <div>
@@ -26,7 +26,7 @@
                 name="clave_para_eliminar_un_gasto/base" 
                 placeholder="Ingrese la clave eliminar gasto/base"
                 value="<?php echo $conflocal['clave_para_eliminar_un_gasto/base']->valor_final;?>"
-                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
             >
         </div>
         <div>
@@ -39,7 +39,7 @@
                 name="clave_para_agregar_descuento" 
                 placeholder="Ingrese la clave para descuento"
                 value="<?php echo $conflocal['clave_para_agregar_descuento']->valor_final;?>"
-                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
             >
         </div>
         <div>
@@ -52,7 +52,7 @@
                 name="clave_para_abrir_cajón_monedero" 
                 placeholder="Ingrese la clave abrir cajón"
                 value="<?php echo $conflocal['clave_para_abrir_cajón_monedero']->valor_final;?>"
-                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
             >
         </div>
         <div>
@@ -65,7 +65,7 @@
                 name="clave_para_ajustar_credito" 
                 placeholder="Ingrese la clave para ajustar credito"
                 value="<?php echo $conflocal['clave_para_ajustar_credito']->valor_final;?>"
-                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
             >
         </div>
     </div> 

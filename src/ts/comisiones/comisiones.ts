@@ -14,13 +14,12 @@
         document.addEventListener("click", cerrarDialogoExterno);
 
         async function callApiReporte(dateinicio:string, datefin:string){
-            document.querySelector('#fecha1')!.textContent = dateinicio;
-            document.querySelector('#fecha2')!.textContent = datefin;
-
             if(selectEmpleado.value === ''){
                 msjalertToast('error', '¡Error!', "Seleccionar un empleado de la lista");
                 return;
             }
+
+            (document.querySelector('#textNameUser') as HTMLElement).textContent = "Detalle de Movimientos - "+$('#selectEmpleado option:selected').text();
 
             //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
             const datos = new FormData();

@@ -90,7 +90,7 @@
 
     <div class="rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-            <h4 class="font-semibold text-slate-700">Detalle de Movimientos - Juan Pérez</h4>
+            <h4 id="textNameUser" class="font-semibold text-slate-700">Detalle de Movimientos</h4>
             <button class="btn-xs btn-blue">Registrar Anticipo / Pago</button>
         </div>
         

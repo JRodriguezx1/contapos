@@ -7,16 +7,18 @@ use App\Models\configuraciones\caja;
 use App\Models\configuraciones\usuarios;
 use App\Models\sucursales;
 use App\Repositories\comisiones\comisionesRepository;
+use App\Repositories\comisiones\pagosComisionesRepository;
 use stdClass;
 
 class comisionesService{
 
     private $repoComisiones;
+    private $repoPagosComisiones;
     
     public function __construct()
     {
         $this->repoComisiones = new comisionesRepository();
-
+        $this->repoPagosComisiones = new pagosComisionesRepository();
     }
 
 
@@ -32,8 +34,10 @@ class comisionesService{
     }
 
 
-    public function comisionesXUser(int $idsucursal, int $idusuario):stdClass{
-       return $this->repoComisiones->getWidgets($idsucursal)[0];
+    public function comisionesXUser(int $idsucursal, int $idusuario, string $fechainicio, string $fechafin):array{
+       $widgetsUser = $this->repoComisiones->comisionTotalUser($idsucursal, $idusuario)[0];
+       $historialPagosXuser = $this->repoPagosComisiones->historialPagosXUser($idusuario, $fechainicio, $fechafin);
+       return ['0'=>$widgetsUser, '1'=>$historialPagosXuser];
     }
     
 

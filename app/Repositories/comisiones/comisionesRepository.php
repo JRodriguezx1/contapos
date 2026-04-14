@@ -24,22 +24,22 @@ class comisionesRepository extends operationRepository{
     public function getConexion(){ return self::getDB(); }
 
 
-    public function getWidgets($idsucursal):array{
+    public function getWidgets(int $idsucursal):array{
         $sql = "SELECT 
                     COALESCE(SUM(c.valorcomision), 0) as comisiontotal, 
                     COALESCE(SUM(c.valorentregado), 0) as comisionentregada,
                     COALESCE(SUM(c.valorcomision)-SUM(c.valorentregado), 0) as comisionpendiente
-                FROM comisiones c WHERE c.fk_idsucursal = $idsucursal;";
+                FROM $this->table c WHERE c.fk_idsucursal = $idsucursal;";
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }
 
-    public function comisionTotalUser($idsucursal, $idusuario):array{
+    public function comisionTotalUser(int $idsucursal, int $idusuario):array{
         $sql = "SELECT 
                     COALESCE(SUM(c.valorcomision), 0) as comisiontotal, 
-                    COALESCE(SUM(c.valorentregado), 0) as comisionentregada,
-                    COALESCE(SUM(c.valorcomision)-SUM(c.valorentregado), 0) as comisionpendiente
-                FROM comisiones c WHERE c.fk_idsucursal = $idsucursal AND c.idusuariofk = $idusuario;";
+                    COALESCE(SUM(c.valorentregado), 0) as totalpagado,
+                    COALESCE(SUM(c.valorcomision)-SUM(c.valorentregado), 0) as saldoporliquidar
+                FROM $this->table c WHERE c.fk_idsucursal = $idsucursal AND c.idusuariofk = $idusuario;";
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }

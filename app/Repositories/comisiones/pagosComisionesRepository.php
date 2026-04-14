@@ -23,6 +23,11 @@ class pagosComisionesRepository extends operationRepository{
     
     public function getConexion(){ return self::getDB(); }
 
+    public function historialPagosXUser(int $idusuario, string $fechainicio, string $fechafin):array{
+        $sql = "SELECT *FROM $this->table pc WHERE pc.fkusuarioid = $idusuario AND pc.fecha BETWEEN '$fechainicio' AND '$fechafin';";
+        $rows = $this->fetchAllStd($sql);
+        return $rows;
+    }
     
     
 }
