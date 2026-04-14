@@ -230,6 +230,36 @@ const configdatatablescaja = {
   }
 }
 
+
+///////////////////// CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK BAJO/////////////////////
+const configdatatablesstockbajo = {
+  destroy: true,
+  lengthChange: false,
+  pageLength: 25,
+  //responsive: true,
+  order: [[ 3, 'asc' ]],
+  language: {
+      search: 'Busqueda',
+      emptyTable: 'No Hay datos disponibles',
+      zeroRecords:    "No se encontraron registros coincidentes",
+      info: 'Mostrando pagina _PAGE_ de _PAGES_',
+      infoEmpty: 'No hay entradas a mostrar',
+      infoFiltered: ' (filtrado desde _MAX_ registros)',
+      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+  },
+  layout: {
+      topStart: {
+          buttons: [
+              {extend: 'excelHtml5', title: 'Stock bajo'},  
+              {extend: 'pdfHtml5', title: 'Stock bajo'}, 
+              {extend: 'print', title: 'Stock bajo', text: 'Imprimir'},
+              'colvis'
+          ],
+          pageLength: 'pageLength'
+      }
+  }
+}
+
 ///////////////////// FUNCION QUE IMPRIME MENSAJE TIPO ALERTA /////////////////////
 function msjAlert(tipo:string, msj:string, divmsjalerta:HTMLElement):void{
   divmsjalerta.insertAdjacentHTML('beforeend', `<div class="alerta alerta__${tipo}">

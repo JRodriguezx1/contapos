@@ -678,10 +678,6 @@ video {
   top: 100%;
 }
 
-.left-1 {
-  left: 0.25rem;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -1126,10 +1122,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-16 {
-  height: 4rem;
 }
 
 .max-h-0 {
@@ -2236,14 +2228,11 @@ video {
   border-color: rgb(202 138 4 / var(--tw-border-opacity));
 }
 
-<<<<<<< HEAD
-=======
 .border-l-blue-600 {
   --tw-border-opacity: 1;
   border-left-color: rgb(37 99 235 / var(--tw-border-opacity));
 }
 
->>>>>>> f9a68052a1fbbf97d3debe7b1bdbd4c6cb1db7a6
 .border-t-gray-300 {
   --tw-border-opacity: 1;
   border-top-color: rgb(209 213 219 / var(--tw-border-opacity));
@@ -2331,11 +2320,6 @@ video {
 .bg-green-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(220 252 231 / var(--tw-bg-opacity));
-}
-
-.bg-green-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(187 247 208 / var(--tw-bg-opacity));
 }
 
 .bg-green-50 {
@@ -2502,11 +2486,6 @@ video {
 .bg-yellow-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 252 232 / var(--tw-bg-opacity));
-}
-
-.bg-gray-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-40 {
@@ -2958,11 +2937,6 @@ video {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.ps-5 {
-  -webkit-padding-start: 1.25rem;
-          padding-inline-start: 1.25rem;
 }
 
 .text-left {
@@ -3492,10 +3466,6 @@ video {
 
 .placeholder-gray-400\/70::placeholder {
   color: rgb(156 163 175 / 0.7);
-}
-
-.accent-indigo-600 {
-  accent-color: #4f46e5;
 }
 
 .opacity-0 {
@@ -4288,11 +4258,6 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.peer:checked ~ .peer-checked\:translate-x-7 {
-  --tw-translate-x: 1.75rem;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .peer:checked ~ .peer-checked\:border-indigo-600 {
   --tw-border-opacity: 1;
   border-color: rgb(79 70 229 / var(--tw-border-opacity));
@@ -4712,6 +4677,11 @@ video {
     line-height: 2.25rem;
   }
 
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
   .md\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
@@ -4725,11 +4695,6 @@ video {
   .md\:text-xl {
     font-size: 1.25rem;
     line-height: 1.75rem;
-  }
-
-  .md\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
   }
 }
 
