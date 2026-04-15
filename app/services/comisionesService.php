@@ -39,10 +39,20 @@ class comisionesService{
     public function comisionesXUser(int $idsucursal, int $idusuario, string $fechainicio, string $fechafin):array{
        $comisionTotaluser = $this->repoComisiones->comisionTotalGeneradaUser($idsucursal, $idusuario)[0];
        $historialPagosXuser = $this->repoPagosComisiones->historialPagosXUser($idusuario, $fechainicio, $fechafin);
-       
        return ['comisionTotaluser'=>$comisionTotaluser, 'historialPagos'=>$historialPagosXuser];
     }
     
+
+    public function liquidarComision(array $data):void{
+        $this->repoComisiones->insert(new comisiones());
+    
+    }
+
+
+    public function eliminarMovimientoComision(int $id):void{
+        $this->repoComisiones->insert(new comisiones());
+    
+    }
 
     
 }

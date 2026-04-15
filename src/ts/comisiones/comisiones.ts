@@ -162,7 +162,7 @@
                     const datos = new FormData();
                     datos.append('id', idmovimento);
                     try {
-                        const url = "/admin/api/eliminarMovimientoComision"; //llamado a la API REST en reportescontrolador para eliminar un ingreso
+                        const url = "/admin/api/comisiones/eliminarMovimientoComision"; //llamado a la API REST en reportescontrolador para eliminar un ingreso
                         const respuesta = await fetch(url, {method: 'POST', body: datos});
                         const resultado = await respuesta.json();
                         if(resultado.exito !== undefined){ 

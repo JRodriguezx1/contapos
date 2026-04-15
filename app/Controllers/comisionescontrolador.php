@@ -62,4 +62,25 @@ class comisionescontrolador{
     return;
   }
 
+
+  public static function liquidarComision():void{
+    $comisionServicio = new comisionesService();
+    isadmin();
+    $id = $_POST['id'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $comisionesUser = $comisionServicio->liquidarComision($_POST);
+    }
+  }
+
+  
+  public static function eliminarMovimientoComision():void{
+    $comisionServicio = new comisionesService();
+    isadmin();
+     $id = $_POST['id'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $comisionesUser = $comisionServicio->eliminarMovimientoComision($id);
+    }
+  }
+
+
 }
