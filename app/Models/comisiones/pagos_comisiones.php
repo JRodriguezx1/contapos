@@ -6,11 +6,12 @@ class pagos_comisiones {
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->fkidsucursal = $args['fkidsucursal']??'';
         $this->fkusuarioid = $args['fkusuarioid']??'';
         $this->idmediopagoid = $args['idmediopagoid']??'';
         $this->valor = $args['valor']??0;
         $this->mediopago = $args['mediopago']??'';
-        $this->fecha = $args['fecha']??date('Y-m-d H:i:s');
+        $this->fechapago = $args['fechapago']??date('Y-m-d H:i:s');
         $this->tipo = $args['tipo']??'pago';  //anticipo, pago
         $this->referencia = $args['referencia']??'';
         $this->created_at = $args['created_at']??'';
@@ -28,12 +29,13 @@ class pagos_comisiones {
 
     public function toArray():array {
         return [
-            //'id' => $this->id, 
+            //'id' => $this->id,
+            'fkidsucursal' => $this->fkidsucursal,
             'fkusuarioid' => $this->fkusuarioid,
             'idmediopagoid' => $this->idmediopagoid,
             'valor' => $this->valor,
             'mediopago' => $this->mediopago,
-            'fecha' => $this->fecha, 
+            'fechapago' => $this->fechapago, 
             'tipo' => $this->tipo,
             'referencia' => $this->referencia,
         ];

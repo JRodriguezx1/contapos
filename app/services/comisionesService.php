@@ -31,15 +31,16 @@ class comisionesService{
 
     public function getWidgets(int $idsucursal):array{
         $comisiontotalgenerada = $this->repoComisiones->comisionTotalGeneradaBusiness($idsucursal)[0];
-        $comisiontotalpagada = $this->repoPagosComisiones->totalPagadoAllUsers($idsucursal);
+        $comisiontotalpagada = $this->repoPagosComisiones->totalPagadoAllUsers($idsucursal)[0];
         return ['0'=>$comisiontotalgenerada, '1'=>$comisiontotalpagada];
     }
 
 
     public function comisionesXUser(int $idsucursal, int $idusuario, string $fechainicio, string $fechafin):array{
-       $widgetsUser = $this->repoComisiones->comisionTotalGeneradaUser($idsucursal, $idusuario)[0];
+       $comisionTotaluser = $this->repoComisiones->comisionTotalGeneradaUser($idsucursal, $idusuario)[0];
        $historialPagosXuser = $this->repoPagosComisiones->historialPagosXUser($idusuario, $fechainicio, $fechafin);
-       return ['0'=>$widgetsUser, '1'=>$historialPagosXuser];
+       
+       return ['comisionTotaluser'=>$comisionTotaluser, 'historialPagos'=>$historialPagosXuser];
     }
     
 

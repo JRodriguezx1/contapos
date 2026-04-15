@@ -10,6 +10,17 @@
     <form id="formCrearUpdateLiquidar" class="formulario" method="POST">
         
         <div class="formulario__campo">
+            <label class="formulario__label" for="concepto">Concepto</label>
+            <input 
+                id="concepto" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                type="text"
+                placeholder="Concepto del pago" 
+                required
+            >
+        </div>
+
+        <div class="formulario__campo">
             <label class="formulario__label" for="valorLiquidar">Valor a liquidar</label>
             <input 
                 id="valorLiquidar" 

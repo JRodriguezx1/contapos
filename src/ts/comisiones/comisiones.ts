@@ -4,11 +4,27 @@
         const POS = (window as any).POS;
 
         const selectEmpleado = document.querySelector('#selectEmpleado') as HTMLSelectElement;
+        const comisiontotalUser = document.querySelector('#comisiontotalUser') as HTMLParagraphElement;
+        const comisionTotalUserPagada = document.querySelector('#comisionTotalUserPagada') as HTMLParagraphElement;
+        const comisionUserPendiente = document.querySelector('#comisionUserPendiente') as HTMLParagraphElement;
         const btnLiquidar = document.querySelector('#btnLiquidar') as HTMLButtonElement;
         const miDialogoLiquidar = document.querySelector('#miDialogoLiquidar') as HTMLDialogElement;
         let tablaMovimientosInventarios:HTMLElement;
         let comisionUser:[] = [];
         //const mesyaño:[string, number] = mesyañoactual();
+
+
+        interface ComisionTotalUser {
+            comisiontotal: number;
+        }
+        interface HistorialPagos {
+            pagos: any[]; // mejor reemplazar por un tipo específico si lo conoces
+            totalPagado: number;
+        }
+        interface ResponseComision {
+            comisionTotaluser: ComisionTotalUser;
+            historialPagos: HistorialPagos;
+        }
 
 
         document.addEventListener("click", cerrarDialogoExterno);
@@ -31,9 +47,7 @@
                 const url = "/admin/api/comisiones/comisionesXUser"; //llama a la api que esta en comisionescontrolador.php
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json();
-                comisionUser = resultado;
-                console.log(comisionUser);
-                printWidgetsUser();
+                printWidgetsUser(resultado);
                 
                 //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
             } catch (error) {
@@ -42,8 +56,22 @@
         }
 
 
-        btnLiquidar.addEventListener('click', async()=>{
+        function printWidgetsUser(resultado:ResponseComision){
+            comisiontotalUser.textContent = '$'+resultado.comisionTotaluser.comisiontotal.toLocaleString('es-CO', {minimumFractionDigits:2, maximumFractionDigits:2});
+            comisionTotalUserPagada.textContent = '$'+resultado.historialPagos.totalPagado.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            comisionUserPendiente.textContent = '$'+(resultado.comisionTotaluser.comisiontotal-resultado.historialPagos.totalPagado).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+        }
+
+
+        btnLiquidar.addEventListener('click', ()=>{
             miDialogoLiquidar.showModal();
+        });
+
+
+        document.querySelector('#formCrearUpdateLiquidar')?.addEventListener('submit', async(e:Event)=>{
+            e.preventDefault();
+            //validar que no supere el monto total a liquidar comision del usuario
             const datos = new FormData();
             
             datos.append('idempleado', selectEmpleado.value);
@@ -51,25 +79,13 @@
                 const url = "/admin/api/comisiones/comisionesXUser"; //llama a la api que esta en comisionescontrolador.php
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json();
-                comisionUser = resultado;
-                console.log(comisionUser);
-                //printTableMovimientoInventario();
-                //(document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
+                
             } catch (error) {
                 console.log(error);
             }
         });
 
 
-        document.querySelector('#formCrearUpdateLiquidar')?.addEventListener('submit', (e:Event)=>{
-            e.preventDefault();
-
-        });
-
-
-        function printWidgetsUser(){
-
-        }
 
         /*printTableMovimientoInventario();
         function printTableMovimientoInventario(){

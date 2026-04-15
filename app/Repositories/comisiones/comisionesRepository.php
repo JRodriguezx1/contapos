@@ -26,7 +26,7 @@ class comisionesRepository extends operationRepository{
 
     public function comisionTotalGeneradaBusiness(int $idsucursal):array{
         $sql = "SELECT 
-                    COALESCE(SUM(c.valorcomision), 0) as comisiontotal, 
+                    COALESCE(SUM(c.valorcomision), 0) as comisiontotal
                 FROM $this->table c WHERE c.fk_idsucursal = $idsucursal;";
         $rows = $this->fetchAllStd($sql);
         return $rows;

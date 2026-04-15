@@ -4,17 +4,17 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="shadow rounded-xl p-6">
             <p class="text-sm font-medium text-slate-500 uppercase">Comisiones Totales</p>
-            <p class="text-2xl font-bold text-slate-900">$<?php echo $widgets->comisiontotal; ?></p>
+            <p class="text-2xl font-bold text-slate-900">$<?php echo number_format($widgets[0]->comisiontotal, 0, ',', '.'); ?></p>
         </div>
 
         <div class="shadow rounded-xl p-6">
             <p class="text-sm font-medium text-slate-500 uppercase">Anticipos Entregados</p>
-            <p class="text-2xl font-bold text-red-600">-$<?php echo $widgets->comisionentregada; ?></p>
+            <p class="text-2xl font-bold text-red-600">-$<?php echo number_format($widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
         </div>
 
         <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
             <p class="text-sm font-medium text-blue-600 uppercase">Saldo a Liquidar</p>
-            <p class="text-2xl font-bold text-blue-900">$<?php echo $widgets->comisionpendiente; ?></p>
+            <p class="text-2xl font-bold text-blue-900">$<?php echo number_format($widgets[0]->comisiontotal-$widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
         </div>
     </div>
 
@@ -51,15 +51,15 @@
                 <div class="flex gap-8 flex-wrap">   
                     <div>
                         <h4 class="text-base text-slate-500 font-medium">Total comisiones</h4>
-                        <p class="text-2xl font-bold text-slate-900 leading-none mt-1">$</p>
+                        <p id="comisiontotalUser" class="text-2xl font-bold text-slate-900 leading-none mt-1">$</p>
                     </div>
                     <div>
                         <h4 class="text-base text-slate-500 font-medium">Total pagado</h4>
-                        <p class="text-2xl font-bold text-green-600 leading-none mt-1">$</p>
+                        <p id="comisionTotalUserPagada" class="text-2xl font-bold text-green-600 leading-none mt-1">$</p>
                     </div>
                     <div>
                         <h4 class="text-base text-slate-500 font-medium">Saldo por Liquidar</h4>
-                        <p class="text-2xl font-bold text-red-600 leading-none mt-1">$</p>
+                        <p id="comisionUserPendiente" class="text-2xl font-bold text-red-600 leading-none mt-1">$</p>
                     </div>
                 </div>
                 
@@ -96,24 +96,24 @@
         
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm text-slate-600">
-                <thead class="bg-slate-100 text-slate-700 uppercase text-xs">
+                <thead class="bg-slate-100 text-slate-700 uppercase text-xl">
                     <tr>
                         <th class="px-6 py-3">Fecha</th>
                         <th class="px-6 py-3">Concepto</th>
-                        <th class="px-6 py-3 text-right">Crédito (+)</th>
-                        <th class="px-6 py-3 text-right">Débito (-)</th>
+                        <th class="px-6 py-3">Crédito (+)</th>
+                        <th class="px-6 py-3">Débito (-)</th>
                         <th class="px-6 py-3">Estado</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200">
+                <tbody class="divide-y divide-slate-200 text-lg">
                     <tr>
                         <td class="px-6 py-4">10 Abr 2026</td>
                         <td class="px-6 py-4">
                             <span class="block font-medium text-slate-900">Venta #FAC-1025</span>
                             <span class="text-xs text-slate-400">Cliente: Empresa ABC</span>
                         </td>
-                        <td class="px-6 py-4 text-right text-green-600 font-medium">+$45.00</td>
-                        <td class="px-6 py-4 text-right">-</td>
+                        <td class="px-6 py-4 text-green-600 font-medium">+$45.00</td>
+                        <td class="px-6 py-4">-</td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-bold uppercase">Pendiente</span>
                         </td>
@@ -125,8 +125,8 @@
                             <span class="block font-medium text-slate-900">Anticipo de Quincena</span>
                             <span class="text-xs text-slate-400">Ref: Transf. 9982</span>
                         </td>
-                        <td class="px-6 py-4 text-right">-</td>
-                        <td class="px-6 py-4 text-right text-red-600 font-medium">-$100.00</td>
+                        <td class="px-6 py-4">-</td>
+                        <td class="px-6 py-4 text-red-600 font-medium">-$100.00</td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase">Entregado</span>
                         </td>
