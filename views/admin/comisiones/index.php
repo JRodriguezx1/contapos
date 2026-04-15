@@ -95,18 +95,18 @@
         </div>
         
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-600">
+            <table id="tablaMovimientosComisiones" class="display responsive nowrap tabla" width="100%">
                 <thead class="bg-slate-100 text-slate-700 uppercase text-xl">
                     <tr>
                         <th class="px-6 py-3">Fecha</th>
                         <th class="px-6 py-3">Concepto</th>
                         <th class="px-6 py-3">Crédito (+)</th>
                         <th class="px-6 py-3">Débito (-)</th>
-                        <th class="px-6 py-3">Estado</th>
+                        <th class="px-6 py-3">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 text-lg">
-                    <tr>
+                    <!--<tr>
                         <td class="px-6 py-4">10 Abr 2026</td>
                         <td class="px-6 py-4">
                             <span class="block font-medium text-slate-900">Venta #FAC-1025</span>
@@ -130,7 +130,7 @@
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase">Entregado</span>
                         </td>
-                    </tr>
+                    </tr>-->
                 </tbody>
             </table>
         </div>

@@ -25,15 +25,22 @@ class pagosComisionesRepository extends operationRepository{
 
 
     public function historialPagosXUser(int $idusuario, string $fechainicio, string $fechafin):array{
-        
-        $sql = "SELECT *FROM $this->table WHERE fkusuarioid = $idusuario AND fechapago BETWEEN '$fechainicio' AND '$fechafin';";
-        
+        $sql = "SELECT fecha, 'COMISION' as tipo, valorcomision as entrada, 0 as salida, idfacturaid
+                FROM comisiones
+                WHERE idusuariofk = $idusuario AND fecha >= '$fechainicio' AND fecha <= '$fechafin'
+                UNION ALL
+                SELECT fechapago as fecha, tipo, 0 as entrada, valor as salida, id
+                FROM $this->table
+                WHERE fkusuarioid = $idusuario AND fechapago >= '$fechainicio' AND fechapago <= '$fechafin'
+                ORDER BY fecha ASC;";
+
+        //$sql = "SELECT *FROM $this->table WHERE fkusuarioid = $idusuario AND fechapago BETWEEN '$fechainicio' AND '$fechafin';";
         $rows = $this->fetchAllStd($sql);
 
         $totalPagado = 0;
-        foreach ($rows as $obj)$totalPagado += $obj->valor;
+        foreach ($rows as $obj)$totalPagado += $obj->salida;
 
-        return ['pagos'=>$rows, 'totalPagado'=>$totalPagado];
+        return ['movimientos'=>$rows, 'totalPagado'=>$totalPagado];
     }
 
 

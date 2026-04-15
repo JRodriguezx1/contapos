@@ -10,14 +10,11 @@
     <form id="formCrearUpdateLiquidar" class="formulario" method="POST">
         
         <div class="formulario__campo">
-            <label class="formulario__label" for="concepto">Concepto</label>
-            <input 
-                id="concepto" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
-                type="text"
-                placeholder="Concepto del pago, anticipo o pago" 
-                required
-            >
+            <label class="formulario__label" for="tipo">Concepto</label>
+            <select id="tipo" class="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block p-3 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="pago">Pago</option>
+                <option value="anticipo">Anticipo</option>
+            </select>
         </div>
 
         <div class="formulario__campo">
@@ -33,7 +30,6 @@
             >
         </div>
 
-
         <div class="formulario__campo">
             <label class="formulario__label" for="mediopago">Medio de pago</label>
             <input 
@@ -44,7 +40,6 @@
                 required
             >
         </div>
-
 
         <div class="formulario__campo">
             <label class="formulario__label" for="observacion">Observacion</label>
