@@ -15,7 +15,7 @@
                 id="concepto" 
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                 type="text"
-                placeholder="Concepto del pago" 
+                placeholder="Concepto del pago, anticipo o pago" 
                 required
             >
         </div>
@@ -30,6 +30,29 @@
                 value=""
                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                 required
+            >
+        </div>
+
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="mediopago">Medio de pago</label>
+            <input 
+                id="mediopago" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                type="text"
+                placeholder="descripcion del medio de pago" 
+                required
+            >
+        </div>
+
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="observacion">Observacion</label>
+            <input 
+                id="observacion" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
+                type="text"
+                placeholder="Observaciones del pago" 
             >
         </div>
 
