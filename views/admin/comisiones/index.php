@@ -9,12 +9,12 @@
 
         <div class="shadow rounded-xl p-6">
             <p class="text-sm font-medium text-slate-500 uppercase">Anticipos Entregados</p>
-            <p class="text-2xl font-bold text-red-600">-$<?php echo number_format($widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
+            <p id="comisionTotalPagadaGlobal" class="text-2xl font-bold text-red-600">-$<?php echo number_format($widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
         </div>
 
         <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
             <p class="text-sm font-medium text-blue-600 uppercase">Saldo a Liquidar</p>
-            <p class="text-2xl font-bold text-blue-900">$<?php echo number_format($widgets[0]->comisiontotal-$widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
+            <p id="comisionPendienteGlobal" class="text-2xl font-bold text-blue-900">$<?php echo number_format($widgets[0]->comisiontotal-$widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
         </div>
     </div>
 
@@ -140,5 +140,8 @@
     <!-- MODAL PARA CAMBIAR USUARIO Y COMSION DE VENTA -->
     <?php include __DIR__. "/modalLiquidar.php"; ?>
 
-
+    <script>
+        let comisionTotalBusinessDB = <?= $widgets[0]->comisiontotal??0; ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
+        let comisionTotalPagadaBusinessDB = <?= $widgets[1]->comisiontotalpagada??0; ?>;
+    </script>
 </div>

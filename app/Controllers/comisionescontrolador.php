@@ -84,7 +84,7 @@ class comisionescontrolador{
   public static function eliminarMovimientoComision():void{
     $comisionServicio = new comisionesService();
     isadmin();
-     $id = $_GET['id'];
+    $id = $_GET['id'];
     if(!is_numeric($id))return;
     $r = $comisionServicio->eliminarMovimientoComision($id);
     echo json_encode($r);

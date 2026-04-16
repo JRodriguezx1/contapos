@@ -10,6 +10,8 @@ declare let List: any;
 declare let bwipjs: any;
 declare const mediosPagoDB: MedioPago[];  //mediosPagoDB inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
 declare const clientesDB: Cliente[];
+declare let comisionTotalBusinessDB: number;
+declare let comisionTotalPagadaBusinessDB: number;
 declare const getParamCaja:any;  //getParamCaja inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
 
 (window as any).POS = (window as any).POS || {};

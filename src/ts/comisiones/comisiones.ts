@@ -1,6 +1,8 @@
 (()=>{
     if(!document.querySelector('.comisiones'))return;
 
+    console.log(comisionTotalBusinessDB);
+    console.log(comisionTotalPagadaBusinessDB);
     const POS = (window as any).POS;
 
     const selectEmpleado = document.querySelector('#selectEmpleado') as HTMLSelectElement;
@@ -10,7 +12,7 @@
     const btnLiquidar = document.querySelector('#btnLiquidar') as HTMLButtonElement;
     const miDialogoLiquidar = document.querySelector('#miDialogoLiquidar') as HTMLDialogElement;
     const inputValorLiquidar = (document.querySelector('#valorLiquidar') as HTMLInputElement);
-    let tablaMovimientosComisiones:HTMLElement, comisionPendienteUser = 0;
+    let tablaMovimientosComisiones:HTMLElement, comisionPendienteUser = 0, comisionPagadaUser = 0;
 
 
     interface ComisionTotalUser {
@@ -56,10 +58,12 @@
 
 
     function printWidgetsUser(resultado:ResponseComision){
-        comisionPendienteUser = resultado.comisionTotaluser.comisiontotal;
-        comisiontotalUser.textContent = '$'+comisionPendienteUser.toLocaleString('es-CO', {minimumFractionDigits:2, maximumFractionDigits:2});
-        comisionTotalUserPagada.textContent = '$'+resultado.historialPagos.totalPagado.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        comisionUserPendiente.textContent = '$'+(resultado.comisionTotaluser.comisiontotal-resultado.historialPagos.totalPagado).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        comisionPagadaUser = resultado.historialPagos.totalPagado;
+        comisionPendienteUser = resultado.comisionTotaluser.comisiontotal-comisionPagadaUser;
+
+        comisiontotalUser.textContent = '$'+resultado.comisionTotaluser.comisiontotal.toLocaleString('es-CO', {minimumFractionDigits:2, maximumFractionDigits:2});
+        comisionTotalUserPagada.textContent = '$'+comisionPagadaUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        comisionUserPendiente.textContent = '$'+comisionPendienteUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         //renderizar tabla
         printTableMovimientosComisiones(resultado.historialPagos.movimientos);
     }
@@ -97,6 +101,15 @@
                     id: resultado.id
                 };
                 (tablaMovimientosComisiones as any).row.add(nuevoMovimiento).draw();
+                //actualizar widget del usuario
+                comisionPagadaUser += nuevoMovimiento.salida;
+                comisionPendienteUser -= nuevoMovimiento.salida;
+                comisionTotalUserPagada.textContent = '$'+comisionPagadaUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                comisionUserPendiente.textContent = '$'+comisionPendienteUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                //actualizar widget business
+                comisionTotalPagadaBusinessDB+=nuevoMovimiento.salida;
+                (document.querySelector('#comisionTotalPagadaGlobal') as HTMLParagraphElement).textContent = " - $"+(comisionTotalPagadaBusinessDB.toLocaleString());
+                (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalBusinessDB-comisionTotalPagadaBusinessDB).toLocaleString();
             }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -119,8 +132,8 @@
             columns: [
                 {title: 'Fecha', data: 'fecha'}, 
                 {title: 'Concepto', data: 'tipo'},
-                {title: 'Crédito (+)', data: 'entrada', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                {title: 'Débito (-)', data: 'salida', render: (data: any, type: any, row: any) => `<div class="">$${row.salida}</div>`},
+                {title: 'Crédito (+)', data: 'entrada', render: (data:number) => `<div class="${Number(data)>0?'text-green-500':''}"> + $${Number(data).toLocaleString()}</div>`},
+                {title: 'Débito (-)', data: 'salida', render: (data: any, type: any, row: any) => `<div class="${row.salida>0?'text-red-500':''}"> - $${row.salida.toLocaleString()}</div>`},
                 {title: 'Acciones', data: null, render: (data: any, type: any, row: any) => `<button class="btn-eliminar" data-id="${row.entrada == 0&&row.salida!=0?row.id:''}">${row.entrada == 0&&row.salida!=0?'⛔':' - '}</button>`},
             ],
             
@@ -182,6 +195,15 @@
                         if(resultado.exito !== undefined){ 
                             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                             fila.remove().draw(false);
+                            //actualizar widget del usuario
+                            comisionPagadaUser -= Number(resultado.valor);
+                            comisionPendienteUser += Number(resultado.valor);
+                            comisionTotalUserPagada.textContent = '$'+comisionPagadaUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            comisionUserPendiente.textContent = '$'+comisionPendienteUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            //actualizar widget business
+                            comisionTotalPagadaBusinessDB-=Number(resultado.valor);
+                            (document.querySelector('#comisionTotalPagadaGlobal') as HTMLParagraphElement).textContent = "$"+comisionTotalPagadaBusinessDB.toLocaleString();
+                            (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalBusinessDB-comisionTotalPagadaBusinessDB).toLocaleString();
                         }else{
                             msjalertToast('error', '¡Error!', resultado.error[0]);
                         }

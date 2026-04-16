@@ -63,7 +63,7 @@ class comisionesService{
         if(!$entityPago)return ['error'=>['Pago de comision ya no existe']];
          $r = $this->repoPagosComisiones->delete($id);
         if($r){
-            return ['exito'=>['pago de comision eliminada']];
+            return ['exito'=>['pago de comision eliminada'], 'valor'=>$entityPago->valor];
         }else{
             return ['error'=>['error al eliminar pago de comision']];
         }
