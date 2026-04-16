@@ -66,20 +66,29 @@ class comisionescontrolador{
   public static function liquidarComision():void{
     $comisionServicio = new comisionesService();
     isadmin();
-    $id = $_POST['id'];
+    $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $comisionesUser = $comisionServicio->liquidarComision($_POST);
+      try {
+        $r = $comisionServicio->liquidarComision($_POST);
+        $alertas['exito'][] = "Liquidacion aplicada en sistema.";
+        $alertas['id'] = $r;
+      } catch (\Throwable $th) {
+        $alertas['error'][] = "Error al actualizar el credito. {$th->getMessage()}";
+      }
     }
+    echo json_encode($alertas);
+    return;
   }
 
   
   public static function eliminarMovimientoComision():void{
     $comisionServicio = new comisionesService();
     isadmin();
-     $id = $_POST['id'];
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $comisionesUser = $comisionServicio->eliminarMovimientoComision($id);
-    }
+     $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    $r = $comisionServicio->eliminarMovimientoComision($id);
+    echo json_encode($r);
+    return;
   }
 
 

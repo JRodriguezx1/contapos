@@ -272,7 +272,7 @@ $router->get('/admin/api/totalCuotasXcliente', [creditoscontrolador::class, 'tot
 
 $router->post('/admin/api/comisiones/comisionesXUser', [comisionescontrolador::class, 'comisionesXUser']);
 $router->post('/admin/api/comisiones/liquidarComision', [comisionescontrolador::class, 'liquidarComision']);
-$router->post('/admin/api/comisiones/eliminarMovimientoComision', [comisionescontrolador::class, 'eliminarMovimientoComision']);
+$router->get('/admin/api/comisiones/eliminarMovimientoComision', [comisionescontrolador::class, 'eliminarMovimientoComision']);
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 

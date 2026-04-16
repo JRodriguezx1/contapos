@@ -3,6 +3,7 @@
 namespace App\services;
 
 use App\Models\comisiones\comisiones;
+use App\Models\comisiones\pagos_comisiones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\usuarios;
 use App\Models\sucursales;
@@ -43,15 +44,29 @@ class comisionesService{
     }
     
 
-    public function liquidarComision(array $data):void{
-        $this->repoComisiones->insert(new comisiones());
-    
+    public function liquidarComision(array $data):int{
+        $getDB = $this->repoPagosComisiones->getConexion();
+        $getDB->begin_transaction();
+        try {
+            $r = $this->repoPagosComisiones->insert(new pagos_comisiones($data));
+            $getDB->commit();
+            return $r[1];
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            throw $th;
+        }
     }
 
 
-    public function eliminarMovimientoComision(int $id):void{
-        $this->repoComisiones->insert(new comisiones());
-    
+    public function eliminarMovimientoComision(int $id):array{
+        $entityPago = $this->repoPagosComisiones->find($id);
+        if(!$entityPago)return ['error'=>['Pago de comision ya no existe']];
+         $r = $this->repoPagosComisiones->delete($id);
+        if($r){
+            return ['exito'=>['pago de comision eliminada']];
+        }else{
+            return ['error'=>['error al eliminar pago de comision']];
+        }
     }
 
     

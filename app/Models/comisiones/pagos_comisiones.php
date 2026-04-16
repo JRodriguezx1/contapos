@@ -6,9 +6,9 @@ class pagos_comisiones {
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
-        $this->fkidsucursal = $args['fkidsucursal']??'';
+        $this->fkidsucursal = $args['fkidsucursal']??id_sucursal();
         $this->fkusuarioid = $args['fkusuarioid']??'';
-        $this->idmediopagoid = $args['idmediopagoid']??'';
+        $this->idmediopagoid = $args['idmediopagoid']??1;
         $this->valor = $args['valor']??0;
         $this->mediopago = $args['mediopago']??'';
         $this->fechapago = $args['fechapago']??date('Y-m-d H:i:s');

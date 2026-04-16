@@ -25,7 +25,7 @@ class pagosComisionesRepository extends operationRepository{
 
 
     public function historialPagosXUser(int $idusuario, string $fechainicio, string $fechafin):array{
-        $sql = "SELECT fecha, 'COMISION' as tipo, valorcomision as entrada, 0 as salida, idfacturaid
+        $sql = "SELECT fecha, 'COMISION' as tipo, valorcomision as entrada, 0 as salida, idfacturaid as id
                 FROM comisiones
                 WHERE idusuariofk = $idusuario AND fecha >= '$fechainicio' AND fecha <= '$fechafin'
                 UNION ALL

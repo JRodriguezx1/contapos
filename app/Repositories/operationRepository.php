@@ -17,6 +17,8 @@ abstract class operationRepository extends BaseRepository{
         $sql = "INSERT INTO {$this->table} ({$cols}) VALUES ('{$vals}');";
         $sql = str_replace("''", 'NULL', $sql);
         $resultado = self::$db->query($sql);
+        if (!$resultado)throw new \Exception(self::$db->error);
+        
         return [$resultado, self::$db->insert_id];  //insert_id retorna el ultimo registro insertado en la bd
            //  [true/false, id=1,2,3...00] = [0,1] 
     }
