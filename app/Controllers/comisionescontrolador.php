@@ -45,7 +45,8 @@ class comisionescontrolador{
     $idsucursal = id_sucursal();
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $widgets = $comisionServicio->getWidgets($idsucursal);
-    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $conflocal = config_local::getParamCaja();
+    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 

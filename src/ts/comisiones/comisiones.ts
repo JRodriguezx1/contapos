@@ -76,6 +76,7 @@
 
     document.querySelector('#formCrearUpdateLiquidar')?.addEventListener('submit', async(e:Event)=>{
         e.preventDefault();
+        const imprimir = document.querySelector('input[name="printComprobante"]') as HTMLInputElement;
         //validar que no supere el monto total a liquidar comision del usuario
         if(selectEmpleado.value === '' || Number(inputValorLiquidar.value) <= 0 || Number(inputValorLiquidar.value)>Number(comisionPendienteUser)){
             msjalertToast('error', '¡Error!', "Seleccionar un empleado de la lista o valor a liquidar no es valido");
@@ -110,6 +111,7 @@
                 comisionTotalPagadaBusinessDB+=nuevoMovimiento.salida;
                 (document.querySelector('#comisionTotalPagadaGlobal') as HTMLParagraphElement).textContent = " - $"+(comisionTotalPagadaBusinessDB.toLocaleString());
                 (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalBusinessDB-comisionTotalPagadaBusinessDB).toLocaleString();
+                if(imprimir.checked)await printTicketSeparado(resultado.id);
             }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -118,6 +120,16 @@
             console.log(error);
         }
     });
+
+
+    function printTicketSeparado(idPagoComision:string): Promise<void>{
+      return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+          window.open("/admin/printPDFPOSPagoComision?id=" + idPagoComision, "_blank");
+          resolve();
+        }, 700);
+      })
+    }
 
 
     printTableMovimientosComisiones([]);

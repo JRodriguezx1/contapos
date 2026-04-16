@@ -142,6 +142,7 @@ $router->get('/admin/printPDFPOS', [printcontrolador::class, 'printPDFPOS']);  /
 $router->get('/admin/printPDFPOSSeparado', [printcontrolador::class, 'printPDFPOSSeparado']);  //llamada desde separado.ts cuando se realiza un separado exitoso
 $router->get('/admin/printPDFAbonoCredito', [printcontrolador::class, 'printPDFAbonoCredito']);  //llamada desde modulo creditos, vista detallecredito
 $router->get('/admin/printComprobanteCompraPDF', [printcontrolador::class, 'printComprobanteCompraPDF']);  //llamada desde compras.ts
+$router->get('/admin/printPDFPOSPagoComision', [printcontrolador::class, 'printPDFPOSPagoComision']);
 ///// Creditos /////
 $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 $router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);

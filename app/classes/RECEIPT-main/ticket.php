@@ -436,4 +436,49 @@
             $this->pdf->Output("I","comprobante $compra->nfactura - $compra->id.pdf",true);
 
         }
+
+
+        public function generarComprobantePagoComision($sucursal, $usuario, $pagoComision){
+            $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
+            if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
+            $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
+            $this->pdf->Ln(25);
+            # Encabezado y datos de la empresa #
+             $this->pdf->SetFont('Arial','B',10);
+            $this->pdf->SetTextColor(0,0,0);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
+            $this->pdf->SetFont('Arial','',9);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$sucursal->email),0,'C',false);
+            
+            $this->pdf->SetFont('Arial','',9);
+
+            $this->pdf->Ln(1);
+            $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
+            $this->pdf->Ln(5);
+
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Empleado: ".$usuario->nombre.' '.$usuario->apellido),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Usuario: ".$usuario->identificacion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cedula: ".$usuario->cedula),0,'C',false);
+
+            $this->pdf->Ln(1);
+            $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+            $this->pdf->Ln(3);
+
+            $this->pdf->SetFont('Arial','B',10);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Id del pago°: ".$pagoComision->id)),0,'C',false);
+
+            $this->pdf->SetFont('Arial','',9);
+             $this->pdf->Ln(7);
+             # Impuestos, descuentos & totales #
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Fecha de pago°: ".$pagoComision->fechapago),0,'C',false);
+            $this->pdf->Ln(5);
+
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Valor pagado: ".$pagoComision->valor),0,'C',false);
+            $this->pdf->Ln(5);
+            # Nombre del archivo PDF #
+            $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
+        }
     }

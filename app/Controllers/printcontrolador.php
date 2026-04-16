@@ -21,6 +21,7 @@ use App\Models\detallecompra;
 use App\Models\felectronicas\facturas_electronicas;
 use App\Models\inventario\proveedores;
 use App\Models\sucursales;
+use App\Repositories\comisiones\pagosComisionesRepository;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\productsSeparadosRepository;
@@ -102,6 +103,18 @@ class printcontrolador{
     $productos = detallecompra::idregistros('idcompra', $compra->id);
     $print = new ticketPOS();
     $print->generarComprobanteCompra($sucursal, $compra, $proveedor, $productos);
+  }
+
+
+  public static function printPDFPOSPagoComision():void{
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    $sucursal = sucursales::find('id', id_sucursal());
+    $repoPagoComision = new pagosComisionesRepository();
+    $x = $repoPagoComision->find($id);
+    $usuario = usuarios::find('id', $x->fkusuarioid);
+    $print = new ticketPOS();
+    $print->generarComprobantePagoComision($sucursal, $usuario, $x);
   }
 
 }
