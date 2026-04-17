@@ -54,6 +54,7 @@ class productos extends \App\Models\ActiveRecord {
         //if(!$this->stock)self::$alertas['error'][] = 'Colocar el stock inicial del producto';
         //if(!$this->precio_compra)self::$alertas['error'][] = 'Colocar el precio de compra del producto';
         if(!$this->precio_venta)self::$alertas['error'][] = 'Colocar el precio de venta del producto';
+        if(isset($this->percentcomision) && trim($this->percentcomision) == '')$this->percentcomision = 0;
         return self::$alertas;
     }
 
