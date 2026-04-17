@@ -51,21 +51,20 @@
                 <div class="flex gap-8 flex-wrap">   
                     <div>
                         <h4 class="text-base text-slate-500 font-medium">Total comisiones</h4>
-                        <p id="comisiontotalUser" class="text-2xl font-bold text-slate-900 leading-none mt-1">$</p>
+                        <p id="comisiontotalUser" class="text-2xl font-bold text-slate-900 leading-none mt-1">$0</p>
                     </div>
                     <div>
                         <h4 class="text-base text-slate-500 font-medium">Total pagado</h4>
-                        <p id="comisionTotalUserPagada" class="text-2xl font-bold text-green-600 leading-none mt-1">$</p>
+                        <p id="comisionTotalUserPagada" class="text-2xl font-bold text-green-600 leading-none mt-1">$0</p>
                     </div>
                     <div>
                         <h4 class="text-base text-slate-500 font-medium">Saldo por Liquidar</h4>
-                        <p id="comisionUserPendiente" class="text-2xl font-bold text-red-600 leading-none mt-1">$</p>
+                        <p id="comisionUserPendiente" class="text-2xl font-bold text-red-600 leading-none mt-1">$0</p>
                     </div>
                 </div>
                 
                 <div class="flex gap-3 font-medium text-base">
-                    <button class="btn-xs bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">Dar Anticipo</button>
-                    <button id="btnLiquidar" class="btn-xs btn-green">Liquidar Saldo</button>
+                    <button id="btnLiquidar" class="btn-xs btn-lima">Liquidar Saldo</button>
                 </div>
             </div>
 
@@ -91,7 +90,6 @@
     <div class="rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
             <h4 id="textNameUser" class="font-semibold text-slate-700">Detalle de Movimientos</h4>
-            <button class="btn-xs btn-blue">Registrar Anticipo / Pago</button>
         </div>
         
         <div class="overflow-x-auto">
@@ -106,31 +104,6 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 text-lg">
-                    <!--<tr>
-                        <td class="px-6 py-4">10 Abr 2026</td>
-                        <td class="px-6 py-4">
-                            <span class="block font-medium text-slate-900">Venta #FAC-1025</span>
-                            <span class="text-xs text-slate-400">Cliente: Empresa ABC</span>
-                        </td>
-                        <td class="px-6 py-4 text-green-600 font-medium">+$45.00</td>
-                        <td class="px-6 py-4">-</td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-bold uppercase">Pendiente</span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="px-6 py-4">08 Abr 2026</td>
-                        <td class="px-6 py-4">
-                            <span class="block font-medium text-slate-900">Anticipo de Quincena</span>
-                            <span class="text-xs text-slate-400">Ref: Transf. 9982</span>
-                        </td>
-                        <td class="px-6 py-4">-</td>
-                        <td class="px-6 py-4 text-red-600 font-medium">-$100.00</td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase">Entregado</span>
-                        </td>
-                    </tr>-->
                 </tbody>
             </table>
         </div>

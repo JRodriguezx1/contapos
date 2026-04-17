@@ -1,8 +1,6 @@
 (()=>{
     if(!document.querySelector('.comisiones'))return;
 
-    console.log(comisionTotalBusinessDB);
-    console.log(comisionTotalPagadaBusinessDB);
     const POS = (window as any).POS;
 
     const selectEmpleado = document.querySelector('#selectEmpleado') as HTMLSelectElement;
@@ -96,7 +94,7 @@
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 const nuevoMovimiento = {
                     fecha: new Date().toISOString(),
-                    tipo: 'pago',
+                    tipo: '<div class=""> pago <p class=" text-slate-600 text-sm mt-2">Nequi</p></div>',
                     entrada: 0,
                     salida: Number(inputValorLiquidar.value),
                     id: resultado.id
@@ -111,7 +109,7 @@
                 comisionTotalPagadaBusinessDB+=nuevoMovimiento.salida;
                 (document.querySelector('#comisionTotalPagadaGlobal') as HTMLParagraphElement).textContent = " - $"+(comisionTotalPagadaBusinessDB.toLocaleString());
                 (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalBusinessDB-comisionTotalPagadaBusinessDB).toLocaleString();
-                if(imprimir.checked)await printTicketSeparado(resultado.id);
+                if(imprimir.checked)await printComprobantePago(resultado.id);
             }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -122,7 +120,7 @@
     });
 
 
-    function printTicketSeparado(idPagoComision:string): Promise<void>{
+    function printComprobantePago(idPagoComision:string): Promise<void>{
       return new Promise<void>((resolve, reject) => {
         setTimeout(() => {
           window.open("/admin/printPDFPOSPagoComision?id=" + idPagoComision, "_blank");
@@ -134,7 +132,6 @@
 
     printTableMovimientosComisiones([]);
     function printTableMovimientosComisiones(movimientos:any){
-        console.log(movimientos);
         tablaMovimientosComisiones = ($('#tablaMovimientosComisiones') as any).DataTable({
             "responsive": true,
             pageLength: 25,
@@ -143,7 +140,7 @@
             order: [[0, "desc"]],
             columns: [
                 {title: 'Fecha', data: 'fecha'}, 
-                {title: 'Concepto', data: 'tipo'},
+                {title: 'Concepto', data: 'tipo', render: (data: any, type: any, row: any) => `<div class=""> ${row.tipo}<p class=" text-slate-600 text-sm mt-2">Nequi</p></div>`},
                 {title: 'Crédito (+)', data: 'entrada', render: (data:number) => `<div class="${Number(data)>0?'text-green-500':''}"> + $${Number(data).toLocaleString()}</div>`},
                 {title: 'Débito (-)', data: 'salida', render: (data: any, type: any, row: any) => `<div class="${row.salida>0?'text-red-500':''}"> - $${row.salida.toLocaleString()}</div>`},
                 {title: 'Acciones', data: null, render: (data: any, type: any, row: any) => `<button class="btn-eliminar" data-id="${row.entrada == 0&&row.salida!=0?row.id:''}">${row.entrada == 0&&row.salida!=0?'⛔':' - '}</button>`},

@@ -22,7 +22,8 @@ class pagos_comisiones {
     {
         $alertas = [];
         if(!$this->fkusuarioid)$alertas['error'][] = "Debe seleccionar el empleado";
-         if(!$this->idmediopagoid)$alertas['error'][] = "Debe seleccionar el medio de pago";
+        if(strlen($this->mediopago)>20)$alertas['error'][] = "Medio de pago muy largo";
+        if(!$this->idmediopagoid)$alertas['error'][] = "Debe seleccionar el medio de pago";
         if($this->valor<0)$alertas['error'][] = "el valor de la comision a pagar no es valido.";
         return $alertas;
     }

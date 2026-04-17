@@ -32,10 +32,10 @@ class comisionesRepository extends operationRepository{
         return $rows;
     }
 
-    public function comisionTotalGeneradaUser(int $idsucursal, int $idusuario):array{
+    public function comisionTotalGeneradaUser(int $idsucursal, int $idusuario, string $fechainicio, string $fechafin):array{
         $sql = "SELECT 
                     COALESCE(SUM(c.valorcomision), 0) as comisiontotal
-                FROM $this->table c WHERE c.fk_idsucursal = $idsucursal AND c.idusuariofk = $idusuario;";
+                FROM $this->table c WHERE c.fk_idsucursal = $idsucursal AND c.idusuariofk = $idusuario AND fecha >= '$fechainicio' AND fecha <= '$fechafin';";
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }

@@ -71,8 +71,12 @@ class comisionescontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       try {
         $r = $comisionServicio->liquidarComision($_POST);
+        if(isset($r['error'])){
+          echo json_encode($r);
+          return;
+        }
         $alertas['exito'][] = "Liquidacion aplicada en sistema.";
-        $alertas['id'] = $r;
+        $alertas['id'] = $r[1];
       } catch (\Throwable $th) {
         $alertas['error'][] = "Error al actualizar el credito. {$th->getMessage()}";
       }

@@ -38,19 +38,26 @@ class comisionesService{
 
 
     public function comisionesXUser(int $idsucursal, int $idusuario, string $fechainicio, string $fechafin):array{
-       $comisionTotaluser = $this->repoComisiones->comisionTotalGeneradaUser($idsucursal, $idusuario)[0];
+       $comisionTotaluser = $this->repoComisiones->comisionTotalGeneradaUser($idsucursal, $idusuario, $fechainicio, $fechafin)[0];
        $historialPagosXuser = $this->repoPagosComisiones->historialPagosXUser($idusuario, $fechainicio, $fechafin);
        return ['comisionTotaluser'=>$comisionTotaluser, 'historialPagos'=>$historialPagosXuser];
     }
     
 
-    public function liquidarComision(array $data):int{
+    public function liquidarComision(array $data):array{
+        $alertas = [];
         $getDB = $this->repoPagosComisiones->getConexion();
+        $liquidar = new pagos_comisiones($data);
+        $alertas = $liquidar->validar();
+        if(!empty($alertas)){
+            return $alertas;
+        }
+
         $getDB->begin_transaction();
         try {
-            $r = $this->repoPagosComisiones->insert(new pagos_comisiones($data));
+            $r = $this->repoPagosComisiones->insert($liquidar);
             $getDB->commit();
-            return $r[1];
+            return $r;
         } catch (\Throwable $th) {
             $getDB->rollback();
             throw $th;

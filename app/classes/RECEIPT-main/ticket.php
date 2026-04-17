@@ -460,7 +460,7 @@
             $this->pdf->Ln(5);
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Empleado: ".$usuario->nombre.' '.$usuario->apellido),0,'C',false);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Usuario: ".$usuario->identificacion),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Usuario: ".$usuario->nickname),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cedula: ".$usuario->cedula),0,'C',false);
 
             $this->pdf->Ln(1);
@@ -468,15 +468,20 @@
             $this->pdf->Ln(3);
 
             $this->pdf->SetFont('Arial','B',10);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Id del pago°: ".$pagoComision->id)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("Id del pago: ".$pagoComision->id)),0,'C',false);
 
             $this->pdf->SetFont('Arial','',9);
              $this->pdf->Ln(7);
              # Impuestos, descuentos & totales #
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Fecha de pago°: ".$pagoComision->fechapago),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Fecha de pago: ".$pagoComision->fechapago),0,'C',false);
             $this->pdf->Ln(5);
+            $this->pdf->SetFont('Arial','',10);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Comision pagado: $".number_format($pagoComision->valor??0, 0, ',', '.')." COP"),0,'C',false);
 
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Valor pagado: ".$pagoComision->valor),0,'C',false);
+            $this->pdf->Ln(5);
+            $this->pdf->SetFont('Arial','',8);
+            $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1", "Medio de pago: $pagoComision->mediopago"),0,0,'C');
+                
             $this->pdf->Ln(5);
             # Nombre del archivo PDF #
             $this->pdf->Output("I","Ticket_Nro_1.pdf",true);
