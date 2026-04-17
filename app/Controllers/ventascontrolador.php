@@ -842,6 +842,7 @@ class ventascontrolador{
       
       if($cierrecaja->estado == 0 &&  $factura->estado == 'Paga'){ //si cierre de caja esta abierto y factura paga
         $factura->estado = "Eliminada";
+        $factura->observacioneliminacion = $_POST['observacioneliminacion'];
 
         /////////// calcular cantidad de facturas y discriminar por tipo
         $cierrecaja->totalfacturaseliminadas += 1;
