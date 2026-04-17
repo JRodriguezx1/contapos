@@ -883,7 +883,7 @@ class ventascontrolador{
               }
               //eliminar detalle impuesto
               $detallefacturaimp = factimpuestos::find('facturaid', $factura->id);
-              $detallefacturaimp->eliminar_registro();
+              if($detallefacturaimp)$detallefacturaimp->eliminar_registro();
               if($_POST['devolverinv'] == '1'){  //si se desea devolver a inventario
                 
 
