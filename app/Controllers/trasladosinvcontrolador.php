@@ -19,6 +19,7 @@ use App\Models\inventario\traslado_inv;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\services\stockService;
+use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -390,6 +391,9 @@ class trasladosinvcontrolador{
               }
               if($rsps&&$rsis){
                 $alertas['exito'][] = "Orden procesada en transito e inventario descontado";
+                //enviar notificacion por ws
+                //$ws = new whatsAppService();
+                //$ws->sendMsgTrasladoInvDespachado();
               }else{
                 $trasladoinv->estado = 'pendiente';
                 $ra = $trasladoinv->actualizar();

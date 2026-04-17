@@ -51,6 +51,9 @@ class whatsAppService{
             $this->msg .= "id: {$value->id}, {$value->nombre}: Cant: " . number_format($value->cantidad??0, 0, ',', '.') . "\n";
         }
 
+        $this->msg .= "\n*OBOSERVACION*\n";
+        $this->msg .= "{$factura->observacioneliminacion}\n";
+
         // 🔹 Pie de pagina
         $this->msg .= "\n*J2 SOFTWARE POS*\n";
         $this->msg .= "www.j2softwarepos.com\n";
@@ -72,6 +75,40 @@ class whatsAppService{
             $this->msg .= "id: {$value->id}, {$value->nombre}: Cant: " . number_format($value->cantidad??0, 0, ',', '.') . "\n";
         }
         
+        // 🔹 Pie de pagina
+        $this->msg .= "\n*J2 SOFTWARE POS*\n";
+        $this->msg .= "www.j2softwarepos.com\n";
+        $this->sendMessage('', $this->msg);
+    }
+
+    public function sendMsgTrasladoInvDespachado(object $factura, int $idcaja, $devolverInv, array $productos = []){
+        $sucursal = sucursales::find('id', id_sucursal());
+        $caja = caja::find('id', $idcaja);
+        $usuario = usuarios::find('id', $_SESSION['id']);
+        $fechaAnulacion = date('Y-m-d H:i:s');
+        $this->msg = '';
+        // 🔹 Encabezado
+   
+        $this->msg .= "🔹*TRASLADO DE INVENTARIO*\n\n";
+        $this->msg .= "Sucursal origen: " . (($sucursal ?? null)->nombre ?? '') . "\n";
+        $this->msg .= "Sucursal destino: " . (($sucursal ?? null)->nombre ?? '') . "\n";
+        $this->msg .= "Usuario: $usuario->nombre.' '.$usuario->apellido\n";
+        $this->msg .= "Fecha: ". ($factura->fechaEliminacion??$fechaAnulacion) ."\n\n";
+        // 🔹 Informacion del despacho de mercancia
+        $this->msg .= "*Informacion del despacho*\n";
+        $this->msg .= "ID orden de traslado: " . $factura->id . "\n";
+        $this->msg .= "Numero de orden: " . $factura->num_orden . "\n";
+        $this->msg .= "📌Numero de factura: " . $factura->prefijo.$factura->num_consecutivo . "\n";
+        $this->msg .= "💰*Valor: $" . number_format($factura->total??0, 0, ',', '.') . "*\n\n";
+        $this->msg .= "PRODUCTOS DESPACHADOS: " . "\n\n";
+
+        foreach ($productos as $value) {
+            $this->msg .= "id: {$value->id}, {$value->nombre}: Cant: " . number_format($value->cantidad??0, 0, ',', '.') . "\n";
+        }
+
+        $this->msg .= "\n*OBOSERVACION*\n";
+        $this->msg .= "{$factura->observacioneliminacion}\n";
+
         // 🔹 Pie de pagina
         $this->msg .= "\n*J2 SOFTWARE POS*\n";
         $this->msg .= "www.j2softwarepos.com\n";

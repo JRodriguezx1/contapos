@@ -26,6 +26,10 @@
               </div>
             </div>
 
+            <div class="formulario__campo md:px-12">
+              <textarea id="observacionEliminacion" class="formulario__textarea" name="observacionEliminacion" placeholder="Observacion" rows="4"></textarea>
+            </div>
+
         </div>
 
         <table id="productsInv" class="w-full text-xl text-left rtl:text-right text-gray-500 hidden">
