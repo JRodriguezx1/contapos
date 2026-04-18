@@ -129,7 +129,7 @@
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);
-        datos.append('fechafin', datefin);
+        datos.append('fechafin', datefin+' 23:59:59');
         try {
             const url = "/admin/api/facturaspagas"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -164,7 +164,12 @@
                 {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                 {title: 'Imp', data: 'valorimpuestototal'}, 
                 {title: 'Descuento', data: 'descuento'}, 
-                {title: 'Total', data: 'total', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
+                {title: 'Total', data: 'total', render: (data: number, type: string) => {
+                                                                                            if (type === 'display') {
+                                                                                            return `$${data.toLocaleString('es-CO')}`;
+                                                                                            }
+                                                                                            return data; // para export, sort, filter
+                                                                                        }}, 
                 {title: 'Vendedor', data: 'vendedor'},
                 {title: 'Comision', data: 'valorgananciauser', render: (data:number) => `$${Number(data).toLocaleString()}`},
                 {title: 'Caja', data: 'caja'}],

@@ -376,6 +376,8 @@ class reportescontrolador{
               GROUP BY fm.idmediopago, m.mediopago;";
       $mediosPagos = productos::camposJoinObj($sql);
 
+      debuguear($sql);
+
       //creditos/separados
       $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital+c.valorinterestotal) as carteraTotal, SUM(c.saldopendiente) as carteraXCobrar,
               (SUM(c.capital+c.valorinterestotal)-SUM(c.saldopendiente)) as totalAbonado, COUNT(*) AS total
@@ -392,7 +394,7 @@ class reportescontrolador{
 
       //canal de venta
       $sql = "SELECT IFNULL(cv.nombre, 'TOTAL GENERAL') AS canalVenta, COUNT(cv.id) as transacciones, SUM(f.total) AS valor
-              FROM facturas f JOIN canaldeventa cv ON f.idcanaldeventa = cv.id
+              FROM facturas f LEFT JOIN canaldeventa cv ON f.idcanaldeventa = cv.id
               WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
               GROUP BY cv.nombre WITH ROLLUP";
       $canalVenta = facturas::camposJoinObj($sql);
@@ -414,7 +416,7 @@ class reportescontrolador{
       
       //resumen
         //ventas
-        $sql = "SELECT COUNT(f.id) as ventas, SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
+        $sql = "SELECT COUNT(DISTINCT f.id) as ventas, SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
                 ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
                 FROM facturas f JOIN ventas v ON f.id = v.idfactura
                 WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
