@@ -342,6 +342,7 @@ class trasladosinvcontrolador{
     }
 
 
+    //cuando presiona btn ver checkout para confirmar el envio de mercancia
     public static function confirmarnuevotrasladoinv(){
         //session_start();
         isadmin();
@@ -352,7 +353,7 @@ class trasladosinvcontrolador{
         $id = $_POST['id'];
         $trasladoinv = traslado_inv::find('id', $id);
         $listaproductos = detalletrasladoinv::idregistros('id_trasladoinv', $trasladoinv->id);
-
+                
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
           if(($trasladoinv->tipo == 'Salida' || $trasladoinv->tipo == 'Solicitud') && $trasladoinv->estado == 'pendiente'){
             $trasladoinv->estado = 'entransito';
@@ -392,8 +393,8 @@ class trasladosinvcontrolador{
               if($rsps&&$rsis){
                 $alertas['exito'][] = "Orden procesada en transito e inventario descontado";
                 //enviar notificacion por ws
-                //$ws = new whatsAppService();
-                //$ws->sendMsgTrasladoInvDespachado();
+                $ws = new whatsAppService();
+                $ws->sendMsgTrasladoInvDespachado($trasladoinv, $listaproductos);
               }else{
                 $trasladoinv->estado = 'pendiente';
                 $ra = $trasladoinv->actualizar();

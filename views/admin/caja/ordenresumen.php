@@ -66,92 +66,97 @@
     <div id="idorden" class="hidden" data-idorden="<?php echo $factura->id;?>"></div>
 
     <div class="flex flex-col tlg:flex-row gap-8">
-            <div class="relative overflow-x-auto flex-1">
-                <table class="w-full text-xl text-left rtl:text-right text-gray-500">
-                    <thead class=" text-gray-700 uppercase bg-gray-100">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 rounded-s-lg">
-                                Nombre producto
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Qty
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Unidad
-                            </th>
-                            <th scope="col" class="px-6 py-3 rounded-e-lg">
-                                Total
-                            </th>
+        <div class="relative overflow-x-auto flex-1">
+            <table class="w-full text-xl text-left rtl:text-right text-gray-500">
+                <thead class=" text-gray-700 uppercase bg-gray-100">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 rounded-s-lg">
+                            Nombre producto
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Qty
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Unidad
+                        </th>
+                        <th scope="col" class="px-6 py-3 rounded-e-lg">
+                            Total
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tablaDetalleProductos">
+                    <?php foreach($productos as $index=>$value): ?>
+                        <tr class="bg-white">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900">
+                                <div class="flex items-center gap-4">
+                                    <img 
+                                        class="w-24" 
+                                        src="/build/img/<?php echo $value->foto;?>"
+                                        onerror="this.onerror=null;this.src='/build/img/default-product.png';"
+                                        alt="J2SoftwarePOS" 
+                                    />
+                                    <?php if($value->tipoproducto == 0): ?> 
+                                        <span><?php echo $value->nombreproducto ?? ''; ?></span>
+                                    <?php else: ?>
+                                        <button id="<?php echo $value->idproducto;?>" class="productoCompuesto btn-xs btn-light"><?php echo $value->nombreproducto ?? '';?></button>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <?php echo $value->cantidad??'';?>
+                            </td>
+                            <td class="px-6 py-4">
+                                $<?php echo number_format($value->valorunidad??0, "0", ",", ".");?>
+                            </td>
+                            <td class="px-6 py-4">
+                                $<?php echo number_format($value->total??0, "0", ",", ".");?>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="tablaDetalleProductos">
-                        <?php foreach($productos as $index=>$value): ?>
-                            <tr class="bg-white">
-                                <td scope="row" class="px-6 py-4 font-medium text-gray-900">
-                                    <div class="flex items-center gap-4">
-                                        <img 
-                                            class="w-24" 
-                                            src="/build/img/<?php echo $value->foto;?>"
-                                            onerror="this.onerror=null;this.src='/build/img/default-product.png';"
-                                            alt="J2SoftwarePOS" 
-                                        />
-                                        <?php if($value->tipoproducto == 0): ?> 
-                                            <span><?php echo $value->nombreproducto ?? ''; ?></span>
-                                        <?php else: ?>
-                                            <button id="<?php echo $value->idproducto;?>" class="productoCompuesto btn-xs btn-light"><?php echo $value->nombreproducto ?? '';?></button>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?php echo $value->cantidad??'';?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    $<?php echo number_format($value->valorunidad??0, "0", ",", ".");?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    $<?php echo number_format($value->total??0, "0", ",", ".");?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        
-                    </tbody>
-                    <tfoot>
-                        <tr class="font-semibold text-gray-900">
-                            <th scope="row" class="px-6 py-3">Total</th>
-                            <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
-                            <td class="px-6 py-3"> - </td>
-                            <td class="px-6 py-3">$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+                    <?php endforeach; ?>
+                    
+                </tbody>
+                <tfoot>
+                    <tr class="font-semibold text-gray-900">
+                        <th scope="row" class="px-6 py-3">Total</th>
+                        <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
+                        <td class="px-6 py-3"> - </td>
+                        <td class="px-6 py-3">$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-        
-       
-            <div class="flex flex-col sm:flex-row tlg:flex-col justify-between tlg:justify-normal gap-4">
-                <div class="w-full sm:max-w-96 flex flex-col  border px-4 border-gray-300 rounded">
-                    <p class="text-xl font-semibold leading-4 text-center text-gray-800">CLIENTE</p>
-                    <p class="mb-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
-                    <p class="my-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
-                    <p class="mt-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
-                </div>
-                <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
-                    <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de entrega</p>
-                    <p class="md:text-left text-lg leading-5 text-gray-600"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
-                    <p class="mt-0 md:text-left text-lg leading-5 text-gray-600">Tarifa envio: $<?php echo $tarifa->valor??'';?></p>
-                </div>
-                <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
-                    <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de facturacion</p>
-                    <p class="md:text-left text-lg leading-5 text-gray-600"> - </p>
-                </div>
+    
+    
+        <div class="flex flex-col sm:flex-row tlg:flex-col justify-between tlg:justify-normal gap-4">
+            <div class="w-full sm:max-w-96 flex flex-col  border px-4 border-gray-300 rounded">
+                <p class="text-xl font-semibold leading-4 text-center text-gray-800">CLIENTE</p>
+                <p class="mb-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
+                <p class="my-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
+                <p class="mt-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
             </div>
+            <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
+                <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de entrega</p>
+                <p class="md:text-left text-lg leading-5 text-gray-600"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
+                <p class="mt-0 md:text-left text-lg leading-5 text-gray-600">Tarifa envio: $<?php echo $tarifa->valor??'';?></p>
+            </div>
+            <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
+                <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de facturacion</p>
+                <p class="md:text-left text-lg leading-5 text-gray-600"> - </p>
+            </div>
+        </div>
             
        
 
     </div>
 
     <div>
-        <div class="mt-6 flex justify-end items-start border-solid border border-gray-300 py-4 px-8 rounded">
+        <div class="mt-6 flex flex-col xxs:flex-row justify-between items-center xxs:items-start gap-8 border-solid border border-gray-300 py-4 px-8 rounded">
+            <div>
+                <p>Observaciones:</p>
+                <p class="text-slate-600 text-lg mb-8"><?php echo $factura->observacion;?></p>
+                <p class="text-slate-600 text-lg"><?php echo $factura->observacioneliminacion;?></p>
+            </div>
             <div class="flex justify-end gap-4 sm:gap-60">
                 <div class="text-end">
                     <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>

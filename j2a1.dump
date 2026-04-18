@@ -1282,6 +1282,7 @@ CREATE TABLE `facturas` (
   `descuento` decimal(12,2) DEFAULT NULL,
   `total` decimal(12,2) DEFAULT NULL,
   `observacion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
+  `observacioneliminacion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `departamento` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `ciudad` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `entrega` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
@@ -1989,6 +1990,36 @@ CREATE TABLE `notacreditoinvoice` (
 LOCK TABLES `notacreditoinvoice` WRITE;
 /*!40000 ALTER TABLE `notacreditoinvoice` DISABLE KEYS */;
 /*!40000 ALTER TABLE `notacreditoinvoice` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notificacionesws`
+--
+
+DROP TABLE IF EXISTS `notificacionesws`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notificacionesws` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sucursal_idfk` int NOT NULL,
+  `nombre` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `movil` varchar(14) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipo` enum('grupo','individual') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `estado` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `sucursal_idfk_idx` (`sucursal_idfk`),
+  CONSTRAINT `sucursal_idfk` FOREIGN KEY (`sucursal_idfk`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notificacionesws`
+--
+
+LOCK TABLES `notificacionesws` WRITE;
+/*!40000 ALTER TABLE `notificacionesws` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notificacionesws` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2912,4 +2943,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-14 20:21:50
+-- Dump completed on 2026-04-18  0:33:58

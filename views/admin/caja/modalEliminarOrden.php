@@ -8,7 +8,7 @@
 
         <div class="text-center mb-4">
             <p class="mt-2 text-xl text-gray-600">Desea devolver los productos al inventario.</p>
-            <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">  
+            <div class="inline-flex border-[3px] border-indigo-600 rounded-xl select-none mb-6">  
                 <label class="flex  p-1 cursor-pointer">
                     <input type="radio" name="devolverinventario" value="1" class="peer hidden"/>
                     <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 px-6 py-3 rounded-lg transition duration-300 ease-in-out text-xl"> Si </span>
@@ -19,15 +19,17 @@
                 </label>
             </div>
 
+            <div class="formulario__campo md:px-12">
+              <textarea 
+                id="observacionEliminacion" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 focus:outline-none focus:ring-1 p-2" name="observacionEliminacion" placeholder="Observacion" rows="4"></textarea>
+            </div>
+
             <div class="sm:col-start-2 col-span-4 mt-6">
               <label for="inputEliminarClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
               <div class="mt-2">
                 <input id="inputEliminarClave" type="password" min="0" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
               </div>
-            </div>
-
-            <div class="formulario__campo md:px-12">
-              <textarea id="observacionEliminacion" class="formulario__textarea" name="observacionEliminacion" placeholder="Observacion" rows="4"></textarea>
             </div>
 
         </div>

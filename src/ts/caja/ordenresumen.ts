@@ -350,7 +350,7 @@
         (async ()=>{
           const datos = new FormData();
           datos.append('id', (document.querySelector('#idorden') as HTMLElement).dataset.idorden!); //id de la factura
-          datos.append('observacioneliminacion', (document.querySelector('#observacioneliminacion') as HTMLTextAreaElement).value);
+          datos.append('observacioneliminacion', (document.querySelector('#observacionEliminacion') as HTMLTextAreaElement).value);
           datos.append('inv', JSON.stringify(products));
           datos.append('devolverinv', (document.querySelector('input[name="devolverinventario"]:checked') as HTMLInputElement).value);
           //datos.append('domicilio', 0);
