@@ -12,7 +12,7 @@
     const tablaIngresoCanalventa = ($('#tablaIngresoCanalventa') as any);
     const tablaVentasXUsuario = ($('#tablaVentasXUsuario') as any);
     const tablaResumenVentas = ($('#tablaResumenVentas') as any);
-    const tablaResumenCreditos = ($('#tablaResumenCreditos') as any);
+    const tablaResumenCreditos = document.querySelector('#tablaResumenCreditos tbody');
     
     interface i_productosVendidos {
         idproducto:string,
@@ -241,7 +241,7 @@
         });
 
         //resumen financiero total creditos
-        tablaResumenCreditos.DataTable({
+        /*tablaResumenCreditos.DataTable({
             destroy: true, // importante si recargas la tabla
             data: resumenCreditos,
             pageLength: 25,
@@ -255,7 +255,19 @@
                         {title: 'Pago total', data: 'valor_pagado', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
-        });
+        });*/
+
+        const tr = document.createElement('tr') as HTMLTableRowElement;
+        while(tablaResumenCreditos?.firstChild)tablaResumenCreditos.removeChild(tablaResumenCreditos.firstChild);
+        tr.insertAdjacentHTML('afterbegin', `
+          <td class="">${resumenCreditos[0]?.creditos??0}</td> 
+          <td class="">$${Number(resumenCreditos[0]?.capitalTotal??0).toLocaleString()}</td>
+          <td class="">$${Number(resumenCreditos[0]?.costo_total??0).toLocaleString()}</td>
+          <td class="">$${Number(resumenCreditos[0]?.utilidad_comercial??0).toLocaleString()}</td>
+          <td class="">$${Number(resumenCreditos[0]?.utilidad_proyectada??0).toLocaleString()}</td>
+          <td class="">$${Number(resumenCreditos[0]?.valor_pagado??0).toLocaleString()}</td>
+          <td class="">$${Number(resumenCreditos[0]?.utilidad_realizada??0).toLocaleString()}</td>`);
+        tablaResumenCreditos?.appendChild(tr);
 
         const totalIngreso = Number(resumenVentas[0]?.total_ventas??0)+Number(resumenCreditos[0]?.valor_pagado??0);
         const totalEgreso = Number(gastos.at(-1)?.valor ?? 0);

@@ -372,11 +372,9 @@ class reportescontrolador{
       $sql = "SELECT fm.idmediopago, COUNT(fm.idmediopago) as cantidadMP, m.mediopago, SUM(fm.valor) as valor
               FROM facturas f JOIN factmediospago fm ON f.id = fm.id_factura
               JOIN mediospago m ON fm.idmediopago = m.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.tipoventa = 'Contado' AND f.id_sucursal = $idsucursal
               GROUP BY fm.idmediopago, m.mediopago;";
       $mediosPagos = productos::camposJoinObj($sql);
-
-      debuguear($sql);
 
       //creditos/separados
       $sql = "SELECT c.idestadocreditos, ec.nombre as estado, SUM(c.capital+c.valorinterestotal) as carteraTotal, SUM(c.saldopendiente) as carteraXCobrar,
@@ -395,14 +393,14 @@ class reportescontrolador{
       //canal de venta
       $sql = "SELECT IFNULL(cv.nombre, 'TOTAL GENERAL') AS canalVenta, COUNT(cv.id) as transacciones, SUM(f.total) AS valor
               FROM facturas f LEFT JOIN canaldeventa cv ON f.idcanaldeventa = cv.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.tipoventa = 'Contado' AND f.id_sucursal = $idsucursal
               GROUP BY cv.nombre WITH ROLLUP";
       $canalVenta = facturas::camposJoinObj($sql);
 
       //calcular ventas por usuario
       $sql = "SELECT COUNT(f.id) as ventasRealizadas, CONCAT(u.nombre, COALESCE(u.apellido, '')) as empleado, SUM(f.total) as totalVentas, ROUND((SUM(f.porcentgananciauser)/COUNT(f.id)), 2) as porcentaje, SUM(f.valorgananciauser) as valorComision
               FROM facturas f JOIN usuarios u ON f.idvendedor = u.id
-              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+              WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.tipoventa = 'Contado' AND f.id_sucursal = $idsucursal
               GROUP BY u.id;";
       $ventasXusuario = productos::camposJoinObj($sql);
 
@@ -419,7 +417,7 @@ class reportescontrolador{
         $sql = "SELECT COUNT(DISTINCT f.id) as ventas, SUM(v.total) as total_ventas, SUM(COALESCE(v.costo, 0) * v.cantidad) AS total_costo, SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad)) AS ganancia,
                 ROUND((SUM(v.total - (COALESCE(v.costo, 0) * v.cantidad))/NULLIF(SUM(v.total), 0))*100, 2) AS margenutilidad
                 FROM facturas f JOIN ventas v ON f.id = v.idfactura
-                WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal";
+                WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.tipoventa = 'Contado' AND f.id_sucursal = $idsucursal";
         $resumenVentas = facturas::camposJoinObj($sql);
         //creditos
         $resumenCreditos = $creditoRepo->estadosFinancierosCreditosTotalesFinalizados($fechainicio, $fechafin, $idsucursal);

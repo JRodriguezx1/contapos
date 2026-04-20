@@ -17,7 +17,7 @@ class facturas extends \App\Models\ActiveRecord {
         $this->iddireccion = $args['iddireccion'] ?? 1;
         $this->idtarifazona = $args['idtarifazona'] ?? 1;
         $this->idcierrecaja = $args['idcierrecaja'] ?? '';
-        $this->idcanaldeventa = $args['idcanaldeventa'] ?? '';
+        $this->idcanaldeventa = $args['idcanaldeventa'] ?? 1;
         $this->num_orden = $args['num_orden'] ?? '';
         $this->prefijo = $args['prefijo'] ?? '';
         $this->num_consecutivo = $args['num_consecutivo'] ?? '';

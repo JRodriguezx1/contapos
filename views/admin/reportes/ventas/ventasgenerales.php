@@ -176,7 +176,7 @@
 
     <!-- Creditos/Separados -->
     <div id="creditosSeparados" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">🤝 Creditos/Separados</h3>
+      <h3 class="text-lg font-semibold mb-4">🤝 Creditos/Separados (SEPARADOS)</h3>
       <table id="tablacreditosSeparados" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -267,22 +267,25 @@
         </tbody>
       </table>
 
-       <h3 class="text-lg font-semibold mb-4 mt-12">📈 Resumen Financiero De creditos</h3>
-      <table id="tablaResumenCreditos" class="display responsive nowrap tabla" width="100%">
-        <thead class="bg-gray-100 text-gray-700">
-          <tr>
-            <th class="px-4 py-2 border">Creditos</th>
-            <th class="px-4 py-2 border">Credito Total</th>
-            <th class="px-4 py-2 border">Costo Total</th>
-            <th class="px-4 py-2 border">Utilidad Comercial</th>
-            <th class="px-4 py-2 border">Utilidad Proyectada</th>
-            <th class="px-4 py-2 border">Pago total</th>
-            <th class="px-4 py-2 border">Utilidad Realizada</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
+      <h3 class="text-lg font-semibold mb-4 mt-12">📈 Resumen Financiero De creditos (Incluye Creditos y Seprados)</h3>
+      <div class="w-full overflow-x-auto">
+        <table id="tablaResumenCreditos" class="tabla">
+          <thead class="bg-gray-100 text-gray-700">
+            <tr>
+              <th class="px-4 py-2 border">Creditos</th>
+              <th class="px-4 py-2 border">Credito Total</th>
+              <th class="px-4 py-2 border">Costo Total</th>
+              <th class="px-4 py-2 border">Utilidad Comercial</th>
+              <th class="px-4 py-2 border">Utilidad Proyectada</th>
+              <th title="Pagos realizados a los creditos y separados de la fecha consultada" class="px-4 py-2 border">Pagos realizados</th>
+              <th class="px-4 py-2 border">Utilidad Realizada</th>
+            </tr>
+          </thead>
+          <tbody class="text-center text-gray-600"></tbody>
+        </table>
+      </div>
+
+      
       
       <h3 class="text-lg font-semibold mb-4 mt-12">💸 Rentabilidad</h3>
       <table id="tablaRentabilidad" class="display responsive nowrap tabla" width="100%">
