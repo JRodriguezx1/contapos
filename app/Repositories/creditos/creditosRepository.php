@@ -103,7 +103,7 @@ class creditosRepository extends operationRepository{
 
 
     public function estadosFinancierosCreditosTotalesFinalizados(string $fechainicio, string $fechafin, int $idsucursal):array{
-        $sql = "SELECT COUNT(c.id) as creditos,
+        /*$sql = "SELECT COUNT(c.id) as creditos,
                     SUM(c.capital+c.valorinterestotal) as capitalTotal,
                     SUM(COALESCE(ps1.costo_total, ps2.costo_total, 0)) as costo_total,
                     SUM(c.capital - COALESCE(ps1.costo_total, ps2.costo_total, 0)) AS utilidad_comercial,
@@ -130,6 +130,49 @@ class creditosRepository extends operationRepository{
                 ) ct ON ct.id_credito = c.id
 
                 WHERE c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
+        */
+
+        $sql = "WITH creditos_filtrados AS (
+                    -- Filtramos primero para trabajar solo con lo que necesitamos
+                    SELECT id, factura_id, capital, valorinterestotal, abonototalantiguo
+                    FROM creditos
+                    WHERE 
+                        id_fksucursal = $idsucursal
+                        AND idestadocreditos != 3 
+                        AND fechainicio BETWEEN '$fechainicio' AND '$fechafin'
+                )
+                SELECT 
+                    COUNT(*) as creditos,
+                    SUM(c.capital + c.valorinterestotal) as capitalTotal,
+                    SUM(COALESCE(ps1.costo_total, ps2.costo_total, 0)) as costo_total,
+                    SUM(c.capital - COALESCE(ps1.costo_total, ps2.costo_total, 0)) AS utilidad_comercial,
+                    SUM(c.capital - COALESCE(ps1.costo_total, ps2.costo_total, 0) + c.valorinterestotal) AS utilidad_proyectada,
+                    SUM(IFNULL(ct.pagado, 0) + c.abonototalantiguo) AS valor_pagado,
+                    GREATEST(0, SUM(IFNULL(ct.pagado, 0) + c.abonototalantiguo) - SUM(COALESCE(ps1.costo_total, ps2.costo_total, 0)) ) AS utilidad_realizada
+                FROM creditos_filtrados c
+
+                -- ✅ Ahora el JOIN solo procesa registros vinculados a los créditos filtrados
+                LEFT JOIN (
+                    SELECT ps.idcredito, SUM(ps.costo * ps.cantidad) AS costo_total
+                    FROM productosseparados ps
+                    WHERE ps.idcredito IN (SELECT id FROM creditos_filtrados)
+                    GROUP BY ps.idcredito
+                ) ps1 ON ps1.idcredito = c.id
+
+                LEFT JOIN (
+                    SELECT dv.idfactura, SUM(dv.costo * dv.cantidad) AS costo_total
+                    FROM ventas dv
+                    WHERE dv.idfactura IN (SELECT factura_id FROM creditos_filtrados)
+                    GROUP BY dv.idfactura
+                ) ps2 ON ps2.idfactura = c.factura_id
+
+                LEFT JOIN (
+                    SELECT id_credito, SUM(valorpagado) AS pagado
+                    FROM cuotas
+                    WHERE id_credito IN (SELECT id FROM creditos_filtrados)
+                    GROUP BY id_credito
+                ) ct ON ct.id_credito = c.id;";
+        
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }

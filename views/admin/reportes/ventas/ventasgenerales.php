@@ -252,7 +252,7 @@
 
     <!-- Resumen -->
     <div id="resumen" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4 mt-10">📈 Resumen Financiero De Ventas</h3>
+      <h3 class="text-lg font-semibold mb-4 mt-10">📈 Resumen Financiero De Ventas (Ventas de contado)</h3>
       <table id="tablaResumenVentas" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -277,7 +277,7 @@
               <th class="px-4 py-2 border">Costo Total</th>
               <th class="px-4 py-2 border">Utilidad Comercial</th>
               <th class="px-4 py-2 border">Utilidad Proyectada</th>
-              <th title="Pagos realizados a los creditos y separados de la fecha consultada" class="px-4 py-2 border">Pagos realizados</th>
+              <th title="Abonos realizados a los creditos y separados de la fecha consultada" class="px-4 py-2 border">Pagos realizados</th>
               <th class="px-4 py-2 border">Utilidad Realizada</th>
             </tr>
           </thead>
@@ -308,7 +308,11 @@
           </tr>
         </tbody>
       </table>
-    </div>
+
+      <!-- tabla balance general -->
+      <?php include __DIR__. "/balanceGeneral.php"; ?>
+
+    </div> <!-- fin resumen -->
 
   </div>
 </div>
