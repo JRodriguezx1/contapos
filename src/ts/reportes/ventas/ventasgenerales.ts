@@ -79,7 +79,7 @@
     }
 
     let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], ventasEmpleados:i_ventasEmpleados[]=[], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
-
+    let totalabonos:number = 0;
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
 
@@ -109,6 +109,7 @@
             printVentasUsuarios();
             printGastos();
             printCanalVenta();
+            totalabonos = Number(resultado.totalabonos);
             printResumen(Number(resultado.totalDescuentos[0].total_descuentos));
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
@@ -226,14 +227,29 @@
     printResumen(0);
     function printResumen(dscto:number){
 
-        const totalIngreso = Number(resumenVentas[0]?.total_ventas??0)+Number(resumenCreditos[0]?.valor_pagado??0);
+        const ventaBruta = Number(resumenVentas[0]?.total_ventas??0);
+        const ventaNeta = ventaBruta - dscto;
+        const totalIngreso = ventaNeta+totalabonos;
         const totalEgreso = Number(gastos.at(-1)?.valor ?? 0);
         const utilidadTotal = totalIngreso - totalEgreso;
         const margenUtilidadTotal = totalIngreso > 0 ? (utilidadTotal / totalIngreso) * 100 : 0;
         const rentabilidadTotal = totalEgreso > 0 ? (utilidadTotal / totalEgreso) * 100 : 0;
 
-        (document.querySelector('#ventaBrutaRF') as HTMLSpanElement).textContent = '$'+Number(resumenVentas[0]?.total_ventas??0).toLocaleString();
+        //cards
+        (document.querySelector('#IngresoTotalCard') as HTMLElement).textContent = '$'+totalIngreso.toLocaleString();
+        (document.querySelector('#utilidadCard') as HTMLElement).textContent = '$'+utilidadTotal.toLocaleString();
+        (document.querySelector('#totalAbonosCard') as HTMLElement).textContent = '$'+totalabonos.toLocaleString();
+        (document.querySelector('#carteraPendienteCard') as HTMLElement).textContent = '$'+Number(creditosSeparados[1]?.carteraXCobrar??0).toLocaleString();
+
+        //tabla de resumen financiero
+        (document.querySelector('#ventaBrutaRF') as HTMLSpanElement).textContent = '$'+ventaBruta.toLocaleString();
         (document.querySelector('#descuentosRF') as HTMLSpanElement).textContent = '-$'+dscto.toLocaleString();
+        (document.querySelector('#ventaNetaRF') as HTMLSpanElement).textContent =  '$'+ventaNeta.toLocaleString();
+        (document.querySelector('#totalAbonosRF') as HTMLSpanElement).textContent = '$'+totalabonos.toLocaleString();
+        (document.querySelector('#egresosRF') as HTMLSpanElement).textContent = '-$'+totalEgreso.toLocaleString();
+        (document.querySelector('#margenUtilidadRF') as HTMLSpanElement).textContent = margenUtilidadTotal.toLocaleString()+'%';
+        (document.querySelector('#utilidadRF') as HTMLSpanElement).textContent = '$'+utilidadTotal.toLocaleString();
+
 
         //resumen financiero total de ventas
         tablaResumenVentas.DataTable({

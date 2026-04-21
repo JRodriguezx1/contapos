@@ -96,8 +96,8 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-base font-medium text-gray-500">Ventas Totales</p>
-            <h2 id="ventasTotalesProductosCard" class="text-2xl font-semibold text-gray-900 mt-1 tracking-tight">$0</h2>
+            <p class="text-base font-medium text-gray-500">Ingreso total</p>
+            <h2 id="IngresoTotalCard" class="text-2xl font-semibold text-gray-900 mt-1 tracking-tight">$0</h2>
         </div>
 
         <div class="group bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-emerald-500/50 transition-all">
@@ -108,7 +108,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-base font-medium text-gray-500">Utilidad Neta</p>
+            <p class="text-base font-medium text-gray-500">Utilidad</p>
             <h2 id="utilidadCard" class="text-2xl font-semibold text-emerald-600 mt-1 tracking-tight">$0</h2>
         </div>
 
@@ -121,7 +121,7 @@
                 </div>
             </div>
             <p class="text-base font-medium text-gray-500">Abonos</p>
-            <h2 id="AbonosRealizadosCard" class="text-2xl font-semibold text-blue-600 mt-1 tracking-tight">$0</h2>
+            <h2 id="totalAbonosCard" class="text-2xl font-semibold text-blue-600 mt-1 tracking-tight">$0</h2>
         </div>
 
         <div class="group bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-amber-500/50 transition-all">
@@ -133,7 +133,7 @@
                 </div>
             </div>
             <p class="text-base font-medium text-gray-500">Cartera Pendiente</p>
-            <h2 id="" class="text-2xl font-semibold text-amber-500 mt-1 tracking-tight">$0</h2>
+            <h2 id="carteraPendienteCard" class="text-2xl font-semibold text-amber-500 mt-1 tracking-tight">$0</h2>
         </div>
     </div>
 
@@ -160,11 +160,11 @@
                 </div>
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
                     <span class="text-indigo-600 font-medium">Abonos</span>
-                    <span id="abonosRF" class="font-semibold text-gray-900">$0</span>
+                    <span id="totalAbonosRF" class="font-semibold text-gray-900">$0</span>
                 </div>
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
                     <span class="font-medium text-red-500">Egresos</span>
-                    <span id="egresoRF" class="font-semibold text-gray-900">-$0</span>
+                    <span id="egresosRF" class="font-semibold text-gray-900">-$0</span>
                 </div>
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
                     <span class="text-gray-600 font-medium">Margen de utilidad</span>
