@@ -109,7 +109,7 @@
             printVentasUsuarios();
             printGastos();
             printCanalVenta();
-            printResumen();
+            printResumen(Number(resultado.totalDescuentos[0].total_descuentos));
             document.querySelector('#totalDescto')!.textContent = '$'+Number(resultado.totalDescuentos[0].total_descuentos).toLocaleString();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
@@ -223,8 +223,18 @@
     }
 
 
-    printResumen();
-    function printResumen(){
+    printResumen(0);
+    function printResumen(dscto:number){
+
+        const totalIngreso = Number(resumenVentas[0]?.total_ventas??0)+Number(resumenCreditos[0]?.valor_pagado??0);
+        const totalEgreso = Number(gastos.at(-1)?.valor ?? 0);
+        const utilidadTotal = totalIngreso - totalEgreso;
+        const margenUtilidadTotal = totalIngreso > 0 ? (utilidadTotal / totalIngreso) * 100 : 0;
+        const rentabilidadTotal = totalEgreso > 0 ? (utilidadTotal / totalEgreso) * 100 : 0;
+
+        (document.querySelector('#ventaBrutaRF') as HTMLSpanElement).textContent = '$'+Number(resumenVentas[0]?.total_ventas??0).toLocaleString();
+        (document.querySelector('#descuentosRF') as HTMLSpanElement).textContent = '-$'+dscto.toLocaleString();
+
         //resumen financiero total de ventas
         tablaResumenVentas.DataTable({
             destroy: true, // importante si recargas la tabla
@@ -257,6 +267,8 @@
                     ],
         });*/
 
+
+        //tabla resumen financiero de creditos
         const tr = document.createElement('tr') as HTMLTableRowElement;
         while(tablaResumenCreditos?.firstChild)tablaResumenCreditos.removeChild(tablaResumenCreditos.firstChild);
         tr.insertAdjacentHTML('afterbegin', `
@@ -269,12 +281,7 @@
           <td class="">$${Number(resumenCreditos[0]?.utilidad_realizada??0).toLocaleString()}</td>`);
         tablaResumenCreditos?.appendChild(tr);
 
-        const totalIngreso = Number(resumenVentas[0]?.total_ventas??0)+Number(resumenCreditos[0]?.valor_pagado??0);
-        const totalEgreso = Number(gastos.at(-1)?.valor ?? 0);
-        const utilidadTotal = totalIngreso - totalEgreso;
-        const margenUtilidadTotal = totalIngreso > 0 ? (utilidadTotal / totalIngreso) * 100 : 0;
-        const rentabilidadTotal = totalEgreso > 0 ? (utilidadTotal / totalEgreso) * 100 : 0;
-
+        //tabla rentabilidad
         (document.querySelector('#ingresoTotal') as HTMLElement).textContent = '$'+totalIngreso.toLocaleString();
         (document.querySelector('#egreso') as HTMLElement).textContent = '$'+totalEgreso.toLocaleString();
         (document.querySelector('#utilidadTotal') as HTMLElement).textContent = '$'+utilidadTotal.toLocaleString();

@@ -252,7 +252,11 @@
 
     <!-- Resumen -->
     <div id="resumen" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4 mt-10">📈 Resumen Financiero De Ventas (Ventas de contado)</h3>
+
+       <!-- tabla balance general -->
+      <?php include __DIR__. "/balanceGeneral.php"; ?>
+
+      <h3 class="text-lg font-semibold mb-4 mt-16">📈 Resumen Financiero De Ventas (Ventas de contado)</h3>
       <table id="tablaResumenVentas" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -308,9 +312,6 @@
           </tr>
         </tbody>
       </table>
-
-      <!-- tabla balance general -->
-      <?php include __DIR__. "/balanceGeneral.php"; ?>
 
     </div> <!-- fin resumen -->
 

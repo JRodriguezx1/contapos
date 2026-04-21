@@ -1,6 +1,6 @@
 <!-- tabla balance general -->
+    <!--
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Card -->
         <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur rounded-2xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition">
             <p class="text-sm text-gray-500">Ventas</p>
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">$10.000.000</h2>
@@ -20,7 +20,6 @@
             <p class="text-sm text-gray-500">Cartera</p>
             <h2 class="text-2xl font-bold text-yellow-500 mt-1">$2.000.000</h2>
         </div>
-
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -83,11 +82,11 @@
             </div>
         </div>
 
-    </div>
+    </div>-->
       
 <!-- segundo diseño -->
 
-
+<div class="mt-8 pb-12 border-b">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-indigo-500/50 transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
@@ -97,8 +96,8 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm font-medium text-gray-500">Ventas Totales</p>
-            <h2 class="text-2xl font-semibold text-gray-900 mt-1 tracking-tight">$10.000.000</h2>
+            <p class="text-base font-medium text-gray-500">Ventas Totales</p>
+            <h2 id="ventasTotalesProductosCard" class="text-2xl font-semibold text-gray-900 mt-1 tracking-tight">$0</h2>
         </div>
 
         <div class="group bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-emerald-500/50 transition-all">
@@ -109,8 +108,8 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm font-medium text-gray-500">Utilidad Neta</p>
-            <h2 class="text-2xl font-semibold text-emerald-600 mt-1 tracking-tight">$2.500.000</h2>
+            <p class="text-base font-medium text-gray-500">Utilidad Neta</p>
+            <h2 id="utilidadCard" class="text-2xl font-semibold text-emerald-600 mt-1 tracking-tight">$0</h2>
         </div>
 
         <div class="group bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-blue-500/50 transition-all">
@@ -121,8 +120,8 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm font-medium text-gray-500">Flujo de Caja</p>
-            <h2 class="text-2xl font-semibold text-blue-600 mt-1 tracking-tight">$6.500.000</h2>
+            <p class="text-base font-medium text-gray-500">Abonos</p>
+            <h2 id="AbonosRealizadosCard" class="text-2xl font-semibold text-blue-600 mt-1 tracking-tight">$0</h2>
         </div>
 
         <div class="group bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-amber-500/50 transition-all">
@@ -133,12 +132,12 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm font-medium text-gray-500">Cartera Pendiente</p>
-            <h2 class="text-2xl font-semibold text-amber-500 mt-1 tracking-tight">$2.000.000</h2>
+            <p class="text-base font-medium text-gray-500">Cartera Pendiente</p>
+            <h2 id="" class="text-2xl font-semibold text-amber-500 mt-1 tracking-tight">$0</h2>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 mb-8">
   
         <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div class="flex items-center justify-between mb-6">
@@ -149,28 +148,36 @@
             <div class="space-y-4">
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
                     <span class="text-gray-600 font-medium">Ventas Brutas</span>
-                    <span class="font-bold text-gray-900">$10.000.000</span>
+                    <span id="ventaBrutaRF" class="font-semibold text-gray-900">$0</span>
                 </div>
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
-                    <span class="font-medium text-red-500">Costos de Operación</span>
-                    <span class="font-bold text-gray-900">-$6.000.000</span>
+                    <span class="text-gray-600 font-medium">Descuentos</span>
+                    <span id="descuentosRF" class="font-semibold text-gray-900">-$0</span>
                 </div>
                 <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
-                    <span class="font-bold text-gray-700">Utilidad Bruta</span>
-                    <span class="text-lg font-black text-gray-900">$4.000.000</span>
+                    <span class="font-bold text-gray-700">Venta Neta</span>
+                    <span id="ventaNetaRF" class="text-xl font-extrabold text-gray-900">$0</span>
                 </div>
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
-                    <span class="text-gray-600 font-medium">Gastos Administrativos</span>
-                    <span class="font-bold text-gray-900">-$1.500.000</span>
+                    <span class="text-indigo-600 font-medium">Abonos</span>
+                    <span id="abonosRF" class="font-semibold text-gray-900">$0</span>
+                </div>
+                <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
+                    <span class="font-medium text-red-500">Egresos</span>
+                    <span id="egresoRF" class="font-semibold text-gray-900">-$0</span>
+                </div>
+                <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
+                    <span class="text-gray-600 font-medium">Margen de utilidad</span>
+                    <span id="margenUtilidadRF" class="font-semibold text-gray-900">0%</span>
                 </div>
                 <div class="flex justify-between items-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
-                    <span class="font-bold text-emerald-700">Utilidad Operativa</span>
-                    <span class="text-xl font-black text-emerald-600">$2.500.000</span>
+                    <span class="font-bold text-emerald-700">Utilidad</span>
+                    <span id="utilidadRF" class="text-xl font-bold text-emerald-600">$0</span>
                 </div>
             </div>
         </div>
 
-        <div class="relative overflow-hidden bg-slate-900 rounded-3xl p-8 shadow-xl">
+        <!--<div class="relative overflow-hidden bg-slate-900 rounded-3xl p-8 shadow-xl">
             <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
     
             <div class="relative z-10">
@@ -207,6 +214,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div>-->
 
     </div>
+</div>

@@ -421,7 +421,17 @@ class reportescontrolador{
         $resumenVentas = facturas::camposJoinObj($sql);
         //creditos
         $resumenCreditos = $creditoRepo->estadosFinancierosCreditosTotalesFinalizados($fechainicio, $fechafin, $idsucursal);
+        //total abonos realizados de periodo consultado
+        /*
+        $sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.idtipofinanciacion, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, smp.valor as valorpormedio, mp.mediopago
+              FROM cuotas cu
+              INNER JOIN separadomediopago smp ON cu.id = smp.idcuota
+              INNER JOIN mediospago mp ON smp.mediopago_id = mp.id
+              INNER JOIN creditos cr ON cu.id_credito = cr.id
+              INNER JOIN clientes cl ON cr.cliente_id = cl.id 
+              WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.valorpagado>0 AND cu.id_sucursal_idfk = $idsucursal;";
       
+        */
 
     }
     echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'canalVenta'=>$canalVenta, 'ventasXusuario'=>$ventasXusuario, 'gastos'=>$gastos, 'resumenCreditos'=>$resumenCreditos, 'resumenVentas'=>$resumenVentas]);
