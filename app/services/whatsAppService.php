@@ -21,6 +21,16 @@ class whatsAppService{
                         );
     }
 
+    public function crearContacto($array){
+        
+    }
+
+
+    public function eliminarContacto($id){
+        
+    }
+
+
     public function sendMessage(string $number, string $text){
         $result = $this->client->sending->sendMessage('573003520420@c.us', $text);
     }

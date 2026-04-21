@@ -13,6 +13,25 @@ use stdClass;
 
 class whatsAppControlador{
   
+  public static function crearContacto():void{
+    isadmin();
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $ws = new whatsAppService();
+      $r = $ws->crearContacto($_POST);
+    }
+  }
+
+
+  public static function eliminarContacto():void{
+    isadmin();
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $ws = new whatsAppService();
+      $r = $ws->crearContacto($id);
+    }
+  }
+
 
   public static function sendtextDetalleCierreCaja():void{
     isadmin();
