@@ -142,7 +142,7 @@
         <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-gray-800">Resumen Financiero</h3>
-                <button class="text-indigo-600 text-sm font-semibold hover:underline">Ver reporte</button>
+                <button id="printBalance" class="btn-xs btn-light"><span class="material-symbols-outlined">print</span></button>
             </div>
 
             <div class="space-y-2">

@@ -13,6 +13,7 @@
     const tablaVentasXUsuario = ($('#tablaVentasXUsuario') as any);
     const tablaResumenVentas = ($('#tablaResumenVentas') as any);
     const tablaResumenCreditos = document.querySelector('#tablaResumenCreditos tbody');
+    const printBalance = document.querySelector('#printBalance') as HTMLButtonElement;
     
     interface i_productosVendidos {
         idproducto:string,
@@ -325,6 +326,12 @@
         (document.querySelector('#margenUtilidadTotal') as HTMLElement).textContent = margenUtilidadTotal.toFixed(2) + '%';
         (document.querySelector('#rentabilidadTotal') as HTMLElement).textContent = rentabilidadTotal.toFixed(2) + '%';
     }
+
+
+    printBalance.addEventListener('click', ()=>{
+        console.log(POS.fechafin);
+    });
+
 
     POS.callApiReporte = callApiReporte;
 

@@ -100,6 +100,11 @@
          msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
          return;
       }
+      POS.fechainicio = fechainicio;
+      POS.fechafin = fechafin;
       POS.callApiReporte(fechainicio, fechafin);
     });
+
+    POS.fechainicio = fechainicio;
+    POS.fechafin = fechafin;
 })();
