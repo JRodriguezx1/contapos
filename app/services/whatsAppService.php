@@ -3,6 +3,7 @@
 namespace App\services;
 
 use App\Models\configuraciones\caja;
+use App\Models\configuraciones\notificacionesWS;
 use App\Models\configuraciones\usuarios;
 use App\Models\inventario\detalletrasladoinv;
 use App\Models\sucursales;
@@ -21,8 +22,20 @@ class whatsAppService{
                         );
     }
 
-    public function crearContacto($array){
-        
+    public function crearContactoWS($array):array{
+        $ws = new notificacionesWS($array);
+        $alertas = $ws->validar();
+        if(!empty($alertas))return $alertas;
+        $getDB = notificacionesWS::getDB();
+        $getDB->begin_transaction();
+        try {
+            $r = $ws->crear_guardar();  //si falla no ejecuta el commit ni el return.
+            $getDB->commit();
+            return $r;
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            throw $th;
+        }
     }
 
 

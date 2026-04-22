@@ -150,9 +150,10 @@
             destroy: true, // importante si recargas la tabla
             data: datosFacturasPagas,
             columns: [
-                {title: 'Orden', data: 'num_orden'}, 
-                {title: 'N° Factura', data: 'num_consecutivo'}, 
-                {title: 'Tipo', data: 'tipofacturador'}, 
+                {title: 'Orden', data: 'num_orden'},
+                {title: 'N° Factura', data: 'num_consecutivo'},
+                {title: 'Tipo', data: 'tipofacturador'},
+                {title: 'Tipo Venta', data: 'tipoventa'},
                 { 
                     title: 'Abrir', 
                     data: null, 
@@ -160,7 +161,7 @@
                     searchable: false, 
                     render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/caja/ordenresumen?id=${row.id}" data-id="${row.id}">Abrir</a>`}
                 },
-                {title: 'Cant vendida', data: 'totalunidades'}, 
+                {title: 'Cant vendida', data: 'totalunidades'},
                 {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                 {title: 'Imp', data: 'valorimpuestototal'}, 
                 {title: 'Descuento', data: 'descuento'}, 

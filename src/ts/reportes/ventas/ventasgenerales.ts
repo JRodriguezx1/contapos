@@ -227,6 +227,10 @@
     printResumen(0);
     function printResumen(dscto:number){
 
+        const contentUtilidadRF = document.querySelector('#contentUtilidadRF') as HTMLSpanElement;
+        const textUtilidadRF = document.querySelector('#textUtilidadRF') as HTMLSpanElement;
+        const utilidadRF = document.querySelector('#utilidadRF') as HTMLSpanElement;
+
         const ventaBruta = Number(resumenVentas[0]?.total_ventas??0);
         const ventaNeta = ventaBruta - dscto;
         const totalIngreso = ventaNeta+totalabonos;
@@ -249,7 +253,23 @@
         (document.querySelector('#ingresoTotalRF') as HTMLSpanElement).textContent = '$'+totalIngreso.toLocaleString();
         (document.querySelector('#egresosRF') as HTMLSpanElement).textContent = '-$'+totalEgreso.toLocaleString();
         (document.querySelector('#margenUtilidadRF') as HTMLSpanElement).textContent = margenUtilidadTotal.toLocaleString()+'%';
-        (document.querySelector('#utilidadRF') as HTMLSpanElement).textContent = '$'+utilidadTotal.toLocaleString();
+        utilidadRF.textContent = '$'+utilidadTotal.toLocaleString();
+        if(utilidadTotal>=0){
+            contentUtilidadRF.classList.add('bg-emerald-500/10', 'border-emerald-500/20');
+            textUtilidadRF.classList.add('text-emerald-700');
+            utilidadRF.classList.add('text-emerald-600');
+            contentUtilidadRF.classList.remove('bg-red-500/10', 'border-red-500/20');
+            textUtilidadRF.classList.remove('text-red-700');
+            utilidadRF.classList.remove('text-red-600');
+        }else{
+            contentUtilidadRF.classList.remove('bg-emerald-500/10', 'border-emerald-500/20');
+            textUtilidadRF.classList.remove('text-emerald-700');
+            utilidadRF.classList.remove('text-emerald-600');
+            contentUtilidadRF.classList.add('bg-red-500/10', 'border-red-500/20');
+            textUtilidadRF.classList.add('text-red-700');
+            utilidadRF.classList.add('text-red-600');
+        }
+
 
 
         //resumen financiero total de ventas

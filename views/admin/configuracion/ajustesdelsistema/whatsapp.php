@@ -1,4 +1,4 @@
-<div class="contenido9 accordion_tab_content bg-white p-6 rounded-lg shadow-md w-full space-y-6 mt-6">
+<div class="contenido9 configNotificationWS accordion_tab_content bg-white p-6 rounded-lg shadow-md w-full space-y-6 mt-6">
 
   <!-- HEADER -->
   <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
@@ -19,17 +19,17 @@
         <form id="createContactNotifcationWs" class="space-y-4">
           <div>
             <label class="text-sm text-gray-600">Nombre</label>
-            <input id="nombreWS" type="text" class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none">
+            <input id="nombreWS" type="text" class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none" required>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Teléfono</label>
-            <input id="movilWS" type="text" placeholder="Ej: 573001234567" class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none">
+            <input id="movilWS" type="text" placeholder="Ej: 573001234567" class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none" required>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Tipo</label>
-            <select class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none">
+            <select id="tipoWS" class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none" required>
               <option value="individual">Individual</option>
               <option value="grupo">Grupo</option>
             </select>

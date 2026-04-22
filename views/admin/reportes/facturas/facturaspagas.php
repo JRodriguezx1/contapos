@@ -50,8 +50,8 @@
 
   <div class="mt-4">
     <table id="tablaFacturasProcesadas" class="display responsive nowrap tabla" width="100%">
-        <thead></thead>
-    <tbody></tbody>
+      <thead></thead>
+      <tbody></tbody>
     </table>
   </div>
 </div>

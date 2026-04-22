@@ -86,7 +86,7 @@
       
 <!-- segundo diseño -->
 
-<div class="mt-8 pb-12 border-b">
+<div class="mt-4 pb-12 border-b">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-indigo-500/50 transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 mb-8">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-6 mb-8">
   
         <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div class="flex items-center justify-between mb-6">
@@ -145,7 +145,7 @@
                 <button class="text-indigo-600 text-sm font-semibold hover:underline">Ver reporte</button>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-2">
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
                     <span class="text-gray-600 font-medium">Ventas Brutas</span>
                     <span id="ventaBrutaRF" class="font-semibold text-gray-900">$0</span>
@@ -174,8 +174,8 @@
                     <span class="text-gray-600 font-medium">Margen de utilidad</span>
                     <span id="margenUtilidadRF" class="font-semibold text-gray-900">0%</span>
                 </div>
-                <div class="flex justify-between items-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
-                    <span class="font-bold text-emerald-700">Utilidad</span>
+                <div id="contentUtilidadRF" class="flex justify-between items-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
+                    <span id="textUtilidadRF" class="font-bold text-emerald-700">Utilidad</span>
                     <span id="utilidadRF" class="text-xl font-bold text-emerald-600">$0</span>
                 </div>
             </div>

@@ -15,10 +15,23 @@ class whatsAppControlador{
   
   public static function crearContacto():void{
     isadmin();
+    $alertas = [];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $ws = new whatsAppService();
-      $r = $ws->crearContacto($_POST);
+      try {
+        $r = $ws->crearContactoWS($_POST);
+        if(isset($r['error'])){
+          echo json_encode($r);
+          return;
+        }
+        $alertas['exito'][] = "Contacto creado con exito";
+        $alertas['data'] = $r;
+      } catch (\Throwable $th) {
+        $alertas['error'][] = "Error al crear contacto {$th->getMessage()}";
+      }
     }
+    echo json_encode($alertas);
+    return;
   }
 
 
@@ -28,7 +41,7 @@ class whatsAppControlador{
     if(!is_numeric($id))return;
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $ws = new whatsAppService();
-      $r = $ws->crearContacto($id);
+      //$r = $ws->crearContacto($id);
     }
   }
 

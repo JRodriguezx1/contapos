@@ -1,6 +1,9 @@
 (():void=>{
-  if(document.querySelector('.nws')){
+  if(document.querySelector('.configNotificationWS')){
 
+    const nombreWS = document.querySelector('#nombreWS') as HTMLInputElement;
+    const movilWS = document.querySelector('#movilWS') as HTMLInputElement;
+    const tipoWS = document.querySelector('#tipoWS') as HTMLInputElement;
     let indiceFila=0, control=0, tablaNmbersWS:HTMLElement;
 
     document.querySelector('#tablaNmbersWS')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
@@ -13,41 +16,25 @@
     document.querySelector('#createContactNotifcationWs')?.addEventListener('submit', e=>{
 
         e.preventDefault();
-        var info = (tablaNmbersWS as any).page.info();
         
         (async ()=>{ 
           const datos = new FormData();
           //datos.append('id', unacaja?.id?unacaja?.id:'');
-          datos.append('idtipoconsecutivo', $('#idtipoconsecutivo').val()as string);
-          datos.append('nombre', $('#nombrecaja').val()as string);
-          datos.append('negocio', $('#negociogestioncaja').val()as string);
+          datos.append('nombre', nombreWS.value);
+          datos.append('movil', movilWS.value);
+          datos.append('tipo', tipoWS.value);
           try {
               const url = "/admin/api/notificacionWS/crearContacto";
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();  
               if(resultado.exito !== undefined){
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                if(!control){ //si es crear registro
                 
-                  (tablaNmbersWS as any).row.add([
-                      (tablaNmbersWS as any).rows().count() + 1,
-                      resultado.caja.nombre,
-                      resultado.caja.nombreconsecutivo.nombre,
-                      resultado.caja.negocio,
-                      `<div class="acciones-btns" id="${resultado.caja.id}" data-caja="${resultado.caja.nombre}">
+                      /*`<div class="acciones-btns" id="${resultado.caja.id}" data-caja="${resultado.caja.nombre}">
                           <button class="btn-md btn-turquoise editarCaja"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button class="btn-md btn-red deleteContactNotificationWS"><i class="fa-solid fa-trash-can"></i></button>
-                      </div>`
-                  ]).draw(false); // draw(false) evita recargar toda la tabla
-                }else{ //si es actualizar
-      
-                  const datosActuales = (tablaNmbersWS as any).row(indiceFila+=info.start).data();
-                  /*CAJA*/      datosActuales[1] = resultado.caja[0].nombre;
-                  /*FACT AUTO*/ datosActuales[2] = $('#idtipoconsecutivo option:selected').text();
-                  /*NEGOCIO*/   datosActuales[3] = $('#negociogestioncaja option:selected').text();
-                  (tablaNmbersWS as any).row(indiceFila).data(datosActuales).draw();
-                  (tablaNmbersWS as any).page(info.page).draw('page'); //me mantiene la pagina actual
-                }
+                      </div>`*/
+                
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
