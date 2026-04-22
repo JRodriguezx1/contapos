@@ -162,6 +162,10 @@
                     <span class="text-indigo-600 font-medium">Abonos</span>
                     <span id="totalAbonosRF" class="font-semibold text-gray-900">$0</span>
                 </div>
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+                    <span class="font-bold text-gray-700">Ingreso Total</span>
+                    <span id="ingresoTotalRF" class="text-xl font-extrabold text-gray-900">$0</span>
+                </div>
                 <div class="flex justify-between items-center p-3 rounded-2xl hover:bg-gray-50 transition">
                     <span class="font-medium text-red-500">Egresos</span>
                     <span id="egresosRF" class="font-semibold text-gray-900">-$0</span>

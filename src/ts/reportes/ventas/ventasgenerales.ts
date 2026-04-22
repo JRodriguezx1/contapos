@@ -246,6 +246,7 @@
         (document.querySelector('#descuentosRF') as HTMLSpanElement).textContent = '-$'+dscto.toLocaleString();
         (document.querySelector('#ventaNetaRF') as HTMLSpanElement).textContent =  '$'+ventaNeta.toLocaleString();
         (document.querySelector('#totalAbonosRF') as HTMLSpanElement).textContent = '$'+totalabonos.toLocaleString();
+        (document.querySelector('#ingresoTotalRF') as HTMLSpanElement).textContent = '$'+totalIngreso.toLocaleString();
         (document.querySelector('#egresosRF') as HTMLSpanElement).textContent = '-$'+totalEgreso.toLocaleString();
         (document.querySelector('#margenUtilidadRF') as HTMLSpanElement).textContent = margenUtilidadTotal.toLocaleString()+'%';
         (document.querySelector('#utilidadRF') as HTMLSpanElement).textContent = '$'+utilidadTotal.toLocaleString();

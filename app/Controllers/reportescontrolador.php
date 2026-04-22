@@ -423,9 +423,9 @@ class reportescontrolador{
         $resumenCreditos = $creditoRepo->estadosFinancierosCreditosTotalesFinalizados($fechainicio, $fechafin, $idsucursal);
         
         //total abonos realizados de periodo consultado
-        
         $sql = "SELECT SUM(cu.valorpagado) as totalabonos FROM cuotas cu
                 WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.valorpagado>0 AND cu.id_sucursal_idfk = $idsucursal;";
+                //debuguear($sql);
                 $cuotasRepo = new cuotasRepository();
                 $totalabonos = $cuotasRepo->querySQL($sql)[0]['totalabonos']; 
 
@@ -530,14 +530,66 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.idtipofinanciacion, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, smp.valor as valorpormedio, mp.mediopago
+      /*$sql = "SELECT cu.fechapagado, CONCAT(cl.nombre,' ',cl.apellido) as cliente, cr.idtipofinanciacion, cr.num_orden as credito, cr.idestadocreditos, cu.numerocuota, smp.valor as valorpormedio, mp.mediopago
               FROM cuotas cu
               INNER JOIN separadomediopago smp ON cu.id = smp.idcuota
               INNER JOIN mediospago mp ON smp.mediopago_id = mp.id
               INNER JOIN creditos cr ON cu.id_credito = cr.id
               INNER JOIN clientes cl ON cr.cliente_id = cl.id 
               WHERE cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin' AND cu.valorpagado>0 AND cu.id_sucursal_idfk = $idsucursal;";
-      
+      */
+
+              $sql = "SELECT 
+                        cu.fechapagado,
+                        CONCAT(cl.nombre,' ',cl.apellido) AS cliente,
+                        cr.idtipofinanciacion,
+                        cr.num_orden AS credito,
+                        cr.idestadocreditos,
+                        cu.numerocuota,
+                        smp.valor AS valorpormedio,
+                        mp.mediopago
+                    FROM cuotas cu
+                    INNER JOIN creditos cr ON cu.id_credito = cr.id
+                    INNER JOIN clientes cl ON cr.cliente_id = cl.id
+                    INNER JOIN separadomediopago smp 
+                        ON cu.id = smp.idcuota
+                    INNER JOIN mediospago mp 
+                        ON smp.mediopago_id = mp.id
+                    WHERE cr.idtipofinanciacion = 2
+                        AND cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin'
+                        AND cu.valorpagado > 0
+                        AND cu.id_sucursal_idfk = $idsucursal
+
+                    UNION ALL
+
+                    -- CRÉDITOS (sin duplicar cuotas)
+                    SELECT 
+                        cu.fechapagado,
+                        CONCAT(cl.nombre,' ',cl.apellido) AS cliente,
+                        cr.idtipofinanciacion,
+                        cr.num_orden AS credito,
+                        cr.idestadocreditos,
+                        cu.numerocuota,
+                        cu.valorpagado AS valorpormedio,
+                        pagos.mediopago
+                    FROM cuotas cu
+                    INNER JOIN creditos cr ON cu.id_credito = cr.id
+                    INNER JOIN clientes cl ON cr.cliente_id = cl.id
+                    INNER JOIN (
+                        SELECT 
+                            fmp.id_factura,
+                            GROUP_CONCAT(mp.mediopago SEPARATOR ' + ') AS mediopago
+                        FROM factmediospago fmp
+                        INNER JOIN mediospago mp 
+                            ON fmp.idmediopago = mp.id
+                        GROUP BY fmp.id_factura
+                    ) pagos 
+                        ON cr.factura_id = pagos.id_factura
+                    WHERE cr.idtipofinanciacion = 1
+                        AND cu.fechapagado BETWEEN '$fechainicio' AND '$fechafin'
+                        AND cu.valorpagado > 0
+                        AND cu.id_sucursal_idfk = $idsucursal;";
+
       $cuotasRepo = new cuotasRepository();
       $cuotas = $cuotasRepo->querySQL($sql);
     }

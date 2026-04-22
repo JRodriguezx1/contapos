@@ -10,7 +10,7 @@
     <span class="sr-only">Atrás</span>
   </a>
   
-  <h4 class="text-gray-600 mb-8 mt-4">Cuotas de separados</h4>
+  <h4 class="text-gray-600 mb-8 mt-4">Cuotas de creditos/separados</h4>
   
   <div class="flex flex-col gap-4">
     <!-- Grupo de botones -->
