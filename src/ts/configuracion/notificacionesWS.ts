@@ -4,13 +4,19 @@
     const nombreWS = document.querySelector('#nombreWS') as HTMLInputElement;
     const movilWS = document.querySelector('#movilWS') as HTMLInputElement;
     const tipoWS = document.querySelector('#tipoWS') as HTMLInputElement;
-    let indiceFila=0, control=0, tablaNmbersWS:HTMLElement;
+    let indiceFila=0, control=0, tablaNumbersWS:HTMLElement;
 
-    document.querySelector('#tablaNmbersWS')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+    document.querySelector('#tablaNumbersWS tbody')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
-      if(target?.classList.contains("deleteContactNotificationWS")||target.parentElement?.classList.contains("deleteContactNotificationWS"))deleteContactNotificationWS(e);
+      console.log(target);
+      if(target?.classList.contains("test"))sendTest(target.closest('tr')?.id);//console.log(target.closest('tr'));
+      //if(target?.classList.contains("deleteContactNotificationWS")||target.parentElement?.classList.contains("deleteContactNotificationWS"))deleteContactNotificationWS(e);
     });
     
+
+    function sendTest(id:string|undefined){
+      
+    }
 
     ////////////////////  Crear contacto para notificacion de whatsapp  //////////////////////
     document.querySelector('#createContactNotifcationWs')?.addEventListener('submit', e=>{
@@ -47,9 +53,9 @@
 
     ////////////////////  Eliminar contacto de notificacion de whatsapp  //////////////////////
     function deleteContactNotificationWS(e:Event){
-      let idcontact = (e.target as HTMLElement).parentElement!.id, info = (tablaNmbersWS as any).page.info();
+      let idcontact = (e.target as HTMLElement).parentElement!.id, info = (tablaNumbersWS as any).page.info();
       if((e.target as HTMLElement).tagName === 'I')idcontact = (e.target as HTMLElement).parentElement!.parentElement!.id;
-      indiceFila = (tablaNmbersWS as any).row((e.target as HTMLElement).closest('tr')).index();
+      indiceFila = (tablaNumbersWS as any).row((e.target as HTMLElement).closest('tr')).index();
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
@@ -68,8 +74,8 @@
                       const respuesta = await fetch(url); 
                       const resultado = await respuesta.json(); 
                       if(resultado.exito !== undefined){
-                        (tablaNmbersWS as any).row(indiceFila+info.start).remove().draw(); 
-                        (tablaNmbersWS as any).page(info.page).draw('page'); 
+                        (tablaNumbersWS as any).row(indiceFila+info.start).remove().draw(); 
+                        (tablaNumbersWS as any).page(info.page).draw('page'); 
                         Swal.fire(resultado.exito[0], '', 'success')
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')

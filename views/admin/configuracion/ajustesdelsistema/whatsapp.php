@@ -48,43 +48,34 @@
           <!-- HEADER TABLA -->
           <div class="bg-gray-50 px-5 py-4 flex justify-between items-center border-b">
             <h2 class="text-lg font-semibold text-gray-800">Destinos configurados</h2>
-            <span class="text-sm text-gray-400">1 registro</span>
+            <span class="text-sm text-gray-400"><?php echo count($contactsNotificationWS);?> <?php echo count($contactsNotificationWS)>1?' Registros':' Registro';?></span>
           </div>
 
           <div class="overflow-x-auto">
-            <table id="tablaNmbersWS" class="w-full text-left">
+            <table id="tablaNumbersWS" class="w-full text-left">
 
-              <thead class="text-sm text-gray-500 uppercase">
+              <thead class="text-lg text-gray-500 uppercase">
                 <tr>
-                  <th class="p-4">Nombre</th>
+                  <th class="">Nombre</th>
                   <th>Teléfono</th>
                   <th>Tipo</th>
+                  <th>Enviar test</th>
                   <th>Estado</th>
-                  <th></th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
 
-              <tbody class="text-sm text-gray-700 divide-y">
-
-                <tr class="hover:bg-gray-50 transition">
-                  <td class="p-4 font-medium">Administrador</td>
-                  <td>573001234567</td>
-                  <td>
-                    <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">
-                      Individual
-                    </span>
-                  </td>
-                  <td>
-                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs">
-                      Activo
-                    </span>
-                  </td>
-                  <td class="text-right pr-4">
-                    <button class="text-red-500 hover:text-red-700 text-xs font-medium">
-                      Eliminar
-                    </button>
-                  </td>
+              <tbody class="text-lg text-gray-700 divide-y">
+                <?php foreach($contactsNotificationWS as $index => $value): ?>
+                <tr id="<?php echo $value->id;?>" class="hover:bg-gray-50 transition">
+                  <td class=""><?php echo $value->nombre;?></td>
+                  <td><?php echo $value->movil;?></td>
+                  <td><?php echo $value->tipo;?></td>
+                  <td class=""><button class="test btn-xs btn-blueintense">Test</button></td>
+                  <td><button id="" data-state="" class="btn-xs btn-lima">Activo</button></td>
+                  <td class=""><button class="btn-md btn-red eliminarContacto" title="Eliminar contacto"><i class="fa-solid fa-trash-can"></i></button></td>
                 </tr>
+                <?php endforeach; ?>
               </tbody>
             </table>
           </div>
