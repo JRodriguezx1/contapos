@@ -80,11 +80,13 @@
     }
 
     let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], ventasEmpleados:i_ventasEmpleados[]=[], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
-    let totalabonos:number = 0;
+    let totalabonos:number = 0, dateStart = '', dateEnd = '';
     //tablaProductosVendidos.DataTable(configdatatables25reg);
 
 
     async function callApiReporte(dateinicio:string, datefin:string){
+        dateStart = dateinicio;
+        dateEnd = datefin;
         document.querySelector('#fecha1')!.textContent = dateinicio;
         document.querySelector('#fecha2')!.textContent = datefin;
         
@@ -329,7 +331,34 @@
 
 
     printBalance.addEventListener('click', ()=>{
-        console.log(POS.fechafin);
+      const contentBalanceGeneral = document.querySelector('#contentBalanceGeneral') as HTMLElement;
+
+      const ventana = window.open('', '_blank', 'width=900,height=700');
+      if(ventana){
+        ventana?.document.write(`
+            <html>
+                <head>
+                    <title>Balance</title>
+                    <link rel="stylesheet" href="/build/css/tailwindapp.css">
+                    <link rel="stylesheet" href="/build/css/app.css">
+                </head>
+                <body class="p-6">
+                    <div class="my-8 p-6">
+                        <h2 class="text-gray-600 text-3xl font-semibold my-12 pb-4 text-center">📊 Balance financiero General</h2>
+                        <p class="text-2xl text-gray-600 mb-0">PERIODO, <span class="text-gray-900 font-semibold ml-8">Inicio: ${dateStart} - Fin: ${dateEnd}</span></p>    
+                    </div>
+                    ${contentBalanceGeneral.innerHTML}
+                </body>
+            </html>
+        `);
+
+        ventana.document.close();
+        ventana.onload = ()=>{
+            ventana?.focus();
+            ventana?.print();
+            setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+        };
+      }
     });
 
 

@@ -86,7 +86,7 @@
       
 <!-- segundo diseño -->
 
-<div class="mt-4 pb-12 border-b">
+<div id="contentBalanceGeneral" class="mt-4 pb-12 border-b">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-indigo-500/50 transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
@@ -96,7 +96,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-base font-medium text-gray-500">Ingreso total</p>
+            <p class="text-lg font-medium text-gray-500">Ingreso total</p>
             <h2 id="IngresoTotalCard" class="text-2xl font-semibold text-gray-900 mt-1 tracking-tight">$0</h2>
         </div>
 
@@ -108,7 +108,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-base font-medium text-gray-500">Utilidad</p>
+            <p class="text-lg font-medium text-gray-500">Utilidad</p>
             <h2 id="utilidadCard" class="text-2xl font-semibold text-emerald-600 mt-1 tracking-tight">$0</h2>
         </div>
 
@@ -120,7 +120,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-base font-medium text-gray-500">Abonos</p>
+            <p class="text-lg font-medium text-gray-500">Abonos</p>
             <h2 id="totalAbonosCard" class="text-2xl font-semibold text-blue-600 mt-1 tracking-tight">$0</h2>
         </div>
 
@@ -132,7 +132,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-base font-medium text-gray-500">Cartera Pendiente</p>
+            <p class="text-lg font-medium text-gray-500">Cartera Pendiente</p>
             <h2 id="carteraPendienteCard" class="text-2xl font-semibold text-amber-500 mt-1 tracking-tight">$0</h2>
         </div>
     </div>
