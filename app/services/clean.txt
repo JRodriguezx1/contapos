@@ -1,0 +1,114 @@
+La Arquitectura Limpia (Clean Architecture), popularizada por Robert C. Martin (Uncle Bob), es un patrón de diseño cuyo objetivo principal es la separación de responsabilidades. En Node.js con TypeScript, esto es especialmente útil para evitar que el código se convierta en un "espagueti" difícil de testear o mantener.
+
+La idea central es que las reglas de negocio sean el núcleo del sistema y no dependan de herramientas externas como la base de datos, el framework (Express, Fastify) o librerías específicas.
+
+1. Las Capas de la Cebolla
+Imagina la arquitectura como una serie de círculos concéntricos. La regla de oro es la Regla de Dependencia: las dependencias solo pueden apuntar hacia adentro.
+
+Entidades (Capa Interna): Son el corazón. Aquí defines los objetos de negocio y sus reglas (ej. una clase User o Product). No saben nada de bases de datos.
+
+Casos de Uso (Interactors): Contienen la lógica específica de la aplicación. Por ejemplo: "Registrar un usuario" o "Procesar un pago". Coordinan el flujo de datos hacia y desde las entidades.
+
+Adaptadores de Interfaz: Aquí reside la lógica para conversar con el mundo exterior. Incluye los Controllers (que reciben peticiones HTTP) y los Presenters.
+
+Infraestructura (Capa Externa): Es donde viven las herramientas: Express, el cliente de la base de datos (Prisma, TypeORM), servicios de email, etc.
+
+2. Estructura de Carpetas Sugerida
+En un proyecto de Node.js/TS, podrías organizar tu carpeta src de la siguiente manera para reflejar este concepto:
+
+Plaintext
+src/
+├── core/
+│   ├── entities/          # Objetos de negocio (clases/interfaces)
+│   └── use-cases/         # Lógica de aplicación (ej. CreateUser.ts)
+├── shared/                # Utilidades, errores personalizados, DTOs
+└── infrastructure/
+    ├── controllers/       # Adaptadores de entrada (Express/Fastify)
+    ├── repositories/      # Implementaciones de BD (SQL, MongoDB)
+    └── data-sources/      # Configuración de clientes (Prisma, Mongoose)
+3. Conceptos Clave para Implementarla
+Inyección de Dependencias: Para que el "Caso de Uso" no dependa de una base de datos real, le pasas una interfaz. Así, el Caso de Uso dice: "Yo necesito algo que guarde un usuario, no me importa si es MySQL o un archivo de texto".
+
+Independencia del Framework: Si mañana decides cambiar Express por NestJS o Fastify, solo deberías tocar la capa de infrastructure, mientras que tu lógica de negocio en core permanece intacta.
+
+Testeabilidad: Como la lógica de negocio está aislada de la infraestructura, puedes hacer tests unitarios de tus casos de uso sin necesidad de levantar una base de datos real o un servidor web.
+
+¿Te gustaría que veamos un ejemplo de código sencillo para implementar un "Caso de Uso" usando esta estructura?
+
+
+Para aterrizar la teoría, vamos a crear un ejemplo de un Registro de Usuario. Lo dividiremos en tres partes siguiendo la jerarquía de la Arquitectura Limpia, moviéndonos desde el centro (las reglas de negocio) hacia afuera (la infraestructura).
+
+1. La Entidad (El Corazón)
+Aquí definimos qué es un usuario. No hay bases de datos ni frameworks, solo lógica pura de TypeScript.
+
+TypeScript
+// src/core/entities/User.ts
+export interface User {
+  id?: string;
+  email: string;
+  name: string;
+}
+2. El Caso de Uso (La Lógica de Aplicación)
+Este archivo contiene la acción de "Registrar". Nota que usamos una interfaz para el repositorio. Al caso de uso no le importa si usas MongoDB o un Array en memoria.
+
+TypeScript
+// src/core/use-cases/RegisterUser.ts
+import { User } from "../entities/User";
+
+// Definimos qué esperamos que haga cualquier base de datos de usuarios
+export interface UserRepository {
+  save(user: User): Promise<void>;
+}
+
+export class RegisterUser {
+  constructor(private userRepository: UserRepository) {}
+
+  async execute(userData: User): Promise<void> {
+    if (!userData.email.includes("@")) {
+      throw new Error("Email inválido");
+    }
+    // Aquí iría más lógica, como cifrar contraseñas
+    await this.userRepository.save(userData);
+  }
+}
+3. La Infraestructura (El Mundo Exterior)
+Aquí implementamos la interfaz del repositorio y creamos el servidor.
+
+El Repositorio (Adaptador de persistencia):
+
+TypeScript
+// src/infrastructure/repositories/InMemoryUserRepository.ts
+import { User } from "../../core/entities/User";
+import { UserRepository } from "../../core/use-cases/RegisterUser";
+
+export class InMemoryUserRepository implements UserRepository {
+  private users: User[] = [];
+
+  async save(user: User): Promise<void> {
+    this.users.push(user);
+    console.log("Usuario guardado en memoria:", user);
+  }
+}
+El Controlador (Adaptador de entrada - Express):
+
+TypeScript
+// src/infrastructure/controllers/UserController.ts
+import { Request, Response } from "express";
+import { RegisterUser } from "../../core/use-cases/RegisterUser";
+import { InMemoryUserRepository } from "../repositories/InMemoryUserRepository";
+
+const repo = new InMemoryUserRepository();
+const registerUserUseCase = new RegisterUser(repo);
+
+export const userController = async (req: Request, res: Response) => {
+  try {
+    await registerUserUseCase.execute(req.body);
+    res.status(201).send("Usuario creado");
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
+};
+¿Por qué esto es mejor?
+Inyección de Dependencias: Al pasarle repo a RegisterUser, estamos inyectando la dependencia. Si mañana quieres usar SQL, solo creas un SqlUserRepository que cumpla con la interfaz y lo cambias en el controlador. El código de RegisterUser no cambia.
+
+Testeo Fácil: Puedes probar RegisterUser pasando un repositorio "falso" (mock) sin necesidad de Express o una base de datos real.
