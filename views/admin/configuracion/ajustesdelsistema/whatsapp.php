@@ -16,7 +16,7 @@
       <div class="bg-gray-50 p-5 rounded-xl border">
         <h2 class="text-lg font-semibold mb-4 text-gray-800">Agregar destino</h2>
 
-        <form id="createContactNotifcationWs" class="space-y-4">
+        <form id="formCreateContactNotifcationWs" class="space-y-4">
           <div>
             <label class="text-sm text-gray-600">Nombre</label>
             <input id="nombreWS" type="text" class="w-full mt-1 p-3 border rounded-lg focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none" required>

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-
+use App\Models\configuraciones\notificacionesWS;
 use App\Models\felectronicas\facturas_electronicas;
 use App\Models\sucursales;
 use App\services\cajaService;
@@ -35,14 +35,41 @@ class whatsAppControlador{
   }
 
 
+  public static function sendTest():void{
+    isadmin();
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    //obtener numero de DB
+    $contactWS = notificacionesWS::find('id', $id);
+    if(!$contactWS){
+      echo json_encode(null);
+      return;
+    }
+    $ws = new whatsAppService();
+    $msg = "*Test de notificacion*\n";
+    $msg .= "Este es un mensaje de prueba de notificaciones por whatsapp enviado desde:";
+    $msg .= "\n*J2 SOFTWARE POS*\n";
+    $msg .= "www.j2softwarepos.com\n";
+    $r = $ws->sendMessage('', $msg);
+    echo json_encode($r);
+    return;
+  }
+
+  
   public static function eliminarContacto():void{
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $ws = new whatsAppService();
-      //$r = $ws->crearContacto($id);
+    $ws = new whatsAppService();
+    try {
+      $r = $ws->eliminarContacto($id);
+      if($r)$alertas['exito'][] = "Contacto de notificaciones eliminado correctamente";
+    } catch (\Throwable $th) {
+      $alertas['error'][] = "Error al eliminar contacto de notificaciones >>{$th->getMessage()}";
     }
+    echo json_encode($alertas);
+    return;
+    
   }
 
 
@@ -115,6 +142,8 @@ class whatsAppControlador{
     $msg .= "www.j2softwarepos.com\n";
 
     $ws = new whatsAppService();
-    $ws->sendMessage('', $msg);
+    $r = $ws->sendMessage('', $msg);
+    echo json_encode($r);
+    return;
   }
 }

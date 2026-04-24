@@ -8,6 +8,7 @@ use App\Models\configuraciones\usuarios;
 use App\Models\inventario\detalletrasladoinv;
 use App\Models\sucursales;
 use GreenApi\RestApi\GreenApiClient;
+use stdClass;
 
 class whatsAppService{
 
@@ -23,6 +24,11 @@ class whatsAppService{
     }
 
     public function crearContactoWS($array):array{
+        $contactWS = notificacionesWS::whereArray(['sucursal_idfk'=>id_sucursal()]);
+        if(count($contactWS)>0){
+            $alertas['error'][] = "Solo un contacto por sucursal";
+            return $alertas;
+        }
         $ws = new notificacionesWS($array);
         $alertas = $ws->validar();
         if(!empty($alertas))return $alertas;
@@ -39,13 +45,24 @@ class whatsAppService{
     }
 
 
-    public function eliminarContacto($id){
-        
+    public function eliminarContacto($id):bool{
+        $contactWS = notificacionesWS::find('id', $id);
+        $getDB = notificacionesWS::getDB();
+        $getDB->begin_transaction();
+        try {
+             $r = $contactWS->eliminar_registro();
+            $getDB->commit();
+            return $r;
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            throw $th;
+        }
     }
 
 
-    public function sendMessage(string $number, string $text){
+    public function sendMessage(string $number, string $text):stdClass{
         $result = $this->client->sending->sendMessage('573003520420@c.us', $text);
+        return $result;
     }
     
 

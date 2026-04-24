@@ -37,6 +37,7 @@ class ActiveRecord {
         $sqldelete = "DELETE FROM ".static::$tabla." WHERE id = ".self::$db->escape_string($this->id)." LIMIT 1";
         //debuguear($this);  $this tiene el objeto actual instanciado
         $resultado = self::$db->query($sqldelete);
+        if(!$resultado)throw new \Exception("Error al eliminar registro". self::$db->error);
         return $resultado;
     } 
 

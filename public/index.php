@@ -359,7 +359,8 @@ $router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::c
 $router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts
 
 $router->post('/admin/api/notificacionWS/crearContacto', [whatsAppControlador::class, 'crearContacto']);
-$router->post('/admin/api/notificacionWS/eliminarContacto', [whatsAppControlador::class, 'eliminarContacto']);
+$router->get('/admin/api/notificacionWS/eliminarContacto', [whatsAppControlador::class, 'eliminarContacto']);
+$router->get('/admin/api/notificacionWS/sendTest', [whatsAppControlador::class, 'sendTest']);
 $router->get('/admin/api/ws/sendtextDetalleCierreCaja', [whatsAppControlador::class, 'sendtextDetalleCierreCaja']); 
 
 
