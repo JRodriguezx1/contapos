@@ -139,12 +139,17 @@
                         <td class="text-center"><?php echo $value->id_facturaid;?></td>
                         <td class="text-center"><?php echo $value->num_factura; echo $value->id_estadonota==2?' / '.$value->prefixnc.' - '.$value->num_nota:''; ?></td>
                         <td class="text-center">
-                            <a 
+                            <div>
+                                <a 
                                 class="btn-xs <?php echo $value->id_estadoelectronica==2?'btn-lima':($value->id_estadoelectronica==1?'btn-blue':'btn-red');?>" 
                                 href="<?php echo $value->link??'/';?>" target="_blank"
-                            >
-                                <?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?>
-                            </a>
+                                >
+                                    <?php echo $value->id_estadoelectronica==2?'Aceptada':($value->id_estadoelectronica==1?'Pendiente':'Error');?>
+                                </a>
+                                <?php if($value->id_estadoelectronica==2):?>
+                                    <a class="btn-xs btn-blueintense" href="https://apidianj2.com/j2softwarepos/download/<?php echo $value->filename;?>">PDF</a>
+                                <?php endif;?>
+                            </div>
                             <a 
                                 class="btn-xs <?php echo $value->id_estadonota==2?'btn-orange':($value->nota_credito==1&&$value->id_estadonota==1?'btn-blue':($value->nota_credito==1&&$value->id_estadonota==3?'btn-red':''));?>" 
                                 href="<?php echo $value->linknc??'/';?>" target="_blank"
