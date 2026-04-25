@@ -10,6 +10,9 @@ use App\Models\sucursales;
 use GreenApi\RestApi\GreenApiClient;
 use stdClass;
 
+//GREEN_API_INSTANCE=7107567532
+//GREEN_API_TOKEN=f00f6093de07418bbf0ab6331862fed231478914797c46a5a7
+
 class whatsAppService{
 
     private GreenApiClient $client;
@@ -22,6 +25,14 @@ class whatsAppService{
                             $_ENV['GREEN_API_TOKEN']
                         );
     }
+
+
+    public function sendMessage(string $number, string $text):stdClass{
+        $result = $this->client->sending->sendMessage("$number@c.us", $text);
+        return $result;
+    }
+    
+
 
     public function crearContactoWS($array):array{
         $contactWS = notificacionesWS::whereArray(['sucursal_idfk'=>id_sucursal()]);
@@ -59,11 +70,6 @@ class whatsAppService{
         }
     }
 
-
-    public function sendMessage(string $number, string $text):stdClass{
-        $result = $this->client->sending->sendMessage('573003520420@c.us', $text);
-        return $result;
-    }
     
 
     public function sendTextOrdenEliminada(object $factura, int $idcaja, $devolverInv, array $productos = []){

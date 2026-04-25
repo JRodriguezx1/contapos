@@ -358,9 +358,9 @@ $router->POST('/admin/api/editarResolutionFE', [apidiancontrolador::class, 'edit
 $router->post('/admin/api/suscripcion/registrarPago', [suscripcioncontrolador::class, 'registrarPago']); //fetch llamado en suscripcionpago.ts
 $router->post('/admin/api/suscripcion/detalleSuscripcion', [suscripcioncontrolador::class, 'detalleSuscripcion']); //fetch llamado en suscripcionpago.ts
 
-$router->post('/admin/api/notificacionWS/crearContacto', [whatsAppControlador::class, 'crearContacto']);
-$router->get('/admin/api/notificacionWS/eliminarContacto', [whatsAppControlador::class, 'eliminarContacto']);
-$router->get('/admin/api/notificacionWS/sendTest', [whatsAppControlador::class, 'sendTest']);
+$router->post('/admin/api/ws/notificacionWS/crearContacto', [whatsAppControlador::class, 'crearContacto']);
+$router->get('/admin/api/ws/notificacionWS/eliminarContacto', [whatsAppControlador::class, 'eliminarContacto']);
+$router->get('/admin/api/ws/notificacionWS/sendTest', [whatsAppControlador::class, 'sendTest']);
 $router->get('/admin/api/ws/sendtextDetalleCierreCaja', [whatsAppControlador::class, 'sendtextDetalleCierreCaja']); 
 
 

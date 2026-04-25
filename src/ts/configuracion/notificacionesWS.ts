@@ -16,7 +16,7 @@
 
     async function sendTest(id:string|undefined){
       try {
-          const url = "/admin/api/notificacionWS/sendTest?id="+id;
+          const url = "/admin/api/ws/notificacionWS/sendTest?id="+id;
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json(); 
           if(resultado && resultado.code === 200 && !resultado.error){
@@ -52,7 +52,7 @@
                   const datos = new FormData();
                   datos.append('id', indiceFila+'');
                   try {
-                      const url = "/admin/api/notificacionWS/eliminarContacto?id="+indiceFila;
+                      const url = "/admin/api/ws/notificacionWS/eliminarContacto?id="+indiceFila;
                       const respuesta = await fetch(url); 
                       const resultado = await respuesta.json(); 
                       if(resultado.exito !== undefined){
@@ -80,7 +80,7 @@
           datos.append('movil', movilWS.value);
           datos.append('tipo', tipoWS.value);
           try {
-              const url = "/admin/api/notificacionWS/crearContacto";
+              const url = "/admin/api/ws/notificacionWS/crearContacto";
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();  
               if(resultado.exito !== undefined){

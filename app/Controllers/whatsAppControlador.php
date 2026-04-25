@@ -50,7 +50,7 @@ class whatsAppControlador{
     $msg .= "Este es un mensaje de prueba de notificaciones por whatsapp enviado desde:";
     $msg .= "\n*J2 SOFTWARE POS*\n";
     $msg .= "www.j2softwarepos.com\n";
-    $r = $ws->sendMessage('', $msg);
+    $r = $ws->sendMessage($contactWS->movil, $msg);
     echo json_encode($r);
     return;
   }
@@ -78,6 +78,11 @@ class whatsAppControlador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //header('Content-Type: application/json');
+    $number = notificacionesWS::find('sucursal_idfk', id_sucursal());
+    if(!$number){
+      echo json_encode(NULL);
+      return;
+    }
     $alertas = [];
     $data = cajaService::printdetallecierre($id);
     $sucursal = sucursales::find('id', id_sucursal());
@@ -142,7 +147,7 @@ class whatsAppControlador{
     $msg .= "www.j2softwarepos.com\n";
 
     $ws = new whatsAppService();
-    $r = $ws->sendMessage('', $msg);
+    $r = $ws->sendMessage($number->movil, $msg);
     echo json_encode($r);
     return;
   }

@@ -35,13 +35,13 @@
     });
 
 
-    ///////// ver detalle cierre en web
+    ///////// ver y enviar detalle de cierre por whatsapp
     btnVerCierreWs?.addEventListener('click', async()=>{
         const url = "/admin/api/ws/sendtextDetalleCierreCaja?id="+id; //llamado a la API REST para enviar detalle de cierre por ws
         try {
           const respuesta = await fetch(url); 
           const resultado = await respuesta.json();
-          if(resultado.code === 200 && !resultado.error){
+          if(resultado && resultado.code === 200 && !resultado.error){
             msjalertToast('success', '¡Éxito!', 'Mensaje detalle de cierre de caja enviado');
           }else{
             msjalertToast('error', '¡Error!', 'Error al enviar mensaje de cierre de caja');
