@@ -27,6 +27,7 @@ use App\Models\configuraciones\negocio;
 use App\Models\sucursales;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use App\services\cajaService;
+use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -719,17 +720,13 @@ class cajacontrolador{
             $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
             $alertas['ultimocierre'][] = $ultimocierre->id;
             //si es base automatica, crear registro en ingresocajas
-            /*
-            $ingresocaja = new ingresoscajas($_POST);
-          $ingresocaja->idusuario = $_SESSION['id'];
-          $ingresocaja->id_cierrecaja = $ultimocierre->id;
-          $ultimocierre->basecaja = $ultimocierre->basecaja + $ingresocaja->valor;
-          $alertas = $ingresocaja->validar();
-          if(empty($alertas)){
-            $r = $ingresocaja->crear_guardar();
-            */
+            if($ultimocierre->idcaja == 1 && $baseAuto > 0){
+              $ingresocaja = new ingresoscajas(['idsucursal_idfk'=>id_sucursal(), 'idusuario'=>$_SESSION['id'], 'id_caja'=>1, 'id_cierrecaja'=>$r[1], 'operacion'=>'ingreso']);
+              $ingresocaja->crear_guardar();
+            }
             //enviar cierre de caja por ws
-            
+            $ws = new whatsAppService();
+            $rws = $ws->sendtextDetalleCierreCaja($ultimocierre->id);
           }else{
             $ultimocierrecaja = cierrescajas::find('id', $r[1]);
             $ultimocierrecaja->eliminar_registro();
