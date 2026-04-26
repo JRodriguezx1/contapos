@@ -39,18 +39,12 @@ class whatsAppControlador{
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    //obtener numero de DB
-    $contactWS = notificacionesws::find('id', $id);
-    if(!$contactWS){
-      echo json_encode(null);
-      return;
-    }
     $ws = new whatsAppService();
     $msg = "*Test de notificacion*\n";
     $msg .= "Este es un mensaje de prueba de notificaciones por whatsapp enviado desde:";
     $msg .= "\n*J2 SOFTWARE POS*\n";
     $msg .= "www.j2softwarepos.com\n";
-    $r = $ws->sendMessage($contactWS->movil, $msg);
+    $r = $ws->sendMessage($msg);
     echo json_encode($r);
     return;
   }
