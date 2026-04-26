@@ -2,8 +2,8 @@
 
 namespace App\Models\configuraciones;
 
-class notificacionesWS extends \App\Models\ActiveRecord{
-    protected static $tabla = 'notificacionesWS';
+class notificacionesws extends \App\Models\ActiveRecord{
+    protected static $tabla = 'notificacionesws';
     protected static $columnasDB = ['id', 'sucursal_idfk', 'nombre', 'movil', 'tipo', 'estado'];
     
     public function __construct($args = []){

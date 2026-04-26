@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\configuraciones\notificacionesWS;
+use App\Models\configuraciones\notificacionesws;
 use App\Models\felectronicas\facturas_electronicas;
 use App\Models\sucursales;
 use App\services\cajaService;
@@ -40,7 +40,7 @@ class whatsAppControlador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //obtener numero de DB
-    $contactWS = notificacionesWS::find('id', $id);
+    $contactWS = notificacionesws::find('id', $id);
     if(!$contactWS){
       echo json_encode(null);
       return;

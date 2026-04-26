@@ -3,7 +3,7 @@
 namespace App\services;
 
 use App\Models\configuraciones\caja;
-use App\Models\configuraciones\notificacionesWS;
+use App\Models\configuraciones\notificacionesws;
 use App\Models\configuraciones\usuarios;
 use App\Models\inventario\detalletrasladoinv;
 use App\Models\sucursales;
@@ -35,15 +35,15 @@ class whatsAppService{
 
 
     public function crearContactoWS($array):array{
-        $contactWS = notificacionesWS::whereArray(['sucursal_idfk'=>id_sucursal()]);
+        $contactWS = notificacionesws::whereArray(['sucursal_idfk'=>id_sucursal()]);
         if(count($contactWS)>0){
             $alertas['error'][] = "Solo un contacto por sucursal";
             return $alertas;
         }
-        $ws = new notificacionesWS($array);
+        $ws = new notificacionesws($array);
         $alertas = $ws->validar();
         if(!empty($alertas))return $alertas;
-        $getDB = notificacionesWS::getDB();
+        $getDB = notificacionesws::getDB();
         $getDB->begin_transaction();
         try {
             $r = $ws->crear_guardar();  //si falla no ejecuta el commit ni el return.
@@ -57,8 +57,8 @@ class whatsAppService{
 
 
     public function eliminarContacto($id):bool{
-        $contactWS = notificacionesWS::find('id', $id);
-        $getDB = notificacionesWS::getDB();
+        $contactWS = notificacionesws::find('id', $id);
+        $getDB = notificacionesws::getDB();
         $getDB->begin_transaction();
         try {
              $r = $contactWS->eliminar_registro();
@@ -72,7 +72,7 @@ class whatsAppService{
 
 
     public function sendtextDetalleCierreCaja($id):stdClass|null{
-        $number = notificacionesWS::find('sucursal_idfk', id_sucursal());
+        $number = notificacionesws::find('sucursal_idfk', id_sucursal());
         if(!$number){
             return null;
         }
