@@ -726,7 +726,9 @@ class cajacontrolador{
             }
             //enviar cierre de caja por ws
             $ws = new whatsAppService();
-            $rws = $ws->sendtextDetalleCierreCaja($ultimocierre->id);
+            if($conflocal['notificacion_por_whatsApp_cierre_caja']->valor_final == 1)
+              $rws = $ws->sendtextDetalleCierreCaja($ultimocierre->id);
+            
           }else{
             $ultimocierrecaja = cierrescajas::find('id', $r[1]);
             $ultimocierrecaja->eliminar_registro();

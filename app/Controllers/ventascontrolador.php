@@ -798,6 +798,7 @@ class ventascontrolador{
     $factura = facturas::find('id', $_POST['id']);
     $cierrecaja = cierrescajas::find('id', $factura->idcierrecaja);
     $mediospago = factmediospago::uniquewhereArray(['id_factura'=>$factura->id, 'idmediopago'=>1])->valor??0; //me trae la factura que pago en efectivo
+    $conflocal = config_local::getParamCaja();
     $tempfactura = clone $factura;
     $tempcierrecaja = clone $cierrecaja;
     $invSub = true;
@@ -909,7 +910,8 @@ class ventascontrolador{
                     $alertas['exito'][] = "Orden eliminada correctamente";
                     //enviar notificacion por ws
                     $ws = new whatsAppService();
-                    $ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, true, $resultArray['productosSimples']);
+                    if($conflocal['notificacion_por_whatsApp_eliminacion_de_factura']->valor_final == 1)
+                      $ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, true, $resultArray['productosSimples']);
                   }else{
                     $alertas['error'][] = "Error, intenta nuevamente";
                     $tempfactura->actualizar();
