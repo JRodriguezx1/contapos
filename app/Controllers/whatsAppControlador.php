@@ -16,6 +16,7 @@ class whatsAppControlador{
   public static function crearContacto():void{
     isadmin();
     $alertas = [];
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $ws = new whatsAppService();
       try {
