@@ -31,12 +31,13 @@ class whatsAppService{
         return $this->client->serviceMethods->getContacts();
     }
 
+
     public function sendMessage(string $text):stdClass|null{
         $number = notificacionesws::find('sucursal_idfk', id_sucursal());
         if(!$number){
             return null;
         }
-        $result = $this->client->sending->sendMessage("$number->movil@c.us", $text);
+        $result = $this->client->sending->sendMessage($number->chatid, $text);
         return $result;
     }
     
@@ -50,15 +51,19 @@ class whatsAppService{
             return $alertas;
         }
 
-        $contacts = $this->getContacts();
-        if($_POST['tipo'] == 'Grupo' && $contacts->code === 200 && count($contacts->data)>0){
+        if($array['tipo'] == 'grupo'){
+            $contacts = $this->getContacts();
+            if($contacts->code !== 200 || count($contacts->data) == 0){
+                $alertas['error'][] = "Error, grupo no encontrado";
+                return $alertas;
+            }
             foreach($contacts->data as $value){
-                if($value->type === "group" && $value->name === $_POST['name']){
-                    $_POST['chatid'] = $value->id;
+                if($value->type === "group" && $value->name === $array['nombre']){
+                    $array['chatid'] = $value->id;
                     break;
                 }
             }
-            if(!isset($_POST['chatid'])){
+            if(!isset($array['chatid'])){
                 $alertas['error'][] = "Error, grupo no encontrado";
                 return $alertas;
             }

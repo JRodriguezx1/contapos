@@ -2004,6 +2004,7 @@ CREATE TABLE `notificacionesws` (
   `sucursal_idfk` int NOT NULL,
   `nombre` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   `movil` varchar(14) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `chatid` varchar(33) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `tipo` enum('grupo','individual') COLLATE utf8mb4_unicode_ci NOT NULL,
   `estado` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -2943,4 +2944,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-27  0:34:06
+-- Dump completed on 2026-04-28  0:25:14

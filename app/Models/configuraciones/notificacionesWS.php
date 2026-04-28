@@ -11,7 +11,7 @@ class notificacionesws extends \App\Models\ActiveRecord{
         $this->sucursal_idfk = id_sucursal();
         $this->nombre = $args['nombre']??'';
         $this->movil = $args['movil']??'';
-        $this->chatid = $args['chatid']??'';
+        $this->chatid = $args['chatid']??$this->movil.'@c.us';
         $this->tipo = $args['tipo']??'';
         $this->estado = $args['estado']??1;
         $this->created_at = $args['created_at']??'';
