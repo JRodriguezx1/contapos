@@ -219,7 +219,7 @@
           costo: producto.precio_compra,
           valorunidad: precio,
           cantidad: cantidad,
-          percentcomision: producto.percentcomision,
+          percentcomision: Number(producto.percentcomision),
           valorcomision: valorcomision,
           subtotal: productototal, //este es el subtotal del producto
           base: productototal-productovalorimp,
@@ -238,6 +238,7 @@
 
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
+      valorTotal.valorgananciauser = 0;
       //calcular el impuesto discriminado por tarifa
       const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
       const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};

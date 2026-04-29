@@ -283,7 +283,9 @@ class ventascontrolador{
               //....
               //procesar si es credito....
               //if($_POST['tipoventa']=='Credito')$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
-              
+              //aplicar comision
+              if($factura->valorgananciauser>0)
+                $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->porcentgananciauser, $factura->valorgananciauser);
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();
