@@ -27,12 +27,17 @@ class whatsAppService{
     }
 
 
+    public function getContacts():stdClass{
+        return $this->client->serviceMethods->getContacts();
+    }
+
+
     public function sendMessage(string $text):stdClass|null{
         $number = notificacionesws::find('sucursal_idfk', id_sucursal());
         if(!$number){
             return null;
         }
-        $result = $this->client->sending->sendMessage("$number->movil@c.us", $text);
+        $result = $this->client->sending->sendMessage($number->chatid, $text);
         return $result;
     }
     
@@ -40,10 +45,30 @@ class whatsAppService{
 
     public function crearContactoWS($array):array{
         $contactWS = notificacionesws::whereArray(['sucursal_idfk'=>id_sucursal()]);
+        $array['charid'] = "";
         if(count($contactWS)>0){
             $alertas['error'][] = "Solo un contacto por sucursal";
             return $alertas;
         }
+
+        if($array['tipo'] == 'grupo'){
+            $contacts = $this->getContacts();
+            if($contacts->code !== 200 || count($contacts->data) == 0){
+                $alertas['error'][] = "Error, grupo no encontrado";
+                return $alertas;
+            }
+            foreach($contacts->data as $value){
+                if($value->type === "group" && $value->name === $array['nombre']){
+                    $array['chatid'] = $value->id;
+                    break;
+                }
+            }
+            if(!isset($array['chatid'])){
+                $alertas['error'][] = "Error, grupo no encontrado";
+                return $alertas;
+            }
+        }
+
         $ws = new notificacionesws($array);
         $alertas = $ws->validar();
         if(!empty($alertas))return $alertas;

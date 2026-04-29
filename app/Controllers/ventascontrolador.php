@@ -31,6 +31,7 @@ use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
 use App\services\creditosService;
 use App\services\stockService;
+use App\services\comisionesService;
 use App\services\whatsAppService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
@@ -109,6 +110,7 @@ class ventascontrolador{
   ///////////  API REST llamada desde ventas.ts cuando se procesa un pago  ////////////
   public static function facturar(){
     //session_start();
+    $comisionServicio = new comisionesService();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     date_default_timezone_set('America/Bogota');
@@ -130,10 +132,10 @@ class ventascontrolador{
 
 
     //si del modulo de venta no se establece comision, se verifica el porcentaje del empleado
-    if($factura->porcentgananciauser == 0 && $_SESSION['porcentajeganancia']>0){
+    /*if($factura->porcentgananciauser == 0 && $_SESSION['porcentajeganancia']>0){
       $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
       $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
-    }
+    }*/
 
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
@@ -798,6 +800,7 @@ class ventascontrolador{
     $factura = facturas::find('id', $_POST['id']);
     $cierrecaja = cierrescajas::find('id', $factura->idcierrecaja);
     $mediospago = factmediospago::uniquewhereArray(['id_factura'=>$factura->id, 'idmediopago'=>1])->valor??0; //me trae la factura que pago en efectivo
+    $conflocal = config_local::getParamCaja();
     $tempfactura = clone $factura;
     $tempcierrecaja = clone $cierrecaja;
     $invSub = true;
@@ -909,7 +912,8 @@ class ventascontrolador{
                     $alertas['exito'][] = "Orden eliminada correctamente";
                     //enviar notificacion por ws
                     $ws = new whatsAppService();
-                    $ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, true, $resultArray['productosSimples']);
+                    if($conflocal['notificacion_por_whatsApp_eliminacion_de_factura']->valor_final == 1)
+                      $ws->sendTextOrdenEliminada($factura, $cierrecaja->idcaja, true, $resultArray['productosSimples']);
                   }else{
                     $alertas['error'][] = "Error, intenta nuevamente";
                     $tempfactura->actualizar();

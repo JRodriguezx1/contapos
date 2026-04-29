@@ -351,6 +351,7 @@ class trasladosinvcontrolador{
         $rsis = true;
 
         $id = $_POST['id'];
+        $conflocal = config_local::getParamGlobal();
         $trasladoinv = traslado_inv::find('id', $id);
         $listaproductos = detalletrasladoinv::idregistros('id_trasladoinv', $trasladoinv->id);
                 
@@ -394,7 +395,7 @@ class trasladosinvcontrolador{
                 $alertas['exito'][] = "Orden procesada en transito e inventario descontado";
                 //enviar notificacion por ws
                 $ws = new whatsAppService();
-                $ws->sendMsgTrasladoInvDespachado($trasladoinv, $listaproductos);
+                if($conflocal['notificacion_por_whatsApp_envio_mercancia']->valor_final == 1)$ws->sendMsgTrasladoInvDespachado($trasladoinv, $listaproductos);
               }else{
                 $trasladoinv->estado = 'pendiente';
                 $ra = $trasladoinv->actualizar();

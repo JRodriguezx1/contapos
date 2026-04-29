@@ -137,7 +137,11 @@
 
         function searchBarCode(barcode:string){
             const itemselected = allproducts.find(x=>x.sku==barcode);
-            if(itemselected != undefined)agregarProducto(itemselected.id, 1);
+            if(itemselected != undefined){
+                let cantidad = 1, productSelected = carrito.find(x=>x.idproducto==itemselected.id);
+                if(productSelected != undefined)cantidad += productSelected.cantidad;
+                agregarProducto(itemselected.id, cantidad);
+            }
         }
 
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 

@@ -246,9 +246,9 @@
                     <div class="formulario__campo">
                         <label class="formulario__label" for="prioridadcomision">Prioridad de comision</label>
                         <select id="prioridadcomision" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="prioridadcomision" required>
-                            <option value="0">Producto</option>
-                            <option value="1">Usuario</option>
-                        </select>          
+                            <option value="0">Usuario</option>
+                            <option value="1">Producto</option>
+                        </select>         
                     </div>
 
 

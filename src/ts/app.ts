@@ -13,6 +13,7 @@ declare const clientesDB: Cliente[];
 declare let comisionTotalBusinessDB: number;
 declare let comisionTotalPagadaBusinessDB: number;
 declare const getParamCaja:any;  //getParamCaja inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
+declare const percentComisionUser:string;
 
 (window as any).POS = (window as any).POS || {};
 
