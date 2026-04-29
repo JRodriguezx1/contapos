@@ -298,7 +298,7 @@
           
           <button id="btnaplicarcredito" class=" text-gray-800 rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto">
             <span class="material-symbols-outlined text-2xl">payments</span>
-            <span class="font-medium text-2xl uppercase">Crédito</span>
+            <span class="font-medium text-2xl">Aplicar Pts</span>
           </button>
         </div>
 
@@ -393,6 +393,7 @@
     const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
     const clientesDB = <?= json_encode($clientes) ?>;
     const getParamCaja = <?= json_encode($conflocal) ?>;
+    const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?>
   </script>
 
 </div>

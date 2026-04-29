@@ -27,6 +27,7 @@ type productsapi = {
       precio_compra: string,
       precio_venta: string,
       percentcomision: number,
+      prioridadcomision: string,  //0 = usuario,  1 = producto
       fecha_ingreso: string,
       estado: string,
       visible: string,

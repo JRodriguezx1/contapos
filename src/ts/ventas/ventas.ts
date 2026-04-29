@@ -29,7 +29,7 @@
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
-    const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
+    const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
@@ -201,6 +201,10 @@
         
         const productovalorimp = (Number(precio)*cantidad)*constImp[producto.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
         const productototal = Number(precio)*cantidad;
+
+        //varia segun la prioridad de la comision
+        if(producto.prioridadcomision === '0')  //si el porcentaje es por usuario
+          producto.percentcomision = Number(percentComisionUser);
         const valorcomision:number = (productototal*producto.percentcomision)/100;
         
         var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
@@ -249,16 +253,18 @@
           }
         }
         if(x.impuesto == null)x.impuesto = "excluido";
-          objbase[x.impuesto as keyof typeof objbase] += x.base;
-          const impValor = mapImpuesto.get(x.impuesto)??0;
-          const index = factimpuestos.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
-          if(index!=-1){ //si existe remplazar obj
-            factimpuestos[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor};
-          }else{
-            factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
-          }
+        objbase[x.impuesto as keyof typeof objbase] += x.base;
+        const impValor = mapImpuesto.get(x.impuesto)??0;
+        const index = factimpuestos.findIndex(Obj=>Obj.id_impuesto == idimpuesto[x.impuesto]);
+        if(index!=-1){ //si existe remplazar obj
+          factimpuestos[index] = {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor};
+        }else{
+          factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
+        }
+        
+        //calcular valor total de comision para el usuario
+        valorTotal.valorgananciauser += x.valorcomision;
       });
-
      
       //Valor del impuesto total de todos los productos, es decir de la factura;
       let valorTotalImp:number = 0;
@@ -267,6 +273,7 @@
       valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
 
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
+      valorTotal.porcentgananciauser =  (100*valorTotal.valorgananciauser)/valorTotal.subtotal;
       valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
       valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
       document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
@@ -276,6 +283,7 @@
       // cantidad total de productos
       totalunidades.textContent = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
     }
+
 
     /////////////////////// evento a la tabla de productos de venta (carrito) //////////////////////////
     tablaventa?.addEventListener('click', (e:Event)=>{
@@ -478,8 +486,10 @@
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
-      datos.append('porcentgananciauser', porcentgananciauser.value);
-      datos.append('valorgananciauser', ((valorTotal.total*Number(porcentgananciauser.value))/100).toFixed(2));
+      //datos.append('porcentgananciauser', porcentgananciauser.value);
+      //datos.append('valorgananciauser', ((valorTotal.total*Number(porcentgananciauser.value))/100).toFixed(2));
+      datos.append('porcentgananciauser', valorTotal.porcentgananciauser.toFixed(2));
+      datos.append('valorgananciauser', valorTotal.valorgananciauser.toFixed(2));
       datos.append('subtotal', valorTotal.subtotal+'');
       datos.append('base', valorTotal.base.toFixed(3));
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
