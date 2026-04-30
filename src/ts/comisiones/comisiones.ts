@@ -9,6 +9,7 @@
     const comisionUserPendiente = document.querySelector('#comisionUserPendiente') as HTMLParagraphElement;
     const btnLiquidar = document.querySelector('#btnLiquidar') as HTMLButtonElement;
     const miDialogoLiquidar = document.querySelector('#miDialogoLiquidar') as HTMLDialogElement;
+    const miDialogoDetalleComision = document.querySelector('#miDialogoDetalleComision') as HTMLDialogElement;
     const inputValorLiquidar = (document.querySelector('#valorLiquidar') as HTMLInputElement);
     let tablaMovimientosComisiones:HTMLElement, comisionPendienteUser = 0, comisionPagadaUser = 0;
 
@@ -141,7 +142,7 @@
             columns: [
                 {title: 'Fecha', data: 'fecha'}, 
                 {title: 'Concepto', data: 'tipo', render: (data: any, type: any, row: any) => `<div class=""> ${row.tipo}<p class=" text-slate-600 text-sm mt-2">Nequi</p></div>`},
-                {title: 'Crédito (+)', data: 'entrada', render: (data:number) => `<div class="${Number(data)>0?'text-green-500':''}"> + $${Number(data).toLocaleString()}</div>`},
+                {title: 'Crédito (+)', data: 'entrada', render: (data:number, type: any, row: any) => `<div class="${Number(row.entrada)>0?'text-green-500':''}"><button class="btn-detalle" data-idfactura="${row.id}"> + $${Number(row.entrada).toLocaleString()} </button></div>`},
                 {title: 'Débito (-)', data: 'salida', render: (data: any, type: any, row: any) => `<div class="${row.salida>0?'text-red-500':''}"> - $${row.salida.toLocaleString()}</div>`},
                 {title: 'Acciones', data: null, render: (data: any, type: any, row: any) => `<button class="btn-eliminar" data-id="${row.entrada == 0&&row.salida!=0?row.id:''}">${row.entrada == 0&&row.salida!=0?'⛔':' - '}</button>`},
             ],
@@ -173,15 +174,21 @@
 
     //EVENTO A LA TABLA DE MOVIMIENTOS DE COMISIONES
     document.querySelector('#tablaMovimientosComisiones')?.addEventListener("click", (e)=>{
-    const target = e.target as HTMLButtonElement;
-    let idmovimento = target?.dataset.id;
-    if(target?.classList.contains("btn-eliminar")){
-        if(!idmovimento || isNaN(Number(idmovimento))){
-            msjalertToast('error', '¡Error!', "id del movimiento no es valido");
-            return;
+        const target = e.target as HTMLButtonElement;
+        let idmovimento = target?.dataset.id;
+        if(target?.classList.contains("btn-detalle")){
+            let idfactura = target?.dataset.idfactura;
+            console.log(idfactura);
+            miDialogoDetalleComision.showModal();
         }
-        eliminarMovimientoComision(idmovimento, target);
-    }
+
+        if(target?.classList.contains("btn-eliminar")){
+            if(!idmovimento || isNaN(Number(idmovimento))){
+                msjalertToast('error', '¡Error!', "id del movimiento no es valido");
+                return;
+            }
+            eliminarMovimientoComision(idmovimento, target);
+        }
     });
 
     function eliminarMovimientoComision(idmovimento:string, target:HTMLButtonElement){
