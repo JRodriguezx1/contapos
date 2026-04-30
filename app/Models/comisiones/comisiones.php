@@ -9,6 +9,7 @@ class comisiones {
         $this->fk_idsucursal = $args['fk_idsucursal']??id_sucursal();
         $this->idfacturaid = $args['idfacturaid']??'';
         $this->idusuariofk = $args['idusuariofk']??'';
+        $this->valorfactura = $args['valorfactura']??0;
         $this->percentcomision = $args['percentcomision']??'';
         $this->valorcomision = $args['valorcomision']??0;
         $this->valorentregado = $args['valorentregado']??0;
@@ -32,6 +33,7 @@ class comisiones {
             'fk_idsucursal'=>$this->fk_idsucursal,
             'idfacturaid' => $this->idfacturaid,
             'idusuariofk' => $this->idusuariofk,
+            'valorfactura' => $this->valorfactura,
             'percentcomision' => $this->percentcomision,
             'valorcomision' => $this->valorcomision,
             'valorentregado' => $this->valorentregado,
