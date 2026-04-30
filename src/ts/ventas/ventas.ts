@@ -234,6 +234,7 @@
         printProduct(id, precio);
         POS.carrito = carrito;
       }
+      console.log(carrito);
     }
 
     ////////////////////// valores finales subtotal y total ////////////////////////

@@ -6,19 +6,23 @@
     <div class="accordion_inv relative">
         <input id="btn1" name="config" type="radio" checked>
         <input id="btn2" name="config" type="radio">
-        <input id="btn3" name="config" type="radio">
+        <?php if($user['perfil']<4):  ?>
+            <input id="btn3" name="config" type="radio">
+        <?php endif;  ?>
 
             <div class="inline-flex rounded-2xl shadow-md overflow-hidden border border-gray-300 self-start mb-4 btnsetup">
-                <label class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition btn1" for="btn1">Precios adicionales</label>
-                <label class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition btn2" for="btn2">Anotacion</label>
-                <label class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition btn3" for="btn3">Comision</label>
+                <label class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer btn1" for="btn1">Precios adicionales</label>
+                <label class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition cursor-pointer btn2" for="btn2">Anotacion</label>
+                <?php if($user['perfil']<4):  ?>
+                    <label class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition cursor-pointer btn3" for="btn3">Comision</label>
+                <?php endif;  ?>
             </div>
             <button id="btnCerrarPreciosAdicionales" class="rounded-lg hover:bg-gray-100  transition absolute right-0">
                 <i class="fa-solid fa-xmark px-2 text-gray-600  text-3xl btnCerrarPreciosAdicionales"></i>
             </button>
         
 
-        <div class="contenedorsetup">
+        <div class="contenedorsetup mb-4">
             <div class="contenido1 accordion_tab_content">
                 <!-- Encabezado -->
                 <h4 class="pb-4 mb-6 text-2xl font-bold text-indigo-700 border-b border-gray-200">💰 Seleccionar precio adicional</h4>
@@ -76,20 +80,37 @@
                         </div>-->
                     </div>
 
-                    <!-- Botones inferiores -->
-                    <div class="text-right pt-6 border-t border-gray-200  flex justify-end gap-3">
-                        <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
-                        <button id="aplicarprecioadicional" type="button" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]" value="Seleccionar">Seleccionar</button>
-                    </div>
                 </form>
             </div>
             <div class="contenido2 accordion_tab_content">
-                bbb
+                <textarea 
+                    id="anotacion"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-40 text-lg focus:outline-none focus:ring-1"
+                    rows="4">Anotacion aqui.
+                </textarea>
+                
             </div>
             <div class="contenido3 accordion_tab_content">
                 <h4 class="pb-4 mb-6 text-2xl font-bold text-indigo-700 border-b border-gray-200">❤️ Porcentaje de comision para el producto</h4>
-                <input id="comisionproducto" type="text" class="">
+                <div class="flex items-center gap-4">
+                    <p>Porcentaje de comision: </p>
+                    <input 
+                        id="comisionproducto"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                        type="text" 
+                        placeholder="Ingresa porcentaje"
+                        value=""
+                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                        required
+                    >
+                    <div class="border border-gray-300 p-3 mt-2 h-14 rounded-lg text-gray-600"><i class=" text-2xl fa-solid fa-percent"></i></div>
+                </div>
             </div>
+        </div>
+        <!-- Botones inferiores -->
+        <div class="text-right pt-6 border-t border-gray-200  flex justify-end gap-3">
+            <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
+            <button id="aplicarprecioadicional" type="button" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]" value="Seleccionar">Seleccionar</button>
         </div>
     </div>
 

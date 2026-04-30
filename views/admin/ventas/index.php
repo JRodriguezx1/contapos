@@ -180,7 +180,7 @@
               <select 
                 id="vendedor"
                 class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-                <?php  if($user['id']>3)echo 'disabled';?>
+                <?php  if($user['perfil']>3)echo 'disabled';?>
               >
                 <?php foreach($usuarios as $value): ?>
                   <option value="<?php echo $value->id;?>"<?php if($value->id === $user['id'])echo 'selected'; ?> > 
