@@ -97,4 +97,12 @@ class comisionescontrolador{
   }
 
 
+  public static function detalleFacturaComision(){
+    $alertas = [];
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    
+  }
+
+
 }

@@ -177,8 +177,7 @@
         const target = e.target as HTMLButtonElement;
         let idmovimento = target?.dataset.id;
         if(target?.classList.contains("btn-detalle")){
-            let idfactura = target?.dataset.idfactura;
-            console.log(idfactura);
+            detalleFacturaComision(target?.dataset.idfactura);
             miDialogoDetalleComision.showModal();
         }
 
@@ -190,6 +189,24 @@
             eliminarMovimientoComision(idmovimento, target);
         }
     });
+
+
+    async function detalleFacturaComision(idfactura:string|undefined){
+        try {
+            const url = "/admin/api/comisiones/detalleFacturaComision?id="+idfactura; //llamado a la API REST 
+            const respuesta = await fetch(url);
+            const resultado = await respuesta.json();
+            if(resultado.exito !== undefined){ 
+                msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                
+            }else{
+                msjalertToast('error', '¡Error!', resultado.error[0]);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     function eliminarMovimientoComision(idmovimento:string, target:HTMLButtonElement){
         const fila = (tablaMovimientosComisiones as any).row(target.closest('tr'));
@@ -233,8 +250,9 @@
 
     function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (f=== miDialogoLiquidar || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLElement).id == 'btnXCerrarModalLiquidar' ) {
+        if (f=== miDialogoLiquidar || f === miDialogoDetalleComision || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLElement).id == 'btnXCerrarModalLiquidar' ) {
             miDialogoLiquidar.close();
+            miDialogoDetalleComision.close();
         }
     }
 

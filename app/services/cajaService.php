@@ -4,9 +4,15 @@ namespace App\services;
 
 use App\Models\caja\cierrescajas;
 use App\Models\caja\declaracionesdineros;
+use App\Models\clientes\clientes;
+use App\Models\clientes\direcciones;
 use App\Models\configuraciones\mediospago;
+use App\Models\configuraciones\tarifas;
+use App\Models\configuraciones\usuarios;
 use App\Models\parametrizacion\config_local;
+use App\Models\sucursales;
 use App\Models\ventas\facturas;
+use App\Models\ventas\ventas;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use stdClass;
 
@@ -66,6 +72,21 @@ class cajaService {
         return compact('sobrantefaltante', 'mediospagos', 'discriminarmediospagos', 'discriminarimpuesto', 'ultimocierre', 'facturas', 'ventasxusuarios');
         //return ['sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios];
 
+    }
+
+
+
+    public static function detalleVenta(int $id):?array{
+        $factura = facturas::find('id', $id);
+        $productos = ventas::idregistros('idfactura', $id);
+        $cliente = clientes::find('id', $factura->idcliente);
+        $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
+        if(!$direccion)$direccion = direcciones::find('id', 1);
+        $tarifa = tarifas::find('id', $direccion->idtarifa);
+        $vendedor = usuarios::find('id', $factura->idvendedor);
+        $sucursal = sucursales::find('id', id_sucursal());
+        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        return compact('factura', 'productos', 'cliente', 'direccion', 'tarifa', 'vendedor', 'lineasencabezado');
     }
     
 }
