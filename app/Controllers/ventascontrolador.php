@@ -130,13 +130,6 @@ class ventascontrolador{
     $invPro = true;
     $c = true;
 
-
-    //si del modulo de venta no se establece comision, se verifica el porcentaje del empleado
-    /*if($factura->porcentgananciauser == 0 && $_SESSION['porcentajeganancia']>0){
-      $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-      $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
-    }*/
-
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
     $carritoupdate=[];
@@ -285,7 +278,7 @@ class ventascontrolador{
               //if($_POST['tipoventa']=='Credito')$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
               //aplicar comision
               if($factura->valorgananciauser>0)
-                $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->porcentgananciauser, $factura->valorgananciauser);
+                $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();

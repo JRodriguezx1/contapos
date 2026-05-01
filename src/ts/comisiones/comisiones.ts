@@ -12,7 +12,7 @@
     const miDialogoDetalleComision = document.querySelector('#miDialogoDetalleComision') as HTMLDialogElement;
     const inputValorLiquidar = (document.querySelector('#valorLiquidar') as HTMLInputElement);
     let tablaMovimientosComisiones:HTMLElement, comisionPendienteUser = 0, comisionPagadaUser = 0;
-
+    const tablaItemsComision = document.querySelector('#tablaItemsComision tbody') as HTMLBodyElement;
 
     interface ComisionTotalUser {
         comisiontotal: number;
@@ -95,7 +95,7 @@
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 const nuevoMovimiento = {
                     fecha: new Date().toISOString(),
-                    tipo: '<div class=""> pago <p class=" text-slate-600 text-sm mt-2">Nequi</p></div>',
+                    tipo: `<div class=""> pago <p class=" text-slate-600 text-sm mt-2">${(document.querySelector('#mediopago') as HTMLInputElement).value}</p></div>`,
                     entrada: 0,
                     salida: Number(inputValorLiquidar.value),
                     id: resultado.id
@@ -141,7 +141,7 @@
             order: [[0, "desc"]],
             columns: [
                 {title: 'Fecha', data: 'fecha'}, 
-                {title: 'Concepto', data: 'tipo', render: (data: any, type: any, row: any) => `<div class=""> ${row.tipo}<p class=" text-slate-600 text-sm mt-2">Nequi</p></div>`},
+                {title: 'Concepto', data: 'tipo', render: (data: any, type: any, row: any) => `<div class=""> ${row.tipo}<p class=" text-slate-600 text-sm mt-2">${row.concepto!==undefined?row.concepto:''}</p></div>`},
                 {title: 'Crédito (+)', data: 'entrada', render: (data:number, type: any, row: any) => `<div class="${Number(row.entrada)>0?'text-green-500':''}"><button class="btn-detalle" data-idfactura="${row.id}"> + $${Number(row.entrada).toLocaleString()} </button></div>`},
                 {title: 'Débito (-)', data: 'salida', render: (data: any, type: any, row: any) => `<div class="${row.salida>0?'text-red-500':''}"> - $${row.salida.toLocaleString()}</div>`},
                 {title: 'Acciones', data: null, render: (data: any, type: any, row: any) => `<button class="btn-eliminar" data-id="${row.entrada == 0&&row.salida!=0?row.id:''}">${row.entrada == 0&&row.salida!=0?'⛔':' - '}</button>`},
@@ -192,13 +192,30 @@
 
 
     async function detalleFacturaComision(idfactura:string|undefined){
+        while(tablaItemsComision.firstChild)tablaItemsComision.removeChild(tablaItemsComision.firstChild);
         try {
             const url = "/admin/api/comisiones/detalleFacturaComision?id="+idfactura; //llamado a la API REST 
             const respuesta = await fetch(url);
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){ 
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                
+                (document.querySelector('#numFactura') as HTMLParagraphElement).textContent = `factura: ${resultado.factura.prefijo}-${resultado.factura.num_consecutivo}`;
+                (document.querySelector('#valorVenta') as HTMLParagraphElement).textContent = `venta: $${Number(resultado.factura.total).toLocaleString()}`;
+                (document.querySelector('#nombreCaja') as HTMLParagraphElement).textContent = `${resultado.factura.caja}`;
+                (document.querySelector('#fechaPago') as HTMLParagraphElement).textContent = `${resultado.factura.fechapago}`;
+                (document.querySelector('#vendedor') as HTMLParagraphElement).textContent = `${resultado.vendedor.nombre} ${(resultado.vendedor.apellido)??''}`;
+
+                resultado.productos.forEach((ins: CarritoItem)=>{
+                    const tr = document.createElement('tr') as HTMLTableRowElement;
+                    tr.innerHTML = `<td class="text-center">${ins.idproducto}</td>
+                                    <td class="text-center">${ins.nombreproducto}</td>
+                                    <td class="text-center">${ins.cantidad}</td>
+                                    <td class="text-center">$${Number(ins.valorunidad).toLocaleString()}</td>
+                                    <td class="text-center">$${Number(ins.total).toLocaleString()}</td>
+                                    <td class="text-center">${ins.percentcomision}%</td>
+                                    <td class="text-center">$${Number(ins.valorcomision).toLocaleString()}</td>`;
+                    tablaItemsComision.prepend(tr);
+                });
             }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -250,7 +267,7 @@
 
     function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (f=== miDialogoLiquidar || f === miDialogoDetalleComision || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLElement).id == 'btnXCerrarModalLiquidar' ) {
+        if (f=== miDialogoLiquidar || f === miDialogoDetalleComision || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLElement).id == 'btnXCerrarModalLiquidar' || (f as HTMLElement).id == 'btnXCerrarModalDetalleComision') {
             miDialogoLiquidar.close();
             miDialogoDetalleComision.close();
         }

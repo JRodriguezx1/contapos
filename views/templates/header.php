@@ -246,6 +246,11 @@
                 <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
                     href="/admin/perfil">Mi Perfil</a>
 
+                <?php if($user['perfil']<4): ?>
+                    <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+                        href="/admin/comisiones">Comisiones</a>
+                <?php endif; ?>
+
                 <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
                     href="/logout">Cerrar sesión</a>
 

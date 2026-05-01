@@ -100,7 +100,7 @@
                         type="text" 
                         placeholder="Ingresa porcentaje"
                         value=""
-                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'); if(parseFloat(this.value) > 100){this.value = 100;}"
                         required
                     >
                     <div class="border border-gray-300 p-3 mt-2 h-14 rounded-lg text-gray-600"><i class=" text-2xl fa-solid fa-percent"></i></div>

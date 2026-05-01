@@ -8,8 +8,8 @@
     </div>
     <div id="divmsjalertaDetalleComision"></div>
     <div class="flex justify-between">
-      <p class="text-2xl uppercase">factura: FA-15</p>
-      <p class="text-2xl uppercase">venta: $9.990</p>
+      <p id="numFactura" class="text-2xl uppercase">factura: -</p>
+      <p id="valorVenta" class="text-2xl uppercase">venta: $0</p>
     </div>
     <div class="flex gap-4 mb-4">
       <div>
@@ -18,9 +18,9 @@
         <p class="m-0 text-slate-500 text-xl font-semibold">Vendedor: </p>
       </div>
       <div>
-        <p id="nombreCaja" class="m-0 text-slate-500 text-xl">Caja principal</p>
-        <p class="m-0 text-slate-500 text-xl"><?php echo date('Y-m-d');?></p>
-        <p class="m-0 text-slate-500 text-xl"><?php echo $user['nombre'];?></p>
+        <p id="nombreCaja" class="m-0 text-slate-500 text-xl"> - </p>
+        <p id="fechaPago" class="m-0 text-slate-500 text-xl"> - </p>
+        <p id="vendedor" class="m-0 text-slate-500 text-xl"> - </p>
       </div>
     </div>
     <!-- TABLA IMTEMS -->
@@ -32,7 +32,6 @@
                     <th class="px-5 py-3 border-b border-gray-200">Id</th>
                     <th class="px-5 py-3 border-b border-gray-200">Nombre</th>
                     <th class="px-5 py-3 border-b border-gray-200">Cant</th>
-                    <th class="px-5 py-3 border-b border-gray-200">U. Medida</th>
                     <th class="px-5 py-3 border-b border-gray-200">Und</th>
                     <th class="px-5 py-3 border-b border-gray-200">Total</th>
                     <th class="px-5 py-3 border-b border-gray-200">Porcentaje</th>
@@ -44,4 +43,4 @@
             </tbody>
         </table>
     </div>
-  </dialog><!--fin modal Liquidar-->
+  </dialog>

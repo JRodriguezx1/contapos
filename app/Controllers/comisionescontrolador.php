@@ -28,6 +28,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\subproductos;
 use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
+use App\services\cajaService;
 use App\services\comisionesService;
 use App\services\creditosService;
 use App\services\stockService;
@@ -40,8 +41,9 @@ class comisionescontrolador{
 
 
   public static function index(Router $router):void{
-    $comisionServicio = new comisionesService();
     isadmin();
+    if(userPerfil()>3)header('Location: /admin/perfil');
+    $comisionServicio = new comisionesService();
     $idsucursal = id_sucursal();
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $widgets = $comisionServicio->getWidgets($idsucursal);
@@ -98,10 +100,20 @@ class comisionescontrolador{
 
 
   public static function detalleFacturaComision(){
-    $alertas = [];
+    isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    
+    $array = cajaService::detalleVenta($id);
+    if(count($array)>0){
+      $datos['exito'][] = 'Detalle de venta OK';
+      $datos['factura'] = $array['factura'];
+      $datos['productos'] = $array['productos'];
+      $datos['vendedor'] = $array['vendedor'];
+    }else{
+       $datos['error'][] = 'Error al consultar detalle de venta';
+    }
+    echo json_encode($datos);
+    return;
   }
 
 

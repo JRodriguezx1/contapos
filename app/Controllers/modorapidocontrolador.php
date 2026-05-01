@@ -206,7 +206,7 @@ class modorapidocontrolador{
 
       //validar si hay comision y es pago
       if($factura->valorgananciauser>0 && $factura->estado == "Paga")
-        $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->porcentgananciauser, $factura->valorgananciauser);
+        $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
 
       echo json_encode($alertas);
       return;

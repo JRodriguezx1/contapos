@@ -25,29 +25,22 @@ use App\Repositories\comisiones\pagosComisionesRepository;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\productsSeparadosRepository;
+use App\services\cajaService;
 use MVC\Router;  //namespace\clase
 use ticketPOS;
 
 class printcontrolador{
     
   public static function printPDFPOS():void{
-    //session_start();
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    $sucursal = sucursales::find('id', id_sucursal());
-    $factura = facturas::find('id', $id);
-    $facturaElectronica = facturas_electronicas::find('id_facturaid', $factura->id);
+    $datos = cajaService::detalleVenta($id);
+    $facturaElectronica = facturas_electronicas::find('id_facturaid', $datos['factura']->id);
     if($facturaElectronica)$facturaElectronica->consecutivo = consecutivos::find('id', $facturaElectronica->consecutivo_id);
-    //debuguear($facturaElectronica);
-    $cliente = clientes::find('id', $factura->idcliente);
-    $direccion = direcciones::find('id', $factura->iddireccion);
-    if(!$direccion)$direccion = direcciones::find('id', 1);
-    $productos = ventas::idregistros('idfactura', $factura->id);
-    $factura->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $factura->id;");
-    
+    $datos['factura']->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = ".$datos['factura']->id.";");
     $print = new ticketPOS();
-    $print->generar($sucursal, $factura, $facturaElectronica, $cliente, $direccion, $productos);
+    $print->generar($datos['sucursal'], $datos['factura'], $facturaElectronica, $datos['cliente'], $datos['direccion'], $datos['productos']);
   }
 
 

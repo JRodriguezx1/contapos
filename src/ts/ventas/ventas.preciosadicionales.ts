@@ -33,7 +33,7 @@
     if(producto != undefined && comision!=='' && !Number.isNaN(Number(comision))){  //ajustar porcentaje de comision a producto
       producto.percentcomision = Number(comision);
       //actualizar el carrito con el nuevo valor de comision
-      const unitem:CarritoItem|undefined = (POS.carrito as CarritoItem[]).find(x=>x.idproducto == producto?.id);
+      const unitem:CarritoItem|undefined = (POS.carrito as CarritoItem[])?.find(x=>x.idproducto == producto?.id);
       if(unitem!=undefined)unitem.percentcomision = Number(comision);
     }
 
