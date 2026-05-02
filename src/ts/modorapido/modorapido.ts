@@ -29,7 +29,7 @@
         let carrito:CarritoItem[]=[];
         let allproducts:productsapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
-        const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
+        const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
         let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
         //const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
 
@@ -163,7 +163,12 @@
                 const itemselected = allproducts.find(x=>x.id==id)!;
                 const productototal = Number(itemselected.precio_venta)*cantidad;
                 const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+                
+                //varia segun la prioridad de la comision
+                if(itemselected.prioridadcomision === '0')  //si el porcentaje es por usuario
+                    itemselected.percentcomision = Number(percentComisionUser);
                 const valorcomision:number = (productototal*itemselected.percentcomision)/100;
+                
                 const item:CarritoItem = {
                     id: '',
                     idproducto: itemselected?.id!,
@@ -301,6 +306,7 @@
         
         ////////////////////// valores finales subtotal y total ////////////////////////
         function valorCarritoTotal(){
+            valorTotal.valorgananciauser = 0;
             //calcular el impuesto discriminado por tarifa
             const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
             const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
@@ -324,6 +330,9 @@
                 }else{
                     factimpuestos = [...factimpuestos, {id_impuesto:idimpuesto[x.impuesto], facturaid:0, basegravable:objbase[x.impuesto as keyof typeof objbase], valorimpuesto: impValor}];
                 }
+
+                //calcular valor total de comision para el usuario
+                valorTotal.valorgananciauser += x.valorcomision;
             });
             
             //Valor del impuesto total de todos los productos, es decir de la factura;
@@ -331,6 +340,7 @@
             for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp;
             valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
             valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
+            valorTotal.porcentgananciauser =  (100*valorTotal.valorgananciauser)/valorTotal.subtotal;
             valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
             valorTotal.total = valorTotal.subtotal + valorTotal.valortarifa - valorTotal.descuento;
             document.querySelector('#subTotal')!.textContent = '$'+valorTotal.subtotal.toLocaleString();
@@ -408,6 +418,8 @@
             datos.append('valoresCredito', JSON.stringify(valoresCredito));
             datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
             datos.append('estado', estado);
+            datos.append('porcentgananciauser', valorTotal.porcentgananciauser.toFixed(2));
+            datos.append('valorgananciauser', valorTotal.valorgananciauser.toFixed(2));
             datos.append('subtotal', valorTotal.subtotal+'');
             datos.append('base', valorTotal.base.toFixed(3));
             datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 

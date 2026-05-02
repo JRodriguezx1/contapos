@@ -6,6 +6,7 @@
     const selectCliente = POS.gestionClientes.selectCliente;
     const dirEntrega = POS.gestionClientes.dirEntrega;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
+    const selectVendedor = (document.querySelector('#vendedor') as HTMLSelectElement);
     const porcentgananciauser = document.querySelector('#percentComision') as HTMLInputElement;
     const contentproducts = document.querySelector('#productos');
     const btnEntrega = document.querySelector('#btnEntrega');
@@ -28,7 +29,7 @@
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
@@ -203,11 +204,13 @@
         const productototal = Number(precio)*cantidad;
 
         //varia segun la prioridad de la comision
-        if(producto.prioridadcomision === '0')  //si el porcentaje es por usuario
-          producto.percentcomision = Number(percentComisionUser);
+        if(producto.prioridadcomision === '0'){  //si el porcentaje es por usuario
+          //producto.percentcomision = Number(percentComisionUser);  ////porcentaje de comision del usuario logueado
+          producto.percentcomision = Number(selectVendedor.options[selectVendedor.selectedIndex].dataset.comision);
+        }
         const valorcomision:number = (productototal*producto.percentcomision)/100;
         
-        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
+        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, prioridadcomision:string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
           id: '',
           idproducto: producto?.id!,
           tipoproducto: producto.tipoproducto,
@@ -219,6 +222,7 @@
           costo: producto.precio_compra,
           valorunidad: precio,
           cantidad: cantidad,
+          prioridadcomision: producto.prioridadcomision,
           percentcomision: Number(producto.percentcomision),
           valorcomision: valorcomision,
           subtotal: productototal, //este es el subtotal del producto
@@ -235,6 +239,19 @@
         POS.carrito = carrito;
       }
     }
+
+    //evento al select del vendedor
+    selectVendedor.addEventListener('change', (e:Event)=>{
+      const target = e.target as HTMLSelectElement;
+      const comisionUser:number = Number(target.selectedOptions[0].dataset.comision);
+      carrito.forEach(x=>{ 
+        if(x.prioridadcomision === '0'){
+          x.percentcomision = comisionUser;
+          x.valorcomision = (x.total*comisionUser)/100;
+        }
+      });
+      valorCarritoTotal();
+    });
 
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
@@ -464,7 +481,7 @@
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
-      datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLSelectElement).value);
+      datos.append('idvendedor', selectVendedor.value);
       datos.append('idcaja', btnCaja.value);
       datos.append('idconsecutivo', btnTipoFacturador.value);
       datos.append('iddireccion', dirEntrega.value);

@@ -215,11 +215,12 @@ class configcontrolador{
         
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $usuarios_permisos = new usuarios_permisos;
+            $_POST['password'] = $empleado->password;
             $empleado->compara_objetobd_post($_POST);
 
             if(isset($_FILES['img']['name']))$alertas = $empleado->validarimgempleado($_FILES);
             $alertas = $empleado->validarempleadoexistente();
-            $empleado->hashPassword();
+            //$empleado->hashPassword();
             if(empty($alertas)){
                 if(isset($_FILES['img']['name'])){
                     if($empleado->img){ //si la imagen ya existe DB, eliminarla

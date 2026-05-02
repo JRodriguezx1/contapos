@@ -266,8 +266,6 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->abono = $valoresCredito->abonoinicial??0;
-              //$factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-              //$factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $factura->habilitada = 1;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
@@ -538,6 +536,7 @@ class ventascontrolador{
   public static function facturarCotizacion(){
     //session_start();
     isadmin();
+    $comisionServicio = new comisionesService();
     $getDB = facturas::getDB();
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
@@ -624,13 +623,13 @@ class ventascontrolador{
               $factura->num_consecutivo = $numConsecutivo;
               $factura->prefijo = $consecutivo->prefijo;
               $factura->habilitada = 1;
-              //$factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-              //$factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
               $fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
               //....
+              if($factura->valorgananciauser>0)
+                $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();

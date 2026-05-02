@@ -11,6 +11,7 @@
     const miDialogoLiquidar = document.querySelector('#miDialogoLiquidar') as HTMLDialogElement;
     const miDialogoDetalleComision = document.querySelector('#miDialogoDetalleComision') as HTMLDialogElement;
     const inputValorLiquidar = (document.querySelector('#valorLiquidar') as HTMLInputElement);
+    const origenRetiro = document.querySelectorAll<HTMLInputElement>('input[name="origenRetiro"]');
     let tablaMovimientosComisiones:HTMLElement, comisionPendienteUser = 0, comisionPagadaUser = 0;
     const tablaItemsComision = document.querySelector('#tablaItemsComision tbody') as HTMLBodyElement;
 
@@ -60,7 +61,7 @@
         comisionPagadaUser = resultado.historialPagos.totalPagado;
         comisionPendienteUser = resultado.comisionTotaluser.comisiontotal-comisionPagadaUser;
 
-        comisiontotalUser.textContent = '$'+resultado.comisionTotaluser.comisiontotal.toLocaleString('es-CO', {minimumFractionDigits:2, maximumFractionDigits:2});
+        comisiontotalUser.textContent = '$'+Number(resultado.comisionTotaluser.comisiontotal).toLocaleString('es-CO', {minimumFractionDigits:2, maximumFractionDigits:2});
         comisionTotalUserPagada.textContent = '$'+comisionPagadaUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         comisionUserPendiente.textContent = '$'+comisionPendienteUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         //renderizar tabla
@@ -71,6 +72,23 @@
     btnLiquidar.addEventListener('click', ()=>{
         miDialogoLiquidar.showModal();
     });
+
+
+    /// evento a los inputs type radio para elegir origne del gasto = caja o bancos
+    origenRetiro.forEach(element =>element.addEventListener('click', showCajasBancos));
+
+    function showCajasBancos(){
+      const selectorigen = document.querySelector('input[name="origenRetiro"]:checked');
+      if(selectorigen?.id == 'gastocaja'){
+        document.querySelector('#showbancos')?.classList.add('hidden');
+        document.querySelector('#showbancos')?.removeAttribute("required");
+        document.querySelector('#banco')?.removeAttribute("required");
+      }else{
+        document.querySelector('#showbancos')?.classList.remove('hidden');
+        document.querySelector('#showbancos')?.setAttribute("required", "");
+        document.querySelector('#banco')?.setAttribute("required", "");
+      }
+    }
 
 
     document.querySelector('#formCrearUpdateLiquidar')?.addEventListener('submit', async(e:Event)=>{

@@ -87,13 +87,7 @@ class modorapidocontrolador{
     $factmediospago = new factmediospago();
     $detalleimpuestos = new factimpuestos();
     $alertas = [];
-
-
-    //si del modulo de venta no se establece comision, se verifica el porcentaje del empleado
-    if($factura->porcentgananciauser == 0 && $_SESSION['porcentajeganancia']>0){
-      $factura->porcentgananciauser = $_SESSION['porcentajeganancia'];
-      $factura->valorgananciauser = ($factura->total*$factura->porcentgananciauser)/100;
-    }
+  
 
     
     //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////

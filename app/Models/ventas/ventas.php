@@ -3,7 +3,7 @@ namespace App\Models\ventas;
 
 class ventas extends \App\Models\ActiveRecord {
     protected static $tabla = 'ventas';
-    protected static $columnasDB = ['id', 'idfactura', 'idproducto', 'tipoproducto', 'tipoproduccion', 'rendimientoestandar', 'nombreproducto', 'foto', 'costo', 'valorunidad', 'cantidad', 'percentcomision', 'valorcomision', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idfactura', 'idproducto', 'tipoproducto', 'tipoproduccion', 'rendimientoestandar', 'nombreproducto', 'foto', 'anotacion', 'costo', 'valorunidad', 'cantidad', 'percentcomision', 'valorcomision', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total', 'dato1', 'dato2'];
     
     public function __construct($args = [])
     {
@@ -15,6 +15,7 @@ class ventas extends \App\Models\ActiveRecord {
         $this->rendimientoestandar = $args['rendimientoestandar']??1;
         $this->nombreproducto = $args['nombreproducto'] ?? '';
         $this->foto = $args['foto'] ?? '';
+        $this->anotacion = $args['anotacion'] ?? '';
         $this->costo = $args['costo'] ?? '';
         $this->valorunidad = $args['valorunidad'] ?? '';
         $this->cantidad = $args['cantidad'] ?? '';

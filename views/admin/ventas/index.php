@@ -183,7 +183,11 @@
                 <?php  if($user['perfil']>3)echo 'disabled';?>
               >
                 <?php foreach($usuarios as $value): ?>
-                  <option value="<?php echo $value->id;?>"<?php if($value->id === $user['id'])echo 'selected'; ?> > 
+                  <option 
+                    value="<?php echo $value->id;?>"
+                    data-comision="<?php echo $value->porcentajeganancia??0; ?>"
+                    <?php if($value->id === $user['id'])echo 'selected'; ?> 
+                  > 
                     <?php echo $value->nombre.' '.$value->apellido;?> 
                   </option>
                 <?php endforeach;  ?>
@@ -393,7 +397,7 @@
     const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
     const clientesDB = <?= json_encode($clientes) ?>;
     const getParamCaja = <?= json_encode($conflocal) ?>;
-    const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?>
+    const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?> //porcentaje de comision del usuario logueado
   </script>
 
 </div>

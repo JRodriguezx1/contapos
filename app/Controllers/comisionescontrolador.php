@@ -15,6 +15,7 @@ use App\Models\ventas\ventas;
 use App\Models\configuraciones\tarifas;
 use App\Models\caja\cierrescajas;
 use App\Models\clientes\departments;
+use App\Models\configuraciones\bancos;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\tipofacturador;
@@ -43,12 +44,14 @@ class comisionescontrolador{
   public static function index(Router $router):void{
     isadmin();
     if(userPerfil()>3)header('Location: /admin/perfil');
-    $comisionServicio = new comisionesService();
     $idsucursal = id_sucursal();
+    $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
+    $bancos = bancos::all();
+    $comisionServicio = new comisionesService();
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $widgets = $comisionServicio->getWidgets($idsucursal);
     $conflocal = config_local::getParamCaja();
-    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/comisiones/index', ['titulo'=>'Comisiones', 'cajas'=>$cajas, 'bancos'=>$bancos, 'widgets'=>$widgets, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
