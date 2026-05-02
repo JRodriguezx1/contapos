@@ -180,10 +180,14 @@
               <select 
                 id="vendedor"
                 class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-                <?php  if($user['id']>3)echo 'disabled';?>
+                <?php  if($user['perfil']>3)echo 'disabled';?>
               >
                 <?php foreach($usuarios as $value): ?>
-                  <option value="<?php echo $value->id;?>"<?php if($value->id === $user['id'])echo 'selected'; ?> > 
+                  <option 
+                    value="<?php echo $value->id;?>"
+                    data-comision="<?php echo $value->porcentajeganancia??0; ?>"
+                    <?php if($value->id === $user['id'])echo 'selected'; ?> 
+                  > 
                     <?php echo $value->nombre.' '.$value->apellido;?> 
                   </option>
                 <?php endforeach;  ?>
@@ -298,7 +302,7 @@
           
           <button id="btnaplicarcredito" class=" text-gray-800 rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 !py-4 !px-6 !w-[180px] flex items-center justify-center gap-2 mx-auto">
             <span class="material-symbols-outlined text-2xl">payments</span>
-            <span class="font-medium text-2xl">Aplicar Pts</span>
+            <span class="font-medium text-2xl">Crédito</span>
           </button>
         </div>
 
@@ -393,7 +397,7 @@
     const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
     const clientesDB = <?= json_encode($clientes) ?>;
     const getParamCaja = <?= json_encode($conflocal) ?>;
-    const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?>
+    const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?> //porcentaje de comision del usuario logueado
   </script>
 
 </div>

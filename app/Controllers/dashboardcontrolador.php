@@ -39,7 +39,7 @@ class dashboardcontrolador{
         //$pos->generar();
         
 
-        if(!tienePermiso('Mostrar dashboard')&&userPerfil()>=3)return;
+        if(!tienePermiso('Mostrar dashboard')&&userPerfil()>3)return;
 
         // calculo de los ingresos y gastos de las cajas abiertas
         $sql = "SELECT SUM(ventasenefectivo) AS efectivofacturado, SUM(ingresoventas) AS totalingreso, SUM(totalfacturaseliminadas) AS totalfacturaseliminadas, 

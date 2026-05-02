@@ -17,6 +17,48 @@
             </select>
         </div>
 
+        <!-- Origen del gasto -->
+        <div id="origengasto" class="flex gap-3 mb-6">
+            <label for="gastocaja"
+                class="flex items-center ps-4 bg-indigo-50 border border-indigo-200 text-gray-900 rounded-xl cursor-pointer select-none w-full p-3 h-14 text-lg transition hover:bg-indigo-100">
+                <input id="gastocaja" type="radio" name="origenRetiro" class="hidden peer" value="gastocaja" checked>
+                <div class="w-5 h-5 border-2 border-indigo-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                <span class="ms-3 font-medium">Retiro efectivo de la caja</span>
+            </label>
+
+            <label for="gastobanco"
+                class="flex items-center ps-4 bg-indigo-50 border border-indigo-200 text-gray-900 rounded-xl cursor-pointer select-none w-full p-3 h-14 text-lg transition hover:bg-indigo-100">
+                <input id="gastobanco" type="radio" name="origenRetiro" class="hidden peer" value="gastobanco">
+                <div class="w-5 h-5 border-2 border-indigo-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                <span class="ms-3 font-medium">Retiro transaccional</span>
+            </label>
+        </div>
+
+        <!-- Banco -->
+        <div id="showbancos" class="hidden mb-5">
+            <label class="formulario__label text-lg font-medium text-gray-700" for="banco">Banco</label>
+            <select id="banco"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                name="id_banco">
+                <option value="" disabled selected>-Seleccionar-</option>
+                <?php foreach($bancos as $value): ?>
+                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <!-- Caja -->
+        <div id="showcajas" class="mb-6">
+            <label class="formulario__label text-lg font-medium text-gray-700" for="caja">Caja</label>
+            <select id="caja"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                name="id_caja" required>
+                <?php foreach($cajas as $value): ?>
+                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
         <div class="formulario__campo">
             <label class="formulario__label" for="valorLiquidar">Valor a liquidar</label>
             <input 

@@ -23,9 +23,8 @@ class comisionesService{
     }
 
 
-    public function crearComision(int $idfacturaid, int $idusuariofk, float $percentcomision, float $valorcomision):void{
-        $this->repoComisiones->insert(new comisiones(['idfacturaid'=>$idfacturaid, 'idusuariofk'=>$idusuariofk, 'percentcomision'=>$percentcomision, 'valorcomision'=>$valorcomision]));
-    
+    public function crearComision(int $idfacturaid, int $idusuariofk, float $valorfactura, float $percentcomision, float $valorcomision):void{
+        $this->repoComisiones->insert(new comisiones(['idfacturaid'=>$idfacturaid, 'idusuariofk'=>$idusuariofk, 'valorfactura'=>$valorfactura, 'percentcomision'=>$percentcomision, 'valorcomision'=>$valorcomision]));
     }
 
 

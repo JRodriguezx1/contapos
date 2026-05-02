@@ -551,47 +551,24 @@ class cajacontrolador{
   }
 
   public static function printfacturacarta(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    //$alertas = usuarios::getAlertas();
-    $factura = facturas::find('id', $id);
-    $productos = ventas::idregistros('idfactura', $id);
-    $cliente = clientes::find('id', $factura->idcliente);
-    $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
-    if(!$direccion)$direccion = direcciones::find('id', 1);
-    $tarifa = tarifas::find('id', $direccion->idtarifa);
-    $vendedor = usuarios::find('id', $factura->idvendedor);
-    $sucursal = sucursales::find('id', id_sucursal());
-    $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+    $datos = cajaService::detalleVenta($id);
     $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
-          JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$factura->id};";
+          JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$datos['factura']->id};";
     $mediospago = ActiveRecord::camposJoinObj($sql);
-    $router->render('admin/caja/printFacturaCarta', ['titulo'=>'Impresion factura', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/caja/printFacturaCarta', $datos+['titulo'=>'Impresion factura', 'mediospago'=>$mediospago, 'sucursal'=>$datos['sucursal'], 'user'=>$_SESSION]);
   }
 
   public static function printcotizacion(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    //$alertas = usuarios::getAlertas();
-    $factura = facturas::find('id', $id);
-     $productos = ventas::idregistros('idfactura', $id);
-    $cliente = clientes::find('id', $factura->idcliente);
-    $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
-    if(!$direccion)$direccion = direcciones::find('id', 1);
-    $tarifa = tarifas::find('id', $direccion->idtarifa);
-    $vendedor = usuarios::find('id', $factura->idvendedor);
-    $sucursal = sucursales::find('id', id_sucursal());
-    /////
-    $lineasencabezado = explode("\n", $sucursal->datosencabezados);
-    $router->render('admin/caja/printcotizacion', ['titulo'=>'Impresion cotizacion', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $datos = cajaService::detalleVenta($id);
+    $router->render('admin/caja/printcotizacion', $datos+['titulo'=>'Impresion cotizacion', 'sucursal'=>$datos['sucursal'], 'user'=>$_SESSION]);
   }
 
   public static function printdetallecierre(Router $router){
