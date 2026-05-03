@@ -81,15 +81,10 @@
       const selectorigen = document.querySelector('input[name="origengasto"]:checked');
       if(selectorigen?.id == 'gastocaja'){
         document.querySelector('#showcajas')?.classList.remove('hidden');
-        document.querySelector('#showcajas')?.setAttribute("required", "");
         document.querySelector('#showbancos')?.classList.add('hidden');
-        document.querySelector('#showbancos')?.removeAttribute("required");
         document.querySelector('#banco')?.removeAttribute("required");
       }else{
-        //document.querySelector('#showcajas')?.classList.add('hidden');
-        //document.querySelector('#showcajas')?.removeAttribute("required");
         document.querySelector('#showbancos')?.classList.remove('hidden');
-        document.querySelector('#showbancos')?.setAttribute("required", "");
         document.querySelector('#banco')?.setAttribute("required", "");
       }
     }

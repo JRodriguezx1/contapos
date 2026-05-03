@@ -16,12 +16,12 @@
 
     producto?.preciosadicionales?.forEach(precio=>{
       const preciohtml = `<label class="flex justify-between items-center p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition">
-                          <div class="flex items-center gap-3">
-                              <input type="radio" class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 inputprecioadicional" data-idproducto="${producto?.id}"  name="precioSeleccionado" value="${precio.precio}">
-                              <span class="text-gray-900 dark:text-gray-100 text-lg font-medium">Precio adicional</span>
-                          </div>
-                          <span class="text-gray-800 dark:text-gray-200 text-lg font-semibold">${precio.precio}</span>
-                      </label>`;
+                            <div class="flex items-center gap-3">
+                                <input type="radio" class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 inputprecioadicional" data-idproducto="${producto?.id}"  name="precioSeleccionado" value="${precio.precio}">
+                                <span class="text-gray-900 dark:text-gray-100 text-lg font-medium">Precio adicional</span>
+                            </div>
+                            <span class="text-gray-800 dark:text-gray-200 text-lg font-semibold">$${Number(precio.precio).toLocaleString()}</span>
+                          </label>`;
       listaPrecios.insertAdjacentHTML('beforeend', preciohtml);
     });
   }
@@ -37,6 +37,8 @@
       if(unitem!=undefined)unitem.percentcomision = Number(comision);
     }
 
+    miDialogoPreciosAdicionales.close();
+    document.removeEventListener("click", POS.cerrarDialogoExterno);
     if(producto != undefined)POS.actualizarCarrito(producto.id, 1, true, true, seleccionado?.checked?seleccionado.value:producto.precio_venta);
   });
 
