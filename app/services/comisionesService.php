@@ -66,6 +66,7 @@ class comisionesService{
             $ingresoGasto = new gastos($_POST);
             $ingresoGasto->idg_usuario = $_SESSION['id'];
             $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
+            $ingresoGasto->idcategoriagastos = 11;
             if($_POST['origengasto'] == 'gastocaja'){
                 $ingresoGasto->idg_caja = $_POST['idcaja'];
                 $ultimocierre->gastoscaja = $ultimocierre->gastoscaja + $ingresoGasto->valor;
@@ -115,6 +116,12 @@ class comisionesService{
         }else{
             return ['error'=>['error al eliminar pago de comision']];
         }
+    }
+
+
+    public function eliminarComisionXFactura(int $id):bool{
+        $result = $this->repoComisiones->delete_regs('idfacturaid', [$id]);
+        return $result;
     }
 
     
