@@ -38,8 +38,7 @@
         <div id="showbancos" class="hidden mb-5">
             <label class="formulario__label text-lg font-medium text-gray-700" for="banco">Banco</label>
             <select id="banco"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                name="id_banco">
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1">
                 <option value="" disabled selected>-Seleccionar-</option>
                 <?php foreach($bancos as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -51,8 +50,7 @@
         <div id="showcajas" class="mb-6">
             <label class="formulario__label text-lg font-medium text-gray-700" for="caja">Caja</label>
             <select id="caja"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                name="id_caja" required>
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1" required>
                 <?php foreach($cajas as $value): ?>
                 <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>

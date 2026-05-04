@@ -4,6 +4,7 @@
     const POS = (window as any).POS;
 
     const selectEmpleado = document.querySelector('#selectEmpleado') as HTMLSelectElement;
+    const tipo = document.querySelector('#tipo') as HTMLSelectElement;
     const comisiontotalUser = document.querySelector('#comisiontotalUser') as HTMLParagraphElement;
     const comisionTotalUserPagada = document.querySelector('#comisionTotalUserPagada') as HTMLParagraphElement;
     const comisionUserPendiente = document.querySelector('#comisionUserPendiente') as HTMLParagraphElement;
@@ -64,14 +65,11 @@
         comisiontotalUser.textContent = '$'+Number(resultado.comisionTotaluser.comisiontotal).toLocaleString('es-CO', {minimumFractionDigits:2, maximumFractionDigits:2});
         comisionTotalUserPagada.textContent = '$'+comisionPagadaUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         comisionUserPendiente.textContent = '$'+comisionPendienteUser.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        //renderizar tabla
         printTableMovimientosComisiones(resultado.historialPagos.movimientos);
     }
 
 
-    btnLiquidar.addEventListener('click', ()=>{
-        miDialogoLiquidar.showModal();
-    });
+    btnLiquidar.addEventListener('click', ()=>{ miDialogoLiquidar.showModal(); });
 
 
     /// evento a los inputs type radio para elegir origne del gasto = caja o bancos
@@ -81,11 +79,9 @@
       const selectorigen = document.querySelector('input[name="origenRetiro"]:checked');
       if(selectorigen?.id == 'gastocaja'){
         document.querySelector('#showbancos')?.classList.add('hidden');
-        document.querySelector('#showbancos')?.removeAttribute("required");
         document.querySelector('#banco')?.removeAttribute("required");
       }else{
         document.querySelector('#showbancos')?.classList.remove('hidden');
-        document.querySelector('#showbancos')?.setAttribute("required", "");
         document.querySelector('#banco')?.setAttribute("required", "");
       }
     }
@@ -103,8 +99,11 @@
         datos.append('fkusuarioid', selectEmpleado.value);
         datos.append('valor', inputValorLiquidar.value);
         datos.append('mediopago', (document.querySelector('#mediopago') as HTMLInputElement).value);
-        datos.append('tipo', (document.querySelector('#tipo') as HTMLSelectElement).value);
+        datos.append('tipo', tipo.value);
         datos.append('referencia', (document.querySelector('#observacion') as HTMLInputElement).value);
+        datos.append('origengasto', document.querySelector<HTMLInputElement>('input[name="origenRetiro"]:checked')!.value);
+        datos.append('idcaja', document.querySelector<HTMLInputElement>('#caja')!.value);
+        datos.append('idbanco', document.querySelector<HTMLInputElement>('#banco')?.value??'');
         try {
             const url = "/admin/api/comisiones/liquidarComision"; //llama a la api que esta en comisionescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -113,7 +112,7 @@
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 const nuevoMovimiento = {
                     fecha: new Date().toISOString(),
-                    tipo: `<div class=""> pago <p class=" text-slate-600 text-sm mt-2">${(document.querySelector('#mediopago') as HTMLInputElement).value}</p></div>`,
+                    tipo: `<div class=""> ${tipo.value} <p class=" text-slate-600 text-sm mt-2">${(document.querySelector('#mediopago') as HTMLInputElement).value}</p></div>`,
                     entrada: 0,
                     salida: Number(inputValorLiquidar.value),
                     id: resultado.id
@@ -127,8 +126,11 @@
                 //actualizar widget business
                 comisionTotalPagadaBusinessDB+=nuevoMovimiento.salida;
                 (document.querySelector('#comisionTotalPagadaGlobal') as HTMLParagraphElement).textContent = " - $"+(comisionTotalPagadaBusinessDB.toLocaleString());
-                (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalBusinessDB-comisionTotalPagadaBusinessDB).toLocaleString();
+                (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalEmpleadosDB-comisionTotalPagadaBusinessDB).toLocaleString();
                 if(imprimir.checked)await printComprobantePago(resultado.id);
+                (e.target as HTMLFormElement).reset();
+                document.querySelector('#showbancos')?.classList.add('hidden');
+                document.querySelector('#banco')?.removeAttribute("required");
             }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
             }
@@ -271,7 +273,7 @@
                             //actualizar widget business
                             comisionTotalPagadaBusinessDB-=Number(resultado.valor);
                             (document.querySelector('#comisionTotalPagadaGlobal') as HTMLParagraphElement).textContent = "$"+comisionTotalPagadaBusinessDB.toLocaleString();
-                            (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalBusinessDB-comisionTotalPagadaBusinessDB).toLocaleString();
+                            (document.querySelector('#comisionPendienteGlobal') as HTMLParagraphElement).textContent = "$"+(comisionTotalEmpleadosDB-comisionTotalPagadaBusinessDB).toLocaleString();
                         }else{
                             msjalertToast('error', '¡Error!', resultado.error[0]);
                         }

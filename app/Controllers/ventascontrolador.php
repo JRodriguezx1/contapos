@@ -869,6 +869,12 @@ class ventascontrolador{
 
         $r = $factura->actualizar();
         if($r){
+            //eliminar comision del empleado
+            if($factura->porcentgananciauser>0 && $factura->valorgananciauser>0){
+              $comisionServicio = new comisionesService();
+              $comisionServicio->eliminarComisionXFactura($factura->id);
+            }
+
             $r1 = $cierrecaja->actualizar();
             if($r1){
               ///descuenta los abonos de creditos por caja, si el cierre de caja no se ha cerrado 

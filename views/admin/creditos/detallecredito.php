@@ -75,7 +75,7 @@
         <div class="flex items-center">
           <span class="text-gray-600">Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
         </div>
-        <?php if($credito->idestadocreditos == 2):
+        <?php if($credito->idestadocreditos == 2 && $credito->idtipofinanciacion == 2):
                 if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
         ?>
           <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="btn-md btn-blue">+</a></div>

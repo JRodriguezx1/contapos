@@ -387,9 +387,9 @@
                         </div>
                     </label>
 
-                    <label for="verreportescaja" class="flex items-center justify-between cursor-pointer">
-                        <span class="text-gray-600 ">Ver reportes de caja</span>
-                        <input id="verreportescaja" name="permisos[]" value="15" type="checkbox" class="sr-only peer">
+                    <label for="verdetallecaja" class="flex items-center justify-between cursor-pointer">
+                        <span class="text-gray-600 ">Ver detalle de la caja</span>
+                        <input id="verdetallecaja" name="permisos[]" value="15" type="checkbox" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
                             <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
                         </div>

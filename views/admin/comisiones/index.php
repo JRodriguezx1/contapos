@@ -3,8 +3,8 @@
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="shadow rounded-xl p-6">
-            <p class="text-base font-medium text-slate-500 uppercase">Comisiones Totales</p>
-            <p class="text-2xl font-bold text-blue-700">$<?php echo number_format($widgets[0]->totalfacturado, 0, ',', '.'); ?></p>
+            <p class="text-base font-medium text-slate-500 uppercase">Comision Total Negocio</p>
+            <p class="text-2xl font-bold text-blue-700">$<?php echo number_format((($widgets[0]??null)?->totalfacturado??0)-(($widgets[0]??null)?->comisiontotalempleados??0), 0, ',', '.'); ?></p>
         </div>
 
         <div class="shadow rounded-xl p-6">
@@ -19,7 +19,7 @@
 
         <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
             <p class="text-base font-medium text-blue-600 uppercase">Saldo a Liquidar</p>
-            <p id="comisionPendienteGlobal" class="text-2xl font-bold text-blue-900">$<?php echo number_format($widgets[0]->comisiontotalempleados-$widgets[1]->comisiontotalpagada, 0, ',', '.'); ?></p>
+            <p id="comisionPendienteGlobal" class="text-2xl font-bold text-blue-900">$<?php echo number_format((($widgets[0]??null)?->comisiontotalempleados??0)-(($widgets[1]??null)?->comisiontotalpagada??0), 0, ',', '.'); ?></p>
         </div>
     </div>
 
@@ -120,7 +120,7 @@
     <?php include __DIR__. "/detalleComision.php"; ?>
 
     <script>
-        let comisionTotalBusinessDB = <?= $widgets[0]->comisiontotal??0; ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
+        let comisionTotalEmpleadosDB = <?= $widgets[0]->comisiontotalempleados??0; ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en comisiones.ts
         let comisionTotalPagadaBusinessDB = <?= $widgets[1]->comisiontotalpagada??0; ?>;
     </script>
 </div>
