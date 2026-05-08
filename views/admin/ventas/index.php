@@ -170,8 +170,14 @@
       </button> 
     </div> <!-- fin primera columna -->
 
+    <!-- fondo oscuro para version movil cuando abre el drawe lateral del carrito -->
+    <div id="overlayCarrito" class="hidden fixed inset-0 bg-black/50 z-40 tlg:hidden"></div>
 
-    <div id="contenedorDesktop" class="basis-1/3 hidden tlg:block">
+    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-50 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:static tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3">
+      <div class="flex justify-between items-center tlg:hidden">
+        <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
+        <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <div id="contenidocarrito">
         <div class="formulario__campo">
             <label class="formulario__label" for="vendedor">vendedor</label>
@@ -193,7 +199,6 @@
                 <?php endforeach;  ?>
               </select>
 
-              <!--<input id="vendedor" data-idVendedor="<?php echo $user['id'];?>" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del Vendedor" name="vendedor" value="<?php echo $user['nombre'];?>" readonly>-->
             </div>
         </div>
         <div class="flex gap-4">
@@ -212,7 +217,7 @@
                 type="text"
                 placeholder="Porcentaje del empleado"  
                 value="<?php echo $user['porcentajeganancia'];?>"
-                <?php if($user['id']>3)echo 'disabled';?>
+                <?php if($user['perfil']>3)echo 'disabled';?>
                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
             >
           </div>
@@ -307,17 +312,8 @@
         </div>
 
       </div>
-    </div> <!-- fin segunda columna -->
+    </div> <!-- fin segunda columna o contenedor carrito desktop -->
   </div>
-
-  <!-- MODAL DEL CARRITO MOVIL-->
-  <dialog id="miDialogoCarritoMovil" class="midialog-sm p-5 w-full max-w-sm overflow-x-hidden">
-    <div class="flex justify-between items-center">
-      <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
-      <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
-      <!-- Aqui se inyecto el carrito, se mueve del bloque principal a aqui -->
-    </div>
-  </dialog>
 
   
 

@@ -42,8 +42,8 @@
         </div>
 
         <div class="formulario__campo">
-            <label class="formulario__label text-lg font-medium text-gray-700" for="identificacion">* Documento</label>
-            <input id="identificacion" name="identificacion" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" required>
+            <label class="formulario__label text-lg font-medium text-gray-700" for="identificacion">Documento</label>
+            <input id="identificacion" name="identificacion" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
         </div>
 
         <div class="formulario__campo">

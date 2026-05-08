@@ -1244,6 +1244,7 @@ class almacencontrolador{
 
   public static function descontarstock(){  //descontar cantidad a inventario
     //session_start();
+    date_default_timezone_set('America/Bogota');
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
@@ -1285,6 +1286,7 @@ class almacencontrolador{
 
   public static function aumentarstock(){  //sumar o ingresar cantidad o produccion a inventario
     //session_start();
+    date_default_timezone_set('America/Bogota');
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
@@ -1360,6 +1362,7 @@ class almacencontrolador{
 
   public static function ajustarstock(){  //ajustar o reiniciar inventario
     //session_start();
+    date_default_timezone_set('America/Bogota');
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];

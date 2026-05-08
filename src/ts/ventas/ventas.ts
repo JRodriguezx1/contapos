@@ -340,7 +340,7 @@
             const partes = val.split('.');
             if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
             if (val.startsWith('.'))val = '1';
-            if (val === '' || isNaN(parseFloat(val))) val = '0';
+            if (val === '' || isNaN(parseFloat(val))) val = '';
 
             input.value = val;
             actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
@@ -360,7 +360,7 @@
     });*/
 
     btnguardar?.addEventListener('click', ()=>{
-      if(carrito.length){
+      if(carrito.length && valorTotal.total>0){
         miDialogoGuardar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
@@ -371,7 +371,7 @@
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
-      if(carrito.length){
+      if(carrito.length && valorTotal.total>0){
         document.querySelector('.Efectivo')?.removeAttribute('readonly');
         document.querySelector('#inputscreditos')?.classList.add('flex');
         document.querySelector('#inputscreditos')?.classList.remove('hidden');
@@ -393,7 +393,7 @@
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
-      if(carrito.length){
+      if(carrito.length && valorTotal.total>0){
         document.querySelector('.Efectivo')?.setAttribute('readonly', 'true');
         document.querySelector('#inputscreditos')?.classList.add('hidden');
         document.querySelector('#inputscreditos')?.classList.remove('flex');
@@ -541,8 +541,9 @@
             btnPagar.disabled = false;
             btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
-            (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
+            (document.getElementById('contenedorDesktop') as HTMLDivElement).classList.add('translate-x-full');
+            (document.getElementById('overlayCarrito') as HTMLDivElement).classList.add('hidden');
           
             //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
@@ -565,6 +566,10 @@
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      setTimeout(() => {
+        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      }, 1000);
+
       try {
         const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
         const respuesta = await fetch(url, {
@@ -578,9 +583,6 @@
         console.log(error);
       }
 
-      setTimeout(() => {
-        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
-      }, 1100);
     }
 
     

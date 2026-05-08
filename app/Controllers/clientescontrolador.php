@@ -35,17 +35,20 @@ class clientescontrolador{
         //session_start();
         isadmin();
         $cliente = new clientes($_POST);
+        $direccion = new direcciones(['idtarifa'=>1, 'iddepartamento'=>1, 'idciudad'=>1, 'departamento'=>'No definido', 'ciudad'=>'No definido', 'direccion'=>'Tienda']);
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $alertas = $cliente->validar_nuevo_cliente();
             $documentID = $cliente->validar_regDinamic('identificacion');
             //$alertas = $direccion->validarDireccion();
-            if(empty($alertas) && !$documentID){ //si los campos cumplen los criterios y cliente no existe por documento    
-                $resultado = $cliente->crear_guardar();  
-                if($resultado[0]){
-                    $alertas['exito'][] = 'Cliente Registrado correctamente'; 
-                }else{
-                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+            if(empty($alertas) && !$documentID){ //si los campos cumplen los criterios y cliente no existe por documento 
+                try {
+                    $cli = $cliente->crear_guardar();
+                    $direccion->idcliente = $cli[1];
+                    $direccion->crear_guardar();
+                    $alertas['exito'][] = 'Cliente creado con exito.';
+                } catch (\Throwable $th) {
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente >>'.$th->getMessage();
                 }
             }else{
                 if($documentID)$cliente::setAlerta('error', 'El cliente ya esta registrado');
@@ -156,25 +159,17 @@ class clientescontrolador{
             $documentID = $cliente->validar_regDinamic('identificacion');
             $alertas = $direccion->validarDireccion();
             if(empty($alertas) && !$documentID){ //si los campos cumplen los criterios y cliente no existe por documento   
-                //guardar cliente recien creado en bd  
-                $resultado = $cliente->crear_guardar();  
-                if($resultado[0]){
+                //guardar cliente recien creado en bd
+                try {
+                    $resultado = $cliente->crear_guardar();
                     if(strlen($direccion->direccion)>3){
                         $direccion->idcliente =  $resultado[1];
                         $r1 = $direccion->crear_guardar();
-                        if($r1[0]){
-                            $alertas['exito'][] = 'Cliente Registrado correctamente';
-                            $alertas['nextID'] = $resultado[1];
-                        }else{
-                            $cliente->eliminar_idregistros('id', [$resultado[1]]);
-                            $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
-                        }
-                    }else{
                         $alertas['exito'][] = 'Cliente Registrado correctamente';
-                        $alertas['nextID'] = $resultado[1];
                     }
-                }else{
-                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                    $alertas['nextID'] = $resultado[1];
+                } catch (\Throwable $th) {
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente'.$th->getMessage();
                 }
             }else{
                 if($documentID)$cliente::setAlerta('error', 'El cliente ya esta registrado');
