@@ -171,9 +171,9 @@
     </div> <!-- fin primera columna -->
 
     <!-- fondo oscuro para version movil cuando abre el drawe lateral del carrito -->
-    <div id="overlayCarrito" class="hidden fixed inset-0 bg-black/50 z-40 tlg:hidden"></div>
+    <div id="overlayCarrito" class="hidden fixed inset-0 bg-black/50 z-30 tlg:hidden"></div>
 
-    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-50 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:static tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3">
+    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:static tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3">
       <div class="flex justify-between items-center tlg:hidden">
         <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
         <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
