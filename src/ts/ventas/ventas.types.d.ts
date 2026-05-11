@@ -39,6 +39,7 @@ interface MedioPago {
     id: string;
     mediopago: string;
     estado: string;
+    valor?: number;
     nick?: string;
 }
 interface ConsumidorFinal {

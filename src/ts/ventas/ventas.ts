@@ -34,6 +34,7 @@
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
+    let printerBT:string = getParamCaja.impresora_principal_de_CAJA_por_BT.valor_final;
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -566,10 +567,32 @@
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      ////// cuando no es impresora CAJA por BT
       setTimeout(() => {
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
       }, 1000);
 
+      if(printerBT === '1'){
+        const builder = new InvoiceTicketBuilder(datainvoice);
+        const ticket = builder.generate();
+        console.log(ticket);
+
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(ticket);
+
+        const blob = new Blob([bytes], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'ticket.bin';
+
+        a.click();
+
+        URL.revokeObjectURL(url);
+      }
+
+      /*
       try {
         const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
         const respuesta = await fetch(url, {
@@ -581,7 +604,7 @@
         console.log(resultado);
       } catch (error) {
         console.log(error);
-      }
+      }*/
 
     }
 
