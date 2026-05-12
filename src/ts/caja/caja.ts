@@ -211,6 +211,8 @@
       let idfactura = target.parentElement!.id;
       if(target.tagName === 'I')idfactura = target.parentElement!.parentElement!.id;
       window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
+      //obtener factura por fetch
+      
     }
 
     function printPDF(target: HTMLElement){

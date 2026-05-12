@@ -568,6 +568,7 @@
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
       ////// cuando no es impresora CAJA por BT
+      const isAndroid = /Android/i.test(navigator.userAgent);
 
       if(printerBT === '1'){  //solo aplica para impresora principal si es android
         const builder = new InvoiceTicketBuilder(datainvoice);
@@ -578,8 +579,7 @@
         //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
         //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
         //window.location.href = url;
-
-        window.location.href = `rawbt:base64,${base64}`;
+        if (isAndroid)window.location.href = `rawbt:base64,${base64}`;
 
         //version string
           //const encoder = new TextEncoder();
