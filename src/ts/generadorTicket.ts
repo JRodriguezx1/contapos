@@ -162,77 +162,84 @@ class EscPosBuilder {
     }
 
 
+    qr(data: string, size = 6, errorLevel: 'L' | 'M' | 'Q' | 'H' = 'M') { 
+        const errorMap = { L: 48, M: 49, Q: 50, H: 51 }; 
+        const store_len = data.length + 3; 
+        const pL = store_len % 256; 
+        const pH = Math.floor(store_len / 256); 
+        //ENCODE DATA
+        const encoder = new TextEncoder(); 
+        const encoded = encoder.encode(data); 
+        /* ========================================= 
+        TAMAÑO QR 
+        ========================================= 
+        */ 
+        // GS ( k 3 0 49 67 n 
+        // tamaño módulo 
+        this.content +='\x1D\x28\x6B\x03\x00\x31\x43'+String.fromCharCode(size); 
+        this.write(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x43, size); //version bytes 
+        /* ========================================= 
+        NIVEL ERROR ========================================= 
+        */ 
+        // GS ( k 3 0 49 69 n 
+        this.content +='\x1D\x28\x6B\x03\x00\x31\x45'+String.fromCharCode(errorMap[errorLevel]); 
+        this.write(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x45, errorMap[errorLevel]); //version bytes 
+        /* ========================================= 
+        ALMACENAR DATA 
+        ========================================= 
+        */ 
+        this.content += '\x1D\x28\x6B' + String.fromCharCode(pL) + String.fromCharCode(pH) + '\x31\x50\x30' + data; 
+        this.write(0x1D, 0x28, 0x6B, pL, pH, 0x31, 0x50, 0x30); //version bytes 
+        this.bytes.push(...encoded); 
+        /* ========================================= 
+        IMPRIMIR QR 
+        ========================================= 
+        */ 
+       this.content += '\x1D\x28\x6B\x03\x00\x31\x51\x30'; 
+       this.write(0x1D, 0x28, 0x6B, 0x03, 0x00, 0x31, 0x51, 0x30); 
+    }
     
 
     canvasToEscPos(canvas: HTMLCanvasElement) {
-
         const ctx = canvas.getContext('2d')!;
-
         const width = canvas.width;
         const height = canvas.height;
-
         const image = ctx.getImageData(0, 0, width, height);
-
         const data = image.data;
-
         const bytes = [];
-
-        bytes.push(
-            0x1D,
-            0x76,
-            0x30,
-            0x00,
-            width / 8,
-            0x00,
-            height & 0xff,
-            (height >> 8) & 0xff
-        );
-
+        bytes.push(0x1D, 0x76, 0x30, 0x00, width / 8, 0x00, height & 0xff, (height >> 8) & 0xff);
         for (let y = 0; y < height; y++) {
-
             for (let x = 0; x < width; x += 8) {
-
                 let byte = 0;
-
                 for (let bit = 0; bit < 8; bit++) {
-
                     const px = x + bit;
-
                     if (px >= width) continue;
-
                     const i = (y * width + px) * 4;
-
                     const r = data[i];
                     const g = data[i + 1];
                     const b = data[i + 2];
-
                     const gray = (r + g + b) / 3;
-
-                    if (gray < 128) {
-                        byte |= (1 << (7 - bit));
-                    }
+                    if (gray < 128) byte |= (1 << (7 - bit));
                 }
-
                 bytes.push(byte);
             }
         }
-
         return bytes;
     }
 
-    async qrRaster(){
+
+    async qrRaster(text:string, correction:string = 'M'){
         return new Promise<number[]>((resolve, reject)=>{
              const self = this; // Guardamos la referencia
             QRCode.toCanvas(
                 canvas,
-                'https://midominio.com',
+                text,
                 {
                     width: 256,
                     margin: 1,
-                    errorCorrectionLevel: 'M'
+                    errorCorrectionLevel: correction
                 },
                 function (error:any) {
-
                     if (error) {
                         console.error(error);
                         reject(error);
@@ -247,7 +254,7 @@ class EscPosBuilder {
     }
 
 
-    build(buildBytes:boolean) {
+    build(buildBytes:boolean): string | Uint8Array  {
         if(buildBytes){
             return new Uint8Array(this.bytes);
         }else{
@@ -266,7 +273,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.invoice = invoice;
     }
 
-    async generate(buildBytes:boolean) {
+    async generate(buildBytes:boolean):Promise<string | Uint8Array> {
         this.header();
         if(this.invoice.consumidorfinal)this.customer(); //solo factura electronica
         this.datosFactura();
@@ -360,7 +367,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
     private async footer() {
         this.setAlign('center');
         //this.qr(this.invoice.link || 'www.j2softwarepos.com/', 8, 'M');
-        const qrBytes = await this.qrRaster();
+        const qrBytes = await this.qrRaster(this.invoice.link || 'www.j2softwarepos.com/', 'M');
         this.bytes.push(...qrBytes);
         this.feed(2);
         this.boldOn();
@@ -370,10 +377,6 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.feed(1);
     }
 }
-
-
-
-//----------------------------------------------------------------
 
 
 
