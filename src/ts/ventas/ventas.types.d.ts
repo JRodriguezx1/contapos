@@ -110,6 +110,7 @@ interface Resolution {
 }
 interface DataInvoice {
     negocio: string;
+    sucursal:string;
     nit: string;
     direccion: string;
     telefono: string;

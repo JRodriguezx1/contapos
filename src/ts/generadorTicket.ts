@@ -1,4 +1,6 @@
 type Align = 'left' | 'center' | 'right';
+const canvas = document.createElement('canvas');
+
 class EscPosBuilder {
 
     protected content = '';
@@ -10,6 +12,9 @@ class EscPosBuilder {
 
    // Comando Reset: Limpia formatos previos
     reset() {
+        // ESC @  version bytes
+        this.write(0x1B, 0x40);
+
         this.content += '\x1B\x40';
         this.setAlign('left');
         // Bold OFF
@@ -19,6 +24,12 @@ class EscPosBuilder {
     }
 
     text(text: string = '') {
+        const encoder = new TextEncoder();
+        const encoded = encoder.encode(text);
+        this.bytes.push(...encoded);
+        this.write(0x0A); // salto línea
+
+        //version string
         this.content += text + '\n';
     }
 
@@ -48,16 +59,22 @@ class EscPosBuilder {
             center: 1,
             right: 2
         };
-        // ESC a n
+        // ESC a n  version bytes
+        this.write(0x1B, 0x61, map[mode]);
+        // ESC a n  version string
         this.content += `\x1B\x61${String.fromCharCode(map[mode])}`;
     }
 
     boldOn(){
-        this.content += '\x1B\x45\x01';
+        this.content += '\x1B\x45\x01';  //version string
+        // ESC E 1
+        this.write(0x1B, 0x45, 0x01);  //version bytes
     }
 
     boldOff(){
-        this.content += '\x1B\x45\x00';
+        this.content += '\x1B\x45\x00'; //version string
+         // ESC E 0
+        this.write(0x1B, 0x45, 0x00);  //version bytes
     }
 
     bold(text: string) {
@@ -67,30 +84,38 @@ class EscPosBuilder {
     }
 
     normalSize(){
-        this.content += '\x1D\x21\x00';
+        this.content += '\x1D\x21\x00';  //version string
+        // GS ! 0
+        this.write(0x1D, 0x21, 0x00);  //version bytes
     }
 
     doubleHeight() {
         this.content += '\x1D\x21\x01';
+        this.write(0x1D, 0x21, 0x01);
     }
 
     doubleWidth() {
         this.content += '\x1D\x21\x10';
+        this.write(0x1D, 0x21, 0x10);
     }
 
     doubleSize() {
         // GS ! 17
         // doble ancho + doble alto
         this.content += '\x1D\x21\x11';
+        this.write(0x1D, 0x21, 0x11);
     }
 
     feed(lines: number = 3) {
-        this.content += '\n'.repeat(lines);
+        this.content += '\n'.repeat(lines); //version string
+        for(let i = 0; i < lines; i++)this.write(0x0A);  //version bytes
     }
 
     cut() {
         this.feed(5);
-        this.content += '\x1D\x56\x00';
+        this.content += '\x1D\x56\x00';  //version string
+        // GS V 0
+        this.write(0x1D, 0x56, 0x00);  //version bytes
     }
 
     row(left: string, right: string, width = 42) {
@@ -137,43 +162,97 @@ class EscPosBuilder {
     }
 
 
-    qr(data: string, size = 6, errorLevel: 'L' | 'M' | 'Q' | 'H' = 'M') {
-        const errorMap = { L: 48, M: 49, Q: 50, H: 51 };
-        const store_len = data.length + 3;
-        const pL = store_len % 256;
-        const pH = Math.floor(store_len / 256);
-        /*
-        =========================================
-        TAMAÑO QR
-        =========================================
-        */
-        // GS ( k 3 0 49 67 n
-        // tamaño módulo
-        this.content +='\x1D\x28\x6B\x03\x00\x31\x43'+String.fromCharCode(size);
-        /*
-        =========================================
-        NIVEL ERROR
-        =========================================
-        */
-        // GS ( k 3 0 49 69 n
-        this.content +='\x1D\x28\x6B\x03\x00\x31\x45'+String.fromCharCode(errorMap[errorLevel]);
-        /*
-        =========================================
-        ALMACENAR DATA
-        =========================================
-        */
-        this.content += '\x1D\x28\x6B' + String.fromCharCode(pL) + String.fromCharCode(pH) + '\x31\x50\x30' + data;
-        /*
-        =========================================
-        IMPRIMIR QR
-        =========================================
-        */
-        this.content += '\x1D\x28\x6B\x03\x00\x31\x51\x30';
-        this.feed(1);
+    
+
+    canvasToEscPos(canvas: HTMLCanvasElement) {
+
+        const ctx = canvas.getContext('2d')!;
+
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const image = ctx.getImageData(0, 0, width, height);
+
+        const data = image.data;
+
+        const bytes = [];
+
+        bytes.push(
+            0x1D,
+            0x76,
+            0x30,
+            0x00,
+            width / 8,
+            0x00,
+            height & 0xff,
+            (height >> 8) & 0xff
+        );
+
+        for (let y = 0; y < height; y++) {
+
+            for (let x = 0; x < width; x += 8) {
+
+                let byte = 0;
+
+                for (let bit = 0; bit < 8; bit++) {
+
+                    const px = x + bit;
+
+                    if (px >= width) continue;
+
+                    const i = (y * width + px) * 4;
+
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+
+                    const gray = (r + g + b) / 3;
+
+                    if (gray < 128) {
+                        byte |= (1 << (7 - bit));
+                    }
+                }
+
+                bytes.push(byte);
+            }
+        }
+
+        return bytes;
     }
 
-    build() {
-        return this.content;
+    async qrRaster(){
+        return new Promise<number[]>((resolve, reject)=>{
+             const self = this; // Guardamos la referencia
+            QRCode.toCanvas(
+                canvas,
+                'https://midominio.com',
+                {
+                    width: 256,
+                    margin: 1,
+                    errorCorrectionLevel: 'M'
+                },
+                function (error:any) {
+
+                    if (error) {
+                        console.error(error);
+                        reject(error);
+                        return;
+                    }
+                    console.log('QR generado');
+                    const qrBytes = self.canvasToEscPos(canvas);
+                    resolve(qrBytes);
+                }
+            );
+        });
+    }
+
+
+    build(buildBytes:boolean) {
+        if(buildBytes){
+            return new Uint8Array(this.bytes);
+        }else{
+            return this.content;
+        }
     }
 }
 
@@ -187,42 +266,44 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.invoice = invoice;
     }
 
-    generate() {
+    async generate(buildBytes:boolean) {
         this.header();
-        this.customer();
+        if(this.invoice.consumidorfinal)this.customer(); //solo factura electronica
         this.datosFactura();
         this.cliente();
         this.items();
         this.totals();
         this.payments();
-        this.footer();
+        if(this.invoice.tipoFactura === '1')this.infoResolution();  //solo factura electronica
+        await this.footer();
         this.cut();
-        return this.build();
+        return this.build(buildBytes);
     }
 
     private header() {
         this.boldOn();
         this.center(this.invoice.negocio.toUpperCase());
         this.boldOff();
+        this.feed(1);
         this.center(`NIT: ${this.invoice.nit.trim()}`);
+        this.center(`SEDE: ${this.invoice.sucursal.trim().toUpperCase()}`);
         this.center(this.invoice.direccion.trim());
         this.center(`TEL: ${this.invoice.telefono.trim()}`);
         this.feed(1);
         this.line();
     }
 
-    private customer() {
-        if(this.invoice.consumidorfinal) {
-            this.text('CONSUMIDOR FINAL');
-            return;
-        }
+    private customer() { //cliente factura electronica
+        this.text(`Cliente: ${this.invoice.consumidorfinal.name}`);
+        this.text(`NIT: ${this.invoice.consumidorfinal.identification_number}`)
     }
 
     private datosFactura(){
         this.bold(`Factura: ${this.invoice.prefijo.trim()}${this.invoice.consecutivo.trim()}`);
         this.text(`Fecha pago: ${this.invoice.fechaPago.trim()}`);
-        this.text(`CAJA: ${this.invoice.caja.trim()}`);
-        this.text(`VENDEDOR: ${this.invoice.vendedor.trim()}`);
+        this.text(`Forma de pago: ${this.invoice.tipoventa.trim()}`);
+        this.text(`Caja: ${this.invoice.caja.trim()}`);
+        this.text(`Vendedor: ${this.invoice.vendedor.trim()}`);
         this.line();
     }
 
@@ -230,6 +311,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.center(`Cliente: ${this.invoice.cliente.nombre.trim()}`);
         this.center(`Documento: ${this.invoice.cliente.identificacion.trim()}`);
         this.center(`Telefono: ${this.invoice.cliente.telefono.trim()}`);
+        this.center(`Direccion: ${this.invoice.cliente.data1?.trim()||' - '}`);
         this.feed(1);
     }
 
@@ -262,16 +344,25 @@ class InvoiceTicketBuilder extends EscPosBuilder {
             //this.text(`${pago.mediopago}: $${pago.valor?.toLocaleString()}`);
             this.row3(' ', pago.mediopago+':', ` $${pago.valor?.toLocaleString()}`, {col1:'right', col2:'right', col3:'left'}, [10, 17, 15]);
         }
-    }
-
-    private footer() {
         this.normalSize();
         this.feed(1);
         this.line();
-        this.feed(2)
+        this.feed(2);
+    }
+
+    private infoResolution(){
+        this.setAlign('left');
+        this.text(`Resolución: ${this.invoice.resolucion.resolucion}, Rango desde: ${this.invoice.resolucion.rangoinicial} hasta ${this.invoice.resolucion.rangofinal}`);
+        this.text(`CUFE: ${this.invoice.cufe || 'fe9c733f32770f5fcc4ef954f9ef663c54c752e6c07bdc144bb00627faadf9f648818da3e96ef8293547140fb1970d22'}`);
+        this.feed(2);
+    }
+
+    private async footer() {
         this.setAlign('center');
-        this.qr('www.j2softwarepos.com/', 8, 'M');
-        this.feed(2)
+        //this.qr(this.invoice.link || 'www.j2softwarepos.com/', 8, 'M');
+        const qrBytes = await this.qrRaster();
+        this.bytes.push(...qrBytes);
+        this.feed(2);
         this.boldOn();
         this.center('GRACIAS POR SU COMPRA');
         this.boldOff();
@@ -279,3 +370,10 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.feed(1);
     }
 }
+
+
+
+//----------------------------------------------------------------
+
+
+

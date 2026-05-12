@@ -34,7 +34,7 @@
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
-    let printerBT:string = getParamCaja.impresora_principal_de_CAJA_por_BT.valor_final;
+    let printerBT:string = getParamCaja.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -572,23 +572,99 @@
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
       }, 1000);
 
-      if(printerBT === '1'){
+      if(printerBT === '1'){  //solo aplica para impresora principal si es android
         const builder = new InvoiceTicketBuilder(datainvoice);
-        const ticket = builder.generate();
-        console.log(ticket);
+        const ticket = await builder.generate(true); //true para version buffer bytes
 
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(ticket);
+        /*
+        const canvas = document.createElement('canvas');
+        function canvasToEscPos(canvas: HTMLCanvasElement) {
 
-        const blob = new Blob([bytes], { type: 'application/octet-stream' });
+        const ctx = canvas.getContext('2d')!;
+
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const image = ctx.getImageData(0, 0, width, height);
+
+        const data = image.data;
+
+        const bytes = [];
+
+        bytes.push(
+            0x1D,
+            0x76,
+            0x30,
+            0x00,
+            width / 8,
+            0x00,
+            height & 0xff,
+            (height >> 8) & 0xff
+        );
+
+        for (let y = 0; y < height; y++) {
+
+            for (let x = 0; x < width; x += 8) {
+
+                let byte = 0;
+
+                for (let bit = 0; bit < 8; bit++) {
+
+                    const px = x + bit;
+
+                    if (px >= width) continue;
+
+                    const i = (y * width + px) * 4;
+
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+
+                    const gray = (r + g + b) / 3;
+
+                    if (gray < 128) {
+                        byte |= (1 << (7 - bit));
+                    }
+                }
+
+                bytes.push(byte);
+            }
+        }
+
+        return bytes;
+    }
+
+    
+        QRCode.toCanvas(
+            canvas,
+            'https://midominio.com',
+            {
+                width: 224,
+                margin: 1,
+                errorCorrectionLevel: 'M'
+            },
+            function (error:any) {
+
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                console.log('QR generado');
+                const qrBytes = canvasToEscPos(canvas);
+            }
+        );
+        //this.bytes.push(...qrBytes);
+        */
+        
+        //version string
+        //const encoder = new TextEncoder();
+        //const bytes = encoder.encode(ticket);
+        const blob = new Blob([ticket], { type: 'application/octet-stream' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-
         a.href = url;
         a.download = 'ticket.bin';
-
         a.click();
-
         URL.revokeObjectURL(url);
       }
 
