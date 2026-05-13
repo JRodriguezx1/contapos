@@ -275,7 +275,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
 
     async generate(buildBytes:boolean):Promise<string | Uint8Array> {
         this.header();
-        if(this.invoice.consumidorfinal)this.customer(); //solo factura electronica
+        if(this.invoice.tipoFactura === '1')this.customer(); //solo factura electronica
         this.datosFactura();
         this.cliente();
         this.items();
@@ -297,15 +297,17 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.center(this.invoice.direccion.trim());
         this.center(`TEL: ${this.invoice.telefono.trim()}`);
         this.feed(1);
-        this.line();
     }
 
     private customer() { //cliente factura electronica
-        this.text(`Cliente: ${this.invoice.consumidorfinal.name}`);
-        this.text(`NIT: ${this.invoice.consumidorfinal.identification_number}`)
+        this.center(`Cliente: ${this.invoice.consumidorfinal.name}`);
+        this.center(`NIT: ${this.invoice.consumidorfinal.identification_number}`);
     }
 
     private datosFactura(){
+        this.boldOn();
+        this.center(`${this.invoice.textFactura}`);
+        this.boldOff();
         this.bold(`Factura: ${this.invoice.prefijo.trim()}${this.invoice.consecutivo.trim()}`);
         this.text(`Fecha pago: ${this.invoice.fechaPago.trim()}`);
         this.text(`Forma de pago: ${this.invoice.tipoventa.trim()}`);
@@ -315,7 +317,8 @@ class InvoiceTicketBuilder extends EscPosBuilder {
     }
 
     private cliente(){
-        this.center(`Cliente: ${this.invoice.cliente.nombre.trim()}`);
+        this.feed(1);
+        this.center(`Cliente: ${this.invoice.cliente.nombre.trim()} ${this.invoice.cliente.apellido.trim()}`);
         this.center(`Documento: ${this.invoice.cliente.identificacion.trim()}`);
         this.center(`Telefono: ${this.invoice.cliente.telefono.trim()}`);
         this.center(`Direccion: ${this.invoice.cliente.data1?.trim()||' - '}`);
@@ -331,7 +334,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         for(const item of this.invoice.items) {
             for(const line of this.wrap(item.nombreproducto.trim()))this.center(line);
             //this.row(`${item.cantidad}  x  $${item.valorunidad.toLocaleString()}`, '$'+item.total.toLocaleString());
-            this.row3(item.cantidad.toString(), item.valorunidad.toLocaleString(), item.total.toLocaleString(), {col1:'left', col2:'right', col3:'right'}, [8, 16, 18]);
+            this.row3(item.cantidad.toString(), '$'+item.valorunidad.toLocaleString(), '$'+item.total.toLocaleString(), {col1:'left', col2:'right', col3:'right'}, [8, 16, 18]);
         }
     }
 
@@ -353,13 +356,15 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         }
         this.normalSize();
         this.feed(1);
+        this.setAlign('left');
+        this.text(`Observacion: ${this.invoice.observacion}`);
         this.line();
         this.feed(2);
     }
 
     private infoResolution(){
         this.setAlign('left');
-        this.text(`Resolución: ${this.invoice.resolucion.resolucion}, Rango desde: ${this.invoice.resolucion.rangoinicial} hasta ${this.invoice.resolucion.rangofinal}`);
+        this.text(`Resolucion: ${this.invoice.resolucion.resolucion}, Rango desde: ${this.invoice.resolucion.rangoinicial} hasta ${this.invoice.resolucion.rangofinal}`);
         this.text(`CUFE: ${this.invoice.cufe || 'fe9c733f32770f5fcc4ef954f9ef663c54c752e6c07bdc144bb00627faadf9f648818da3e96ef8293547140fb1970d22'}`);
         this.feed(2);
     }
@@ -373,9 +378,11 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.boldOn();
         this.center('GRACIAS POR SU COMPRA');
         this.boldOff();
-        this.center('www.j2softwarepos.com/');
-        this.feed(1);
+        this.feed(2);
+        this.center(`© ${new Date().getFullYear()} J2 Software POS Multisucursal`);
+        this.center('www.j2softwarepos.com');
     }
+    //copy /b ticket.bin "\\localhost\\CAJA"
 }
 
 

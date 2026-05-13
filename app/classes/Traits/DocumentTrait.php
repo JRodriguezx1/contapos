@@ -3,6 +3,7 @@
 namespace App\Classes\Traits;
 
 use App\Models\configuraciones\consecutivos;
+use App\Models\felectronicas\adquirientes;
 use App\Models\felectronicas\diancompanias;
 use App\Models\felectronicas\facturas_electronicas;
 use App\Models\ventas\facturas;
@@ -298,6 +299,122 @@ trait DocumentTrait
             'error' => $decoded['message'] ?? 'Error en la API',
             'response' => $decoded ?: $response,
         ];
+    }
+
+
+
+    protected static function transformarDataInvoice(array $datos):array
+    {
+        $sucursal = $datos['sucursal'];
+        $factura = $datos['factura'];
+        $clienteData = $datos['cliente'];
+        $productosData = $datos['productos'];
+        $consecutivo = consecutivos::find('id', $factura->idconsecutivo);
+        if($consecutivo->idtipofacturador == 1){
+            $facturaElectronica = facturas_electronicas::uniquewhereArray(['id_sucursalidfk'=>$factura->id_sucursal, 'id_facturaid'=>$factura->id]);
+            $customer = adquirientes::find('id', $facturaElectronica->id_adquiriente);
+        }
+
+        // 1. Mapeo de Medios de Pago
+        $mediosPago = array_map(function($mp) {
+            return [
+                'id' => (string)$mp->idmediopago,
+                'mediopago' => $mp->mediopago,
+                'estado' => (string)$mp->estado,
+                'valor' => (float)$mp->valor,
+                'nick' => $mp->nick
+            ];
+        }, $factura->mediosdepago);
+
+        // 2. Mapeo de Items del Carrito
+        $items = array_map(function($prod) {
+            $item = [
+                'id' => (string)$prod->id,
+                'idproducto' => (string)$prod->idproducto,
+                'tipoproducto' => (string)$prod->tipoproducto,
+                'tipoproduccion' => (string)$prod->tipoproduccion,
+                'foto' => $prod->foto,
+                'nombreproducto' => $prod->nombreproducto,
+                'rendimientoestandar' => (string)$prod->rendimientoestandar,
+                'costo' => (string)$prod->costo,
+                'valorunidad' => (float)$prod->valorunidad,
+                'cantidad' => (float)$prod->cantidad,
+                'percentcomision' => (float)$prod->percentcomision,
+                'valorcomision' => (float)$prod->valorcomision,
+                'subtotal' => (float)$prod->subtotal,
+                'base' => (float)$prod->base,
+                'impuesto' => (string)$prod->impuesto,
+                'valorimp' => (float)$prod->valorimp,
+                'descuento' => (float)$prod->descuento,
+                'total' => (float)$prod->total,
+            ];
+            if(isset($prod->idcategoria))$item['idcategoria'] = (string)$prod->idcategoria;
+            return $item;
+        }, $productosData);
+
+        // 3. Estructura Principal (DataInvoice)
+        $dataInvoice = [
+            // Datos extraídos de $sucursal
+            'negocio' => $sucursal->negocio,
+            'sucursal' => $sucursal->nombre,
+            'nit' => $sucursal->nit,
+            'direccion' => $sucursal->direccion,
+            'telefono' => $sucursal->telefono,
+            'email' => $sucursal->email,
+            // Datos de la factura
+            'num_orden' => (int)$factura->num_orden,
+            'tipoFactura' => $consecutivo->idtipofacturador,
+            'textFactura' => $consecutivo->idtipofacturador == 1?'FACTURA ELECTRONICA DE VENTA':'COMPROBANTE DE VENTA',
+            'prefijo' => $factura->prefijo,
+            'consecutivo' => $factura->num_consecutivo,
+            'fechaPago' => $factura->fechapago,
+            'caja' => $factura->caja,
+            'vendedor' => $factura->vendedor,
+            // Consumidor Final (Estructura fija según interfaz)
+            'consumidorfinal' => [
+                'identification_number' => ($customer??null)?->identification_number??"222222222222",
+                'name' => ($customer??null)?->business_name??'Consumidor Final',
+                'phone' => ($customer??null)?->phone??null,
+                'address' => ($customer??null)?->address??null,
+                'email' => ($customer??null)?->email??null,
+                'municipality_id' => ($customer??null)?->municipality_id??null
+            ],
+            // Cliente (Mapeo directo del objeto cliente)
+            'cliente' => [
+                'id' => (string)$clienteData?->id??'',
+                'nombre' => ($clienteData?->nombre)??$factura->cliente,
+                'apellido' => ($clienteData?->apellido)??'',
+                'tipodocumento' => ((string)$clienteData?->tipodocumento)??'',
+                'identificacion' => ($clienteData?->identificacion)??'',
+                'telefono' => ($clienteData?->telefono)??'',
+                'email' => ($clienteData?->email)??'',
+                'fecha_nacimiento' => ($clienteData?->fecha_nacimiento)??'',
+                'total_compras' => ($clienteData?->total_compras)??'',
+                'ultima_compra' => ($clienteData?->ultima_compra)??'',
+                'totaldebe' => ($clienteData?->totaldebe)??'',
+                'limitecredito' => ($clienteData?->limitecredito)??'',
+                'data1' => ($clienteData?->data1)??'',
+                'created_at' => ($clienteData?->created_at)??'',
+            ],
+            'items' => $items,
+            'mediospago' => $mediosPago,
+            'tipoventa' => $factura->tipoventa,
+            'subtotal' => (string)$factura->subtotal,
+            'base' => (string)$factura->base,
+            'valorimpuestototal' => (string)$factura->valorimpuestototal,
+            'descuento' => (string)$factura->descuento,
+            'total' => (string)$factura->total,
+            'observacion' => (string)$factura->observacion,
+            // Resolución (Inicializada vacía como pediste)
+            'resolucion' => $consecutivo,
+        ];
+
+        if(isset($facturaElectronica)){
+            $dataInvoice['cufe'] = $facturaElectronica->cufe;
+            $dataInvoice['link'] = $facturaElectronica->link;
+        }
+
+        return $dataInvoice;
     }
 
 

@@ -392,7 +392,7 @@
   <script>
     const mediosPagoDB = <?= json_encode($mediospago) ?>;  //se inyecta el array de medios de pago desde PHP a JavaScript y se utiliza en ventas.ts
     const clientesDB = <?= json_encode($clientes) ?>;
-    const getParamCaja = <?= json_encode($conflocal) ?>;
+    const getParam = <?= json_encode($conflocal) ?>;
     const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?> //porcentaje de comision del usuario logueado
   </script>
 

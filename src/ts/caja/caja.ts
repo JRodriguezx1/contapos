@@ -12,6 +12,7 @@
     const numfactura = document.querySelector('#numfactura') as HTMLLabelElement;
     const inputAbrirCaja = document.querySelector('#inputAbrirCaja') as HTMLInputElement;
 
+    let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     let tablaListaPedidos:HTMLElement;
     let estadofactura:string, contentMP:HTMLElement, idfactura:string = '0';
     let mediospagoDB:{id:string, idmediopago:string, id_factura:string, valor:string}[];
@@ -207,12 +208,33 @@
     });
 
 
-    function printPOS(target: HTMLElement){
+    async function printPOS(target: HTMLElement){
       let idfactura = target.parentElement!.id;
       if(target.tagName === 'I')idfactura = target.parentElement!.parentElement!.id;
-      window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
       //obtener factura por fetch
-      
+      try{
+        const url = "/admin/api/getInvoice?id="+idfactura; //llamado a la API REST - cajacontrolador y se trae detalle de factura 
+        const respuesta = await fetch(url); 
+        const resultado:DataInvoice = await respuesta.json();
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if(printerBT === '1'){
+          const builder = new InvoiceTicketBuilder(resultado);
+          const ticket = await builder.generate(true); //true para version buffer bytes
+          const base64 = bytesToBase64(ticket);
+          if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
+          //descargar .bin a equipo
+          /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ticket.bin';
+          a.click();
+          URL.revokeObjectURL(url);*/
+        }
+        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
+      }catch(error){
+        console.log(error);
+      }
     }
 
     function printPDF(target: HTMLElement){

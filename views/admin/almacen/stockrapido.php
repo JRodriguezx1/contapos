@@ -12,6 +12,7 @@
                 <th>Categoria</th>
                 <th>Stock</th>
                 <th>Unidad</th>
+                <th>Aux</th>
                 <th>Agregado</th>
                 <th class="accionesth">Acciones</th>
             </tr>
@@ -21,10 +22,11 @@
                 <?php if(($value->tipoproducto == '0' || ($value->tipoproducto == '1' && $value->tipoproduccion == '1'))&&$value->visible == 1): ?>  <!-- productos simple o compuesto tipo construccion -->
                 <tr class="fila producto" data-idproducto="<?php echo $value->productoid;?>"> 
                     <td class=""><?php echo $index+1;?></td>
-                    <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
-                    <td class="" ><?php echo $value->categoria;?></td>
+                    <td class=""><div class="w-72 whitespace-normal"><?php echo $value->nombre;?></div></td> 
+                    <td class=""><div class="w-52 whitespace-normal"><?php echo $value->categoria;?></div></td>
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>
+                    <td class=""><?php echo "0";?></td>
                     <td class=""><?php echo $value->fecha_ingreso;?></td>
                     <td class="accionestd">
                         <?php if($value->tipoproducto == '0'): ?>
@@ -47,6 +49,7 @@
                     <td class="" ><?php echo $value->categoria??'';?></td> 
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>
+                    <td class=""><?php echo "0";?></td>
                     <td class=""><?php echo $value->fecha_ingreso;?></td>
                     <td class="accionestd">
                         <div class="acciones-btns btnssubproducto" id="<?php echo $value->subproductoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
@@ -79,9 +82,16 @@
           </div>
 
           <div class="formulario__campo">
-              <label class="formulario__label" for="cantidadStockRapido">Cantidad</label>
+              <label class="formulario__label" for="cantidadStockRapido">Stock</label>
               <div class="formulario__dato">
-                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Precio de venta" name="cantidadStockRapido" value="" required>
+                  <input id="cantidadStockRapido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Ingresar cantidad" name="cantidadStockRapido" value="" required>
+              </div>
+          </div>
+
+          <div class="formulario__campo">
+              <label class="formulario__label" for="aux">Aux</label>
+              <div class="formulario__dato">
+                  <input id="aux" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Ingresar cantidad" name="aux" value="">
               </div>
           </div>
 

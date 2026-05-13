@@ -15,7 +15,7 @@
           console.log(error);
       }
     })();*/
-    tasaInteresDB = Number(getParamCaja.tasa_de_interes_por_cuota.valor_final);
+    tasaInteresDB = Number(getParam.tasa_de_interes_por_cuota.valor_final);
 
     const mediospago = document.querySelectorAll<HTMLInputElement>('.mediopago');
     const interes = document.querySelector('#interes') as HTMLSelectElement;

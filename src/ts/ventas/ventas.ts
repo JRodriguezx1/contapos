@@ -34,7 +34,7 @@
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
-    let printerBT:string = getParamCaja.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
+    let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -575,7 +575,6 @@
         const ticket = await builder.generate(true); //true para version buffer bytes
         
         const base64 = bytesToBase64(ticket);
-        //window.location.href = `rawbt:base64,${base64}`;
         //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
         //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
         //window.location.href = url;
@@ -643,18 +642,6 @@
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();
     }
 
-
-
-    function bytesToBase64(data: string|Uint8Array) {
-        if (typeof data === 'string')
-          return btoa(data);
-  
-        let binary = '';
-        if(data instanceof Uint8Array)
-          for (let i = 0; i < data.length; i++) 
-              binary += String.fromCharCode(data[i]);
-        return btoa(binary);
-    }
 
     //exponer variables y funciones globalmente
     POS.limpiarformdialog = limpiarformdialog;

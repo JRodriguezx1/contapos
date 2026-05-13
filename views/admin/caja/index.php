@@ -24,7 +24,7 @@
         </span>
     </h5>
 
-  <table class="display responsive nowrap tabla" width="100%" id="tablaListaPedidos">
+  <table id="tablaListaPedidos" class="display responsive nowrap tabla" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -208,15 +208,6 @@
         </form>
     </dialog>
 
-    <script>
-        document.getElementById('operacion').addEventListener('change', function () {
-            const esGasto = this.value === 'gasto';
-            //document.getElementById('origengasto').classList.toggle('hidden', !esGasto);
-            //document.querySelector('.tipodegasto').classList.toggle('hidden', !esGasto);
-            document.getElementById('soporteGasto').classList.toggle('hidden', !esGasto);
-        });
-    </script>
-
 
     <dialog class="midialog-sm px-8 pb-8" id="miDialogoAbrirCaja">
         <div><p class="text-3xl font-semibold text-gray-500">Abrir cajon monedero</p></div>
@@ -304,4 +295,16 @@
             </div>
         </form>
     </dialog>
+
+
+    <script>
+        document.getElementById('operacion').addEventListener('change', function () {
+            const esGasto = this.value === 'gasto';
+            //document.getElementById('origengasto').classList.toggle('hidden', !esGasto);
+            //document.querySelector('.tipodegasto').classList.toggle('hidden', !esGasto);
+            document.getElementById('soporteGasto').classList.toggle('hidden', !esGasto);
+        });
+
+        const getParam = <?= json_encode($conflocal) ?>;
+    </script>
 </div>

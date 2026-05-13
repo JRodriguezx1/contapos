@@ -28,10 +28,13 @@ use App\Models\sucursales;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use App\services\cajaService;
 use App\services\whatsAppService;
+use App\classes\Traits\DocumentTrait;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
 class cajacontrolador{
+
+  use DocumentTrait;
 
   public static function index(Router $router){
     //session_start();
@@ -930,6 +933,17 @@ class cajacontrolador{
       $r = $email->enviarConfirmacion();
     }
     echo json_encode($r);
+  }
+
+
+  public static function getInvoice(){
+    isadmin();
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    $datos = cajaService::detalleVenta($id);
+    $datos['factura']->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = ".$datos['factura']->id.";");
+    $result = self::transformarDataInvoice($datos);  //llama al trait
+    echo json_encode($result);
   }
 
 }

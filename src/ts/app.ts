@@ -13,7 +13,7 @@ declare const mediosPagoDB: MedioPago[];  //mediosPagoDB inyectada por medio de 
 declare const clientesDB: Cliente[];
 declare let comisionTotalEmpleadosDB: number;
 declare let comisionTotalPagadaBusinessDB: number;
-declare const getParamCaja:any;  //getParamCaja inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
+declare const getParam:any;  //getParam inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
 declare const percentComisionUser:string;
 
 (window as any).POS = (window as any).POS || {};
@@ -369,4 +369,16 @@ function flashCantidad(element:HTMLElement, color:string) {
     const clase = color === 'up'? 'bg-green-200': 'bg-red-200';
     element.classList.add(clase);
     setTimeout(() => element.classList.remove(clase), 120);
-  }
+}
+
+
+function bytesToBase64(data: string|Uint8Array) {
+    if (typeof data === 'string')
+      return btoa(data);
+
+    let binary = '';
+    if(data instanceof Uint8Array)
+      for (let i = 0; i < data.length; i++) 
+          binary += String.fromCharCode(data[i]);
+    return btoa(binary);
+}
