@@ -52,22 +52,18 @@
     </div>
 
     <!-- Indicadores -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-green-600">
-            <p class="text-base text-gray-500">🛒 Total de compras</p>
+            <p class="text-base text-gray-500">🏷️ Total de compras</p>
             <p class="text-3xl lg:text-4xl font-bold"><?php echo $indicadores->cantidad_ventas??0;?></p>
         </div>
         <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-indigo-600">
-            <p class="text-base text-gray-500">💰 Monto total gastado</p>
+            <p class="text-base text-gray-500">💰 Monto total comprado</p>
             <p class="text-3xl lg:text-3xl font-bold">$ <?php echo number_format($indicadores->total_ventas_cliente??0, 2, ',', '.');?></p>
         </div>
         <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-yellow-600">
             <p class="text-base text-gray-500">📊 Ticket promedio</p>
             <p class="text-3xl lg:text-3xl font-bold">$ <?php echo number_format($indicadores->ticket_promedio??0, 2, ',', '.');?></p>
-        </div>
-        <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-red-600">
-            <p class="text-base text-gray-500">🏷️ Productos comprados</p>
-            <p class="text-3xl lg:text-4xl font-bold"><?php echo $indicadores->total_productos_comprados??0;?></p>
         </div>
         <div class="bg-white rounded-2xl p-2 shadow text-center border-b-4 border-red-600">
             <p class="text-base text-gray-500">❤️ Puntos Acumulados</p>

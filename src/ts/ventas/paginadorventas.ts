@@ -82,11 +82,12 @@
       const btnCarritoMovil = document.querySelector('#btnCarritoMovil') as HTMLButtonElement; //btn para abrir el modal del carrito de ventas en movil
       const contenidocarrito = document.getElementById('contenidocarrito') as HTMLElement;
       const contenedorDesktop = document.getElementById('contenedorDesktop') as HTMLDivElement;
-      const miDialogoCarritoMovil = document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement;
+      //const miDialogoCarritoMovil = document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement;
       const btnCerrarCarritoMovil = document.querySelector('#btnCerrarCarritoMovil') as HTMLButtonElement;
+      const overlayCarrito = document.getElementById('overlayCarrito') as HTMLDivElement;
       const screenWidth:number = window.innerWidth;
 
-      if(screenWidth<992)miDialogoCarritoMovil.appendChild(contenidocarrito);
+      /*if(screenWidth<992)miDialogoCarritoMovil.appendChild(contenidocarrito);
 
       window.addEventListener('resize', ()=>{
         if (window.innerWidth >= 992) {
@@ -96,26 +97,30 @@
         } else {
           miDialogoCarritoMovil.appendChild(contenidocarrito);
         }
-      });
+      });*/
 
       // btn para abrir el carrito de ventas en movil
       btnCarritoMovil?.addEventListener('click', (e)=>{
-        miDialogoCarritoMovil.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
+        //miDialogoCarritoMovil.showModal();
+        //document.addEventListener("click", cerrarDialogoExterno);
+        contenedorDesktop.classList.remove('translate-x-full');
+        overlayCarrito.classList.remove('hidden');
       });
 
       btnCerrarCarritoMovil.addEventListener('click', ()=>{
-        miDialogoCarritoMovil.close();
-        document.removeEventListener("click", cerrarDialogoExterno);
+        //miDialogoCarritoMovil.close();
+        //document.removeEventListener("click", cerrarDialogoExterno);
+        contenedorDesktop.classList.add('translate-x-full');
+        overlayCarrito.classList.add('hidden');
       });
 
-      function cerrarDialogoExterno(event:Event) {
+      /*function cerrarDialogoExterno(event:Event) {
         const f = event.target;
         if (f === miDialogoCarritoMovil ) {
           miDialogoCarritoMovil.close();
           document.removeEventListener("click", cerrarDialogoExterno);
         }
-      }
+      }*/
 
 
       /*const paginador ={

@@ -70,6 +70,8 @@
     <!-- Menú flotante en la parte inferior -->
     <div class="fixed z-50 w-full h-[7rem] max-w-[33rem] -translate-x-1/2 bg-white  border border-gray-200 rounded-full bottom-4 left-1/2  shadow-lg">
         <div class="grid h-full max-w-[33rem] grid-cols-5 mx-auto group">
+            
+            <?php if(tienePermiso('Habilitar modulo de configuracion')&&userPerfil()==3 || userPerfil()<3): ?>
             <a href="/admin/configuracion" data-tooltip-target="tooltip-home" class="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 ">
                 <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-indigo-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2"/>
@@ -77,7 +79,9 @@
                 <span class="sr-only">Settings</span>
                 <p class="text-base my-0 text-gray-500">Ajuste</p>
             </a>
+            <?php endif; ?>
 
+            <?php if(tienePermiso('Habilitar modulo de inventario') || userPerfil()<=3): ?>
             <a href="/admin/almacen" data-tooltip-target="tooltip-almacen" type="button" class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50  group">
                 <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-indigo-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M11.074 4 8.442.408A.95.95 0 0 0 7.014.254L2.926 4h8.148ZM9 13v-1a4 4 0 0 1 4-4h6V6a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1v-2h-6a4 4 0 0 1-4-4Z"/>
@@ -86,6 +90,7 @@
                 <span class="sr-only">Almacén</span>
                 <p class="text-base my-0 text-gray-500">Almacén</p>
             </a>
+            <?php endif; ?>
 
             <div class="flex items-center justify-center menu">
                 <button data-tooltip-target="tooltip-new" id="mobile-menu1" type="button" class="inline-flex items-center justify-center w-14 h-14 font-medium bg-indigo-500 rounded-full hover:bg-indigo-600 group focus:ring-4 focus:ring-indigo-300 focus:outline-none ">
@@ -96,6 +101,7 @@
                 </button>
             </div>
             
+            <?php if(tienePermiso('Habilitar modulo de caja') || userPerfil()<=3): ?>
             <a href="/admin/caja" data-tooltip-target="tooltip-caja"    class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50  group">
                 <!-- Ícono caja registradora -->
                 <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-indigo-600 " 
@@ -106,7 +112,9 @@
                 <span class="sr-only">Módulo de Caja</span>
                 <p class="text-base my-0 text-gray-500">Caja</p>
             </a>
+            <?php endif; ?>
 
+            <?php if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
             <a href="/admin/ventas<?php echo (getConfigLocal()['habilitar_venta_modo_rapido']??null)?->valor_final == 1?'/modorapido':''; ?>" data-tooltip-target="tooltip-venta" class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50  group">
                 <svg class="w-5 h-5 mb-1 text-gray-500  group-hover:text-indigo-600 " 
                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -119,6 +127,7 @@
                 <span class="sr-only">Ventas</span>
                 <p class="text-base my-0 text-gray-500">Venta</p>
             </a>
+            <?php endif; ?>
             <div id="tooltip-venta" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip ">
                 Ventas
                 <div class="tooltip-arrow" data-popper-arrow></div>
@@ -216,7 +225,7 @@
             <img class="w-14 h-14 rounded-full" src="/build/img/avatar/avatar9.jpg" alt="user" />
 
             <div
-                class="absolute z-10 bg-white flex flex-col items-start top-full right-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
+                class="absolute z-50 bg-white flex flex-col items-start top-full right-0 rounded-lg pt-2 pb-3 px-4 shadow-md scale-y-0 group-hover:scale-y-100 origin-top duration-200">
 
                 <div class="px-3 py-2 w-full">
                     <label for="selectSucursal"
@@ -284,16 +293,27 @@
 
     <nav class="flex flex-col space-y-3">
       <!-- Inicio -->
-      <a href="/admin/dashboard" class="flex items-center text-2xl gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50    bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5     h-20 focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-indigo-500 text-2xl">home</span>
-        <span>Inicio</span>
-      </a>
+       <?php if(tienePermiso('Mostrar dashboard') || userPerfil()<=3): ?>
+        <a href="/admin/dashboard" class="flex items-center text-2xl gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50    bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5     h-20 focus:outline-none focus:ring-0">
+            <span class="material-symbols-outlined text-indigo-500 text-2xl">home</span>
+            <span>Inicio</span>
+        </a>
+      <?php endif; ?>
+
+      <?php if(tienePermiso('Habilitar módulo de credito/separados') || userPerfil()<=3): ?>
+        <a href="/admin/creditos" class="flex items-center text-2xl gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50    bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5     h-20 focus:outline-none focus:ring-0">
+            <span class="material-symbols-outlined text-indigo-500 text-2xl">swap_horiz</span>
+            <span>Creditos</span>
+        </a>
+      <?php endif; ?>
 
       <!-- Reportes -->
-      <a href="/admin/reportes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50    bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5     h-20 text-2xl focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-indigo-500 text-2xl">format_list_bulleted</span>
-        <span>Reportes</span>
-      </a>
+       <?php if(tienePermiso('Habilitar modulo de reportes')&&userPerfil()==3 || userPerfil()<3): ?>
+        <a href="/admin/reportes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50    bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5     h-20 text-2xl focus:outline-none focus:ring-0">
+            <span class="material-symbols-outlined text-indigo-500 text-2xl">format_list_bulleted</span>
+            <span>Reportes</span>
+        </a>
+      <?php endif; ?>
 
       <!-- Clientes -->
       <a href="/admin/clientes" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50    bg-gray-50 border-b border-gray-300 text-gray-900 focus:border-indigo-600 w-full p-2.5     h-20 text-2xl focus:outline-none focus:ring-0">
@@ -313,6 +333,10 @@
       <p class="text-gray-500 text-xl">Bienvenido: 
         <span class="text-indigo-600 font-bold text-right text-xl"><?php echo $_SESSION['nombre']; ?></span>
       </p>
+      <?php if($user['perfil']<4): ?>
+        <a class="w-full text-start text-gray-500 whitespace-nowrap hover:bg-slate-200 p-3"
+            href="/admin/comisiones">Comisiones</a>
+      <?php endif; ?>
       <a class="cerrar-sesion text-lg mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout">Cerrar Sesión</a>
     </div>
   </div>

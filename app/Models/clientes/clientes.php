@@ -9,7 +9,7 @@ class clientes extends \App\Models\ActiveRecord {
     {
         $this->id = $args['id'] ?? null;
         $this->nombre = $args['nombre'] ?? '';
-        $this->apellido = $args['apellido'] ?? '';
+        $this->apellido = !empty($args['apellido'])?$args['apellido']:' ';
         $this->tipodocumento = $args['tipodocumento'] ?? '3';
         $this->identificacion = $args['identificacion'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
@@ -29,11 +29,11 @@ class clientes extends \App\Models\ActiveRecord {
         
         if(strlen($this->nombre)>45)self::$alertas['error'][] = 'Has excecido el limite de caracteres';
         
-        if(!$this->apellido || strlen($this->apellido)>32)self::$alertas['error'][] = 'El apellido del cliente no debe ir vacio o ser mayor a 32 digitos';
+        if(strlen($this->apellido)>32)self::$alertas['error'][] = 'El apellido del cliente no debe ir vacio o ser mayor a 32 digitos';
         
-        if(!$this->identificacion)self::$alertas['error'][] = 'La identificacion del cliente es Obligatorio';
+        //if(!$this->identificacion)self::$alertas['error'][] = 'La identificacion del cliente es Obligatorio';
 
-        if(strlen($this->identificacion)<7 || strlen($this->identificacion)>11)self::$alertas['error'][] = 'La identificacion no debe ser menor a 7 digitos o mayor a 11 digitos';
+        //if(strlen($this->identificacion)<7 || strlen($this->identificacion)>11)self::$alertas['error'][] = 'La identificacion no debe ser menor a 7 digitos o mayor a 11 digitos';
         
         if(!$this->telefono)self::$alertas['error'][] = 'El telefono del cliente es Obligatorio';
 
@@ -49,12 +49,10 @@ class clientes extends \App\Models\ActiveRecord {
 
     public static function indicadoresVentasXcliente(int $idcliente, int $idsucursal = 1):object|NULL{
         $query = "SELECT
-                    SUM(f.total) AS total_ventas_cliente,
                     COUNT(f.id) AS cantidad_ventas,
-                    AVG(f.total) AS ticket_promedio,
-                    SUM(v.cantidad) AS total_productos_comprados
+                    SUM(f.total) AS total_ventas_cliente,
+                    AVG(f.total) AS ticket_promedio
                 FROM facturas f
-                LEFT JOIN ventas v ON v.idfactura = f.id
                 WHERE f.fechapago >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) AND f.id_sucursal = $idsucursal AND f.idcliente = $idcliente AND f.estado = 'Paga';";
         $array = self::camposJoinObj($query);
         return array_shift($array);
@@ -89,7 +87,7 @@ class clientes extends \App\Models\ActiveRecord {
         return $array;
     }
 
-    public static function direccionesANDTarifas($id):array{
+    public static function direccionesANDTarifas(int $id):array{
         $query = "SELECT 
                 JSON_ARRAYAGG(
                     JSON_OBJECT(

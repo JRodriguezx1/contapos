@@ -35,10 +35,12 @@ type productsapi = {
     };
 
 
+//detalle de factura
 interface MedioPago {
     id: string;
     mediopago: string;
     estado: string;
+    valor?: number;
     nick?: string;
 }
 interface ConsumidorFinal {
@@ -70,7 +72,7 @@ interface CarritoItem {
     idproducto: string;
     tipoproducto: string;
     tipoproduccion: string;
-    idcategoria: string;
+    idcategoria?: string;
     foto: string;
     nombreproducto: string;
     rendimientoestandar: string;
@@ -109,6 +111,7 @@ interface Resolution {
 }
 interface DataInvoice {
     negocio: string;
+    sucursal:string;
     nit: string;
     direccion: string;
     telefono: string;

@@ -61,6 +61,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/2.0.10/bwip-js-min.js" integrity="sha512-5uGnKj8h56cEozQZHq09metdJx1V6UM8qs7M+bG7EJMKYAKBl+CWo1SdmqU9RZTTlzIIa4xTCR5LWBY3spP9zw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> <!-- para el manejo de QR en almacen -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     
     <!--<script src="/build/js/bundle.min.js" defer></script>-->
     <script src="/build/js/bundle.ts.min.js" defer></script>

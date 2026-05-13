@@ -34,6 +34,7 @@
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
+    let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
@@ -340,7 +341,7 @@
             const partes = val.split('.');
             if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
             if (val.startsWith('.'))val = '1';
-            if (val === '' || isNaN(parseFloat(val))) val = '0';
+            if (val === '' || isNaN(parseFloat(val))) val = '';
 
             input.value = val;
             actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
@@ -360,7 +361,7 @@
     });*/
 
     btnguardar?.addEventListener('click', ()=>{
-      if(carrito.length){
+      if(carrito.length && valorTotal.total>0){
         miDialogoGuardar.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
@@ -371,7 +372,7 @@
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
-      if(carrito.length){
+      if(carrito.length && valorTotal.total>0){
         document.querySelector('.Efectivo')?.removeAttribute('readonly');
         document.querySelector('#inputscreditos')?.classList.add('flex');
         document.querySelector('#inputscreditos')?.classList.remove('hidden');
@@ -393,7 +394,7 @@
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
-      if(carrito.length){
+      if(carrito.length && valorTotal.total>0){
         document.querySelector('.Efectivo')?.setAttribute('readonly', 'true');
         document.querySelector('#inputscreditos')?.classList.add('hidden');
         document.querySelector('#inputscreditos')?.classList.remove('flex');
@@ -541,8 +542,9 @@
             btnPagar.disabled = false;
             btnPagar.value = 'Pagar';
             miDialogoFacturar.close();
-            (document.getElementById('miDialogoCarritoMovil') as HTMLDialogElement).close();
             document.removeEventListener("click", cerrarDialogoExterno);
+            (document.getElementById('contenedorDesktop') as HTMLDivElement).classList.add('translate-x-full');
+            (document.getElementById('overlayCarrito') as HTMLDivElement).classList.add('hidden');
           
             //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
@@ -565,6 +567,38 @@
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      ////// cuando no es impresora CAJA por BT
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
+      if(printerBT === '1'){  //solo aplica para impresora principal si es android
+        const builder = new InvoiceTicketBuilder(datainvoice);
+        const ticket = await builder.generate(true); //true para version buffer bytes
+        
+        const base64 = bytesToBase64(ticket);
+        //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
+        //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
+        //window.location.href = url;
+        if (isAndroid)window.location.href = `rawbt:base64,${base64}`;
+
+        //version string
+          //const encoder = new TextEncoder();
+          //const bytes = encoder.encode(ticket);
+        //descargar .bin a equipo
+          /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ticket.bin';
+          a.click();
+          URL.revokeObjectURL(url);*/
+      }
+
+
+      setTimeout(() => {
+        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+      }, 1000);
+
+      /*
       try {
         const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
         const respuesta = await fetch(url, {
@@ -576,11 +610,8 @@
         console.log(resultado);
       } catch (error) {
         console.log(error);
-      }
+      }*/
 
-      setTimeout(() => {
-        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
-      }, 1100);
     }
 
     
@@ -610,6 +641,7 @@
     function limpiarformdialog(){
       (document.querySelector('#formAddCliente') as HTMLFormElement)?.reset();
     }
+
 
     //exponer variables y funciones globalmente
     POS.limpiarformdialog = limpiarformdialog;

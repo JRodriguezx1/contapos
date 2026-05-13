@@ -277,7 +277,7 @@
         <h5 class="text-sky-400 font-bold uppercase text-center mb-3">Ventas del dia</h5>
         <!-- Facturas del dia -->
         <div class="overflow-x-auto">
-            <table class="display responsive nowrap tabla w-full min-w-[700px]" width="100%" id="">
+            <table id="tablaListaPedidos" class="display responsive nowrap tabla w-full min-w-[700px]" width="100%">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700 text-center">
                         <th class="p-2">N.</th>
@@ -309,7 +309,7 @@
                         <td class=""><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                         <td class=""><?php echo number_format($value->total??0, "0", ",", ".");?></td>
                         <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                                <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-light printPOS"><i class="fa-solid fa-print"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -322,4 +322,8 @@
     <?php }else{ ?>
         <label class="block mt-8 etiqueta text-sky-400 text-center  font-bold uppercase" for="first">Cierre de caja realizado</label>
      <?php }; ?>
+
+     <script>
+        const getParam = <?= json_encode($conflocal) ?>;
+    </script>
 </div>

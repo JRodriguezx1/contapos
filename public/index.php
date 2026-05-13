@@ -253,6 +253,7 @@ $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospa
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eliminarPedidoGuardado']);  //api llamada desde pedidosguardados.ts
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
+$router->get('/admin/api/getInvoice', [cajacontrolador::class, 'getInvoice']); //obtener detalle invoice en caja.ts
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //api llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
