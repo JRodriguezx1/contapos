@@ -319,7 +319,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
     private cliente(){
         this.feed(1);
         this.center(`Cliente: ${this.invoice.cliente.nombre.trim()} ${this.invoice.cliente.apellido.trim()}`);
-        this.center(`Documento: ${this.invoice.cliente.identificacion.trim()}`);
+        this.center(`Documento: ${this.invoice.cliente.identificacion?.trim()??''}`);
         this.center(`Telefono: ${this.invoice.cliente.telefono.trim()}`);
         this.center(`Direccion: ${this.invoice.cliente.data1?.trim()||' - '}`);
         this.feed(1);
