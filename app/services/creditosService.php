@@ -48,7 +48,7 @@ class creditosService {
                 $alertas['exito'][] = "Credito creado con exito";
                 //acatualizar deuda de cliente
                 $cliente = clientes::find('id', $idcliente);
-                $cliente->totaldebe += $valoresCredito->abonoinicial;
+                $cliente->totaldebe += $valoresCredito->montototal;
                 $cliente->actualizar();
             }else{
                 $alertas['error'][] = "Credito creado con exito";

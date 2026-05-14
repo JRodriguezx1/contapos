@@ -97,7 +97,7 @@
     <div class="flex justify-start gap-4">
         <button id="btnDeudaTotal" class=" text-gray-800 rounded-md border-2 border-indigo-400 shadow-sm hover:bg-gray-100 focus:ring-1 focus:ring-indigo-400 !py-4 !px-6 flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl text-blue-400">payments</span>
-            <span class="font-medium text-2xl uppercase text-blue-400">Deuda total: <span class="text-gray-800">$<?php echo number_format($cliente->totaldebe, 0, ',', '.'); ?></span></span>
+            <span class="font-medium text-2xl uppercase text-blue-400">Deuda total: <span class="text-gray-800">$<?php echo number_format($cliente->totaldebe??0, 0, ',', '.'); ?></span></span>
           </button>
           <button id="btnTotalCuotas" class=" text-gray-800 rounded-md border-2 border-indigo-400 shadow-sm hover:bg-gray-100 focus:ring-1 focus:ring-indigo-400 !py-4 !px-6 flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl">payments</span>

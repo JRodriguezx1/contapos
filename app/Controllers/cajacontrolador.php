@@ -699,9 +699,9 @@ class cajacontrolador{
           if($ra){
             $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
             $alertas['ultimocierre'][] = $ultimocierre->id;
-            //si es base automatica, crear registro en ingresocajas
+            //si es base automatica, crear registro en ingresocajas asociada al siguiente cierre de caja
             if($ultimocierre->idcaja == 1 && $baseAuto > 0){
-              $ingresocaja = new ingresoscajas(['idsucursal_idfk'=>id_sucursal(), 'idusuario'=>$_SESSION['id'], 'id_caja'=>1, 'id_cierrecaja'=>$r[1], 'operacion'=>'ingreso']);
+              $ingresocaja = new ingresoscajas(['idsucursal_idfk'=>id_sucursal(), 'idusuario'=>$_SESSION['id'], 'id_caja'=>1, 'id_cierrecaja'=>$r[1], 'operacion'=>'ingreso', 'valor'=>$baseAuto]);
               $ingresocaja->crear_guardar();
             }
             //enviar cierre de caja por ws
