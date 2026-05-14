@@ -34,7 +34,7 @@
                                 <button class="btn-md btn-turquoise editarClientes" title="Actualizar datos del cliente"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button class="btn-md btn-light editarEliminarDireccion" title="Actualizar dirección del cliente"><i class="fa-solid fa-location-dot"></i></button>
                                 <a class="btn-md btn-bluedark" href="/admin/clientes/detalle?id=<?php echo $cliente->id;?>" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>
-                                
+                                <a class="btn-md btn-blue" href=""><i class="fa-solid fa-dollar-sign"></i></a>
                                 <button class="btn-md btn-red eliminarClientes" title="Eliminar cliente"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </td>

@@ -116,6 +116,8 @@ interface DataInvoice {
     direccion: string;
     telefono: string;
     email: string;
+    www: string;
+    logo: string;
     num_orden: number;
     tipoFactura: string;
     textFactura: string;

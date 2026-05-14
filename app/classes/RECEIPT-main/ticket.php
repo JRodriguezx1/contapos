@@ -296,7 +296,7 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","PAGOS"),0,'C',false);
             foreach($cuotas as $value)
                 foreach($value->mediosdepago as $mp)
-                    $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value->fechapagado.' '.$mp->mediopago.' $'.number_format($mp->valor, '0', ',', '.')),0,'C',false);
+                    $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value->fechapagado.' '.$mp->mediopago.' $'.number_format($mp->valor??$value->valorpagado, '0', ',', '.')),0,'C',false);
             
             $this->pdf->Ln(12);
 

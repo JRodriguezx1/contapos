@@ -312,6 +312,8 @@
         </div>
 
       </div>
+
+      <!--<canvas id="miCanvas" width="223" height="226" style="border:1px solid #000;"></canvas>-->
     </div> <!-- fin segunda columna o contenedor carrito desktop -->
   </div>
 

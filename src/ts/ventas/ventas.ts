@@ -566,6 +566,19 @@
     }
 
 
+    /*const canvas = document.getElementById('miCanvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+
+    const img = new Image();
+    img.src = '/build/img/cliente/logoticket.png'; // Ruta de la imagen
+
+    // Es vital esperar a que cargue, de lo contrario el canvas estará vacío
+    img.onload = function() {
+        // drawImage(imagen, x, y, ancho, alto)
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };*/
+
+
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
       ////// cuando no es impresora CAJA por BT
       const isAndroid = /Android/i.test(navigator.userAgent);

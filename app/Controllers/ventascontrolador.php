@@ -400,6 +400,8 @@ class ventascontrolador{
                       'direccion' => negocionSucursal()->direccion.' - '.negocionSucursal()->ciudad,
                       'telefono' => negocionSucursal()->telefono.' '.negocionSucursal()->movil,
                       'email' => negocionSucursal()->email,
+                      'www' => negocionSucursal()->www,
+                      'logo' => negocionSucursal()->logo,
                       'num_orden' => $factura->num_orden,
                       'tipoFactura' => $consecutivo->idtipofacturador,
                       'textFactura' => $consecutivo->idtipofacturador == 1?'FACTURA ELECTRONICA DE VENTA':'COMPROBANTE DE VENTA',

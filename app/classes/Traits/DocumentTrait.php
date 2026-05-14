@@ -361,6 +361,8 @@ trait DocumentTrait
             'direccion' => $sucursal->direccion,
             'telefono' => $sucursal->telefono,
             'email' => $sucursal->email,
+            'www' => $sucursal->www,
+            'logo' => $sucursal->logo,
             // Datos de la factura
             'num_orden' => (int)$factura->num_orden,
             'tipoFactura' => $consecutivo->idtipofacturador,

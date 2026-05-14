@@ -55,6 +55,10 @@
                     <!-- <label data-num="12" class="count-charts" for="">12</label> -->
                 </div>
             </div>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="www">www/QR alternativo</label>
+                <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Texto o link a imprimir en QR" id="www" name="www" value="<?php echo $negocio->www??'';?>">
+            </div>
         </fieldset>
 
 <fieldset class="w-full max-w-full">

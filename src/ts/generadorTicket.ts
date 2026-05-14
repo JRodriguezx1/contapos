@@ -218,8 +218,8 @@ class EscPosBuilder {
                     const r = data[i];
                     const g = data[i + 1];
                     const b = data[i + 2];
-                    const gray = (r + g + b) / 3;
-                    if (gray < 128) byte |= (1 << (7 - bit));
+                    const gray = r * 0.299 + g * 0.587 + b * 0.114;
+                    if (gray < 160) byte |= (1 << (7 - bit));
                 }
                 bytes.push(byte);
             }
@@ -254,6 +254,51 @@ class EscPosBuilder {
     }
 
 
+    async image(src: string, options: { width?: number; align?: 'left' | 'center' | 'right'; } = {}){
+        const {
+            width = 256,
+            align = 'center'
+        } = options;
+
+        return new Promise<void>((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                // calcular alto proporcional
+                const ratio = img.height / img.width;
+                const height = Math.floor(width * ratio);
+                // canvas temporal
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.ceil(width / 8) * 8;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                if(!ctx){
+                    reject('No canvas context');
+                    return;
+                }
+                // fondo blanco
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // mejora contraste
+                ctx.filter = 'grayscale(100%) contrast(180%)';
+                // dibujar imagen
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                // alineación
+                this.setAlign(align);
+                // convertir a ESC/POS
+                const imgBytes = this.canvasToEscPos(canvas);
+                // agregar bytes
+                this.bytes.push(...imgBytes);
+                this.feed(1);
+                this.setAlign('left');
+                resolve();
+            };
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
+
+
     build(buildBytes:boolean): string | Uint8Array  {
         if(buildBytes){
             return new Uint8Array(this.bytes);
@@ -274,7 +319,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
     }
 
     async generate(buildBytes:boolean):Promise<string | Uint8Array> {
-        this.header();
+        await this.header();
         if(this.invoice.tipoFactura === '1')this.customer(); //solo factura electronica
         this.datosFactura();
         this.cliente();
@@ -287,7 +332,11 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         return this.build(buildBytes);
     }
 
-    private header() {
+    private async header() {
+        await this.image(`/build/img/${this.invoice.logo}`, {
+            width: 256,
+            align: 'center'
+        });
         this.boldOn();
         this.center(this.invoice.negocio.toUpperCase());
         this.boldOff();
@@ -372,7 +421,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
     private async footer() {
         this.setAlign('center');
         //this.qr(this.invoice.link || 'www.j2softwarepos.com/', 8, 'M');
-        const qrBytes = await this.qrRaster(this.invoice.link || 'www.j2softwarepos.com/', 'M');
+        const qrBytes = await this.qrRaster(this.invoice.link || this.invoice.www, 'M');
         this.bytes.push(...qrBytes);
         this.feed(2);
         this.boldOn();
