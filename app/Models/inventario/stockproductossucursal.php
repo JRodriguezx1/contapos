@@ -4,7 +4,7 @@ namespace App\Models\inventario;
 
 class stockproductossucursal extends \App\Models\ActiveRecord{
     protected static $tabla = 'stockproductossucursal';
-    protected static $columnasDB = ['id', 'productoid', 'sucursalid', 'stock', 'stockminimo', 'habilitarventa'];
+    protected static $columnasDB = ['id', 'productoid', 'sucursalid', 'stock', 'stockminimo', 'stockaux', 'habilitarventa', 'promediostock'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -12,6 +12,8 @@ class stockproductossucursal extends \App\Models\ActiveRecord{
         $this->sucursalid = $args['sucursalid']??'';
         $this->stock = !empty($args['stock'])?$args['stock']:0;
         $this->stockminimo = !empty($args['stockminimo']) ? $args['stockminimo'] : 1;
+        $this->stockaux = !empty($args['stockaux'])?$args['stockaux']:0;
+        $this->promediostock = !empty($args['promediostock'])?$args['promediostock']:0;
         $this->habilitarventa = $args['habilitarventa']??1;
         $this->created_at = $args['created_at']??'';
     }
