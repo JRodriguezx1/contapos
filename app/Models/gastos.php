@@ -4,13 +4,14 @@ namespace App\Models;
 
 class gastos extends \App\Models\ActiveRecord {
     protected static $tabla = 'gastos';
-    protected static $columnasDB = ['id', 'id_sucursalfk', 'idg_usuario', 'id_compra', 'id_banco', 'idg_caja', 'idg_cierrecaja', 'idcategoriagastos', 'tipo_origen', 'operacion', 'valor', 'descripcion', 'imgcomprobante', 'fecha'];
+    protected static $columnasDB = ['id', 'id_sucursalfk', 'idg_usuario', 'idpagos_comisiones', 'id_compra', 'id_banco', 'idg_caja', 'idg_cierrecaja', 'idcategoriagastos', 'tipo_origen', 'operacion', 'valor', 'descripcion', 'imgcomprobante', 'fecha'];
     
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
         $this->id_sucursalfk = id_sucursal();
         $this->idg_usuario = $args['idg_usuario'] ?? 1;
+        $this->idpagos_comisiones = $args['idpagos_comisiones']??NULL;
         $this->id_compra = $args['id_compra']??NULL;
         $this->id_banco = $args['id_banco'] ??'';
         $this->idg_caja = $args['idg_caja'] ??'';

@@ -63,6 +63,7 @@ class comisionesService{
         }
 
         if($ultimocierre->estado == 0){ 
+            $liquidar->fkcierrecaja = $ultimocierre->id;
             $ingresoGasto = new gastos($_POST);
             $ingresoGasto->idg_usuario = $_SESSION['id'];
             $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
@@ -97,9 +98,13 @@ class comisionesService{
 
         $getDB->begin_transaction();
         try {
-            $r = $this->repoPagosComisiones->insert($liquidar);
+            $rpc = $this->repoPagosComisiones->insert($liquidar);
             $getDB->commit();
-            return $r;
+            //actualizar el gasto creado con el id de pagos_comisiones
+            $gastoComision = gastos::find('id', $rig[1]);
+            $gastoComision->idpagos_comisiones = $rpc[1];
+            $gastoComision->actualizar();
+            return $rpc;
         } catch (\Throwable $th) {
             $getDB->rollback();
             throw $th;
@@ -109,8 +114,17 @@ class comisionesService{
 
     public function eliminarMovimientoComision(int $id):array{
         $entityPago = $this->repoPagosComisiones->find($id);
+        $gasto = gastos::find('id', $id);
+        $cierrecaja = cierrescajas::find('id', $entityPago->fkcierrecaja);
         if(!$entityPago)return ['error'=>['Pago de comision ya no existe']];
-         $r = $this->repoPagosComisiones->delete($id);
+
+        if($gasto->id_banco!=null){ //ajustar gasto pago de comision - banco del cierre de caja
+            $cierrecaja->gastosbanco -= $entityPago->valor;
+        }else{ //ajustar gasto pago de comision - caja efectivo del cierre de caja
+            $cierrecaja->gastoscaja -= $entityPago->valor;
+        }
+        $rc = $cierrecaja->actualizar();
+        $r = $this->repoPagosComisiones->delete($id);
         if($r){
             return ['exito'=>['pago de comision eliminada'], 'valor'=>$entityPago->valor];
         }else{

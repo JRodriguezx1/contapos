@@ -2,11 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\configuraciones\notificacionesws;
-use App\Models\felectronicas\facturas_electronicas;
-use App\Models\sucursales;
-use App\services\cajaService;
-use App\services\facturaElectronicaService;
+use App\Models\parametrizacion\config_local;
 use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
 use stdClass;
@@ -55,6 +51,7 @@ class whatsAppControlador{
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
+    $alertas = [];
     $ws = new whatsAppService();
     try {
       $r = $ws->eliminarContacto($id);
@@ -73,7 +70,8 @@ class whatsAppControlador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     //header('Content-Type: application/json');
-    $ws = new whatsAppService();
+    $conflocal = config_local::getParamGlobal();
+    $ws = new whatsAppService($conflocal);
     $r = $ws->sendtextDetalleCierreCaja($id);
     echo json_encode($r);
     return;

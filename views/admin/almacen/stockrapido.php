@@ -26,7 +26,7 @@
                     <td class=""><div class="w-52 whitespace-normal"><?php echo $value->categoria;?></div></td>
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>
-                    <td class=""><?php echo "0";?></td>
+                    <td class=""><?php echo $value->stockaux;?></td>
                     <td class=""><?php echo $value->fecha_ingreso;?></td>
                     <td class="accionestd">
                         <?php if($value->tipoproducto == '0'): ?>
@@ -49,7 +49,7 @@
                     <td class="" ><?php echo $value->categoria??'';?></td> 
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>
-                    <td class=""><?php echo "0";?></td>
+                    <td class=""><?php echo $value->stockaux;?></td>
                     <td class=""><?php echo $value->fecha_ingreso;?></td>
                     <td class="accionestd">
                         <div class="acciones-btns btnssubproducto" id="<?php echo $value->subproductoid;?>" data-nombre="<?php echo $value->nombre;?>" data-stock="<?php echo $value->stock;?>">
@@ -74,7 +74,7 @@
           <p id="nombreItemstockrapido" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg"></p>
 
           <div class="formulario__campo">
-              <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida</label>
+              <label class="formulario__label" for="selectStockRapidoUndmedida">Unidad de medida vendida</label>
               <select id="selectStockRapidoUndmedida" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="selectStockRapidoUndmedida" required>
                   <option value="" disabled selected>-Seleccionar-</option>
                     <!-- se inserta por ts en almacen.ts -->
@@ -89,9 +89,9 @@
           </div>
 
           <div class="formulario__campo">
-              <label class="formulario__label" for="aux">Aux</label>
+              <label class="formulario__label" for="stockAux">Stock Auxiliar</label>
               <div class="formulario__dato">
-                  <input id="aux" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Ingresar cantidad" name="aux" value="">
+                  <input id="stockAux" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="0" step="0.01" placeholder="Ingresar cantidad" name="stockAux" value="">
               </div>
           </div>
 

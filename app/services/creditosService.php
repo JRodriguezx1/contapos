@@ -435,8 +435,12 @@ class creditosService {
                 }
             }
 
-           // debuguear($arrayCierresCaja);
+            
             //descontar los abonos de los separados en cierre de caja si esta abierta
+            if(empty($arrayCierresCaja)){
+                $alertas['exito'][] = "Credito anulado correctamente";
+                return $alertas;
+            }
             $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
             //debuguear($r);
             if($r){

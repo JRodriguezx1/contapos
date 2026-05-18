@@ -14,7 +14,7 @@ class stockService {
         $movInv = new movimientos_productos;
         //registrar ajuste de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
-        $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
+        $cantidadxitem = array_column($sumarSubproductos, 'stock', 'id');
         foreach($returnInsumos as $value){
             $obj = new stdClass();
             $obj->idfksucursal = id_sucursal();
@@ -38,7 +38,7 @@ class stockService {
         $movInv = new movimientos_productos;
         //registrar aumento de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
-        $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
+        $cantidadxitem = array_column($sumarSubproductos, 'stock', 'id');
         foreach($returnInsumos as $value){
             $obj = new stdClass();
             $obj->idfksucursal = id_sucursal();
@@ -61,7 +61,7 @@ class stockService {
          $movInv = new movimientos_productos;
         //registrar descuento de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
-        $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
+        $cantidadxitem = array_column($sumarSubproductos, 'stock', 'id');
         foreach($returnInsumos as $value){
             $obj = new stdClass();
             $obj->idfksucursal = id_sucursal();
@@ -85,7 +85,7 @@ class stockService {
          $movInv = new movimientos_insumos;
         //registrar aumento de movimiento de inventario de insumos de forma masiva
         $arrayMovInv = [];
-        $cantidadxitem = array_column($sumarSubproductos, 'cantidad', 'id');
+        $cantidadxitem = array_column($sumarSubproductos, 'stock', 'id');
         foreach($returnInsumos as $value){
             $obj = new stdClass();
             $obj->fksucursal_id = id_sucursal();
@@ -111,7 +111,7 @@ class stockService {
         $movInv = new movimientos_insumos;
         //registrar descuento de movimiento de inventario de insumos de forma masiva
         $arrayMovInv = [];
-        $cantidadxitem = array_column($descontarSubproductos, 'cantidad', 'id');
+        $cantidadxitem = array_column($descontarSubproductos, 'stock', 'id');
         foreach($returnInsumos as $value){
             $obj = new stdClass();
             $obj->fksucursal_id = id_sucursal();

@@ -281,6 +281,30 @@ class ActiveRecord {
         return $resultado;
     }
 
+
+    public static function reducirMultiplesColumnas(array $array, array $columnas, string $id, string $condicion = '1=1'){
+        if(empty($array))return false;
+        $query = "UPDATE " . static::$tabla . " SET ";
+        $sets = [];
+        $ids = [];
+        foreach($columnas as $col){
+            $case = "$col = CASE ";
+            foreach($array as $item){
+                $itemId = (int)$item->id;
+                $cantidad = (float)$item->$col;
+                $case .= "WHEN $id = $itemId THEN $col - $cantidad ";
+                $ids[] = $itemId;
+            }
+            $case .= " ELSE $col END ";
+            $sets[] = $case;
+        }
+        $ids = array_unique($ids);
+        $query .= implode(", ", $sets);
+        $query .= " WHERE $id IN (" . implode(',', $ids) . ") AND $condicion";
+        return self::$db->query($query);
+    }
+
+
     public static function updateaddinv($array, $col){  //$array = [{idproducto: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
         $query = "UPDATE ".static::$tabla." SET $col = CASE ";
         $in = "";
@@ -333,6 +357,29 @@ class ActiveRecord {
         $resultado = self::$db->query($query);
         if(!$resultado)throw new \Exception("Error al descontar stock");
         return $resultado;
+    }
+
+
+    public static function aumentarMultiplesColumnas(array $array, array $columnas, string $id, string $condicion = '1=1'){
+        if(empty($array))return false;
+        $query = "UPDATE " . static::$tabla . " SET ";
+        $sets = [];
+        $ids = [];
+        foreach($columnas as $col){
+            $case = "$col = CASE ";
+            foreach($array as $item){
+                $itemId = (int)$item->id;
+                $cantidad = (float)$item->$col;
+                $case .= "WHEN $id = $itemId THEN $col + $cantidad ";
+                $ids[] = $itemId;
+            }
+            $case .= " ELSE $col END ";
+            $sets[] = $case;
+        }
+        $ids = array_unique($ids);
+        $query .= implode(", ", $sets);
+        $query .= " WHERE $id IN (" . implode(',', $ids) . ") AND $condicion";
+        return self::$db->query($query);
     }
 
 

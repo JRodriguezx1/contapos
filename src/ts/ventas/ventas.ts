@@ -29,7 +29,7 @@
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, cantidad: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let nombretarifa:string|undefined='', tipoventa:string="Contado";
@@ -124,7 +124,7 @@
         // Crear popup
         const popup = document.createElement('div');
         popup.className = `popup absolute z-40 right-8 top-1/3 opacity-0 translate-x-0 translate-y-0 transition-all duration-500 w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white font-semibold text-lg`;
-        popup.innerHTML = `${(count?.cantidad??0)+1}`;
+        popup.innerHTML = `${(count?.stock??0)+1}`;
         elementProduct!.appendChild(popup);
         // Forzar reflow para activar transición
         requestAnimationFrame(() => {
@@ -153,7 +153,7 @@
             <span class="menos material-symbols-outlined text-base">remove</span>
           </button>
 
-          <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.cantidad}">
+          <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.stock}">
 
           <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
             <span class="mas material-symbols-outlined text-base">add</span>
@@ -181,13 +181,13 @@
           carrito[index].total = 0;
         }
         if(control){ //cuando el producto se agrega desde la lista de productos
-          carrito[index].cantidad += cantidad;
+          carrito[index].stock += cantidad;
         }else{ //cuando el producto se agrega por cantidad
-          carrito[index].cantidad = cantidad;
+          carrito[index].stock = cantidad;
         }
        
         
-        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].cantidad;
+        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].stock;
         carrito[index].total = carrito[index].subtotal;
         carrito[index].valorcomision = (carrito[index].subtotal*carrito[index].percentcomision)/100;
         //calculo del impuesto y base por producto en el carrito deventas
@@ -196,7 +196,7 @@
 
         valorCarritoTotal();
         if(stateinput)
-        (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
+        (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
         (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
       }else{  //agregar a carrito si el producto no esta agregado en carrito, se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
@@ -211,7 +211,7 @@
         }
         const valorcomision:number = (productototal*producto.percentcomision)/100;
         
-        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, cantidad: number, prioridadcomision:string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
+        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision:string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
           id: '',
           idproducto: producto?.id!,
           tipoproducto: producto.tipoproducto,
@@ -222,7 +222,8 @@
           foto: producto.foto,
           costo: producto.precio_compra,
           valorunidad: precio,
-          cantidad: cantidad,
+          stock: cantidad,
+          promediostock: Number(producto.promediostock),
           prioridadcomision: producto.prioridadcomision,
           percentcomision: Number(producto.percentcomision),
           valorcomision: valorcomision,
@@ -300,7 +301,7 @@
       (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+valorTotal.valortarifa.toLocaleString();
       document.querySelector('#total')!.textContent = '$ '+valorTotal.total.toLocaleString();
       // cantidad total de productos
-      totalunidades.textContent = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
+      totalunidades.textContent = carrito.reduce((total, producto)=>producto.stock+total, 0)+'';
     }
 
 
@@ -311,10 +312,10 @@
       const precio = (elementProduct as HTMLElement).dataset.precio!;
       const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
       if((e.target as HTMLElement).classList.contains('menos')){
-        actualizarCarrito(idProduct, productoCarrito!.cantidad-1, false, true, productoCarrito?.valorunidad);
+        actualizarCarrito(idProduct, productoCarrito!.stock-1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('mas')){
-        actualizarCarrito(idProduct, productoCarrito!.cantidad+1, false, true, productoCarrito?.valorunidad);
+        actualizarCarrito(idProduct, productoCarrito!.stock+1, false, true, productoCarrito?.valorunidad);
       }
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
         carrito = carrito.filter(x=>x.idproducto != idProduct || x.valorunidad != precio);
@@ -494,7 +495,7 @@
       datos.append('tipofacturador', btnTipoFacturador.options[btnTipoFacturador.selectedIndex].textContent!);
       datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
       datos.append('tarifazona', nombretarifa||'');
-      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
+      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.stock>0)));  //envio de todos los productos con sus cantidades
       datos.append('totalunidades', totalunidades.textContent!);
       //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
       datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
@@ -529,7 +530,7 @@
           const resultado = await respuesta.json();
 
           if(estado == "Paga"){
-            resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
+            resultado.dataInvoice.items = carrito.filter(x=>x.stock>0);
             resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
               idmediopago,
               mediopago: mediosPagoDBMAP.get(idmediopago),

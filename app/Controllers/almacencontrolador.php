@@ -214,9 +214,13 @@ class almacencontrolador{
               if($value->id == id_sucursal()){
                 $stocksucursal[$index]['stock'] = $producto->stock;
                 $stocksucursal[$index]['stockminimo'] = $producto->stockminimo;
+                $stocksucursal[$index]['stockaux'] = 0;
+                $stocksucursal[$index]['promediostock'] = 1;
               }else{
                 $stocksucursal[$index]['stock'] = 0;
                 $stocksucursal[$index]['stockminimo'] = 0;
+                $stocksucursal[$index]['stockaux'] = 0;
+                $stocksucursal[$index]['promediostock'] = 1;
               }
               $stocksucursal[$index]['habilitarventa'] = 1;
             }
@@ -290,9 +294,13 @@ class almacencontrolador{
               if($value->id == id_sucursal()){
                 $stocksucursal[$index]['stock'] = $subproducto->stock;
                 $stocksucursal[$index]['stockminimo'] = $subproducto->stockminimo;
+                $stocksucursal[$index]['stockaux'] = 0;
+                $stocksucursal[$index]['promediostock'] = 1;
               }else{
                 $stocksucursal[$index]['stock'] = 0;
                 $stocksucursal[$index]['stockminimo'] = 0;
+                $stocksucursal[$index]['stockaux'] = 0;
+                $stocksucursal[$index]['promediostock'] = 1;
               }
             }
             $stockinsumossucursales->crear_varios_reg($stocksucursal);
@@ -1248,11 +1256,15 @@ class almacencontrolador{
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
+    $stockaux = $_POST['stockaux']??0;
+    $promediostock = $_POST['promediostock']??1;
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
         //$producto = productos::find('id', $iditem);
         $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $producto->stock =$producto->stock-$cantidad;
+        $producto->stockaux -= $stockaux;
+        $producto->promediostock = $promediostock;
         $ra = $producto->actualizar();
         //$producto->id = $producto->productoid;
         if($ra){
@@ -1268,6 +1280,8 @@ class almacencontrolador{
         //$insumo = subproductos::find('id', $iditem);
         $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $insumo->stock =  $insumo->stock-$cantidad;
+        $insumo->stockaux -= $stockaux;
+        $insumo->promediostock = $promediostock;
         $ra = $insumo->actualizar();
         //$producto->id = $producto->subproductoid;
         if($ra){
@@ -1290,10 +1304,14 @@ class almacencontrolador{
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
+    $stockaux = $_POST['stockaux']??0;
+    $promediostock = $_POST['promediostock']??1;
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
         $productostock = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $productostock->stock =  $productostock->stock+$cantidad;
+        $productostock->stockaux += $stockaux;
+        $productostock->promediostock = $promediostock;
         $ra = $productostock->actualizar();
 
         /////  registrar movimiento de inventario a productos
@@ -1311,12 +1329,13 @@ class almacencontrolador{
           $soloIdSubProduct = [];
           foreach($descontarSubproductos as $index => $value){
             $value->id = $value->id_subproducto;
+            $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
             $soloIdSubProduct[] = $value->id;
           }
           
           if(!empty($descontarSubproductos)){
             //$invSub = subproductos::updatereduceinv($descontarSubproductos, 'stock');
-            $invSub = stockinsumossucursal::reduceinv1condicion($descontarSubproductos, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            $invSub = stockinsumossucursal::reducirMultiplesColumnas($descontarSubproductos, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
             $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdSubProduct).") AND sucursalid = ".id_sucursal().";";
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);
             if($invSub){
@@ -1344,6 +1363,8 @@ class almacencontrolador{
         //$insumo = subproductos::find('id', $iditem);
         $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $insumo->stock = $insumo->stock+$cantidad;
+        $insumo->stockaux += $stockaux;
+        $insumo->promediostock = $promediostock;
          $ra = $insumo->actualizar();
         if($ra){
           // registrar ingreso de movimientos de inventario a insumos
@@ -1366,12 +1387,17 @@ class almacencontrolador{
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
+    $stockaux = $_POST['stockaux'];
+    $promediostock = $_POST['promediostock'];
+    
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
         //$producto = productos::find('id', $iditem);
         $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>$producto->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
         $producto->stock = $cantidad;
+        $producto->stockaux = $stockaux;
+        $producto->promediostock = $promediostock;
         $ra = $producto->actualizar();
         /////  registrar movimiento de inventario de productos
         $rm = $movpro->crear_guardar();
@@ -1386,6 +1412,8 @@ class almacencontrolador{
         $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
         $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>$insumo->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
         $insumo->stock = $cantidad;
+        $insumo->stockaux = $stockaux;
+        $insumo->promediostock = $promediostock;
         $ra = $insumo->actualizar();
         /////  registrar movimiento de inventario de insumos
         $rm = $movsub->crear_guardar();

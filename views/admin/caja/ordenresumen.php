@@ -59,7 +59,7 @@
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
             <p class="font-bold">Estado Orden</p>
-            <p id="estadoOrden"><?php echo ($factura->tipoventa =='Contado'||$factura->tipoventa =='')?$factura->estado:'Credito';?></p>
+            <p id="estadoOrden"><?php echo ($factura->tipoventa =='Contado'|| $factura->tipoventa =='')?$factura->estado:"Credito - F. $factura->estado";?></p>
         </div>
     </div>
 

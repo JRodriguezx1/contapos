@@ -21,6 +21,7 @@ type productsapi = {
       garantia: string,
       stock: string,
       stockminimo: string,
+      promediostock?:string,
       categoria: string,
       rendimientoestandar: string,
       sku:string,

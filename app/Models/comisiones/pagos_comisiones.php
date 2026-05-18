@@ -7,6 +7,7 @@ class pagos_comisiones {
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->fkidsucursal = $args['fkidsucursal']??id_sucursal();
+        $this->fkcierrecaja = $args['fkcierrecaja']??NULL;
         $this->fkusuarioid = $args['fkusuarioid']??'';
         $this->idmediopagoid = $args['idmediopagoid']??1;
         $this->valor = $args['valor']??0;
@@ -32,6 +33,7 @@ class pagos_comisiones {
         return [
             //'id' => $this->id,
             'fkidsucursal' => $this->fkidsucursal,
+            'fkcierrecaja' => $this->fkcierrecaja,
             'fkusuarioid' => $this->fkusuarioid,
             'idmediopagoid' => $this->idmediopagoid,
             'valor' => $this->valor,

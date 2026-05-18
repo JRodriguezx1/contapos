@@ -11,6 +11,8 @@
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numfactura = document.querySelector('#numfactura') as HTMLLabelElement;
     const inputAbrirCaja = document.querySelector('#inputAbrirCaja') as HTMLInputElement;
+    const formGastosingresos = document.querySelector('#formGastosingresos') as HTMLFormElement;
+    const btnEnviargastosingresos = document.querySelector('#btnEnviargastosingresos') as HTMLInputElement;
 
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     let tablaListaPedidos:HTMLElement;
@@ -49,6 +51,11 @@
     btnGastosingresos?.addEventListener('click', ():void=>{
       modalGastosIngresos.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    formGastosingresos.addEventListener('submit', (e:Event)=>{
+      btnEnviargastosingresos.disabled = true;
+      btnEnviargastosingresos.textContent = "Enviando...";
     });
 
     ///////// cambio de tipo de operacion si ingreso o gasto, si es gasto habilita el select de los tipos de gastos

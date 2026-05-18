@@ -210,5 +210,21 @@
             </select>
         </div>
 
+        <!-- Mostrar ventas por usuario en print cierre de caja -->
+        <div class="flex flex-col gap-2">
+            <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Mostrar ventas por usuario en impresion/ws cierre de caja</label>
+            <label for="mostrar_ventasXusuario_en_impresion/ws_cierrecaja_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 hover:border-indigo-500">
+                <input id="mostrar_ventasXusuario_en_impresion/ws_cierrecaja_si" type="radio" name="mostrar_ventas_por_usuario_en_impresion/ws_cierrecaja" value="1" class="hidden peer" <?php echo $conflocal['mostrar_ventas_por_usuario_en_impresion/ws_cierrecaja']->valor_final == 1?'checked':'';?>>
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
+            </label>
+
+            <label for="mostrar_ventasXusuario_en_impresion/ws_cierrecaja_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg cursor-pointer select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 hover:border-indigo-500">
+                <input id="mostrar_ventasXusuario_en_impresion/ws_cierrecaja_no" type="radio" name="mostrar_ventas_por_usuario_en_impresion/ws_cierrecaja" value="0" class="hidden peer" <?php echo $conflocal['mostrar_ventas_por_usuario_en_impresion/ws_cierrecaja']->valor_final == 0?'checked':'';?>>
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                <span class="ms-3 text-xl font-medium text-gray-900">No</span>
+            </label>
+        </div>
+
     </div>
 </div>

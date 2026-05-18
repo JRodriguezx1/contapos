@@ -11,13 +11,14 @@
         const modalStock = document.querySelector('#modalStock') as HTMLElement;
         const selectStockRapidoUndmedida = document.querySelector('#selectStockRapidoUndmedida') as HTMLSelectElement;
         let amount = document.querySelector('#cantidadStockRapido') as HTMLInputElement; //input cantidad de modal de stock rapido
+        let stockAux = document.querySelector('#stockAux') as HTMLInputElement; //input cantidad aux de modal de stock rapido
 
         const miDialogoIngresarProduccion = document.querySelector('#miDialogoIngresarProduccion') as any;
         const selectitemAproducir = document.querySelector('#itemAproducir') as HTMLSelectElement;
         const btnsproduccion = document.querySelectorAll<HTMLButtonElement>('.btnproduccion');  //btns ingresar descontar ajustar produccion
         const selectIngresarProduccionUnidadmedida = document.querySelector('#selectIngresarProduccionUnidadmedida') as HTMLSelectElement;
         const amountProduccion = document.querySelector('#stockIngresarProduccion') as HTMLInputElement;  //input cantidad cuando se ingresa orden de produccion
-        let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement, tablaInventarioSedes:HTMLTableElement;
+        let cantidadactual = 0, indiceFila=0, endponit:string='', factorC = 0, idUnidMedida:string, tipoelemento:string = '', idelemento:string = '', tablaStockRapido:HTMLElement, tablaInventarioSedes:HTMLTableElement;
     
         const sedes = document.querySelector('#sedes');
         const tablaBajoStock = document.querySelector('#tablaBajoStock tbody') as HTMLBodyElement;
@@ -182,12 +183,18 @@
             while(selectStockRapidoUndmedida.firstChild)selectStockRapidoUndmedida.removeChild(selectStockRapidoUndmedida.firstChild);
             if(tipoelemento == '0'){
                 const productounidades = allConversionUnidades.filter(x => x.idproducto == idelemento); 
-                productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
+                productounidades.forEach(u=>{
+                    options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`;
+                    idUnidMedida = u.idunidadmedidabase;
+                });
                 selectStockRapidoUndmedida.insertAdjacentHTML('afterbegin', options);
             }
             if(tipoelemento == '1'){
                 const subproductounidades = allConversionUnidades.filter(x => x.idsubproducto == idelemento); 
-                subproductounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idsubproducto}" >${u.nombreunidaddestino}</option>`);
+                subproductounidades.forEach(u=>{
+                    options+=`<option data-factor="${u.factorconversion}" value="${u.idsubproducto}" >${u.nombreunidaddestino}</option>`;
+                    idUnidMedida = u.idunidadmedidabase;
+                });
                 selectStockRapidoUndmedida.insertAdjacentHTML('afterbegin', options);
             }
             
@@ -225,17 +232,26 @@
         document.querySelector('#formStock')?.addEventListener('submit', (e)=>{
             e.preventDefault();
             factorC = Number(selectStockRapidoUndmedida.options[selectStockRapidoUndmedida.selectedIndex].dataset.factor);
-            let info = (tablaStockRapido as any).page.info(), AmountItem:number = factorC*Number(amount.value);
+            let info = (tablaStockRapido as any).page.info(), AmountItem:number = factorC*Number(amount.value), promediostock = 1, stockAuxiliar = Number(stockAux.value);
             
             if(endponit == "descontarstock")cantidadactual = cantidadactual-AmountItem;
             if(endponit == "aumentarstock")cantidadactual = cantidadactual+AmountItem;
             if(endponit == "ajustarstock")cantidadactual = AmountItem;
+
+            /*idUnidMedida === '1'
+                ?
+                (promediostock = cantidadactual>0?(stockAuxiliar/cantidadactual):0)
+                :
+                (promediostock = stockAuxiliar>0?(cantidadactual/stockAuxiliar):0);*/
+            promediostock = stockAuxiliar>0?(AmountItem/stockAuxiliar):0;
 
             (async ()=>{
                 const datos = new FormData();
                 datos.append('tipoitem', tipoelemento);
                 datos.append('iditem', idelemento);
                 datos.append('cantidad', AmountItem.toString());
+                datos.append('stockaux', stockAuxiliar.toString());
+                datos.append('promediostock', promediostock.toString());
                 try{
                     const url = "/admin/api/"+endponit;  //asocia el producto con el sub producto en la tabla productos_sub
                     const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -446,7 +462,7 @@
         }
 
 
-        function actualizarStockRapido(insumosProductos:{id:string, productoid:string, subproductoid:string, sucursalid:string, stock:string, stockminimo:string}[], tipoItem:string){
+        function actualizarStockRapido(insumosProductos:{id:string, productoid:string, subproductoid:string, sucursalid:string, stock:string, stockminimo:string, stockaux?:string}[], tipoItem:string){
             insumosProductos.forEach(element => {
                 (tablaStockRapido as any).rows().every(function (this: any){
                     const rowNode = this.node() as HTMLTableRowElement;
@@ -457,6 +473,7 @@
                     }
                     if (idAttr && idAttr === id_element){
                         this.cell(this.index(), 3).data(`<div class="text-center px-3 py-4 rounded-lg">${element.stock}</div>`);
+                        this.cell(this.index(), 5).data(`${element.stockaux}`);
 
                         // Obtén el <td> real
                         const td = (tablaStockRapido as any).cell(this.index(), 3).node() as HTMLTableCellElement;

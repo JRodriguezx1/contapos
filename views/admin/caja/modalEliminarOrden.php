@@ -64,6 +64,7 @@
                             data-tipoproducto = "<?php echo $value->tipoproducto;?>";
                             data-tipoproduccion = "<?php echo $value->tipoproduccion;?>";
                             data-rendimientoestandar = "<?php echo $value->rendimientoestandar;?>";
+                            data-promediostock = "<?php echo $value->promediostock;?>";
                             class="inputInv block w-full rounded-md px-3 py-1.5 text-xl text-gray-500 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600" 
                             type="text" 
                             name="" 

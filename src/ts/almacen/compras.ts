@@ -27,7 +27,7 @@
         //idservicios:{idempleado:string, idservicio:string}[]
         };
 
-        let carrito:{iditem:string, idpx:string, idsx:string, tipocosto:string, tipo: string, nombreitem:string, unidad:string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
+        let carrito:{iditem:string, idpx:string, idsx:string, tipocosto:string, tipo: string, nombreitem:string, unidad:string, stock: number, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
         let allConversionUnidades:conversionunidadesapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
@@ -46,8 +46,9 @@
             try {
                 const url = "/admin/api/totalitems"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
                 const respuesta = await fetch(url); 
-                const resultado:{id:string, nombre:string, tipoproducto:string, sku:string, unidadmedida:string}[] = await respuesta.json(); 
-                filteredData = resultado.map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'1', sku: item.sku, unidadmedida: item.unidadmedida }));
+                const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion: string, sku:string, unidadmedida:string}[] = await respuesta.json();
+                console.log(resultado);
+                filteredData = resultado.filter(item => item.tipoproduccion=='0'||item.tipoproduccion==null).map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'1', sku: item.sku, unidadmedida: item.unidadmedida }));
                 activarselect2(filteredData);
             } catch (error) {
                 console.log(error);
@@ -96,14 +97,15 @@
                 const index = carrito.findIndex(x=>x.iditem==datos.id&&x.tipo==datos.tipo);
                 if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
                     const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; //products es el arreglo de todos los productos traido por api
-                    const item:{iditem: string, idpx: string, idsx: string, tipocosto:string, tipo: string, nombreitem: string, unidad: string, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
+                    const item:{iditem: string, idpx: string, idsx: string, tipocosto:string, tipo: string, nombreitem: string, unidad: string, stock: number, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
                         iditem: itemselected?.id!,
                         idpx: itemselected.tipo=='0'?itemselected.id:'NULL',
                         idsx: itemselected.tipo=='1'?itemselected.id:'NULL',
                         tipocosto: '1',
-                        tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
+                        tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = producto principal compuesto o subproducto
                         nombreitem: itemselected.text,
                         unidad: itemselected.unidadmedida,
+                        stock: 1,
                         cantidad: 1,
                         cantidadcomprado: 1,
                         factor: 1,
@@ -178,6 +180,7 @@
                     e.target?.addEventListener('input', (e:Event)=>{
                         itemCarrito.cantidadcomprado = Number((e.target as HTMLInputElement).value);
                         itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;
+                        itemCarrito.stock = itemCarrito.cantidad;
                     });
                     (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
                 }
@@ -217,6 +220,7 @@
             }
 
             itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;
+            itemCarrito.stock = itemCarrito.cantidad;
         });
 
 

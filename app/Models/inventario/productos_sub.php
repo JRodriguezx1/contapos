@@ -54,19 +54,19 @@ class productos_sub extends \App\Models\ActiveRecord{
 
     
     //////////// SE UTILIZA ESTE METODO CUANDO SE REALIZA UNA VENTA DE PRODUCTOS COMPUESTOS, PARA CALCULUAR LA CANTIDAD DE SUBPRODUCTOS ASOCIADOS AL PRODUCTO COMPUESTO A DESCONTAR
-    public static function cantidadSubproductosXventa($array=[]):array
+    public static function cantidadSubproductosXventa(array $array=[],  int $sucursalid = 1):array
     {
-        $query = "SELECT *, CASE ";
+        $query = "SELECT ps.*, sis.promediostock, CASE ";
         $in = "";
         foreach($array as $index => $value){
-            $query .= "WHEN id_producto = $value->id THEN cantidadsubproducto*{$value->porcion} ";
+            $query .= "WHEN ps.id_producto = $value->id THEN ps.cantidadsubproducto*{$value->porcion} ";
             if(array_key_last($array) === $index){
                 $in .= "$value->id";
             }else{
                 $in .= "$value->id, ";
             }
         }   
-        $query .= "ELSE cantidadsubproducto END AS cantidad FROM ".static::$tabla." WHERE id_producto IN ($in);";
+        $query .= "ELSE ps.cantidadsubproducto END AS stock FROM ".static::$tabla." as ps LEFT JOIN stockinsumossucursal sis ON sis.subproductoid = ps.id_subproducto AND sis.sucursalid = $sucursalid WHERE ps.id_producto IN ($in);";
         //SELECT *, CASE WHEN id_producto = 1 THEN cantidadsubproducto*3 WHEN id_producto = 2 THEN cantidadsubproducto*2 ELSE cantidadsubproducto END as x FROM productos_sub WHERE id_producto IN (1, 2);
         $arreglo = [];
         if(!empty($array)){

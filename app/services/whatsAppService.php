@@ -17,9 +17,11 @@ class whatsAppService{
 
     private GreenApiClient $client;
     private string $msg = "";
+    private array $configLocalParam;
     
-    public function __construct()
+    public function __construct($configLocal = [])
     {
+        $this->configLocalParam = $configLocal;
         $this->client = new GreenApiClient(
                             $_ENV['GREEN_API_INSTANCE'],
                             $_ENV['GREEN_API_TOKEN']
@@ -155,8 +157,17 @@ class whatsAppService{
             $this->msg .= "Medio de pago: *{$value->nombremediopago}*" . "\n";
             $this->msg .= "Sisitema: $" . number_format($value->valorsistema, 0, ',', '.') . " - Declarado: $" . number_format($value->valordeclarado??0, 0, ',', '.') . " => " . number_format($value->valordeclarado-$value->valorsistema, 0, ',', '.') . "\n";
         }
-        /*// 🔹 Ventas por usuario
-        $this->msg .= "*VENTAS POR USUARIO*\n";*/
+
+        // 🔹 Ventas por usuario
+        if($this->configLocalParam['mostrar_ventas_por_usuario_en_impresion/ws_cierrecaja']->valor_final == 1){
+            $this->msg .= "\n*VENTAS POR USUARIO*\n";
+            foreach ($data['ventasxusuarios'] as $index => $value) {
+                $comision = "comision";
+                if(array_key_last($data['ventasxusuarios']) == $index)$comision = "comision_negocio";
+                $this->msg .= "*{$value['Nombre']}*" . "\n";
+                $this->msg .= $value['N_ventas'] . " Ventas: $" . $value['ventas'] . " Comision: $" . number_format($value[$comision], 0, ',', '.') . "\n";
+            }
+        }
 
         // 🔹 Pie de pagina
         $this->msg .= "\n*J2 SOFTWARE POS*\n";
