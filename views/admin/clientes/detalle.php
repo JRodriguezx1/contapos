@@ -150,10 +150,10 @@
             </tbody>
         </table>
     </div>
-
-   <?php include __DIR__ . "/../creditos/abonoinicial.php"; ?> 
     
 </div>
+
+<?php include __DIR__ . "/abonoCredito.php"; ?>
 
 <dialog id="miDialogoTotalCuotas" class="midialog-md p-12">
     <div class="flex justify-between items-center mb-4">

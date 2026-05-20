@@ -12,6 +12,7 @@ use App\Models\clientes\direcciones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\tarifas;
+use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Repositories\creditos\creditosRepository;
 
@@ -129,17 +130,15 @@ class clientescontrolador{
         isadmin(); 
         $id = $_GET['id'];
         if(!is_numeric($id))return;
-
-        $alertas = []; 
- 
+        $alertas = [];
+        $conflocal = config_local::getParamGlobal();
         $cliente = clientes::find('id', $id);
-        //debuguear($cliente);
         $indicadores = clientes::indicadoresVentasXcliente($cliente->id, id_sucursal());
         $creditos = new creditosRepository;
         $creditos = $creditos->findAll('cliente_id', $cliente->id);
         $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $mediospago = mediospago::whereArray(['estado'=>1]);
-        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'cajas'=>$cajas, 'mediospago'=>$mediospago, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'conflocal'=>$conflocal, 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'cajas'=>$cajas, 'mediospago'=>$mediospago, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 

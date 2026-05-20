@@ -43,7 +43,8 @@
               <label class="formulario__label" for="abonoinicial">Abono inicial</label>
               <input id="abonoinicial" name="abonoinicial" type="text" placeholder="0" value="0"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2 text-xl focus:outline-none focus:ring-1"
-                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';">
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
+              >
             </div>
 
             <!-- Aplicar interes -->
@@ -61,7 +62,7 @@
               <label class="formulario__label" for="cantidadcuotas">Plazo (cuotas)</label>
               <input id="cantidadcuotas" name="cantidadcuotas" type="text" min="1" placeholder="Ingrese cantidad de días del palzo" value="1"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2 text-xl focus:outline-none focus:ring-1"
-                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = 1;}"
+                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
               >
             </div>
 

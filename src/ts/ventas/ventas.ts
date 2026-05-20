@@ -471,6 +471,11 @@
         msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
+
+      if(tipoventa == "Credito" && (isNaN(POS.gestionSubirModalPagar.valoresCredito.cantidadcuotas)||POS.gestionSubirModalPagar.valoresCredito.cantidadcuotas<=0)){
+        msjAlert('error', 'Plazo de cuotas no especificado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        return;
+      }
   
       btnPagar.disabled = true;
       btnPagar.value = 'Procesando...';
