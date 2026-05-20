@@ -185,5 +185,11 @@ class creditosRepository extends operationRepository{
         $rows = $this->fetchAllStd($sql);        
         return $rows;
     }
+
+
+    public function deudaTotalXcliente(int $idcliente, int $idsucursal):array{
+        return $this->fetchAllStd("SELECT * FROM creditos WHERE cliente_id = $idcliente AND idestadocreditos = 2 AND id_fksucursal = $idsucursal;");  
+    }
+
     
 }

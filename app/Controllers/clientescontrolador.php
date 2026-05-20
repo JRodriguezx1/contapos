@@ -135,7 +135,7 @@ class clientescontrolador{
         $cliente = clientes::find('id', $id);
         $indicadores = clientes::indicadoresVentasXcliente($cliente->id, id_sucursal());
         $creditos = new creditosRepository;
-        $creditos = $creditos->findAll('cliente_id', $cliente->id);
+        $creditos = $creditos->findAll('cliente_id', $cliente->id, 'DESC');
         $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $mediospago = mediospago::whereArray(['estado'=>1]);
         $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'conflocal'=>$conflocal, 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'cajas'=>$cajas, 'mediospago'=>$mediospago, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);

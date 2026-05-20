@@ -1,8 +1,7 @@
 
 interface CarritoItemC {
     idfactura?: string,  //para creditos
-    idproducto?: string,  //para creditos
-    fk_producto?: string,
+    idproducto?: string,
     nombreproducto: string,
     cantidad: string,
     costo: string,

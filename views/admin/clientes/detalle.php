@@ -187,9 +187,9 @@
 <dialog id="miDialogoPagoTotal" class="midialog-sm p-12">
     <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
         <h4 id="modalPagoTotal" class="font-semibold text-gray-700 mb-4">Pago total</h4>
-        <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarPagoTotal" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
+        <button id="btnCerrarPagoTotal" class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
     </div>
-    <div id="divmsjalerta"></div>
+    <div id="divmsjalerta1"></div>
     <form id="formPagoTotalDeuda" class="formulario">
         
         <p class="text-gray-600 text-3xl text-center font-light m-0">Total a pagar $: <span class="text-gray-700 font-semibold">$<?php echo number_format($cliente->totaldebe??0, 0, ',', '.'); ?></span></p>
@@ -218,3 +218,8 @@
         </div>
     </form>
 </dialog>
+
+<script>
+    const getParam = <?= json_encode($conflocal) ?>;
+    const deudatotalCiente = <?= json_encode($cliente->totaldebe) ?>
+</script>

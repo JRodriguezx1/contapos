@@ -38,3 +38,5 @@ ALTER TABLE compras AUTO_INCREMENT = 0;
 ALTER TABLE creditos AUTO_INCREMENT = 0;
 ALTER TABLE comisiones AUTO_INCREMENT = 0;
 ALTER TABLE pagos_comisiones AUTO_INCREMENT = 0;
+
+UPDATE clientes set totaldebe = 0, total_compras = 0, ultima_compra = null;

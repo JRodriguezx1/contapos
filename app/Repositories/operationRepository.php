@@ -138,9 +138,9 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function findAll(string $col, int $id): ?array  //similar a idregistros
+    public function findAll(string $col, int $id, string $orden = "ASC"): ?array  //similar a idregistros
     {
-        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE $col = {$id}");
+        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE $col = {$id} ORDER BY id $orden;");
         return $rows ?  array_map(fn($r) => new $this->entityClass($r), $rows) : [];
     }
 

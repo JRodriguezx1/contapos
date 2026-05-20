@@ -91,8 +91,8 @@
                       const resultado = await respuesta.json();
                       if(resultado.exito !== undefined){
                         const datosActuales = (tablaCreditos as any).row(indiceFila).data();
-                        datosActuales[10] = 'Anulado';
-                        datosActuales[11] = `<a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>`;
+                        datosActuales[8] = '<div class=" text-red-500 font-semibold">Anulado</div>';
+                        datosActuales[9] = `<a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>`;
                         (tablaCreditos as any).row(indiceFila).data(datosActuales).draw();
                         (tablaCreditos as any).page(info.page).draw('page'); 
                         Swal.fire(resultado.exito[0], '', 'success');

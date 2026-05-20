@@ -284,7 +284,16 @@ class creditoscontrolador{
     }
 
 
-     public static function getArrayData(object $sucursal, object $credito, array $productos, array $cuotas, object $cliente, object|null $direccionCliente = null, ?object $usuario = null): array{
+    public static function pagarDeudaTotal():void{
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::pagarDeudaTotal($_POST);
+        echo json_encode($alertas);
+        return;
+    }
+
+
+    public static function getArrayData(object $sucursal, object $credito, array $productos, array $cuotas, object $cliente, object|null $direccionCliente = null, ?object $usuario = null): array{
         $data = [
             'negocio' => $sucursal->negocio,
             'sucursal' => $sucursal->nombre,

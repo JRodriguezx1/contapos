@@ -1,3 +1,4 @@
+
 (():void=>{
 
     if(document.querySelector('.detallecliente')){
@@ -88,6 +89,27 @@
         btnPagoDeudaTotal.addEventListener('click', ()=>{
             miDialogoPagoTotal.showModal();
         });
+
+
+        document.querySelector('#formPagoTotalDeuda')?.addEventListener('submit', async (e:Event)=>{
+            e.preventDefault();
+            if(id!=null&&!Number.isNaN(id)){
+                const datos = new FormData();
+                datos.append('idcliente', id);
+                datos.append('caja', $('#PagoTotal_caja').val() as string);
+                datos.append('mediodepago', $('#PagoTotal_mediopago').val() as string);
+                datos.append('valorDeudaTotal', deudatotalCiente);
+                try {
+                    const url = "/admin/api/creditos/pagarDeudaTotal";  //api en creditoscontrolador
+                    const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                    const resultado = await respuesta.json();
+                    console.log(resultado);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+
 
 
         async function imprimirTotalCuotasXcliente(){

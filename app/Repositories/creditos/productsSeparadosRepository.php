@@ -45,7 +45,7 @@ class productsSeparadosRepository extends operationRepository{
                        c.interestotal, c.valorinterestotal, c.montototal, c.descuento as descuentocredito, p.id as idproducto, p.nombre, p.sku, p.preciopersonalizado, p.stockminimo, p.rendimientoestandar, p.impuesto, und.id as idunidadmedida, und.nombre as unidadmedida
                 FROM productosseparados ps
                 LEFT JOIN creditos c ON ps.idcredito = c.id
-                LEFT JOIN productos p ON ps.fk_producto = p.id
+                LEFT JOIN productos p ON ps.idproducto = p.id
                 LEFT JOIN unidadesmedida und ON p.idunidadmedida = und.id
                 WHERE p.visible = 1 AND ps.idcredito = $id;";
         return $this->querySQL($sql);

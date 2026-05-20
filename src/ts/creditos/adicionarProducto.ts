@@ -8,8 +8,7 @@
         interface i_itemDetalle {
             id:string, //id del registro de la tabla productosseparados
             idcredito:string,
-            fk_producto: string,
-            idproducto?:string,
+            idproducto: string,
             idunidadmedida:string,
             tipoproducto:string,
             tipoproduccion:string,
@@ -110,7 +109,6 @@
                         return {
                             id: item.id,
                             idcredito: item.idcredito,
-                            fk_producto: item.idproducto!,
                             idproducto:item.idproducto,
                             idunidadmedida: item.idunidadmedida,
                             tipoproducto: item.tipoproducto, 
@@ -132,7 +130,7 @@
                             factor: 1
                         }
                     });
-                    carrito.forEach(c =>printItemTable(c.fk_producto, c.unidadmedida, c.cantidad, c.nombreproducto, c.valorunidad, c.total));
+                    carrito.forEach(c =>printItemTable(c.idproducto, c.unidadmedida, c.cantidad, c.nombreproducto, c.valorunidad, c.total));
                     //obtener datos del credito
 
                     dataCredit.capital = Number(resultado[0].capital);
@@ -183,7 +181,6 @@
                     const item:i_itemDetalle = {
                         id: '',
                         idcredito: idcreditoURL!,
-                        fk_producto: productSelected.id, 
                         idproducto:productSelected.id,
                         idunidadmedida: productSelected.idunidadmedida,
                         //tipo: itemselected.tipo,  ////tipo = 0 es producto (simple o compuesto produccion),  1 = subproducto
@@ -216,7 +213,7 @@
                     carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
                     carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
                     //calcular valores
-                    const tr = document.querySelector(`[data-id="${carrito[index].fk_producto}"]`)!;
+                    const tr = document.querySelector(`[data-id="${carrito[index].idproducto}"]`)!;
                     tr.children[1].textContent = carrito[index].cantidad+'';
                     valorCarritoTotal();
                 }
@@ -300,7 +297,7 @@
             //const tipoitem = (elementItem as HTMLElement).dataset.tipo!;
         
             if((e.target as HTMLElement).classList.contains('eliminarItem')){ //se trae todoscon true menos el que coincida con iditem y tipoitem
-                carrito = carrito.filter(x => x.fk_producto!==iditem);
+                carrito = carrito.filter(x => x.idproducto!==iditem);
                 tablaItems?.querySelector(`TR[data-id="${iditem}"]`)?.remove();
             }
             valorCarritoTotal();

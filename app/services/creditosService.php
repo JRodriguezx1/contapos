@@ -90,7 +90,9 @@ class creditosService {
             //registrar los productos
             foreach($carrito as $obj){
               $obj->idcredito = $r[1];
-              $obj->idproducto = $obj->fk_producto;
+              $obj->idproducto = $obj->idproducto;
+              $obj->cantidad = $obj->stock; //para la tabla venta
+              $obj->stockaux = $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
             }
             $repo = new productsSeparadosRepository();
             $repo->crear_varios_reg_arrayobj($carrito);
@@ -286,7 +288,7 @@ class creditosService {
         $impuestos = [];
         foreach($carrito as $value){
             $value->idfactura = $r[1];
-            $value->idproducto = $value->fk_producto;
+            $value->idproducto = $value->idproducto;
             $value->dato1 = '';
             $value->dato2 = '';
 
@@ -390,7 +392,7 @@ class creditosService {
             //devolver a inventario
             $productos = $productosRepo->obtenerPorCredito($credito->id);
             foreach($productos as $obj)
-              $obj->idproducto = $obj->fk_producto;
+              $obj->idproducto = $obj->idproducto;
             ventasService::addIventarioXVenta($productos);
 
             //acatualizar deuda de cliente
@@ -414,6 +416,15 @@ class creditosService {
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->uniqueWhere(['factura_id'=>$idfactura]);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+
+        //acatualizar deuda de cliente
+        $cliente = clientes::find('id', $credito->cliente_id);
+        $cliente->totaldebe -= $credito->saldopendiente;
+        $cli = $cliente->actualizar();
+        if(!$cli){
+            $alertas['error'][] = "No se puede eliminar el credito, intenta nuevamente";
+            return $alertas;
+        }
 
         //$getDB = $creditoRepo->getConexion();
         //$getDB->begin_transaction();
@@ -440,24 +451,13 @@ class creditosService {
                     $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
                 }
             }
-
             
             //descontar los abonos de los separados en cierre de caja si esta abierta
             if(empty($arrayCierresCaja)){
                 $alertas['exito'][] = "Credito anulado correctamente";
                 return $alertas;
             }
-            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
-            //debuguear($r);
-            if($r){
-                $alertas['exito'][] = "Credito anulado correctamente";
-                //acatualizar deuda de cliente
-                $cliente = clientes::find('id', $credito->cliente_id);
-                $cliente->totaldebe -= $credito->saldopendiente;
-                $cliente->actualizar();
-            }else{
-                $alertas['error'][] = "Error al anular el credito.";
-            }
+            cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
             //$getDB->commit();
         //} catch (\Throwable $th) {
             //$alertas['error'][] = "Error al anular el credito. {$th->getMessage()}";
@@ -469,6 +469,8 @@ class creditosService {
 
     public static function anularAbono(int $idabono):array{
         $alertas = [];
+        $cs = true;
+        $cc = true;
         $creditoRepo = new creditosRepository();
         $separdoMediopago = new separadoMediopagoRepository();
         $cuotaRepo = new cuotasRepository();
@@ -482,20 +484,28 @@ class creditosService {
 
         if($credito->idtipofinanciacion == 1){  //credito
             $cuotaMP = factmediospago::find('id_factura', $credito->factura_id);
-            if($cuotaMP)$cuotaMP->eliminar_registro();
-            $cuotaRepo->delete($cuota->id);
+            if($cuotaMP)$cc = $cuotaMP->eliminar_registro();
             $cierrecaja->abonoscreditos -= $cuota->valorpagado;
-            $alertas['exito'][] = "Cuota eliminada";
         }else{  //separado
-            $separdoMediopago->delete_regs('idcuota', [$cuota->id]);
-            $cuotaRepo->delete($cuota->id);
+            $cs = $separdoMediopago->delete_regs('idcuota', [$cuota->id]);
             $cierrecaja->abonosseparados -= $cuota->valorpagado;
-            $alertas['exito'][] = "Cuota eliminada";
         }
-        if($alertas['exito']){
+
+        if($cc && $cs){
+            $cuotaRepo->delete($cuota->id);
+            $credito->abonodecuotas -= $cuota->valorpagado;
+            $credito->saldopendiente += $cuota->valorpagado;
+            $creditoRepo->update($credito);
+
+            //acatualizar deuda de cliente
+            $cliente = clientes::find('id', $credito->cliente_id);
+            $cliente->totaldebe += $cuota->valorpagado;
+            $cliente->actualizar();
+
             $cierrecaja->abonostotales -= $cuota->valorpagado;
             $cuota->mediopagoid == 1 ? ($cierrecaja->abonosenefectivo -= $cuota->valorpagado) : $cierrecaja->abonosenefectivo -= 0;
             $cierrecaja->actualizar();
+            $alertas['exito'][] = "Cuota eliminada";
         }
 
         return $alertas;
@@ -558,24 +568,24 @@ class creditosService {
         $productosRepo = new productsSeparadosRepository();
         $detalleProductosDB = $productosRepo->findAll('idcredito', $idcredito);
 
-        //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de fk_producto
+        //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de idproducto
         foreach($nuevosproductosFront as $itemfront){
-            $itemfront->idproducto = $itemfront->fk_producto;
+            $itemfront->idproducto = $itemfront->idproducto;
           foreach($detalleProductosDB as $itemDB){
             if($itemfront->idcredito == $itemDB->idcredito){
-              if($itemfront->fk_producto == $itemDB->fk_producto){
+              if($itemfront->idproducto == $itemDB->idproducto){
                 $itemfront->id = $itemDB->id;
                 $idsdetalleproductos[] = $itemDB->id;
                 if($itemDB->cantidad < $itemfront->cantidad){ //descontar diferencia a inv
                     $diferencia = $itemfront->cantidad-$itemDB->cantidad;
                     $itemClone = clone $itemDB;
-                    $itemClone->idproducto = $itemDB->fk_producto;
+                    $itemClone->idproducto = $itemDB->idproducto;
                     $itemClone->cantidad = $diferencia;
                     $arrayDownInv[] = $itemClone;
                 }elseif ($itemDB->cantidad > $itemfront->cantidad){ //aumentar diferencia a inv
                     $diferencia = $itemDB->cantidad-$itemfront->cantidad;
                     $itemClone = clone $itemDB;
-                    $itemClone->idproducto = $itemDB->fk_producto;
+                    $itemClone->idproducto = $itemDB->idproducto;
                     $itemClone->cantidad = $diferencia;
                     $arrayUpInv[] = $itemClone;
                 }
@@ -589,7 +599,7 @@ class creditosService {
 
         ///IDs a eliminar de la DB
         foreach($detalleProductosDB as $key => $value){
-            $value->idproducto = $value->fk_producto;
+            $value->idproducto = $value->idproducto;
             if(!in_array($value->id, $idsdetalleproductos)){
                 $arrayIdeliminar[] = $value->id;
                 $arrayProductsEliminar[] = $value;
@@ -642,6 +652,31 @@ class creditosService {
             $alertas['error'][] = "Error, intenta actualizar la orden dle credito nuevamnete";
         }
 
+        return $alertas;
+    }
+
+
+    public static function pagarDeudaTotal(array $data):array{
+        $alertas = [];
+        $idcliente = $data['idcliente'];
+        $valorDeudaTotal = $data['valorDeudaTotal'];
+        $creditoRepo = new creditosRepository();
+        $cuotaRepo = new cuotasRepository();
+        $creditosCliente = $creditoRepo->deudaTotalXcliente($idcliente, id_sucursal());
+        $saldoPendiente = 0;
+        foreach($creditosCliente as $value){
+            $saldoPendiente += $value->saldopendiente;
+            $value->abonodecuotas += $saldoPendiente;
+            $value->saldopendiente = 0;
+            $value->estado = 1;
+            $value->idestadocreditos = 1;
+        }
+        debuguear($valorDeudaTotal);
+        if($valorDeudaTotal != $saldoPendiente)return ['error' => ['Verificar saldo pendiente no corresponde']];
+        
+        $creditoRepo->crear_varios_reg_arrayobj($creditosCliente);
+        
+        debuguear($creditosCliente);
         return $alertas;
     }
 

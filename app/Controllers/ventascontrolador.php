@@ -842,8 +842,8 @@ class ventascontrolador{
         $reduceSub[$obj->id_subproducto] = $obj;
         $soloIdInsumos[] = $obj->id;
       }else{
-      $reduceSub[$obj->id_subproducto]->stock += $obj->stock;
-      $reduceSub[$obj->id_subproducto]->stockaux += $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
+        $reduceSub[$obj->id_subproducto]->stock += $obj->stock;
+        $reduceSub[$obj->id_subproducto]->stockaux += $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
       }
     }
 
