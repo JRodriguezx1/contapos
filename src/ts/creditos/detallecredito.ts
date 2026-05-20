@@ -20,6 +20,7 @@
     const inputPasswordAjustarCredito = document.querySelector('#inputPasswordAjustarCredito') as HTMLInputElement;
     let contentMP:HTMLButtonElement, idcuota:string = '0', idcredito:string = '0', totalpagado:string = '0', idmediopago:string = '0', mediopagado:string = '0';
     
+    let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     let indiceFila=0, tablacuotas:HTMLElement;
 
     interface clavesApi {
@@ -85,10 +86,11 @@
     });
 
     ////////////// Evento a la tabla cuotas ///////////////
-    document.querySelector('#tablacuotas')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+    document.querySelector('#tablacuotas')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLButtonElement;
       if(target?.classList.contains("mediosdepago")||target.parentElement?.classList.contains("mediosdepago"))cambiomediopago(target);
-      if(target?.classList.contains("printPOSAbono"))printPOSComprobanteAbono(target.id);
+      if(target?.classList.contains("anularAbono"))anularAbono(target);
+      if(target?.classList.contains("printPOSAbono"))printPOSComprobanteAbono(target.parentElement?.id);
     });
 
 
@@ -213,11 +215,68 @@
     }
 
 
-    function printPOSComprobanteAbono(idabono:string){
+    function anularAbono(target: HTMLButtonElement){
+      const idabono = target.parentElement?.id;
+      const fila = target.closest('tr');
+      if(idabono==undefined)return;
+      Swal.fire({
+          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          icon: 'question',
+          title: 'Desea anular el abono registrado',
+          text: "El abono, seran anulado definitivamente.",
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+      }).then((result:any) => {
+          if (result.isConfirmed) {
+              (async ()=>{ 
+                  try {
+                      const url = "/admin/api/creditos/anularAbono?id="+idabono;
+                      const respuesta = await fetch(url); 
+                      const resultado = await respuesta.json();
+                      if(resultado.exito !== undefined){
+                        fila?.remove();
+                        Swal.fire(resultado.exito[0], '', 'success');
+                      }else{
+                          Swal.fire(resultado.error[0], '', 'error');
+                      }
+                  } catch (error) {
+                      console.log(error);
+                  }
+              })();//cierre de async()
+          }
+      });
+    }
+
+
+    async function printPOSComprobanteAbono(idabono:string|undefined){
+      if(idabono==undefined)return;
+      try{
+        const url = "/admin/api/creditos/getAbono?id="+idabono; //llamado a la API REST - creditocontrolador 
+        const respuesta = await fetch(url); 
+        const resultado = await respuesta.json();
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if(printerBT === '1'){
+          const builder = new ticketAbonoBuilder(resultado);
+          const ticket = await builder.generate(true); //true para version buffer bytes
+          const base64 = bytesToBase64(ticket);
+          if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
+          //descargar .bin a equipo
+          /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ticket.bin';
+          a.click();
+          URL.revokeObjectURL(url);*/
+        }
+      }catch(error){
+        console.log(error);
+      }
+
       if(!isNaN(Number(idabono)))
         window.open("/admin/printPDFAbonoCredito?id=" + idabono, "_blank"); //controlador printcontrolador
     }
-
   }
 
 })();

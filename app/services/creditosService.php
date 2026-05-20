@@ -10,6 +10,7 @@ use App\Models\clientes\direcciones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\mediospago;
+use App\Models\configuraciones\usuarios;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\creditos\productosseparados;
@@ -121,7 +122,7 @@ class creditosService {
     }
 
 
-    public static function detallecredito($id):array{
+    public static function detallecredito(int $id):array{
         $credito = new creditosRepository();
         $cuotasRepo = new cuotasRepository();
         $productos = new productsSeparadosRepository();
@@ -130,12 +131,17 @@ class creditosService {
             'titulo' => 'Creditos',
             'credito' => $credito,
             'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
-            'productos' => $productos->obtenerPorCredito($credito->id),
+            'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],
             'cliente' => clientes::find('id', $credito->cliente_id),  //$credito->cliente_id
             'cajas' => caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]),
             'factura' => facturas::find('id', $credito->factura_id),
-            'mediospago' => mediospago::whereArray(['estado'=>1])
+            'mediospago' => mediospago::whereArray(['estado'=>1]),
+            'usuario' => usuarios::find('id', $credito->usuariofk)
         ];
+
+        $direccion = direcciones::find('idcliente', $detalle['cliente']?->id);
+        if(!$direccion)$direccion = direcciones::find('id', 1);
+        $detalle['direccion'] = $direccion;
         return $detalle;
     }
 
@@ -461,6 +467,41 @@ class creditosService {
     }
 
 
+    public static function anularAbono(int $idabono):array{
+        $alertas = [];
+        $creditoRepo = new creditosRepository();
+        $separdoMediopago = new separadoMediopagoRepository();
+        $cuotaRepo = new cuotasRepository();
+        $cuota = $cuotaRepo->find($idabono);
+        $credito = $creditoRepo->find($cuota->id_credito);
+
+        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+
+        $cierrecaja = cierrescajas::uniquewhereArray(['id'=>$cuota->cierrecaja_id, 'idsucursal_id'=>id_sucursal()]);
+        if($cierrecaja->estado == 1)return ['error'=>['Caja se encuentra cerrada para esta cuota']];
+
+        if($credito->idtipofinanciacion == 1){  //credito
+            $cuotaMP = factmediospago::find('id_factura', $credito->factura_id);
+            if($cuotaMP)$cuotaMP->eliminar_registro();
+            $cuotaRepo->delete($cuota->id);
+            $cierrecaja->abonoscreditos -= $cuota->valorpagado;
+            $alertas['exito'][] = "Cuota eliminada";
+        }else{  //separado
+            $separdoMediopago->delete_regs('idcuota', [$cuota->id]);
+            $cuotaRepo->delete($cuota->id);
+            $cierrecaja->abonosseparados -= $cuota->valorpagado;
+            $alertas['exito'][] = "Cuota eliminada";
+        }
+        if($alertas['exito']){
+            $cierrecaja->abonostotales -= $cuota->valorpagado;
+            $cuota->mediopagoid == 1 ? ($cierrecaja->abonosenefectivo -= $cuota->valorpagado) : $cierrecaja->abonosenefectivo -= 0;
+            $cierrecaja->actualizar();
+        }
+
+        return $alertas;
+    }
+
+
     public static function ajustarCreditoAntiguo(array $datos):array{
         date_default_timezone_set('America/Bogota');
         $alertas = [];
@@ -501,17 +542,15 @@ class creditosService {
     }
 
 
-    //metodo llamado desde adicionarProductos.ts para el detalle de la orden trasnaldo/solicitud
+    //metodo llamado desde adicionarProductos.ts para el detalle
     public static function detalleProductosCredito(int $id):array{
-        $alertas = [];
-        //$orden = traslado_inv::find('id', $id);
         $productosSeparados = new productsSeparadosRepository();
         return $productosSeparados->detalleProductosCredito($id);
     }
 
 
     //metodo llamado desde adicionarproducto.ts para editar los productos del credito/separado
-    public static function editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit){
+    public static function editarOrdenCreditoSeparado(int $idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit){
         $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = []; $arrayDownInv=[]; $arrayUpInv = []; $arrayProductsEliminar = [];
         $r1 = true; $r2 = true; $r3 = true;
         $creditoRepo = new creditosRepository();

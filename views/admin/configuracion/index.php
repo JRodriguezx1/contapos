@@ -35,10 +35,13 @@
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
                 <span id="pagina8">Dian</span>
             </label>
-            
+            <label>
+                <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
+                <span id="pagina9">Impresoras</span>
+            </label>
             <label>
                 <input type="radio" name="radio">
-                <span id="pagina9">Configuración</span>
+                <span id="pagina10">Configuración</span>
             </label>
         </div>
     </div>
@@ -61,8 +64,10 @@
     <div class="hidden paginas pagina7"><?php include __DIR__. "/mediospago.php";?></div>
     <!-- gestion dian -->
     <div class="hidden paginas pagina8"><?php include __DIR__. "/dian.php";?></div>
+    <!-- gestion dian -->
+    <div class="hidden paginas pagina9"><?php include __DIR__. "/impresoras.php";?></div>
     <!-- configuración -->
-    <div class="hidden mt-6 paginas pagina9">
+    <div class="hidden mt-6 paginas pagina10">
         <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
 
             <!-- Inputs de control de pestañas verticales -->

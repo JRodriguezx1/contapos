@@ -3,7 +3,10 @@
     if(document.querySelector('.detallecliente')){
 
         const btnTotalCuotas = document.querySelector('#btnTotalCuotas') as HTMLButtonElement;
+        const btnPagoDeudaTotal = document.querySelector('#btnPagoDeudaTotal') as HTMLButtonElement;
         const miDialogoTotalCuotas = document.querySelector('#miDialogoTotalCuotas') as HTMLDialogElement;
+        const miDialogoPagoTotal = document.querySelector('#miDialogoPagoTotal') as HTMLDialogElement;
+        const miDialogoAbono = document.querySelector('#miDialogoAbono') as HTMLDialogElement;
         const tablaCuotas = document.querySelector('#tablaCuotas tbody') as HTMLBodyElement;
 
         document.addEventListener("click", cerrarDialogoExterno);
@@ -82,6 +85,11 @@
         });
 
 
+        btnPagoDeudaTotal.addEventListener('click', ()=>{
+            miDialogoPagoTotal.showModal();
+        });
+
+
         async function imprimirTotalCuotasXcliente(){
             if(id!=null&&!Number.isNaN(id)){
                 try {
@@ -108,10 +116,58 @@
         }
 
 
+        ////////////// Evento a la tabla cuotas ///////////////
+        document.querySelector('#tablaCreditos')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
+            const target = e.target as HTMLButtonElement;
+            if(target?.classList.contains("abonarCredito") || target?.parentElement?.classList.contains("abonarCredito") )abonarCredito(target);
+            if(target?.classList.contains("anularCredito") || target?.parentElement?.classList.contains("anularCredito"))anularCredito(target);
+        });
+
+        function abonarCredito(target: HTMLButtonElement){
+            miDialogoAbono.showModal();
+        }
+
+
+        function anularCredito(target: HTMLButtonElement){
+            const idabono = target.parentElement?.id;
+            const fila = target.closest('tr');
+            if(idabono==undefined)return;
+            Swal.fire({
+                customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+                icon: 'question',
+                title: 'Desea anular el credito',
+                text: "El credito, seran anulado definitivamente.",
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result:any) => {
+                if (result.isConfirmed) {
+                    /*(async ()=>{ 
+                        try {
+                            const url = "/admin/api/creditos/anularAbono?id="+idabono;
+                            const respuesta = await fetch(url); 
+                            const resultado = await respuesta.json();
+                            if(resultado.exito !== undefined){
+                                fila?.remove();
+                                Swal.fire(resultado.exito[0], '', 'success');
+                            }else{
+                                Swal.fire(resultado.error[0], '', 'error');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })();//cierre de async()*/
+                }
+            });
+        }
+
+
         function cerrarDialogoExterno(event:Event) {
             const f = event.target;
-            if (f=== miDialogoTotalCuotas || (f as HTMLInputElement).id === 'btnCerrarTotalCuotas'){
+            if (f=== miDialogoTotalCuotas || f === miDialogoPagoTotal || f === miDialogoAbono || (f as HTMLElement).id === 'btnCerrarTotalCuotas' || (f as HTMLElement).id === 'btnCerrarPagoTotal' || (f as HTMLButtonElement).value == 'Salir'){
                 miDialogoTotalCuotas.close();
+                miDialogoPagoTotal.close();
+                miDialogoAbono.close();
             }
         }
 

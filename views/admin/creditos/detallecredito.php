@@ -109,7 +109,12 @@
                 <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago btn-xs btn-light"><?php echo $element->mediopago;?></button>
                 <?php endforeach; ?>
               </td>
-              <td class="px-4 py-2 text-gray-800 text-center cursor-pointer"><span id="<?php echo $value->id;?>" class="printPOSAbono material-symbols-outlined">print</span></td>
+              <td class="px-4 py-2 text-gray-800 text-center">
+                <div id="<?php echo $value->id;?>" class="flex justify-center gap-4">
+                  <button class="btn-xs btn-red anularAbono" title="Eliminar abono">X</button>
+                  <button class="printPOSAbono material-symbols-outlined">print</button>
+                </div>
+              </td>
             </tr>
           <?php endforeach; ?>
           
@@ -214,5 +219,9 @@
   <?php include __DIR__ . "/abonoinicial.php"; ?>
   <?php include __DIR__ . "/abonototal.php"; ?>
   <?php include __DIR__ . "/ajustarcredito.php"; ?>
+
+  <script>
+    const getParam = <?= json_encode($conflocal) ?>;
+  </script>
 
 </div>

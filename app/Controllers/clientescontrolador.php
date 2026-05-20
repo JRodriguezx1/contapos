@@ -9,6 +9,8 @@ use App\Models\configuraciones\usuarios;
 use App\Models\clientes\clientes;
 use App\Models\empleados;
 use App\Models\clientes\direcciones;
+use App\Models\configuraciones\caja;
+use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\tarifas;
 use App\Models\sucursales;
 use App\Repositories\creditos\creditosRepository;
@@ -135,9 +137,10 @@ class clientescontrolador{
         $indicadores = clientes::indicadoresVentasXcliente($cliente->id, id_sucursal());
         $creditos = new creditosRepository;
         $creditos = $creditos->findAll('cliente_id', $cliente->id);
-        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
+        $mediospago = mediospago::whereArray(['estado'=>1]);
+        $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'cajas'=>$cajas, 'mediospago'=>$mediospago, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
-     
 
 
     ///////////////////////////////////  Apis ////////////////////////////////////
