@@ -87,6 +87,7 @@
 
 
         btnPagoDeudaTotal.addEventListener('click', ()=>{
+            if(!Number.isNaN(deudatotalCiente) && Number(deudatotalCiente)>0)
             miDialogoPagoTotal.showModal();
         });
 
@@ -96,14 +97,28 @@
             if(id!=null&&!Number.isNaN(id)){
                 const datos = new FormData();
                 datos.append('idcliente', id);
-                datos.append('caja', $('#PagoTotal_caja').val() as string);
-                datos.append('mediodepago', $('#PagoTotal_mediopago').val() as string);
+                datos.append('idcaja', $('#PagoTotal_caja').val() as string);
+                datos.append('idmediodepago', $('#PagoTotal_mediopago').val() as string);
                 datos.append('valorDeudaTotal', deudatotalCiente);
                 try {
                     const url = "/admin/api/creditos/pagarDeudaTotal";  //api en creditoscontrolador
                     const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                     const resultado = await respuesta.json();
-                    console.log(resultado);
+                    if(resultado.exito !== undefined){
+                        document.querySelector('#totalDeudaText')!.textContent = '$0';
+                        document.querySelectorAll<HTMLTableCellElement>('.pendiente').forEach(td=>{
+                            const tr = td.parentElement;
+                            if(tr){
+                                tr.children[5].textContent = '$0';
+                                tr?.children[5].classList.remove('text-red-500');
+                                tr.children[6].textContent = 'Finalizado';
+                            }
+                        });
+                        miDialogoPagoTotal.close();
+                        Swal.fire(resultado.exito[0], '', 'success');
+                    }else{
+                        Swal.fire(resultado.error[0], '', 'error');
+                    }
                 } catch (error) {
                     console.log(error);
                 }
@@ -147,7 +162,17 @@
 
         function abonarCredito(target: HTMLButtonElement){
             miDialogoAbono.showModal();
+            const element = target.closest('div');
+            const idcredito = element?.id;
+            const saldopendiente = element?.dataset.saldopendiente;
+            
         }
+
+
+        document.querySelector('#formrealizarAbono')?.addEventListener('submit', async (e:Event)=>{
+            e.preventDefault();
+
+        });
 
 
         function anularCredito(target: HTMLButtonElement){
@@ -186,7 +211,7 @@
 
         function cerrarDialogoExterno(event:Event) {
             const f = event.target;
-            if (f=== miDialogoTotalCuotas || f === miDialogoPagoTotal || f === miDialogoAbono || (f as HTMLElement).id === 'btnCerrarTotalCuotas' || (f as HTMLElement).id === 'btnCerrarPagoTotal' || (f as HTMLButtonElement).value == 'Salir'){
+            if (f=== miDialogoTotalCuotas || f === miDialogoPagoTotal || f === miDialogoAbono || (f as HTMLElement).id === 'btnCerrarTotalCuotas' || (f as HTMLElement).id === 'btnCerrarPagoTotal' || (f as HTMLElement).id === 'btnXCerrarModalAbono' || (f as HTMLButtonElement).value == 'Salir'){
                 miDialogoTotalCuotas.close();
                 miDialogoPagoTotal.close();
                 miDialogoAbono.close();

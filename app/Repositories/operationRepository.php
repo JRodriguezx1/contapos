@@ -52,7 +52,13 @@ abstract class operationRepository extends BaseRepository{
         $sql = "INSERT INTO ".$this->table."(".$string1.") VALUES".$string2;
         $resultado = self::$db->query($sql);
         //INSERT INTO empserv(idempleado, idservicio) VALUES('3', '3'), ('3', '1');
-        return [$resultado, self::$db->insert_id];
+
+        ///  calcular todos los IDs  ///
+        //primer ID generado
+        $primerId = self::$db->insert_id;
+        $ids = [];
+        for($i = 0; $i < count($arrays); $i++)$ids[] = $primerId + $i;
+        return [$resultado, $ids];
     }
 
 

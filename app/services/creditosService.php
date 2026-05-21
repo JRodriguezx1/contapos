@@ -658,26 +658,123 @@ class creditosService {
 
     public static function pagarDeudaTotal(array $data):array{
         $alertas = [];
+        $abonosSeparados = 0;
+        $abonosCreditos = 0;
         $idcliente = $data['idcliente'];
+        $idcaja = $data['idcaja'];
+        $idmediodepago = $data['idmediodepago'];
         $valorDeudaTotal = $data['valorDeudaTotal'];
         $creditoRepo = new creditosRepository();
         $cuotaRepo = new cuotasRepository();
+        $sepadoMPRepo = new separadoMediopagoRepository();
+        $factmediospago = new factmediospago();
+        $getDB = $creditoRepo->getConexion();
+        
+        $cierrecaja = cierrescajas::uniquewhereArray(['idcaja'=>$idcaja, 'idsucursal_id'=>id_sucursal(), 'estado'=>0]);
+        if(!$cierrecaja)return ['error'=>['Caja se encuentra cerrada para esta cuota']];
+        
         $creditosCliente = $creditoRepo->deudaTotalXcliente($idcliente, id_sucursal());
         $saldoPendiente = 0;
-        foreach($creditosCliente as $value){
+        $arrayCuotas = [];
+        $arrayMPPendientes = [];
+        $arrayFactMPPendientes = [];
+        foreach($creditosCliente as $index => $value){
+            // guardar saldo original
+            $saldoCredito = $value->saldopendiente;
+            // acumulador total
             $saldoPendiente += $value->saldopendiente;
             $value->abonodecuotas += $saldoPendiente;
             $value->saldopendiente = 0;
             $value->estado = 1;
             $value->idestadocreditos = 1;
+            //armar array de las cuotas y medios de pago asociada a cada cuota para INSERT
+            //cuotas
+            $getModelCuota = $cuotaRepo->getModel();
+            $getModelCuota->id_credito = $value->id;
+            $getModelCuota->cierrecaja_id = $cierrecaja->id;
+            $getModelCuota->cajaid = $idcaja;
+            $getModelCuota->mediopagoid = $idmediodepago;
+            $getModelCuota->numerocuota += 1;
+            $getModelCuota->montocuota = $value->montocuota;
+            $getModelCuota->valorpagado = $saldoCredito;
+            $getModelCuota->fechapago = date('Y-m-d H:i:s');
+            $getModelCuota->registrarencaja = 1;
+            $getModelCuota->cuotaantigua = 0;
+            $getModelCuota->fechacuotaantigua = 'NULL';
+            $getModelCuota->estado = 1;
+            $arrayCuotas[] = $getModelCuota;
+
+            if($value->idtipofinanciacion == 2){ //si es separado abonado
+                $abonosSeparados += $saldoCredito;
+                $arrayMPPendientes[$index] = [
+                    'mediopago_id' => $idmediodepago,
+                    'valor' => $saldoCredito,
+                ];
+            }
+
+            if($value->idtipofinanciacion == 1){ //si es credito abonado
+                $abonosCreditos += $saldoCredito;
+                $arrayFactMPPendientes[$index] = [
+                    'cierrecajaid' => $cierrecaja->id,
+                    'id_factura' => $value->factura_id,
+                    'idmediopago' => $idmediodepago,
+                    'valor' => $saldoCredito
+                ];
+            }
         }
-        debuguear($valorDeudaTotal);
-        if($valorDeudaTotal != $saldoPendiente)return ['error' => ['Verificar saldo pendiente no corresponde']];
         
-        $creditoRepo->crear_varios_reg_arrayobj($creditosCliente);
+
+        if($valorDeudaTotal != $saldoPendiente)return ['error' => ['Verificar saldo pendiente no corresponde']];        
         
-        debuguear($creditosCliente);
-        return $alertas;
+        $getDB->begin_transaction();
+        try {
+            //actualizar creditos
+            $creditoRepo->updatemultiregobj($creditosCliente, ['idestadocreditos', 'abonodecuotas', 'saldopendiente', 'estado']);
+            //crear las cuotas para los creditos
+            [$ok, $idsCuotas] = $cuotaRepo->crear_varios_reg_arrayobj($arrayCuotas);
+
+            //crear los arreglos de objetos de medios de pago para separados y creditos para insertar los medios de pago asociados a las cuotas creadas
+            $arraySeparadosMP=[];
+            $arrayFactMediosPago = [];
+
+            foreach($idsCuotas as $key => $idcuota){
+                if($creditosCliente[$key]->idtipofinanciacion == 2){ //si es separado abonado
+                    $objMP = $sepadoMPRepo->getModel();
+                    $objMP->idcuota = $idcuota;
+                    $objMP->mediopago_id = $arrayMPPendientes[$key]['mediopago_id'];
+                    $objMP->valor = $arrayMPPendientes[$key]['valor'];
+                    $arraySeparadosMP[] = $objMP;
+                }
+                if($creditosCliente[$key]->idtipofinanciacion == 1){ //si es credito abonado
+                    $objFactMP = new stdClass;
+                    $objFactMP->cierrecajaid = $arrayFactMPPendientes[$key]['cierrecajaid'];
+                    $objFactMP->id_factura = $arrayFactMPPendientes[$key]['id_factura'];
+                    $objFactMP->idmediopago = $arrayFactMPPendientes[$key]['idmediopago'];
+                    $objFactMP->valor = $arrayFactMPPendientes[$key]['valor'];
+                    $arrayFactMediosPago[] = $objFactMP;
+                }
+            }
+            
+            if($arraySeparadosMP)$sepadoMPRepo->crear_varios_reg_arrayobj($arraySeparadosMP);
+            $getDB->commit();
+
+            if($arrayFactMediosPago)$fmp = $factmediospago->crear_varios_reg_arrayobj($arrayFactMediosPago);
+            //actualizar el cierre de caja
+            $cierrecaja->abonostotales += $valorDeudaTotal;
+            $cierrecaja->abonosenefectivo += ($idmediodepago == 1) ? $valorDeudaTotal : 0;
+            $cierrecaja->abonoscreditos += $abonosCreditos;
+            $cierrecaja->abonosseparados += $abonosSeparados;
+            $cierrecaja->actualizar();
+            //acatualizar deuda de cliente
+            $cliente = clientes::find('id', $idcliente);
+            $cliente->totaldebe -= $valorDeudaTotal;
+            $cliente->actualizar();
+            return ['exito' => ['Deuda total pagada correctamente']];
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            return ['error' => ['Error al procesar el pago de la deuda total, intenta nuevamente. Detalle: '.$th->getMessage()]];
+        }
+
     }
 
 

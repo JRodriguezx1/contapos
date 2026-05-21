@@ -19,9 +19,12 @@ class separadoMediopagoRepository extends operationRepository implements mediosP
         //$this->db = $conexion;
         $model = new $this->entityClass();
         $this->allowedColumns = array_keys($model->toArray());
-        
     }
 
+
+    public function getModel():object{
+        return new $this->entityClass();
+    }
     
     /*public function obtenerPorCredito(int $id):array{
 

@@ -97,7 +97,7 @@
     <div class="flex justify-start gap-4">
         <button id="btnDeudaTotal" class=" text-gray-800 rounded-md border-2 border-indigo-400 shadow-sm hover:bg-gray-100 focus:ring-1 focus:ring-indigo-400 !py-4 !px-6 flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl text-blue-400">payments</span>
-            <span class="font-medium text-2xl uppercase text-blue-400">Deuda total: <span class="text-gray-800">$<?php echo number_format($cliente->totaldebe??0, 0, ',', '.'); ?></span></span>
+            <span class="font-medium text-2xl uppercase text-blue-400">Deuda total: <span id="totalDeudaText" class="text-gray-800">$<?php echo number_format($cliente->totaldebe??0, 0, ',', '.'); ?></span></span>
         </button>
         <button id="btnPagoDeudaTotal" class=" text-gray-800 rounded-md border-2 border-indigo-400 shadow-sm hover:bg-gray-100 focus:ring-1 focus:ring-indigo-400 !py-4 !px-6 flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl text-blue-400">check</span>
@@ -135,9 +135,9 @@
                     <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td>
                     <td class=""><?php echo $value->numcuota;?></td>
                     <td class="<?php echo $value->saldopendiente>0?'text-red-500':'';?>">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
-                    <td class=""><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');?></td>
+                    <td class="pendiente"><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');?></td>
                     <td class="accionestd">
-                        <div class="acciones-btns" id="<?php echo $value->id;?>">
+                        <div class="acciones-btns" id="<?php echo $value->id;?>" data-saldopendiente="<?php echo $value->saldopendiente;?>">
                             <button class="btn-xs btn-lima abonarCredito" title="Abonar al credito"><i class="fa-solid fa-dollar-sign"></i></button>
                             <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->id;?>" target="_blank" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
                             <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
@@ -187,7 +187,7 @@
 <dialog id="miDialogoPagoTotal" class="midialog-sm p-12">
     <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
         <h4 id="modalPagoTotal" class="font-semibold text-gray-700 mb-4">Pago total</h4>
-        <button id="btnCerrarPagoTotal" class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
+        <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarPagoTotal" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
     </div>
     <div id="divmsjalerta1"></div>
     <form id="formPagoTotalDeuda" class="formulario">
