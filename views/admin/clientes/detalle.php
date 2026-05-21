@@ -137,7 +137,7 @@
                     <td class="<?php echo $value->saldopendiente>0?'text-red-500':'';?>">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
                     <td class="pendiente"><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');?></td>
                     <td class="accionestd">
-                        <div class="acciones-btns" id="<?php echo $value->id;?>" data-saldopendiente="<?php echo $value->saldopendiente;?>">
+                        <div class="acciones-btns" id="<?php echo $value->id;?>" data-saldopendiente="<?php echo $value->saldopendiente;?>" data-montocuota="<?php echo $value->montocuota;?>">
                             <button class="btn-xs btn-lima abonarCredito" title="Abonar al credito"><i class="fa-solid fa-dollar-sign"></i></button>
                             <a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=<?php echo $value->id;?>" target="_blank" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
                             <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
@@ -221,5 +221,5 @@
 
 <script>
     const getParam = <?= json_encode($conflocal) ?>;
-    const deudatotalCiente = <?= json_encode($cliente->totaldebe) ?>
+    let deudatotalCiente = <?= json_encode($cliente->totaldebe) ?>
 </script>

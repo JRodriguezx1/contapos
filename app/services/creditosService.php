@@ -148,7 +148,7 @@ class creditosService {
     }
 
 
-    public static function registrarAbono($datos){
+    public static function registrarAbono(array $datos){
         $alertas = [];
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($datos['id_credito']);
@@ -757,6 +757,8 @@ class creditosService {
             
             if($arraySeparadosMP)$sepadoMPRepo->crear_varios_reg_arrayobj($arraySeparadosMP);
             $getDB->commit();
+
+            //crear las facturas para los separados
 
             if($arrayFactMediosPago)$fmp = $factmediospago->crear_varios_reg_arrayobj($arrayFactMediosPago);
             //actualizar el cierre de caja

@@ -10,6 +10,8 @@
         const miDialogoAbono = document.querySelector('#miDialogoAbono') as HTMLDialogElement;
         const tablaCuotas = document.querySelector('#tablaCuotas tbody') as HTMLBodyElement;
 
+        let idcredito:string|undefined, montocuota:string = '', saldopendienteCredito:string='0', indiceFila:HTMLDivElement;
+
         document.addEventListener("click", cerrarDialogoExterno);
 
         const parametrosURL = new URLSearchParams(window.location.search);
@@ -160,18 +162,50 @@
             if(target?.classList.contains("anularCredito") || target?.parentElement?.classList.contains("anularCredito"))anularCredito(target);
         });
 
-        function abonarCredito(target: HTMLButtonElement){
-            miDialogoAbono.showModal();
-            const element = target.closest('div');
-            const idcredito = element?.id;
-            const saldopendiente = element?.dataset.saldopendiente;
-            
-        }
 
+        function abonarCredito(target: HTMLButtonElement){
+            const element = target.closest('div');
+            if(!element)return;
+            idcredito = element?.id;
+            montocuota = element?.dataset.montocuota||'0';
+            if(idcredito == undefined || Number.isNaN(idcredito))return
+            saldopendienteCredito = element?.dataset.saldopendiente!;
+            if(Number.isNaN(saldopendienteCredito) || Number(saldopendienteCredito)<=0)return;
+            miDialogoAbono.showModal();
+            document.querySelector('#numCredito')!.textContent = "Credito N°: "+idcredito;
+            document.querySelector('#saldopendiente')!.textContent = "Saldo pendiente: "+saldopendienteCredito;
+            indiceFila = (element.parentElement?.parentElement) as HTMLTableRowElement;
+        }
 
         document.querySelector('#formrealizarAbono')?.addEventListener('submit', async (e:Event)=>{
             e.preventDefault();
-
+            const valorabono = (document.querySelector('#abono') as HTMLInputElement).value;
+            const datos = new FormData();
+            datos.append('id_credito', idcredito||'');
+            datos.append('cajaid', $('#abono_caja').val() as string);
+            datos.append('mediopagoid', $('#abono_mediopago').val() as string);
+            datos.append('valorpagado', valorabono);
+            datos.append('montocuota', montocuota);
+            try {
+                const url = "/admin/api/creditos/registrarAbonoFromCli";  //api en creditoscontrolador
+                const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                const resultado = await respuesta.json();
+                if(resultado.exito !== undefined){
+                    deudatotalCiente = (Number(deudatotalCiente)-Number(valorabono))+'';
+                    saldopendienteCredito = (Number(saldopendienteCredito)-Number(valorabono))+'';
+                    document.querySelector('#totalDeudaText')!.textContent = '$'+deudatotalCiente;
+                    indiceFila.children[5].textContent = '$'+saldopendienteCredito;
+                    indiceFila.children[6].textContent = (Number(saldopendienteCredito))== 0 ?'Finalizado':'Abierto';
+                    (indiceFila.children[7].children[0] as HTMLDivElement).dataset.saldopendiente = saldopendienteCredito;
+                    miDialogoAbono.close();
+                    Swal.fire(resultado.exito[0], '', 'success');
+                }else{
+                    miDialogoAbono.close();
+                    Swal.fire(resultado.error[0], '', 'error');
+                }
+            } catch (error) {
+                console.log(error);
+            }
         });
 
 

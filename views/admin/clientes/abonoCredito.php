@@ -9,12 +9,12 @@
     <div id="divmsjalerta2"></div>
     <form id="formrealizarAbono" class="formulario">
         
-        <h5 id="NumCredito" class="font-medium text-gray-600 text-center">Credito N°: </h5>
-        <p id="Saldopendiente" class="font-medium text-red-500 mb-4 text-center">Saldo pendiente: $500.000</p>
+        <h5 id="numCredito" class="font-medium text-gray-600 text-center">Credito N°: </h5>
+        <p id="saldopendiente" class="font-medium text-red-500 mb-4 text-center">Saldo pendiente: $500.000</p>
 
         <div class="formulario__campo">
             <label class="formulario__label" for="caja">Caja</label>
-            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="cajaid" required>
+            <select id="abono_caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="cajaid" required>
                 <?php foreach($cajas as $value):  ?>
                       <option value="<?php echo $value->id;?>" ><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
@@ -22,7 +22,7 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="mediopago">Medio de pago</label>
-            <select id="mediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="mediopagoid" required>
+            <select id="abono_mediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="mediopagoid" required>
                 <?php foreach($mediospago as $value):  ?>
                       <option value="<?php echo $value->id;?>" ><?php echo $value->mediopago;?></option>
                 <?php endforeach; ?>
@@ -31,7 +31,7 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="abono">Abono</label>
             <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
-                <input 
+                <input
                     id="abono" 
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text"

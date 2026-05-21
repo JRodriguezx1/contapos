@@ -15,7 +15,7 @@ declare let comisionTotalEmpleadosDB: number;
 declare let comisionTotalPagadaBusinessDB: number;
 declare const getParam:any;  //getParam inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
 declare const percentComisionUser:string;
-declare const deudatotalCiente:string;
+declare let deudatotalCiente:string;
 
 (window as any).POS = (window as any).POS || {};
 

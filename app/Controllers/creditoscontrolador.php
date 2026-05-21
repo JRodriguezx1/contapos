@@ -293,6 +293,18 @@ class creditoscontrolador{
     }
 
 
+    public static function registrarAbonoFromCli(Router $router){
+        date_default_timezone_set('America/Bogota');
+        isadmin();
+        $conflocal = config_local::getParamGlobal();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
+        echo json_encode($alertas);
+        return;
+    }
+
+
     public static function getArrayData(object $sucursal, object $credito, array $productos, array $cuotas, object $cliente, object|null $direccionCliente = null, ?object $usuario = null): array{
         $data = [
             'negocio' => $sucursal->negocio,
