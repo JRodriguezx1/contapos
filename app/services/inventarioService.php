@@ -108,7 +108,7 @@ class inventarioService {
                     if($idReal != null){  //actualizar
                         $upsertProductos[] = $value;
                         //stockporsucursal
-                        $rowsStock[] = "($idReal, $idsucursal, $value->stock, 0, 1)";
+                        $rowsStock[] = "($idReal, $idsucursal, $value->stock, 0, 0, 0, 1)";
                     }else{  //insertar
                         $value->fecha_ingreso = date('Y-m-d H:i:s');
                         $insertProductos[] = $value;
@@ -131,11 +131,11 @@ class inventarioService {
                         foreach($sucursales as $index => $value){
                             // Sucursal actual → stock Excel
                             if ($value->id == $idsucursal) {
-                                $rowsStock[] = "($idproducto, $idsucursal, $val->stock, 0, 1)";
+                                $rowsStock[] = "($idproducto, $idsucursal, $val->stock, 0, 0, 0, 1)";
                                 
                             } else {
                                 // Otras sucursales → stock = 0
-                                $rowsStock[] = "($idproducto, $value->id, 0, 0, 1)";
+                                $rowsStock[] = "($idproducto, $value->id, 0, 0, 0, 0, 1)";
                             }
                         }
                     }
