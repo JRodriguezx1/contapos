@@ -26,6 +26,7 @@ use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\productsSeparadosRepository;
 use App\services\cajaService;
+use App\services\creditosService;
 use MVC\Router;  //namespace\clase
 use ticketPOS;
 
@@ -51,16 +52,17 @@ class printcontrolador{
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     $sucursal = sucursales::find('id', id_sucursal());
-    $repoCredito = new creditosRepository();
-    $cuotasRepo = new cuotasRepository();
-    $credito = $repoCredito->find($id);
-    $cuotas = $cuotasRepo->obtenerPorCredito_Mediopago($credito->id);
-    $usuario = usuarios::find('id', $credito->usuariofk);
-    $cliente = clientes::find('id', $credito->cliente_id);
-    $direccion = direcciones::find('idcliente', $cliente->id);
-    if(!$direccion)$direccion = direcciones::find('id', 1);
-    $repoProductsSep = new productsSeparadosRepository();
-    $productos = $repoProductsSep->findAll('idcredito', $credito->id);
+    $datos = creditosService::detallecredito($id);
+    [
+      'credito'=>$credito,
+      'cuotas'=>$cuotas,
+      'productos'=>$productos,
+      'cliente'=>$cliente,
+      'direccion'=>$direccion,
+      'usuario'=>$usuario,
+      'factura'=>$factura
+    ] = $datos;
+
     $print = new ticketPOS();
     $print->generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos, $cuotas);
   }
@@ -87,6 +89,7 @@ class printcontrolador{
   }
 
 
+  //cuando se realiza una compra por el modulo de inventario
   public static function printComprobanteCompraPDF():void{
     $id = $_GET['id'];
     if(!is_numeric($id))return;

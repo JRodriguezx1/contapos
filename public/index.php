@@ -189,6 +189,7 @@ $router->post('/admin/clientes/crear', [clientescontrolador::class, 'crear']);  
 $router->post('/admin/clientes/actualizar', [clientescontrolador::class, 'actualizar']);
 $router->get('/admin/clientes/detalle', [clientescontrolador::class, 'detalle']);
 $router->get('/admin/clientes/hab_desh', [clientescontrolador::class, 'hab_desh']); //habilitar deshabilitar cliente
+$router->get('/admin/clientes/preciosXCliente', [clientescontrolador::class, 'preciosXCliente']);
 ///// direcciones de los clientes /////
 $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear']);  //crear direccion en vista de clientes
 ///// area de configuracion /////
@@ -253,7 +254,7 @@ $router->get('/admin/api/mediospagoXfactura', [cajacontrolador::class, 'mediospa
 $router->post('/admin/api/cambioMedioPago', [cajacontrolador::class, 'cambioMedioPago']);  //aip llamada desde caja.ts
 $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eliminarPedidoGuardado']);  //api llamada desde pedidosguardados.ts
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
-$router->get('/admin/api/getInvoice', [cajacontrolador::class, 'getInvoice']); //obtener detalle invoice en caja.ts
+$router->get('/admin/api/getInvoice', [cajacontrolador::class, 'getInvoice']); //obtener detalle invoice en caja.ts para imprimir
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //api llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
@@ -271,6 +272,11 @@ $router->post('/admin/api/anularSeparado', [creditoscontrolador::class, 'anularS
 $router->post('/admin/api/ajustarCreditoAntiguo', [creditoscontrolador::class, 'ajustarCreditoAntiguo']);
 $router->post('/admin/api/editarOrdenCreditoSeparado', [creditoscontrolador::class, 'editarOrdenCreditoSeparado']);
 $router->get('/admin/api/totalCuotasXcliente', [creditoscontrolador::class, 'totalCuotasXcliente']);
+$router->get('/admin/api/getCreditoSeparado', [creditoscontrolador::class, 'getCreditoSeparado']);  //llamada desde creditos/index.ts para detalle de credito/separado e imprimir
+$router->get('/admin/api/creditos/getAbono', [creditoscontrolador::class, 'getAbono']);  //llamada desde creditos/detallecredito.ts para detalle del abono e imprimir
+$router->get('/admin/api/creditos/anularAbono', [creditoscontrolador::class, 'anularAbono']);  //llamada desde creditos/detallecredito.ts para anular el abono.
+$router->post('/admin/api/creditos/pagarDeudaTotal', [creditoscontrolador::class, 'pagarDeudaTotal']);  //llamada desde clientes/detalle.ts
+$router->post('/admin/api/creditos/registrarAbonoFromCli', [creditoscontrolador::class, 'registrarAbonoFromCli']); //llamada desde clientes/detalle.ts
 
 $router->post('/admin/api/comisiones/comisionesXUser', [comisionescontrolador::class, 'comisionesXUser']);
 $router->post('/admin/api/comisiones/liquidarComision', [comisionescontrolador::class, 'liquidarComision']);
@@ -287,6 +293,8 @@ $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiA
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
 $router->get('/admin/api/clientes/comprasXMesXCliente', [clientescontrolador::class, 'comprasXMesXCliente']);
 $router->get('/admin/api/clientes/ventasXCategoriasXCliente', [clientescontrolador::class, 'ventasXCategoriasXCliente']);
+$router->post('/admin/api/clientes/preciospersonalizados', [clientescontrolador::class, 'preciospersonalizados']);
+$router->get('/admin/api/clientes/eliminarPrecioPersonalizado', [clientescontrolador::class, 'eliminarPrecioPersonalizado']);
 
 $router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.ts
 $router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.ts para crear cajas

@@ -7,9 +7,10 @@ class productosseparados {
     {
         $this->id = $args['id'] ?? null;
         $this->idcredito = $args['idcredito'] ?? '';
-        $this->fk_producto = $args['fk_producto'] ?? '';
+        $this->idproducto = $args['idproducto'] ?? '';
         $this->tipoproducto = $args['tipoproducto'] ?? '';
         $this->tipoproduccion = $args['tipoproduccion']??0; // 0 = inmediato,  1 = construccion solo aplica para productos compuesto
+        $this->promediostock = $args['promediostock']??0;
         $this->rendimientoestandar = $args['rendimientoestandar']??1;
         $this->nombreproducto = $args['nombreproducto'] ?? '';
         $this->foto = $args['foto'] ?? '';
@@ -30,7 +31,7 @@ class productosseparados {
         $alertas = [];
         if(!$this->idcredito)$alertas['error'][] = 'La factura es obligatoria';
         
-        if(!$this->fk_producto)$alertas['error'][] = 'El producto es obligatorio';
+        if(!$this->idproducto)$alertas['error'][] = 'El producto es obligatorio';
         
         if(!$this->cantidad)$alertas['error'][] = 'La cantidad es obligatoria';
 
@@ -44,9 +45,10 @@ class productosseparados {
         return [
             //'id' => $this->id, 
             'idcredito' => $this->idcredito, 
-            'fk_producto' => $this->fk_producto, 
+            'idproducto' => $this->idproducto, 
             'tipoproducto' => $this->tipoproducto, 
             'tipoproduccion' => $this->tipoproduccion, 
+            'promediostock' => $this->promediostock,
             'rendimientoestandar' => $this->rendimientoestandar, 
             'nombreproducto' => $this->nombreproducto, 
             'foto' => $this->foto, 

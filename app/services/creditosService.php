@@ -10,6 +10,7 @@ use App\Models\clientes\direcciones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\mediospago;
+use App\Models\configuraciones\usuarios;
 use App\Models\creditos\creditos;
 use App\Models\creditos\cuotas;
 use App\Models\creditos\productosseparados;
@@ -89,7 +90,9 @@ class creditosService {
             //registrar los productos
             foreach($carrito as $obj){
               $obj->idcredito = $r[1];
-              $obj->idproducto = $obj->fk_producto;
+              $obj->idproducto = $obj->idproducto;
+              $obj->cantidad = $obj->stock; //para la tabla venta
+              $obj->stockaux = $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
             }
             $repo = new productsSeparadosRepository();
             $repo->crear_varios_reg_arrayobj($carrito);
@@ -121,7 +124,7 @@ class creditosService {
     }
 
 
-    public static function detallecredito($id):array{
+    public static function detallecredito(int $id):array{
         $credito = new creditosRepository();
         $cuotasRepo = new cuotasRepository();
         $productos = new productsSeparadosRepository();
@@ -130,17 +133,22 @@ class creditosService {
             'titulo' => 'Creditos',
             'credito' => $credito,
             'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
-            'productos' => $productos->obtenerPorCredito($credito->id),
+            'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],
             'cliente' => clientes::find('id', $credito->cliente_id),  //$credito->cliente_id
             'cajas' => caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]),
             'factura' => facturas::find('id', $credito->factura_id),
-            'mediospago' => mediospago::whereArray(['estado'=>1])
+            'mediospago' => mediospago::whereArray(['estado'=>1]),
+            'usuario' => usuarios::find('id', $credito->usuariofk)
         ];
+
+        $direccion = direcciones::find('idcliente', $detalle['cliente']?->id);
+        if(!$direccion)$direccion = direcciones::find('id', 1);
+        $detalle['direccion'] = $direccion;
         return $detalle;
     }
 
 
-    public static function registrarAbono($datos){
+    public static function registrarAbono(array $datos){
         $alertas = [];
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($datos['id_credito']);
@@ -194,6 +202,7 @@ class creditosService {
 
                     $getDB->commit();
                     $alertas['exito'][] = "Cuota procesada";
+                    $alertas['idcuota'] = $r[1];
                     //acatualizar deuda de cliente
                     $cliente = clientes::find('id', $credito->cliente_id);
                     $cliente->totaldebe -= $cuota->valorpagado;
@@ -280,7 +289,7 @@ class creditosService {
         $impuestos = [];
         foreach($carrito as $value){
             $value->idfactura = $r[1];
-            $value->idproducto = $value->fk_producto;
+            $value->idproducto = $value->idproducto;
             $value->dato1 = '';
             $value->dato2 = '';
 
@@ -384,7 +393,7 @@ class creditosService {
             //devolver a inventario
             $productos = $productosRepo->obtenerPorCredito($credito->id);
             foreach($productos as $obj)
-              $obj->idproducto = $obj->fk_producto;
+              $obj->idproducto = $obj->idproducto;
             ventasService::addIventarioXVenta($productos);
 
             //acatualizar deuda de cliente
@@ -408,6 +417,15 @@ class creditosService {
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->uniqueWhere(['factura_id'=>$idfactura]);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+
+        //acatualizar deuda de cliente
+        $cliente = clientes::find('id', $credito->cliente_id);
+        $cliente->totaldebe -= $credito->saldopendiente;
+        $cli = $cliente->actualizar();
+        if(!$cli){
+            $alertas['error'][] = "No se puede eliminar el credito, intenta nuevamente";
+            return $alertas;
+        }
 
         //$getDB = $creditoRepo->getConexion();
         //$getDB->begin_transaction();
@@ -434,29 +452,63 @@ class creditosService {
                     $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
                 }
             }
-
             
             //descontar los abonos de los separados en cierre de caja si esta abierta
             if(empty($arrayCierresCaja)){
                 $alertas['exito'][] = "Credito anulado correctamente";
                 return $alertas;
             }
-            $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
-            //debuguear($r);
-            if($r){
-                $alertas['exito'][] = "Credito anulado correctamente";
-                //acatualizar deuda de cliente
-                $cliente = clientes::find('id', $credito->cliente_id);
-                $cliente->totaldebe -= $credito->saldopendiente;
-                $cliente->actualizar();
-            }else{
-                $alertas['error'][] = "Error al anular el credito.";
-            }
+            cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
             //$getDB->commit();
         //} catch (\Throwable $th) {
             //$alertas['error'][] = "Error al anular el credito. {$th->getMessage()}";
             //$getDB->rollback();
         //}
+        return $alertas;
+    }
+
+
+    public static function anularAbono(int $idabono):array{
+        $alertas = [];
+        $cs = true;
+        $cc = true;
+        $creditoRepo = new creditosRepository();
+        $separdoMediopago = new separadoMediopagoRepository();
+        $cuotaRepo = new cuotasRepository();
+        $cuota = $cuotaRepo->find($idabono);
+        $credito = $creditoRepo->find($cuota->id_credito);
+
+        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+
+        $cierrecaja = cierrescajas::uniquewhereArray(['id'=>$cuota->cierrecaja_id, 'idsucursal_id'=>id_sucursal()]);
+        if($cierrecaja->estado == 1)return ['error'=>['Caja se encuentra cerrada para esta cuota']];
+
+        if($credito->idtipofinanciacion == 1){  //credito
+            $cuotaMP = factmediospago::find('id_factura', $credito->factura_id);
+            if($cuotaMP)$cc = $cuotaMP->eliminar_registro();
+            $cierrecaja->abonoscreditos -= $cuota->valorpagado;
+        }else{  //separado
+            $cs = $separdoMediopago->delete_regs('idcuota', [$cuota->id]);
+            $cierrecaja->abonosseparados -= $cuota->valorpagado;
+        }
+
+        if($cc && $cs){
+            $cuotaRepo->delete($cuota->id);
+            $credito->abonodecuotas -= $cuota->valorpagado;
+            $credito->saldopendiente += $cuota->valorpagado;
+            $creditoRepo->update($credito);
+
+            //acatualizar deuda de cliente
+            $cliente = clientes::find('id', $credito->cliente_id);
+            $cliente->totaldebe += $cuota->valorpagado;
+            $cliente->actualizar();
+
+            $cierrecaja->abonostotales -= $cuota->valorpagado;
+            $cuota->mediopagoid == 1 ? ($cierrecaja->abonosenefectivo -= $cuota->valorpagado) : $cierrecaja->abonosenefectivo -= 0;
+            $cierrecaja->actualizar();
+            $alertas['exito'][] = "Cuota eliminada";
+        }
+
         return $alertas;
     }
 
@@ -501,17 +553,15 @@ class creditosService {
     }
 
 
-    //metodo llamado desde adicionarProductos.ts para el detalle de la orden trasnaldo/solicitud
+    //metodo llamado desde adicionarProductos.ts para el detalle
     public static function detalleProductosCredito(int $id):array{
-        $alertas = [];
-        //$orden = traslado_inv::find('id', $id);
         $productosSeparados = new productsSeparadosRepository();
         return $productosSeparados->detalleProductosCredito($id);
     }
 
 
     //metodo llamado desde adicionarproducto.ts para editar los productos del credito/separado
-    public static function editarOrdenCreditoSeparado($idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit){
+    public static function editarOrdenCreditoSeparado(int $idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit){
         $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = []; $arrayDownInv=[]; $arrayUpInv = []; $arrayProductsEliminar = [];
         $r1 = true; $r2 = true; $r3 = true;
         $creditoRepo = new creditosRepository();
@@ -519,24 +569,24 @@ class creditosService {
         $productosRepo = new productsSeparadosRepository();
         $detalleProductosDB = $productosRepo->findAll('idcredito', $idcredito);
 
-        //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de fk_producto
+        //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de idproducto
         foreach($nuevosproductosFront as $itemfront){
-            $itemfront->idproducto = $itemfront->fk_producto;
+            $itemfront->idproducto = $itemfront->idproducto;
           foreach($detalleProductosDB as $itemDB){
             if($itemfront->idcredito == $itemDB->idcredito){
-              if($itemfront->fk_producto == $itemDB->fk_producto){
+              if($itemfront->idproducto == $itemDB->idproducto){
                 $itemfront->id = $itemDB->id;
                 $idsdetalleproductos[] = $itemDB->id;
                 if($itemDB->cantidad < $itemfront->cantidad){ //descontar diferencia a inv
                     $diferencia = $itemfront->cantidad-$itemDB->cantidad;
                     $itemClone = clone $itemDB;
-                    $itemClone->idproducto = $itemDB->fk_producto;
+                    $itemClone->idproducto = $itemDB->idproducto;
                     $itemClone->cantidad = $diferencia;
                     $arrayDownInv[] = $itemClone;
                 }elseif ($itemDB->cantidad > $itemfront->cantidad){ //aumentar diferencia a inv
                     $diferencia = $itemDB->cantidad-$itemfront->cantidad;
                     $itemClone = clone $itemDB;
-                    $itemClone->idproducto = $itemDB->fk_producto;
+                    $itemClone->idproducto = $itemDB->idproducto;
                     $itemClone->cantidad = $diferencia;
                     $arrayUpInv[] = $itemClone;
                 }
@@ -550,7 +600,7 @@ class creditosService {
 
         ///IDs a eliminar de la DB
         foreach($detalleProductosDB as $key => $value){
-            $value->idproducto = $value->fk_producto;
+            $value->idproducto = $value->idproducto;
             if(!in_array($value->id, $idsdetalleproductos)){
                 $arrayIdeliminar[] = $value->id;
                 $arrayProductsEliminar[] = $value;
@@ -604,6 +654,130 @@ class creditosService {
         }
 
         return $alertas;
+    }
+
+
+    public static function pagarDeudaTotal(array $data):array{
+        $alertas = [];
+        $abonosSeparados = 0;
+        $abonosCreditos = 0;
+        $idcliente = $data['idcliente'];
+        $idcaja = $data['idcaja'];
+        $idmediodepago = $data['idmediodepago'];
+        $valorDeudaTotal = $data['valorDeudaTotal'];
+        $creditoRepo = new creditosRepository();
+        $cuotaRepo = new cuotasRepository();
+        $sepadoMPRepo = new separadoMediopagoRepository();
+        $factmediospago = new factmediospago();
+        $getDB = $creditoRepo->getConexion();
+        
+        $cierrecaja = cierrescajas::uniquewhereArray(['idcaja'=>$idcaja, 'idsucursal_id'=>id_sucursal(), 'estado'=>0]);
+        if(!$cierrecaja)return ['error'=>['Caja se encuentra cerrada para esta cuota']];
+        
+        $creditosCliente = $creditoRepo->deudaTotalXcliente($idcliente, id_sucursal());
+        $saldoPendiente = 0;
+        $arrayCuotas = [];
+        $arrayMPPendientes = [];
+        $arrayFactMPPendientes = [];
+        foreach($creditosCliente as $index => $value){
+            // guardar saldo original
+            $saldoCredito = $value->saldopendiente;
+            // acumulador total
+            $saldoPendiente += $value->saldopendiente;
+            $value->abonodecuotas += $saldoPendiente;
+            $value->saldopendiente = 0;
+            $value->estado = 1;
+            $value->idestadocreditos = 1;
+            //armar array de las cuotas y medios de pago asociada a cada cuota para INSERT
+            //cuotas
+            $getModelCuota = $cuotaRepo->getModel();
+            $getModelCuota->id_credito = $value->id;
+            $getModelCuota->cierrecaja_id = $cierrecaja->id;
+            $getModelCuota->cajaid = $idcaja;
+            $getModelCuota->mediopagoid = $idmediodepago;
+            $getModelCuota->numerocuota += 1;
+            $getModelCuota->montocuota = $value->montocuota;
+            $getModelCuota->valorpagado = $saldoCredito;
+            $getModelCuota->fechapago = date('Y-m-d H:i:s');
+            $getModelCuota->registrarencaja = 1;
+            $getModelCuota->cuotaantigua = 0;
+            $getModelCuota->fechacuotaantigua = 'NULL';
+            $getModelCuota->estado = 1;
+            $arrayCuotas[] = $getModelCuota;
+
+            if($value->idtipofinanciacion == 2){ //si es separado abonado
+                $abonosSeparados += $saldoCredito;
+                $arrayMPPendientes[$index] = [
+                    'mediopago_id' => $idmediodepago,
+                    'valor' => $saldoCredito,
+                ];
+            }
+
+            if($value->idtipofinanciacion == 1){ //si es credito abonado
+                $abonosCreditos += $saldoCredito;
+                $arrayFactMPPendientes[$index] = [
+                    'cierrecajaid' => $cierrecaja->id,
+                    'id_factura' => $value->factura_id,
+                    'idmediopago' => $idmediodepago,
+                    'valor' => $saldoCredito
+                ];
+            }
+        }
+        
+
+        if($valorDeudaTotal != $saldoPendiente)return ['error' => ['Verificar saldo pendiente no corresponde']];        
+        
+        $getDB->begin_transaction();
+        try {
+            //actualizar creditos
+            $creditoRepo->updatemultiregobj($creditosCliente, ['idestadocreditos', 'abonodecuotas', 'saldopendiente', 'estado']);
+            //crear las cuotas para los creditos
+            [$ok, $idsCuotas] = $cuotaRepo->crear_varios_reg_arrayobj($arrayCuotas);
+
+            //crear los arreglos de objetos de medios de pago para separados y creditos para insertar los medios de pago asociados a las cuotas creadas
+            $arraySeparadosMP=[];
+            $arrayFactMediosPago = [];
+
+            foreach($idsCuotas as $key => $idcuota){
+                if($creditosCliente[$key]->idtipofinanciacion == 2){ //si es separado abonado
+                    $objMP = $sepadoMPRepo->getModel();
+                    $objMP->idcuota = $idcuota;
+                    $objMP->mediopago_id = $arrayMPPendientes[$key]['mediopago_id'];
+                    $objMP->valor = $arrayMPPendientes[$key]['valor'];
+                    $arraySeparadosMP[] = $objMP;
+                }
+                if($creditosCliente[$key]->idtipofinanciacion == 1){ //si es credito abonado
+                    $objFactMP = new stdClass;
+                    $objFactMP->cierrecajaid = $arrayFactMPPendientes[$key]['cierrecajaid'];
+                    $objFactMP->id_factura = $arrayFactMPPendientes[$key]['id_factura'];
+                    $objFactMP->idmediopago = $arrayFactMPPendientes[$key]['idmediopago'];
+                    $objFactMP->valor = $arrayFactMPPendientes[$key]['valor'];
+                    $arrayFactMediosPago[] = $objFactMP;
+                }
+            }
+            
+            if($arraySeparadosMP)$sepadoMPRepo->crear_varios_reg_arrayobj($arraySeparadosMP);
+            $getDB->commit();
+
+            //crear las facturas para los separados
+
+            if($arrayFactMediosPago)$fmp = $factmediospago->crear_varios_reg_arrayobj($arrayFactMediosPago);
+            //actualizar el cierre de caja
+            $cierrecaja->abonostotales += $valorDeudaTotal;
+            $cierrecaja->abonosenefectivo += ($idmediodepago == 1) ? $valorDeudaTotal : 0;
+            $cierrecaja->abonoscreditos += $abonosCreditos;
+            $cierrecaja->abonosseparados += $abonosSeparados;
+            $cierrecaja->actualizar();
+            //acatualizar deuda de cliente
+            $cliente = clientes::find('id', $idcliente);
+            $cliente->totaldebe -= $valorDeudaTotal;
+            $cliente->actualizar();
+            return ['exito' => ['Deuda total pagada correctamente']];
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            return ['error' => ['Error al procesar el pago de la deuda total, intenta nuevamente. Detalle: '.$th->getMessage()]];
+        }
+
     }
 
 

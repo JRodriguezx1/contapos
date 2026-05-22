@@ -1,10 +1,17 @@
+
 (():void=>{
 
     if(document.querySelector('.detallecliente')){
 
         const btnTotalCuotas = document.querySelector('#btnTotalCuotas') as HTMLButtonElement;
+        const btnPagoDeudaTotal = document.querySelector('#btnPagoDeudaTotal') as HTMLButtonElement;
         const miDialogoTotalCuotas = document.querySelector('#miDialogoTotalCuotas') as HTMLDialogElement;
+        const miDialogoPagoTotal = document.querySelector('#miDialogoPagoTotal') as HTMLDialogElement;
+        const miDialogoAbono = document.querySelector('#miDialogoAbono') as HTMLDialogElement;
         const tablaCuotas = document.querySelector('#tablaCuotas tbody') as HTMLBodyElement;
+
+        let idcredito:string|undefined, montocuota:string = '', saldopendienteCredito:string='0', indiceFila:HTMLDivElement;
+        let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
 
         document.addEventListener("click", cerrarDialogoExterno);
 
@@ -82,6 +89,47 @@
         });
 
 
+        btnPagoDeudaTotal.addEventListener('click', ()=>{
+            if(!Number.isNaN(deudatotalCiente) && Number(deudatotalCiente)>0)
+            miDialogoPagoTotal.showModal();
+        });
+
+
+        document.querySelector('#formPagoTotalDeuda')?.addEventListener('submit', async (e:Event)=>{
+            e.preventDefault();
+            if(id!=null&&!Number.isNaN(id)){
+                const datos = new FormData();
+                datos.append('idcliente', id);
+                datos.append('idcaja', $('#PagoTotal_caja').val() as string);
+                datos.append('idmediodepago', $('#PagoTotal_mediopago').val() as string);
+                datos.append('valorDeudaTotal', deudatotalCiente);
+                try {
+                    const url = "/admin/api/creditos/pagarDeudaTotal";  //api en creditoscontrolador
+                    const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                    const resultado = await respuesta.json();
+                    if(resultado.exito !== undefined){
+                        document.querySelector('#totalDeudaText')!.textContent = '$0';
+                        document.querySelectorAll<HTMLTableCellElement>('.pendiente').forEach(td=>{
+                            const tr = td.parentElement;
+                            if(tr){
+                                tr.children[5].textContent = '$0';
+                                tr?.children[5].classList.remove('text-red-500');
+                                tr.children[6].textContent = 'Finalizado';
+                            }
+                        });
+                        miDialogoPagoTotal.close();
+                        Swal.fire(resultado.exito[0], '', 'success');
+                    }else{
+                        Swal.fire(resultado.error[0], '', 'error');
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+
+
+
         async function imprimirTotalCuotasXcliente(){
             if(id!=null&&!Number.isNaN(id)){
                 try {
@@ -108,10 +156,132 @@
         }
 
 
+        ////////////// Evento a la tabla cuotas ///////////////
+        document.querySelector('#tablaCreditos')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
+            const target = e.target as HTMLButtonElement;
+            if(target?.classList.contains("abonarCredito") || target?.parentElement?.classList.contains("abonarCredito") )abonarCredito(target);
+            if(target?.classList.contains("anularCredito") || target?.parentElement?.classList.contains("anularCredito"))anularCredito(target);
+        });
+
+
+        function abonarCredito(target: HTMLButtonElement){
+            const element = target.closest('div');
+            if(!element)return;
+            idcredito = element?.id;
+            montocuota = element?.dataset.montocuota||'0';
+            if(idcredito == undefined || Number.isNaN(idcredito))return
+            saldopendienteCredito = element?.dataset.saldopendiente!;
+            if(Number.isNaN(saldopendienteCredito) || Number(saldopendienteCredito)<=0)return;
+            miDialogoAbono.showModal();
+            document.querySelector('#numCredito')!.textContent = "Credito N°: "+idcredito;
+            document.querySelector('#saldopendiente')!.textContent = "Saldo pendiente: "+saldopendienteCredito;
+            indiceFila = (element.parentElement?.parentElement) as HTMLTableRowElement;
+        }
+
+        document.querySelector('#formrealizarAbono')?.addEventListener('submit', async (e:Event)=>{
+            e.preventDefault();
+            const imprimirAbono = document.querySelector('#imprimirAbono') as HTMLInputElement;
+            const valorabono = (document.querySelector('#abono') as HTMLInputElement).value;
+            const datos = new FormData();
+            datos.append('id_credito', idcredito||'');
+            datos.append('cajaid', $('#abono_caja').val() as string);
+            datos.append('mediopagoid', $('#abono_mediopago').val() as string);
+            datos.append('valorpagado', valorabono);
+            datos.append('montocuota', montocuota);
+            try {
+                const url = "/admin/api/creditos/registrarAbonoFromCli";  //api en creditoscontrolador
+                const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+                const resultado = await respuesta.json();
+                if(resultado.exito !== undefined){
+                    deudatotalCiente = (Number(deudatotalCiente)-Number(valorabono))+'';
+                    saldopendienteCredito = (Number(saldopendienteCredito)-Number(valorabono))+'';
+                    document.querySelector('#totalDeudaText')!.textContent = '$'+deudatotalCiente;
+                    indiceFila.children[5].textContent = '$'+saldopendienteCredito;
+                    indiceFila.children[6].textContent = (Number(saldopendienteCredito))== 0 ?'Finalizado':'Abierto';
+                    (indiceFila.children[7].children[0] as HTMLDivElement).dataset.saldopendiente = saldopendienteCredito;
+                    miDialogoAbono.close();
+                    Swal.fire(resultado.exito[0], '', 'success');
+                    if(resultado.idcuota && imprimirAbono.checked)printPOSComprobanteAbono(resultado.idcuota);
+                }else{
+                    miDialogoAbono.close();
+                    Swal.fire(resultado.error[0], '', 'error');
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+
+        async function printPOSComprobanteAbono(idabono:string|undefined){
+            if(idabono==undefined)return;
+            try{
+                const url = "/admin/api/creditos/getAbono?id="+idabono; //llamado a la API REST - creditocontrolador 
+                const respuesta = await fetch(url); 
+                const resultado = await respuesta.json();
+                const isAndroid = /Android/i.test(navigator.userAgent);
+                if(printerBT === '1'){
+                const builder = new ticketAbonoBuilder(resultado);
+                const ticket = await builder.generate(true); //true para version buffer bytes
+                const base64 = bytesToBase64(ticket);
+                if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
+                //descargar .bin a equipo
+                /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ticket.bin';
+                a.click();
+                URL.revokeObjectURL(url);*/
+                }
+            }catch(error){
+                console.log(error);
+            }
+
+            if(!isNaN(Number(idabono)))
+                window.open("/admin/printPDFAbonoCredito?id=" + idabono, "_blank"); //controlador printcontrolador
+        }
+
+
+        function anularCredito(target: HTMLButtonElement){
+            const idabono = target.parentElement?.id;
+            const fila = target.closest('tr');
+            if(idabono==undefined)return;
+            Swal.fire({
+                customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+                icon: 'question',
+                title: 'Desea anular el credito',
+                text: "El credito, seran anulado definitivamente.",
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+            }).then((result:any) => {
+                if (result.isConfirmed) {
+                    /*(async ()=>{ 
+                        try {
+                            const url = "/admin/api/creditos/anularAbono?id="+idabono;
+                            const respuesta = await fetch(url); 
+                            const resultado = await respuesta.json();
+                            if(resultado.exito !== undefined){
+                                fila?.remove();
+                                Swal.fire(resultado.exito[0], '', 'success');
+                            }else{
+                                Swal.fire(resultado.error[0], '', 'error');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })();//cierre de async()*/
+                }
+            });
+        }
+
+
         function cerrarDialogoExterno(event:Event) {
             const f = event.target;
-            if (f=== miDialogoTotalCuotas || (f as HTMLInputElement).id === 'btnCerrarTotalCuotas'){
+            if (f=== miDialogoTotalCuotas || f === miDialogoPagoTotal || f === miDialogoAbono || (f as HTMLElement).id === 'btnCerrarTotalCuotas' || (f as HTMLElement).id === 'btnCerrarPagoTotal' || (f as HTMLElement).id === 'btnXCerrarModalAbono' || (f as HTMLButtonElement).value == 'Salir'){
                 miDialogoTotalCuotas.close();
+                miDialogoPagoTotal.close();
+                miDialogoAbono.close();
             }
         }
 

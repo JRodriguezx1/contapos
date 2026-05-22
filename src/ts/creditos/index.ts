@@ -35,6 +35,7 @@
     }
     let factimpuestos:Item[] = [];*/
 
+    let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     let credits:creditsapi[]=[], uncredito:creditsapi;
     let indiceFila=0, control=0;
 
@@ -90,8 +91,8 @@
                       const resultado = await respuesta.json();
                       if(resultado.exito !== undefined){
                         const datosActuales = (tablaCreditos as any).row(indiceFila).data();
-                        datosActuales[10] = 'Anulado';
-                        datosActuales[11] = `<a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>`;
+                        datosActuales[8] = '<div class=" text-red-500 font-semibold">Anulado</div>';
+                        datosActuales[9] = `<a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>`;
                         (tablaCreditos as any).row(indiceFila).data(datosActuales).draw();
                         (tablaCreditos as any).page(info.page).draw('page'); 
                         Swal.fire(resultado.exito[0], '', 'success');
@@ -107,16 +108,41 @@
     }
 
 
-    function printPOSSeparado(idcredito:string){
+    async function printPOSSeparado(idcredito:string){
       //printTicketPOS(resultado.idfactura, resultado.dataInvoice);
-      console.log(idcredito);
+
+      try{
+        const url = "/admin/api/getCreditoSeparado?id="+idcredito; //llamado a la API REST - creditocontrolador 
+        const respuesta = await fetch(url); 
+        const resultado = await respuesta.json();
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if(printerBT === '1'){
+          const builder = new ticketCreditoSeparadoBuilder(resultado);
+          const ticket = await builder.generate(true); //true para version buffer bytes
+          const base64 = bytesToBase64(ticket);
+          if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
+          //descargar .bin a equipo
+          /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ticket.bin';
+          a.click();
+          URL.revokeObjectURL(url);*/
+        }
+        //window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
+      }catch(error){
+        console.log(error);
+      }
+
       if(!isNaN(Number(idcredito)))
         window.open("/admin/printPDFPOSSeparado?id=" + idcredito, "_blank"); //controlador printcontrolador
     }
 
     
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
-      try {
+      
+      /*try {
         const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API REST apidiancontrolador.php
         const respuesta = await fetch(url, {
           method: 'POST',
@@ -127,7 +153,7 @@
         console.log(resultado);
       } catch (error) {
         console.log(error);
-      }
+      }*/
     }
 
   }

@@ -68,7 +68,7 @@ class cierrescajas extends \App\Models\ActiveRecord {
         $sql = "SELECT mediospago.id AS idmediopago, mediospago.mediopago, SUM(factmediospago.valor) AS valor FROM mediospago 
         JOIN factmediospago ON mediospago.id = factmediospago.idmediopago 
         JOIN facturas ON factmediospago.id_factura = facturas.id 
-        WHERE facturas.idcierrecaja = $id AND facturas.estado = 'Paga' GROUP BY mediospago.mediopago;";
+        WHERE factmediospago.cierrecajaid = $id AND facturas.estado = 'Paga' GROUP BY mediospago.mediopago;";
 
         $resultado = self::$db->query($sql); //SHOW TABLE STATUS LIKE 'facturas';
         $array = [];

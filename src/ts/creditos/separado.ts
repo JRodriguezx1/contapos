@@ -29,8 +29,8 @@
     }
 
     let allConversionUnidades:conversionunidadesapi[] = [];
-    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_compra:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
-    let carrito:{id:string, fk_producto:string,  tipoproducto: string, tipoproduccion:string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
+    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, promediostock: string, rendimientoestandar:string, precio_compra:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
+    let carrito:{id:string, idproducto:string,  tipoproducto: string, tipoproduccion:string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, stock: number, promediostock: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let factimpuestos:Item[] = [], tipoventa:string="Contado";
     const mapMediospago = new Map();
@@ -52,8 +52,8 @@
         try {
             const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
             const respuesta = await fetch(url); 
-            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, rendimientoestandar:string, precio_compra:string, precio_venta:string, visible:string, habilitarventa:string}[] = await respuesta.json();
-            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, rendimientoestandar: item.rendimientoestandar, precio_compra: item.precio_compra, precio_venta: item.precio_venta }));
+            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, promediostock:string, rendimientoestandar:string, precio_compra:string, precio_venta:string, visible:string, habilitarventa:string}[] = await respuesta.json();
+            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, promediostock: item.promediostock, rendimientoestandar: item.rendimientoestandar, precio_compra: item.precio_compra, precio_venta: item.precio_venta }));
             activarselect2(filteredData);
         } catch (error) {
             console.log(error);
@@ -74,7 +74,7 @@
     document.querySelector('#contenedorCanalVenta')?.classList.add('hidden');
     document.querySelector('#canalVenta')?.removeAttribute('required');
 
-    function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string}[]){
+    function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string, promediostock:string}[]){
       ($('#articulo') as any).select2({ 
           data: filteredData,
           placeholder: "Selecciona un item",
@@ -97,24 +97,24 @@
     $("#articulo").on('change', (e)=>{
         let datos = ($('#articulo') as any).select2('data')[0];
         if(datos){
-          let cantidad = 1, itemselected = carrito.find(x=>x.fk_producto==datos.id);
-          if(itemselected != undefined)cantidad += itemselected.cantidad;
+          let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
+          if(itemselected != undefined)cantidad += itemselected.stock;
           actualizarCarrito(datos.id, cantidad, true);
           $("#articulo").val('null').trigger('change');
         }
     });
 
     function actualizarCarrito(id:string, cantidad:number = 1, stateinput:boolean){
-      const index = carrito.findIndex(x=>x.fk_producto==id);
+      const index = carrito.findIndex(x=>x.idproducto==id);
       if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
           const itemselected = filteredData.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
           
           const productototal = Number(itemselected.precio_venta)*cantidad;
           const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
           
-          const item:{id: string, fk_producto: string, tipoproducto: string, tipoproduccion:string, foto:string, costo:number, valorunidad:string, nombreproducto: string, rendimientoestandar:string, unidad: string, cantidad: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
+          const item:{id: string, idproducto: string, tipoproducto: string, tipoproduccion:string, foto:string, costo:number, valorunidad:string, nombreproducto: string, rendimientoestandar:string, unidad: string, stock: number, promediostock: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
               id: '',
-              fk_producto: itemselected?.id!,
+              idproducto: itemselected?.id!,
               tipoproducto: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
               tipoproduccion: itemselected.tipoproduccion,
               foto: '',
@@ -123,7 +123,8 @@
               nombreproducto: itemselected.text,
               rendimientoestandar: itemselected.rendimientoestandar,
               unidad: itemselected.unidadmedida,
-              cantidad: 1,
+              stock: 1,
+              promediostock: Number(itemselected.promediostock),
               factor: 1,
               impuesto: itemselected.impuesto,
               precio_venta: productototal,
@@ -144,18 +145,18 @@
           //carrito = carrito.filter(x=>x.iditem != id);
         }
         
-        carrito[index].cantidad = cantidad;
-        /*const total:number = carrito[index].cantidad*carrito[index].precio_venta;
+        carrito[index].stock = cantidad;
+        /*const total:number = carrito[index].stock*carrito[index].precio_venta;
         carrito[index].subtotal = total;
         carrito[index].total = total;*/
-        carrito[index].subtotal = (carrito[index].precio_venta)*carrito[index].cantidad;
+        carrito[index].subtotal = (carrito[index].precio_venta)*carrito[index].stock;
         carrito[index].total = carrito[index].subtotal;
         //calculo del impuesto y base por producto en el carrito deventas
         carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
         carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
 
         if(stateinput)
-          (tablaSeparado?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].cantidad+'';
+          (tablaSeparado?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
         (tablaSeparado?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
         valorCarritoTotal();
       }
@@ -166,7 +167,7 @@
     }
 
     function printItemTable(id:string){
-        const uncarrito = carrito.find(x=>x.fk_producto==id)!;
+        const uncarrito = carrito.find(x=>x.idproducto==id)!;
         let options:string = '';
 
         const productounidades = allConversionUnidades.filter(x => x.idproducto === id); 
@@ -179,8 +180,8 @@
         tr.insertAdjacentHTML('afterbegin', `
           <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${uncarrito.nombreproducto}</td> 
           <td class="!p-2 !py-0 text-xl text-gray-500 leading-5"><select class="formulario__select selectunidad">${options}</select></td>
-          <td class="!p-2 !py-0"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" name="inputcantidad" value="${uncarrito.cantidad}"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
-          <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${uncarrito.precio_venta*uncarrito.cantidad}</td>
+          <td class="!p-2 !py-0"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" name="inputcantidad" value="${uncarrito.stock}"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
+          <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${uncarrito.precio_venta*uncarrito.stock}</td>
           <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
         tablaSeparado?.appendChild(tr);
         valorCarritoTotal();
@@ -240,9 +241,9 @@
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
       //const precio = (elementProduct as HTMLElement).dataset.precio!;
-      const productoCarrito = carrito.find(x=>x.fk_producto==idProduct);
+      const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
       if((e.target as HTMLElement).classList.contains('menos')){
-        actualizarCarrito(idProduct, productoCarrito!.cantidad-1, true);
+        actualizarCarrito(idProduct, productoCarrito!.stock-1, true);
       }
       
       if((e.target as HTMLElement).classList.contains('inputcantidad')){
@@ -263,11 +264,11 @@
       }
 
       if((e.target as HTMLElement).classList.contains('mas')){
-        actualizarCarrito(idProduct, productoCarrito!.cantidad+1, true);
+        actualizarCarrito(idProduct, productoCarrito!.stock+1, true);
       }
       
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        carrito = carrito.filter(x=>x.fk_producto != idProduct);
+        carrito = carrito.filter(x=>x.idproducto != idProduct);
         valorCarritoTotal();
         tablaSeparado?.querySelector(`TR[data-id="${idProduct}"]`)?.remove();
       }
@@ -330,7 +331,7 @@
       valoresCredito.cliente_id = (document.querySelector('#cliente') as HTMLSelectElement).value;
       valoresCredito.valorpagado = valoresCredito.abonoinicial;
       valoresCredito.cajaid = btnCaja.value;
-      valoresCredito.totalunidades = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
+      valoresCredito.totalunidades = carrito.reduce((total, producto)=>producto.stock+total, 0)+'';
       valoresCredito.base = valorTotal.base.toFixed(3);
       valoresCredito.valorimpuestototal = valorTotal.valorimpuestototal+'';
       valoresCredito.dctox100 = valorTotal.dctox100+'';
@@ -343,13 +344,13 @@
       datos.append('cantidadcuotas', $('#cantidadcuotas').val()as string);
       datos.append('montocuota', $('#montocuota').val()as string);
       datos.append('frecuenciapago', $('#frecuenciapago').val()as string);
-      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
+      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.stock>0)));  //envio de todos los productos con sus cantidades
       datos.append('mediospago', JSON.stringify(Array.from(mapMediospago, ([mediopago_id, valor])=>({mediopago_id, idcuota:0, valor}))));
       datos.append('valorefectivo', mapMediospago.get('1')??'0');
       datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
 
-      datos.append('totalunidades', carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'');
+      datos.append('totalunidades', carrito.reduce((total, producto)=>producto.stock+total, 0)+'');
       datos.append('base', valorTotal.base.toFixed(3));
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
       datos.append('dctox100', valorTotal.dctox100+'');

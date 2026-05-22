@@ -20,6 +20,9 @@ class cuotasRepository extends operationRepository{
         
     }
 
+    public function getModel():object{
+        return new $this->entityClass();
+    }
 
     public function obtenerPorCredito_Mediopago(int $id):array{
         $sql = "SELECT c.*, JSON_ARRAYAGG(

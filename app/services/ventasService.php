@@ -13,7 +13,7 @@ use App\Models\inventario\stockproductossucursal;
 
 class ventasService {
 
-    public static function reducirIventarioXVenta($carrito):array{
+    public static function reducirIventarioXVenta(array $carrito):array{
         //$invSub = true;
         $invPro = true;
         //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
@@ -26,15 +26,15 @@ class ventasService {
                 $acumulador['productosSimples'][$objeto->idproducto] = $obj;
                 $acumulador['soloIdproductos'][] = $obj->id;
                 }else{
-                $acumulador['productosSimples'][$objeto->idproducto]->cantidad += $obj->cantidad;
+                $acumulador['productosSimples'][$objeto->idproducto]->stock += $obj->stock;
                 }
             }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
                 if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
                 $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
                 }else{
-                $acumulador['productosCompuestos'][$objeto->idproducto]->cantidad += $obj->cantidad;
+                $acumulador['productosCompuestos'][$objeto->idproducto]->stock += $obj->stock;
                 }
-                $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->cantidad/(float)$objeto->rendimientoestandar, 4);
+                $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->stock/(float)$objeto->rendimientoestandar, 4);
             }
             return $acumulador;
         }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
@@ -48,10 +48,12 @@ class ventasService {
         foreach($descontarSubproductos as $idx => $obj){
             if(!isset($reduceSub[$obj->id_subproducto])){
                 $obj->id = $obj->id_subproducto;
+                $obj->stockaux = $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
                 $reduceSub[$obj->id_subproducto] = $obj;
                 $soloIdInsumos[] = $obj->id;
             }else{
-            $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
+            $reduceSub[$obj->id_subproducto]->stock += $obj->stock;
+            $reduceSub[$obj->id_subproducto]->stockaux += $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
             }
         }
 
@@ -76,7 +78,7 @@ class ventasService {
     }
     
 
-    public static function addIventarioXVenta($carrito):array{
+    public static function addIventarioXVenta(array $carrito):array{
         //$invSub = true;
         $invPro = true;
         //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
@@ -84,18 +86,20 @@ class ventasService {
             $obj = clone $objeto;
             $obj->id = $objeto->idproducto;
             //unset($objeto->iditem);
+            $obj->stock = $objeto->cantidad;
             if($objeto->tipoproducto == 0 || ($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 1)){  //producto simple o producto compuesto de tipo produccion construccion, solo se descuenta sus cantidades, y sus insumos cuando se hace produccion en almacen del producto compuesto
                 if(!isset($acumulador['productosSimples'][$objeto->idproducto])){
-                $acumulador['productosSimples'][$objeto->idproducto] = $obj;
-                $acumulador['soloIdproductos'][] = $obj->id;
+                    $acumulador['productosSimples'][$objeto->idproducto] = $obj;
+                    $acumulador['soloIdproductos'][] = $obj->id;
                 }else{
-                $acumulador['productosSimples'][$objeto->idproducto]->cantidad += $obj->cantidad;
+                    $acumulador['productosSimples'][$objeto->idproducto]->stock += $obj->stock;
                 }
+                $objeto->stockaux = $objeto->promediostock>0?$objeto->stock/$objeto->promediostock:0;
             }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
                 if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
-                $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
+                    $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
                 }else{
-                $acumulador['productosCompuestos'][$objeto->idproducto]->cantidad += $obj->cantidad;
+                    $acumulador['productosCompuestos'][$objeto->idproducto]->stock += $obj->stock;
                 }
                 $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->cantidad/(float)$objeto->rendimientoestandar, 4);
             }
@@ -111,10 +115,12 @@ class ventasService {
         foreach($descontarSubproductos as $idx => $obj){
             if(!isset($reduceSub[$obj->id_subproducto])){
                 $obj->id = $obj->id_subproducto;
+                $obj->stockaux = $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
                 $reduceSub[$obj->id_subproducto] = $obj;
                 $soloIdInsumos[] = $obj->id;
             }else{
-            $reduceSub[$obj->id_subproducto]->cantidad += $obj->cantidad;
+                $reduceSub[$obj->id_subproducto]->stock += $obj->stock;
+                $reduceSub[$obj->id_subproducto]->stockaux += $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
             }
         }
 
@@ -134,7 +140,6 @@ class ventasService {
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);
             stockService::upStock_movimientoInsumos($reduceSub, $returnInsumos, 'devolucion', 'retorno de unidades por anulacion de venta');
         }
-
 
         return $resultArray;
     }

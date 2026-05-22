@@ -383,7 +383,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         for(const item of this.invoice.items) {
             for(const line of this.wrap(item.nombreproducto.trim()))this.center(line);
             //this.row(`${item.cantidad}  x  $${item.valorunidad.toLocaleString()}`, '$'+item.total.toLocaleString());
-            this.row3(item.cantidad.toString(), '$'+item.valorunidad.toLocaleString(), '$'+item.total.toLocaleString(), {col1:'left', col2:'right', col3:'right'}, [8, 16, 18]);
+            this.row3(item.stock?.toString()||item.cantidad.toString(), '$'+item.valorunidad.toLocaleString(), '$'+item.total.toLocaleString(), {col1:'left', col2:'right', col3:'right'}, [8, 16, 18]);
         }
     }
 

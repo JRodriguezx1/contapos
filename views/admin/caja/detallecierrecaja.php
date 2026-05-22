@@ -166,7 +166,7 @@
                     </thead>
                     <tbody>
                         <tr>        
-                            <td class="">Ingreso de ventas total</td> 
+                            <td class="">Ingreso de ventas total <p class=" text-sm m-0 text-gray-500">(solo ventas de contado)</p></td> 
                             <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->totaldescuentos??0), "0", ",", ".");?></td>
                         </tr>
                         <tr>        
@@ -186,7 +186,7 @@
                             <td id="totalDomicilios" class=""> - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
                         </tr>
                         <tr>        
-                            <td class="text-blue-400 font-medium">Real ingreso de ventas</td> 
+                            <td class="text-blue-400 font-medium">Ganancia hoy</td> 
                             <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                         </tr>
                         

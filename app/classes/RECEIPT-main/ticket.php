@@ -269,17 +269,22 @@
 
             # Impuestos, descuentos & totales #
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","CREDITO TOTAL"),0,0,'C');
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","CREDITO TOTAL:"),0,0,'C');
             $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL ABONOS"),0,0,'C');
-            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital-$credito->saldopendiente, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","Interes:"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->valorinterestotal, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
-            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","Descuento"),0,0,'C');
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL ABONOS:"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->abonodecuotas, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Ln(5);
+
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","Descuento:"),0,0,'C');
             $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($credito->descuento, '0', ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
@@ -349,7 +354,7 @@
             $this->pdf->SetFont('Arial','',9);
              $this->pdf->Ln(7);
              # Impuestos, descuentos & totales #
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Abono N°: ".$cuota->numerocuota),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "$cuota->fechapagado  -  Abono N°: ".$cuota->numerocuota),0,'C',false);
             $this->pdf->Ln(5);
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", "Valor pagado: ".$cuota->valorpagado),0,'C',false);

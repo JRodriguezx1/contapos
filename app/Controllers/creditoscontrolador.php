@@ -32,9 +32,10 @@ class creditoscontrolador{
         $alertas = [];
         //validar permisso de usuario
         if(!tienePermiso('Habilitar módulo de credito/separados')&&userPerfil()>3)return;
+        $conflocal = config_local::getParamCaja();
         $creditos = new creditosRepository();
         $creditos = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal(), 'idestadocreditos'=>2]);
-        $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/creditos/index', ['titulo'=>'Creditos', 'creditos'=>$creditos, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -228,4 +229,115 @@ class creditoscontrolador{
         echo json_encode($creditos);
         return;
     }
+
+
+    public static function getCreditoSeparado(){
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar solicitud.";
+            echo json_encode($alertas);
+            return;
+        }
+        $sucursal = sucursales::find('id', id_sucursal());
+        $detallecredito = creditosService::detallecredito($id);
+        $data = self::getArrayData($sucursal, $detallecredito['credito'], $detallecredito['productos'], $detallecredito['cuotas'], $detallecredito['cliente'], $detallecredito['direccion'], $detallecredito['usuario']);
+        echo json_encode($data);
+        return;
+    }
+
+
+    public static function getAbono(){
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar solicitud.";
+            echo json_encode($alertas);
+            return;
+        }
+        $sucursal = sucursales::find('id', id_sucursal());
+        $repoCuota = new cuotasRepository();
+        $cuota = $repoCuota->find($id);
+        $repoCredito = new creditosRepository();
+        $credito = $repoCredito->find($cuota->id_credito);
+        $cliente = clientes::find('id', $credito->cliente_id);
+        $data = self::getArrayData($sucursal, $credito, [], [$cuota], $cliente, null, null);
+        echo json_encode($data);
+        return;
+    }
+
+
+    public static function anularAbono(){
+        isadmin();
+        $alertas = [];
+        $id=$_GET['id'];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Error al procesar solicitud.";
+            echo json_encode($alertas);
+            return;
+        }
+        $alertas = creditosService::anularAbono($id);
+        echo json_encode($alertas);
+        return;
+    }
+
+
+    public static function pagarDeudaTotal():void{
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::pagarDeudaTotal($_POST);
+        echo json_encode($alertas);
+        return;
+    }
+
+
+    public static function registrarAbonoFromCli(Router $router){
+        date_default_timezone_set('America/Bogota');
+        isadmin();
+        $conflocal = config_local::getParamGlobal();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
+        echo json_encode($alertas);
+        return;
+    }
+
+
+    public static function getArrayData(object $sucursal, object $credito, array $productos, array $cuotas, object $cliente, object|null $direccionCliente = null, ?object $usuario = null): array{
+        $data = [
+            'negocio' => $sucursal->negocio,
+            'sucursal' => $sucursal->nombre,
+            'nit' => $sucursal->nit,
+            'direccion' => $sucursal->direccion,
+            'telefono' => $sucursal->telefono,
+            'email' => $sucursal->email,
+            'www' => $sucursal->www,
+            'logo' => $sucursal->logo,
+            'num_orden' => $credito->num_orden,
+            'id' => $credito->id,
+            'fechainicio' => $credito->fechainicio,
+            'fechafin' => $credito->fechafin,
+            'idestadocreditos' => $credito->idestadocreditos,
+            'capital' => $credito->capital,
+            'descuento' => $credito->descuento,
+            'interestotal' => $credito->interestotal,
+            'interesxcuota' => $credito->interesxcuota,
+            'valorinterestotal' => $credito->valorinterestotal,
+            'montototal' => $credito->montototal,
+            'nombrecliente' => $credito->nombrecliente,
+            'nota' => $credito->nota,
+            'saldopendiente' => $credito->saldopendiente,
+            'abonodecuotas' => $credito->abonodecuotas,
+            'valorimpuestototal' => $credito->valorimpuestototal,
+            'productos' => $productos,
+            'cuotas' => $cuotas,
+            'cliente' => $cliente,
+            'direccionCliente' => $direccionCliente,
+            'usuario' => $usuario
+        ];
+        return $data;
+     }
+
 }

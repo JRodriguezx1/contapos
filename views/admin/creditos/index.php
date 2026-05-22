@@ -60,4 +60,9 @@
     </tbody>
   </table>
 
+
+  <script>
+    const getParam = <?= json_encode($conflocal) ?>;
+  </script>
+
 </div>
