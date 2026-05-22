@@ -1553,16 +1553,17 @@ class almacencontrolador{
     }
 
 
-    public static function generarBarCode(){
+    public static function generarBarCode():void{
         $alertas = []; 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $alertas = inventarioService::generarBarCode($_POST);
         }
-        echo json_encode($alertas);  
+        echo json_encode($alertas);
+        return;
     }
 
 
-    public static function getItemsBajoStock(){
+    public static function getItemsBajoStock():void{
       isadmin();
       $items = stockproductossucursal::getProductosBajoStock(id_sucursal());
       echo json_encode($items);

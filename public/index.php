@@ -189,6 +189,7 @@ $router->post('/admin/clientes/crear', [clientescontrolador::class, 'crear']);  
 $router->post('/admin/clientes/actualizar', [clientescontrolador::class, 'actualizar']);
 $router->get('/admin/clientes/detalle', [clientescontrolador::class, 'detalle']);
 $router->get('/admin/clientes/hab_desh', [clientescontrolador::class, 'hab_desh']); //habilitar deshabilitar cliente
+$router->get('/admin/clientes/preciosXCliente', [clientescontrolador::class, 'preciosXCliente']);
 ///// direcciones de los clientes /////
 $router->post('/admin/direcciones/crear', [direccionescontrolador::class, 'crear']);  //crear direccion en vista de clientes
 ///// area de configuracion /////
@@ -292,6 +293,8 @@ $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiA
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
 $router->get('/admin/api/clientes/comprasXMesXCliente', [clientescontrolador::class, 'comprasXMesXCliente']);
 $router->get('/admin/api/clientes/ventasXCategoriasXCliente', [clientescontrolador::class, 'ventasXCategoriasXCliente']);
+$router->post('/admin/api/clientes/preciospersonalizados', [clientescontrolador::class, 'preciospersonalizados']);
+$router->get('/admin/api/clientes/eliminarPrecioPersonalizado', [clientescontrolador::class, 'eliminarPrecioPersonalizado']);
 
 $router->get('/admin/api/allcajas', [configcontrolador::class, 'allcajas']); // me trae todos las cajas desde gestioncajas.ts
 $router->post('/admin/api/crearCaja', [configcontrolador::class, 'crearCaja']); //api llamada desde gestioncajas.ts para crear cajas

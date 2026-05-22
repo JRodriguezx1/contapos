@@ -59,6 +59,7 @@
                 fabricante: 'na',
                 garantia: 'na',
                 stock: '0',
+                promediostock: '0',
                 stockminimo: '1',
                 categoria: 'na',
                 rendimientoestandar: '1',

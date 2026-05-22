@@ -9,14 +9,19 @@ use App\Models\configuraciones\usuarios;
 use App\Models\clientes\clientes;
 use App\Models\empleados;
 use App\Models\clientes\direcciones;
+use App\Models\clientes\preciosporcliente;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\tarifas;
+use App\Models\inventario\productos;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Repositories\creditos\creditosRepository;
+use App\services\clientesService;
+use stdClass;
 
 class clientescontrolador{
+    
 
     public static function index(Router $router){
         //session_start();
@@ -139,6 +144,20 @@ class clientescontrolador{
         $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
         $mediospago = mediospago::whereArray(['estado'=>1]);
         $router->render('admin/clientes/detalle', ['titulo'=>'Clientes', 'conflocal'=>$conflocal, 'cliente'=>$cliente, 'indicadores'=>$indicadores, 'cajas'=>$cajas, 'mediospago'=>$mediospago, 'creditos'=>$creditos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+
+    public static function preciosXCliente(Router $router){
+        //session_start();
+        isadmin(); 
+        $id = $_GET['id'];
+        if(!is_numeric($id))return;
+        $alertas = [];
+        $conflocal = config_local::getParamGlobal();
+        $cliente = clientes::find('id', $id);
+        $productos = productos::whereArray(['visible'=>1]);
+        $arrayPreciosPorCliente = preciosporcliente::unJoinWhereArrayObj(productos::class, "idproducto", "id", ['preciosporcliente.idcliente'=>$cliente->id]);
+        $router->render('admin/clientes/preciosXCliente', ['titulo'=>'Clientes', 'conflocal'=>$conflocal, 'cliente'=>$cliente, 'productos'=>$productos, 'arrayPreciosPorCliente'=>$arrayPreciosPorCliente, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -274,5 +293,31 @@ class clientescontrolador{
         if(!is_numeric($id))return;
         $ventasXCategoriasXCliente = clientes::ventasXCategoriasXCliente($id, id_sucursal());
         echo json_encode($ventasXCategoriasXCliente);
+    }
+
+
+    public static function preciospersonalizados():void{
+         isadmin();
+        $clienteService = new clientesService();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST')$alertas = $clienteService->preciospersonalizados($_POST);
+        echo json_encode($alertas);
+        return;
+    }
+
+
+    public static function eliminarPrecioPersonalizado():void{
+        isadmin();
+        $idcliente = $_GET['idcliente'];
+        $idproducto = $_GET['idproducto'];
+        if(!is_numeric($idcliente)||!is_numeric($idproducto)){
+            $alertas['error'][] = "Hubo un error, intentalo nuevamente";
+            echo json_encode($alertas);
+            return;
+        }
+        $clienteService = new clientesService();
+        $alertas = $clienteService->eliminarPrecioPersonalizado($idcliente, $idproducto);
+        echo json_encode($alertas);
+        return;
     }
 }

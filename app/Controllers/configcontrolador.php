@@ -39,6 +39,7 @@ class configcontrolador{
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
     $tarifas = tarifas::all();
+    $impresoras = [];
     $dapartments = departments::all();
     $companias = diancompanias::all();
     $empleado = new \stdClass();
@@ -55,7 +56,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'impresoras'=>$impresoras, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -128,6 +129,7 @@ class configcontrolador{
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
         $tarifas = tarifas::all();
+        $impresoras=[];
         $dapartments = departments::all();
         $companias = diancompanias::all();
         $empleado = new \stdClass();
@@ -136,7 +138,7 @@ class configcontrolador{
         $contactsNotificationWS = notificacionesws::whereArray(['sucursal_idfk'=>$idsucursal, 'estado'=>1]);
         $suscripcionPagoRepo = new suscripcionPagosRepository;
         $suscripcionPagos = $suscripcionPagoRepo->all();
-        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'impresoras'=>$impresoras, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
@@ -186,12 +188,13 @@ class configcontrolador{
         $bancos = bancos::all();
         $companias = diancompanias::all();
         $mediospago = mediospago::all();
+        $impresoras = [];
         $dapartments = departments::all();
         $conflocal = config_local::getParamGlobal();
         $contactsNotificationWS = notificacionesws::whereArray(['sucursal_idfk'=>$idsucursal, 'estado'=>1]);
         $suscripcionPagoRepo = new suscripcionPagosRepository;
         $suscripcionPagos = $suscripcionPagoRepo->all();
-        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/index', ['titulo'=>'Administracion', 'paginaempleado'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado??'', 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'impresoras'=>$impresoras, 'alertas'=>$alertas, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
   ///////////////////////////////////  Apis ////////////////////////////////////
