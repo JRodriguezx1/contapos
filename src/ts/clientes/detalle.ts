@@ -11,6 +11,7 @@
         const tablaCuotas = document.querySelector('#tablaCuotas tbody') as HTMLBodyElement;
 
         let idcredito:string|undefined, montocuota:string = '', saldopendienteCredito:string='0', indiceFila:HTMLDivElement;
+        let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
 
         document.addEventListener("click", cerrarDialogoExterno);
 
@@ -179,6 +180,7 @@
 
         document.querySelector('#formrealizarAbono')?.addEventListener('submit', async (e:Event)=>{
             e.preventDefault();
+            const imprimirAbono = document.querySelector('#imprimirAbono') as HTMLInputElement;
             const valorabono = (document.querySelector('#abono') as HTMLInputElement).value;
             const datos = new FormData();
             datos.append('id_credito', idcredito||'');
@@ -199,6 +201,7 @@
                     (indiceFila.children[7].children[0] as HTMLDivElement).dataset.saldopendiente = saldopendienteCredito;
                     miDialogoAbono.close();
                     Swal.fire(resultado.exito[0], '', 'success');
+                    if(resultado.idcuota && imprimirAbono.checked)printPOSComprobanteAbono(resultado.idcuota);
                 }else{
                     miDialogoAbono.close();
                     Swal.fire(resultado.error[0], '', 'error');
@@ -207,6 +210,36 @@
                 console.log(error);
             }
         });
+
+
+        async function printPOSComprobanteAbono(idabono:string|undefined){
+            if(idabono==undefined)return;
+            try{
+                const url = "/admin/api/creditos/getAbono?id="+idabono; //llamado a la API REST - creditocontrolador 
+                const respuesta = await fetch(url); 
+                const resultado = await respuesta.json();
+                const isAndroid = /Android/i.test(navigator.userAgent);
+                if(printerBT === '1'){
+                const builder = new ticketAbonoBuilder(resultado);
+                const ticket = await builder.generate(true); //true para version buffer bytes
+                const base64 = bytesToBase64(ticket);
+                if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
+                //descargar .bin a equipo
+                /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ticket.bin';
+                a.click();
+                URL.revokeObjectURL(url);*/
+                }
+            }catch(error){
+                console.log(error);
+            }
+
+            if(!isNaN(Number(idabono)))
+                window.open("/admin/printPDFAbonoCredito?id=" + idabono, "_blank"); //controlador printcontrolador
+        }
 
 
         function anularCredito(target: HTMLButtonElement){

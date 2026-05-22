@@ -44,11 +44,11 @@
             </div>
         </div>
         
-        <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
+        <label for="imprimirAbono" class="flex flex-col items-center cursor-pointer">
             <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>
             <input 
-                id="imprimirComprobanteAbonoinicial" 
-                name="imprimirComprobanteAbonoinicial" 
+                id="imprimirAbono" 
+                name="imprimirAbono" 
                 value="1" 
                 type="checkbox" 
                 class="sr-only peer"

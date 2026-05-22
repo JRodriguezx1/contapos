@@ -202,6 +202,7 @@ class creditosService {
 
                     $getDB->commit();
                     $alertas['exito'][] = "Cuota procesada";
+                    $alertas['idcuota'] = $r[1];
                     //acatualizar deuda de cliente
                     $cliente = clientes::find('id', $credito->cliente_id);
                     $cliente->totaldebe -= $cuota->valorpagado;

@@ -80,6 +80,7 @@ interface CarritoItem {
     costo: string;
     valorunidad: number;
     cantidad: number;
+    stock?: number;
     percentcomision: number; 
     valorcomision: number;
     subtotal: number;
