@@ -68,7 +68,7 @@
     </div> -->
 
     <!-- Menú flotante en la parte inferior -->
-    <div class="fixed z-50 w-full h-[7rem] max-w-[33rem] -translate-x-1/2 bg-white  border border-gray-200 rounded-full bottom-4 left-1/2  shadow-lg">
+    <div class="fixed z-30 w-full h-[7rem] max-w-[33rem] -translate-x-1/2 bg-white  border border-gray-200 rounded-full bottom-4 left-1/2  shadow-lg">
         <div class="grid h-full max-w-[33rem] grid-cols-5 mx-auto group">
             
             <?php if(tienePermiso('Habilitar modulo de configuracion')&&userPerfil()==3 || userPerfil()<3): ?>
