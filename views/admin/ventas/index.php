@@ -297,7 +297,7 @@
           
           <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px] flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-2xl">save</span>
-            <span class="font-medium text-2xl uppercase">Cotizar</span>
+            <span class="font-medium text-2xl uppercase">Orden</span>
           </button>
           
           <button id="btnfacturar" class="btn-md btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] between992:mt-3 flex items-center justify-center gap-2">

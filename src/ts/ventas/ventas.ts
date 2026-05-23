@@ -410,7 +410,7 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.sivaciar') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.cotizacion') || (f as HTMLInputElement).closest('.remision') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
         miDialogoDescuento.close();
         //miDialogoCredito.close();
         miDialogoGuardar.close();
@@ -421,9 +421,13 @@
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicionales.close();
         document.removeEventListener("click", cerrarDialogoExterno);
-        if((f as HTMLInputElement).closest('.siguardar')){
+        if((f as HTMLInputElement).closest('.cotizacion')){
           tipoventa = "";
           procesarpedido('Guardado', '1');
+        }
+        if((f as HTMLInputElement).closest('.remision')){
+          tipoventa = "";
+          console.log('remision');
         }
         //if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
       }

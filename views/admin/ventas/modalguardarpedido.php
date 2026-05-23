@@ -1,11 +1,11 @@
 <!-- MODAL PARA GUARDAR EL PEDIDO-->
   <dialog id="miDialogoGuardar" class="bg-white rounded-xl shadow-lg p-8 relative z-50">
       <div class="text-center">
-          <p class="text-2xl font-semibold text-gray-600 mb-6">Desea generar cotizacion?</p>
-          <p class="text-xl text-gray-500">La orden de cotizacion No: <?php echo $num_orden;?> se guardara en sistema. Podra volver a retomarla.</p>
+          <p class="text-2xl font-semibold text-gray-600 mb-6">Generar orden</p>
+          <p class="text-xl text-gray-500">La orden No: <?php echo $num_orden;?> se registrara en sistema. Podra volver a retomarla.</p>
       </div>
       <div id="" class="flex justify-around w-full border-t border-gray-300 pt-6">
-          <div class="siguardar flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Si</p></div>
-          <div class="noguardar flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">No</p></div>
+          <button class="btn-md btn-blue cotizacion">Cotzacion</button>
+          <button class="btn-md btn-indigo remision">Remision</button>
       </div>
   </dialog>
