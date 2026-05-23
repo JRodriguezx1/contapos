@@ -30,6 +30,7 @@
               <th>N.</th>
               <th>Fecha</th>
               <th>Caja</th>
+              <th>Entrega</th>
               <th>Orden</th>
               <th>Factura</th>
               <th>Medio Pago</th>
@@ -43,8 +44,9 @@
           <?php foreach($facturas as $index => $value): ?>
             <tr> 
               <td class=""><?php echo $index+1;?></td>
-              <td class=""><?php echo $value->fechapago;?></td> 
-              <td class=""><?php echo $value->caja;?></td>
+              <td class=""><div class="w-36 whitespace-normal"><?php echo $value->fechapago;?></div></td> 
+              <td class=""><div class="w-24 whitespace-normal"><?php echo $value->caja;?></div></td>
+              <td class=""><?php echo 'Domicilio';?></td>
               <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
               <td>
