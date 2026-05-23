@@ -259,7 +259,13 @@ class clientescontrolador{
     public static function apiEliminarCliente(){
         //session_start();
         $cliente = clientes::find('id', $_POST['id']);
-        
+        $creditos = new creditosRepository;
+        $creditocliente = $creditos->where(['cliente_id'=>$cliente->id, 'idestadocreditos'=>2]);
+        if(count($creditocliente)>0){
+            $alertas['error'][] = "Cliente tiene credito pendiente";
+            echo json_encode($alertas);
+            return;
+        }
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($cliente)){
                 $r = $cliente->eliminar_registro();

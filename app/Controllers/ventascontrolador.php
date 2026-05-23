@@ -856,7 +856,7 @@ class ventascontrolador{
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       
-      if($cierrecaja->estado == 0 &&  $factura->estado == 'Paga'){ //si cierre de caja esta abierto y factura paga
+      if($cierrecaja->estado == 0 && $factura->estado == 'Paga' || $factura->tipoventa == 'Credito'){ //si cierre de caja esta abierto y factura paga
         $factura->estado = "Eliminada";
         $factura->observacioneliminacion = $_POST['observacioneliminacion'];
 
