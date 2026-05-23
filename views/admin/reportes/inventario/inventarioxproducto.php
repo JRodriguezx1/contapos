@@ -13,11 +13,13 @@
             <tr>
                 <th>Nº</th>
                 <th>Producto</th>
+                <th>Marca</th>
                 <th>Categoria</th>
+                <th>sku</th>
                 <th>tipo</th>
                 <th>Stock</th>
                 <th>Unidad</th>
-                <th>Agregado</th>
+                <th>Fecha</th>
             </tr>
         </thead>
         <tbody>
@@ -25,8 +27,10 @@
                 
                 <tr class="fila producto" data-idproducto="<?php echo $value->productoid;?>"> 
                     <td class=""><?php echo $index+1;?></td>
-                    <td class=""><div class="w-80 whitespace-normal"><?php echo $value->nombre;?></div></td> 
-                    <td class="" ><?php echo $value->categoria;?></td>
+                    <td class=""><div class="w-72 whitespace-normal"><?php echo $value->nombre;?></div></td>
+                    <td class="" ><?php echo $value->marca;?></td>
+                    <td class="" ><div class="w-28 whitespace-normal"><?php echo $value->categoria;?></div></td>
+                    <td class="" ><?php echo $value->sku;?></td>
                     <td class="" ><?php echo $value->tipoproducto==1?'Compuesto':'Simple';?></td>
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>
@@ -39,8 +43,10 @@
             <?php foreach($subproductos as $index => $value): ?>  
                 <tr class="fila subproducto" data-idsubproducto="<?php echo $value->subproductoid;?>"> 
                     <td class=""><?php echo $index+1;?></td>
-                    <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td> 
+                    <td class=""><div class="w-80 whitespace-normal">* <?php echo $value->nombre;?></div></td>
+                    <td class="" > - </td>
                     <td class="" ><?php echo $value->categoria??'';?></td>
+                    <td class="" ><?php echo $value->sku;?></td>
                     <td class="" >Insumo</td>
                     <td class=""><div class="text-center px-3 py-4 rounded-lg <?php echo $value->stock<=$value->stockminimo?'text-red-800 bg-red-50':'text-cyan-600 bg-cyan-50';?>"><?php echo $value->stock;?></div></td>
                     <td class=""><?php echo $value->unidadmedida;?></td>

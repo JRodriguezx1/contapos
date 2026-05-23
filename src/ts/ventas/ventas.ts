@@ -395,6 +395,9 @@
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         return;
       }
+      
+      if(modalidadEntrega.textContent == ": Domicilio")document.querySelector('#confirmarDespacho')?.classList.remove('hidden');
+
       if(carrito.length && valorTotal.total>0){
         document.querySelector('.Efectivo')?.setAttribute('readonly', 'true');
         document.querySelector('#inputscreditos')?.classList.add('hidden');

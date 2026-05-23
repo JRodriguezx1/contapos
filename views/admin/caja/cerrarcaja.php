@@ -355,6 +355,7 @@
                                 <th class="p-2">N.</th>
                                 <th class="p-2">Fecha</th>
                                 <th class="p-2">Cliente</th>
+                                <th class="p-2">Entrega</th>
                                 <th class="p-2">Factura</th>
                                 <th class="p-2">Medio pago</th>
                                 <th class="p-2">Estado</th>
@@ -367,15 +368,16 @@
                             <?php foreach($facturas as $index => $value): ?>
                             <tr>
                                 <td><?php echo $index+1;?></td>
-                                <td><?php echo $value->fechapago;?></td>
-                                <td><?php echo $value->cliente;?></td>
-                                <td><?php echo $value->id;?></td>
+                                <td><div class="w-32 whitespace-normal"><?php echo $value->fechapago;?></div></td>
+                                <td><div class=" w-48 whitespace-normal"><?php echo $value->cliente;?></div></td>
+                                <td class=""><?php echo $value->entrega;?></td>
+                                <td><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
                                 <td>
-                                <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
-                                    <?php foreach($value->mediosdepago as $idx => $element): ?>
-                                    <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
-                                    <?php endforeach; ?>
-                                </div>
+                                    <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
+                                        <?php foreach($value->mediosdepago as $idx => $element): ?>
+                                        <button class="btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </td>
                                 <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&& $value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':'btn-light'));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
                                 <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>

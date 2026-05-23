@@ -259,6 +259,7 @@ class clientescontrolador{
     public static function apiEliminarCliente(){
         //session_start();
         $cliente = clientes::find('id', $_POST['id']);
+        
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($cliente)){
                 $r = $cliente->eliminar_registro();

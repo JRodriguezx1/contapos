@@ -156,12 +156,12 @@ class reportescontrolador{
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $sql = "SELECT sps.stock, p.nombre, p.unidadmedida, p.categoria, p.tipoproducto, p.stockminimo, p.fecha_ingreso
+        $sql = "SELECT sps.stock, p.nombre, p.unidadmedida, p.categoria, p.marca, p.tipoproducto, p.sku, p.stockminimo, p.fecha_ingreso
                 FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id
                 WHERE p.estado = 1 AND p.visible = 1 AND sps.sucursalid = ".id_sucursal().";";
         $productos = productos::camposJoinObj($sql);
 
-        $sql = "SELECT sis.stock, sp.nombre, sp.unidadmedida, sp.stockminimo, sp.fecha_ingreso
+        $sql = "SELECT sis.stock, sp.nombre, sp.unidadmedida, sp.sku, sp.stockminimo, sp.fecha_ingreso
                 FROM stockinsumossucursal sis JOIN subproductos sp ON sis.subproductoid = sp.id
                 WHERE sis.sucursalid = ".id_sucursal().";";  
         $subproductos = subproductos::camposJoinObj($sql);

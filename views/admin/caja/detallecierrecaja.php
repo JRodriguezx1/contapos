@@ -283,6 +283,7 @@
                         <th class="p-2">N.</th>
                         <th class="p-2">Fecha</th>
                         <th class="p-2">Cliente</th>
+                        <th class="p-2">Entrega</th>
                         <th class="p-2">Factura</th>
                         <th class="p-2">Medios pago</th>
                         <th class="p-2">Estado</th>
@@ -295,8 +296,9 @@
                     <?php foreach($facturas as $index => $value): ?>
                     <tr> 
                         <td class=""><?php echo $index+1;?></td>        
-                        <td class=""><?php echo $value->fechapago;?></td> 
-                        <td class=""><?php echo $value->cliente;?></td> 
+                        <td class=""><div class="w-32 whitespace-normal"><?php echo $value->fechapago;?></div></td> 
+                        <td class=""><div class=" w-48 whitespace-normal"><?php echo $value->cliente;?></div></td>
+                        <td class=""><?php echo $value->entrega;?></td>
                         <td class=""><?php echo $value->id;?></td>
                         <td>
                             <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">

@@ -46,7 +46,7 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class="w-36 whitespace-normal"><?php echo $value->fechapago;?></div></td> 
               <td class=""><div class="w-24 whitespace-normal"><?php echo $value->caja;?></div></td>
-              <td class=""><?php echo 'Domicilio';?></td>
+              <td class=""><?php echo $value->entrega;?></td>
               <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
               <td>

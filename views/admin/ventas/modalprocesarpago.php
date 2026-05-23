@@ -103,7 +103,7 @@
             </div>
           </div>
           
-         <!-- Opción imprimir factura -->
+        <!-- Opción imprimir factura -->
         <div class="formulario__campo md:px-12 mb-6">
           <label id="textPrint" class="formulario__label block text-center mb-2">¿Desea imprimir factura?</label>
           <div class="flex justify-center gap-8">
@@ -118,6 +118,23 @@
           </div>
         </div>
         <!-- Fin opción imprimir factura -->
+
+        <div id="confirmarDespacho" class="hidden">
+          <label for="despachar" class="flex flex-col items-center cursor-pointer mb-6">
+            <span class="formulario__label block text-center mb-2">Despachar orden</span>
+            <input
+                id="despachar" 
+                name="despachar"
+                value="1" 
+                type="checkbox" 
+                class="sr-only peer"
+                <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?>
+                >
+            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
+                <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+            </div>
+          </label>
+        </div>
 
 
           <div class="formulario__campo md:px-12">
