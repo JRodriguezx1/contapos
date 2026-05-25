@@ -157,7 +157,7 @@
         if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
         (async ()=>{
           try {
-            const url = "/admin/api/direccionesXcliente?id="+idcliente; //llamado a la API REST y se trae las direcciones segun cliente elegido
+            const url = "/admin/api/clientes/direccionesXcliente?id="+idcliente; //llamado a la API REST y se trae las direcciones segun cliente elegido
             const respuesta = await fetch(url); 
             const resultado = await respuesta.json(); 
             direcciones = resultado;

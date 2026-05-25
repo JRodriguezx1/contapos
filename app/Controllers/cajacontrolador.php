@@ -508,6 +508,15 @@ class cajacontrolador{
     $router->render('admin/caja/trasladosRetiros', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
+
+  public static function despachosPendientes(Router $router){
+    isadmin();
+    //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
+    $alertas = [];
+    $router->render('admin/caja/despachosPendientes', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
+
   public static function ordenresumen(Router $router){
     //session_start();
     isadmin();

@@ -124,7 +124,7 @@
                 <div class="flex flex-col justify-between grow overflow-hidden">
                     <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
                     
-                    <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
+                    <p class="precioVenta m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div>
                 <button id="precioadicional" title="Precio personalizado" class="text-indigo-600 hover:text-indigo-800"><i class="fa-solid fa-pen-to-square fa-xl"></i></button>
                 <!--<div class="popup absolute right-8 top-1/3 -translate-y-14 translate-x-10 opacity-100 transition-all duration-800 ease-out w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white">2</div>-->
@@ -313,7 +313,6 @@
 
       </div>
 
-      <!--<canvas id="miCanvas" width="223" height="226" style="border:1px solid #000;"></canvas>-->
     </div> <!-- fin segunda columna o contenedor carrito desktop -->
   </div>
 
@@ -374,6 +373,29 @@
         </div>
       </div>
     </div>
+  </dialog>
+
+
+  <!-- MODAL PARA CALCULADORA-->
+  <dialog id="miDialogoCalculadora" class="midialog-xs p-8">
+    <h4 class=" text-gray-700 font-semibold">Calculadora</h4>
+    <form id="formMerma" class=" border-b border-gray-900/10 pb-6 text-center">
+        <p class="mt-2 text-xl text-gray-600">Ingresar merma para recalcular cantidad.</p>
+
+        <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-start-2 col-span-4">
+            <label for="inputMerma" class="block text-2xl font-medium text-gray-600 mb-4">Cantidad a descontar</label>
+            <input id="inputMerma" type="number" min="0" name="merma" data-merma="" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
+          </div>
+            
+          <div class="sm:col-start-2 col-span-4">
+            <div class="grid grid-cols-2 gap-3">
+              <button type="button" class="btn-md btn-turquoise !py-4 !px-6 w-full salir">Salir</button>
+              <button id="btnMermaCantidad" type="button" class="btn-md btn-indigo !py-4 !px-6 w-full">Aplicar</button>
+            </div>
+          </div>
+        </div>
+    </form>
   </dialog>
 
   <!-- MODAL PARA CREAR AÑADIR CLIENTE-->

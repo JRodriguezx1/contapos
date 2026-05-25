@@ -25,6 +25,7 @@
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
+    const miDialogoCalculadora = document.querySelector('#miDialogoCalculadora') as HTMLDialogElement;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
@@ -32,7 +33,7 @@
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
-    let nombretarifa:string|undefined='', tipoventa:string="Contado";
+    let indiceCarrito = 0, nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     
@@ -145,25 +146,24 @@
       tr.classList.add('productselect');
       tr.dataset.id = `${id}`;
       tr.dataset.precio = precio;
-      tr.insertAdjacentHTML('afterbegin', `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5">${uncarrito?.nombreproducto}</td> 
+      tr.insertAdjacentHTML('afterbegin', 
+        `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5 nombreproducto">${uncarrito?.nombreproducto}</td>
+        <td class="!px-0 !py-2">
+          <div class="flex items-center gap-2 px-4">
+            <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
+              <span class="menos material-symbols-outlined text-base">remove</span>
+            </button>
 
-      <td class="!px-0 !py-2">
-        <div class="flex items-center gap-2 px-4">
-          <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
-            <span class="menos material-symbols-outlined text-base">remove</span>
-          </button>
+            <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.stock}">
 
-          <input type="text" class="inputcantidad w-20 px-2 text-center" value="${uncarrito.stock}">
-
-          <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
-            <span class="mas material-symbols-outlined text-base">add</span>
-          </button>
-        </div>
-      </td>
-
-      <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.valorunidad).toLocaleString()}</td>
-      <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.total).toLocaleString()}</td>
-      <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
+            <button type="button" class="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center">
+              <span class="mas material-symbols-outlined text-base">add</span>
+            </button>
+          </div>
+        </td>
+        <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.valorunidad).toLocaleString()}</td>
+        <td class="!p-2 text-xl text-gray-500 leading-5">$${Number(uncarrito?.total).toLocaleString()}</td>
+        <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
       tablaventa?.appendChild(tr);
     } //oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"
 
@@ -310,7 +310,26 @@
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
       const precio = (elementProduct as HTMLElement).dataset.precio!;
-      const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
+      //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
+      let productoCarrito;
+
+      for (let i = 0; i < carrito.length; i++) {
+        const item = carrito[i];
+        if (item.idproducto == idProduct && item.valorunidad == precio) {
+            indiceCarrito = i;
+            productoCarrito = item;
+            break;
+        }
+      }
+
+      if((e.target as HTMLElement).classList.contains('nombreproducto')){
+        (document.querySelector('#inputMerma') as HTMLInputElement).value = '';
+        if(getParam.activar_calculadira_de_merma_en_modulo_de_ventas.valor_final == '1'){
+          miDialogoCalculadora.showModal();
+          document.addEventListener("click", cerrarDialogoExterno);
+        }
+      }
+      
       if((e.target as HTMLElement).classList.contains('menos')){
         actualizarCarrito(idProduct, productoCarrito!.stock-1, false, true, productoCarrito?.valorunidad);
       }
@@ -332,27 +351,29 @@
       const idProduct = fila.dataset.id!;
       const precio = fila.dataset.precio!;
       const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
-      
-      
-        //if((e.target as HTMLElement).dataset.event != "eventInput"){
-          
-           
-            let val = input.value;
-            val = val.replace(/[^0-9.]/g, '');
-            const partes = val.split('.');
-            if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
-            if (val.startsWith('.'))val = '1';
-            if (val === '' || isNaN(parseFloat(val))) val = '';
 
-            input.value = val;
-            actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
-          
-          //(e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
-        //}
-      
+      let val = input.value;
+      val = val.replace(/[^0-9.]/g, '');
+      const partes = val.split('.');
+      if(partes.length > 2)val = partes[0]+'.'+partes.slice(1).join('');
+      if (val.startsWith('.'))val = '1';
+      if (val === '' || isNaN(parseFloat(val))) val = '';
 
+      input.value = val;
+      actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
     });
 
+
+    document.querySelector('#btnMermaCantidad')?.addEventListener('click', (e:Event)=>{
+      const inputMerma = (document.querySelector('#inputMerma') as HTMLInputElement).value;
+      const {idproducto, stock, valorunidad} = carrito[indiceCarrito];
+      let nuevaCantidad = stock - Number(inputMerma);
+      if(nuevaCantidad<0)nuevaCantidad=0;
+      (tablaventa?.querySelector(`TR[data-id="${idproducto}"][data-precio="${valorunidad}"] .inputcantidad`) as HTMLInputElement).value = nuevaCantidad+'';
+      actualizarCarrito(idproducto, nuevaCantidad, false, false, valorunidad);
+      miDialogoCalculadora.close();
+      document.removeEventListener("click", cerrarDialogoExterno);
+    });
 
     /*btnvaciar?.addEventListener('click', ()=>{
       if(carrito.length){
@@ -413,7 +434,7 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.cotizacion') || (f as HTMLInputElement).closest('.remision') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || f === miDialogoCalculadora || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.cotizacion') || (f as HTMLInputElement).closest('.remision') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
         miDialogoDescuento.close();
         //miDialogoCredito.close();
         miDialogoGuardar.close();
@@ -423,6 +444,7 @@
         miDialogoFacturarA.close();
         miDialogoOtrosProductos.close();
         miDialogoPreciosAdicionales.close();
+        miDialogoCalculadora.close();
         document.removeEventListener("click", cerrarDialogoExterno);
         if((f as HTMLInputElement).closest('.cotizacion')){
           tipoventa = "";

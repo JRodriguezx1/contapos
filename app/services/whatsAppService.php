@@ -145,6 +145,8 @@ class whatsAppService{
         $this->msg .= "Total Descuentos: - $" . number_format($data['ultimocierre']->totaldescuentos??0, 0, ',', '.') . "\n";
         $this->msg .= "Total Domicilios: - $" . number_format($data['ultimocierre']->domicilios??0, 0, ',', '.') . "\n";
         $this->msg .= "📌*Ganancia hoy: = $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->abonostotales??0)-($data['ultimocierre']->totaldescuentos??0)-($data['ultimocierre']->domicilios??0)-($data['ultimocierre']->gastoscaja??0)-($data['ultimocierre']->gastosbanco??0), 0, ',', '.') . "*\n";
+        $this->msg .= "Creditos: + $" . number_format($data['ultimocierre']->creditos??0, 0, ',', '.') . "\n";
+        $this->msg .= "*TOTAL DE VENTAS: $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->creditos??0), 0, ',', '.') . "*\n";
         $this->msg .= "Base grabable: = $" . number_format($data['ultimocierre']->basegravable??0, 0, ',', '.') . "\n";
         $this->msg .= "Impuesto Total: - $" . number_format($data['ultimocierre']->valorimpuestototal??0, 0, ',', '.') . "\n\n";
         /*// 🔹 Detalle impuesto

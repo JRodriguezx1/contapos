@@ -2,12 +2,10 @@
 
 namespace App\Controllers;
 
-use App\classes\Email;
 use App\Models\ActiveRecord;
 use MVC\Router;  //namespace\clase
 use App\Models\configuraciones\usuarios;
 use App\Models\clientes\clientes;
-use App\Models\empleados;
 use App\Models\clientes\direcciones;
 use App\Models\clientes\preciosporcliente;
 use App\Models\configuraciones\caja;
@@ -167,6 +165,19 @@ class clientescontrolador{
         echo json_encode($clientes);
     }
     
+
+    ///////////////////////////////////  Apis ////////////////////////////////////
+    public static function direccionesXcliente(){  //api llamado desde ventas.js me trae todas las direcciones segun cliente elegido
+        isadmin(); 
+        $id = $_GET['id'];
+        if(!is_numeric($id))return;
+        $cliente = clientes::find('id', $id);
+        $cliente->direcciones = clientes::direccionesANDTarifas($id);
+        //precios personalizados segun el cliente
+        $cliente->preciospersonalizados = preciosporcliente::idregistros("idcliente", $id);
+        echo json_encode($cliente);
+    }
+
 
     public static function apiCrearCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea un cliente
         //session_start();

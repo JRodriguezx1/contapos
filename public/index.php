@@ -124,6 +124,7 @@ $router->get('/admin/caja/fechazetadiario', [cajacontrolador::class, 'fechazetad
 $router->get('/admin/caja/ultimoscierres', [cajacontrolador::class, 'ultimoscierres']);
 $router->get('/admin/caja/pedidosguardados', [cajacontrolador::class, 'pedidosguardados']);
 $router->get('/admin/caja/trasladosRetirosDinero', [cajacontrolador::class, 'trasladosRetirosDinero']);
+$router->get('/admin/caja/despachosPendientes', [cajacontrolador::class, 'despachosPendientes']);
 $router->get('/admin/caja/detallecierrecaja', [cajacontrolador::class, 'detallecierrecaja']);
 $router->post('/admin/caja/ingresoGastoCaja', [cajacontrolador::class, 'ingresoGastoCaja']);
 $router->get('/admin/caja/categoriaGasto', [cajacontrolador::class, 'categoriaGasto']);
@@ -286,11 +287,11 @@ $router->get('/admin/api/comisiones/detalleFacturaComision', [comisionescontrola
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
 $router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts
-$router->get('/admin/api/direccionesXcliente', [direccionescontrolador::class, 'direccionesXcliente']); //obtener direcciones segun cliente elegido en ventas.ts y en clientes.ts
 $router->post('/admin/api/addDireccionCliente', [direccionescontrolador::class, 'addDireccionCliente']); //add direccion segun cliente elegido desde ventas.ts
 $router->get('/admin/api/allclientes', [clientescontrolador::class, 'allclientes']); // me trae todos los clientes desde clientes.js
 $router->post('/admin/api/actualizarCliente', [clientescontrolador::class, 'apiActualizarcliente']);  //actualizar cliente en clientes.ts
 $router->post('/admin/api/eliminarCliente', [clientescontrolador::class, 'apiEliminarCliente']); //eliminar cliente en clientes.ts
+$router->get('/admin/api/clientes/direccionesXcliente', [clientescontrolador::class, 'direccionesXcliente']); //obtener direcciones segun cliente elegido en ventas.ts y en clientes.ts
 $router->get('/admin/api/clientes/comprasXMesXCliente', [clientescontrolador::class, 'comprasXMesXCliente']);
 $router->get('/admin/api/clientes/ventasXCategoriasXCliente', [clientescontrolador::class, 'ventasXCategoriasXCliente']);
 $router->post('/admin/api/clientes/preciospersonalizados', [clientescontrolador::class, 'preciospersonalizados']);

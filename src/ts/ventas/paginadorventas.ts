@@ -10,7 +10,7 @@
       const menuCategorias = document.querySelector<HTMLDivElement>('#menuCategorias');
 
       var options = {
-        valueNames: [ 'card-producto', { data: ['categoria', 'code'] }],
+        valueNames: [ 'card-producto', { data: ['id', 'categoria', 'code'] }],
         page: 18,
         pagination: true,
       };

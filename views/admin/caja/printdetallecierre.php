@@ -60,6 +60,8 @@
       <li>Total Descuentos: - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></li>
       <li>Total Domicilios: - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></li>
       <li class="font-semibold text-gray-900">GANANCIA HOY: = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->totaldescuentos??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0)-($ultimocierre->gastosbanco??0), "0", ",", ".");?></li>
+      <li>Creditos <span class="font-semibold text-gray-900">+ $<?php echo number_format($ultimocierre->creditos??0, "0", ",", ".");?></span></li>
+      <li class="font-semibold text-gray-900">Total de ventas: $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditos??0), "0", ",", ".");?></li>
       <li>Base grabable: = $<?php echo number_format($ultimocierre->basegravable??0, "0", ",", ".");?></li>
       <li>Impuesto Total: - $<?php echo number_format($ultimocierre->valorimpuestototal??0, "0", ",", ".");?></li>
     </ul>

@@ -2,11 +2,9 @@
 
 namespace App\Controllers;
 
-use App\classes\Email;
 use MVC\Router;  //namespace\clase
 use App\Models\configuraciones\usuarios;
 use App\Models\clientes\clientes;
-use App\Models\empleados;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\tarifas;
 
@@ -54,13 +52,6 @@ class direccionescontrolador{
 
 
     ///////////////////////////////////  Apis ////////////////////////////////////
-    public static function direccionesXcliente(){  //api llamado desde ventas.js me trae todas las direcciones segun cliente elegido
-        $id = $_GET['id'];
-        $cliente = clientes::find('id', $id);
-        $cliente->direcciones = clientes::direccionesANDTarifas($id);
-        echo json_encode($cliente);
-    }
-    
 
     public static function addDireccionCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea una direccion
         //session_start();

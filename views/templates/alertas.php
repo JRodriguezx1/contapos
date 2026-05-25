@@ -1,5 +1,6 @@
 <?php //['error'][] as ['error'] => ['strin1', 'string2'...]
     foreach($alertas as $key => $alerta){ //$key => [error],   $alerta = ['strin1', 'string2'...]
+        if($key === "exito" || $key === "error")
         foreach($alerta as $mensaje){  //   $mensaje = 'string1'.. 'string2'   
             ?>
             <div class="alerta alerta__<?php echo $key ?>"> <!-- echo $key = clase deacuerdo al tipo de alerta si es un error etc -->

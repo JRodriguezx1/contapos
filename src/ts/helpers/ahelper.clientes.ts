@@ -90,7 +90,7 @@
             if(idcli){
                 (async ()=>{
                     try {
-                        const url = "/admin/api/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae el cliente y sus direcciones direccionescontrolador
+                        const url = "/admin/api/clientes/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae el cliente y sus direcciones direccionescontrolador, tambien traer sus precios personalizados
                         const respuesta = await fetch(url); 
                         const resultado = await respuesta.json();
                         (document.querySelector('#nombreclientenuevo') as HTMLInputElement).value = resultado.nombre;
@@ -104,6 +104,8 @@
                         (document.querySelector('#badgeEstado') as HTMLParagraphElement).textContent = 'SELECCIONADO';
                         (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.remove('bg-gray-100', 'text-gray-700');
                         (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.add('bg-green-100', 'text-green-600');
+                        //mapear los precios personalizados del cliente con arreglo de los productos
+                        actualizarPreciosCliente(resultado.preciospersonalizados);
                     } catch (error) {
                         console.log(error);
                     }
@@ -121,7 +123,6 @@
             while(dirEntrega?.firstChild)dirEntrega.removeChild(dirEntrega?.firstChild);
             const setTarifas = new Set();
             POS.tarifas.length = 0;
-            console.log(addrs);
             addrs.direcciones.forEach(dir =>{
                 const option = document.createElement('option');
                 option.textContent = dir.direccion;
@@ -141,6 +142,21 @@
             POS.valorCarritoTotal();
             (document.querySelector('#departamento') as HTMLInputElement).value = addrs.direcciones[0]?.departamento??'No especificado';
             (document.querySelector('#ciudad') as HTMLInputElement).value = addrs.direcciones[0]?.ciudad??'No especificado';
+        }
+
+
+        function actualizarPreciosCliente(preciosDelCliente:{id:string, idcliente:string, idproducto:string, precioxcliente:string}[]){
+            const mapaPrecios = new Map( preciosDelCliente.map(p => [p.idproducto, p.precioxcliente]) );
+            POS.products.forEach((prod:any) => {
+                if(mapaPrecios.has(prod.id))
+                    prod.precio_venta = mapaPrecios.get(prod.id);
+            });
+
+            for(const prod of mapaPrecios.entries()){
+                console.log(prod);
+                const item = POS.hackerList.get('id', prod[0])[0];
+                if(item)item.elm.querySelector('.precioVenta').textContent = '$'+Number(prod[1]).toLocaleString();
+            }
         }
 
 
