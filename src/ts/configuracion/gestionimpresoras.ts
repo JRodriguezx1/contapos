@@ -6,25 +6,25 @@
 
     let indiceFila=0, control=0, tablaImpresoras:HTMLElement;
 
-    type bancosapi = {
-        id:string,
-        nombre: string,
-        numerocuenta: string,
-        saldo: string,
-        estado: string,
-        created_at: string
-      };
-  
-      let bancos:bancosapi[]=[], unbanco:bancosapi|undefined;
-      /*(async ()=>{
-        try {
-            const url = "/admin/api/allbancos"; //llamado a la API REST y se trae todos los bancos
-            const respuesta = await fetch(url); 
-            bancos = await respuesta.json(); 
-        } catch (error) {
-            console.log(error);
-        }
-      })();*/
+    type printersApi = {
+      id:string,
+      nombre: string,
+      nombrecompartido: string,
+      estacion: string,
+      estado: string,
+      created_at: string
+    };
+
+    let impresoras:printersApi[]=[], unPrinter:printersApi|undefined;
+    (async ()=>{
+      try {
+          const url = "/admin/api/allPrinters"; //llamado a la API REST y se trae todos las impresoras
+          const respuesta = await fetch(url); 
+          impresoras = await respuesta.json(); 
+      } catch (error) {
+          console.log(error);
+      }
+    })();
 
      //////////////////  TABLA //////////////////////
     tablaImpresoras = ($('#tablaImpresoras') as any).DataTable(configdatatables);
@@ -53,9 +53,10 @@
       document.querySelector('#modalIMpresora')!.textContent = "Actualizar punto de impresora";
       (document.querySelector('#btnEditarCrearImpresora') as HTMLInputElement)!.value = "Actualizar";
       
-      unbanco = bancos.find(x => x.id==idimpresora); //me trae a lA impresora seleccionada
-      (document.querySelector('#nombreIMpresora')as HTMLInputElement).value = unbanco?.nombre!;
-      (document.querySelector('#nombrecompartido')as HTMLInputElement).value = unbanco?.numerocuenta!;
+      unPrinter = impresoras.find(x => x.id==idimpresora); //me trae a lA impresora seleccionada
+      (document.querySelector('#nombreImpresora')as HTMLInputElement).value = unPrinter?.nombre!;
+      (document.querySelector('#nombreCompartido')as HTMLInputElement).value = unPrinter?.nombrecompartido!;
+      (document.querySelector('#estacion')as HTMLInputElement).value = unPrinter?.estacion!;
       
       indiceFila = (tablaImpresoras as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoIMpresora.showModal();
@@ -72,9 +73,10 @@
         
         (async ()=>{ 
           const datos = new FormData();
-          datos.append('id', unbanco?.id?unbanco?.id:'');
+          datos.append('id', unPrinter?.id?unPrinter?.id:'');
           datos.append('nombre', $('#nombreIMpresora').val()as string);
           datos.append('nombrecompartido', $('#nombrecompartido').val()as string);
+          datos.append('estacion', $('#estacion').val()as string);
           try {
               const url = "/admin/api/"+urlApi;
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -84,24 +86,26 @@
                 document.removeEventListener("click", cerrarDialogoExterno);
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 if(!control){ //si es crear registro
-                  /// actualizar el arregle de la banco ///
-                  bancos = [...bancos, resultado.banco];
+                  /// actualizar el arregle de las impresoras ///
+                  impresoras = [...impresoras, resultado.printer];
                   (tablaImpresoras as any).row.add([
                       (tablaImpresoras as any).rows().count() + 1,
-                      resultado.banco.nombre,
-                      resultado.banco.numerocuenta,
-                      resultado.banco.created_at,
-                      `<div class="acciones-btns" id="${resultado.banco.id}" data-imprsora="${resultado.banco.nombre}">
+                      resultado.printer.nombre,
+                      resultado.printer.nombrecompartido,
+                      resultado.printer.estacion,
+                      resultado.printer.created_at,
+                      `<div class="acciones-btns" id="${resultado.printer.id}">
                           <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button class="btn-md btn-red eliminarImpresora"><i class="fa-solid fa-trash-can"></i></button>
                       </div>`
                   ]).draw(false); // draw(false) evita recargar toda la tabla
                 }else{ //si es actualizar
                   /// actualizar el arregle de impresoras ///
-                  bancos.forEach(a=>{if(a.id == unbanco?.id)a = Object.assign(a, resultado.banco[0]);});
+                  impresoras.forEach(a=>{if(a.id == unPrinter?.id)a = Object.assign(a, resultado.printer[0]);});
                   const datosActuales = (tablaImpresoras as any).row(indiceFila+=info.start).data();
-                  /*NOMBRE*/      datosActuales[1] = resultado.banco[0].nombre;
-                  /*NOMBRECOMPARTIDO*/ datosActuales[2] = resultado.banco[0].numerocuenta;
+                  /*NOMBRE*/      datosActuales[1] = resultado.printer[0].nombre;
+                  /*NOMBRECOMPARTIDO*/ datosActuales[2] = resultado.printer[0].nombrecompartido;
+                  /*ESTACION*/ datosActuales[3] = resultado.printer[0].estacion;
                   (tablaImpresoras as any).row(indiceFila).data(datosActuales).draw();
                   (tablaImpresoras as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }

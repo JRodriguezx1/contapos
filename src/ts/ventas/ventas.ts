@@ -482,6 +482,14 @@
       document.querySelector('#total')!.textContent = '$'+0;
       $('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
+      //volver a mapear los productos con los valores originales de inventario
+
+      //actualizar DOM
+      for(const prod of products){
+          const item = POS.hackerList.get('id', prod.id)[0];
+          prod.precio_venta = prod.precio_original!;
+          if(item)item.elm.querySelector('.precioVenta').textContent = '$'+Number(prod.precio_venta).toLocaleString();
+      }
     }
 
 

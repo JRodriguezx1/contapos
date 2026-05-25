@@ -644,6 +644,7 @@ class almacencontrolador{
       $producto->id = $producto->ID; //esto se hace por la union de las tablas con unJoinWhereArrayObj
       $producto->categoria = categorias::uncampo('id', $producto->idcategoria, 'nombre');
       $producto->preciosadicionales = precios_personalizados::idregistros('idproductoid', $producto->id);
+      $producto->precio_original = $producto->precio_venta;
     }
    echo json_encode($productos);
   }

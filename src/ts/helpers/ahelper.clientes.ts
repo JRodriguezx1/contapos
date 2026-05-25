@@ -115,6 +115,16 @@
                 (document.querySelector('#badgeEstado') as HTMLParagraphElement).textContent = 'SIN CLIENTE';
                 (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.remove('bg-green-100', 'text-green-600');
                 (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.add('bg-gray-100', 'text-gray-700');
+                //actualizar array de products y DOM
+                for(const prod of POS.products){
+                    const item = POS.hackerList.get('id', prod.id)[0];
+                    prod.precio_venta = prod.precio_original;
+                    if(item)item.elm.querySelector('.precioVenta').textContent = '$'+Number(prod.precio_venta).toLocaleString();
+                }
+                //actualizar el carrito de ventas con los valores originales
+                POS.carrito.forEach((x:any)=>{
+                    
+                })
             }
         });
 
@@ -146,14 +156,17 @@
 
 
         function actualizarPreciosCliente(preciosDelCliente:{id:string, idcliente:string, idproducto:string, precioxcliente:string}[]){
+            //resetar o eliminar precios personalizados de clientes anteriores
             const mapaPrecios = new Map( preciosDelCliente.map(p => [p.idproducto, p.precioxcliente]) );
-            POS.products.forEach((prod:any) => {
-                if(mapaPrecios.has(prod.id))
-                    prod.precio_venta = mapaPrecios.get(prod.id);
+            POS.products.forEach((prod:productsapi) => {
+                if(mapaPrecios.has(prod.id)){
+                    prod.precio_venta = mapaPrecios.get(prod.id)!;
+                }else{
+                    prod.precio_venta = prod.precio_original!;
+                }
             });
 
             for(const prod of mapaPrecios.entries()){
-                console.log(prod);
                 const item = POS.hackerList.get('id', prod[0])[0];
                 if(item)item.elm.querySelector('.precioVenta').textContent = '$'+Number(prod[1]).toLocaleString();
             }

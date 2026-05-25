@@ -12,6 +12,7 @@ use App\Models\ActiveRecord;
 use App\Models\configuraciones\bancos;
 use App\Models\caja\cierrescajas;
 use App\Models\clientes\departments;
+use App\Models\configuraciones\deviceprinter;
 use App\Models\configuraciones\notificacionesws;
 use App\Models\parametrizacion\config_local;
 use App\Models\configuraciones\permisos;
@@ -39,7 +40,7 @@ class configcontrolador{
     $tipofacturadores = tipofacturador::all();
     $bancos = bancos::all();
     $tarifas = tarifas::all();
-    $impresoras = [];
+    $impresoras = deviceprinter::whereArray(['estado'=>1]);
     $dapartments = departments::all();
     $companias = diancompanias::all();
     $empleado = new \stdClass();
@@ -129,7 +130,7 @@ class configcontrolador{
         $tipofacturadores = tipofacturador::all();
         $bancos = bancos::all();
         $tarifas = tarifas::all();
-        $impresoras=[];
+        $impresoras = deviceprinter::whereArray(['estado'=>1]);
         $dapartments = departments::all();
         $companias = diancompanias::all();
         $empleado = new \stdClass();
@@ -188,7 +189,7 @@ class configcontrolador{
         $bancos = bancos::all();
         $companias = diancompanias::all();
         $mediospago = mediospago::all();
-        $impresoras = [];
+        $impresoras = deviceprinter::whereArray(['estado'=>1]);
         $dapartments = departments::all();
         $conflocal = config_local::getParamGlobal();
         $contactsNotificationWS = notificacionesws::whereArray(['sucursal_idfk'=>$idsucursal, 'estado'=>1]);
@@ -257,7 +258,7 @@ class configcontrolador{
                     if($r1==false || $r2[0]==false || $r1==true&&$r2[0]==false || $r1==false&&$r2[0]==true){
                         $alertas['error'][] = "Error en el proceso, intentalo nuevamente...";
                     }else{
-                        $alertas['exito'][] = "permisos del empleado actualizadas";
+                        $alertas['exito'][] = "Permisos del empleado actualizadas";
                     }
                 }else{
                     $alertas['error'][] = "Error en el proceso, intentalo nuevamente...";
@@ -390,7 +391,7 @@ class configcontrolador{
                     if($r){
                         ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
                     }else{
-                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                        ActiveRecord::setAlerta('error', 'Error en el proceso de eliminacion');
                     }
                 } catch (\Throwable $th) {  //entra aqui si al eliminar caja no se puede por facturas existentes asoicada a la caja.
                     //throw $th;
@@ -399,7 +400,7 @@ class configcontrolador{
                     if($ra){
                         ActiveRecord::setAlerta('exito', 'Caja eliminado correctamente');
                     }else{
-                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                        ActiveRecord::setAlerta('error', 'Error en el proceso de eliminacion');
                     }
                 }
             }else{
@@ -476,7 +477,7 @@ class configcontrolador{
                     if($r){
                         ActiveRecord::setAlerta('exito', 'Consecutivo eliminado correctamente');
                     }else{
-                        ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion del consecutivo');
+                        ActiveRecord::setAlerta('error', 'Error en el proceso de eliminacion del consecutivo');
                     }
                 }catch (\Throwable $th){
                     $mensaje = $th->getMessage();
@@ -489,7 +490,7 @@ class configcontrolador{
                             if($ra){
                                 ActiveRecord::setAlerta('exito', 'Consecutivo eliminado correctamente');
                             }else{
-                                ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion del consecutivo');
+                                ActiveRecord::setAlerta('error', 'Error en el proceso de eliminacion del consecutivo');
                             }
                         }
                     }else{
@@ -524,7 +525,7 @@ class configcontrolador{
                 if($r[0]){
                     $banco->id = $r[1];
                     $banco->created_at = date('Y-m-d H:i:s');
-                    $alertas['exito'][] = 'banco creada correctamente';
+                    $alertas['exito'][] = 'Banco creada correctamente';
                     $alertas['banco'] = $banco;
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
@@ -561,12 +562,12 @@ class configcontrolador{
             if(!empty($banco)){
                 $r = $banco->eliminar_registro();
                 if($r){
-                    ActiveRecord::setAlerta('exito', 'banco eliminado correctamente');
+                    ActiveRecord::setAlerta('exito', 'Banco eliminado correctamente');
                 }else{
-                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                    ActiveRecord::setAlerta('error', 'Error en el proceso de eliminacion');
                 }
             }else{
-                ActiveRecord::setAlerta('error', 'banco no encontrada');
+                ActiveRecord::setAlerta('error', 'Banco no encontrada');
             }
         }
         $alertas = ActiveRecord::getAlertas();
@@ -632,7 +633,7 @@ class configcontrolador{
                 if($r){
                     ActiveRecord::setAlerta('exito', 'Tarifa eliminado correctamente');
                 }else{
-                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                    ActiveRecord::setAlerta('error', 'Error en el proceso de eliminacion');
                 }
             }else{
                 ActiveRecord::setAlerta('error', 'Tarifa no encontrada');
@@ -662,7 +663,7 @@ class configcontrolador{
                 $r = $mediopago->crear_guardar();
                 if($r[0]){
                     $mediopago->id = $r[1];
-                    $alertas['exito'][] = 'medio de pago creado correctamente';
+                    $alertas['exito'][] = 'Medio de pago creado correctamente';
                     $alertas['mediopago'] = $mediopago;
                 }else{
                     $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
@@ -740,6 +741,52 @@ class configcontrolador{
         }
         $alertas = ActiveRecord::getAlertas();
         echo json_encode($alertas);
+    }
+
+
+    ///////////// procesando la gestion de las impresoras ////////////////
+    public static function allPrinters(){  //api llamado desde gestionprinters.js
+      $printers = deviceprinter::all();
+      echo json_encode($printers);
+    }
+
+    public static function crearPrinter(){ //api llamada desde el modulo de gestionPrinters.ts
+        isadmin();
+        $alertas = [];
+        $printer = new deviceprinter($_POST);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $printer->validar();
+            if(empty($alertas)){ //si los campos cumplen los criterios  
+                $r = $printer->crear_guardar();
+                if($r[0]){
+                    $printer->id = $r[1];
+                    $printer->created_at = date('Y-m-d H:i:s');
+                    $alertas['exito'][] = 'impresora creada correctamente';
+                    $alertas['printer'] = $printer;
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+    public static function eliminarPrinter(){
+        $printer = deviceprinter::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($printer)){
+                $r = $printer->eliminar_registro();
+                if($r){
+                    ActiveRecord::setAlerta('exito', 'Impresora eliminado correctamente');
+                }else{
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Impresora no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
     }
 
 }

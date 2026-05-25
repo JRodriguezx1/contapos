@@ -22,7 +22,7 @@
               <td class=""><?php echo $value->estacion;?></td>
               <td class=""><?php echo $value->estado;?></td>
               <td class="accionestd">
-                <div class="acciones-btns" id="<?php echo $value->id;?>" data-imprsora="<?php echo $value->nombre;?>">
+                <div class="acciones-btns" id="<?php echo $value->id;?>" data-impresora="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square" title="Actualizar punto de impresion"></i></button>
                     <button class="btn-md btn-red eliminarImpresora" title="Eliminar Impresora"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
@@ -38,12 +38,12 @@
     <form id="formCrearUpdateIMpresora" class="formulario" action="/admin/config/crear_IMpresora" method="POST">
         <div class="empleado-grid">
             <div class="formulario__campo">
-                <label class="formulario__label" for="nombreIMpresora">Nombre de la impresora</label>
-                <input id="nombreIMpresora" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del espacio de trabajo" name="nombre" value="" required>
+                <label class="formulario__label" for="nombreImpresora">Nombre de la impresora</label>
+                <input id="nombreImpresora" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del espacio de trabajo" name="nombre" value="" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombrecompartido">Nombre compartido</label>
-                <input id="nombrecompartido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre compartido de la impresora" name="nombrecompartido" value="">
+                <input id="nombreCompartido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre compartido de la impresora" name="nombrecompartido" value="">
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="estacion">Estacion</label>
