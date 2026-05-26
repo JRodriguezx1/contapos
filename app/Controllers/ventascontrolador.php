@@ -282,6 +282,8 @@ class ventascontrolador{
               //aplicar comision
               if($factura->valorgananciauser>0)
                 $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
+              //aplicar puntos a cliente
+              
               $getDB->commit();
             } catch (\Throwable $th) {
               $getDB->rollback();

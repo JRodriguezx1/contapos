@@ -513,7 +513,8 @@ class cajacontrolador{
     isadmin();
     //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $router->render('admin/caja/despachosPendientes', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $despachosPendientes = facturas::whereArray(['estado'=>'Paga', 'entrega'=>'Domicilio', 'id_sucursal'=>id_sucursal()]);
+    $router->render('admin/caja/despachosPendientes', ['titulo'=>'Caja', 'despachosPendientes'=>$despachosPendientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
