@@ -122,9 +122,15 @@
                     if(item)item.elm.querySelector('.precioVenta').textContent = '$'+Number(prod.precio_venta).toLocaleString();
                 }
                 //actualizar el carrito de ventas con los valores originales
-                POS.carrito.forEach((x:any)=>{
-                    
+                POS.carrito.forEach((cr:CarritoItem)=>{
+                    cr.valorunidad = POS.products.find((p:productsapi)=>p.id==cr.idproducto)?.precio_venta??cr.valorunidad;
+                    cr.subtotal = cr.valorunidad * cr.stock!;
+                    cr.total = cr.subtotal;
+                    cr.valorcomision = (cr.subtotal*cr.percentcomision)/100;
+                    cr.base = 1/(1+(Number(cr.impuesto)/100))*cr.subtotal;
+                    cr.valorimp = cr.subtotal - cr.base;
                 })
+                POS.valorCarritoTotal();
             }
         });
 
