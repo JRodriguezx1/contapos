@@ -261,11 +261,11 @@
                                     </tr>
                                     <tr>
                                         <td class="">Creditos</td>
-                                        <td id="creditos" class=""> + $<?php echo number_format($ultimocierre->creditos??0, "0", ",", ".");?></td>
+                                        <td id="creditos" class=""> + $<?php echo number_format($ultimocierre->creditocapital??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>
                                         <td class="text-gray-800 font-medium">Total de ventas:</td>
-                                        <td id="totaldeventas" class=""> $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditos??0), "0", ",", ".");?></td>
+                                        <td id="totaldeventas" class=""> $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>  
                                         <td class="text-blue-600 font-medium">Base grabable</td>
