@@ -42,7 +42,12 @@
 
         const items = hackerList.visibleItems;
 
-        if (!items.length) return;
+        console.log(items);
+        if (!items.length) {
+          inputBuscar.value = '';
+          hackerList.search('');
+          return;
+        }
 
         const productosku = items[0].elm as HTMLElement;
         const products = POS.products as productsapi[];

@@ -571,24 +571,18 @@
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
 
-          if(estado == "Paga"){
-            resultado.dataInvoice.items = carrito.filter(x=>x.stock>0);
-            resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
-              idmediopago,
-              mediopago: mediosPagoDBMAP.get(idmediopago),
-              valor,
-            }));
-          }
-
           if(resultado.exito !== undefined){
+            if(estado == "Paga"){
+              resultado.dataInvoice.items = carrito.filter(x=>x.stock>0);
+              resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
+                idmediopago,
+                mediopago: mediosPagoDBMAP.get(idmediopago),
+                valor,
+              }));
+            }
+
+            limpiarFormFacturar();
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-            btnPagar.disabled = false;
-            btnPagar.value = 'Pagar';
-            miDialogoFacturar.close();
-            document.removeEventListener("click", cerrarDialogoExterno);
-            (document.getElementById('contenedorDesktop') as HTMLDivElement).classList.add('translate-x-full');
-            (document.getElementById('overlayCarrito') as HTMLDivElement).classList.add('hidden');
-          
             //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
             if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
               const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
@@ -601,6 +595,7 @@
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
             vaciarventa();
           }else{
+            limpiarFormFacturar();
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
       } catch (error) {
@@ -609,17 +604,14 @@
     }
 
 
-    /*const canvas = document.getElementById('miCanvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-
-    const img = new Image();
-    img.src = '/build/img/cliente/logoticket.png'; // Ruta de la imagen
-
-    // Es vital esperar a que cargue, de lo contrario el canvas estará vacío
-    img.onload = function() {
-        // drawImage(imagen, x, y, ancho, alto)
-        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };*/
+    function limpiarFormFacturar(){
+      btnPagar.disabled = false;
+      btnPagar.value = 'Pagar';
+      miDialogoFacturar.close();
+      document.removeEventListener("click", cerrarDialogoExterno);
+      (document.getElementById('contenedorDesktop') as HTMLDivElement).classList.add('translate-x-full');
+      (document.getElementById('overlayCarrito') as HTMLDivElement).classList.add('hidden');
+    }
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){

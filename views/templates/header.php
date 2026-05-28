@@ -338,6 +338,7 @@
             href="/admin/comisiones">Comisiones</a>
       <?php endif; ?>
       <a class="cerrar-sesion text-lg mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-bold transition-colors text-right" href="/logout">Cerrar Sesión</a>
+      <p class="text-gray-600 text-lg font-medium text-center absolute bottom-0 inset-x-0">JDOS  <?php echo $_SESSION['sucursal']->version; ?></p>
     </div>
   </div>
 </dialog>

@@ -32,15 +32,19 @@ class direccionescontrolador{
         //session_start();
         isadmin();
         $direccion = new direcciones($_POST);
-        $alertas = [];  
+        $alertas = [];
+        $getDB = direcciones::getDB();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $alertas = $direccion->validarDireccion();
-            if(empty($alertas)){ 
-                $resultado = $direccion->crear_guardar();
-                if($resultado[0]){
+            if(empty($alertas)){
+                $getDB->begin_transaction();
+                try {
+                    $direccion->crear_guardar();
+                    $getDB->commit();
                     $alertas['exito'][] = 'Direccion creada correctamente';
-                }else{
-                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                } catch (\Throwable $th) {
+                $getDB->rollback();
+                $alertas['error'][] = "Hubo un error en el proceso, intentalo nuevamente {$th->getMessage()} ";
                 }
             }
         }

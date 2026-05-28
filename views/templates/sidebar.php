@@ -43,7 +43,7 @@
     </nav>
 </aside>-->
 
-<aside class="sidebar mp-6">
+<aside class="sidebar mp-6 relative">
     <div class="uptask flex flex-col items-center">
         <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2blanco.png" alt="logoj2">
 
@@ -87,8 +87,9 @@
         <a class="<?php echo ($titulo === 'Configuracion')?'activo':''; ?>" href="/admin/configuracion"><span class="material-symbols-outlined">settings</span> <label class="btnav">Ajustes</label></a>
         <?php endif; ?>
     </nav>
-    <div class="cerrar-sesion-mobile">
-        <p>Bienvenido: <span> <?php echo $_SESSION['nombre']; ?></span></p>
+    <p class="text-gray-300 text-lg font-medium text-center absolute bottom-0 inset-x-0">JDOS  <?php echo $_SESSION['sucursal']->version; ?></p>
+    <!--<div class="cerrar-sesion-mobile">
+        <p>Bienvenido: <span> <?php // echo $_SESSION['nombre']; ?></span></p>
         <a class="cerrar-sesion" href="/logout">Cerrar Sesión</a>
-    </div>
+    </div>-->
 </aside>
