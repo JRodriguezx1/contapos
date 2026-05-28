@@ -14,11 +14,14 @@
       const printcarta = document.querySelector('#printcarta');
       const printcotizacion = document.querySelector('#printcotizacion');
       const btnDespachar = document.querySelector<HTMLButtonElement>("#btnDespachar");
+      const btnMasOpciones = document.querySelector('#btnMasOpciones') as HTMLInputElement;
       const numOrden = document.querySelector('#numOrden');
       const referenciaFactura = document.querySelector('#referenciaFactura');
+      const miDialogoMasOpciones = document.querySelector('#miDialogoMasOpciones') as any;
       const miDialogoSelectUser = document.querySelector('#miDialogoSelectUser') as HTMLDialogElement;
       const enviarEmail = document.querySelector('#enviarEmail') as HTMLButtonElement;
       const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
+      //const miDialogoDespachar = document.querySelector('#miDialogoDespachar') as any;
       const miDialogoProductoCompuesto = document.querySelector('#miDialogoProductoCompuesto') as any;
       const inputEliminarClave = document.querySelector('#inputEliminarClave') as HTMLInputElement;
       const tablaDetalleInsumos = document.querySelector('#tablaDetalleInsumos tbody') as HTMLBodyElement;
@@ -138,9 +141,43 @@
       });
 
 
+      btnDespachar?.addEventListener('click', ()=>{
+        const idorden = (document.querySelector('#idorden') as HTMLElement).dataset.idorden;
+        Swal.fire({
+          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          icon: 'question',
+          title: 'Desea despachar la orden?',
+          text: "La orden sera registrada como despachada.",
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+      }).then((result:any) => {
+          if (result.isConfirmed) {
+            (async ()=>{
+              try {
+                const url = "/admin/api/despacharOrden?id="+idorden; //llamado a la API REST
+                const respuesta = await fetch(url); 
+                const resultado = await respuesta.json(); 
+              } catch (error) {
+                  console.log(error);
+              }
+            })();
+          }
+        });
+      });
+
+
+      //apertura de la ventana modal para las opcionesde traslado de inventario
+        btnMasOpciones.addEventListener('click', ()=>{
+            miDialogoMasOpciones.showModal();
+            document.addEventListener("click", cerrarDialogoExterno);
+        });
+
+
       /////////  CAMBIAR USUARIO VENDEDOR Y COMISION  /////////////
       btnSelectVendedor.addEventListener('click', (e)=>{
         miDialogoSelectUser.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
       });
 
       document.querySelector('#btnEditarCrearSelectUser')?.addEventListener('submit', (e:Event)=>{
@@ -154,6 +191,7 @@
               console.log(error);
           }*/
       });
+
 
       ///////////////////// Logica botones devolver inventario ////////////////////////
       btnsdevolverinv.forEach(inv=>{ //evento a los radiobutton
@@ -319,11 +357,13 @@
   
       function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoProductoCompuesto || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLElement).id == 'btnXCerrarModalProductoCompuesto') {
+        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoMasOpciones || f === miDialogoSelectUser || f === miDialogoProductoCompuesto || (f as HTMLElement).id == 'btnXCerrarMasOpciones' || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLElement).id == 'btnXCerrarModalProductoCompuesto' || (f as HTMLElement).id == 'btnXCerrarModalSelectUser') {
             miDialogoFacturar.close();
             miDialogoEliminarOrden.close();
             miDialogoEnviarEmailCliente.close();
+            miDialogoMasOpciones.close();
             miDialogoProductoCompuesto.close();
+            miDialogoSelectUser.close();
             document.removeEventListener("click", cerrarDialogoExterno);
         }
       }

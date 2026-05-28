@@ -34,6 +34,7 @@
         <?php if($factura->estado=='Paga' && $factura->entrega == 'Domicilio'):?>
             <button id="btnDespachar" class="btn-command"><span class="material-symbols-outlined">delivery_truck_speed</span>Marcar despachado</button>
         <?php endif; ?>
+        <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
     </div>
     
     <div class="flex gap-4 mb-4">
@@ -258,10 +259,41 @@
           <div class="self-end">
               <button class="btn-md btn-turquoise !py-4 !px-6 !w-[145px]" type="button" value="Cancelar">Cancelar</button>
               <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[145px]" type="submit" value="Pagar">
-          </div>
-          
+          </div> 
       </form>
     </dialog>
+
+
+     <!-- MODAL DE MAS OPCIONES -->
+  <dialog id="miDialogoMasOpciones" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+      <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Mas opciones</h4>
+      <button class="rounded-lg hover:bg-gray-100 transition">
+        <i id="btnXCerrarMasOpciones" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
+      </button>
+    </div>
+
+    <!-- Opciones -->
+    <div class="grid gap-4">
+        <button id="btnImprimirTirilla" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
+            <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+                Imprimir factura tirilla
+            </span>
+            <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+        </button>
+
+      <button id="btnOrdenEnvio" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
+        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+          Imprimir Orden de entrega
+        </span>
+        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+      </button>
+    </div>
+  </dialog>
+
 
     <!-- MODAL PARA ELIMINAR ORDEN-->
     <?php include __DIR__. "/modalEliminarOrden.php"; ?>

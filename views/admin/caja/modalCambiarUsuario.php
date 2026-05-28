@@ -28,7 +28,7 @@
         </div>
 
         <div class="text-right border-t border-gray-200 pt-12 mt-8">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>
             <input id="btnEditarCrearSelectUser" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">
         </div>
     </form>
