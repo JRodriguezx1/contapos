@@ -576,10 +576,26 @@ class ventascontrolador{
     $tempultimocierre = clone $ultimocierre;
    
     //CAMBIA EL id POR EL idproducto
+    $idsProductos = [];
     foreach($productos as $value){
       $value->id = $value->idproducto;
       $value->stock = $value->cantidad;
+      $idsProductos[] = $value->idproducto;
+      $mapCarrito[$value->idproducto] = $value->stock;
       $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
+    }
+
+    $conflocal = config_local::getParamCaja();
+    //////// CALCULAR PRODUCTOS AGOTADOS /////////
+    if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){ //no permitir vender sin stock
+      $productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
+      foreach($productosDB as $item){
+        if(($item->stock - $mapCarrito[$item->productoid])<0){
+          $alertas['error'][] = "Productos agotados, no es posible vender";
+          echo json_encode($alertas);
+          return;
+        }
+      }
     }
 
     //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
