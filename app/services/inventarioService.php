@@ -166,7 +166,7 @@ class inventarioService {
 
                 //STOCK POR SUCURSAL
                 if (!empty($rowsStock)) {
-                    $sqlStock = "INSERT INTO stockproductossucursal (productoid, sucursalid, stock, stockminimo, habilitarventa)
+                    $sqlStock = "INSERT INTO stockproductossucursal (productoid, sucursalid, stock, stockminimo, stockaux, promediostock, habilitarventa)
                     VALUES " . implode(",", $rowsStock) . 
                     "ON DUPLICATE KEY UPDATE stock = VALUES(stock)";
                     $k = stockproductossucursal::actualizarLibre($sqlStock);
