@@ -31,6 +31,9 @@
         <?php if($factura->estado=='Paga'):?>
             <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
         <?php endif; ?>
+        <?php if($factura->estado=='Paga' && $factura->entrega == 'Domicilio'):?>
+            <button id="btnDespachar" class="btn-command"><span class="material-symbols-outlined">delivery_truck_speed</span>Marcar despachado</button>
+        <?php endif; ?>
     </div>
     
     <div class="flex gap-4 mb-4">

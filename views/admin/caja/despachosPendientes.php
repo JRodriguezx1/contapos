@@ -17,7 +17,7 @@
               <th>Cliente</th>
               <th>Zona</th>
               <th>Vendedor</th>
-              <th>Mensajero</th>
+              <th>Observacion</th>
               <th>Estado</th>
               <th>Total</th>
               <th class="accionesth">Acciones</th>
@@ -31,9 +31,9 @@
               <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
               <td class=""><?php echo $value->cliente;?></td>
-              <td class="">Direccion - zona</td>
+              <td class=""><?php echo $value->direccion;?></td>
               <td class=""><?php echo $value->vendedor;?></td>
-              <td class=""><?php echo $value->vendedor;?></td>
+              <td class=""><?php echo $value->observacion;?></td>
               <td>
                 <div data-estado="<?php echo $value->estado;?>" id="<?php echo $value->id;?>" class="max-w-full flex flex-wrap gap-2 justify-center">
                     <button class="btn-xs btn-lima"><?php echo $value->estado;?></button>
@@ -41,7 +41,7 @@
               </td>
               <td class="">$<?php echo number_format($value->total, '0', ',', '.');?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>">
-                      <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a> <button class="btn-xs btn-red eliminarPedidoGuardado"><i class="fa-solid fa-trash-can"></i></button>
+                      <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Abrir</a>
                   </div>
               </td>
           </tr>

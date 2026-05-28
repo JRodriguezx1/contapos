@@ -13,6 +13,7 @@
       const inputsInv = document.querySelectorAll<HTMLInputElement>('.inputInv');
       const printcarta = document.querySelector('#printcarta');
       const printcotizacion = document.querySelector('#printcotizacion');
+      const btnDespachar = document.querySelector<HTMLButtonElement>("#btnDespachar");
       const numOrden = document.querySelector('#numOrden');
       const referenciaFactura = document.querySelector('#referenciaFactura');
       const miDialogoSelectUser = document.querySelector('#miDialogoSelectUser') as HTMLDialogElement;

@@ -23,6 +23,8 @@
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->negocio)),0,'C',false);
+            $this->pdf->SetFont('Arial','B',8);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
