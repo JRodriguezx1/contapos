@@ -155,7 +155,7 @@ class ventascontrolador{
     if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){ //no permitir vender sin stock
       $productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
       foreach($productosDB as $item){
-        if(($item->stock - $mapCarrito[$item->productoid])<=0){
+        if(($item->stock - $mapCarrito[$item->productoid])<0){
           $alertas['error'][] = "Productos agotados, no es posible vender";
           echo json_encode($alertas);
           return;
