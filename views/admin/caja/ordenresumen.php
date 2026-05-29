@@ -309,5 +309,6 @@
     <?php include __DIR__. "/modalCambiarUsuario.php"; ?>
     <!-- MODAL PARA ENVIAR FACTURA POR EMAIL -->
     <?php include __DIR__. "/modalSendInvoiceEmail.php"; ?>
-
+    <!-- MODAL REMISION -->
+    <?php include __DIR__. "/remision.php"; ?>
 </div>
