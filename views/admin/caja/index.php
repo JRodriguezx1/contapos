@@ -15,7 +15,7 @@
      <?php endif; ?>
     <button id="btnAbrirCajon" class="btn-command"><span class="material-symbols-outlined">lock_open</span>Abrir Cajon</button>
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
-    <a class="btn-command text-center" href="/admin/caja/trasladosRetirosDinero"><span class="material-symbols-outlined">assured_workload</span>Traslados y retiros</a>
+    <!--<a class="btn-command text-center" href="/admin/caja/trasladosRetirosDinero"><span class="material-symbols-outlined">assured_workload</span>Traslados y retiros</a>-->
     <a class="btn-command text-center" href="/admin/caja/despachosPendientes"><span class="material-symbols-outlined">delivery_truck_speed</span>Despachos pendientes</a>
   </div>
     <h5 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-4">
@@ -47,7 +47,7 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class="w-36 whitespace-normal"><?php echo $value->fechapago;?></div></td> 
               <td class=""><div class="w-24 whitespace-normal"><?php echo $value->caja;?></div></td>
-              <td class=""><?php echo $value->entrega;?></td>
+              <td class="<?php echo ($value->entrega=='Domicilio' && $value->estado == 'Paga' && $value->entregado == 1)?'text-green-500':(($value->entrega=='Domicilio'&& $value->estado == 'Paga' && $value->entregado == 0)?'text-red-500':'');?>"><?php echo $value->entrega;?></td>
               <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
               <td>

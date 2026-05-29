@@ -513,7 +513,7 @@ class cajacontrolador{
     isadmin();
     //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $despachosPendientes = facturas::whereArray(['estado'=>'Paga', 'entrega'=>'Domicilio', 'id_sucursal'=>id_sucursal()]);
+    $despachosPendientes = facturas::whereArray(['estado'=>'Paga', 'entrega'=>'Domicilio', 'entregado'=>0, 'id_sucursal'=>id_sucursal()]);
     $router->render('admin/caja/despachosPendientes', ['titulo'=>'Caja', 'despachosPendientes'=>$despachosPendientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
@@ -954,6 +954,15 @@ class cajacontrolador{
     $datos['factura']->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = ".$datos['factura']->id.";");
     $result = self::transformarDataInvoice($datos);  //llama al trait
     echo json_encode($result);
+  }
+
+
+  public static function despacharOrden(){
+    isadmin();
+    $id = $_GET['id'];
+    if(!is_numeric($id))return;
+    $datos = cajaService::despacharOrden($id);
+    echo json_encode($datos);
   }
 
 }

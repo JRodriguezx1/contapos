@@ -377,7 +377,7 @@
                                 <td><?php echo $index+1;?></td>
                                 <td><div class="w-32 whitespace-normal"><?php echo $value->fechapago;?></div></td>
                                 <td><div class=" w-48 whitespace-normal"><?php echo $value->cliente;?></div></td>
-                                <td class=""><?php echo $value->entrega;?></td>
+                                <td class="<?php echo ($value->entrega=='Domicilio' && $value->estado == 'Paga' && $value->entregado == 1)?'text-green-500':(($value->entrega=='Domicilio'&& $value->estado == 'Paga' && $value->entregado == 0)?'text-red-500':'');?>"><?php echo $value->entrega;?></td>
                                 <td><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
                                 <td>
                                     <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">

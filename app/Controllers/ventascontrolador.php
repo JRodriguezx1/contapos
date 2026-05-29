@@ -1016,6 +1016,7 @@ class ventascontrolador{
         foreach($productoscotz as $value){ //convertir a tipo de dato numero
           $value->valorunidad = (int)$value->valorunidad;
           $value->cantidad = (float)$value->cantidad;
+          $value->stock = (float)$value->cantidad;
           $value->subtotal = (float)$value->subtotal;
           $value->base = (float)$value->base;
           $value->impuesto = (int)$value->impuesto;

@@ -88,5 +88,28 @@ class cajaService {
         $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
         return compact('factura', 'productos', 'cliente', 'direccion', 'tarifa', 'vendedor', 'lineasencabezado', 'sucursal');
     }
+
+
+    public static function despacharOrden(int $id):array{
+        $alertas = [];
+        $factura = facturas::find('id', $id);
+        $getDB = facturas::getDB();
+        if($factura->entregado == 0 && $factura->entrega == 'Domicilio'){
+            $factura->entregado = 1;
+            $getDB->begin_transaction();
+            try {
+                $factura->actualizar();
+                $getDB->commit();
+                $alertas['exito'][] = "Orden despachada.";
+            } catch (\Throwable $th) {
+                $getDB->rollback();
+                $alerta['error'][] = "Error al procesar solicitud >>".$th->getMessage();
+            }
+        }else{
+            $alerta['error'][] = "Error, verificar si ya se despacho como domicilio";
+        }
+        return $alertas;
+        
+    }
     
 }

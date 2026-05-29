@@ -283,7 +283,7 @@
         }
         
         //calcular valor total de comision para el usuario
-        valorTotal.valorgananciauser += x.valorcomision;
+        valorTotal.valorgananciauser += Number(x.valorcomision);
       });
      
       //Valor del impuesto total de todos los productos, es decir de la factura;
@@ -521,6 +521,7 @@
 
     async function procesarpedido(estado:string, ctz:string){
       const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
+      const despachar = document.querySelector('#despachar') as HTMLInputElement;
       const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
@@ -562,6 +563,7 @@
       datos.append('departamento', '');
       datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
       datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
+      datos.append('entregado', despachar.checked?'1':'0');
       datos.append('valortarifa', valorTotal.valortarifa+'');
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
@@ -677,7 +679,7 @@
             datosfactura = resultado.factura;
             carrito = resultado.productos;
             carrito.forEach(item =>printProduct(item.idproducto, item.valorunidad));
-            valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
+            //valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
             (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.num_orden;
             $('#selectCliente').val(datosfactura.idcliente).trigger('change');
         } catch (error) {

@@ -1,10 +1,10 @@
 <div class="box ordenresumen !pb-20">
-    <a href="/admin/caja" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
-    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-    </svg>
-    <span class="sr-only">Atrás</span>
-    </a>
+    <button onclick="history.back()" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
+        <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+        </svg>
+        <span class="sr-only">Atrás</span>
+    </button>
     <div class="flex flex-wrap gap-2 mt-4 mb-6 pb-4 border-b-2 border-blue-600">
         <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
             <button id="btnfacturar" class="btn-command"><span class="material-symbols-outlined">attach_money</span>Procesar pago</button>
@@ -31,7 +31,7 @@
         <?php if($factura->estado=='Paga'):?>
             <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
         <?php endif; ?>
-        <?php if($factura->estado=='Paga' && $factura->entrega == 'Domicilio'):?>
+        <?php if($factura->estado=='Paga' && $factura->entrega == 'Domicilio' && $factura->entregado == 0):?>
             <button id="btnDespachar" class="btn-command"><span class="material-symbols-outlined">delivery_truck_speed</span>Marcar despachado</button>
         <?php endif; ?>
         <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
@@ -45,6 +45,10 @@
         <div>
             <span class="m-0 text-slate-500 text-xl font-semibold">Referencia: </span>
             <span id="referenciaFactura" class="m-0 text-slate-500 text-xl">Orden: <?php echo $factura->referencia??'';?></span>
+        </div>
+        <div>
+            <span class="m-0 text-slate-500 text-xl font-semibold">Estado: </span>
+            <span id="textEstado" class="m-0 text-slate-500 text-xl"><?php echo ($factura->entrega=='Domicilio' && $factura->entregado==0)?'Pendiente de despacho':($factura->entrega=='Presencial' && $factura->entregado==1 ? 'Presencial':'Domicilio entregado');?></span>
         </div>
     </div>
 
@@ -63,7 +67,8 @@
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
             <p class="font-bold">Estado Orden</p>
-            <p id="estadoOrden"><?php echo ($factura->tipoventa =='Contado'|| $factura->tipoventa =='')?$factura->estado:"Credito - F. $factura->estado";?></p>
+            <p id="estadoOrden" class="mb-2"><?php echo ($factura->tipoventa =='Contado'|| $factura->tipoventa =='')?$factura->estado:"Credito - F. $factura->estado";?></p>
+            <p class="m-0 text-gray-600 text-xl font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
         </div>
     </div>
 
@@ -141,6 +146,7 @@
             </div>
             <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
                 <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de entrega</p>
+                <p class="m-0 md:text-left text-lg leading-5 text-gray-600">Tipo entrega: <?php echo $factura->entrega??'';?></p>
                 <p class="md:text-left text-lg leading-5 text-gray-600"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
                 <p class="mt-0 md:text-left text-lg leading-5 text-gray-600">Tarifa envio: $<?php echo $tarifa->valor??'';?></p>
             </div>

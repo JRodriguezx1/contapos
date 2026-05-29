@@ -147,7 +147,7 @@
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
           title: 'Desea despachar la orden?',
-          text: "La orden sera registrada como despachada.",
+          text: "La orden sera registrada como despachada y entregada.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -155,9 +155,15 @@
           if (result.isConfirmed) {
             (async ()=>{
               try {
-                const url = "/admin/api/despacharOrden?id="+idorden; //llamado a la API REST
+                const url = "/admin/api/caja/despacharOrden?id="+idorden; //llamado a la API REST
                 const respuesta = await fetch(url); 
-                const resultado = await respuesta.json(); 
+                const resultado = await respuesta.json();
+                if(resultado.exito !== undefined){
+                  msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                  (document.querySelector('#textEstado') as HTMLParagraphElement).textContent = "Domicilio entregado";
+                }else{
+                  msjalertToast('error', '¡Error!', resultado.error[0]);
+                }
               } catch (error) {
                   console.log(error);
               }
