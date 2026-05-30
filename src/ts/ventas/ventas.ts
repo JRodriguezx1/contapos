@@ -7,7 +7,7 @@
     const dirEntrega = POS.gestionClientes.dirEntrega;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const selectVendedor = (document.querySelector('#vendedor') as HTMLSelectElement);
-    const porcentgananciauser = document.querySelector('#percentComision') as HTMLInputElement;
+    const valorDomicilio = document.querySelector('#valorDomicilio') as HTMLInputElement;
     const contentproducts = document.querySelector('#productos');
     const btnEntrega = document.querySelector('#btnEntrega');
     const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
@@ -93,7 +93,7 @@
 
     ///////// funcion que imprime el valor de la tarifa segun direccion ///////////
     function printTarifaEnvio():void{
-      tarifas = POS.tarifas;
+      tarifas = POS.tarifas; //viene de ahelper.clientes.ts
       const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
       if(modalidadEntrega.textContent == ": Presencial" || dirEntrega.selectedIndex == -1){
         valorTotal.valortarifa = 0;
@@ -104,7 +104,11 @@
         const objtarifa = tarifas.find(tarifa =>{
           if(tarifa.idcliente == selectDir.dataset.idcliente && tarifa.id == selectDir.dataset.idtarifa)return true;
         });
-        valorTotal.valortarifa = Number(objtarifa?.valor);
+        if(valorDomicilio.value == '' || isNaN(Number(valorDomicilio.value))){
+          valorTotal.valortarifa = Number(objtarifa?.valor);
+        }else{
+          valorTotal.valortarifa = Number(valorDomicilio.value);
+        }
         valorTotal.idtarifa = Number(objtarifa?.id);
         nombretarifa = objtarifa?.nombre;
       }
@@ -549,8 +553,6 @@
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
-      //datos.append('porcentgananciauser', porcentgananciauser.value);
-      //datos.append('valorgananciauser', ((valorTotal.total*Number(porcentgananciauser.value))/100).toFixed(2));
       datos.append('porcentgananciauser', valorTotal.porcentgananciauser.toFixed(2));
       datos.append('valorgananciauser', valorTotal.valorgananciauser.toFixed(2));
       datos.append('subtotal', valorTotal.subtotal+'');
@@ -568,6 +570,7 @@
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
       datos.append('opc2', '');
+  
       try {
           const url = "/admin/api/facturar";  //va al controlador ventascontrolador
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 

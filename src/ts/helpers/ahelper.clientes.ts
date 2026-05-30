@@ -194,7 +194,7 @@
         dirEntrega?.addEventListener('change', (e)=>{
             const select = (e.target as HTMLSelectElement);
             const x:string = select.options[select.selectedIndex].dataset.ciudad||'';
-            (document.querySelector('#ciudadEntrega') as HTMLInputElement).value = x;
+            (document.querySelector('#ciudad') as HTMLInputElement).value = x;
             POS.printTarifaEnvio();
             POS.valorCarritoTotal();
         });

@@ -128,6 +128,12 @@
 
             $this->pdf->Ln(5);
 
+            $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
+            $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Tarifa envio"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->valortarifa??0, '0', ',', '.')." COP"),0,0,'C');
+
+            $this->pdf->Ln(5);
+
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
 
             $this->pdf->Ln(5);

@@ -91,11 +91,13 @@ class cajaService {
 
 
     public static function despacharOrden(int $id):array{
+        date_default_timezone_set('America/Bogota');
         $alertas = [];
         $factura = facturas::find('id', $id);
         $getDB = facturas::getDB();
         if($factura->entregado == 0 && $factura->entrega == 'Domicilio'){
             $factura->entregado = 1;
+            $factura->fechaentrega = date('Y-m-d H:i:s');
             $getDB->begin_transaction();
             try {
                 $factura->actualizar();

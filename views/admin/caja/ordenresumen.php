@@ -148,7 +148,7 @@
                 <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de entrega</p>
                 <p class="m-0 md:text-left text-lg leading-5 text-gray-600">Tipo entrega: <?php echo $factura->entrega??'';?></p>
                 <p class="md:text-left text-lg leading-5 text-gray-600"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
-                <p class="mt-0 md:text-left text-lg leading-5 text-gray-600">Tarifa envio: $<?php echo $tarifa->valor??'';?></p>
+                <p class="mt-0 md:text-left text-lg leading-5 text-gray-600">Tarifa envio: $<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
             </div>
             <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
                 <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de facturacion</p>
@@ -181,7 +181,7 @@
                     <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->abono??0, '0', ',', '.');?></p>
                     <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valorimpuestototal??0, '0', ',', '.');?></p>
                     <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal"><?php echo $factura->dctox100.'%  $'.$factura->descuento;?></p>
-                    <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo $factura->valortarifa??'';?></p>
+                    <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
                     <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ <?php echo number_format($factura->total??0, "0", ",", ".");?></p>
                 </div>
             </div>

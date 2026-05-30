@@ -26,24 +26,24 @@
             <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-slate-100 print:px-0 print:py-6">
                 <!-- Detalles del documento -->
                 <div>
-                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Detalles del Envío</h3>
-                    <dl class="mt-2 space-y-2 text-sm text-slate-600">
-                    <div class="flex justify-between md:block">
-                        <dt class="font-medium text-slate-900">Fecha de Emisión:</dt>
-                        <dd class="font-mono">29 Mayo, 2026</dd>
-                    </div>
-                    <div class="flex justify-between md:block">
-                        <dt class="font-medium text-slate-900">Fecha de Entrega:</dt>
-                        <dd class="font-mono">01 Junio, 2026</dd>
-                    </div>
+                    <h3 class="text-base font-semibold text-slate-400 uppercase tracking-wider">Detalles del Envío</h3>
+                    <dl class="mt-2 space-y-2 text-base text-slate-600">
+                        <div class="flex justify-between md:block">
+                            <dt class="font-medium text-slate-900">Fecha de Emisión:</dt>
+                            <dd class="font-mono"><?php echo $factura->fechacreacion??'';?></dd>
+                        </div>
+                        <div class="flex justify-between md:block">
+                            <dt class="font-medium text-slate-900">Fecha de Entrega:</dt>
+                            <dd class="font-mono"><?php echo $factura->fechaentrega??'';?></dd>
+                        </div>
                     </dl>
                 </div>
 
                 <!-- De (Remitente) -->
                 <div>
-                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Origen / Despachado por</h3>
+                    <h3 class="text-base font-semibold text-slate-400 uppercase tracking-wider">Origen / Despachado por</h3>
                     <div class="mt-2 text-sm text-slate-600 space-y-1">
-                        <p class="font-semibold text-slate-900"><?php echo $sucursal->nombre??$sucursal->negocio;?></p>
+                        <p class="font-semibold text-slate-900 text-base"><?php echo $sucursal->nombre??$sucursal->negocio;?></p>
                         <p><?php echo $sucursal->direccion??'';?></p>
                         <p><?php echo $sucursal->ciudad??'';?></p>
                         <p class="text-slate-400"><?php echo $sucursal->email??'';?></p>
@@ -52,7 +52,7 @@
 
                 <!-- Para (Destinatario) -->
                 <div>
-                    <h3 class="text-sm font-semibold text-indigo-600 uppercase tracking-wider print:text-slate-500">Destinatario / Entregar a</h3>
+                    <h3 class="text-base font-semibold text-indigo-600 uppercase tracking-wider print:text-slate-500">Destinatario / Entregar a</h3>
                     <div class="mt-2 text-sm text-slate-600 space-y-1">
                         <p class="font-semibold text-slate-900 text-base">Pixel Craft Studio S.A.S.</p>
                         <p>NIT: <?php echo $cliente->identificacion??'';?></p>

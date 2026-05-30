@@ -159,9 +159,9 @@
           try {
             const url = "/admin/api/clientes/direccionesXcliente?id="+idcliente; //llamado a la API REST y se trae las direcciones segun cliente elegido
             const respuesta = await fetch(url); 
-            const resultado = await respuesta.json(); 
+            const resultado = await respuesta.json();
             direcciones = resultado;
-            addDireccionSelect(resultado);
+            addDireccionSelect(resultado.direcciones);
           } catch (error) {
               console.log(error);
           }

@@ -210,14 +210,13 @@
               </div>
           </div>
           <div class="formulario__campo flex-1">
-            <label class="formulario__label" for="npedido">Comision</label>
+            <label class="formulario__label" for="npedido">Domicilio</label>
             <input
-                id="percentComision"
+                id="valorDomicilio"
                 class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                 type="text"
-                placeholder="Porcentaje del empleado"  
-                value="<?php echo $user['porcentajeganancia'];?>"
-                <?php if($user['perfil']>3)echo 'disabled';?>
+                placeholder="Valor del domicilio"
+                
                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
             >
           </div>

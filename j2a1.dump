@@ -1304,6 +1304,7 @@ CREATE TABLE `facturas` (
   `abono` decimal(12,2) DEFAULT '0.00',
   `abonofinal` decimal(12,2) DEFAULT '0.00',
   `porcentgananciauser` decimal(5,2) DEFAULT '0.00',
+  `valorgananciauser` decimal(12,2) DEFAULT '0.00',
   `subtotal` decimal(12,2) DEFAULT NULL,
   `base` decimal(13,3) DEFAULT NULL,
   `valorimpuestototal` decimal(12,3) DEFAULT NULL,
@@ -1315,14 +1316,15 @@ CREATE TABLE `facturas` (
   `departamento` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `ciudad` varchar(22) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `entrega` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `entregado` tinyint(1) DEFAULT '1',
   `valortarifa` varchar(9) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `fechaentrega` datetime DEFAULT NULL,
   `fechacreacion` datetime DEFAULT NULL,
   `fechapago` datetime DEFAULT NULL,
   `fechaanulacion` datetime DEFAULT NULL,
   `habilitada` tinyint(1) DEFAULT '0',
   `opc1` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `opc2` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `valorgananciauser` decimal(12,2) DEFAULT '0.00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_num_orden` (`id_sucursal`,`num_orden`),
   KEY `idcierrecaja_idx` (`idcierrecaja`),
@@ -2638,6 +2640,7 @@ CREATE TABLE `sucursales` (
   `logo` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `estado` tinyint(1) DEFAULT '1',
   `timezone` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT 'America/Bogota',
+  `version` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idplan_idx` (`idplan`),
@@ -2651,7 +2654,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota',NULL,'2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3047,4 +3050,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-26  0:58:21
+-- Dump completed on 2026-05-29 23:09:30

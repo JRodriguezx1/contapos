@@ -124,6 +124,11 @@
                         </dl>
 
                         <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
+                            <dt class="col-span-3 text-gray-400">Tarifa envio:</dt>
+                            <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->valortarifa??0, '0', ',', '.');?></dd>
+                        </dl>
+
+                        <dl class="grid sm:grid-cols-5 gap-x-3 text-sm">
                             <dt class="col-span-3 text-gray-400">Total:</dt>
                             <dd class="col-span-2 font-medium text-gray-800">$<?php echo number_format($factura->total??'','0', ',', '.');?></dd>
                         </dl>
