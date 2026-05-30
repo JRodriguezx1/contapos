@@ -212,16 +212,16 @@ class ventascontrolador{
       
       //si viene id, es cotizacion cargada en modulo de venta
       if(!empty($_POST['id'])){
-        if(!is_numeric($_POST['id']))return;  //validar que el id de la cotizacion sea numero
+        if(!is_numeric($_POST['id']))return;  //validar que el id de la cotizacion/Remision sea numero
         $factura = facturas::find('id', $_POST['id']);
         $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
-        if($factura->cotizacion == 1 && $factura->cambioaventa == 0){ //validar que la cotizacion aun se encuentre en estado de cotizacion
+        if($factura->cotizacion == 1 && $factura->cambioaventa == 0 || $factura->estado == 'Remision' && $factura->cambioaventa == 0){ //validar que la cotizacion aun se encuentre en estado de cotizacion
           if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si la cotizacion que se va a pagar, cambio de caja o si su cierre caja esta cerrado
             $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
           }
-          if($_POST['estado']=='Paga'){  //si es una cotizacion que se va a pagar
+          if($_POST['estado']=='Paga'){  //si es una cotizacion/Remision que se va a pagar
             //$factura->compara_objetobd_post($_POST);
-            $factura->cotizacion = 1;
+            //$factura->cotizacion = 1;
             $factura->cambioaventa = 1;
             $factura->estado = 'Aceptada';
             $idctz = $factura->id;
@@ -238,7 +238,7 @@ class ventascontrolador{
         $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
       }
       
-      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || !isset($ultimocierre)&&empty($_POST['id'])&&$_POST['estado']=='Guardado'){ // si la caja esta cerrada y se hace apertura con la venta o cotizacion
+      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || !isset($ultimocierre)&&empty($_POST['id'])&&($_POST['estado']=='Guardado' || $_POST['estado']=='Remision')){ // si la caja esta cerrada y se hace apertura con la venta o cotizacion
         $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
         $ruc = $ultimocierre->crear_guardar();
         if(!$ruc[0])$ultimocierre->estado = 1;
@@ -258,7 +258,8 @@ class ventascontrolador{
           $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
         }
 
-        if($_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado'){
+        //si es nueva venta, o nueva cotizacion o nueva remision
+        if($_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado' || empty($_POST['id'])&&$_POST['estado']=='Remision'){
           $factura->idcierrecaja = $ultimocierre->id;
           //calcular ultimo num_orden
           $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
@@ -301,7 +302,7 @@ class ventascontrolador{
               return;
             }
           }
-          if($_POST['estado']=='Guardado')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
+          if($_POST['estado']=='Guardado' || $_POST['estado']=='Remision')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
         }
 
         if($r[0]&&$c || $Ctz){
@@ -462,8 +463,8 @@ class ventascontrolador{
           }else{
 
       ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
-            if($factura->cotizacion == 1 && $factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id']) && $_POST['estado']=='Guardado'){
-              //algoritmo si se cambia la cotizacion como productos, cantidades valores etc.
+            if(($factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id'])) && ($factura->cotizacion == 1 && $_POST['estado']=='Guardado' || $factura->cotizacion == 0 && $_POST['estado']=='Remision')){
+              //algoritmo si se cambia la cotizacion/remision como productos, cantidades valores etc.
               $idsExistentes = ventas::multicampos('idfactura', $factura->id, 'id');
               /*$carritoupdate=[];
               $carritoinsert=[];
@@ -492,11 +493,12 @@ class ventascontrolador{
               if(!empty($carritoinsert))$venta->crear_varios_reg_arrayobj($carritoinsert);
                if(!empty($idseliminar))ventas::eliminar_idregistros('id', $idseliminar);
 
-              $alertas['exito'][] = "Cotizacion actualizada con exito";
+              $alertas['exito'][] = "Orden actualizada con exito";
               echo json_encode($alertas);
               return;
 
             }else{
+              if($_POST['estado']=='Guardado')
               $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
               //////////// Guardar los productos de la venta en tabla ventas //////////////
               foreach($carrito as $obj){
@@ -516,7 +518,7 @@ class ventascontrolador{
             if($rc[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
-                $alertas['exito'][] = "Cotizacion guardada con exito";
+                $alertas['exito'][] = "Cotizacion/Remision guardada con exito";
               }else{
                 $alertas['error'][] = "Error en sistema intentalo nuevamente";
                 //borrar la factura automaticamente tambien se borra los productos en la tabla venta

@@ -456,7 +456,7 @@
         }
         if((f as HTMLInputElement).closest('.remision')){
           tipoventa = "";
-          console.log('remision');
+          procesarpedido('Remision', '0');
         }
         //if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
       }
