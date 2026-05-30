@@ -386,7 +386,7 @@
                                         <?php endforeach; ?>
                                     </div>
                                 </td>
-                                <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&& $value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':'btn-light'));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
+                                <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&& $value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':($value->estado=='Remision'?'btn-indigo':'btn-light')));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
                                 <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                                 <td>$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
                                 <td class="accionestd">
