@@ -95,7 +95,9 @@
     function printTarifaEnvio():void{
       tarifas = POS.tarifas; //viene de ahelper.clientes.ts
       const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
+      document.querySelector('#confirmarDespacho')?.classList.remove('hidden');
       if(modalidadEntrega.textContent == ": Presencial" || dirEntrega.selectedIndex == -1){
+        document.querySelector('#confirmarDespacho')?.classList.add('hidden');
         valorTotal.valortarifa = 0;
         nombretarifa = '';
         return;
@@ -527,6 +529,7 @@
       const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
       const despachar = document.querySelector('#despachar') as HTMLInputElement;
       const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
+      const tipoEntrega = modalidadEntrega.textContent!.replace(': ', '');
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
@@ -552,6 +555,7 @@
       datos.append('tipoventa', tipoventa);
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
       datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
+      datos.append('remision', estado=='Remision'?'1':'0');  //1= cotizacion, 0 = no cotizacion pagada.
       datos.append('estado', estado);
       datos.append('porcentgananciauser', valorTotal.porcentgananciauser.toFixed(2));
       datos.append('valorgananciauser', valorTotal.valorgananciauser.toFixed(2));
@@ -564,8 +568,8 @@
       datos.append('observacion', document.querySelector<HTMLTextAreaElement>('#observacion')!.value);
       datos.append('departamento', '');
       datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
-      datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
-      datos.append('entregado', despachar.checked?'1':'0');
+      datos.append('entrega', tipoEntrega);
+      datos.append('entregado', estado=='Paga'&&tipoEntrega=='Domicilio'?(despachar.checked?'1':'0'):'0');
       datos.append('valortarifa', valorTotal.valortarifa+'');
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');

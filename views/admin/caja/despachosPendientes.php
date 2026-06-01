@@ -34,7 +34,7 @@
               <td><?php echo $value->observacion;?></td>
               <td>
                 <div data-estado="<?php echo $value->estado;?>" id="<?php echo $value->id;?>" class="max-w-full flex flex-wrap gap-2 justify-center">
-                    <button class="btn-xs btn-lima"><?php echo $value->estado;?></button>
+                    <button class="btn-xs <?php echo $value->estado=='Paga'?'btn-lima':'btn-indigo';?>"><?php echo $value->estado;?></button>
                 </div>
               </td>
               <td>$<?php echo number_format($value->total, '0', ',', '.');?></td>

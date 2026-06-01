@@ -1,9 +1,10 @@
 (()=>{
 
     if(
-        !document.querySelector('.ventasgenerales') && 
-        !document.querySelector('.cuotasCreditos') && 
-        !document.querySelector('.movimientosinventarios') && 
+        !document.querySelector('.ventasgenerales') &&
+        !document.querySelector('.remisiones') &&
+        !document.querySelector('.cuotasCreditos') &&
+        !document.querySelector('.movimientosinventarios') &&
         !document.querySelector('.estadosfinancierosCreditos') &&
         !document.querySelector('.comisiones'))return;
 

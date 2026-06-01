@@ -3,7 +3,7 @@ namespace App\Models\ventas;
 
 class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -35,7 +35,8 @@ class facturas extends \App\Models\ActiveRecord {
         $this->transaccion = $args['transaccion'] ?? 0;
         $this->tipoventa = $args['tipoventa'] ?? 'Contado'; //si es de contado o credito
         $this->cotizacion = $args['cotizacion'] ?? 0; //1 = cotizacion
-        $this->estado = $args['estado'] ?? 'paga';
+        $this->remision = $args['remision'] ?? 0;
+        $this->estado = $args['estado'] ?? 'Paga';
         $this->cambioaventa = $args['cambioaventa']??0;  //1 = se pasa de cotizacion a venta
         $this->ref_creditoid = $args['ref_creditoid']??'';
         $this->referencia = $args['referencia']??'';
@@ -56,9 +57,9 @@ class facturas extends \App\Models\ActiveRecord {
         $this->entrega = $args['entrega'] ?? 'Presencial';
         $this->entregado = $args['entregado'] ?? 1;
         $this->valortarifa = $args['valortarifa'] ?? 0;
-        $this->fechaentrega = $args['fechaentrega'] ?? date('Y-m-d H:i:s');
+        $this->fechaentrega = $this->entregado == 1?date('Y-m-d H:i:s'):'';
         $this->fechacreacion = $args['fechacreacion'] ?? date('Y-m-d H:i:s');
-        $this->fechapago = $args['fechapago'] ?? date('Y-m-d H:i:s');
+        $this->fechapago = $this->estado=='Paga'?date('Y-m-d H:i:s'):'';
         $this->habilitada = $args['habilitada']??0;
         $this->opc1 = $args['opc1'] ?? '';
         $this->opc2 = $args['opc2'] ?? '';
@@ -112,11 +113,6 @@ class facturas extends \App\Models\ActiveRecord {
 
     //metodo usado para la graficas de index reportes
     public static function ventasGraficaMensual(int $idsucursal){
-
-        /*$sql = "SELECT MONTH(fechapago) AS mes, SUM(total) AS total_venta FROM facturas 
-        WHERE fechapago >= CONCAT(YEAR(CURRENT_DATE()), '-01-01') AND fechapago < CONCAT(YEAR(CURRENT_DATE())+1, '-01-01') AND estado = 'Paga' AND id_sucursal = $idsucursal
-        GROUP BY MONTH(fechapago) ORDER BY mes;";*/
-
         $sql = "SELECT DATE_FORMAT(fechapago, '%Y-%m') AS periodo, SUM(total) AS total_venta
                 FROM facturas
                 WHERE fechapago >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) AND estado = 'Paga' AND id_sucursal = $idsucursal
@@ -180,5 +176,10 @@ class facturas extends \App\Models\ActiveRecord {
         return $array;
     }
 
-    
+
+    public static function despachosPendientes(int $idsucursal):?array{
+        $sql = "SELECT * FROM facturas f WHERE (f.estado = 'Paga' OR f.estado = 'Remision') AND (f.entrega = 'Domicilio' OR f.entrega = 'Presencial') AND f.entregado = 0 AND id_sucursal = $idsucursal;";
+        $result = self::camposJoinObj($sql);
+        return $result;
+    }
 }

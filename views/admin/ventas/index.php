@@ -189,13 +189,11 @@
                 <?php  if($user['perfil']>3)echo 'disabled';?>
               >
                 <?php foreach($usuarios as $value): ?>
-                  <option 
+                  <option
                     value="<?php echo $value->id;?>"
                     data-comision="<?php echo $value->porcentajeganancia??0; ?>"
                     <?php if($value->id === $user['id'])echo 'selected'; ?> 
-                  > 
-                    <?php echo $value->nombre.' '.$value->apellido;?> 
-                  </option>
+                  ><?php echo $value->nombre.' '.$value->apellido;?></option>
                 <?php endforeach;  ?>
               </select>
 

@@ -164,6 +164,7 @@ $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
 $router->get('/admin/reportes/ventaProductosUsuarios', [reportescontrolador::class, 'ventaProductosUsuarios']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
+$router->get('/admin/reportes/remisiones', [reportescontrolador::class, 'remisiones']);
 $router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
 $router->get('/admin/reportes/creditos/cuotas-creditos', [reportescontrolador::class, 'cuotasCreditos']);
 $router->get('/admin/reportes/creditos/creditos-finalizados', [reportescontrolador::class, 'creditosFinalizados']);
@@ -336,6 +337,7 @@ $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifacturaspagas']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/remisiones', [reportescontrolador::class, 'apiRemisiones']);  //fetch llamado desde remisiones.ts
 $router->post('/admin/api/reportes/creditos/estadosFinancieros', [reportescontrolador::class, 'estadosFinancierosCreditos']);  //fetch llamado desde reportes/creditos.ts
 $router->post('/admin/api/reportes/creditos/cuotasCreditos', [reportescontrolador::class, 'apiCuotasCreditos']);  //fetch llamado desde cuotascreditoss.ts
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts

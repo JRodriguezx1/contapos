@@ -6,10 +6,10 @@
         <span class="sr-only">Atrás</span>
     </button>
     <div class="flex flex-wrap gap-2 mt-4 mb-6 pb-4 border-b-2 border-blue-600">
-        <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
-            <button id="btnfacturar" class="btn-command"><span class="material-symbols-outlined">attach_money</span>Procesar pago</button>
+        <?php if($factura->cambioaventa == 0 && ($factura->estado=='Guardado' || $factura->estado=='Remision')):?>
+            <button id="btnfacturar" title="Procesar pago de cotizaciones y remisiones. Solo para las cotizaciones se descuenta de inventario" class="btn-command"><span class="material-symbols-outlined">attach_money</span>Procesar pago</button>
         <?php endif; ?>
-        <?php if($factura->estado=='Paga'):?>
+        <?php if($factura->estado=='Paga' || $factura->estado=='Remision'):?>
             <button id="btneliminarorden" class="btn-command"><span class="material-symbols-outlined">delete</span>Eliminar orden</button>
         <?php endif; ?>
         <?php if($factura->estado=='Paga' || $factura->estado=='Eliminada'):?>
@@ -25,14 +25,14 @@
             <button id="enviarEmail" class="btn-command text-center"><span class="material-symbols-outlined">mail</span>Enviar factura</button>
         <?php endif; ?>
             <!--<a class="btn-command text-center" href="/admin/caja/detalleorden?id=<?php //echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle orden</a>-->
-        <?php if($factura->estado=='Guardado' && $factura->cambioaventa == 0):?>
+        <?php if($factura->cambioaventa == 0 && ($factura->estado=='Guardado' || $factura->estado == 'Remision')):?>
             <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
             <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura Electronica</a>
         <?php endif; ?>
-        <?php if($factura->estado=='Paga' && $factura->entrega == 'Domicilio' && $factura->entregado == 0):?>
-            <button id="btnDespachar" class="btn-command"><span class="material-symbols-outlined">delivery_truck_speed</span>Marcar despachado</button>
+        <?php if($factura->entregado == 0 && ($factura->estado=='Paga' && $factura->entrega == 'Domicilio' || $factura->estado == 'Remision')):?>
+            <button id="btnDespachar" title="Solo para facturas pendientes de despachar y remisiones" class="btn-command"><span class="material-symbols-outlined">delivery_truck_speed</span>Marcar despachado</button>
         <?php endif; ?>
         <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
     </div>
@@ -48,7 +48,7 @@
         </div>
         <div>
             <span class="m-0 text-slate-500 text-xl font-semibold">Estado: </span>
-            <span id="textEstado" class="m-0 text-slate-500 text-xl"><?php echo ($factura->entrega=='Domicilio' && $factura->entregado==0)?'Pendiente de despacho':($factura->entrega=='Presencial' && $factura->entregado==1 ? 'Presencial':'Domicilio entregado');?></span>
+            <span id="textEstado" class="m-0 text-slate-500 text-xl"><?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)?'Pendiente de despacho':($factura->entrega=='Presencial' && $factura->entregado==1 ? 'Presencial':'Domicilio/Presencial entregado');?></span>
         </div>
     </div>
 
@@ -67,7 +67,7 @@
         </div>
         <div class="flex-1 text-center border-l border-gray-300">
             <p class="font-bold">Estado Orden</p>
-            <p id="estadoOrden" class="mb-2"><?php echo ($factura->tipoventa =='Contado'|| $factura->tipoventa =='')?$factura->estado:"Credito - F. $factura->estado";?></p>
+            <p id="estadoOrden" class="mb-2"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
             <p class="m-0 text-gray-600 text-xl font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
         </div>
     </div>
@@ -271,34 +271,36 @@
 
 
      <!-- MODAL DE MAS OPCIONES -->
-  <dialog id="miDialogoMasOpciones" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
-    <!-- Encabezado -->
-    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-      <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Mas opciones</h4>
-      <button class="rounded-lg hover:bg-gray-100 transition">
-        <i id="btnXCerrarMasOpciones" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
-      </button>
-    </div>
+    <dialog id="miDialogoMasOpciones" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Mas opciones</h4>
+            <button class="rounded-lg hover:bg-gray-100 transition">
+                <i id="btnXCerrarMasOpciones" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
+            </button>
+        </div>
 
-    <!-- Opciones -->
-    <div class="grid gap-4">
-        <button id="btnImprimirTirilla" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
-            <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-                <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-                Imprimir factura tirilla
-            </span>
-            <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-        </button>
+        <!-- Opciones -->
+        <div class="grid gap-4">
+            <button id="btnImprimirTirilla" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
+                <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+                    <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+                    Imprimir factura tirilla
+                </span>
+                <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+            </button>
 
-      <button id="btnOrdenEnvio" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
-        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-          Imprimir Orden de entrega
-        </span>
-        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-      </button>
-    </div>
-  </dialog>
+            <?php if($factura->estado=='Paga' || $factura->remision == 1):?>
+            <button id="btnOrdenEnvio" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
+                <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+                    <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+                    Imprimir Orden de entrega
+                </span>
+                <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+            </button>
+            <?php endif; ?>
+        </div>
+    </dialog>
 
 
     <!-- MODAL PARA ELIMINAR ORDEN-->
