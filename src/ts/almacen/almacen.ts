@@ -213,7 +213,7 @@
         }
 
         function aumentarStock(e:Event){
-            modalStock.textContent = "Ingreasar cantidad a inventario"
+            modalStock.textContent = "Ingresar cantidad a inventario"
             endponit = "aumentarstock";
             indiceFila = (tablaStockRapido as any).row((e.target as HTMLElement).closest('tr')).index();
             miDialogoStock.showModal();
@@ -400,7 +400,7 @@
                     document.querySelector('#nombreItemAProducir')!.textContent = selectitemAproducir.options[selectitemAproducir.selectedIndex].textContent;
                     if(index === 0){
                         endponit = "aumentarstock";
-                        document.querySelector('#modalIngresarProduccion')!.textContent = "Ingreasar produccion a inventario";
+                        document.querySelector('#modalIngresarProduccion')!.textContent = "Ingresar produccion a inventario";
                     }
                     if(index === 1){
                         endponit = "descontarstock";

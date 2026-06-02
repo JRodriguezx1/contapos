@@ -29,9 +29,7 @@
             <button id="ingresarProduccion" class="btnproduccion btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-green-500">assignment_add</span>Ingresar Produccion</button>
             <button id="descontarProduccion" class="btnproduccion btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-red-500">playlist_remove</span>Descontar Cantidad</button>
             <button id="ajustarProduccion" class="btnproduccion btn-command !border-0 shadow-lg"><span class="material-symbols-outlined text-cyan-500">checkbook</span>Ajustar Cantidad</button>
-        </div>
-
-        
+        </div>    
 
     </div>
 
@@ -68,39 +66,60 @@
         </div>
     
 
-    <dialog id="miDialogoIngresarProduccion" class="midialog-sm p-5">
-        <h4 id="modalIngresarProduccion" class="font-semibold text-gray-600 mb-4">Ingreasar produccion a inventario</h4>
-        <div id="divmsjalerta1"></div>
-        <form id="formIngresarProduccion" class="formulario" action="/" method="POST">
+<dialog id="miDialogoIngresarProduccion" class="midialog-sm !p-12">
+    <h4 id="modalIngresarProduccion" class="font-semibold text-gray-600 mb-4">
+        Ingreasar produccion a inventario
+    </h4>
 
-            
-            <p id="nombreItemAProducir" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg"> </p>
+    <div id="divmsjalerta1"></div>
 
-            <div class="formulario__campo">
-                <label class="formulario__label" for="selectIngresarProduccionUnidadmedida">Unidad de medida</label>
-                <select class="formulario__select" id="selectIngresarProduccionUnidadmedida" name="selectIngresarProduccionUnidadmedida" required>
-                    <option value="" disabled selected>-Seleccionar-</option>
+    <form id="formIngresarProduccion" class="formulario" action="/" method="POST">
 
-                </select>       
+        <p id="nombreItemAProducir" class="inline-block mt-2 px-4 py-2 text-gray-900 text-2xl font-bold self-center rounded-lg shadow-lg">
+        </p>
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="selectIngresarProduccionUnidadmedida">
+                Unidad de medida
+            </label>
+
+            <select
+                class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                id="selectIngresarProduccionUnidadmedida"
+                name="selectIngresarProduccionUnidadmedida"
+                required>
+                <option value="" disabled selected>-Seleccionar-</option>
+            </select>
+        </div>
+
+        <div class="formulario__campo">
+            <label class="formulario__label" for="stockIngresarProduccion">
+                Cantidad
+            </label>
+
+            <div class="formulario__dato">
+                <input
+                    class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                    id="stockIngresarProduccion"
+                    type="number"
+                    min="0"
+                    placeholder="Precio de venta"
+                    value=""
+                    required>
             </div>
+        </div>
 
-            <div class="formulario__campo">
-                <label class="formulario__label" for="stockIngresarProduccion">Cantidad</label>
-                <div class="formulario__dato">
-                    <input class="formulario__input" 
-                           id="stockIngresarProduccion" 
-                           type="number" 
-                           min="0" 
-                           placeholder="Precio de venta"  
-                           value="" 
-                           required
-                    >
-                </div>
-            </div>
+        <div class="text-right">
+            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[140px]"
+                    type="button"
+                    value="salir">
+                Salir
+            </button>
 
-            <div class="text-right">
-                <button class="btn-md btn-red" type="button" value="salir">Salir</button>
-                <input id="btnIngresarProduccion" class="btn-md btn-blue" type="submit" value="Ingresar">
-            </div>
-        </form>
-    </dialog>
+            <input id="btnIngresarProduccion"
+                   class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[140px]"
+                   type="submit"
+                   value="Ingresar">
+        </div>
+    </form>
+</dialog>

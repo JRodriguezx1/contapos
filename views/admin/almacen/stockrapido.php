@@ -66,7 +66,7 @@
 
 <!-- MODAL PARA AJUSTAR SUMAR, PRODUCIR O DESCONTAR UNUDADES-->
   <dialog class="midialog-sm !p-12" id="miDialogoStock">
-      <h4 id="modalStock" class="font-semibold text-gray-600 mb-4">Ingreasar cantidad a inventario</h4>
+      <h4 id="modalStock" class="font-semibold text-gray-600 mb-4">Ingresar cantidad a inventario</h4>
       <div id="divmsjalertaStock"></div>
       <form id="formStock" class="formulario" action="/" method="POST">
 

@@ -271,34 +271,51 @@
 
 
      <!-- MODAL DE MAS OPCIONES -->
-  <dialog id="miDialogoMasOpciones" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
-    <!-- Encabezado -->
-    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-      <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Mas opciones</h4>
-      <button class="rounded-lg hover:bg-gray-100 transition">
-        <i id="btnXCerrarMasOpciones" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
-      </button>
-    </div>
+    <dialog id="miDialogoMasOpciones"
+        class="rounded-2xl border border-gray-200 w-[95%] max-w-lg p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
-    <!-- Opciones -->
-    <div class="grid gap-4">
-        <button id="btnImprimirTirilla" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
-            <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-                <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-                Imprimir factura tirilla
-            </span>
-            <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-        </button>
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h4 id="modalMasOpciones" class="text-3xl font-bold text-indigo-700">
+                Más opciones
+            </h4>
 
-      <button id="btnOrdenEnvio" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
-        <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-          <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
-          Imprimir Orden de entrega
-        </span>
-        <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
-      </button>
-    </div>
-  </dialog>
+            <button type="button"
+                class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <i id="btnXCerrarMasOpciones"
+                    class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
+            </button>
+        </div>
+
+        <!-- Opciones -->
+        <div class="grid gap-4">
+            <button id="btnImprimirTirilla"
+                class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all duration-200">
+
+                <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+                    <span class="material-symbols-outlined text-indigo-600 text-3xl">
+                        receipt_long
+                    </span>
+                    Imprimir factura tirilla
+                </span>
+
+                <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+            </button>
+
+            <button id="btnOrdenEnvio"
+                class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all duration-200">
+
+                <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+                    <span class="material-symbols-outlined text-indigo-600 text-3xl">
+                        local_shipping
+                    </span>
+                    Imprimir orden de entrega
+                </span>
+
+                <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+            </button>
+        </div>
+    </dialog>
 
 
     <!-- MODAL PARA ELIMINAR ORDEN-->
