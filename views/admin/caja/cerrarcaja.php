@@ -392,7 +392,9 @@
                                 <td class="accionestd">
                                 <div class="acciones-btns" id="<?php echo $value->id;?>">
                                     <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
-                                    <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                    <?php if($value->estado=='Paga'): ?>
+                                        <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                    <?php endif; ?>
                                 </div>
                                 </td>
                             </tr>
