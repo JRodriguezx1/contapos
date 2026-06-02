@@ -392,8 +392,11 @@ class creditosService {
                 $separdoMediopago->delete_regs('id', $idseparadomediopago);
             //devolver a inventario
             $productos = $productosRepo->obtenerPorCredito($credito->id);
-            foreach($productos as $obj)
+            foreach($productos as $obj){
               $obj->idproducto = $obj->idproducto;
+              $obj->stock = $obj->cantidad;
+              $obj->stockaux =  $obj->promediostock>0?$obj->cantidad/$obj->promediostock:0;
+            }
             ventasService::addIventarioXVenta($productos);
 
             //acatualizar deuda de cliente
@@ -571,7 +574,7 @@ class creditosService {
 
         //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de idproducto
         foreach($nuevosproductosFront as $itemfront){
-            $itemfront->idproducto = $itemfront->idproducto;
+            
           foreach($detalleProductosDB as $itemDB){
             if($itemfront->idcredito == $itemDB->idcredito){
               if($itemfront->idproducto == $itemDB->idproducto){
@@ -582,12 +585,16 @@ class creditosService {
                     $itemClone = clone $itemDB;
                     $itemClone->idproducto = $itemDB->idproducto;
                     $itemClone->cantidad = $diferencia;
+                    $itemClone->stock = $diferencia;
+                    $itemClone->stockaux = $itemClone->promediostock>0?$itemClone->stock/$itemClone->promediostock:0;
                     $arrayDownInv[] = $itemClone;
                 }elseif ($itemDB->cantidad > $itemfront->cantidad){ //aumentar diferencia a inv
                     $diferencia = $itemDB->cantidad-$itemfront->cantidad;
                     $itemClone = clone $itemDB;
                     $itemClone->idproducto = $itemDB->idproducto;
                     $itemClone->cantidad = $diferencia;
+                    $itemClone->stock = $diferencia;
+                    $itemClone->stockaux = $itemClone->promediostock>0?$itemClone->stock/$itemClone->promediostock:0;
                     $arrayUpInv[] = $itemClone;
                 }
                 break;
@@ -602,15 +609,21 @@ class creditosService {
         foreach($detalleProductosDB as $key => $value){
             $value->idproducto = $value->idproducto;
             if(!in_array($value->id, $idsdetalleproductos)){
+                $value->stockaux = $value->promediostock>0?$value->cantidad/$value->promediostock:0;
                 $arrayIdeliminar[] = $value->id;
                 $arrayProductsEliminar[] = $value;
             }
         }
-            //registros a insertar
+
+        //registros a insertar
         foreach ($nuevosproductosFront as $value){
             if(is_numeric($value->id))$arrayactualizar[] = $value;
-            if($value->id=='') $nuevosproductos[] = $value;
+            if($value->id==''){
+                $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
+                $nuevosproductos[] = $value;
+            }
         }
+
 
         //acatualizar deuda de cliente
         $cliente = clientes::find('id', $credito->cliente_id);

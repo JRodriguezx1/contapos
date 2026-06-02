@@ -513,7 +513,7 @@ class cajacontrolador{
     isadmin();
     //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $despachosPendientes = facturas::whereArray(['estado'=>'Paga', 'entrega'=>'Domicilio', 'entregado'=>0, 'id_sucursal'=>id_sucursal()]);
+    $despachosPendientes = facturas::despachosPendientes(id_sucursal());
     $router->render('admin/caja/despachosPendientes', ['titulo'=>'Caja', 'despachosPendientes'=>$despachosPendientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
@@ -963,6 +963,7 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     $datos = cajaService::despacharOrden($id);
     echo json_encode($datos);
+    return;
   }
 
 }

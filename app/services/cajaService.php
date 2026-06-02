@@ -94,23 +94,52 @@ class cajaService {
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $factura = facturas::find('id', $id);
+        $productos = ventas::idregistros('idfactura', $factura->id);
+
+        //CAMBIA EL id POR EL idproducto
+        $idsProductos = [];
+        foreach($productos as $value){
+        $value->id = $value->idproducto;
+        $value->stock = $value->cantidad;
+        $idsProductos[] = $value->idproducto;
+        $mapCarrito[$value->idproducto] = $value->stock;
+        $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
+        }
+
+        /*
+        $conflocal = config_local::getParamCaja();
+        //////// CALCULAR PRODUCTOS AGOTADOS /////////
+        if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){ //no permitir vender sin stock
+            $productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
+            foreach($productosDB as $item){
+                if(($item->stock - $mapCarrito[$item->productoid])<0){
+                $alertas['error'][] = "Productos agotados, no es posible vender";
+                echo json_encode($alertas);
+                return;
+                }
+            }
+        }*/
+
         $getDB = facturas::getDB();
-        if($factura->entregado == 0 && $factura->entrega == 'Domicilio'){
+        if($factura->entregado == 0 && ($factura->estado == 'Paga' || $factura->estado == 'Remision')){
             $factura->entregado = 1;
             $factura->fechaentrega = date('Y-m-d H:i:s');
             $getDB->begin_transaction();
             try {
+                $resultArray = ventasService::reducirIventarioXVenta($productos);
                 $factura->actualizar();
                 $getDB->commit();
                 $alertas['exito'][] = "Orden despachada.";
+                return $alertas;
             } catch (\Throwable $th) {
                 $getDB->rollback();
-                $alerta['error'][] = "Error al procesar solicitud >>".$th->getMessage();
+                $alertas['error'][] = "Error al procesar solicitud >>".$th->getMessage();
+                return $alertas;
             }
         }else{
-            $alerta['error'][] = "Error, verificar si ya se despacho como domicilio";
+            $alertas['error'][] = "Error, verificar si ya se despacho como domicilio";
+            return $alertas;
         }
-        return $alertas;
         
     }
     

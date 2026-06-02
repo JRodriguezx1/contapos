@@ -58,7 +58,8 @@ class ventasService {
         }
 
         if(!empty($resultArray['productosSimples'])){
-            $invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+            //$invPro = stockproductossucursal::reduceinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+            $invPro = stockproductossucursal::reducirMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
             //registrar descuento de movimiento de invnetario
             $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
             $returnProductos = stockproductossucursal::camposJoinObj($query);
@@ -67,7 +68,8 @@ class ventasService {
         //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
         if($invPro && !empty($reduceSub)){
             //$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
-            $invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            //$invSub = stockinsumossucursal::reduceinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            $invSub = stockinsumossucursal::reducirMultiplesColumnas($reduceSub, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
             //registrar descuento de movimiento de invnetario
             $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);
@@ -126,15 +128,17 @@ class ventasService {
 
         //////// sumar del inventario los productos simples ////////
         if(!empty($resultArray['productosSimples'])){//$invPro = productos::addinv($resultArray['productosSimples'], 'stock');
-            $invPro = stockproductossucursal::addinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
-        //registrar suma de movimiento de invnetario
+            //$invPro = stockproductossucursal::addinv1condicion($resultArray['productosSimples'], 'stock', 'productoid', "sucursalid = ".id_sucursal());
+            $invPro = stockproductossucursal::aumentarMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
+            //registrar suma de movimiento de invnetario
             $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
             $returnProductos = stockproductossucursal::camposJoinObj($query);
             stockService::upStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'devolucion', 'retorno de unidades por anulacion de venta');
         }
             //////// sumar del inventario la variable reduceSub que es el total de subproductos a descontar
         if($invPro && !empty($reduceSub)){//$invSub = subproductos::addinv($reduceSub, 'stock');
-            $invSub = stockinsumossucursal::addinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            //$invSub = stockinsumossucursal::addinv1condicion($reduceSub, 'stock', 'subproductoid', "sucursalid = ".id_sucursal());
+            $invSub = stockinsumossucursal::aumentarMultiplesColumnas($reduceSub, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
             //registrar suma de movimiento de invnetario
             $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
             $returnInsumos = stockinsumossucursal::camposJoinObj($query);

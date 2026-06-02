@@ -214,7 +214,7 @@ const configdatatablesajustarcostos = {
 ///////////////////// CONFIGURACION DEL PLUGIN DATATABLES PARA CAJA/////////////////////
 const configdatatablescaja = {
   "paging": false,
-  "order": [[ 3, 'desc' ]],
+  "order": [[ 4, 'desc' ]],
   "searching": false,
   "ordering": true,
   "info": true,

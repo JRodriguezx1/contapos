@@ -193,7 +193,7 @@
       });
 
 
-      btnOrdenEnvio.addEventListener('click', ()=>{
+      btnOrdenEnvio?.addEventListener('click', ()=>{
         miDialogoRemision.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       });
@@ -368,10 +368,10 @@
       }
   
       function printTicketPOS(idfactura:string){
-      setTimeout(() => {
-        window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
-      }, 1200);
-    }
+        setTimeout(() => {
+          window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
+        }, 1200);
+      }
 
       function ordenpagada(){
         if(btnfacturar)btnfacturar.style.display = "none";

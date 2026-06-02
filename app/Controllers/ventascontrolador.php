@@ -57,7 +57,7 @@ class ventascontrolador{
       if(!is_numeric($id))return;
       //obtener datos de la factura guardada o cotizacion
       $facturacotz = facturas::find('id', $id);
-      if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0 && $facturacotz->id_sucursal == $idsucursal){
+      if(($facturacotz->cotizacion == 1 || $facturacotz->remision == 1) && $facturacotz->cambioaventa == 0 && $facturacotz->id_sucursal == $idsucursal){
         $productoscotz = ventas::idregistros('idfactura', $id);
         $num_orden = $facturacotz->num_orden;
       }else{ 
@@ -252,6 +252,7 @@ class ventascontrolador{
         if(!empty($_POST['id'])&&$_POST['estado']=='Paga'){ //crear nuevo registro para cotizacion que se va a facturar
           $factura->compara_objetobd_post($_POST);
           //$factura->cotizacion = 1;
+          $factura->fechapago = date('Y-m-d H:i:s');
           $factura->cambioaventa = 1;
           $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
           $factura->estado =  'Paga';
@@ -302,7 +303,7 @@ class ventascontrolador{
               return;
             }
           }
-          if($_POST['estado']=='Guardado' || $_POST['estado']=='Remision')$r = $factura->crear_guardar();  //crear factura o cotizacion segun estado que se envia desde ventas.ts
+          if($_POST['estado']=='Guardado' || $_POST['estado']=='Remision')$r = $factura->crear_guardar();  //crear remision o cotizacion segun estado que se envia desde ventas.ts
         }
 
         if($r[0]&&$c || $Ctz){
@@ -371,22 +372,25 @@ class ventascontrolador{
               if($ru){
 
                 //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples'])){
-                  $invPro = stockproductossucursal::reducirMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
-                  //registrar descuento de movimiento de invnetario
-                  $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
-                  $returnProductos = stockproductossucursal::camposJoinObj($query);
-                  stockService::downStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'venta', 'descuento de unidades por venta');
+                if($_POST['entregado']==1){
+                  if(!empty($resultArray['productosSimples'])){
+                    $invPro = stockproductossucursal::reducirMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
+                    //registrar descuento de movimiento de invnetario
+                    $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                    $returnProductos = stockproductossucursal::camposJoinObj($query);
+                    stockService::downStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'venta', 'descuento de unidades por venta');
+                  }
+                  //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
+                  if($invPro && !empty($reduceSub)){
+                    //$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
+                    $invSub = stockinsumossucursal::reducirMultiplesColumnas($reduceSub, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
+                    //registrar descuento de movimiento de invnetario
+                    $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
+                    $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                    stockService::downStock_movimientoInsumos($reduceSub, $returnInsumos, 'venta', 'descuento de unidades por venta');
+                  }
                 }
-                //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub)){
-                  //$invSub = subproductos::updatereduceinv($reduceSub, 'stock');
-                  $invSub = stockinsumossucursal::reducirMultiplesColumnas($reduceSub, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
-                  //registrar descuento de movimiento de invnetario
-                  $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
-                  $returnInsumos = stockinsumossucursal::camposJoinObj($query);
-                  stockService::downStock_movimientoInsumos($reduceSub, $returnInsumos, 'venta', 'descuento de unidades por venta');
-                }
+
                 if($invPro){
                   if($invSub){
 
@@ -461,8 +465,7 @@ class ventascontrolador{
             }
 
           }else{
-
-      ////////////// SI ES COTIZACION O SI SE VA A GUARDAR LA FACTURA ///////////////
+            ////////////// SI ES COTIZACION O REMISION ///////////////
             if(($factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id'])) && ($factura->cotizacion == 1 && $_POST['estado']=='Guardado' || $factura->cotizacion == 0 && $_POST['estado']=='Remision')){
               //algoritmo si se cambia la cotizacion/remision como productos, cantidades valores etc.
               $idsExistentes = ventas::multicampos('idfactura', $factura->id, 'id');
@@ -636,7 +639,7 @@ class ventascontrolador{
       
       if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
 
-        if($factura && $factura->estado == "Guardado"){  // si la factura guardada existe
+        if($factura && ($factura->estado == "Guardado" || $factura->estado == "Remision")){  // si la factura guardada existe
             $factura->compara_objetobd_post($_POST);
             $factura->estado = 'Aceptada';
             $r = $factura->actualizar();
@@ -646,6 +649,7 @@ class ventascontrolador{
             $factura->cambioaventa = 1;
             $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
             $factura->estado = 'Paga';
+            $factura->fechapago = date('Y-m-d H:i:s');
             //calcular ultimo num_orden
             $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
             
@@ -738,22 +742,25 @@ class ventascontrolador{
             if($r1[0] && $r3[0]){
               $ru = $ultimocierre->actualizar();
               if($ru){
-                //////// descontar del inventario los productos simples ////////
-                if(!empty($resultArray['productosSimples'])){
-                  $invPro = stockproductossucursal::reducirMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
-                  //registrar descuento de movimiento de invnetario
-                  $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
-                  $returnProductos = stockproductossucursal::camposJoinObj($query);
-                  stockService::downStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'venta', 'descuento de unidades por venta');
+                if($factura->cotizacion == 1){  //solo se descuenta de inventario cunado la cotizacion se paga.
+                  //////// descontar del inventario los productos simples ////////
+                  if(!empty($resultArray['productosSimples'])){
+                    $invPro = stockproductossucursal::reducirMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
+                    //registrar descuento de movimiento de invnetario
+                    $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
+                    $returnProductos = stockproductossucursal::camposJoinObj($query);
+                    stockService::downStock_movimientoProductos($resultArray['productosSimples'], $returnProductos, 'venta', 'descuento de unidades por venta');
+                  }
+                    //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
+                  if($invPro && !empty($reduceSub)){
+                    $invSub = stockinsumossucursal::reducirMultiplesColumnas($reduceSub, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
+                    //registrar descuento de movimiento de invnetario
+                    $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
+                    $returnInsumos = stockinsumossucursal::camposJoinObj($query);
+                    stockService::downStock_movimientoInsumos($reduceSub, $returnInsumos, 'venta', 'descuento de unidades por venta');
+                  }
                 }
-                  //////// descontar del inventario la variable reduceSub que es el total de subproductos a descontar
-                if($invPro && !empty($reduceSub)){
-                  $invSub = stockinsumossucursal::reducirMultiplesColumnas($reduceSub, ['stock', 'stockaux'], 'subproductoid', "sucursalid = ".id_sucursal());
-                  //registrar descuento de movimiento de invnetario
-                  $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $soloIdInsumos).") AND sucursalid = ".id_sucursal().";";
-                  $returnInsumos = stockinsumossucursal::camposJoinObj($query);
-                  stockService::downStock_movimientoInsumos($reduceSub, $returnInsumos, 'venta', 'descuento de unidades por venta');
-                }
+                  
                 if($invPro){
                   if($invSub){
                     $alertas['idfactura'] = $factura->id;
@@ -1013,7 +1020,7 @@ class ventascontrolador{
       if(!is_numeric($id))return;
       //obtener datos de la factura guardada o cotizacion
       $facturacotz = facturas::uniquewhereArray(['id'=>$id, 'id_sucursal'=>id_sucursal()]);
-      if($facturacotz->cotizacion == 1 && $facturacotz->cambioaventa == 0){
+      if(($facturacotz->cotizacion == 1 || $facturacotz->remision == 1) && $facturacotz->cambioaventa == 0){
         $productoscotz = ventas::idregistros('idfactura', $id);
         foreach($productoscotz as $value){ //convertir a tipo de dato numero
           $value->valorunidad = (int)$value->valorunidad;

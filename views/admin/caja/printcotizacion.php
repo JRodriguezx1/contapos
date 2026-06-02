@@ -60,7 +60,7 @@
                         <div class="flex flex-col gap-x-1 pt-8 text-lg leading-normal">
                             <p class="font-medium min-w-36 max-w-[200px] text-gray-800">
                                 <span class="uppercase"> Fecha y Hora de Cotización</span> <br>
-                                <span class=" font-normal text-gray-400"><?php echo $factura->fechapago??'';?></span>
+                                <span class=" font-normal text-gray-400"><?php echo $factura->fechacreacion??'';?></span>
                             </p>
                             <p class="font-medium text-gray-800 mt-4">
                                 <span class="uppercase">Pago no procesado</span> <br>

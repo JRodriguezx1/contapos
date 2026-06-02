@@ -82,6 +82,13 @@ class reportescontrolador{
     }
 
 
+    public static function remisiones(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $router->render('admin/reportes/facturas/remisiones', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    }
+
+
     public static function creditos(Router $router){
         //session_start();
         isadmin();
@@ -501,8 +508,8 @@ class reportescontrolador{
 
 
   //Facturas procesadas como pagas
-  public static function apifacturaspagas(){
-    //session_start();
+  public static function apifacturaspagas():void{
+    $facturas = [];
     isadmin();
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
@@ -511,6 +518,20 @@ class reportescontrolador{
       $facturas = facturas::whereArrayBETWEEN('fechapago', $fechainicio, $fechafin, ['estado'=>'Paga', 'id_sucursal'=>$idsucursal]);
     }
     echo json_encode($facturas);
+    return;
+  }
+
+  public static function apiRemisiones():void{
+    $facturas = [];
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $sql = "SELECT *FROM facturas WHERE fechapago BETWEEN '$fechainicio' AND '$fechafin' AND remision = 1 AND (estado = 'Remision' OR estado = 'Paga') AND id_sucursal = $idsucursal";
+    if($_SERVER['REQUEST_METHOD'] === 'POST' )
+      $facturas = facturas::camposJoinObj($sql);
+    echo json_encode($facturas);
+    return;
   }
 
   //estado financiero solo de separados

@@ -12,6 +12,7 @@
             idunidadmedida:string,
             tipoproducto:string,
             tipoproduccion:string,
+            promediostock:number,
             rendimientoestandar?:string,
             factor?:number,
             nombreproducto:string,
@@ -34,6 +35,7 @@
             valorunidad:number,
             descuento:number,  //se calcula para productos nuevos agregados
             cantidad:number,   //se calcula para productos nuevos agregados
+            stock?:number,
             base:number,       //se calcula para productos nuevos agregados
             impuesto:string,
             valorimp:number,   //se calcula para productos nuevos agregados
@@ -49,7 +51,8 @@
             tipoproducto:string, 
             tipoproduccion:string, 
             sku:string, 
-            unidadmedida:string, 
+            unidadmedida:string,
+            promediostock:number,
             preciopersonalizado:string,
             rendimientoestandar:string, 
             stockminimo:string,
@@ -64,13 +67,13 @@
             facturaid: number,
             basegravable: number,
             valorimpuesto: number
-            }
+        }
 
 
         let factimpuestos:Item[] = [];
         let carrito:i_itemDetalle[]=[];
         let allproducts:i_allProducts[] = [];
-        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
+        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string, promediostock:number}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
         const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, total: 0}; //datos global de la venta
         const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
 
@@ -87,7 +90,7 @@
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
                 const resultado:i_allProducts[] = await respuesta.json();
-                filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida }));
+                filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida, promediostock: item.promediostock }));
                 activarselect2();
                 allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
             } catch (error) {
@@ -113,6 +116,7 @@
                             idunidadmedida: item.idunidadmedida,
                             tipoproducto: item.tipoproducto, 
                             tipoproduccion: item.tipoproduccion,
+                            promediostock: Number(item.promediostock),
                             rendimientoestandar: item.rendimientoestandar,
                             nombreproducto: item.nombreproducto, 
                             unidadmedida: item.unidadmedida,
@@ -122,6 +126,7 @@
                             valorunidad: Number(item.valorunidad),
                             descuento: Number(item.descuento), //descuento del producto
                             cantidad: Number(item.cantidad),
+                            stock: Number(item.cantidad),
                             base: Number(item.base),
                             impuesto: item.impuesto,
                             valorimp: Number(item.valorimp),
@@ -186,6 +191,7 @@
                         //tipo: itemselected.tipo,  ////tipo = 0 es producto (simple o compuesto produccion),  1 = subproducto
                         tipoproducto: productSelected.tipoproducto, 
                         tipoproduccion: productSelected.tipoproduccion,
+                        promediostock: Number(productSelected.promediostock),
                         rendimientoestandar: productSelected.rendimientoestandar,
                         nombreproducto: productSelected.nombre, 
                         unidadmedida: productSelected.unidadmedida,
@@ -195,6 +201,7 @@
                         valorunidad: Number(productSelected.precio_venta),
                         descuento: 0,
                         cantidad: cantidad,
+                        stock: cantidad,
                         base: productototal-productovalorimp,
                         impuesto: productSelected.impuesto,
                         valorimp: productovalorimp,

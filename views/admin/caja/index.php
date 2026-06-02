@@ -17,6 +17,7 @@
     <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/caja/pedidosguardados"><span class="material-symbols-outlined">folder_check_2</span>Cotizaciones</a>
     <!--<a class="btn-command text-center" href="/admin/caja/trasladosRetirosDinero"><span class="material-symbols-outlined">assured_workload</span>Traslados y retiros</a>-->
     <a class="btn-command text-center" href="/admin/caja/despachosPendientes"><span class="material-symbols-outlined">delivery_truck_speed</span>Despachos pendientes</a>
+    <a class="btn-command text-center" href="/admin/reportes/remisiones"><span class="material-symbols-outlined">format_list_bulleted</span>Remisiones</a>
   </div>
     <h5 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-4">
         Lista de Ordenes
@@ -29,7 +30,7 @@
       <thead>
           <tr>
               <th>N.</th>
-              <th>Fecha</th>
+              <th title="Fecha de pago">Fecha</th>
               <th>Caja</th>
               <th>Entrega</th>
               <th>Orden</th>
@@ -47,7 +48,7 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><div class="w-36 whitespace-normal"><?php echo $value->fechapago;?></div></td> 
               <td class=""><div class="w-24 whitespace-normal"><?php echo $value->caja;?></div></td>
-              <td class="<?php echo ($value->entrega=='Domicilio' && $value->estado == 'Paga' && $value->entregado == 1)?'text-green-500':(($value->entrega=='Domicilio'&& $value->estado == 'Paga' && $value->entregado == 0)?'text-red-500':'');?>"><?php echo $value->entrega;?></td>
+              <td class="<?php echo ($value->entrega=='Domicilio' && ($value->estado == 'Paga' || $value->estado == 'Remision') && $value->entregado == 1)?'text-green-500':(($value->entrega=='Domicilio'&& ($value->estado == 'Paga' || $value->estado == 'Remision') && $value->entregado == 0)?'text-red-500':'');?>"><?php echo $value->entrega;?></td>
               <td class=""><?php echo $value->num_orden;?></td>
               <td class=""><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
               <td>
@@ -57,12 +58,12 @@
                     <?php endforeach; ?>
                 </div>
               </td>
-              <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&&$value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':($value->estado=='Remision'?'btn-indigo':'btn-light')));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:(($value->tipoventa =='Credito' && $value->estado == 'Paga')?'Credito':'Credito elim..');?></div></td>
+              <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&&$value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':($value->estado=='Remision' || $value->estado=='Paga'&&$value->remision==1?'btn-indigo':'btn-light')));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:(($value->tipoventa =='Credito' && $value->estado == 'Paga')?'Credito':'Credito elim..');?></div></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
               <td class=""><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-cotizacion="<?php echo $value->cotizacion;?>" >
                     <a class="btn-xs btn-turquoise" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
-                    <?php if($value->estado=='Paga' || $value->estado=='Guardado'): ?>
+                    <?php if($value->estado=='Paga'): ?>
                         <button class="btn-xs btn-light printPOS" title="Imprimir en PDF POS"><i class="fa-solid fa-print"></i></button>
                     <?php endif; ?>
                     <button class="btn-xs btn-light printPDF" title="Imprimir en PDF carta"><i class="fa-solid fa-file-pdf text-red-600"></i></button>

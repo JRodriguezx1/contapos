@@ -377,7 +377,7 @@
                                 <td><?php echo $index+1;?></td>
                                 <td><div class="w-32 whitespace-normal"><?php echo $value->fechapago;?></div></td>
                                 <td><div class=" w-48 whitespace-normal"><?php echo $value->cliente;?></div></td>
-                                <td class="<?php echo ($value->entrega=='Domicilio' && $value->estado == 'Paga' && $value->entregado == 1)?'text-green-500':(($value->entrega=='Domicilio'&& $value->estado == 'Paga' && $value->entregado == 0)?'text-red-500':'');?>"><?php echo $value->entrega;?></td>
+                                <td class="<?php echo ($value->entrega=='Domicilio' && ($value->estado == 'Paga' || $value->estado == 'Remision') && $value->entregado == 1)?'text-green-500':(($value->entrega=='Domicilio'&& ($value->estado == 'Paga' || $value->estado == 'Remision') && $value->entregado == 0)?'text-red-500':'');?>"><?php echo $value->entrega;?></td>
                                 <td><?php echo $value->prefijo.''.$value->num_consecutivo;?></td>
                                 <td>
                                     <div data-estado="<?php echo $value->estado;?>" data-totalpagado="<?php echo $value->total;?>" id="<?php echo $value->id;?>" class="mediosdepago max-w-full flex flex-wrap gap-2">
@@ -386,13 +386,15 @@
                                         <?php endforeach; ?>
                                     </div>
                                 </td>
-                                <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&& $value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':($value->estado=='Remision'?'btn-indigo':'btn-light')));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
+                                <td class=""><div class="btn-xs <?php echo $value->estado=='Paga'&&$value->tipoventa=='Contado'?'btn-lima':($value->estado=='Paga'&& $value->tipoventa=='Credito'?'btn-green':($value->estado=='Guardado'?'btn-turquoise':($value->estado=='Remision' || $value->estado=='Paga'&&$value->remision==1?'btn-indigo':'btn-light')));?>"><?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:'Credito';?></div></td>
                                 <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                                 <td>$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
                                 <td class="accionestd">
                                 <div class="acciones-btns" id="<?php echo $value->id;?>">
                                     <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
-                                    <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                    <?php if($value->estado=='Paga'): ?>
+                                        <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                    <?php endif; ?>
                                 </div>
                                 </td>
                             </tr>
