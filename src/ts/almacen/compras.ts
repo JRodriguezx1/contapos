@@ -31,6 +31,18 @@
         let allConversionUnidades:conversionunidadesapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
+        function actualizarContadorProductos(): void {
+
+            const badge = document.querySelector('#contadorProductos');
+            
+            if(!badge) return;
+
+            const cantidad = carrito.length;
+            badge.textContent =
+                cantidad === 1
+                    ? '1 producto'
+                    : `${cantidad} productos`;
+        }
 
         (async ()=>{
             try {
@@ -116,6 +128,13 @@
                         valorcompra: 0,
                     }
                     carrito = [...carrito, item];
+
+                    actualizarContadorProductos();
+
+                    if(carrito.length === 1){
+                        document.querySelector('#filaVacia')?.remove();
+                    }
+
                     printItemTable(datos.id, datos.tipo, datos.unidadmedida);
                 }
             }
@@ -216,6 +235,7 @@
                     }
                 });
                 tablaCompras?.querySelector(`TR[data-id="${iditem}"][data-tipo="${tipoitem}"]`)?.remove();
+                actualizarContadorProductos();
                 resumen();
             }
 
