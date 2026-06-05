@@ -3,9 +3,17 @@
 
   const POS = (window as any).POS;
 
-  const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as any;
+  const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as HTMLDialogElement;
   const aplicarprecioadicional = document.querySelector('#aplicarprecioadicional') as HTMLButtonElement;
   const inputComisionProducto = document.querySelector('#comisionproducto') as HTMLInputElement;
+  const inputCantidadCalculada = document.querySelector('#inputCantidadCalculada') as HTMLInputElement;
+  const operationSum = document.querySelector('#operationSum') as HTMLInputElement;
+  const operationLess = document.querySelector('#operationLess') as HTMLInputElement;
+  const reset = document.querySelector('#reset') as HTMLInputElement;
+  const textCantidadCalculada = document.querySelector('#textCantidadCalculada') as HTMLParagraphElement;
+  const lastOperation = document.querySelector('#lastOperation') as HTMLParagraphElement;
+  let cantidadTotal:number = 0;
+  let historialCalculadora: string[] = [];
 
   let producto:  Partial<productsapi>|undefined = {};
 
@@ -39,14 +47,68 @@
 
     miDialogoPreciosAdicionales.close();
     document.removeEventListener("click", POS.cerrarDialogoExterno);
-    if(producto != undefined)POS.actualizarCarrito(producto.id, 1, true, true, seleccionado?.checked?seleccionado.value:producto.precio_venta);
+    if(producto != undefined)POS.actualizarCarrito(producto.id, cantidadTotal==0?1:cantidadTotal, true, true, seleccionado?.checked?seleccionado.value:producto.precio_venta);
   });
 
+
+  //****CALCULADORA
+  inputCantidadCalculada.addEventListener('keydown', (e: KeyboardEvent)=>{
+    if(e.key === '+') {
+      e.preventDefault();
+      calcular('sumar');
+    }
+    if(e.key === '-') {
+      e.preventDefault();
+      calcular('restar');
+    }
+  });
+
+  function calcular(operacion: 'sumar' | 'restar'):void{
+    const cantidad = Number(inputCantidadCalculada.value);
+    /*if(isNaN(cantidad) || inputCantidadCalculada.value === ''){
+      inputCantidadCalculada.focus();
+      return;
+    }*/
+    if(operacion === 'sumar'){
+      cantidadTotal += cantidad;
+      //lastOperation.textContent = `+${cantidad}`;
+      historialCalculadora.push(`+${cantidad}`);
+      lastOperation.textContent = historialCalculadora.join('');
+
+    }else{
+      cantidadTotal -= cantidad;
+      //lastOperation.textContent = `-${cantidad}`;
+      historialCalculadora.push(`-${cantidad}`);
+      lastOperation.textContent = historialCalculadora.join('');
+    }
+    textCantidadCalculada.textContent = cantidadTotal.toFixed(2);
+    inputCantidadCalculada.value = '';
+    inputCantidadCalculada.focus();
+  }
+
+  operationSum.addEventListener('click', ()=>calcular('sumar'));
+  operationLess.addEventListener('click', ()=>calcular('restar'));
+
+  reset.addEventListener('click', ()=>{
+    cantidadTotal = 0;
+    inputCantidadCalculada.value = '';
+    textCantidadCalculada.textContent = '0';
+    lastOperation.textContent = '0';
+    historialCalculadora.length = 0;
+  });
+  //****FIN CALCULADORA
+
+  
 
   const gestionarPreciosAdicionales = {
     miDialogoPreciosAdicionales,
     abrirDialogo(elementProduct: HTMLElement) {
+      (document.querySelector('#textCardProduct') as HTMLParagraphElement).textContent = elementProduct.querySelector('.card-producto')?.textContent??'';
       miDialogoPreciosAdicionales.showModal();
+      cantidadTotal = 0;
+      textCantidadCalculada.textContent = '0';
+      lastOperation.textContent = '0';
+      historialCalculadora.length = 0;
       const products = POS.products as productsapi[];
       producto = products.find(x=>x.id==elementProduct.dataset.id!);
       cargarPreciosAdicionales();

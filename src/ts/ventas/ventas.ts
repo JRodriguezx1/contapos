@@ -182,13 +182,14 @@
       const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio); //devuelve el index si el producto existe
       
       if(index>-1){
-        if(cantidad <= 0){
+        if(cantidad < 0 && (carrito[index].stock + cantidad)<0){
           cantidad = 0;
+          carrito[index].stock = 0;
           carrito[index].total = 0;
         }
         if(control){ //cuando el producto se agrega desde la lista de productos
           carrito[index].stock += cantidad;
-        }else{ //cuando el producto se agrega por cantidad
+        }else{ //cuando el producto se agrega por el input cantidad
           carrito[index].stock = cantidad;
         }
        
@@ -206,7 +207,7 @@
         (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
       }else{  //agregar a carrito si el producto no esta agregado en carrito, se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
-        
+        if(cantidad < 0)cantidad = 0;
         const productovalorimp = (Number(precio)*cantidad)*constImp[producto.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
         const productototal = Number(precio)*cantidad;
 
@@ -569,7 +570,7 @@
       datos.append('departamento', '');
       datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
       datos.append('entrega', tipoEntrega);
-      datos.append('entregado', estado=='Paga'&&tipoEntrega=='Domicilio'?(despachar.checked?'1':'0'):'0');
+      datos.append('entregado', estado=='Paga'&&tipoEntrega=='Domicilio'?(despachar.checked?'1':'0'):estado=='Paga'&&tipoEntrega=='Presencial'?'1':'0'); //si es remision no se ha entregado, si es pago y entrega a domicilio se define segun el checkbox de despachar, si es pago y entrega presencial se marca como entregado
       datos.append('valortarifa', valorTotal.valortarifa+'');
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
@@ -624,11 +625,12 @@
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      console.log(datainvoice);
       ////// cuando no es impresora CAJA por BT
       const isAndroid = /Android/i.test(navigator.userAgent);
 
       if(printerBT === '1'){  //solo aplica para impresora principal si es android
-        const builder = new InvoiceTicketBuilder(datainvoice);
+        const builder = new InvoiceTicketBuilder2(datainvoice);
         const ticket = await builder.generate(true); //true para version buffer bytes
         
         const base64 = bytesToBase64(ticket);

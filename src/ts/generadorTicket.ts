@@ -111,8 +111,8 @@ class EscPosBuilder {
         for(let i = 0; i < lines; i++)this.write(0x0A);  //version bytes
     }
 
-    cut() {
-        this.feed(5);
+    cut(feed:number = 5) {
+        this.feed(feed);
         this.content += '\x1D\x56\x00';  //version string
         // GS V 0
         this.write(0x1D, 0x56, 0x00);  //version bytes
@@ -428,6 +428,134 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.center('GRACIAS POR SU COMPRA');
         this.boldOff();
         this.feed(2);
+        this.center(`© ${new Date().getFullYear()} J2 Software POS Multisucursal`);
+        this.center('www.j2softwarepos.com');
+    }
+    //copy /b ticket.bin "\\localhost\\CAJA"
+}
+
+
+
+class InvoiceTicketBuilder2 extends EscPosBuilder {
+
+    private invoice: DataInvoice;
+    constructor(invoice: DataInvoice) {
+        super();
+        this.reset();
+        this.invoice = invoice;
+    }
+
+    async generate(buildBytes:boolean):Promise<string | Uint8Array> {
+        await this.header();
+        if(this.invoice.tipoFactura === '1')this.customer(); //solo factura electronica
+        this.datosFactura();
+        this.cliente();
+        this.items();
+        this.totals();
+        this.payments();
+        if(this.invoice.tipoFactura === '1')this.infoResolution();  //solo factura electronica
+        await this.footer();
+        this.cut(2);
+        return this.build(buildBytes);
+    }
+
+    private async header() {
+        await this.image(`/build/img/${this.invoice.logo}`, {
+            width: 220,
+            align: 'center'
+        });
+        this.boldOn();
+        this.center(this.invoice.negocio.toUpperCase());
+        this.boldOff();
+        this.feed(1);
+        this.center(`NIT: ${this.invoice.nit.trim()}`);
+        this.center(`SEDE: ${this.invoice.sucursal.trim().toUpperCase()}`);
+        this.center(this.invoice.direccion.trim());
+        this.center(`TEL: ${this.invoice.telefono.trim()}`);
+        //this.feed(1);
+    }
+
+    private customer() { //cliente factura electronica
+        this.center(`Cliente: ${this.invoice.consumidorfinal.name}`);
+        this.center(`NIT: ${this.invoice.consumidorfinal.identification_number}`);
+    }
+
+    private datosFactura(){
+        this.boldOn();
+        this.center(`${this.invoice.textFactura}`);
+        this.boldOff();
+        this.bold(`Factura: ${this.invoice.prefijo.trim()}${this.invoice.consecutivo.trim()}`);
+        this.text(`Fecha pago: ${this.invoice.fechaPago.trim()}`);
+        this.text(`Forma de pago: ${this.invoice.tipoventa.trim()}`);
+        //this.text(`Caja: ${this.invoice.caja.trim()}`);
+        this.text(`Vendedor: ${this.invoice.vendedor.trim()}`);
+        this.line();
+    }
+
+    private cliente(){
+        //this.feed(1);
+        this.center(`Cliente: ${this.invoice.cliente.nombre.trim()} ${this.invoice.cliente.apellido.trim()}`);
+        this.center(`Documento: ${this.invoice.cliente.identificacion?.trim()??''}`);
+        this.center(`Telefono: ${this.invoice.cliente.telefono.trim()}`);
+        this.center(`Direccion: ${this.invoice.cliente.data1?.trim()||' - '}`);
+        //this.feed(1);
+    }
+
+    private items() {
+        this.line();
+        //this.feed(1);
+        this.boldOn();
+        this.row3('CANT', 'UND', 'TOTAL', {col1:'left', col2:'right', col3:'right'}, [8, 16, 18]);
+        this.boldOff();
+        for(const item of this.invoice.items) {
+            for(const line of this.wrap(item.nombreproducto.trim()))this.center(line);
+            //this.row(`${item.cantidad}  x  $${item.valorunidad.toLocaleString()}`, '$'+item.total.toLocaleString());
+            this.row3(item.stock?.toString()||item.cantidad.toString(), '$'+item.valorunidad.toLocaleString(), '$'+item.total.toLocaleString(), {col1:'left', col2:'right', col3:'right'}, [8, 16, 18]);
+        }
+    }
+
+    private totals() {
+        this.line();
+        this.feed(1);
+        this.setAlign('right');
+        this.text(`SUBTOTAL: $${Number(this.invoice.subtotal.trim()).toLocaleString()}`);
+        this.text(`IMPUESTO: $${Number(this.invoice.valorimpuestototal.trim()).toLocaleString()}`);
+        this.bigText(`TOTAL: $${Number(this.invoice.total.trim()).toLocaleString()}`, true);
+    }
+
+    private payments() {
+        this.feed(1);
+        //this.doubleHeight();
+        this.normalSize();
+        for(const pago of this.invoice.mediospago) {
+            //this.text(`${pago.mediopago}: $${pago.valor?.toLocaleString()}`);
+            this.row3(' ', pago.mediopago+':', ` $${pago.valor?.toLocaleString()}`, {col1:'right', col2:'right', col3:'left'}, [10, 17, 15]);
+        }
+        //this.normalSize();
+        this.feed(1);
+        this.setAlign('left');
+        this.text(`Observacion: ${this.invoice.observacion}`);
+        this.line();
+        //this.feed(2);
+    }
+
+    private infoResolution(){
+        this.setAlign('left');
+        this.text(`Resolucion: ${this.invoice.resolucion.resolucion}, Rango desde: ${this.invoice.resolucion.rangoinicial} hasta ${this.invoice.resolucion.rangofinal}`);
+        this.text(`CUFE: ${this.invoice.cufe || 'fe9c733f32770f5fcc4ef954f9ef663c54c752e6c07bdc144bb00627faadf9f648818da3e96ef8293547140fb1970d22'}`);
+        this.feed(2);
+    }
+
+    private async footer() {
+        this.setAlign('center');
+        //this.qr(this.invoice.link || 'www.j2softwarepos.com/', 8, 'M');
+        const qrBytes = await this.qrRaster(this.invoice.link || this.invoice.www, 'M');
+        this.bytes.push(...qrBytes);
+        this.feed(1);
+        this.boldOn();
+        this.center('GRACIAS POR SU COMPRA');
+        this.boldOff();
+        this.feed(1);
         this.center(`© ${new Date().getFullYear()} J2 Software POS Multisucursal`);
         this.center('www.j2softwarepos.com');
     }
