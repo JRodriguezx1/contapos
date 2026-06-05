@@ -84,17 +84,17 @@
                     <div>
                         <p class="text-center text-slate-500 font-medium">Calculadora de cantidades</p>
                         <div class="flex items-center justify-center gap-4">
-                            <p class="text-slate-600">Cantidad: </p>
+                            <p class="text-slate-600 text-xl">Cantidad: </p>
                             <input 
                                 id="inputCantidadCalculada"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                                class="flex-1 min-w-32 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
                                 type="text" 
                                 placeholder="Ingresa cantidad"
                                 value=""
                                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                                 
                             >
-                            <div class="border border-gray-300 mt-2 h-14 rounded-lg text-gray-600 cursor-pointer">
+                            <div class="flex-shrink-0 border border-gray-300 mt-2 h-14 rounded-lg text-gray-600 cursor-pointer">
                                 <button id="operationSum" type="button"><i class="text-2xl fa-solid fa-plus pl-3 py-3 pr-4"></i></button>
                                 <button id="operationLess" type="button"><i class="text-2xl fa-solid fa-minus pl-3 py-3 pr-4"></i></button>
                                 <button id="reset" type="button"><i class="text-2xl fa-solid fa-power-off p-3"></i></button>
