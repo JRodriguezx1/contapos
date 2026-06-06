@@ -22,7 +22,7 @@
             <ul class="list-items z-10 hidden bg-white rounded-lg shadow-sm !mt-0 !pl-0 !pt-4 !pr-0 !min-w-0 !w-full md:w-auto">
                 <?php foreach($cajas as $value): ?>
                 <li class="flex items-center gap-2 p-3 text-lg text-gray-700 w-auto">
-                    <input class="caja scale-125" type="checkbox" id="caja<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
+                    <input class="selectedcajas scale-125" type="checkbox" id="caja<?php echo $value->id;?>" value="<?php echo $value->id;?>" checked>
                     <label class="text-xl" for="caja<?php echo $value->id;?>"><?php echo $value->nombre;?></label>
                 </li>
                 <?php endforeach; ?>
