@@ -738,15 +738,30 @@ class cajacontrolador{
     //session_start();
     isadmin();
     $alertas = [];
-
+    $idsucursal = id_sucursal();
     $conflocal = config_local::getParamGlobal();
     $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+    $separdomediospagoRepo = new separadoMediopagoRepository();
 
-    $ultimocierre = cierrescajas::uniquewhereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
+    $discriminarmediospagos=[];
+
+    $ultimocierre = cierrescajas::uniquewhereArray(['idsucursal_id'=>$idsucursal, 'estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
     $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-    $discriminarmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
+    $factmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
+    $sepMediosPago = $separdomediospagoRepo->allMediospagoXCierrecaja($ultimocierre->id);
+    foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
+        $id = $item['idmediopago'];
+        if (!isset($discriminarmediospagos[$id])) {
+            $discriminarmediospagos[$id] = $item;
+            $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
+        } else {
+            $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
+        }
+    }
+
+    $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
+    $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $_POST['idcaja'], $idsucursal);
     $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
-    //$mediospagos = mediospago::all();
     $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);  //lo que el usuario declara de forma manual.
     //////////// Indicador de caja //////////////////
       $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
@@ -776,16 +791,18 @@ class cajacontrolador{
     foreach($facturas as $value)
       $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
     
-    //$cajas = caja::all();
+    
     $alertas['exito'][] = "Cambio de caja.";
     $alertas['ultimocierre'] = $ultimocierre;
     $alertas['discriminarmediospagos'] = $discriminarmediospagos;
     $alertas['facturas'] = $facturas;
+    $alertas['discriminarimpuesto'] = $discriminarimpuesto;
+    $alertas['discriminargastos'] = $discriminargastos;
     $alertas['ventasxusuarios'] = $ventasxusuarios;
-    //$alertas['mediospagos'] = $mediospagos;
     $alertas['sobrantefaltante'] = $sobrantefaltante;
     echo json_encode($alertas);
   }
+
 
   public static function mediospagoXfactura(){  //api llamado desde caja.js me trae los medios de pago segun factura
     $id = $_GET['id'];

@@ -393,6 +393,7 @@ class InvoiceTicketBuilder extends EscPosBuilder {
         this.setAlign('right');
         this.text(`SUBTOTAL: $${Number(this.invoice.subtotal.trim()).toLocaleString()}`);
         this.text(`IMPUESTO: $${Number(this.invoice.valorimpuestototal.trim()).toLocaleString()}`);
+        this.text(`DESCUENTO: $${Number(this.invoice.descuento.trim()).toLocaleString()}`);
         this.bigText(`TOTAL: $${Number(this.invoice.total.trim()).toLocaleString()}`, true);
     }
 
@@ -455,7 +456,7 @@ class InvoiceTicketBuilder2 extends EscPosBuilder {
         this.payments();
         if(this.invoice.tipoFactura === '1')this.infoResolution();  //solo factura electronica
         await this.footer();
-        this.cut(2);
+        this.cut(1);
         return this.build(buildBytes);
     }
 
@@ -520,6 +521,7 @@ class InvoiceTicketBuilder2 extends EscPosBuilder {
         this.setAlign('right');
         this.text(`SUBTOTAL: $${Number(this.invoice.subtotal.trim()).toLocaleString()}`);
         this.text(`IMPUESTO: $${Number(this.invoice.valorimpuestototal.trim()).toLocaleString()}`);
+        this.text(`DESCUENTO: $${Number(this.invoice.descuento.trim()).toLocaleString()}`);
         this.bigText(`TOTAL: $${Number(this.invoice.total.trim()).toLocaleString()}`, true);
     }
 

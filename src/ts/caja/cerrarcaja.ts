@@ -215,7 +215,8 @@
       const ventasenefectivo = Number(obj.ventasenefectivo);
       const gastoscaja = Number(obj.gastoscaja);
       const domicilios = Number(obj.domicilios);
-      const ingresoventas = Number(obj.ingresoventas);
+      const ventasContado = Number(obj.ingresoventas); //ventas de contado ya esta aplicado los descuentos
+      const ventasACredito = Number(obj.creditocapital); //ventas a credito, aqui ya esta aplicado los descuentos
       const totaldescuentos = Number(obj.totaldescuentos);
       const abonosenefectivo = Number(obj.abonosenefectivo);
       const abonostotales = Number(obj.abonostotales);
@@ -223,7 +224,7 @@
       document.querySelector('#basecajaResumen')!.textContent = '$'+basecaja.toLocaleString();
       document.querySelector('#gastoscajaResumen')!.textContent = '$'+gastoscaja.toLocaleString();
       document.querySelector('#domiciliosResumen')!.textContent = '$'+domicilios.toLocaleString();
-      document.querySelector('#ingresoventasResumen')!.textContent = '$'+(ingresoventas).toLocaleString();
+      document.querySelector('#ingresoventasResumen')!.textContent = '$'+(ventasContado+ventasACredito).toLocaleString();
       document.querySelector('#totalfacturasResumen')!.textContent = obj.totalfacturas;
       document.querySelector('#totalcotizacionesResumen')!.textContent = obj.totalcotizaciones;
 
@@ -234,15 +235,20 @@
       document.querySelector('#dineroCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja).toLocaleString();
       document.querySelector('#domicilios')!.textContent = '- $'+domicilios.toLocaleString();
       document.querySelector('#realCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja-domicilios).toLocaleString();
-      document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+ingresoventas.toLocaleString();
-      document.querySelector('#abonosTotales')!.textContent = '+ $'+abonostotales.toLocaleString();
-      document.querySelector('#totalGastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
+      
+      document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+ventasContado+totaldescuentos.toLocaleString();
+      document.querySelector('#creditos')!.textContent = '+ $'+ventasACredito.toLocaleString();
       document.querySelector('#totalDescuentos')!.textContent = '- $'+totaldescuentos.toLocaleString();
+      document.querySelector('#totaldeventas')!.textContent = ': $'+(ventasContado+ventasACredito).toLocaleString();
+      document.querySelector('#abonosTotales')!.textContent = '+ $'+abonostotales.toLocaleString();
+      document.querySelector('#ingresoCajaDelDia')!.textContent = '- $'+(ventasContado+abonostotales).toLocaleString();
+      document.querySelector('#totalGastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
       document.querySelector('#totalDomicilios')!.textContent = '= $'+(domicilios).toLocaleString();
-      document.querySelector('#realVentas')!.textContent = '= $'+(ingresoventas-totaldescuentos-domicilios-gastoscaja).toLocaleString();
+      document.querySelector('#realVentas')!.textContent = '= $'+(ventasContado+ventasACredito-domicilios-gastoscaja).toLocaleString();
       document.querySelector('#totalBaseGravable')!.textContent = '+ $'+Number(obj.basegravable).toLocaleString();
       document.querySelector('#impuestoTotal')!.textContent = '+ $'+Number(obj.valorimpuestototal).toLocaleString();
       document.querySelector('#otrosGastosBancarios')!.textContent = '+ $'+Number(obj.gastosbanco).toLocaleString();
+      
       document.querySelector('#cantidadFacturasFE')!.textContent = obj.facturaselectronicas;
       document.querySelector('#cantidadFacturasPOS')!.textContent = obj.facturaspos;
     }
