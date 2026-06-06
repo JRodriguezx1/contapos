@@ -37,36 +37,62 @@
         <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
     </div>
     
-    <div class="flex gap-4 mb-4">
-        <div>
-            <span class="m-0 text-slate-500 text-xl font-semibold">Orden: </span>
-            <span id="numOrden" class="m-0 text-slate-500 text-xl">#: <?php echo $factura->num_orden??'';?></span>
-        </div>
-        <div>
-            <span class="m-0 text-slate-500 text-xl font-semibold">Referencia: </span>
-            <span id="referenciaFactura" class="m-0 text-slate-500 text-xl">Orden: <?php echo $factura->referencia??'';?></span>
-        </div>
-        <div>
-            <span class="m-0 text-slate-500 text-xl font-semibold">Estado: </span>
-            <span id="textEstado" class="m-0 text-slate-500 text-xl"><?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)?'Pendiente de despacho':($factura->entrega=='Presencial' && $factura->entregado==1 ? 'Presencial':'Domicilio/Presencial entregado');?></span>
-        </div>
-    </div>
+<div class="flex flex-wrap gap-3 mb-6">
 
-    <div class="flex justify-between p-4 border border-gray-300 rounded mb-6">
-        <div class="flex-1 text-center">
-            <p class="font-bold">Fecha Orden</p>
+    <span class="px-5 py-2.5 rounded-full bg-slate-100 text-slate-700 font-medium">
+        Orden #<?php echo $factura->num_orden??'';?>
+    </span>
+
+    <span class="px-5 py-2.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
+        Referencia: <?php echo $factura->referencia??'';?>
+    </span>
+
+    <span id="textEstado"
+        class="px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 font-medium">
+        <?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)
+            ? 'Pendiente de despacho'
+            : ($factura->entrega=='Presencial' && $factura->entregado==1
+                ? 'Presencial'
+                : 'Domicilio/Presencial entregado'); ?>
+    </span>
+
+</div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
+            <p class="font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-indigo-600">
+                    calendar_month
+                </span>
+                Fecha Orden
+            </p>
             <p><?php echo $factura->fechacreacion??'';?></p>
         </div>
-        <div class="flex-1 text-center border-l border-gray-300">
-            <p class="font-bold">Fecha Pago</p>
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
+            <p class="font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-indigo-600">
+                    payments
+                </span>
+                Fecha Pago
+            </p>
             <p><?php echo $factura->fechapago??'';?></p>
         </div>
-        <div class="flex-1 text-center border-l border-gray-300">
-            <p class="font-bold">Vendedor</p>
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
+            <p class="font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-indigo-600">
+                    badge
+                </span>
+                Vendedor
+            </p>
             <button id="btnSelectVendedor" class="btn-xs btn-light"><?php echo $factura->vendedor??'';?></button>
         </div>
-        <div class="flex-1 text-center border-l border-gray-300">
-            <p class="font-bold">Estado Orden</p>
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
+            <p class="font-bold text-slate-800 flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-indigo-600">
+                    inventory_2
+                </span>
+                Estado Orden
+            </p>
             <p id="estadoOrden" class="mb-2"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
             <p class="m-0 text-gray-600 text-xl font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
         </div>
@@ -74,8 +100,20 @@
 
     <div id="idorden" class="hidden" data-idorden="<?php echo $factura->id;?>"></div>
 
-    <div class="flex flex-col tlg:flex-row gap-8">
-        <div class="relative overflow-x-auto flex-1">
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        <div class="relative overflow-x-auto xl:col-span-9 bg-white border border-slate-200 rounded-2xl shadow-sm p-4 min-h-[420px]">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-slate-800 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">
+                        inventory_2
+                    </span>
+                    Productos de la orden
+                </h3>
+
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">
+                    <?php echo count($productos); ?> productos
+                </span>
+            </div>
             <table class="w-full text-xl text-left rtl:text-right text-gray-500">
                 <thead class=" text-gray-700 uppercase bg-gray-100">
                     <tr>
@@ -137,58 +175,153 @@
 
     
     
-        <div class="flex flex-col sm:flex-row tlg:flex-col justify-between tlg:justify-normal gap-4">
-            <div class="w-full sm:max-w-96 flex flex-col  border px-4 border-gray-300 rounded">
-                <p class="text-xl font-semibold leading-4 text-center text-gray-800">CLIENTE</p>
+        <div class="xl:col-span-3 flex flex-col gap-4">
+            <div class="w-full flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                <p class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">
+                        person
+                    </span>
+                    CLIENTE
+                </p>
                 <p class="mb-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
                 <p class="my-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
                 <p class="mt-0 text-center md:text-left text-lg leading-5 text-gray-600 flex items-center"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
             </div>
-            <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
-                <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de entrega</p>
+            <div class="w-full flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                <p class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">
+                        local_shipping
+                    </span>
+                    Dirección de entrega
+                </p>
                 <p class="m-0 md:text-left text-lg leading-5 text-gray-600">Tipo entrega: <?php echo $factura->entrega??'';?></p>
                 <p class="md:text-left text-lg leading-5 text-gray-600"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
                 <p class="mt-0 md:text-left text-lg leading-5 text-gray-600">Tarifa envio: $<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
             </div>
-            <div class="w-full sm:max-w-96 flex flex-col border px-4 border-gray-300 rounded">
-                <p class="text-xl font-semibold leading-4 text-center text-gray-800">Direccion de facturacion</p>
+            <div class="w-full flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+                <p class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-indigo-600">
+                        receipt_long
+                    </span>
+                    Dirección de facturación
+                </p>
                 <p class="md:text-left text-lg leading-5 text-gray-600"> - </p>
             </div>
-        </div>
-            
-       
-
+        </div>     
     </div>
 
-    <div>
-        <div class="mt-6 flex flex-col xxs:flex-row justify-between items-center xxs:items-start gap-8 border-solid border border-gray-300 py-4 px-8 rounded">
-            <div>
-                <p>Observaciones:</p>
-                <p class="text-slate-600 text-lg mb-8"><?php echo $factura->observacion;?></p>
-                <p class="text-slate-600 text-lg"><?php echo $factura->observacioneliminacion;?></p>
+    <div class="mt-8 bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+            <!-- OBSERVACIONES -->
+            <div class="xl:col-span-2 bg-slate-50 rounded-xl p-6 border border-slate-200 min-h-[100px]">
+
+                <p class="font-semibold text-slate-800 text-xl mb-4">
+                    Observaciones
+                </p>
+
+                <?php if(empty(trim($factura->observacion ?? ''))): ?>
+                    <div class="flex items-center gap-2 mt-6 text-slate-500 italic">
+                        <span class="material-symbols-outlined text-xl">
+                            info
+                        </span>
+                        <span>Sin observaciones registradas.</span>
+                    </div>
+                <?php else: ?>
+
+                    <p class="text-slate-600 text-lg mb-4">
+                        <?php echo $factura->observacion;?>
+                    </p>
+
+                <?php endif; ?>
+
+                <?php if(!empty($factura->observacioneliminacion)): ?>
+                    <div class="border-t border-slate-200 pt-4 mt-4">
+
+                        <p class="font-medium text-red-600 mb-2">
+                            Observación de eliminación
+                        </p>
+
+                        <p class="text-slate-600 text-lg">
+                            <?php echo $factura->observacioneliminacion;?>
+                        </p>
+
+                    </div>
+                <?php endif; ?>
             </div>
-            <div class="flex justify-end gap-4 sm:gap-60">
-                <div class="text-end">
-                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>
-                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Abono:</p>
-                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Impuesto:</p>
-                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Descuento:</p>
-                    <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Tarifa Envio:</p>
-                    <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
+
+            <!-- RESUMEN DE PAGO -->
+            <div class="xl:col-span-1 bg-slate-50 rounded-xl p-5 border border-slate-200">
+
+                <p class="font-semibold text-slate-800 text-xl mb-5">
+                    Resumen de pago
+                </p>
+
+                <div class="flex justify-between">
+                    <div class="text-start">
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            Sub Total:
+                        </p>
+
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            Abono:
+                        </p>
+
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            Impuesto:
+                        </p>
+
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            Descuento:
+                        </p>
+
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            Tarifa Envío:
+                        </p>
+                    </div>
+
+                    <div class="text-end">
+                        <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            $<?php echo number_format($factura->subtotal ?? 0, 0, ',', '.');?>
+                        </p>
+
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            $<?php echo number_format($factura->abono ?? 0, 0, ',', '.');?>
+                        </p>
+
+                        <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            $<?php echo number_format($factura->valorimpuestototal ?? 0, 0, ',', '.');?>
+                        </p>
+
+                        <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            <?php echo $factura->dctox100;?>%
+                            $<?php echo number_format($factura->descuento ?? 0, 0, ',', '.');?>
+                        </p>
+
+                        <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">
+                            $<?php echo number_format($factura->valortarifa ?? 0, 0, ',', '.');?>
+                        </p>
+
+                    </div>
                 </div>
-                <div>
-                    <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->subtotal??0, '0', ',', '.');?></p>
-                    <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->abono??0, '0', ',', '.');?></p>
-                    <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valorimpuestototal??0, '0', ',', '.');?></p>
-                    <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal"><?php echo $factura->dctox100.'%  $'.$factura->descuento;?></p>
-                    <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">$<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
-                    <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ <?php echo number_format($factura->total??0, "0", ",", ".");?></p>
+
+                <!-- TOTAL DESTACADO -->
+                <div class="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-4">
+                    <div class="flex justify-between items-center">
+
+                        <span class="text-slate-700 text-2xl font-semibold">
+                            Total:
+                        </span>
+
+                        <span id="total"
+                            class="text-emerald-600 text-6xl font-bold"
+                            style="font-family:'Tektur', serif;">
+                            $ <?php echo number_format($factura->total ?? 0, 0, ',', '.');?>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div></div>
     </div>
-
 
     <dialog id="miDialogoFacturar" class="midialog-md !p-12">
       <h4 class="text-3xl font-semibold m-0 text-neutral-800">Registro de pago</h4>
@@ -274,26 +407,35 @@
     <dialog id="miDialogoMasOpciones" class="rounded-2xl border border-gray-200 w-[95%] max-w-2xl p-8 bg-white backdrop:bg-black/40">
         <!-- Encabezado -->
         <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Mas opciones</h4>
+            <div>
+                <h4 id="modalMasOpciones"
+                    class="text-2xl font-bold text-gray-900">
+                    Más opciones
+                </h4>
+
+                <p class="text-sm text-slate-500 mt-1">
+                    Acciones adicionales disponibles para esta orden.
+                </p>
+            </div>
             <button class="rounded-lg hover:bg-gray-100 transition">
                 <i id="btnXCerrarMasOpciones" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
             </button>
         </div>
 
         <!-- Opciones -->
-        <div class="grid gap-4">
-            <button id="btnImprimirTirilla" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
+        <div class="flex flex-col gap-4">
+            <button id="btnImprimirTirilla" class="flex items-center justify-between px-6 py-6 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
                 <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-                    <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+                    <span class="material-symbols-outlined text-indigo-600 text-4xl">receipt_long</span>
                     Imprimir factura tirilla
                 </span>
                 <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
             </button>
 
             <?php if($factura->estado=='Paga' || $factura->remision == 1):?>
-            <button id="btnOrdenEnvio" class="flex items-center justify-between px-6 py-5 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
+            <button id="btnOrdenEnvio" class="flex items-center justify-between px-6 py-6 rounded-xl border border-gray-200 hover:bg-indigo-50 transition">
                 <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
-                    <span class="material-symbols-outlined text-indigo-600 text-3xl">switch_right</span>
+                    <span class="material-symbols-outlined text-indigo-600 text-4xl">local_shipping</span>
                     Imprimir Orden de entrega
                 </span>
                 <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>

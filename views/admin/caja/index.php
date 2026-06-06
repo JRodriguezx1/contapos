@@ -212,22 +212,58 @@
         </form>
     </dialog>
 
+    <!-- Modal Abrir cajón monedero -->
+    <dialog class="midialog-sm rounded-3xl p-0 overflow-hidden" id="miDialogoAbrirCaja">
+        <!-- Header -->
+        <div class="bg-indigo-600 text-white px-8 py-6 text-center">
+            <i class="fa-solid fa-cash-register text-5xl mb-3"></i>
 
-    <dialog class="midialog-sm px-8 pb-8" id="miDialogoAbrirCaja">
-        <div><p class="text-3xl font-semibold text-gray-500">Abrir cajon monedero</p></div>
-        <div id="divmsjalerta3"></div>
-        <div class="text-center mb-4">
-            <p class="mt-2 text-xl text-gray-600">Desea abrir el cajon monedero.</p>
-            <div class="sm:col-start-2 col-span-4 mt-6">
-              <label for="inputAbrirCaja" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
-              <div class="mt-2">
-                <input id="inputAbrirCaja" type="password" min="0" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-1/2 mx-auto p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
-              </div>
-            </div>
+            <h2 class="text-3xl font-bold">
+                Abrir Cajón Monedero
+            </h2>
+
+            <p class="text-indigo-100 mt-2 text-lg">
+                Se requiere autorización para abrir el cajón.
+            </p>
         </div>
-        <div class="flex justify-around border-t-gray-300 pt-4">
-            <div class="siAbrirCajon flex cursor-pointer transition-transform hover:scale-110 text-blue-500 font-semibold"><i class="fa-regular fa-pen-to-square"></i><p class="m-0 ml-1">Confirmar</p></div>
-            <div class="noAbrirCajon flex cursor-pointer transition-transform hover:scale-110 text-red-500 font-semibold"><i class="fa-regular fa-trash-can"></i><p class="m-0 ml-1">Cancelar</p></div>
+
+        <!-- Body -->
+        <div class="p-8">
+            <div id="divmsjalerta3"></div>
+            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-6">
+
+                <label
+                    for="inputAbrirCaja"
+                    class="block text-xl font-semibold text-slate-700 mb-3">
+
+                    Clave de autorización
+                </label>
+
+                <input
+                    id="inputAbrirCaja"
+                    type="password"
+                    class="w-full h-14 rounded-xl border border-slate-300 px-4 text-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 focus:outline-none"
+                    placeholder="Ingrese la clave">
+
+            </div>
+            <!-- Botones -->
+            <div class="flex justify-end gap-4 mt-8">
+
+                <button
+                    type="button"
+                    class="noAbrirCajon px-6 py-3 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 transition">
+
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="siAbrirCajon px-6 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm">
+
+                    <i class="fa-solid fa-lock-open mr-2"></i>
+                    Confirmar
+                </button>
+            </div>
         </div>
     </dialog>
 

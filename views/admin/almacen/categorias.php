@@ -37,19 +37,44 @@
       </tbody>
   </table>
 
-  <dialog id="miDialogoCategoria" class="w-[500px] h-[205px] p-12 rounded-lg shadow-lg">
-    <h4 id="modalCategoria" class="font-semibold text-gray-700 mb-4 mt-10">Crear categoria</h4>
+  <dialog id="miDialogoCategoria" class="w-[95%] max-w-lg p-8 rounded-2xl border border-slate-200 bg-white shadow-xl">
+    <div class="text-center border-b border-slate-200 pb-5 mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 mb-4">
+            <i class="fa-solid fa-layer-group text-indigo-600 text-2xl"></i>
+        </div>
+
+        <h4 id="modalCategoria" class="text-4xl font-bold text-slate-700">
+            Crear categoría
+        </h4>
+
+        <p class="mt-2 text-lg text-slate-500">
+            Agregue una nueva categoría para organizar sus productos.
+        </p>
+    </div>
+
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateCategoria" class="formulario" action="/admin/almacen/crear_categoria" method="POST">
-        <input type="hidden" id="idcategoria" value="0">
-        <div class="formulario__campo">
-            <!-- <label class="formulario__label" for="categoria">Categoria</label> -->
-            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
-                <input id="categoria" class="formulario__input !border-0" type="text" placeholder="Categoria" name="nombre"  required>
-                <!-- <label data-num="24" class="count-charts" for="">24</label> -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mt-4">
+            <input type="hidden" id="idcategoria" value="0">
+            <div class="formulario__campo">
+                <label
+                    for="categoria"
+                    class="block text-lg font-semibold text-slate-700 mb-3 text-left">
+                    Nombre de la categoría
+                </label>
+
+                <div class="formulario__dato focus-within:!border-indigo-600 border border-slate-300 rounded-xl flex items-center h-14 overflow-hidden bg-white">
+                    <input
+                        id="categoria"
+                        class="formulario__input !border-0"
+                        type="text"
+                        placeholder="Nombre de la categoría"
+                        name="nombre"
+                        required>
+                </div>
             </div>
         </div>
-        <div class="text-right">
+        <div class="text-right mt-8">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[100px]" type="button" value="Salir">Salir</button>
             <input id="btnEditarCrearCategoria" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[100px]" type="submit" value="Crear">
         </div>

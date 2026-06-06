@@ -317,43 +317,104 @@
 
   <!-- MODAL PARA AGREGAR DESCUENTO -->
   <dialog id="miDialogoDescuento" class="midialog-xs p-8">
-    <h4 class=" text-gray-700 font-semibold">Aplicar Descuento</h4>
-    
-    <form id="formDescuento" class=" border-b border-gray-900/10 pb-6 text-center">
-        <p class="mt-2 text-xl text-gray-600">Aplicar descuento al subtotal del pedido.</p>
-
-        <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">   
-          <label class="flex  p-1 cursor-pointer">
-            <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked/>
-            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Valor </span>
-          </label>
-          <label class="flex  p-1 cursor-pointer">
-            <input type="radio" name="tipodescuento" value="porcentaje" class="peer hidden"/>
-            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Porcentaje </span>
-          </label>
+    <div class="text-center border-b border-slate-200 pb-4 mb-4">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 mb-4">
+            <i class="fa-solid fa-percent text-indigo-600 text-3xl"></i>
         </div>
 
-        <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div class="sm:col-start-2 col-span-4">
-            <label for="inputDescuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
-            <div class="mt-2">
-              <input id="inputDescuento" type="number" min="0" name="descuento" data-descuento="" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div>
-            
-            <div class="sm:col-start-2 col-span-4 mt-6">
-              <label for="inputDescuentoClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
-              <div class="mt-2">
-                <input id="inputDescuentoClave" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-                <div id="divmsjalertaClaveDcto"></div>
+        <h4 class="text-4xl font-bold text-slate-700">
+            Aplicar Descuento
+        </h4>
+
+        <p class="mt-2 text-lg text-slate-500">
+            Aplicar descuento al subtotal del pedido.
+        </p>
+    </div>
+    
+    <form id="formDescuento" class="text-center">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+          <div class="mb-4">
+              <h5 class="block text-lg font-semibold text-slate-600 mb-2">
+                  Tipo de descuento
+              </h5>
+
+              <div class="inline-flex border-[3px] border-indigo-600 rounded-xl select-none">
+                  <label class="flex p-1 cursor-pointer">
+                      <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked />
+
+                      <span class="tracking-wide px-6 py-3 rounded-lg text-lg text-gray-700
+                                  peer-checked:bg-indigo-600
+                                  peer-checked:text-white
+                                  transition-all duration-200">
+                          Valor
+                      </span>
+                  </label>
+
+                  <label class="flex p-1 cursor-pointer">
+                      <input type="radio" name="tipodescuento" value="porcentaje" class="peer hidden" />
+
+                      <span class="tracking-wide px-6 py-3 rounded-lg text-lg text-gray-700
+                                  peer-checked:bg-indigo-600
+                                  peer-checked:text-white
+                                  transition-all duration-200">
+                          Porcentaje
+                      </span>
+                  </label>
               </div>
-              <div class="grid grid-cols-2 gap-3 mt-6">
-                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 w-full salir">Salir</button>
-                <button id="btnCrearAddDir" type="submit" class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">Aplicar</button>
-              </div>
+          </div>
+
+          <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-6">
+                <label for="inputDescuento" class="block text-lg font-semibold text-slate-700">
+                    Descuento
+                </label>
+
+                <div class="mt-2">
+                    <input
+                        id="inputDescuento"
+                        type="number"
+                        min="0"
+                        name="descuento"
+                        data-descuento=""
+                        class="miles bg-white border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                        required>
+                </div>
+
+                <div class="mt-8">
+                    <label for="inputDescuentoClave" class="block text-lg font-semibold text-slate-700">
+                        Clave de autorización
+                    </label>
+
+                    <div class="mt-2">
+                        <input
+                            id="inputDescuentoClave"
+                            type="password"
+                            name="descuentoclave"
+                            class="miles bg-white border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+
+                        <div id="divmsjalertaClaveDcto"></div>
+                    </div>
+                </div>
             </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-6">
+            <button
+                type="button"
+                class="btn-md btn-turquoise !py-4 !px-6 w-full salir">
+                Salir
+            </button>
+
+            <button
+                id="btnCrearAddDir"
+                type="submit"
+                class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">
+                Aplicar
+            </button>
         </div>
       </form>
-  </dialog>
+    </dialog>
   
   <!-- MODAL PARA VACIAR EL CARRITO-->
   <dialog id="miDialogoVaciar" class="bg-white rounded-xl shadow-lg p-8 max-w-lg w-full relative z-50">
