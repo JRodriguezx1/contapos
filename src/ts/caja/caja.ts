@@ -225,7 +225,7 @@
         const resultado:DataInvoice = await respuesta.json();
         const isAndroid = /Android/i.test(navigator.userAgent);
         if(printerBT === '1'){
-          const builder = new InvoiceTicketBuilder(resultado);
+          const builder = new InvoiceTicketBuilder2(resultado);
           const ticket = await builder.generate(true); //true para version buffer bytes
           const base64 = bytesToBase64(ticket);
           if(isAndroid)window.location.href = `rawbt:base64,${base64}`;

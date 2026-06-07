@@ -32,16 +32,11 @@
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
         function actualizarContadorProductos(): void {
-
             const badge = document.querySelector('#contadorProductos');
-            
             if(!badge) return;
-
             const cantidad = carrito.length;
             badge.textContent =
-                cantidad === 1
-                    ? '1 producto'
-                    : `${cantidad} productos`;
+                cantidad === 1? '1 producto': `${cantidad} productos`;
         }
 
         (async ()=>{

@@ -372,7 +372,7 @@ class ventascontrolador{
               if($ru){
 
                 //////// descontar del inventario los productos simples ////////
-                if($_POST['entregado']==1){
+                if($_POST['entregado']==1 || $_POST['entregado']==0&&$_POST['entrega']=='Presencial'){
                   if(!empty($resultArray['productosSimples'])){
                     $invPro = stockproductossucursal::reducirMultiplesColumnas($resultArray['productosSimples'], ['stock', 'stockaux'], 'productoid', "sucursalid = ".id_sucursal());
                     //registrar descuento de movimiento de invnetario

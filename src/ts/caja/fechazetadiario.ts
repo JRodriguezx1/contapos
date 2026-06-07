@@ -3,7 +3,7 @@
   if(document.querySelector('.fechazetadiario')){
 
     const btnsmultiselect = document.querySelectorAll<HTMLElement>('.btnmultiselect');
-    const selectedcajas = document.querySelectorAll<HTMLLIElement>('.caja');
+    const selectedcajas = document.querySelectorAll<HTMLLIElement>('.selectedcajas');
     const consultarZDiario = document.querySelector('#consultarZDiario') as HTMLButtonElement;
     const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
     const base = document.querySelector('#base') as HTMLElement;
@@ -39,7 +39,7 @@
     selectedcajas.forEach(c=>{c.addEventListener('click', cajas_seleccionadas);});
 
     function cajas_seleccionadas(){
-      const inputscaja = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+      const inputscaja = document.querySelectorAll<HTMLInputElement>('input.selectedcajas[type="checkbox"]:checked');
       const cajastext = document.querySelector('#cajastext') as HTMLElement;
       cajastext.textContent = ". ";
       inputscaja.forEach((inputcaja, i) =>{
@@ -78,7 +78,7 @@
          msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
          return;
       }
-      const cajas = document.querySelectorAll<HTMLInputElement>('input.caja[type="checkbox"]:checked');
+      const cajas = document.querySelectorAll<HTMLInputElement>('input.selectedcajas[type="checkbox"]:checked');
       const facturadores = document.querySelectorAll<HTMLInputElement>('input.facturador[type="checkbox"]:checked');
       
       const valuecajas:string[] = Array.from(cajas).map(c=>c.value);

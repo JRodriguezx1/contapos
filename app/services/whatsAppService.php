@@ -138,17 +138,18 @@ class whatsAppService{
         }
         // 🔹 Datos de venta
         $this->msg .= "\n*DATOS DE VENTA*\n";
-        $this->msg .= "💰Ingreso Total de ventas: + *$" . number_format(($data['ultimocierre']->ingresoventas ?? 0)+($data['ultimocierre']->totaldescuentos ?? 0), 0, ',', '.') . "*\n";
-        $this->msg .= "Abonos totales: + $" . number_format($data['ultimocierre']->abonostotales??0, 0, ',', '.') . "\n";
+        $this->msg .= "Ventas de contado: + $" . number_format(($data['ultimocierre']->ingresoventas ?? 0), 0, ',', '.') . "\n";
+        $this->msg .= "Ventas a credito: + $" . number_format($data['ultimocierre']->creditocapital??0, 0, ',', '.') . "\n";
+        $this->msg .= "Total Descuentos:  $" . number_format($data['ultimocierre']->totaldescuentos??0, 0, ',', '.') . "\n";
+        $this->msg .= "💰*Ingreso total de ventas: = $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->creditocapital??0), 0, ',', '.') . "*\n";
+        $this->msg .= "Total abonos: + $" . number_format($data['ultimocierre']->abonostotales??0, 0, ',', '.') . "\n";
+        $this->msg .= "💵*Ingreso de caja del dia:  $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->abonostotales??0), 0, ',', '.') . "*\n";
         $this->msg .= "Total gastos de caja: - $" . number_format($data['ultimocierre']->gastoscaja??0, 0, ',', '.') . "\n";
-        $this->msg .= "Gastos otros/bancarios: - $" . number_format($data['ultimocierre']->gastosbanco??0, 0, ',', '.') . "\n";
-        $this->msg .= "Total Descuentos: - $" . number_format($data['ultimocierre']->totaldescuentos??0, 0, ',', '.') . "\n";
         $this->msg .= "Total Domicilios: - $" . number_format($data['ultimocierre']->domicilios??0, 0, ',', '.') . "\n";
-        $this->msg .= "📌*Ganancia hoy: = $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->abonostotales??0)-($data['ultimocierre']->domicilios??0)-($data['ultimocierre']->gastoscaja??0)-($data['ultimocierre']->gastosbanco??0), 0, ',', '.') . "*\n";
-        $this->msg .= "Creditos: + $" . number_format($data['ultimocierre']->creditos??0, 0, ',', '.') . "\n";
-        $this->msg .= "*TOTAL DE VENTAS: $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->creditos??0), 0, ',', '.') . "*\n";
+        $this->msg .= "📌*Ganancia hoy: = $" . number_format(($data['ultimocierre']->ingresoventas??0)+($data['ultimocierre']->creditocapital??0)-($data['ultimocierre']->domicilios??0)-($data['ultimocierre']->gastoscaja??0), 0, ',', '.') . "*\n";
         $this->msg .= "Base grabable: = $" . number_format($data['ultimocierre']->basegravable??0, 0, ',', '.') . "\n";
-        $this->msg .= "Impuesto Total: - $" . number_format($data['ultimocierre']->valorimpuestototal??0, 0, ',', '.') . "\n\n";
+        $this->msg .= "Impuesto Total: - $" . number_format($data['ultimocierre']->valorimpuestototal??0, 0, ',', '.') . "\n";
+        $this->msg .= "Gastos otros/bancarios: - $" . number_format($data['ultimocierre']->gastosbanco??0, 0, ',', '.') . "\n\n";
         /*// 🔹 Detalle impuesto
         $this->msg .= "*DETALLE IMPUESTO*\n";
         // 🔹 Tipo de facturas

@@ -76,7 +76,7 @@
                     <p id="gastoscajaResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></p>
                     <p id="domiciliosResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal">$<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></p>
                     <?php if($conflocal['permitir_ver_resumen_cierre_de_caja']->valor_final == 1 || userPerfil() < 3 ): ?>
-                    <p id="ingresoventasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$<?php echo number_format($ultimocierre->ingresoventas??0, "0", ",", ".");?></p>
+                    <p id="ingresoventasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0), "0", ",", ".");?></p>
                     <?php endif; ?>
                     <p id="totalfacturasResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalfacturas??0;?></p>
                     <p id="totalcotizacionesResumen" class="m-0 mb-2 text-slate-600 text-2xl font-normal"><?php echo $ultimocierre->totalcotizaciones??0;?></p>
@@ -236,36 +236,45 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="text-gray-800 font-medium">Ingreso de ventas total <p class=" text-base m-0 text-gray-500">(solo ventas de contado)</p></td>
-                                        <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->totaldescuentos??0), "0", ",", ".");?></td>
+                                        <td class="text-gray-800 font-medium">Ingreso de ventas <p class=" text-base m-0 text-gray-500">(solo ventas de contado)</p></td>
+                                        <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0), "0", ",", ".");?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="">Ventas a credito</td>
+                                        <td id="creditos" class=""> + $<?php echo number_format($ultimocierre->creditocapital??0, "0", ",", ".");?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="">Total descuentos:</td>
+                                        <td id="totalDescuentos" class=""> $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-gray-800 font-medium">Ingreso total de ventas:</td>
+                                        <td id="totaldeventas" class=""> $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr> 
-                                        <td class="">Abonos totales</td> 
+                                        <td 
+                                            class="" 
+                                            title="los abonos no aumentan las ventas, porque la venta ya fue registrada cuando se realizó el crédito, únicamente disminuyen la cartera pendiente y aumentan el dinero que entra a la caja."
+                                        >
+                                            Total abonos
+                                        </td> 
                                         <td id="abonosTotales" class=""> + $<?php echo number_format($ultimocierre->abonostotales??0, "0", ",", ".");?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-gray-800 font-medium" title="dinero que realmente entró o dinero recibido durante el día.">Ingreso de caja del dia: <p class=" text-base m-0 text-gray-500">(Ventas de contado + Abonos recibidos)</p></td>
+                                        <td id="ingresoCajaDelDia" class=""> $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>
                                         <td class="">Total gastos de caja</td> 
                                         <td id="totalGastosCaja" class=""> - $<?php echo number_format($ultimocierre->gastoscaja??0, "0", ",", ".");?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="">Total descuentos</td> 
-                                        <td id="totalDescuentos" class=""> - $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>  
                                         <td class="">Total domicilios</td> 
                                         <td id="totalDomicilios" class=""> - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr> 
-                                        <td class="text-blue-400 font-medium">Ganacia hoy</td> 
-                                        <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->abonostotales??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="">Creditos</td>
-                                        <td id="creditos" class=""> + $<?php echo number_format($ultimocierre->creditocapital??0, "0", ",", ".");?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-gray-800 font-medium">Total de ventas:</td>
-                                        <td id="totaldeventas" class=""> $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0), "0", ",", ".");?></td>
+                                        <td class="text-blue-400 font-medium">Ganacia hoy <p class=" text-base m-0 text-gray-500">(Ingreso total ventas - Gastos - Domicilios)</p></td> 
+                                        <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>  
                                         <td class="text-blue-600 font-medium">Base grabable</td>

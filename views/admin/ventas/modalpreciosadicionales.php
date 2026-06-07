@@ -23,6 +23,7 @@
         
 
         <div class="contenedorsetup mb-4">
+            <p id="textCardProduct" class="text-center text-xl text-slate-500 mt-0"></p>
             <div class="contenido1 accordion_tab_content">
                 <!-- Encabezado -->
                 <h4 class="pb-4 mb-6 text-2xl font-bold text-indigo-700 border-b border-gray-200">💰 Seleccionar precio adicional</h4>
@@ -80,16 +81,40 @@
                         </div>-->
                     </div>
 
+                    <div>
+                        <p class="text-center text-slate-500 font-medium">Calculadora de cantidades</p>
+                        <div class="flex items-center justify-center gap-4">
+                            <p class="text-slate-600 text-xl">Cantidad: </p>
+                            <input 
+                                id="inputCantidadCalculada"
+                                class="flex-1 min-w-32 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
+                                type="text" 
+                                placeholder="Ingresa cantidad"
+                                value=""
+                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                
+                            >
+                            <div class="flex-shrink-0 border border-gray-300 mt-2 h-14 rounded-lg text-gray-600 cursor-pointer">
+                                <button id="operationSum" type="button"><i class="text-2xl fa-solid fa-plus pl-3 py-3 pr-4"></i></button>
+                                <button id="operationLess" type="button"><i class="text-2xl fa-solid fa-minus pl-3 py-3 pr-4"></i></button>
+                                <button id="reset" type="button"><i class="text-2xl fa-solid fa-power-off p-3"></i></button>
+                            </div>
+                        </div>
+                        <p id="lastOperation" class="text-slate-600 text-xl text-center mb-0">0</p>
+                        <p id="textCantidadCalculada" class="text-green-500 text-2xl text-center mt-0">0</p>
+                    </div>
+
                 </form>
             </div>
+
             <div class="contenido2 accordion_tab_content">
                 <textarea 
                     id="anotacion"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-40 text-lg focus:outline-none focus:ring-1"
                     rows="4">Anotacion aqui.
                 </textarea>
-                
             </div>
+
             <div class="contenido3 accordion_tab_content">
                 <h4 class="pb-4 mb-6 text-2xl font-bold text-indigo-700 border-b border-gray-200">❤️ Porcentaje de comision para el producto</h4>
                 <div class="flex items-center gap-4">
