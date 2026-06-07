@@ -37,9 +37,6 @@
         <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
     </div>
     
-<<<<<<< HEAD
-<div class="flex flex-wrap gap-3 mb-6">
-=======
     <div class="flex gap-4 mb-4">
         <div>
             <span class="m-0 text-slate-500 text-xl font-semibold">Orden: </span>
@@ -54,7 +51,6 @@
             <span id="textEstado" class="m-0 text-slate-500 text-xl"><?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)?'Pendiente de despacho':($factura->entrega=='Presencial' && $factura->entregado==1 ? 'Presencial entregado':'Domicilio/Presencial entregado');?></span>
         </div>
     </div>
->>>>>>> 66d3ee5e272c6e2e9199aabb7d559ec1835d0a46
 
     <span class="px-5 py-2.5 rounded-full bg-slate-100 text-slate-700 font-medium">
         Orden #<?php echo $factura->num_orden??'';?>
