@@ -236,7 +236,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="text-gray-800 font-medium">Ingreso de ventas <p class=" text-base m-0 text-gray-500">(solo ventas de contado)</p></td>
+                                        <td class="">Ventas de contado</td>
                                         <td id="ingresoVentasTotal" class=""> + $<?php echo number_format(($ultimocierre->ingresoventas??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>
@@ -248,7 +248,7 @@
                                         <td id="totalDescuentos" class=""> $<?php echo number_format($ultimocierre->totaldescuentos??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>
-                                        <td class="text-gray-800 font-medium">Ingreso total de ventas:</td>
+                                        <td class="text-gray-800 font-medium">Ingreso total de ventas:<p class=" text-base m-0 text-gray-500">(Ventas de contado + ventas a credito)</p></td>
                                         <td id="totaldeventas" class=""> $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr> 
@@ -273,7 +273,7 @@
                                         <td id="totalDomicilios" class=""> - $<?php echo number_format($ultimocierre->domicilios??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr> 
-                                        <td class="text-blue-400 font-medium">Ganacia hoy <p class=" text-base m-0 text-gray-500">(Ingreso total ventas - Gastos - Domicilios)</p></td> 
+                                        <td class="text-blue-400 font-medium">Utilidad del dia <p class=" text-base m-0 text-gray-500">(Ingreso total ventas - Gastos - Domicilios)</p></td> 
                                         <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>  

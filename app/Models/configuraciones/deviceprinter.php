@@ -4,13 +4,14 @@ namespace App\Models\configuraciones;
 
 class deviceprinter extends \App\Models\ActiveRecord{
     protected static $tabla = 'deviceprinter';
-    protected static $columnasDB = ['id', 'nombre', 'nombrecompartido', 'estacion', 'estado'];
+    protected static $columnasDB = ['id', 'nombre', 'nombrecompartido', 'estacion', 'mm', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->nombre = $args['nombre']??'';
         $this->nombrecompartido = $args['nombrecompartido']??'';
         $this->estacion = $args['estacion']??1;
+        $this->mm = $args['mm']??48;
         $this->estado = $args['estado']??1;
         $this->created_at = $args['created_at']??'';
     }

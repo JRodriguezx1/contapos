@@ -9,6 +9,7 @@
               <th>Nombre</th>
               <th>Nombre compartido</th>
               <th>Estacion</th>
+              <th>Mm</th>
               <th>Estado</th>
               <th class="accionesth">Acciones</th>
           </tr>
@@ -19,6 +20,7 @@
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->nombre; ?></td> 
               <td class=""><?php echo $value->nombrecompartido;?></td>
+              <td class=""><?php echo $value->estacion;?></td>
               <td class=""><?php echo $value->estacion;?></td>
               <td class=""><?php echo $value->estado;?></td>
               <td class="accionestd">
@@ -43,11 +45,15 @@
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombrecompartido">Nombre compartido</label>
-                <input id="nombreCompartido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre compartido de la impresora" name="nombrecompartido" value="">
+                <input id="nombreCompartido" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre compartido de la impresora" name="nombrecompartido" value="" required>
+            </div>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="anchoPapel">Ancho del papel (mm)</label>
+                <input id="anchoPapel" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ejemplo: 58" name="anchoPapel" value="" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0)" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="estacion">Estacion</label>
-                <input id="estacion" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Estacion de trabajo" name="estacion" value="">
+                <input id="estacion" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Estacion de trabajo" name="estacion" value="" required>
             </div>
         </div>
         

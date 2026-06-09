@@ -625,7 +625,6 @@
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
-      console.log(datainvoice);
       ////// cuando no es impresora CAJA por BT
       const isAndroid = /Android/i.test(navigator.userAgent);
 
@@ -652,24 +651,34 @@
           URL.revokeObjectURL(url);*/
       }
 
+      if(printerBT !== '1'){
+        const dataPrinter = {
+          businessId: datainvoice.negocio,
+          sucursal: datainvoice.sucursal,
+          printerName: 'CAJA',
+          tipoTicket: 'ticket',
+          content: datainvoice
+        };
+
+        console.log(dataPrinter);
+
+        try {
+          const url = "https://servidorimpresionposws-production.up.railway.app/api/print/printJob"; //llamado a la API server print nodejs/ts
+          const respuesta = await fetch(url, {
+            method: 'POST',
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify(dataPrinter)
+        });
+          const resultado = await respuesta.json();
+          console.log(resultado);
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
       setTimeout(() => {
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");
       }, 1000);
-
-      /*
-      try {
-        const url = "http://localhost:3100/api/printPOS/ticket1/CAJA"; //llamado a la API server print nodejs/ts
-        const respuesta = await fetch(url, {
-          method: 'POST',
-          headers: { "Accept": "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify(datainvoice)
-        });
-        const resultado = await respuesta.json();
-        console.log(resultado);
-      } catch (error) {
-        console.log(error);
-      }*/
 
     }
 
