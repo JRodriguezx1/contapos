@@ -24,6 +24,7 @@ use App\Controllers\comisionescontrolador;
 use App\Controllers\direccionescontrolador;
 use App\Controllers\configcontrolador;
 use App\Controllers\creditoscontrolador;
+use App\Controllers\parqueaderocontrolador;
 use App\Controllers\reservascontrolador;
 use App\Controllers\modorapidocontrolador;
 use App\Controllers\nominaelectcontrolador;
@@ -154,6 +155,8 @@ $router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTot
 ///// area de comisiones /////
 $router->get('/admin/comisiones', [comisionescontrolador::class, 'index']);
 
+////// Parqueadero //////
+$router->get('/admin/parqueadero', [parqueaderocontrolador::class, 'index']);
 ////// Reservas //////
 $router->get('/admin/reservas', [reservascontrolador::class, 'index']);
 
