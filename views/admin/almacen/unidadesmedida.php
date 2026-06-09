@@ -43,20 +43,42 @@
     </table>
 
 
-    <dialog id="miDialogoUnidadMedida" class="w-[500px] h-[195px] p-12 rounded-lg shadow-lg">
-        <h4 id="modalUnidadMedida" class="font-semibold text-gray-700 mb-4 mt-3">Crear unidad de medida</h4>
+    <dialog id="miDialogoUnidadMedida" class="w-[95%] max-w-xl p-8 rounded-2xl border border-slate-200 bg-white shadow-xl">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+                <i class="fa-solid fa-ruler-combined text-indigo-600 text-2xl"></i>
+            </div>
+
+            <h4 id="modalUnidadMedida" class="text-4xl font-bold text-slate-700">
+                Crear unidad de medida
+            </h4>
+
+            <p class="text-slate-500 text-xl mt-2">
+                Agregue una nueva unidad para organizar sus productos.
+            </p>
+        </div>
+
+        <hr class="my-6 border-slate-200">
+
         <div id="divmsjalerta1"></div>
+        
         <form id="formCrearUpdateUnidad" class="formulario" action="/admin/almacen/crear_unidadmedida" enctype="multipart/form-data" method="POST">
             <input type="hidden" id="idunidadmedida" name="idunidad" value="">
-            <div class="formulario__campo">
-                <label class="formulario__label" for="unidad">Unidad</label>
-                <div class="formulario__dato">
-                    <input class="formulario__input focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden" type="text" placeholder="Nombre de la unidad de medida" id="unidad" name="nombre" value="<?php echo $unidadmedida->nombre??'';?>" required>
-                    <!-- <label data-num="28" class="count-charts" for="">28</label> -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mt-6">
+                <div class="formulario__campo">
+                    <label
+                        for="unidad"
+                        class="block text-xl font-semibold text-slate-700 mb-2 text-left">
+                        Nombre de la unidad
+                    </label>
+                    <div class="formulario__dato focus-within:!border-indigo-600 border border-slate-300 rounded-xl flex items-center h-14 overflow-hidden bg-whit">
+                        <input class="formulario__input focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden" type="text" placeholder="Nombre de la unidad de medida" id="unidad" name="nombre" value="<?php echo $unidadmedida->nombre??'';?>" required>
+                        <!-- <label data-num="28" class="count-charts" for="">28</label> -->
+                    </div>
                 </div>
             </div>
-            <div class="text-right">
-                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[100px]" type="button" value="salir">Salir</button>
+            <div class="text-right mt-6">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[100px]" type="button" value="Salir">Salir</button>
                 <input id="btnEditarCrearUnidadMedida" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[100px]" type="submit" value="Crear">
             </div>
         </form>
