@@ -39,8 +39,8 @@
 
     document.querySelector('#tablamediosPagos')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
-      if((e.target as HTMLElement)?.classList.contains("statemediopago"))changeState(e);
-      if((e.target as HTMLElement)?.classList.contains("editarMedioPago")||(e.target as HTMLElement).parentElement?.classList.contains("editarMedioPago"))editarMedioPago(e);
+      if(target?.classList.contains("statemediopago"))changeState(e);
+      if(target?.classList.contains("editarMedioPago")||target.parentElement?.classList.contains("editarMedioPago"))editarMedioPago(e);
       if(target?.classList.contains("eliminarMedioPago")||target.parentElement?.classList.contains("eliminarMedioPago"))eliminarMedioPago(e);
     });
 

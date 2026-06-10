@@ -2,7 +2,7 @@
 
   <h4 class="text-gray-600 mb-12 mt-4">Gestion de facturadores</h4>
   <button id="crearFacturador" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-auto">Crear facturador</button>
-  <table class="display responsive nowrap tabla" width="100%" id="tablaFacturadores">
+  <table id="tablaFacturadores" class="display responsive nowrap tabla" width="100%" id="tablaFacturadores">
       <thead>
           <tr>
               <th>Nº</th>

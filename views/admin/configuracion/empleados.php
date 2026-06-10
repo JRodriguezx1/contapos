@@ -1,7 +1,7 @@
 <div class="empleados">
     <h4 class="text-gray-600 text-center mb-4">Gestion de empleado</h4>
     <button id="crearempleado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-auto">Crear Empleado</button>
-    <table class="display responsive nowrap tabla" width="100%" id="tablaempleados">
+    <table id="tablaempleados" class="display responsive nowrap tabla" width="100%">
         <thead>
             <tr>
                 <th>N.</th>

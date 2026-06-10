@@ -13,6 +13,7 @@ use App\Models\configuraciones\bancos;
 use App\Models\caja\cierrescajas;
 use App\Models\clientes\departments;
 use App\Models\configuraciones\deviceprinter;
+use App\Models\configuraciones\emisores;
 use App\Models\configuraciones\notificacionesws;
 use App\Models\parametrizacion\config_local;
 use App\Models\configuraciones\permisos;
@@ -33,6 +34,7 @@ class configcontrolador{
     $alertas = [];
     $idsucursal = id_sucursal();
     $sucursal = sucursales::find('id', $idsucursal);
+    $emisores = emisores::whereArray(['idsucursal'=>$idsucursal]);
     $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
     $mediospago = mediospago::all();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
@@ -57,7 +59,7 @@ class configcontrolador{
     foreach($consecutivos as $consecutivo)$consecutivo->nombretipofacturador = tipofacturador::find('id', $consecutivo->idtipofacturador)->nombre;
     
     $conflocal = config_local::getParamGlobal();
-    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'impresoras'=>$impresoras, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/configuracion/index', ['titulo'=>'Configuracion', 'paginanegocio'=>'checked', 'negocio'=>$sucursal, 'emisores'=>$emisores, 'empleado'=>$empleado, 'empleados'=>$empleados, 'cajas'=>$cajas, 'facturadores'=>$consecutivos, 'tipofacturadores'=>$tipofacturadores, 'bancos'=>$bancos, 'tarifas'=>$tarifas, 'departments'=>$dapartments, 'companias'=>$companias, 'mediospago'=>$mediospago, 'impresoras'=>$impresoras, 'conflocal'=>$conflocal, 'contactsNotificationWS'=>$contactsNotificationWS, 'suscripcionPagos'=>$suscripcionPagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -124,6 +126,7 @@ class configcontrolador{
             }
         }
         $mediospago = mediospago::all();
+        $emisores = emisores::whereArray(['idsucursal'=>$idsucursal]);
         $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
         $cajas = caja::idregistros('idsucursalid', $idsucursal);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
@@ -182,6 +185,7 @@ class configcontrolador{
                 $empleado->perfil = '';
             }
         }
+        $emisores = emisores::whereArray(['idsucursal'=>$idsucursal]);
         $empleados = usuarios::whereArray(['idsucursal'=>$idsucursal, 'confirmado'=>1]);
         $cajas = caja::idregistros('idsucursalid', $idsucursal);
         $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
@@ -776,6 +780,95 @@ class configcontrolador{
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if(!empty($printer)){
                 $r = $printer->eliminar_registro();
+                if($r){
+                    ActiveRecord::setAlerta('exito', 'Impresora eliminado correctamente');
+                }else{
+                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Impresora no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas); 
+    }
+
+
+    ///////////// procesando la gestion de los emisores ////////////////
+    public static function allEmisores(){  //api llamado desde gestionemisores.js
+      $emisores = emisores::all();
+      echo json_encode($emisores);
+    }
+
+    public static function crearEmisor(){ //api llamada desde el modulo de gestionemisores.ts
+        isadmin();
+        $alertas = [];
+        $emisor = new emisores($_POST);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $alertas = $emisor->validar();
+            if(empty($alertas)){ //si los campos cumplen los criterios  
+                $r = $emisor->crear_guardar();
+                if($r[0]){
+                    $emisor->id = $r[1];
+                    $emisor->created_at = date('Y-m-d H:i:s');
+                    $alertas['exito'][] = 'impresora creada correctamente';
+                    $alertas['emisor'] = $emisor;
+                }else{
+                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
+                }
+            }
+        }
+        echo json_encode($alertas);
+    }
+
+    public static function actualizarEmisor(){
+        //session_start();
+        $alertas = []; 
+        $emisor = emisores::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            $emisor->compara_objetobd_post($_POST);
+            $alertas = $emisor->validar();
+            if(empty($alertas)){
+                $r = $emisor->actualizar();
+                if($r){
+                    $alertas['exito'][] = "Datos del emisor actualizados";
+                    $alertas['emisor'][] = $emisor;
+                }else{
+                    $alertas['error'][] = "Error al actualizar emisor";
+                }
+            }
+        }
+        echo json_encode($alertas);  
+    }
+
+    public static function updateStateEmisor(){
+        //session_start();
+        isadmin();
+        $emisor = emisores::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($emisor)){
+                if($emisor->estado != $_POST['estado']){
+                    $emisor->estado = $_POST['estado'];
+                    $r = $emisor->actualizar();
+                    if($r){
+                        ActiveRecord::setAlerta('exito', 'Emisor actualizado.');
+                    }else{
+                        ActiveRecord::setAlerta('error', 'Emisor no es posible actualizar su estado.');
+                    }
+                }
+            }else{
+                ActiveRecord::setAlerta('error', 'Medio de pago no encontrada');
+            }
+        }
+        $alertas = ActiveRecord::getAlertas();
+        echo json_encode($alertas);
+    }
+
+    public static function eliminarEmisor(){
+        $emisor = emisores::find('id', $_POST['id']);
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if(!empty($emisor)){
+                $r = $emisor->eliminar_registro();
                 if($r){
                     ActiveRecord::setAlerta('exito', 'Impresora eliminado correctamente');
                 }else{

@@ -9,39 +9,43 @@
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginaempleado??'';?> >
-                <span id="pagina2">Empleados</span>
+                <span id="pagina2">Emisores</span>
+            </label>
+            <label>
+                <input type="radio" name="radio" <?php echo $paginaempleado??'';?> >
+                <span id="pagina3">Empleados</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginamalla??'';?> >
-                <span id="pagina3">Cajas</span>
+                <span id="pagina4">Cajas</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina4">Facturadores</span>
+                <span id="pagina5">Facturadores</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina5">Bancos</span>
+                <span id="pagina6">Bancos</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina6">Tarifas</span>
+                <span id="pagina7">Tarifas</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina7">M. pago</span>
+                <span id="pagina8">M. pago</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina8">Dian</span>
+                <span id="pagina9">Dian</span>
             </label>
             <label>
                 <input type="radio" name="radio" <?php echo $paginadesc??'';?> >
-                <span id="pagina9">Impresoras</span>
+                <span id="pagina10">Impresoras</span>
             </label>
             <label>
                 <input type="radio" name="radio">
-                <span id="pagina10">Configuración</span>
+                <span id="pagina11">Configuración</span>
             </label>
         </div>
     </div>
@@ -50,24 +54,26 @@
 
     <!-- negocio -->
     <div class="hidden max-w-screen-md mx-auto mt-6 paginas pagina1"><?php include __DIR__. "/negocio.php";?></div>
+    <!-- gestion emisores -->
+    <div class="hidden mt-6 paginas pagina2"><?php include __DIR__. "/emisores.php";?></div>  
     <!-- gestion empleado -->
-    <div class="hidden mt-6 paginas pagina2"><?php include __DIR__. "/empleados.php";?></div>  
+    <div class="hidden mt-6 paginas pagina3"><?php include __DIR__. "/empleados.php";?></div>  
     <!-- gestion cajas -->
-    <div class="hidden paginas pagina3"><?php include __DIR__. "/gestioncajas.php";?></div>
+    <div class="hidden paginas pagina4"><?php include __DIR__. "/gestioncajas.php";?></div>
     <!-- gestion facturadores -->
-    <div class="hidden paginas pagina4"><?php include __DIR__. "/gestionfacturadores.php";?></div>
+    <div class="hidden paginas pagina5"><?php include __DIR__. "/gestionfacturadores.php";?></div>
     <!-- gestion bancos -->
-    <div class="hidden paginas pagina5"><?php include __DIR__. "/gestionbancos.php";?></div>
+    <div class="hidden paginas pagina6"><?php include __DIR__. "/gestionbancos.php";?></div>
     <!-- gestion tarifas -->
-    <div class="hidden paginas pagina6"><?php include __DIR__. "/tarifas.php";?></div>
+    <div class="hidden paginas pagina7"><?php include __DIR__. "/tarifas.php";?></div>
     <!-- gestion medios de pago -->
-    <div class="hidden paginas pagina7"><?php include __DIR__. "/mediospago.php";?></div>
+    <div class="hidden paginas pagina8"><?php include __DIR__. "/mediospago.php";?></div>
     <!-- gestion dian -->
-    <div class="hidden paginas pagina8"><?php include __DIR__. "/dian.php";?></div>
+    <div class="hidden paginas pagina9"><?php include __DIR__. "/dian.php";?></div>
     <!-- gestion dian -->
-    <div class="hidden paginas pagina9"><?php include __DIR__. "/impresoras.php";?></div>
+    <div class="hidden paginas pagina10"><?php include __DIR__. "/impresoras.php";?></div>
     <!-- configuración -->
-    <div class="hidden mt-6 paginas pagina10">
+    <div class="hidden mt-6 paginas pagina11">
         <div class="tlg:flex flex-1 tlg:overflow-hidden accordion_inv">
 
             <!-- Inputs de control de pestañas verticales -->

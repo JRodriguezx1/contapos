@@ -2,7 +2,7 @@
 
   <h4 class="text-gray-600 mb-8 mt-12">Gestion de impresoras</h4>
   <button id="crearImpresora" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[144px]">Crear punto</button>
-  <table class="display responsive nowrap tabla" width="100%" id="tablaImpresoras">
+  <table id="tablaImpresoras" class="display responsive nowrap tabla" width="100%">
       <thead>
           <tr>
               <th>N.</th>

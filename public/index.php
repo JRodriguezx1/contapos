@@ -328,8 +328,13 @@ $router->post('/admin/api/actualizarEmpleado', [configcontrolador::class, 'actua
 $router->post('/admin/api/eliminarEmpleado', [configcontrolador::class, 'eliminarEmpleado']); //fetch llamado en empleados.ts
 $router->post('/admin/api/updatepassword', [configcontrolador::class, 'updatepassword']); //fetch llamado en empleados.ts
 $router->get('/admin/api/allPrinters', [configcontrolador::class, 'allPrinters']); // me trae todos las impresoras desde gestionimpresoras.ts
-$router->post('/admin/api/crearBanco', [configcontrolador::class, 'crearPrinter']); //api llamada desde gestionimpresoras.ts para crear impresoras
-$router->post('/admin/api/eliminarBanco', [configcontrolador::class, 'eliminarPrinter']);
+$router->post('/admin/api/crearPrinter', [configcontrolador::class, 'crearPrinter']); //api llamada desde gestionimpresoras.ts para crear impresoras
+$router->post('/admin/api/eliminarPrinter', [configcontrolador::class, 'eliminarPrinter']);
+$router->get('/admin/api/config/allEmisores', [configcontrolador::class, 'allEmisores']); // me trae todos los emisores desde gestionemisores.ts
+$router->post('/admin/api/config/crearEmisor', [configcontrolador::class, 'crearEmisor']); //api llamada desde gestionemisores.ts para crear impresoras
+$router->post('/admin/api/config/actualizarEmisor', [configcontrolador::class, 'actualizarEmisor']); //api llamada desde gestionemisores.ts para actualizar emisores
+$router->post('/admin/api/config/eliminarEmisor', [configcontrolador::class, 'eliminarEmisor']);
+$router->post('/admin/api/config/updateStateEmisor', [configcontrolador::class, 'updateStateEmisor']); //api llamada desde gestionemisores.ts para cambiar el estado del emisor
 
 $router->get('/admin/api/reporteventamensual', [reportescontrolador::class, 'reporteventamensual']);
 $router->get('/admin/api/ventasGraficaMensual', [reportescontrolador::class, 'ventasGraficaMensual']);  //fetch llamado desde reportes.ts
