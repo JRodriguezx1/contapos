@@ -120,11 +120,10 @@
                   emisores = [...emisores, resultado.emisor];
                   (tablaEmisores as any).row.add([
                       (tablaEmisores as any).rows().count() + 1,
-                      'sucursal',
                       resultado.emisor.nombre,
                       resultado.emisor.nit,
-                      resultado.emisor.movil,
-                      resultado.emisor.estado,
+                      resultado.emisor.telefono,
+                      `<button id="${resultado.emisor.id}" data-state="${resultado.emisor.estado}" class="stateEmisor btn-xs btn-lima">Activo</button>`,
                       `<div class="acciones-btns" id="${resultado.emisor.id}">
                           <button class="btn-md btn-turquoise editarEmisor"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button class="btn-md btn-red eliminarEmisor"><i class="fa-solid fa-trash-can"></i></button>
