@@ -4,10 +4,11 @@ namespace App\Models\configuraciones;
 
 class caja extends \App\Models\ActiveRecord{
     protected static $tabla = 'caja';
-    protected static $columnasDB = ['id', 'idsucursalid', 'idtipoconsecutivo', 'nombre', 'negocio', 'editable', 'estado'];
+    protected static $columnasDB = ['id', 'idemisor', 'idsucursalid', 'idtipoconsecutivo', 'nombre', 'negocio', 'editable', 'estado'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
+        $this->idemisor = $args['idemisor']??'';
         $this->idsucursalid = id_sucursal();
         $this->idtipoconsecutivo = $args['idtipoconsecutivo']??'';
         $this->nombre = $args['nombre']??'';

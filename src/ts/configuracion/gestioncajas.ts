@@ -8,6 +8,7 @@
 
     type cajasapi = {
         id:string,
+        idemisor:string,
         idtipoconsecutivo: string,
         nombre: string,
         negocio: string
@@ -55,6 +56,7 @@
       (document.querySelector('#nombrecaja')as HTMLInputElement).value = unacaja?.nombre!;
       $('#idtipoconsecutivo').val(unacaja?.idtipoconsecutivo??'');
       $('#negociogestioncaja').val(1);
+      $('#idEmisorCaja').val(unacaja?.idemisor??'');
       
       indiceFila = (tablaCajas as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoCaja.showModal();
@@ -72,6 +74,7 @@
         (async ()=>{ 
           const datos = new FormData();
           datos.append('id', unacaja?.id?unacaja?.id:'');
+          datos.append('idemisor', $('#idEmisorCaja').val()as string);
           datos.append('idtipoconsecutivo', $('#idtipoconsecutivo').val()as string);
           datos.append('nombre', $('#nombrecaja').val()as string);
           datos.append('negocio', $('#negociogestioncaja').val()as string);
