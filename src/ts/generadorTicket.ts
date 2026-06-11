@@ -349,8 +349,8 @@ class InvoiceTicketBuilder extends EscPosBuilder {
     }
 
     private customer() { //cliente factura electronica
-        this.center(`Cliente: ${this.invoice.consumidorfinal.name}`);
-        this.center(`NIT: ${this.invoice.consumidorfinal.identification_number}`);
+        this.center(`Cliente: ${this.invoice.consumidorFinal.name}`);
+        this.center(`NIT: ${this.invoice.consumidorFinal.identification_number}`);
     }
 
     private datosFactura(){
@@ -477,8 +477,8 @@ class InvoiceTicketBuilder2 extends EscPosBuilder {
     }
 
     private customer() { //cliente factura electronica
-        this.center(`Cliente: ${this.invoice.consumidorfinal.name}`);
-        this.center(`NIT: ${this.invoice.consumidorfinal.identification_number}`);
+        this.center(`Cliente: ${this.invoice.consumidorFinal.name}`);
+        this.center(`NIT: ${this.invoice.consumidorFinal.identification_number}`);
     }
 
     private datosFactura(){

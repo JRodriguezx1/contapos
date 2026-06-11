@@ -373,7 +373,7 @@ trait DocumentTrait
             'caja' => $factura->caja,
             'vendedor' => $factura->vendedor,
             // Consumidor Final (Estructura fija según interfaz)
-            'consumidorfinal' => [
+            'consumidorFinal' => [
                 'identification_number' => ($customer??null)?->identification_number??"222222222222",
                 'name' => ($customer??null)?->business_name??'Consumidor Final',
                 'phone' => ($customer??null)?->phone??null,
