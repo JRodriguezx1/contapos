@@ -18,7 +18,6 @@ class caja extends \App\Models\ActiveRecord{
         $this->created_at = $args['created_at']??'';
     }
 
-
     public function validar():array
     {
         if(!$this->idtipoconsecutivo)self::$alertas['error'][] = "Consecutivo de factura no especificado";
