@@ -533,6 +533,7 @@
       const tipoEntrega = modalidadEntrega.textContent!.replace(': ', '');
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
+      datos.append('idemisor', '');
       datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
       datos.append('idvendedor', selectVendedor.value);
       datos.append('idcaja', btnCaja.value);
