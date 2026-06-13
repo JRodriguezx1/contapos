@@ -85,7 +85,8 @@ class cajaService {
         $tarifa = tarifas::find('id', $direccion->idtarifa);
         $vendedor = usuarios::find('id', $factura->idvendedor);
         $sucursal = sucursales::find('id', id_sucursal());
-        if($factura->idemisor!=''){
+        debuguear($factura->idemisor);
+        if($factura->idemisor){
 
         }else{
             
