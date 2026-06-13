@@ -198,10 +198,11 @@
       
     });
 
-    function printdiscriminarmediospago(array: {idmediopago:string, mediopago:string, valor:string}[]){
+    function printdiscriminarmediospago(data: Record<string, {idmediopago:string, mediopago:string, valor:string}>){
       const tbodyMediosPago = document.querySelector('#tablaMediosPago tbody') as HTMLTableElement;
       while(tbodyMediosPago.firstChild)tbodyMediosPago.removeChild(tbodyMediosPago.firstChild);
-      array.forEach(row=>{
+      
+      Object.values(data).forEach((row:{idmediopago:string, mediopago:string, valor:string})=>{
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="">${row.mediopago}</td> 
                         <td class=""><strong>$ </strong>${Number(row.valor).toLocaleString()}</td>
@@ -236,10 +237,10 @@
       document.querySelector('#domicilios')!.textContent = '- $'+domicilios.toLocaleString();
       document.querySelector('#realCaja')!.textContent = '= $'+(basecaja+ventasenefectivo-gastoscaja-domicilios).toLocaleString();
       
-      document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+ventasContado+totaldescuentos.toLocaleString();
+      document.querySelector('#ingresoVentasTotal')!.textContent = '+ $'+(ventasContado+totaldescuentos).toLocaleString();
       document.querySelector('#creditos')!.textContent = '+ $'+ventasACredito.toLocaleString();
       document.querySelector('#totalDescuentos')!.textContent = '- $'+totaldescuentos.toLocaleString();
-      document.querySelector('#totaldeventas')!.textContent = ': $'+(ventasContado+ventasACredito).toLocaleString();
+      document.querySelector('#totaldeventas')!.textContent = ' $'+(ventasContado+ventasACredito).toLocaleString();
       document.querySelector('#abonosTotales')!.textContent = '+ $'+abonostotales.toLocaleString();
       document.querySelector('#ingresoCajaDelDia')!.textContent = '- $'+(ventasContado+abonostotales).toLocaleString();
       document.querySelector('#totalGastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
