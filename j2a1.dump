@@ -191,6 +191,7 @@ DROP TABLE IF EXISTS `caja`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `caja` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `idemisor` int DEFAULT NULL,
   `idsucursalid` int DEFAULT NULL,
   `idtipoconsecutivo` int NOT NULL,
   `nombre` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci NOT NULL,
@@ -201,9 +202,11 @@ CREATE TABLE `caja` (
   PRIMARY KEY (`id`),
   KEY `idconsecutivo_idx` (`idtipoconsecutivo`),
   KEY `idsucursalid_idx` (`idsucursalid`),
+  KEY `idemisor_cj_idx` (`idemisor`),
   CONSTRAINT `idconsecutivo` FOREIGN KEY (`idtipoconsecutivo`) REFERENCES `consecutivos` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `idemisor_cj` FOREIGN KEY (`idemisor`) REFERENCES `emisores` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idsucursalid` FOREIGN KEY (`idsucursalid`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,7 +215,7 @@ CREATE TABLE `caja` (
 
 LOCK TABLES `caja` WRITE;
 /*!40000 ALTER TABLE `caja` DISABLE KEYS */;
-INSERT INTO `caja` VALUES (1,1,1,'Caja principal','',0,1,'2025-10-19 01:53:34');
+INSERT INTO `caja` VALUES (1,NULL,1,1,'Caja principal','',0,1,'2025-10-19 01:53:34');
 /*!40000 ALTER TABLE `caja` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1123,6 +1126,37 @@ INSERT INTO `direcciones` VALUES (1,1,1,1,1,NULL,'Quindio','Armenia','Almacen',N
 UNLOCK TABLES;
 
 --
+-- Table structure for table `emisores`
+--
+
+DROP TABLE IF EXISTS `emisores`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `emisores` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idsucursal` int NOT NULL,
+  `nombre` varchar(77) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `nit` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `datosencabezados` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `telefono` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `estado` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idsucursal_ems_idx` (`idsucursal`),
+  CONSTRAINT `idsucursal_ems` FOREIGN KEY (`idsucursal`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `emisores`
+--
+
+LOCK TABLES `emisores` WRITE;
+/*!40000 ALTER TABLE `emisores` DISABLE KEYS */;
+/*!40000 ALTER TABLE `emisores` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `estadocreditos`
 --
 
@@ -1271,6 +1305,7 @@ DROP TABLE IF EXISTS `facturas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `facturas` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `idemisor` int DEFAULT NULL,
   `id_sucursal` int DEFAULT NULL,
   `idcliente` int DEFAULT NULL,
   `idvendedor` int DEFAULT NULL,
@@ -1339,12 +1374,14 @@ CREATE TABLE `facturas` (
   KEY `estado` (`estado`),
   KEY `idcanaldeventa_idx` (`idcanaldeventa`),
   KEY `idrepartidorcobrador_idx` (`idrepartidorcobrador`),
+  KEY `idemisor_idx` (`idemisor`),
   CONSTRAINT `id_consecutivo` FOREIGN KEY (`idconsecutivo`) REFERENCES `consecutivos` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `id_sucursalx` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idcanaldeventa` FOREIGN KEY (`idcanaldeventa`) REFERENCES `canaldeventa` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idcierrecajax` FOREIGN KEY (`idcierrecaja`) REFERENCES `cierrescajas` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idclientex` FOREIGN KEY (`idcliente`) REFERENCES `clientes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `iddireccionx` FOREIGN KEY (`iddireccion`) REFERENCES `direcciones` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `idemisor` FOREIGN KEY (`idemisor`) REFERENCES `emisores` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idrepartidorcobrador` FOREIGN KEY (`idrepartidorcobrador`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `idvendedorx` FOREIGN KEY (`idvendedor`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `ref_creditoid` FOREIGN KEY (`ref_creditoid`) REFERENCES `creditos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -2655,7 +2692,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota',NULL,'2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2.1','2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3051,4 +3088,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-05 13:55:59
+-- Dump completed on 2026-06-10 23:22:48

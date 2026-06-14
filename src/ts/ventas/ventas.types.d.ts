@@ -129,7 +129,7 @@ interface DataInvoice {
     fechaPago: string;
     caja: string;
     vendedor: string;
-    consumidorfinal: ConsumidorFinal;
+    consumidorFinal: ConsumidorFinal;
     cliente: Cliente;
     items: CarritoItem[];
     mediospago: MedioPago[];

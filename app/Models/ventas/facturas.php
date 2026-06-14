@@ -3,12 +3,13 @@ namespace App\Models\ventas;
 
 class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'idemisor', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
+        $this->idemisor = $args['idemisor'] ?? '';
         $this->id_sucursal = $args['id_sucursal'] ?? '';
         $this->idcliente = $args['idcliente'] ?? 1;
         $this->idvendedor = $args['idvendedor'] ?? 1; //tabla usuarios

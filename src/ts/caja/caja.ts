@@ -238,6 +238,32 @@
           a.click();
           URL.revokeObjectURL(url);*/
         }
+
+
+        if(printerBT !== '1'){
+          const dataPrinter = {
+            businessId: resultado.negocio,
+            sucursal: resultado.sucursal,
+            printerName: 'CAJA',
+            tipoTicket: 'ticket',
+            content: resultado
+          };
+          console.log(dataPrinter);
+          try {
+            const url = "https://servidorimpresionposws-production.up.railway.app/api/print/printJob"; //llamado a la API server print nodejs/ts
+            const respuesta = await fetch(url, {
+              method: 'POST',
+              headers: { "Accept": "application/json", "Content-Type": "application/json" },
+              body: JSON.stringify(dataPrinter)
+          });
+            const resultado = await respuesta.json();
+            console.log(resultado);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
       }catch(error){
         console.log(error);

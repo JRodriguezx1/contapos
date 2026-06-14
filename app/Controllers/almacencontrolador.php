@@ -1395,7 +1395,7 @@ class almacencontrolador{
       if($_POST['tipoitem'] == 0){ //si es producto
         //$producto = productos::find('id', $iditem);
         $producto = stockproductossucursal::uniquewhereArray(['productoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
-        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>$producto->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
+        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>"reinicio/ajuste de stock, aux=$stockaux", 'cantidad'=>$cantidad, 'stockanterior'=>$producto->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
         $producto->stock = $cantidad;
         $producto->stockaux = $stockaux;
         $producto->promediostock = $promediostock;
@@ -1411,7 +1411,7 @@ class almacencontrolador{
       }else{  // si es insumo subproducto
         //$insumo = subproductos::find('id', $iditem);
         $insumo = stockinsumossucursal::uniquewhereArray(['subproductoid'=>$iditem, 'sucursalid'=>id_sucursal()]);
-        $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>'reinicio/ajuste de stock', 'cantidad'=>$cantidad, 'stockanterior'=>$insumo->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
+        $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ajuste', 'referencia'=>"reinicio/ajuste de stock, aux=$stockaux", 'cantidad'=>$cantidad, 'stockanterior'=>$insumo->stock, 'stocknuevo'=>$cantidad, 'comentario'=>'Stock ajustado manualmente']);
         $insumo->stock = $cantidad;
         $insumo->stockaux = $stockaux;
         $insumo->promediostock = $promediostock;

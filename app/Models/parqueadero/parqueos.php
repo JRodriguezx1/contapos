@@ -1,58 +1,60 @@
 <?php
 
-namespace App\Models\comisiones;
+namespace App\Models\parqueadero;
 
-class comisiones {
-    
-    public function __construct($args = []){
-        $this->id = $args['id']??null;
-        $this->fk_idsucursal = $args['fk_idsucursal']??id_sucursal();
-        $this->idfacturaid = $args['idfacturaid']??'';
-        $this->idusuariofk = $args['idusuariofk']??'';
-        $this->valorfactura = $args['valorfactura']??0;
-        $this->percentcomision = $args['percentcomision']??'';
-        $this->valorcomision = $args['valorcomision']??0;
-        $this->valorentregado = $args['valorentregado']??0;
-        $this->fecha = $args['fecha']??date('Y-m-d H:i:s');
-        $this->estado = $args['estado']??0; //-- pendiente(0), pagada(1), parcial(2)
-        $this->created_at = $args['created_at']??'';
-    }
+class parqueos
+{
+    public ?int $id;
+    public int $vehiculoId;
+    public string $fechaHoraIngreso;
+    public ?string $fechaHoraSalida;
+    public ?float $horas;
+    public ?float $valor;
+    public string $estado;
+    public ?string $observaciones;
 
+    // Atributos mapeados de la relación (opcionales)
+    public ?float $tarifaHora;
+    public ?float $tarifaDia;
 
-    public function validar():array
+    public function __construct(array $datos = []) 
     {
-        $alertas = [];
-        if(!$this->idusuariofk)$alertas['error'][] = "Debe seleccionar el empleado";
-        if($this->valorcomision<0)$alertas['error'][] = "el valor de la comision no es valido.";
-        return $alertas;
+        $this->id = $datos['id'] ?? null;
+        $this->vehiculoId = $datos['vehiculo_id'] ?? 0;
+        $this->fechaHoraIngreso = $datos['fecha_hora_ingreso'] ?? '';
+        $this->fechaHoraSalida = $datos['fecha_hora_salida'] ?? null;
+        $this->horas = isset($datos['horas']) ? (float)$datos['horas'] : null;
+        $this->valor = isset($datos['valor']) ? (float)$datos['valor'] : null;
+        $this->estado = $datos['estado'] ?? 'ACTIVO';
+        $this->observaciones = $datos['observaciones'] ?? null;
+        
+        $this->tarifaHora = isset($datos['tarifa_hora']) ? (float)$datos['tarifa_hora'] : null;
+        $this->tarifaDia = isset($datos['tarifa_dia']) ? (float)$datos['tarifa_dia'] : null;
     }
 
-    public function toArray():array {
-        return [
-            //'id' => $this->id,
-            'fk_idsucursal'=>$this->fk_idsucursal,
-            'idfacturaid' => $this->idfacturaid,
-            'idusuariofk' => $this->idusuariofk,
-            'valorfactura' => $this->valorfactura,
-            'percentcomision' => $this->percentcomision,
-            'valorcomision' => $this->valorcomision,
-            'valorentregado' => $this->valorentregado,
-            'fecha' => $this->fecha, 
-            'estado' => $this->estado,
-        ];
-    }
-
-    public function actualizarComision($valorpagadoCuota, int|null $idf) {
-        $this->numcuota += 1;
-        $this->abonodecuotas += $valorpagadoCuota;
-        $this->saldopendiente -= $valorpagadoCuota;
-        if($this->saldopendiente<=0){
-            $this->factura_id = $idf;
-            $this->estado = 1;  //credito cerrado
-            $this->idestadocreditos = 1; //credito finalizado
-            $this->fechafin = date('Y-m-d H:i:s');
-            $this->productoentregado = 1;  //producto entregado
+    /**
+     * Lógica de negocio encapsulada en el Modelo.
+     * El modelo calcula su propia tarifa si conoce las horas.
+     */
+    public function calcularLiquidacion(): void 
+    {
+        if ($this->estado !== 'ACTIVO') {
+            throw new \Exception("El parqueo ya no está activo.");
         }
-    }
 
+        $ingreso = new \DateTime($this->fechaHoraIngreso);
+        $salida = new \DateTime(); // Ahora mismo
+        
+        $intervalo = $ingreso->diff($salida);
+        $horasTotales = ($intervalo->days * 24) + $intervalo->h + ($intervalo->i / 60);
+        
+        $horasACobrar = ceil($horasTotales);
+        if ($horasACobrar == 0) $horasACobrar = 1;
+
+        // Asignamos los valores calculados al modelo
+        $this->fechaHoraSalida = $salida->format('Y-m-d H:i:s');
+        $this->horas = round($horasTotales, 2);
+        $this->valor = $horasACobrar * $this->tarifaHora;
+        $this->estado = 'FINALIZADO';
+    }
 }

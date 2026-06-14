@@ -4,12 +4,12 @@
         <fieldset class="formulario__fieldset">
             <div class="formulario__campo">
                 <label class="formulario__label" for="empresa">Empresa</label>
-                <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la empresa" id="empresa" name="negocio" value="<?php echo $negocio->negocio??''; ?>" required>
+                <input id="nombreEmpresa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la empresa" id="empresa" name="negocio" value="<?php echo $negocio->negocio??''; ?>" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombrenegocio">Nombre de la sucursal</label>
                 <div class="formulario__dato">
-                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la sucursal" id="nombrenegocio" name="nombre" value="<?php echo $negocio->nombre??''; ?>" required>
+                    <input id="nombreSucursal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre de la sucursal" id="nombrenegocio" name="nombre" value="<?php echo $negocio->nombre??''; ?>" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
@@ -22,42 +22,42 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="ciudadnegocio">Ciudad</label>
                 <div class="formulario__dato">
-                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad del negocio" id="ciudadnegocio" name="ciudad" value="<?php echo $negocio->ciudad ?? '';?>" required>
+                    <input id="ciudadSucursal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="ciudad del negocio" id="ciudadnegocio" name="ciudad" value="<?php echo $negocio->ciudad ?? '';?>" required>
                     <!-- <label data-num="40" class="count-charts" for="">40</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="direccionnegocio">Dirección</label>
                 <div class="formulario__dato">
-                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion del negocio" id="direccionnegocio" name="direccion" value="<?php echo $negocio->direccion ?? '';?>" required>
+                    <input id="direccionSucursal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Direccion del negocio" id="direccionnegocio" name="direccion" value="<?php echo $negocio->direccion ?? '';?>" required>
                     <!-- <label data-num="56" class="count-charts" for="">56</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="telefononegocio">Teléfono</label>
-                <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="telefono fijo de contacto" id="telefononegocio" name="telefono" value="<?php echo $negocio->telefono ?? '';?>">
+                <input id="telefonoSucursal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="telefono fijo de contacto" id="telefononegocio" name="telefono" value="<?php echo $negocio->telefono ?? '';?>">
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="movilnegocio">Celular</label>
-                <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Movil de contacto" id="movilnegocio" name="movil" value="<?php echo $negocio->movil ?? '';?>" required>
+                <input id="celularSucursal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Movil de contacto" id="movilnegocio" name="movil" value="<?php echo $negocio->movil ?? '';?>" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="">Correo Electrónico</label>
                 <div class="formulario__dato">
-                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Ingresa correo electrónico" id="email" name="email" value="<?php echo $negocio->email ?? '';?>" required>
+                    <input id="emailSucursal" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="email" placeholder="Ingresa correo electrónico" id="email" name="email" value="<?php echo $negocio->email ?? '';?>" required>
                     <!-- <label data-num="50" class="count-charts" for="">50</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="nit">NIT</label>
                 <div class="formulario__dato">
-                    <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nit del negocio" id="nit" name="nit" value="<?php echo $negocio->nit ?? '';?>" required>
+                    <input id="nitEmpresa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nit del negocio" id="nit" name="nit" value="<?php echo $negocio->nit ?? '';?>" required>
                     <!-- <label data-num="12" class="count-charts" for="">12</label> -->
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="www">www/QR alternativo</label>
-                <input id="negocio" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Texto o link a imprimir en QR" id="www" name="www" value="<?php echo $negocio->www??'';?>">
+                <input id="QREmpresa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Texto o link a imprimir en QR" id="www" name="www" value="<?php echo $negocio->www??'';?>">
             </div>
         </fieldset>
 

@@ -140,7 +140,6 @@
     <!-- izquierda -->
     <div class="toggleanduser flex items-center gap-3">
         <span class="sidebartoggle material-symbols-outlined">menu</span>
-
         <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide">
             <?php echo nombreSucursal(); ?>
         </span>

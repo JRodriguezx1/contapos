@@ -2,7 +2,7 @@
 
   <h4 class="text-gray-600 mb-8 mt-12">Gestion de cajas facturadoras</h4>
   <button id="crearCaja" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[144px]">Crear caja</button>
-  <table class="display responsive nowrap tabla" width="100%" id="tablaCajas">
+  <table id="tablaCajas" class="display responsive nowrap tabla" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -51,7 +51,7 @@
                     <?php foreach($facturadores as $value): ?>
                         <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
                     <?php endforeach; ?>
-                </select>                 
+                </select>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="negociogestioncaja">Negocio</label>
@@ -60,9 +60,18 @@
                     
                         <option value="<?php echo $negocio->id;?>"><?php echo $negocio->nombre;?></option>
                     
-                </select>                   
+                </select>
             </div>
-        </div>  
+            <div class="formulario__campo">
+                <label class="formulario__label" for="idEmisorCaja">Emisor</label>
+                <select id="idEmisorCaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="idEmisorCaja">
+                    <option value="" selected> <?php echo $negocio->negocio;?> </option>
+                    <?php foreach($emisores as $value): ?>
+                        <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
         
         <div class="text-right">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>

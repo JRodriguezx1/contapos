@@ -13,7 +13,7 @@ trait DocumentTrait
 {
 
     //metodo llamado desde ventascontrolador cuando se hace la venta, para guardar la FE de manera local
-    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, float $descgeneral, float $cargo):array
+    protected static function createInvoiceElectronic(array $carrito, stdClass $datosAdquiriente, $idconsecutivo, $idfactura, $numconsecutivo, array $mediospago, float $descgeneral, float $cargo, string $observacion):array
     {
         date_default_timezone_set('America/Bogota');
         $invoice_lines = [];
@@ -149,7 +149,7 @@ trait DocumentTrait
                 "time" => date('H:i:s'),
                 "resolution_number" => $consecutivo->resolucion,
                 "sendmail" => $stateEmail,
-                "notes" => "Factura Electroncia de venta",
+                "notes" => "Factura Electroncia de venta. ".$observacion,
                 "payment_form" => [
                     "payment_form_id" => "1",  //1 = contado,  2  = credito
                     "payment_method_id" => $metodoPago,  //efectivo, transferencia etc
@@ -373,7 +373,7 @@ trait DocumentTrait
             'caja' => $factura->caja,
             'vendedor' => $factura->vendedor,
             // Consumidor Final (Estructura fija según interfaz)
-            'consumidorfinal' => [
+            'consumidorFinal' => [
                 'identification_number' => ($customer??null)?->identification_number??"222222222222",
                 'name' => ($customer??null)?->business_name??'Consumidor Final',
                 'phone' => ($customer??null)?->phone??null,
