@@ -1,6 +1,8 @@
 <div class="box parqueadero">
-    <h4 class="text-gray-800 mb-8 mt-4">Modulo de parqueadero</h4>
-
+    <div>
+        <h4 class="font-semibold text-slate-800 tracking-tight">Módulo de Parqueadero</h1>
+        <p class="text-lg text-slate-500">Gestión de ingresos, salidas y tarifas en tiempo real.</p>
+    </div>
 
 </div>
 
@@ -8,8 +10,8 @@
     
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 border-b border-slate-200 pb-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Módulo de Parqueadero</h1>
-            <p class="text-sm text-slate-500">Gestión de ingresos, salidas y tarifas en tiempo real.</p>
+            <button id="updateTarifa" class="btn-xs btn-indigo">Actualizar Tarifas</button>
+            <button id="viewTarifa" class="btn-xs btn-turquoise">Ver Tarifas</button>
         </div>
         <div class="flex gap-4 mt-4 md:mt-0">
             <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 flex items-center gap-3">
@@ -96,7 +98,13 @@
                         </button>
                     </div>
                 </div>
-                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+<!-- MODAL PARA CREAR/ACTUALIZAR TARIFA-->
+<?php include __DIR__. "/miDialogoUpdateTarifa.php"; ?>
+<!-- MODAL PARA VER TARIFA-->
+<?php include __DIR__. "/viewTarifas.php"; ?>

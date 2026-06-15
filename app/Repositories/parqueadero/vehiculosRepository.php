@@ -1,8 +1,11 @@
 <?php
 
-use App\Models\parqueadero\vehiculos;
+namespace App\Repositories\parqueadero;
 
-class PDOVehiculoRepository 
+use App\Models\parqueadero\vehiculos;
+use App\Repositories\operationRepository;
+
+class PDOVehiculoRepository extends operationRepository
 {
     private $db;
 

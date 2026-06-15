@@ -289,6 +289,9 @@ $router->post('/admin/api/comisiones/liquidarComision', [comisionescontrolador::
 $router->get('/admin/api/comisiones/eliminarMovimientoComision', [comisionescontrolador::class, 'eliminarMovimientoComision']);
 $router->get('/admin/api/comisiones/detalleFacturaComision', [comisionescontrolador::class, 'detalleFacturaComision']);
 
+$router->post('/admin/api/parqueadero/createUpdateTarifa', [parqueaderocontrolador::class, 'createUpdateTarifa']);
+$router->get('/admin/api/parqueadero/allTarifas', [parqueaderocontrolador::class, 'allTarifas']);  //lamadas desde parqueadero.ts
+
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
 $router->post('/admin/api/apiCrearCliente', [clientescontrolador::class, 'apiCrearCliente']);  // crear cliente desde modulo de ventas.ts
