@@ -67,7 +67,7 @@
         const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
         const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioDia);
-        const fechafinbtn:string = formatoFecha(finDia);
+        const fechafinbtn:string = formatoFecha(finDia).substring(0, 10);
         POS.callApiReporte(fechainiciobtn, fechafinbtn);
     });
 
@@ -80,7 +80,7 @@
         const inicioAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 0, 0, 0);
         const finAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioAyer);
-        const fechafinbtn:string = formatoFecha(finAyer);
+        const fechafinbtn:string = formatoFecha(finAyer).substring(0, 10);
         POS.callApiReporte(fechainiciobtn, fechafinbtn);
     });
 

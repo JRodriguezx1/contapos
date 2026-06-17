@@ -527,7 +527,7 @@ class reportescontrolador{
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
-    $sql = "SELECT *FROM facturas WHERE fechapago BETWEEN '$fechainicio' AND '$fechafin' AND remision = 1 AND (estado = 'Remision' OR estado = 'Paga') AND id_sucursal = $idsucursal";
+    $sql = "SELECT *FROM facturas WHERE fechacreacion BETWEEN '$fechainicio' AND '$fechafin' AND remision = 1 AND (estado = 'Remision' OR estado = 'Paga') AND id_sucursal = $idsucursal";
     if($_SERVER['REQUEST_METHOD'] === 'POST' )
       $facturas = facturas::camposJoinObj($sql);
     echo json_encode($facturas);
