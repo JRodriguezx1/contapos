@@ -13,6 +13,7 @@
     <form action="/admin/almacen/downexcelinsumos" method="POST">
         <button class="btn-md btn-light !py-2 !px-4" name="downexcel" title="Descargar en excel"><span class="material-symbols-outlined text-[24px] leading-none">download</span></button>
     </form>
+    <button id="btnUploadExcel" class="btn-md btn-light mb-4 !py-2 !px-4" name="upexcel"><span class="material-symbols-outlined text-[24px] leading-none">upload</span></button>
   </div>
   
   <table class="display responsive nowrap tabla" width="100%" id="tablaSubProductos">

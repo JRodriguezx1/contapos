@@ -111,6 +111,7 @@ $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'do
 $router->get('/admin/almacen/cambioPrecios', [almacencontrolador::class, 'cambioPrecios']);
 $router->get('/admin/almacen/estadisticas', [almacencontrolador::class, 'estadisticas']);
 $router->get('/admin/almacen/productosParaFormulas', [almacencontrolador::class, 'productosParaFormulas']);
+$router->get('/admin/almacen/conversionUnidades', [almacencontrolador::class, 'conversionUnidades']);
 ////// area de traslados de inventario  //////
 $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
 $router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);
