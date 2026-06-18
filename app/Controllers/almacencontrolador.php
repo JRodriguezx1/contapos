@@ -595,8 +595,8 @@ class almacencontrolador{
   public static function conversionUnidades(Router $router){
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $productos = productos::all();
-    $router->render('admin/almacen/conversionUnidades', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all()]);
+    $subproductos = subproductos::all();
+    $router->render('admin/almacen/conversionUnidades', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'sucursales'=>sucursales::all()]);
   }
 
 
