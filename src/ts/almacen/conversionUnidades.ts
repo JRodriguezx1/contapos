@@ -4,6 +4,7 @@
       const miDialogoConversionUnidad = document.querySelector('#miDialogoConversionUnidad') as any;
       const unidadesMedidas = document.querySelector('#unidadesMedidas') as HTMLSelectElement;
       const contenedor = document.querySelector('#contenedor') as HTMLDivElement;
+      const factor = document.querySelector('#equivalente') as HTMLInputElement;
       let indiceFila=0, tablaSubProductos:HTMLElement;
       
       type subproductsapi = {
@@ -105,8 +106,7 @@
           }
         });
 
-        const subAllUnidades = allConversionUnidades.filter(z=>z.idsubproducto===unsubproducto.id);
-        imprimirConversionesUnidades(subAllUnidades);
+        imprimirConversionesUnidades(allConversionUnidades);
         
         //indiceFila = (tablaSubProductos as any).row((e.target as HTMLElement).closest('tr')).index();
         miDialogoConversionUnidad.showModal();
@@ -114,7 +114,8 @@
       }
 
 
-      function imprimirConversionesUnidades(subAllUnidades:conversionunidadesapi[]){
+      function imprimirConversionesUnidades(allConversionUnidades:conversionunidadesapi[]){
+        const subAllUnidades = allConversionUnidades.filter(z=>z.idsubproducto===unsubproducto.id);
         console.log(subAllUnidades);
         contenedor.innerHTML = '';
         subAllUnidades.forEach(conversion => {
@@ -145,49 +146,36 @@
 
       contenedor.addEventListener('click', (e) => {
           const target = e.target as HTMLElement;
-          if (target.classList.contains('btn-eliminar')) {
+          if(target.classList.contains('btn-eliminar')){
               const id = target.dataset.id;
               console.log('Eliminar conversión:', id);
-              //allConversionUnidades = allConversionUnidades.filter(conversion => conversion.id !== id && idsubproducto===unsubproducto.id);
-
-              //imprimirConversionesUnidades(allConversionUnidades);
+              allConversionUnidades = allConversionUnidades.filter(conversion => conversion.id !== id);
+              imprimirConversionesUnidades(allConversionUnidades);
               // Aquí llamas tu API o eliminas del arreglo
           }
       });
   
       ////////////////////  Actualizar conversion unidad de medida  //////////////////////
       document.querySelector('#formConversionUnidad')?.addEventListener('submit', e=>{
-        
           e.preventDefault();
           var info = (tablaSubProductos as any).page.info();
-          
           (async ()=>{ 
             const datos = new FormData();
             datos.append('id', unsubproducto!.id);
-            datos.append('id_unidadmedida', $('#unidadmedida').val()as string);
-            datos.append('unidadmedida', $('#unidadmedida').find('option:selected').text());
-            datos.append('nombre', $('#nombre').val()as string);
-            datos.append('sku', $('#sku').val()as string);
-            datos.append('precio_compra', $('#preciocompra').val()as string);
-             datos.append('stockminimo', $('#stockminimo').val()as string);
+            datos.append('idsubproducto', unsubproducto.id);
+            datos.append('idunidadmedidabase', unsubproducto.id_unidadmedida);
+            datos.append('idunidadmedidadestino', $('#unidadesMedidas').val()as string);
+            datos.append('nombreunidadbase', unsubproducto.unidadmedida);
+            datos.append('nombreunidaddestino', $('#unidadesMedidas').text()as string);
+             datos.append('factorconversion', (($('#factor').val())??'0')as string);
             try {
-                const url = "/admin/api/actualizarsubproducto";
+                const url = "/admin/api/almacen/crearNuevaConversionUnidad";
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json(); 
                 console.log(resultado); 
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                  /// actualizar el arregle del subproducto ///
-                  subproducts.forEach(a=>{if(a.id == unsubproducto.id)a = Object.assign(a, resultado.subproducto[0]);});
-                  ///////// cambiar la fila completa, su contenido //////////
-                  const datosActuales = (tablaSubProductos as any).row(indiceFila+=info.start).data();
-                  /*NOMBRE*/datosActuales[1] ='<div class="w-80 whitespace-normal">'+$('#nombre').val()+'</div>';
-                  /*proveedor*/datosActuales[2] = '';
-                  /*SKU*/datosActuales[3] = $('#sku').val();
-                  /*UNIDADMEDIDA*/datosActuales[4] = $('#unidadmedida option:selected').text();
-                  /*PRECIOCOMPRA*/datosActuales[5] = '$'+Number($('#preciocompra').val())?.toLocaleString();
-                  (tablaSubProductos as any).row(indiceFila).data(datosActuales).draw();
-                  (tablaSubProductos as any).page(info.page).draw('page'); //me mantiene la pagina actual
+                  
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }

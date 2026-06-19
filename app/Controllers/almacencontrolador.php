@@ -1586,4 +1586,12 @@ class almacencontrolador{
       return; 
     }
 
+
+    public static function crearNuevaConversionUnidad():void{
+      isadmin();
+      
+      echo json_encode('lupe');
+      return; 
+    }
+
 }
