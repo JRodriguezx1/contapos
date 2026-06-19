@@ -3,6 +3,7 @@
 
       const miDialogoConversionUnidad = document.querySelector('#miDialogoConversionUnidad') as any;
       const unidadesMedidas = document.querySelector('#unidadesMedidas') as HTMLSelectElement;
+      const contenedor = document.querySelector('#contenedor') as HTMLDivElement;
       let indiceFila=0, tablaSubProductos:HTMLElement;
       
       type subproductsapi = {
@@ -27,14 +28,25 @@
         nombre:string
       }
   
-      let subproducts:subproductsapi[]=[], unsubproducto:subproductsapi, allUnidadesMedida:IunidadesMedida[]=[];
+      type conversionunidadesapi = {
+        id:string,
+        idproducto: string,
+        idsubproducto: string,
+        idunidadmedidabase: string,
+        idunidadmedidadestino: string,
+        nombreunidadbase: string,
+        nombreunidaddestino: string,
+        factorconversion: string,
+      };
+
+      let subproducts:subproductsapi[]=[], unsubproducto:subproductsapi, allUnidadesMedida:IunidadesMedida[]=[], allConversionUnidades:conversionunidadesapi[] = [];
   
       (async ()=>{
         try {
             const url = "/admin/api/allsubproducts"; //llamado a la API REST
             const respuesta = await fetch(url); 
             subproducts = await respuesta.json(); 
-            console.log(subproducts);
+            //console.log(subproducts);
         } catch (error) {
             console.log(error);
         }
@@ -46,7 +58,19 @@
             const url = "/admin/api/almacen/allUnidadesMedida"; //llamado a la API REST
             const respuesta = await fetch(url); 
             allUnidadesMedida = await respuesta.json(); 
-            console.log(allUnidadesMedida);
+            //console.log(allUnidadesMedida);
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+
+
+      (async ()=>{
+        try {
+            const url = "/admin/api/allConversionesUnidades";
+            const respuesta = await fetch(url); 
+            allConversionUnidades = await respuesta.json(); 
+            console.log(allConversionUnidades);
         } catch (error) {
             console.log(error);
         }
@@ -80,11 +104,56 @@
             unidadesMedidas.appendChild(option);
           }
         });
+
+        const subAllUnidades = allConversionUnidades.filter(z=>z.idsubproducto===unsubproducto.id);
+        imprimirConversionesUnidades(subAllUnidades);
         
         //indiceFila = (tablaSubProductos as any).row((e.target as HTMLElement).closest('tr')).index();
         miDialogoConversionUnidad.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
+
+
+      function imprimirConversionesUnidades(subAllUnidades:conversionunidadesapi[]){
+        console.log(subAllUnidades);
+        contenedor.innerHTML = '';
+        subAllUnidades.forEach(conversion => {
+            contenedor.innerHTML += `
+                <div class="flex items-center justify-between p-3 mb-3 bg-white border border-slate-200 rounded-lg">
+                    <div class="flex items-center gap-6 text-lg">
+                        <span>
+                            <span class="font-medium text-slate-500">Base:</span>
+                            <span class="text-slate-900 font-medium">1 ${conversion.nombreunidadbase}</span>
+                        </span>
+                        <span>
+                            <span class="font-medium text-slate-500">Destino:</span>
+                            <span class="text-slate-900 font-medium">${conversion.nombreunidaddestino}</span>
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        data-id="${conversion.id}"
+                        class="btn-eliminar px-3 py-1.5 text-base font-medium text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 hover:border-red-300 transition-colors"
+                    >
+                        Eliminar
+                    </button>
+                </div>
+            `;
+        });
+      }
+
+
+      contenedor.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.classList.contains('btn-eliminar')) {
+              const id = target.dataset.id;
+              console.log('Eliminar conversión:', id);
+              //allConversionUnidades = allConversionUnidades.filter(conversion => conversion.id !== id && idsubproducto===unsubproducto.id);
+
+              //imprimirConversionesUnidades(allConversionUnidades);
+              // Aquí llamas tu API o eliminas del arreglo
+          }
+      });
   
       ////////////////////  Actualizar conversion unidad de medida  //////////////////////
       document.querySelector('#formConversionUnidad')?.addEventListener('submit', e=>{
