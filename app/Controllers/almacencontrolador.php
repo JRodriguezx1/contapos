@@ -987,6 +987,13 @@ class almacencontrolador{
   }
 
 
+  public static function allUnidadesMedida():void{
+    $allUnidadesMedida = unidadesmedida::all();
+    echo json_encode($allUnidadesMedida);
+    return;
+  }
+
+
   public static function allConversionesUnidades(){  //Envia todas las equivalencias o conversiones de unidades
     $conversionUnidades = conversionunidades::all();
     echo json_encode($conversionUnidades);

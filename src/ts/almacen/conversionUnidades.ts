@@ -2,6 +2,7 @@
     if(document.querySelector('.conversionUnidades')){
 
       const miDialogoConversionUnidad = document.querySelector('#miDialogoConversionUnidad') as any;
+      const unidadesMedidas = document.querySelector('#unidadesMedidas') as HTMLSelectElement;
       let indiceFila=0, tablaSubProductos:HTMLElement;
       
       type subproductsapi = {
@@ -20,8 +21,13 @@
         precio_compra: string,
         fecha_ingreso: string,
       };
+
+      interface IunidadesMedida {
+        id:string,
+        nombre:string
+      }
   
-      let subproducts:subproductsapi[]=[], unsubproducto:subproductsapi;
+      let subproducts:subproductsapi[]=[], unsubproducto:subproductsapi, allUnidadesMedida:IunidadesMedida[]=[];
   
       (async ()=>{
         try {
@@ -29,6 +35,18 @@
             const respuesta = await fetch(url); 
             subproducts = await respuesta.json(); 
             console.log(subproducts);
+        } catch (error) {
+            console.log(error);
+        }
+      })();
+
+
+      (async ()=>{
+        try {
+            const url = "/admin/api/almacen/allUnidadesMedida"; //llamado a la API REST
+            const respuesta = await fetch(url); 
+            allUnidadesMedida = await respuesta.json(); 
+            console.log(allUnidadesMedida);
         } catch (error) {
             console.log(error);
         }
@@ -45,20 +63,31 @@
       });
   
       function editarUnidadMedida(e:Event){
+        while(unidadesMedidas.firstChild)unidadesMedidas.removeChild(unidadesMedidas.firstChild);
         let idsubproducto = (e.target as HTMLElement).parentElement?.id!;
         if((e.target as HTMLElement)?.tagName === 'I')idsubproducto = (e.target as HTMLElement).parentElement?.parentElement?.id!;
         unsubproducto = subproducts.find(x=>x.id === idsubproducto)!;
-        $('#unidadmedida').val(unsubproducto?.id_unidadmedida??'');
+  
+        $('#nombreInsumo').text(unsubproducto?.nombre??'');
+        $('#unidadMedidaBase').text(unsubproducto?.unidadmedida??'');
+        $('#unidadMedidaBase2').val(unsubproducto?.unidadmedida??'');
+
+        allUnidadesMedida.forEach(u=>{
+          if(u.id != unsubproducto.id_unidadmedida){
+            const option = document.createElement('option');
+            option.value = u.id;
+            option.textContent = u.nombre;
+            unidadesMedidas.appendChild(option);
+          }
+        });
         
-        (document.querySelector('#stockminimo')as HTMLInputElement).value = unsubproducto?.stockminimo??'';
-        
-        indiceFila = (tablaSubProductos as any).row((e.target as HTMLElement).closest('tr')).index();
+        //indiceFila = (tablaSubProductos as any).row((e.target as HTMLElement).closest('tr')).index();
         miDialogoConversionUnidad.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
       }
   
-      ////////////////////  Actualizar/Editar producto  //////////////////////
-      document.querySelector('#formCrearUpdateSubProducto')?.addEventListener('submit', e=>{
+      ////////////////////  Actualizar conversion unidad de medida  //////////////////////
+      document.querySelector('#formConversionUnidad')?.addEventListener('submit', e=>{
         
           e.preventDefault();
           var info = (tablaSubProductos as any).page.info();

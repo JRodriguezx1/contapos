@@ -225,6 +225,7 @@ $router->post('/admin/api/eliminarSubProducto', [almacencontrolador::class, 'eli
 $router->post('/admin/api/setrendimientoestandar', [almacencontrolador::class, 'setrendimientoestandar']);  //establecer rendimiento estandar de la formula de salida
 $router->post('/admin/api/ensamblar', [almacencontrolador::class, 'ensamblar']);  //asociar un o unos subproductos a un producto principal
 $router->get('/admin/api/desasociarsubproducto', [almacencontrolador::class, 'desasociarsubproducto']);
+$router->get('/admin/api/almacen/allUnidadesMedida', [almacencontrolador::class, 'allUnidadesMedida']); //trae todas las unidades de medida
 $router->get('/admin/api/allConversionesUnidades', [almacencontrolador::class, 'allConversionesUnidades']); //trae todos los sub-productos con todas las unidades equivalentes
 $router->post('/admin/api/actualizarcostos', [almacencontrolador::class, 'actualizarcostos']);  //actualizar costos, api llamada desde ajustarcostos.ts
 $router->post('/admin/api/actualizarPreciosVenta', [almacencontrolador::class, 'actualizarPreciosVenta']);  //actualizar precios, api llamada desde ajustarprecios.ts
