@@ -19,8 +19,6 @@ class conversionunidades extends \App\Models\ActiveRecord{
 
     public function validar():array
     {
-        if(!$this->idproducto)self::$alertas['error'][] = "Error subproducto intenta nuevamnete";
-        if(!$this->idsubproducto)self::$alertas['error'][] = "Error subproducto intenta nuevamnete";
         if(!$this->idunidadmedidabase)self::$alertas['error'][] = "Error unidad base intenta nuevamnete.";
         if(!$this->idunidadmedidadestino)self::$alertas['error'][] = "Error unidad destino intenta nuevamnete.";
         if(!$this->factorconversion)self::$alertas['error'][] = "Error factor de conversion intenta nuevamnete.";

@@ -6,6 +6,8 @@
       const contenedor = document.querySelector('#contenedor') as HTMLDivElement;
       const factor = document.querySelector('#equivalente') as HTMLInputElement;
       let indiceFila=0, tablaSubProductos:HTMLElement;
+
+      document.addEventListener("click", cerrarDialogoExterno);
       
       type subproductsapi = {
         id:string,
@@ -97,8 +99,10 @@
         $('#unidadMedidaBase').text(unsubproducto?.unidadmedida??'');
         $('#unidadMedidaBase2').val(unsubproducto?.unidadmedida??'');
 
+        const unidadesDestino = allConversionUnidades.filter(c => c.idsubproducto === unsubproducto.id).map(c => c.idunidadmedidadestino);
+
         allUnidadesMedida.forEach(u=>{
-          if(u.id != unsubproducto.id_unidadmedida){
+          if(!unidadesDestino.includes(u.id)){
             const option = document.createElement('option');
             option.value = u.id;
             option.textContent = u.nombre;
@@ -110,7 +114,6 @@
         
         //indiceFila = (tablaSubProductos as any).row((e.target as HTMLElement).closest('tr')).index();
         miDialogoConversionUnidad.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       }
 
 
@@ -134,6 +137,8 @@
                     <button
                         type="button"
                         data-id="${conversion.id}"
+                        data-idunidadMedidaDestino="${conversion.idunidadmedidadestino}"
+                        data-nombreunidaddestino="${conversion.nombreunidaddestino}"
                         class="btn-eliminar px-3 py-1.5 text-base font-medium text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 hover:border-red-300 transition-colors"
                     >
                         Eliminar
@@ -144,30 +149,33 @@
       }
 
 
+      //ELIMINAR CONVERSION DE UNIDAD
       contenedor.addEventListener('click', (e) => {
           const target = e.target as HTMLElement;
           if(target.classList.contains('btn-eliminar')){
-              const id = target.dataset.id;
+              const id = target.dataset.id; //id de la tabla conversionunidad
+              const idunidadMedidaDestino = target.dataset.idunidadMedidaDestino;
+              const nombreunidaddestino = target.dataset.nombreunidaddestino;
               console.log('Eliminar conversión:', id);
-              allConversionUnidades = allConversionUnidades.filter(conversion => conversion.id !== id);
+              allConversionUnidades = allConversionUnidades.filter(conversion => conversion.id != id);
               imprimirConversionesUnidades(allConversionUnidades);
               // Aquí llamas tu API o eliminas del arreglo
+              //agregar la unidad de medida al select de unidades de medida
+              
           }
       });
   
       ////////////////////  Actualizar conversion unidad de medida  //////////////////////
       document.querySelector('#formConversionUnidad')?.addEventListener('submit', e=>{
           e.preventDefault();
-          var info = (tablaSubProductos as any).page.info();
           (async ()=>{ 
             const datos = new FormData();
-            datos.append('id', unsubproducto!.id);
             datos.append('idsubproducto', unsubproducto.id);
             datos.append('idunidadmedidabase', unsubproducto.id_unidadmedida);
             datos.append('idunidadmedidadestino', $('#unidadesMedidas').val()as string);
             datos.append('nombreunidadbase', unsubproducto.unidadmedida);
-            datos.append('nombreunidaddestino', $('#unidadesMedidas').text()as string);
-             datos.append('factorconversion', (($('#factor').val())??'0')as string);
+            datos.append('nombreunidaddestino', $('#unidadesMedidas option:selected').text());
+             datos.append('factorconversion', factor.value??'0');
             try {
                 const url = "/admin/api/almacen/crearNuevaConversionUnidad";
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -175,14 +183,20 @@
                 console.log(resultado); 
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                  
+                  const nuevaConversion:conversionunidadesapi = resultado.newCv;
+                  allConversionUnidades.push(nuevaConversion);
+                  imprimirConversionesUnidades(allConversionUnidades);
+                  //eliminar del select de unidades de medida el option
+                  const option = unidadesMedidas.querySelector(`option[value="${nuevaConversion.idunidadmedidadestino}"]`);
+                  option?.remove();
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
-                document.addEventListener("click", cerrarDialogoExterno);
+                
             } catch (error) {
                 console.log(error);
             }
+            //miDialogoConversionUnidad.close();
           })();//cierre de async()
 
       });
@@ -228,10 +242,10 @@
         (document.querySelector('#formCrearUpdateSubProducto') as HTMLFormElement)?.reset();
         (document.querySelector('#formCrearUpdateSubProducto') as HTMLFormElement).action = "/admin/almacen/crear_subproducto";
       }
+      
       function cerrarDialogoExterno(event:Event) {
-        if (event.target === miDialogoConversionUnidad || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Actualizar') {
+        if (event.target === miDialogoConversionUnidad || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Actualizar') {
             miDialogoConversionUnidad.close();
-          document.removeEventListener("click", cerrarDialogoExterno);
         }
       }
     }

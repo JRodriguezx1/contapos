@@ -212,4 +212,51 @@ class inventarioService {
         }
         
     }
+
+
+    public static function crearNuevaConversionUnidad(array $date):array{
+        $alertas = [];
+        $getDB = conversionunidades::getDB();
+        $cv = new conversionunidades($date);
+        $alertas = $cv->validar();
+        if(empty($alertas)){
+            $getDB->begin_transaction();
+            try {
+                $r = $cv->crear_guardar();
+                $getDB->commit();
+                $alertas['exito'][] = "Conversion de unidad creada exitosamente";
+                $cv->id = $r[1];
+                $alertas['newCv'] = $cv;
+            } catch (\Throwable $th) {
+                $getDB->rollback();
+                $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
+            }
+        }
+        return $alertas;
+    }
+
+
+
+    public static function eliminarConversionUnidad(array $date):array{
+        $alertas = [];
+        $getDB = conversionunidades::getDB();
+        $cv = new conversionunidades($date);
+        $alertas = $cv->validar();
+        if(empty($alertas)){
+            $getDB->begin_transaction();
+            try {
+                $r = $cv->crear_guardar();
+                $getDB->commit();
+                $alertas['exito'][] = "Conversion de unidad creada exitosamente";
+                $cv->id = $r[1];
+                $alertas['newCv'] = $cv;
+            } catch (\Throwable $th) {
+                $getDB->rollback();
+                $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
+            }
+        }
+        return $alertas;
+    }
+
+
 }

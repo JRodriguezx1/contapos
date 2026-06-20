@@ -1589,9 +1589,10 @@ class almacencontrolador{
 
     public static function crearNuevaConversionUnidad():void{
       isadmin();
-      
-      echo json_encode('lupe');
-      return; 
+      $alertas = [];
+      if($_SERVER['REQUEST_METHOD'] === 'POST') $alertas = inventarioService::crearNuevaConversionUnidad($_POST);
+      echo json_encode($alertas);
+      return;
     }
 
 }

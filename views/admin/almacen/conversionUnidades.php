@@ -87,7 +87,7 @@
 
             <div class="text-right mt-6">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>
-                <input id="btnCrearConversionUnidad" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">
+                <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">
             </div>
         </form>
 
