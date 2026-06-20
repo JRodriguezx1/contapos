@@ -237,23 +237,18 @@ class inventarioService {
 
 
 
-    public static function eliminarConversionUnidad(array $date):array{
+    public static function eliminarConversionUnidad(int $id):array{
         $alertas = [];
         $getDB = conversionunidades::getDB();
-        $cv = new conversionunidades($date);
-        $alertas = $cv->validar();
-        if(empty($alertas)){
-            $getDB->begin_transaction();
-            try {
-                $r = $cv->crear_guardar();
-                $getDB->commit();
-                $alertas['exito'][] = "Conversion de unidad creada exitosamente";
-                $cv->id = $r[1];
-                $alertas['newCv'] = $cv;
-            } catch (\Throwable $th) {
-                $getDB->rollback();
-                $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
-            }
+        $cv = conversionunidades::find('id', $id);
+        $getDB->begin_transaction();
+        try {
+            $cv->eliminar_registro();
+            $getDB->commit();
+            $alertas['exito'][] = "Conversion de unidad eliminada exitosamente";
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
         }
         return $alertas;
     }

@@ -1595,4 +1595,15 @@ class almacencontrolador{
       return;
     }
 
+    public static function eliminarConversionUnidad():void{
+      $id = $_GET['id'];
+      if(!is_numeric($id)){
+        echo json_encode(['error'=>['id de la unidad de medida de conversion no es valida.']]);
+        return;
+      }
+      $alertas = inventarioService::eliminarConversionUnidad($id);  
+      echo json_encode($alertas);
+      return;
+    }
+
 }

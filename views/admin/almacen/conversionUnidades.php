@@ -11,7 +11,6 @@
     <table id="tablaSubProductos" class="display responsive nowrap tabla" width="100%">
       <thead>
           <tr>
-              <th>Nº</th>
               <th>ID</th>
               <th>Nombre</th>
               <th>Unidad base</th>
@@ -22,7 +21,6 @@
       <tbody>
           <?php foreach($subproductos as $index => $value): ?>
           <tr> 
-              <td class=""><?php echo $index+1;?></td>
               <td class=""><?php echo $value->id;?></td>
               <td class=""><?php echo $value->nombre;?></td>
               <td class=""><?php echo $value->unidadmedida;?></td>
@@ -52,12 +50,6 @@
             <h5 id="nombreInsumo" class="font-medium text-gray-600 text-center">xxx</h5>
 
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mt-6">
-                <div class="formulario__campo">
-                    <label for="unidad" class="block text-xl font-semibold text-slate-700 text-left">
-                        Unidad de medida base: 
-                    </label>
-                    <p id="unidadMedidaBase" class="text-slate-500 text-2xl m-0 text-center"></p>
-                </div>
 
                 <div class="formulario__campo">
                     <label class="block text-xl font-semibold text-slate-700 text-left" for="unidadesMedidas">Nueva unidad de medida</label>
