@@ -232,6 +232,7 @@ class apidiancontrolador{
     echo json_encode($adquirientes);
   }
 
+  
   public static function guardarAdquiriente(){
     //session_start();
     isadmin();

@@ -151,6 +151,7 @@
             data: datosFacturasPagas,
             columns: [
                 {title: 'Orden', data: 'num_orden'},
+                {title: 'Fecha Pago', data: 'fechapago'},
                 {title: 'N° Factura', data: 'num_consecutivo'},
                 {title: 'Tipo', data: 'tipofacturador'},
                 {title: 'Tipo Venta', data: 'tipoventa'},

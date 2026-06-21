@@ -29,6 +29,7 @@ class facturaElectronicaService {
         $alertas['tipo'] = "crear";
         $alertas['response'] = $r[0];
         $alertas['obj'] = $adquiriente;
+        $alertas['obj']->id = $r[1];
         $alertas['id'] = $r[1];
       }
       return $alertas;
