@@ -107,6 +107,7 @@ $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, '
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
 $router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
 $router->post('/admin/almacen/uploadExcel', [almacencontrolador::class, 'uploadExcel']);
+$router->post('/admin/almacen/uploadInsumosExcel', [almacencontrolador::class, 'uploadInsumosExcel']);
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 $router->get('/admin/almacen/cambioPrecios', [almacencontrolador::class, 'cambioPrecios']);
 $router->get('/admin/almacen/estadisticas', [almacencontrolador::class, 'estadisticas']);
@@ -206,6 +207,7 @@ $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 
 $router->get('/suspendido', [suscripcioncontrolador::class, 'suspendido']);
 //// Descargas /////
 $router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
+$router->get('/admin/descarga/plantillaImportarInsumos', [archivocontroller::class, 'descargarInsumosExcel']);
 $router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
 $router->get('/admin/descarga/logo', [archivocontroller::class, 'descargarLogo']);
 

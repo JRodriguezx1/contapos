@@ -5,7 +5,9 @@ namespace App\services;
 use App\Models\ActiveRecord;
 use App\Models\inventario\conversionunidades;
 use App\Models\inventario\productos;
+use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
+use App\Models\inventario\subproductos;
 use App\Models\sucursales;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use stdClass;
@@ -19,6 +21,7 @@ class inventarioService {
         $conversion = new conversionunidades;
         $sucursales = sucursales::all();
         $getDB = productos::getDB();
+        $getDB->begin_transaction();
         try {
             // Cargar el archivo Excel
             $spreadsheet = IOFactory::load($excel_temp);
@@ -176,16 +179,170 @@ class inventarioService {
                 count($upsertProductos)>0?stockService::upDate_movimientoProductos($upsertProductos, $returnProductos, 'ajuste', 'ajuste desde excel'):'';
                 //movimiento de productos nuevos insertados
             }
-
+            $getDB->commit();
             return $alertas;
-
         } catch (\Throwable $th) {
             //throw $th;
+            $getDB->rollback();
             $alertas['error'][] = "Archvio de excel vacio o con errores en su contenido";
             $alertas['error'][] = $th->getMessage();
             return $alertas;
         }
     }
+
+
+    public static function importarInsumosExcel($excel_temp){
+        $alertas = [];
+        $idsExcel = [];
+        $subProductos = new subproductos();
+        $sucursales = sucursales::all();
+        $getDB = subproductos::getDB();
+        $getDB->begin_transaction();
+        try {
+            // Cargar el archivo Excel
+            $spreadsheet = IOFactory::load($excel_temp);
+            $worksheet = $spreadsheet->getActiveSheet();
+            // Convertir a array
+            $filas = $worksheet->toArray();
+            
+            // Procesar cada fila
+            foreach($filas as $index => $fila){
+                // Saltar encabezado
+                if ($index == 0) continue;
+
+                $v = self::filaVacia($fila);
+                if($v['status']==false){
+                    $alertas['error'][] = "error en fila $index ".$v['columna'];
+                }
+                
+                $id = $fila[0];
+                $id_unidadmedida = $fila[1];
+                $insumoprocesado = $fila[2];
+                $nombre  = $fila[3];
+                //$impuesto = $fila[4];
+                $sku = $fila[4]??'';
+                $stock = $fila[5];
+                $stockminimo = $fila[6];
+                $precio_compra = $fila[7];
+            
+                if(isset($id))$idsExcel[] = $id;
+
+                $subProducto = new stdClass;
+                $subProducto->id = $id;
+                $subProducto->id_unidadmedida = $id_unidadmedida;
+                $subProducto->insumoprocesado = $insumoprocesado;
+                $subProducto->unidadmedida = '';
+                $subProducto->nombre = $nombre;
+                $subProducto->sku = $sku;
+                $subProducto->proveedor = '';
+                $subProducto->descripcion = '';
+                $subProducto->medidas = '';
+                $subProducto->color = '';
+                $subProducto->uso = '';
+                $subProducto->stock = $stock;
+                $subProducto->stockminimo = $stockminimo;
+                $subProducto->precio_compra = $precio_compra;
+                $rows[] = $subProducto;
+            }
+
+            if(!empty($rows) && empty($alertas)){
+                //SUBPRODUCTOS EXISTENTES
+                $subProductosExistentes = subproductos::IN_Where('id', $idsExcel);
+                //MAPERAR LOS ID EXISTENTES CON TRUE
+                $mapId = [];
+                foreach ($subProductosExistentes as $value)$mapId[$value->id] = true;
+
+                $insertSubProductos = [];
+                $rowsStock = [];
+                $upsertSubProductos = [];
+                $nuevosIds = [];
+                $idsucursal = id_sucursal();
+
+                foreach ($rows as $key => $value) {
+                    $idReal = null;
+                    // Primero, se trae ID, comprobar si existe
+                    if($value->id !== "" && isset($mapId[$value->id]))$idReal = $value->id;
+
+                    if($idReal != null){  //actualizar
+                        $upsertSubProductos[] = $value;
+                        //stockporsucursal
+                        $rowsStock[] = "($idReal, $idsucursal, $value->stock, $value->stockminimo, 0, 0)";
+                    }else{  //insertar
+                        $value->fecha_ingreso = date('Y-m-d H:i:s');
+                        $insertSubProductos[] = $value;
+                    }
+                }
+
+                if(!empty($upsertSubProductos)) //actualizar subproductos
+                    $u = $subProductos->updatemultiregobj($upsertSubProductos, ['id_unidadmedida', 'insumoprocesado', 'nombre', 'sku', 'stock', 'stockminimo', 'precio_compra']);
+                
+                if(!empty($insertSubProductos)){// insertar subproductos
+                    $r = $subProductos->crear_varios_reg_arrayobj($insertSubProductos);
+                    $lastId = $getDB->insert_id;
+                    $cantidadInsertados = count($insertSubProductos);
+                    $nuevosIds = range($lastId, $lastId + $cantidadInsertados - 1);
+
+                    foreach($insertSubProductos as $i => $val){
+                        $val->id = $nuevosIds[$i];
+                        $idSubProducto = $nuevosIds[$i];
+                        foreach($sucursales as $index => $value){
+                            // Sucursal actual → stock Excel
+                            if ($value->id == $idsucursal) {
+                                $rowsStock[] = "($idSubProducto, $idsucursal, $val->stock, $val->stockminimo, 0, 0)";
+                            } else {
+                                // Otras sucursales → stock = 0
+                                $rowsStock[] = "($idSubProducto, $value->id, 0, 0, 0, 0)";
+                            }
+                        }
+                    }
+
+                    ///////  EQUIVALENCIAS DE UNIDAD DE MEDIDA  ////////////
+                    $rowsEquivalencias = [];
+                    foreach ($insertSubProductos as $sub) {
+                        $equivs = $subProductos->equivalencias($sub->id, $sub->id_unidadmedida);
+
+                        foreach ($equivs as $eq) {
+                            $rowsEquivalencias[] = "(NULL, {$eq->idsubproducto}, {$eq->idunidadmedidabase}, {$eq->idunidadmedidadestino}, '$eq->nombreunidadbase', '$eq->nombreunidaddestino', {$eq->factorconversion})";
+                        }
+                    }
+                }
+
+
+                //////  INSERTAR LAS EQUIVALENCIAS DE UNIDAD DE MEDIDA  ///////
+                if (!empty($rowsEquivalencias)) {
+                    $sqlEq = "INSERT INTO conversionunidades 
+                        (idproducto, idsubproducto, idunidadmedidabase, idunidadmedidadestino, nombreunidadbase, nombreunidaddestino, factorconversion)
+                        VALUES " . implode(',', $rowsEquivalencias);
+                    conversionunidades::actualizarLibre($sqlEq);
+                }
+
+
+                //Traer todos los subproductos del stockporsucursal que se va a actualizar su stock
+                $returnSubProductos = stockinsumossucursal::IN_Where('subproductoid', array_keys($mapId), ['sucursalid', $idsucursal]);
+
+                //STOCK POR SUCURSAL
+                if (!empty($rowsStock)) {
+                    $sqlStock = "INSERT INTO stockinsumossucursal (subproductoid, sucursalid, stock, stockminimo, stockaux, promediostock)
+                    VALUES " . implode(",", $rowsStock) . 
+                    "ON DUPLICATE KEY UPDATE stock = VALUES(stock)";
+                    $k = stockinsumossucursal::actualizarLibre($sqlStock);
+                }
+                
+                //ACTUALIZAR MOVIMIENTO DE INVENTARIO
+                count($upsertSubProductos)>0?stockService::upDate_movimientoInsumos($upsertSubProductos, $returnSubProductos, 'ajuste', 'ajuste desde excel'):'';
+                //movimiento de productos nuevos insertados
+            }
+            $getDB->commit();
+            return $alertas;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $getDB->rollback();
+            $alertas['error'][] = "Archvio de excel vacio o con errores en su contenido";
+            $alertas['error'][] = $th->getMessage();
+            return $alertas;
+        }
+    }
+
 
     private static function filaVacia($fila) {
         $s = "";
@@ -234,8 +391,6 @@ class inventarioService {
         }
         return $alertas;
     }
-
-
 
     public static function eliminarConversionUnidad(int $id):array{
         $alertas = [];

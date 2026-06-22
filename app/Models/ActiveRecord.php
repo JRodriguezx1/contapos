@@ -641,7 +641,11 @@ class ActiveRecord {
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum IN(";
         foreach($array as $key => $value){
             if(array_key_last($array) == $key){
-                $sql.= "'{$value}') AND $filter[0] = $filter[1];";
+                if(count($filter)>0){
+                    $sql.= "'{$value}') AND $filter[0] = $filter[1];";
+                }else{
+                    $sql.= "'{$value}');";  
+                }
             }else{
                 $sql.= "'{$value}', ";
             }
