@@ -2,7 +2,8 @@
 (()=>{
     if(document.querySelector('.compras')){
         const proveedor = document.querySelector('#proveedor') as HTMLSelectElement;
-        const impuesto = document.querySelector('#inputimpuesto') as HTMLInputElement;
+        //const impuesto = document.querySelector('#inputimpuesto') as HTMLSelectElement;
+        const inputValorimp = document.querySelector('#valorimp') as HTMLInputElement;
         const nfactura = document.querySelector('#nfactura') as HTMLInputElement;
         const fecha = document.querySelector('#fecha') as HTMLDataElement;
         const origenPago = document.querySelector('#origenPago') as HTMLSelectElement;
@@ -14,6 +15,14 @@
         const miDialogoVaciar = document.querySelector('#miDialogoVaciar') as any;
         const miDialogoRegistrarcompra = document.querySelector('#miDialogoRegistrarcompra') as any;
         const tablaCompras = document.querySelector('#tablaCompras tbody');
+
+        const constImp: {[key:string]: number} = {};
+        constImp['excluido'] = 0;
+        constImp['0'] = 0;  //exento de iva, tarifa 0%
+        constImp['5'] = 0.0476190476190476; //iva, tarifa al 5%,  Bienes/servicios al 5
+        constImp['8'] = 0.0740740740740741; //inc, tarifa al 8%,  impuesto nacional al consumo
+        constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
+        constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
         type conversionunidadesapi = {
         id:string,
@@ -28,15 +37,14 @@
         };
 
         let carrito:{iditem:string, idpx:string, idsx:string, tipocosto:string, tipo: string, nombreitem:string, unidad:string, stock: number, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra: number, valorcompra: number}[]=[];
-        let allConversionUnidades:conversionunidadesapi[] = [];
+        let tax:number = 0, percentImp:number = 0, barcode = "", allConversionUnidades:conversionunidadesapi[] = [];
         let filteredData: {id:string, text:string, tipo:string, sku:string, unidadmedida:string}[];   //tipo = 0 es producto simple,  1 = subproducto
 
         function actualizarContadorProductos(): void {
             const badge = document.querySelector('#contadorProductos');
             if(!badge) return;
             const cantidad = carrito.length;
-            badge.textContent =
-                cantidad === 1? '1 producto': `${cantidad} productos`;
+            badge.textContent = cantidad === 1? '1 producto': `${cantidad} productos`;
         }
 
         (async ()=>{
@@ -63,7 +71,8 @@
         })();
 
 
-        impuesto?.addEventListener('input', ()=>resumen());
+        //impuesto?.addEventListener('input', ()=>resumen());
+        inputValorimp.addEventListener('input', (e)=>resumen());
 
         function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string}[]){
             ($('#articulo') as any).select2({ 
@@ -97,43 +106,77 @@
         });
 
 
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.key === 'Control')(document.querySelector('#btnScanner') as HTMLSelectElement).focus();
+            if (e.key === 'Enter') {
+                if (barcode.length >= 3) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation(); // <--- CRITICO: Detiene a Select2 y a cualquier botón
+                    searchBarCode(barcode);
+                    barcode = "";
+                    return false;
+                }
+                barcode = "";
+            } else {
+                barcode += e.key;
+            }
+        }, true);
+
+
+        function searchBarCode(barcode:string){
+            const itemselected = filteredData.find(x=>x.sku==barcode);
+            if(itemselected != undefined){
+                let productSelected = carrito.find(x=>x.iditem==itemselected.id&&x.tipo==itemselected.tipo);
+                if(productSelected != undefined){
+                    productSelected.cantidadcomprado  += 1;
+                    productSelected.cantidad = productSelected.cantidadcomprado*productSelected.factor;
+                    productSelected.stock = productSelected.cantidad;
+                    //aumentar la cantodad en los inputs
+                    const fila = document.querySelector<HTMLInputElement>(`TR[data-id="${productSelected.iditem}"][data-tipo="${productSelected.tipo}"] .inputcantidad`);
+                    if(fila)fila.value = productSelected.stock+'';
+                }else{ //itme no esta en carrito
+                    agregarProducto(itemselected);
+                }
+            }
+        }
+
+
         ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
-            if(datos){
-                const index = carrito.findIndex(x=>x.iditem==datos.id&&x.tipo==datos.tipo);
-                if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-                    const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; //products es el arreglo de todos los productos traido por api
-                    const item:{iditem: string, idpx: string, idsx: string, tipocosto:string, tipo: string, nombreitem: string, unidad: string, stock: number, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
-                        iditem: itemselected?.id!,
-                        idpx: itemselected.tipo=='0'?itemselected.id:'NULL',
-                        idsx: itemselected.tipo=='1'?itemselected.id:'NULL',
-                        tipocosto: '1',
-                        tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = producto principal compuesto o subproducto
-                        nombreitem: itemselected.text,
-                        unidad: itemselected.unidadmedida,
-                        stock: 1,
-                        cantidad: 1,
-                        cantidadcomprado: 1,
-                        factor: 1,
-                        impuesto: 0,
-                        valorunidad: 0,
-                        subtotal: 0,
-                        precio_compra: 0,
-                        valorcompra: 0,
-                    }
-                    carrito = [...carrito, item];
-
-                    actualizarContadorProductos();
-
-                    if(carrito.length === 1){
-                        document.querySelector('#filaVacia')?.remove();
-                    }
-
-                    printItemTable(datos.id, datos.tipo, datos.unidadmedida);
-                }
-            }
+            if(datos)agregarProducto(datos);
+            $("#articulo").val('null');
         });
+
+
+        function agregarProducto(datos:any) {
+            const index = carrito.findIndex(x=>x.iditem==datos.id&&x.tipo==datos.tipo);
+            if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
+                const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!; //products es el arreglo de todos los productos traido por api
+                const item:{iditem: string, idpx: string, idsx: string, tipocosto:string, tipo: string, nombreitem: string, unidad: string, stock: number, cantidad: number, cantidadcomprado: number, factor: number, impuesto: number, valorunidad: number, subtotal: number, precio_compra:number, valorcompra: number} = {
+                    iditem: itemselected?.id!,
+                    idpx: itemselected.tipo=='0'?itemselected.id:'NULL',
+                    idsx: itemselected.tipo=='1'?itemselected.id:'NULL',
+                    tipocosto: '1',
+                    tipo: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = producto principal compuesto o subproducto
+                    nombreitem: itemselected.text,
+                    unidad: itemselected.unidadmedida,
+                    stock: 1,
+                    cantidad: 1,
+                    cantidadcomprado: 1,
+                    factor: 1,
+                    impuesto: 0,
+                    valorunidad: 0,
+                    subtotal: 0,
+                    precio_compra: 0,
+                    valorcompra: 0,
+                }
+                carrito = [...carrito, item];
+                actualizarContadorProductos();
+                if(carrito.length === 1)document.querySelector('#filaVacia')?.remove();
+                printItemTable(datos.id, datos.tipo, datos.unidadmedida);
+            }
+        }
 
 
         function printItemTable(id:string, tipo:string, unidadmedida:string){
@@ -256,6 +299,7 @@
   
         async function procesarpedido(estado:string){
             const datos = new FormData();
+            const valorCarrito = carrito.reduce((total, item)=>item.valorcompra+total, 0);
             datos.append('idproveedor', proveedor.options[proveedor.selectedIndex].value);
             //datos.append('idformapago', formapago.options[formapago.selectedIndex].value);
             datos.append('idorigencaja', origenCaja.options[origenCaja.selectedIndex].value);
@@ -263,7 +307,9 @@
             datos.append('nombreproveedor', proveedor.options[proveedor.selectedIndex].textContent!);
             //datos.append('formapago', formapago.options[formapago.selectedIndex].text);
             datos.append('nfactura', nfactura.value);
-            datos.append('impuesto', impuesto.value);
+            datos.append('impuesto', (percentImp.toFixed(2))+'');
+            datos.append('valorimp', tax+'');
+            datos.append('base', valorCarrito+'');
             datos.append('origenpago', origenPago.options[origenPago.selectedIndex].value); //0 = si el origen viene de la caja,  1 = banco
             datos.append('nombreorigenpago', origenPago.options[origenPago.selectedIndex].textContent+''); //caja o banco
             datos.append('nombreorigencaja', origenCaja.options[origenCaja.selectedIndex].textContent+'');
@@ -271,8 +317,8 @@
             datos.append('cantidaditems', carrito.reduce((total, item)=>item.cantidad+total, 0)+'');
             datos.append('observacion', observacion.value);
             datos.append('estado', estado);
-            datos.append('subtotal', carrito.reduce((total, item)=>item.valorcompra+total, 0)+'');
-            datos.append('valortotal', carrito.reduce((total, item)=>item.valorcompra+total, 0)+'');
+            datos.append('subtotal', valorCarrito+'');
+            datos.append('valortotal', (valorCarrito+tax)+'');
             datos.append('fechacompra', fecha.value);
             datos.append('carrito', JSON.stringify(carrito));  ////arreglo de objetos de producto simple y subproducto
             datos.append('subID', JSON.stringify(carrito.map(item=>{if(item.idsx){return item.idsx}}))); //envia solo los id de los subproductos
@@ -309,13 +355,15 @@
         }
 
         function resumen():void{
-            document.querySelector('#impuesto')!.textContent = '% '+impuesto.value;
-            document.querySelector('#total')!.textContent = '$ '+carrito.reduce((total, item)=>item.valorcompra+total, 0).toLocaleString()+'';
-        
+            const valorCarrito = carrito.reduce((total, item)=>item.valorcompra+total, 0);
+            tax = Number(inputValorimp.value);
+            percentImp = valorCarrito == 0 ? 0 :(100*tax)/valorCarrito;
+            document.querySelector('#subTotal')!.textContent = '$ '+(valorCarrito.toLocaleString());
+            document.querySelector('#impuesto')!.textContent = (percentImp.toFixed(2))+'%  -  $'+tax.toLocaleString();
+            document.querySelector('#total')!.textContent = '$ '+((valorCarrito+tax).toLocaleString());
         }
 
-        function vaciarcompra():void
-        {
+        function vaciarcompra():void{
             carrito.length = 0;
             while(tablaCompras?.firstChild)tablaCompras.removeChild(tablaCompras?.firstChild);
             document.querySelector('#impuesto')!.textContent = '% 0';

@@ -6,20 +6,20 @@
         </svg>
         <span class="sr-only">Atrás</span>
         </a>
-        <h4 class="text-gray-600 mb-12 mt-4">Compras</h4>
+        <h4 class="text-gray-600 mb-10 mt-4">Compras</h4>
         <?php include __DIR__. "/../../templates/alertas.php"; ?>
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
             <form id="formComprar" action="">
-                <div class="border-b border-gray-900/10 pb-10 mb-3">
+                <div class="border-b border-gray-900/10 pb-8 mb-3">
                 
                     <p class="mt-2 text-xl text-gray-600">Ingreso Almacen.</p>
 
-                    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-8">
 
                         <div class="sm:col-span-3 tlg:col-span-2">
                             <label for="proveedor" class="block text-2xl font-medium text-gray-600">Proveedor</label>
                             <div class="mt-2 grid grid-cols-1">
-                                <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                                <select id="proveedor" name="proveedor" autocomplete="proveedor-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1" required>
                                     <option value="" disabled selected>-Seleccionar-</option>
                                     <?php foreach($proveedores as $value): ?>
                                     <option value="<?php echo $value->id; ?>"><?php echo $value->nombre;?></option>
@@ -32,17 +32,16 @@
                         </div>
 
                         <!-- Porcentaje de impuesto -->
-                        <div class="sm:col-span-3 md:col-span-3 tlg:col-span-2"> 
-                            <label for="porcentaje_impuesto" class="block text-2xl font-medium text-gray-600">
-                                Impuesto
-                            </label>
+                        <!--<div class="sm:col-span-3 md:col-span-3 tlg:col-span-2"> 
+                            <label for="porcentaje_impuesto" class="block text-2xl font-medium text-gray-600">Impuesto</label>
+                            -->
                             <!-- <span class="block mb-1 text-sm text-gray-500">
                                 Seleccione el impuesto y tarifa correspondiente al negocio
                             </span> -->
-                            <select 
+                            <!--<select 
                                 id="inputimpuesto" 
                                 name="inputimpuestocompra"
-                                class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                                class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1"
                             >
                                 <span class="text-indigo-600 font-bold">
                                     <optgroup label="IVA">
@@ -59,25 +58,40 @@
                                 <option value="8">Impuesto Nacional al Consumo – 8%</option>
                                 </optgroup>
                             </select>
+                        </div>-->
+
+                        <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
+                            <label for="valorimp" class="block text-2xl font-medium text-gray-600">Impuesto Total</label>
+                            <div class="mt-2">
+                                <input 
+                                    id="valorimp" 
+                                    type="text" 
+                                    name="valorimp" 
+                                    autocomplete="family-name" 
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1" 
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                    placeholder="EJ: 25100"
+                                >
+                            </div>
                         </div>
 
                         <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
                             <label for="factura" class="block text-2xl font-medium text-gray-600">N° Factura</label>
                             <div class="mt-2">
-                                <input type="text" name="factura" id="nfactura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                                <input id="nfactura" type="text" name="factura" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1">
                             </div>
                         </div>
                         <div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                             <label for="fecha" class="block text-2xl font-medium text-gray-600">Fecha</label>
                             <div class="mt-2">
-                                <input type="date" name="fecha" id="fecha" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                                <input id="fecha" type="date" name="fecha" autocomplete="family-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1" required>
                             </div>
                         </div>
 
                         <div class="sm:col-span-2 md:col-span-2 tlg:col-span-2">
                             <label for="origenPago" class="block text-2xl font-medium text-gray-600">Origen</label>
                             <div class="mt-2 grid grid-cols-1">
-                                <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                                <select id="origenPago" name="origen" autocomplete="origen-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1" required>
                                     <option value="" disabled selected>-Seleccionar-</option>
                                     <option value="0">Caja</option>
                                     <option value="1">Banco</option>
@@ -88,7 +102,7 @@
                         <div id="divCaja" class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                             <label for="origenCaja" class="block text-2xl font-medium text-gray-600">Caja</label>
                             <div class="mt-2 grid grid-cols-1">
-                                <select id="origenCaja" name="origencaja" autocomplete="origencaja-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                                <select id="origenCaja" name="origencaja" autocomplete="origencaja-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1" required>
                                     <option value="" disabled selected>-Seleccionar-</option>
                                     <?php foreach($cajas as $value): ?>
                                     <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -100,7 +114,7 @@
                         <div id="divBanco" class="sm:col-span-2 md:col-span-3 tlg:col-span-2 hidden">
                             <label for="origenBanco" class="block text-2xl font-medium text-gray-600">Banco</label>
                             <div class="mt-2 grid grid-cols-1">
-                                <select id="origenBanco" name="origenbanco" autocomplete="origenbanco-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1">
+                                <select id="origenBanco" name="origenbanco" autocomplete="origenbanco-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1">
                                     <option value="" disabled selected>-Seleccionar-</option>
                                     <?php foreach($bancos as $value): ?>
                                     <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -115,7 +129,7 @@
                         <!--<div class="sm:col-span-2 md:col-span-3 tlg:col-span-2">
                             <label for="formapago" class="block text-2xl font-medium text-gray-600">Forma de pago</label>
                             <div class="mt-2 grid grid-cols-1">
-                                <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                                <select id="formapago" name="formapago" autocomplete="formapago-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-12 text-xl focus:outline-none focus:ring-1" required>
                                     <option value="" disabled selected>-Seleccionar-</option>
                                     <option value="1">Contado</option>
                                     <option value="2">Credito 1 mes</option>
@@ -138,7 +152,7 @@
                         <div class="sm:col-span-8">
                             <label for="observacion" class="block text-2xl font-medium text-gray-600">Observacion</label>
                             <div class="mt-2">
-                            <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 text-xl focus:outline-none focus:ring-1 h-14">
+                            <input id="observacion" name="observacion" type="text" autocomplete="observacion ID" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 text-xl focus:outline-none focus:ring-1 h-12">
                             </div>
                         </div>
                     
@@ -148,26 +162,27 @@
                 <div class="mb-6 w-full lg:w-3/4">
                     <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 shadow-sm">
                         <div class="flex items-center gap-3 mb-4">
-                            <i class="fa-solid fa-barcode text-indigo-600 text-2xl"></i>
+                            <i class="fa-solid fa-barcode text-indigo-600 text-3xl"></i>
                             <div>
                                 <h3 class="text-2xl font-bold text-indigo-700">
                                     Buscar y agregar productos
                                 </h3>
 
-                                <p class="text-sm text-slate-500">
+                                <p class="text-base text-slate-500">
                                     Seleccione uno o varios productos para agregarlos a la compra.
                                 </p>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1">
+                        <div class="flex gap-4">
+                            <button type="button" id="btnScanner" class="btn-xs btn-blue whitespace-nowrap">Ctl . Escáner</button>
                             <select
                                 id="articulo"
                                 name="articulo"
                                 autocomplete="articulo-name"
                                 class="bg-white border-2 border-indigo-100 shadow-sm text-gray-900 rounded-xl focus:!border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-2 focus:ring-indigo-200"
                                 multiple="multiple"
-                                required>
+                            >
 
                                 <?php foreach($totalitems as $value): ?>
                                     <option value="<?php echo $value->id;?>">
@@ -260,17 +275,17 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-slate-500 text-2xl">Sub Total</span>
-                            <span id="subTotal" class="text-slate-700 text-2xl font-semibold">$ 0</span>
+                            <span id="subTotal" class="text-slate-700 text-2xl font-medium">$ 0</span>
                         </div>
 
                         <div class="flex justify-between items-center">
                             <span class="text-slate-500 text-2xl">Impuesto</span>
-                            <span id="impuesto" class="text-slate-700 text-2xl font-semibold">% 0</span>
+                            <span id="impuesto" class="text-slate-700 text-2xl font-medium">0%</span>
                         </div>
 
                         <div class="flex justify-between items-center">
                             <span class="text-slate-500 text-2xl">Descuento</span>
-                            <span id="descuento" class="text-slate-700 text-2xl font-semibold">$ 0</span>
+                            <span id="descuento" class="text-slate-700 text-2xl font-medium">$ 0</span>
                         </div>
 
                         <div class="border-t border-indigo-200 pt-4 mt-4">
