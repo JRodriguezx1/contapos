@@ -32,7 +32,7 @@ class subproductos extends \App\Models\ActiveRecord {
         
         if(!$this->nombre)self::$alertas['error'][] = 'El Nombre del producto es Obligatorio';
         
-        if(strlen($this->nombre)>51)self::$alertas['error'][] = 'El Nombre del producto no debe superar los 52 caracteres';
+        if(strlen($this->nombre)>95)self::$alertas['error'][] = 'El Nombre del producto no debe superar los 52 caracteres';
         
         if($this->sku)
           if(strlen($this->sku)>15)self::$alertas['error'][] = 'El codigo del producto no debe ser mayor a 15 digitos';
