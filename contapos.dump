@@ -631,7 +631,7 @@ CREATE TABLE `conversionunidades` (
   CONSTRAINT `idunidadmedidabase` FOREIGN KEY (`idunidadmedidabase`) REFERENCES `unidadesmedida` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idunidadmedidadestino` FOREIGN KEY (`idunidadmedidadestino`) REFERENCES `unidadesmedida` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `producto_id` FOREIGN KEY (`idproducto`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1986,7 +1986,7 @@ CREATE TABLE `movimientos_insumos` (
   CONSTRAINT `fksucursal_id` FOREIGN KEY (`fksucursal_id`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_subproductoid` FOREIGN KEY (`id_subproductoid`) REFERENCES `subproductos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idusuario_id` FOREIGN KEY (`idusuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=462 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=469 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2902,11 +2902,12 @@ CREATE TABLE `stockinsumossucursal` (
   `promediostock` decimal(8,2) DEFAULT '1.00',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_subproducto_sucursal` (`subproductoid`,`sucursalid`),
   KEY `subproductoid_idx` (`subproductoid`),
   KEY `sucursal_id_idx` (`sucursalid`),
   CONSTRAINT `subproductoid` FOREIGN KEY (`subproductoid`) REFERENCES `subproductos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `sucursal_id` FOREIGN KEY (`sucursalid`) REFERENCES `sucursales` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2938,6 +2939,7 @@ CREATE TABLE `stockproductossucursal` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_produt_sede` (`productoid`,`sucursalid`),
+  UNIQUE KEY `uk_producto_sucursal` (`productoid`,`sucursalid`),
   KEY `productoid_idx` (`productoid`),
   KEY `sucursalid_idx` (`sucursalid`),
   CONSTRAINT `productoid` FOREIGN KEY (`productoid`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -3584,4 +3586,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-22  2:11:26
+-- Dump completed on 2026-06-23  2:00:03

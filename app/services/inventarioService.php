@@ -49,8 +49,9 @@ class inventarioService {
                 $sku = $fila[7]??'';
                 $preciopersonalizado = $fila[8];   //  0 = no,  1 = si
                 $stock = $fila[9];
-                $precio_compra = $fila[10];
-                $precio_venta  = $fila[11];
+                $stockminimo = $fila[10];
+                $precio_compra = $fila[11];
+                $precio_venta  = $fila[12];
             
                 if(isset($id))$idsExcel[] = $id;
 
@@ -77,7 +78,7 @@ class inventarioService {
                 $producto->garantia = '';
                 $producto->stock = $stock;
                 $producto->cantidad = $stock;
-                $producto->stockminimo = 1;
+                $producto->stockminimo = $stockminimo;
                 $producto->categoria = '';
                 $producto->merma = 0;
                 $producto->rendimientoestandar = 1;
@@ -147,7 +148,7 @@ class inventarioService {
                     $rowsEquivalencias = [];
                     foreach ($insertProductos as $producto) {
                         $equivs = $productos->equivalencias($producto->id, $producto->idunidadmedida);
-
+                        if(!$equivs)throw new \Exception('Error en el id de la unidad de medida');
                         foreach ($equivs as $eq) {
                             $rowsEquivalencias[] = "({$eq->idproducto}, NULL, {$eq->idunidadmedidabase}, {$eq->idunidadmedidadestino}, '$eq->nombreunidadbase', '$eq->nombreunidaddestino', {$eq->factorconversion})";
                         }
@@ -300,7 +301,7 @@ class inventarioService {
                     $rowsEquivalencias = [];
                     foreach ($insertSubProductos as $sub) {
                         $equivs = $subProductos->equivalencias($sub->id, $sub->id_unidadmedida);
-
+                        if(!$equivs)throw new \Exception('Error en el id de la unidad de medida');
                         foreach ($equivs as $eq) {
                             $rowsEquivalencias[] = "(NULL, {$eq->idsubproducto}, {$eq->idunidadmedidabase}, {$eq->idunidadmedidadestino}, '$eq->nombreunidadbase', '$eq->nombreunidaddestino', {$eq->factorconversion})";
                         }
