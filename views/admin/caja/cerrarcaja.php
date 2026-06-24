@@ -399,12 +399,9 @@
                                 <td>$ <?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
                                 <td>$ <?php echo number_format($value->total??0, "0", ",", ".");?></td>
                                 <td class="accionestd">
-                                <div class="acciones-btns" id="<?php echo $value->id;?>">
-                                    <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
-                                    <?php if($value->estado=='Paga'): ?>
-                                        <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
-                                    <?php endif; ?>
-                                </div>
+                                    <div class="acciones-btns" id="<?php echo $value->id;?>">
+                                        <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

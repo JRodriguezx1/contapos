@@ -116,6 +116,7 @@
             if($producto->visible==1&&$producto->estado==1):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="relative producto rounded-lg bg-slate-200 flex gap-3 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->ID;?>">
                 <img
+                    loading="lazy"
                     src="/build/img/<?php echo ($producto->foto!=null&&$producto->foto!='null'&&$producto->foto!='undefined')?$producto->foto:'default-product.png';?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
                     class="block object-contain h-24 min-w-24 w-24 rounded-md" 

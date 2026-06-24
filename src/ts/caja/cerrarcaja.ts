@@ -90,7 +90,7 @@
           }
         })();
       });
-    }); 
+    });
 
 
     function actualizarAnalisis(id: string, valordeclarado: string, mediopago:string):void{
