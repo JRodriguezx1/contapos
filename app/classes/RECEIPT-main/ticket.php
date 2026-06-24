@@ -15,7 +15,7 @@
         }
 
 
-        public function generar($sucursal, $factura, $facturaElectronica, $cliente, $direccion, $productos=[], object|null $emisor = null){
+        public function generar($sucursal, $lineasencabezado, $factura, $facturaElectronica, $cliente, $direccion, $productos=[], object|null $emisor = null){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             if(!$emisor)
@@ -29,6 +29,8 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".($emisor?$emisor->nit:$sucursal->nit)),0,'C',false);
+            //LINEA DE ENCABEZADO SEGUN EMPRESA O EMISOR
+            foreach($lineasencabezado as $value)$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$sucursal->email),0,'C',false);
@@ -201,7 +203,7 @@
         }
 
 
-        public function generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[]){
+        public function generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[]){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -212,6 +214,7 @@
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
+            foreach($lineasencabezado as $value)$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$sucursal->email),0,'C',false);

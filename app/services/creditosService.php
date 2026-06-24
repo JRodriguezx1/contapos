@@ -30,11 +30,11 @@ use stdClass;
 class creditosService {
 
     //metodo llamado desde ventascontrolador.php
-    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor){
+    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor, int $idemisor){
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $credito = new creditosRepository();
-        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente, $totalunidades, $base, $valorimpuestototal, $dctox100, $descuento, $idvendedor); //llama metodo del repositorio
+        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente, $totalunidades, $base, $valorimpuestototal, $dctox100, $descuento, $idvendedor, $idemisor); //llama metodo del repositorio
         $alertas = $entity->validar();
         if(empty($alertas)){
             $r = $credito->insert($entity);
@@ -131,6 +131,7 @@ class creditosService {
         $credito = $credito->find($id);
         $detalle = [
             'titulo' => 'Creditos',
+            'lineasencabezado' => '',
             'credito' => $credito,
             'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
             'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],

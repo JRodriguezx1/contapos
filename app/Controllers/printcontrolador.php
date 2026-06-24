@@ -41,7 +41,7 @@ class printcontrolador{
     if($facturaElectronica)$facturaElectronica->consecutivo = consecutivos::find('id', $facturaElectronica->consecutivo_id);
     $datos['factura']->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = ".$datos['factura']->id.";");
     $print = new ticketPOS();
-    $print->generar($datos['sucursal'], $datos['factura'], $facturaElectronica, $datos['cliente'], $datos['direccion'], $datos['productos'], $datos['emisor']);
+    $print->generar($datos['sucursal'], $datos['lineasencabezado'], $datos['factura'], $facturaElectronica, $datos['cliente'], $datos['direccion'], $datos['productos'], $datos['emisor']);
   }
 
 
@@ -54,6 +54,7 @@ class printcontrolador{
     $sucursal = sucursales::find('id', id_sucursal());
     $datos = creditosService::detallecredito($id);
     [
+      'lineasencabezado'=>$lineasencabezado,
       'credito'=>$credito,
       'cuotas'=>$cuotas,
       'productos'=>$productos,
@@ -64,7 +65,7 @@ class printcontrolador{
     ] = $datos;
 
     $print = new ticketPOS();
-    $print->generarCredito($sucursal, $credito, $usuario, $cliente, $direccion, $productos, $cuotas);
+    $print->generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos, $cuotas);
   }
 
 

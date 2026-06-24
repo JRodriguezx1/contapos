@@ -7,6 +7,7 @@ class creditos {
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->id_fksucursal = $args['id_fksucursal']??id_sucursal();
+        $this->idemisor = $args['idemisor']??'';
         $this->usuariofk = $args['usuariofk']??'';
         $this->idtipofinanciacion = $args['idtipofinanciacion']??'';
         $this->factura_id = $args['factura_id']??NULL;
@@ -62,7 +63,8 @@ class creditos {
         return [
             //'id' => $this->id, 
             'id_fksucursal' => $this->id_fksucursal,
-            'usuariofk' => $this->usuariofk, 
+            'usuariofk' => $this->usuariofk,
+            'idemisor' => $this->idemisor,
             'idtipofinanciacion' => $this->idtipofinanciacion, 
             'factura_id' => $this->factura_id, 
             'cliente_id' => $this->cliente_id,

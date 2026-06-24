@@ -87,12 +87,13 @@ class cajaService {
         $vendedor = usuarios::find('id', $factura->idvendedor);
         $sucursal = sucursales::find('id', id_sucursal());
 
+        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        $emisor = null;
         if($factura->idemisor){
             $emisor = emisores::find('id', $factura->idemisor);
-        }else{
-            $emisor = null;
+            $lineasencabezado = $emisor->datosencabezados?explode("\n", $emisor->datosencabezados??''):[];
         }
-        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        
         return compact('factura', 'productos', 'cliente', 'direccion', 'tarifa', 'vendedor', 'lineasencabezado', 'sucursal', 'emisor');
     }
 
