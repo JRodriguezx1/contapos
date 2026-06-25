@@ -1,4 +1,4 @@
-<div class="box ordenresumen !pb-20">
+<div class="box ordenresumen !pb-16">
     <button onclick="history.back()" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -57,18 +57,22 @@
     </span>
 
     <span class="px-5 py-2.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
-        Referencia: <?php echo $factura->referencia??'';?>
+        Referencia: Orden-<?php echo $factura->referencia??'';?>
     </span>
 
     <span id="textEstado"
         class="px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 font-medium">
         <?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)
             ? 'Pendiente de despacho'
-            : ($factura->entrega=='Presencial' && $factura->entregado==1
-                ? 'Presencial'
-                : 'Domicilio/Presencial entregado'); ?>
+            : ($factura->entrega=='Presencial' && $factura->entregado==1? 'Presencial entregado':'Domicilio/Presencial entregado'); 
+        ?>
     </span>
 
+    <div class="mt-6 text-slate-600 text-xl">
+        <button id="btnEmisor" class="btn-xs btn-light">Emisor</button>
+        <span id="nitEmisor">NIT: 4188502-8</span>, 
+        <span id="nombreEmisor">Nombre emisor</span>
+    </div>
 </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
@@ -264,67 +268,40 @@
 
             <!-- RESUMEN DE PAGO -->
             <div class="xl:col-span-1 bg-slate-50 rounded-xl p-5 border border-slate-200">
-
-                <p class="font-semibold text-slate-800 text-xl mb-5">
-                    Resumen de pago
-                </p>
-
+                <p class="font-semibold text-slate-800 text-xl mb-5">Resumen de pago</p>
                 <div class="flex justify-between">
                     <div class="text-start">
-                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            Sub Total:
-                        </p>
-
-                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            Abono:
-                        </p>
-
-                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            Impuesto:
-                        </p>
-
-                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            Descuento:
-                        </p>
-
-                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            Tarifa Envío:
-                        </p>
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Abono:</p>
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Impuesto:</p>
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Descuento:</p>
+                        <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Tarifa Envío:</p>
                     </div>
 
                     <div class="text-end">
                         <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">
                             $<?php echo number_format($factura->subtotal ?? 0, 0, ',', '.');?>
                         </p>
-
                         <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
                             $<?php echo number_format($factura->abono ?? 0, 0, ',', '.');?>
                         </p>
-
                         <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">
                             $<?php echo number_format($factura->valorimpuestototal ?? 0, 0, ',', '.');?>
                         </p>
-
                         <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal">
                             <?php echo $factura->dctox100;?>%
                             $<?php echo number_format($factura->descuento ?? 0, 0, ',', '.');?>
                         </p>
-
                         <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">
                             $<?php echo number_format($factura->valortarifa ?? 0, 0, ',', '.');?>
                         </p>
-
                     </div>
                 </div>
 
                 <!-- TOTAL DESTACADO -->
                 <div class="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-4">
                     <div class="flex justify-between items-center">
-
-                        <span class="text-slate-700 text-2xl font-semibold">
-                            Total:
-                        </span>
-
+                        <span class="text-slate-700 text-2xl font-semibold">Total:</span>
                         <span id="total"
                             class="text-emerald-600 text-6xl font-bold"
                             style="font-family:'Tektur', serif;">
@@ -421,11 +398,7 @@
         <!-- Encabezado -->
         <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
             <div>
-                <h4 id="modalMasOpciones"
-                    class="text-2xl font-bold text-gray-900">
-                    Más opciones
-                </h4>
-
+                <h4 id="modalMasOpciones" class="text-2xl font-bold text-gray-900">Más opciones</h4>
                 <p class="text-sm text-slate-500 mt-1">
                     Acciones adicionales disponibles para esta orden.
                 </p>
@@ -460,12 +433,14 @@
 
     <!-- MODAL PARA ELIMINAR ORDEN-->
     <?php include __DIR__. "/modalEliminarOrden.php"; ?>
+    <!-- MODAL REMISION -->
+    <?php include __DIR__. "/remision.php"; ?>
+    <!-- MODAL REMISION -->
+    <?php include __DIR__. "/modalCambiarEmisor.php"; ?>
     <!-- MODAL DETALLE DE PRODUCTO COMPUESTO-->
     <?php include __DIR__. "/modalProductoCompuesto.php"; ?>
     <!-- MODAL PARA CAMBIAR USUARIO Y COMSION DE VENTA -->
     <?php include __DIR__. "/modalCambiarUsuario.php"; ?>
     <!-- MODAL PARA ENVIAR FACTURA POR EMAIL -->
     <?php include __DIR__. "/modalSendInvoiceEmail.php"; ?>
-    <!-- MODAL REMISION -->
-    <?php include __DIR__. "/remision.php"; ?>
 </div>

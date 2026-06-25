@@ -5,6 +5,7 @@
       const miDialogoEliminarOrden = document.querySelector('#miDialogoEliminarOrden') as any;
       const btnfacturar = document.querySelector<HTMLButtonElement>("#btnfacturar");
       const btneliminarorden = document.querySelector('#btneliminarorden') as HTMLButtonElement;
+      const btnEmisor = document.querySelector('#btnEmisor') as HTMLButtonElement;
       const btnSelectVendedor = document.querySelector('#btnSelectVendedor') as HTMLButtonElement;
       const btnCaja = document.querySelector('#caja') as HTMLSelectElement;
       const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement;
@@ -22,6 +23,7 @@
       const referenciaFactura = document.querySelector('#referenciaFactura');
       const miDialogoRemision = document.querySelector('#miDialogoRemision') as HTMLDialogElement;
       const miDialogoSelectUser = document.querySelector('#miDialogoSelectUser') as HTMLDialogElement;
+      const miDialogoSelectEmisor = document.querySelector('#miDialogoSelectEmisor') as HTMLDialogElement;
       const enviarEmail = document.querySelector('#enviarEmail') as HTMLButtonElement;
       const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
       //const miDialogoDespachar = document.querySelector('#miDialogoDespachar') as any;
@@ -198,6 +200,12 @@
         document.addEventListener("click", cerrarDialogoExterno);
       });
 
+      /////////  CAMBIAR EMISOR  /////////////
+      btnEmisor.addEventListener('click', (e)=>{
+        miDialogoSelectEmisor.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+      });
+
       /////////  CAMBIAR USUARIO VENDEDOR Y COMISION  /////////////
       btnSelectVendedor.addEventListener('click', (e)=>{
         miDialogoSelectUser.showModal();
@@ -206,6 +214,25 @@
 
       document.querySelector('#btnEditarCrearSelectUser')?.addEventListener('submit', (e:Event)=>{
         e.preventDefault();
+        /*try {
+            const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
+            const respuesta = await fetch(url); 
+            const resultado = await respuesta.json();
+            detalleInsumos(resultado);
+          } catch (error) {
+              console.log(error);
+          }*/
+      });
+
+
+
+      ////////////////////FORM PARA CAMBIAR DE EMISOR
+      document.querySelector('#formUpdateSelectEmisor')?.addEventListener('submit', (e:Event)=>{
+        e.preventDefault();
+        const v:number = validarPassword('clave_para_cambiar_emisor', 'divmsjalertaSelectEmisor');
+        if(!v){
+          return;
+        }
         /*try {
             const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
             const respuesta = await fetch(url); 
@@ -381,7 +408,7 @@
   
       function cerrarDialogoExterno(event:Event) {
         const f = event.target;
-        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoMasOpciones || f === miDialogoRemision || f === miDialogoSelectUser || f === miDialogoProductoCompuesto || (f as HTMLElement).id == 'btnXCerrarMasOpciones' || (f as HTMLElement).id == 'btnXCerrarRemision' || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLElement).id == 'btnXCerrarModalProductoCompuesto' || (f as HTMLElement).id == 'btnXCerrarModalSelectUser') {
+        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoMasOpciones || f === miDialogoRemision || f === miDialogoSelectEmisor || f === miDialogoSelectUser || f === miDialogoProductoCompuesto || (f as HTMLElement).id == 'btnXCerrarMasOpciones' || (f as HTMLElement).id == 'btnXCerrarRemision' || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLElement).id == 'btnXCerrarModalProductoCompuesto' || (f as HTMLElement).id == 'btnXCerrarModalSelectUser' || (f as HTMLElement).id == 'btnXCerrarModalSelectEmisor') {
             miDialogoFacturar.close();
             miDialogoEliminarOrden.close();
             miDialogoEnviarEmailCliente.close();
@@ -389,6 +416,7 @@
             miDialogoRemision.close();
             miDialogoProductoCompuesto.close();
             miDialogoSelectUser.close();
+            miDialogoSelectEmisor.close();
             document.removeEventListener("click", cerrarDialogoExterno);
         }
       }
@@ -405,7 +433,7 @@
         type producto = {id:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string , promediostock: string};
         var products:producto[] = [];
 
-        const v:number = validarPasswordDcto();
+        const v:number = validarPassword('clave_para_eliminar_factura', 'divmsjalerta1');
         if(!v)return;
 
         inputsInv.forEach(inputinv =>{
@@ -479,10 +507,10 @@
       }
 
 
-      function validarPasswordDcto():number{
-        const clave = claveEliminarOrden.find(c => c.clave=='clave_para_eliminar_factura');
+      function validarPassword(llave:string, divAlert:string):number{
+        const clave = claveEliminarOrden.find(c => c.clave==llave);
         if(clave?.valor_final!==null && inputEliminarClave.value !== clave?.valor_final){
-          msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalerta1') as HTMLElement));
+          msjAlert('error', 'El password es invalido', (document.querySelector('#'+divAlert) as HTMLElement));
           return 0;
         }
         return 1;

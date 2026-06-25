@@ -1213,6 +1213,10 @@ video {
   min-height: 100vh;
 }
 
+.\!w-36 {
+  width: 9rem !important;
+}
+
 .\!w-\[100px\] {
   width: 100px !important;
 }
@@ -1223,6 +1227,10 @@ video {
 
 .\!w-\[125px\] {
   width: 125px !important;
+}
+
+.\!w-\[130px\] {
+  width: 130px !important;
 }
 
 .\!w-\[135px\] {
@@ -1473,6 +1481,10 @@ video {
 
 .w-screen {
   width: 100vw;
+}
+
+.\!w-48 {
+  width: 12rem !important;
 }
 
 .\!min-w-0 {
