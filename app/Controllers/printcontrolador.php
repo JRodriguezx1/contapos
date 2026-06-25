@@ -51,9 +51,10 @@ class printcontrolador{
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    $sucursal = sucursales::find('id', id_sucursal());
     $datos = creditosService::detallecredito($id);
     [
+      'sucursal'=>$sucursal,
+      'emisor'=>$emisor,
       'lineasencabezado'=>$lineasencabezado,
       'credito'=>$credito,
       'cuotas'=>$cuotas,
@@ -65,7 +66,7 @@ class printcontrolador{
     ] = $datos;
 
     $print = new ticketPOS();
-    $print->generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos, $cuotas);
+    $print->generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos, $cuotas, $emisor);
   }
 
 

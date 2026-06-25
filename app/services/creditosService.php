@@ -9,6 +9,7 @@ use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\emisores;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\usuarios;
 use App\Models\creditos\creditos;
@@ -17,6 +18,7 @@ use App\Models\creditos\productosseparados;
 use App\Models\creditos\separadomediopago;
 use App\Models\factimpuestos;
 use App\Models\inventario\productos_sub;
+use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
 use App\Repositories\creditos\creditosRepository;
@@ -125,13 +127,24 @@ class creditosService {
 
 
     public static function detallecredito(int $id):array{
+        $sucursal = sucursales::find('id', id_sucursal());
         $credito = new creditosRepository();
         $cuotasRepo = new cuotasRepository();
         $productos = new productsSeparadosRepository();
         $credito = $credito->find($id);
+
+        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        $emisor = null;
+        if($credito->idemisor){
+            $emisor = emisores::find('id', $credito->idemisor);
+            $lineasencabezado = $emisor->datosencabezados?explode("\n", $emisor->datosencabezados??''):[];
+        }
+
         $detalle = [
             'titulo' => 'Creditos',
-            'lineasencabezado' => '',
+            'sucursal' => $sucursal,
+            'emisor' => $emisor,
+            'lineasencabezado' => $lineasencabezado,
             'credito' => $credito,
             'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
             'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],

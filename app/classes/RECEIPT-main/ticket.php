@@ -48,6 +48,7 @@
             $this->pdf->SetFont('Arial','',9);
 
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Fecha: ".$factura->fechapago),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Forma de pago: ".$factura->tipoventa),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Caja: ".$factura->caja),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$factura->vendedor),0,'C',false);
             $this->pdf->SetFont('Arial','B',10);
@@ -203,7 +204,7 @@
         }
 
 
-        public function generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[]){
+        public function generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[], object|null $emisor = null){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -211,9 +212,11 @@
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($emisor?$emisor->nombre:$sucursal->negocio)),0,'C',false);
+            $this->pdf->SetFont('Arial','B',8);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".($emisor?$emisor->nit:$sucursal->nit)),0,'C',false);
             foreach($lineasencabezado as $value)$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);

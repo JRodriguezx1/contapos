@@ -712,6 +712,7 @@ DROP TABLE IF EXISTS `creditos`;
 CREATE TABLE `creditos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_fksucursal` int NOT NULL,
+  `idemisor` int DEFAULT NULL,
   `usuariofk` int DEFAULT NULL,
   `idtipofinanciacion` int NOT NULL,
   `factura_id` int DEFAULT NULL,
@@ -755,9 +756,11 @@ CREATE TABLE `creditos` (
   KEY `idtipofinanciacion_idx` (`idtipofinanciacion`),
   KEY `usuariofk_idx` (`usuariofk`),
   KEY `idestadocreditos_idx` (`idestadocreditos`),
+  KEY `idemisor_crd_idx` (`idemisor`),
   CONSTRAINT `cliente_id` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `factura_id` FOREIGN KEY (`factura_id`) REFERENCES `facturas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `id_fksucursal` FOREIGN KEY (`id_fksucursal`) REFERENCES `sucursales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idemisor_crd` FOREIGN KEY (`idemisor`) REFERENCES `emisores` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idestadocreditos` FOREIGN KEY (`idestadocreditos`) REFERENCES `estadocreditos` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idtipofinanciacion` FOREIGN KEY (`idtipofinanciacion`) REFERENCES `tipofinanciacion` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `usuariofk` FOREIGN KEY (`usuariofk`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -3093,4 +3096,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-24  1:18:03
+-- Dump completed on 2026-06-25  0:11:21
