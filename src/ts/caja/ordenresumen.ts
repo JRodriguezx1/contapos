@@ -28,6 +28,7 @@
       const miDialogoEnviarEmailCliente = document.querySelector('#miDialogoEnviarEmailCliente') as any;
       //const miDialogoDespachar = document.querySelector('#miDialogoDespachar') as any;
       const miDialogoProductoCompuesto = document.querySelector('#miDialogoProductoCompuesto') as any;
+      const selectEmisor = document.querySelector('#selectEmisor') as HTMLInputElement;
       const inputEliminarClave = document.querySelector('#inputEliminarClave') as HTMLInputElement;
       const tablaDetalleInsumos = document.querySelector('#tablaDetalleInsumos tbody') as HTMLBodyElement;
 
@@ -218,6 +219,14 @@
       });
 
 
+      selectEmisor.addEventListener('click', (e:Event)=>{
+        const target = e.target as HTMLSelectElement;
+        const opcion = document.querySelector(`#selectCaja option[data-emisor="${target.value}"]`) as HTMLOptionElement;
+        if(opcion) {
+          (document.querySelector('#selectCaja') as HTMLSelectElement).value = opcion.value;
+        }
+      });
+
 
       ////////////////////FORM PARA CAMBIAR DE EMISOR
       document.querySelector('#formUpdateSelectEmisor')?.addEventListener('submit', async (e:Event)=>{
@@ -231,7 +240,8 @@
         inputcambiarEmisor.value = '';
         const datos = new FormData();
         datos.append('id', idorden);
-        datos.append('idemisor', (document.querySelector('#selectEmisor') as HTMLInputElement).value);
+        datos.append('idemisor', selectEmisor.value);
+        datos.append('idcaja', (document.querySelector('#selectCaja') as HTMLSelectElement).value);
         try {
           const url = "/admin/api/creditos/cambiarEmisor";  //va al controlador cajacontrolador para cambiar el emisor en tabla creditos y facturas.
           const respuesta = await fetch(url, {method: 'POST', body: datos});

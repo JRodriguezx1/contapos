@@ -23,6 +23,17 @@
             </select>
         </div>
 
+        <div class="formulario__campo">
+            <label class="formulario__label" for="selectCaja">Caja Facturadora</label>
+            <select id="selectCaja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" disabled>
+                <?php foreach($cajas as $value):  ?>
+                      <option value="<?php echo $value->id;?>" data-emisor="<?php echo $value->idemisor;?>">
+                        <?php echo $value->nombre;?>
+                      </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
         <div class="bg-red-50 border border-red-100 rounded-2xl p-5 mb-6">
             <label for="inputcambiarEmisor" class="block text-xl font-semibold text-red-700 mb-3">
                 Confirmación de seguridad
