@@ -35,7 +35,7 @@ class creditosRepository extends operationRepository{
     
 
     //metodo llamado desde el ventascontrolador.php y a su vez servicio creditosService y su metodo: crearCredito
-    public function generarCredito(array $array, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idvendedor, int $idemisor):creditos{
+    public function generarCredito(array $array, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idvendedor, int|string|null $idemisor = NULL):creditos{
         $entity = new $this->entityClass($array);
         $entity->usuariofk = $idvendedor;
         $entity->idemisor = $idemisor;

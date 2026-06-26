@@ -68,5 +68,18 @@
                 class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
             >
         </div>
+        <div>
+            <label for="clave_para_cambiar_emisor_de_una_factura" class="block mb-2 text-xl font-medium text-gray-900 ">
+                Clave para cambiar emisor de una factura
+            </label>
+            <input 
+                type="password" 
+                id="clave_para_cambiar_emisor_de_una_factura" 
+                name="clave_para_cambiar_emisor_de_una_factura" 
+                placeholder="Ingrese la clave para ajustar credito"
+                value="<?php echo $conflocal['clave_para_cambiar_emisor_de_una_factura']->valor_final;?>"
+                class="keyinput bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
+            >
+        </div>
     </div> 
 </div> <!-- fin claves-->

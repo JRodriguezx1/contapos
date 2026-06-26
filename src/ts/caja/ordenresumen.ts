@@ -44,6 +44,8 @@
       let claveEliminarOrden:clavesApi[];
       const idorden = (document.querySelector('#idorden') as HTMLElement).dataset.idorden;
 
+      document.addEventListener("click", cerrarDialogoExterno);
+
       (async ()=>{
         try {
             const url = "/admin/api/getPasswords"; //llamado a la API REST
@@ -105,20 +107,17 @@
         /*if(carrito.length){*/
           subirModalPagar();
           miDialogoFacturar.showModal();
-          document.addEventListener("click", cerrarDialogoExterno);
         //}
       });
       
 
       btneliminarorden?.addEventListener('click', ()=>{
           miDialogoEliminarOrden.showModal();
-          document.addEventListener("click", cerrarDialogoExterno);
       });
 
 
       enviarEmail?.addEventListener('click', ()=>{
         miDialogoEnviarEmailCliente.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       });
 
 
@@ -129,7 +128,6 @@
           datos.append('id', idorden);
           datos.append('email', (document.querySelector('#inputEmail') as HTMLInputElement).value);
           miDialogoEnviarEmailCliente.close();
-          document.removeEventListener("click", cerrarDialogoExterno);
           (async ()=>{
             try {
               const url = "/admin/api/sendOrdenEmailToCustemer";  //va al controlador cajacontrolador para enviar detalle de orden por email.
@@ -183,33 +181,28 @@
       //apertura de la ventana modal para las opcionesde traslado de inventario
       btnMasOpciones.addEventListener('click', ()=>{
           miDialogoMasOpciones.showModal();
-          document.addEventListener("click", cerrarDialogoExterno);
       });
 
 
       btnImprimirTirilla.addEventListener('click', ()=>{
         if(Number.isNaN(idorden))return;
         miDialogoMasOpciones.close();
-        document.addEventListener("click", cerrarDialogoExterno);
         window.open("/admin/printPDFPOS?id=" + idorden, "_blank");  //controlador printcontrolador
       });
 
 
       btnOrdenEnvio?.addEventListener('click', ()=>{
         miDialogoRemision.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       });
 
       /////////  CAMBIAR EMISOR  /////////////
       btnEmisor.addEventListener('click', (e)=>{
         miDialogoSelectEmisor.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       });
 
       /////////  CAMBIAR USUARIO VENDEDOR Y COMISION  /////////////
       btnSelectVendedor.addEventListener('click', (e)=>{
         miDialogoSelectUser.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       });
 
       document.querySelector('#btnEditarCrearSelectUser')?.addEventListener('submit', (e:Event)=>{
@@ -227,20 +220,30 @@
 
 
       ////////////////////FORM PARA CAMBIAR DE EMISOR
-      document.querySelector('#formUpdateSelectEmisor')?.addEventListener('submit', (e:Event)=>{
+      document.querySelector('#formUpdateSelectEmisor')?.addEventListener('submit', async (e:Event)=>{
         e.preventDefault();
-        const v:number = validarPassword('clave_para_cambiar_emisor', 'divmsjalertaSelectEmisor');
-        if(!v){
+        const inputcambiarEmisor = document.querySelector('#inputcambiarEmisor') as HTMLInputElement;
+        const v:number = validarPassword('clave_para_cambiar_emisor_de_una_factura', 'divmsjalertaSelectEmisor', inputcambiarEmisor);
+        if(!v || idorden==null || Number(idorden)<=0){
           return;
         }
-        /*try {
-            const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
-            const respuesta = await fetch(url); 
-            const resultado = await respuesta.json();
-            detalleInsumos(resultado);
-          } catch (error) {
-              console.log(error);
-          }*/
+        miDialogoSelectEmisor.close();
+        inputcambiarEmisor.value = '';
+        const datos = new FormData();
+        datos.append('id', idorden);
+        datos.append('idemisor', (document.querySelector('#selectEmisor') as HTMLInputElement).value);
+        try {
+          const url = "/admin/api/creditos/cambiarEmisor";  //va al controlador cajacontrolador para cambiar el emisor en tabla creditos y facturas.
+          const respuesta = await fetch(url, {method: 'POST', body: datos});
+          const resultado = await respuesta.json();
+          if(resultado.exito!=undefined){
+            msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+          }else{
+            msjalertToast('error', '¡Error!', resultado.error[0]);
+          }
+        } catch (error) {
+            console.log(error);
+        }
       });
 
 
@@ -380,7 +383,6 @@
               /////// reinciar modulo de ventas
               ordenpagada();
               miDialogoFacturar.close();
-              document.removeEventListener("click", cerrarDialogoExterno);
               if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura);
               if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){ 
                 const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura); //llama a la funcion que esta en ts/ventas/ventas.sendinvoice.ts
@@ -417,7 +419,6 @@
             miDialogoProductoCompuesto.close();
             miDialogoSelectUser.close();
             miDialogoSelectEmisor.close();
-            document.removeEventListener("click", cerrarDialogoExterno);
         }
       }
 
@@ -433,7 +434,7 @@
         type producto = {id:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string , promediostock: string};
         var products:producto[] = [];
 
-        const v:number = validarPassword('clave_para_eliminar_factura', 'divmsjalerta1');
+        const v:number = validarPassword('clave_para_eliminar_factura', 'divmsjalerta1', inputEliminarClave);
         if(!v)return;
 
         inputsInv.forEach(inputinv =>{
@@ -455,7 +456,6 @@
               if(resultado.exito !== undefined){
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 miDialogoEliminarOrden.close();
-                document.removeEventListener("click", cerrarDialogoExterno);
                 btneliminarorden.style.display = "none";
                 enviarEmail.style.display = "none";
                 (document.querySelector('#estadoOrden') as HTMLElement).textContent = "Eliminada";
@@ -480,7 +480,7 @@
           const idproducto = target.id;
           document.querySelector('#nombreProducto')!.textContent = nombreProductoCompuesto;
           miDialogoProductoCompuesto.showModal();
-          document.addEventListener("click", cerrarDialogoExterno);
+          
           try {
             const url = `/admin/api/ventas/detalleProductoCompuesto?idproducto=${idproducto}&idfactura=${idventa}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
             const respuesta = await fetch(url); 
@@ -507,9 +507,9 @@
       }
 
 
-      function validarPassword(llave:string, divAlert:string):number{
+      function validarPassword(llave:string, divAlert:string, input:HTMLInputElement):number{
         const clave = claveEliminarOrden.find(c => c.clave==llave);
-        if(clave?.valor_final!==null && inputEliminarClave.value !== clave?.valor_final){
+        if(clave?.valor_final!==null && input.value !== clave?.valor_final){
           msjAlert('error', 'El password es invalido', (document.querySelector('#'+divAlert) as HTMLElement));
           return 0;
         }

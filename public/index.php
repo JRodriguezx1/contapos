@@ -267,6 +267,7 @@ $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eli
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
 $router->get('/admin/api/getInvoice', [cajacontrolador::class, 'getInvoice']); //obtener detalle invoice en caja.ts para imprimir
 $router->get('/admin/api/caja/despacharOrden', [cajacontrolador::class, 'despacharOrden']); //despachar orden desdes ordenresumen.ts
+$router->post('/admin/api/caja/cambiarEmisor', [cajacontrolador::class, 'cambiarEmisor']); //llamada desde ordenresumen.ts
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //api llamada desde ordenresumen.ts cuando se factura una cotizacion guardada

@@ -29,6 +29,7 @@ use App\Repositories\creditos\separadoMediopagoRepository;
 use App\services\cajaService;
 use App\services\whatsAppService;
 use App\classes\Traits\DocumentTrait;
+use App\Models\configuraciones\emisores;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -546,10 +547,11 @@ class cajacontrolador{
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
-
+    $emisores = emisores::whereArray(['idsucursal'=>$idsucursal, 'estado'=>1]);
     $conflocal = config_local::getParamCaja();
-    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'usuarios'=>$usuarios, 'emisores'=>$emisores, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
+
 
   public static function detalleorden(Router $router){
     //session_start();
@@ -980,6 +982,15 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     $datos = cajaService::despacharOrden($id);
     echo json_encode($datos);
+    return;
+  }
+
+
+  public static function cambiarEmisor(){
+    isadmin();
+    $alertas = [];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' )$alertas = cajaService::cambiarEmisor($_POST);
+    echo json_encode($alertas);
     return;
   }
 

@@ -14,6 +14,7 @@ use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
+use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use stdClass;
 
@@ -149,6 +150,28 @@ class cajaService {
             return $alertas;
         }
         
+    }
+
+
+    public static function cambiarEmisor(array $data):array{
+        $creditoRepo = new creditosRepository();
+        $idfactura = $data['id'];
+        $idemisor = $data['idemisor'];
+        $factura = facturas::find('id', $idemisor);
+        $credito = $creditoRepo->uniqueWhere(['factura_id'=>$factura->id]);
+
+        if(!$factura) return ['error'=>'No se encontro factura'];
+        $factura->idemisor = $idemisor;
+        $factura->idcaja = '';
+        $factura->idcierrecaja = '';
+        $credito->idemisor = $idemisor;
+        $r1 = $factura->actualizar();
+        if($r1){
+            if($credito)$creditoRepo->update($credito);
+        }else{
+            return ['error'=>'Error al actualizar el emisor en la factura'];
+        }
+        return ['exito'=>'Emisor actualizado en factura'];
     }
     
 }

@@ -32,7 +32,7 @@ use stdClass;
 class creditosService {
 
     //metodo llamado desde ventascontrolador.php
-    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor, int $idemisor){
+    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor, int|string|null $idemisor = NULL){
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $credito = new creditosRepository();

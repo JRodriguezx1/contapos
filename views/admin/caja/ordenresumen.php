@@ -1,4 +1,4 @@
-<div class="box ordenresumen !pb-16">
+<div class="box ordenresumen">
     <button onclick="history.back()" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -37,38 +37,24 @@
         <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">Apps</span>Mas</button>
     </div>
     
-    <div class="flex gap-4 mb-4">
-        <div>
-            <span class="m-0 text-slate-500 text-xl font-semibold">Orden: </span>
-            <span id="numOrden" class="m-0 text-slate-500 text-xl">#: <?php echo $factura->num_orden??'';?></span>
-        </div>
-        <div>
-            <span class="m-0 text-slate-500 text-xl font-semibold">Referencia: </span>
-            <span id="referenciaFactura" class="m-0 text-slate-500 text-xl">Orden: <?php echo $factura->referencia??'';?></span>
-        </div>
-        <div>
-            <span class="m-0 text-slate-500 text-xl font-semibold">Estado: </span>
-            <span id="textEstado" class="m-0 text-slate-500 text-xl"><?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)?'Pendiente de despacho':($factura->entrega=='Presencial' && $factura->entregado==1 ? 'Presencial entregado':'Domicilio/Presencial entregado');?></span>
-        </div>
+    
+    <div class=" flex">
+        <span class="px-5 py-2.5 rounded-full bg-slate-100 text-slate-700 font-medium">
+            Orden #<?php echo $factura->num_orden??'';?>
+        </span>
+        <span class="px-5 py-2.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
+            Referencia: Orden-<?php echo $factura->referencia??'';?>
+        </span>
+        <span id="textEstado"
+            class="px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 font-medium">
+            <?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)
+                ? 'Pendiente de despacho'
+                : ($factura->entrega=='Presencial' && $factura->entregado==1? 'Presencial entregado':'Domicilio/Presencial entregado'); 
+            ?>
+        </span>
     </div>
 
-    <span class="px-5 py-2.5 rounded-full bg-slate-100 text-slate-700 font-medium">
-        Orden #<?php echo $factura->num_orden??'';?>
-    </span>
-
-    <span class="px-5 py-2.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
-        Referencia: Orden-<?php echo $factura->referencia??'';?>
-    </span>
-
-    <span id="textEstado"
-        class="px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 font-medium">
-        <?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)
-            ? 'Pendiente de despacho'
-            : ($factura->entrega=='Presencial' && $factura->entregado==1? 'Presencial entregado':'Domicilio/Presencial entregado'); 
-        ?>
-    </span>
-
-    <div class="mt-6 text-slate-600 text-xl">
+    <div class="mt-4 pb-4 text-slate-600 text-xl">
         <button id="btnEmisor" class="btn-xs btn-light">Emisor</button>
         <span id="nitEmisor">NIT: 4188502-8</span>, 
         <span id="nombreEmisor">Nombre emisor</span>
