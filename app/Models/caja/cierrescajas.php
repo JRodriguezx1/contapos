@@ -171,4 +171,15 @@ class cierrescajas extends \App\Models\ActiveRecord {
         return $array;
     }
 
+
+    public static function findCierredecajaXidcajaXfactura(int $idcaja, string $fechaFactura):array{
+        $sql="SELECT *FROM cierrescajas WHERE idcaja = $idcaja AND fechainicio <= '$fechaFactura' AND fechafin >= '$fechaFactura';";
+        $resultado = self::$db->query($sql);
+        $array = [];
+        while($row = $resultado->fetch_assoc())
+        $array[] = $row;
+        $resultado->free();
+        return $array;
+    }
+
 }

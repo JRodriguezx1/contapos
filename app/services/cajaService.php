@@ -4,12 +4,14 @@ namespace App\services;
 
 use App\Models\caja\cierrescajas;
 use App\Models\caja\declaracionesdineros;
+use App\Models\caja\factmediospago;
 use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\emisores;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\tarifas;
 use App\Models\configuraciones\usuarios;
+use App\Models\factimpuestos;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
@@ -162,9 +164,42 @@ class cajaService {
         $credito = $creditoRepo->uniqueWhere(['factura_id'=>$factura->id]);
 
         if(!$factura) return ['error'=>'No se encontro factura'];
-        //buscar cierre de caja de la nueva con la fecha de la factura
+        //actualizar valores de la caja actual
+        $factMP = factmediospago::idregistros('id_factura', $factura->id);
+        $factImp = factimpuestos::idregistros('facturaid', $factura->id);
+        $cierrecajafactura = cierrescajas::whereArray(['id'=>$factura->idcaja]);
+
+        if($factura->tipo == 'Contado'){
+            $valor = 0;
+            foreach($mediosPago as $mp){
+                if($mp->idmediopago == 1){
+                    $valor = $mp->valor;
+                    break;
+                }
+            }
+
+            if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
+            
+            $cierrecajafactura->totalfacturas = 
+            $cierrecajafactura->facturaselectronicas
+            $cierrecajafactura->facturaspos
+            $cierrecajafactura->valorfe
+            $cierrecajafactura->valorpos
+            $cierrecajafactura->descuentofe
+            $cierrecajafactura->descuentopos
+            $cierrecajafactura->ventasenefectivo
+            $cierrecajafactura->ingresoventas = 
+            $cierrecajafactura->totaldescuentos = 
+            $cierrecajafactura->realventas = 
+            $cierrecajafactura->valorimpuestototal = 
+            $cierrecajafactura->basegravable = 
+        }else{
+            $cierrecajafactura
+
+        }
         //actualizar valores de la nueva caja
-        //actualizar valores de la cajaactual
+        //buscar cierre de caja de la nueva con la fecha de la factura
+        $cierrecaja = cierrescajas::findCierredecajaXidcajaXfactura($idcaja, $factura->fechapago);
         
         $factura->idemisor = $idemisor;
         $factura->idcaja = $idcaja;
