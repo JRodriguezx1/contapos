@@ -157,12 +157,17 @@ class cajaService {
         $creditoRepo = new creditosRepository();
         $idfactura = $data['id'];
         $idemisor = $data['idemisor'];
+        $idcaja = $data['idcaja'];
         $factura = facturas::find('id', $idemisor);
         $credito = $creditoRepo->uniqueWhere(['factura_id'=>$factura->id]);
 
         if(!$factura) return ['error'=>'No se encontro factura'];
+        //buscar cierre de caja de la nueva con la fecha de la factura
+        //actualizar valores de la nueva caja
+        //actualizar valores de la cajaactual
+        
         $factura->idemisor = $idemisor;
-        $factura->idcaja = '';
+        $factura->idcaja = $idcaja;
         $factura->idcierrecaja = '';
         $credito->idemisor = $idemisor;
         $r1 = $factura->actualizar();
