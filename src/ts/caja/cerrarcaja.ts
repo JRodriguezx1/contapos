@@ -181,7 +181,7 @@
               //mostar datos de la caja seleccionada
               printdiscriminarmediospago(resultado.discriminarmediospagos);
               printindicadores(resultado.ultimocierre);
-              //printdetalleimpuesto();
+              printdetalleimpuesto(resultado.discriminarimpuesto);
               //printgastosdelacaja();
               //printdiscriminadoabonos();
               printsobrantesfaltantes(resultado.sobrantefaltante);
@@ -252,6 +252,22 @@
       
       document.querySelector('#cantidadFacturasFE')!.textContent = obj.facturaselectronicas;
       document.querySelector('#cantidadFacturasPOS')!.textContent = obj.facturaspos;
+
+      document.querySelector('#abonoscreditos')!.innerHTML = `<td class=""><strong>$ </strong>${Number(obj.abonoscreditos).toLocaleString()}</td>`;
+      document.querySelector('#abonosseparados')!.innerHTML = `<td class=""><strong>$ </strong>${Number(obj.abonosseparados).toLocaleString()}</td>`;
+    }
+
+    function printdetalleimpuesto(data: {basegravable:string, impuestos:string, tarifa:string, valorimpuesto:string}[]){
+      const tablaDetalleImpuestos = document.querySelector('#tablaDetalleImpuestos tbody') as HTMLTableElement;
+      while(tablaDetalleImpuestos.firstChild)tablaDetalleImpuestos.removeChild(tablaDetalleImpuestos.firstChild);
+      data.forEach(row=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="">${row.tarifa}</td> 
+                        <td class=""><strong>$ </strong>${Number(row.basegravable).toLocaleString()}</td>
+                        <td class=""><strong>$ </strong>${Number(row.valorimpuesto).toLocaleString()}</td>
+                      `;
+        tablaDetalleImpuestos.appendChild(tr);
+      });
     }
 
     function printsobrantesfaltantes(array: {id_mediopago:string, idcierrecajaid:string, nombremediopago:string, valordeclarado:number, valorsistema:number}[]){

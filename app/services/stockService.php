@@ -82,7 +82,7 @@ class stockService {
 
 
     public static function upDate_movimientoInsumos(array $upDateSubproductos, array $returnInsumos, string $tipo, string $referencia):bool{
-         $movInv = new movimientos_insumos;
+        $movInv = new movimientos_insumos;
         //registrar ajuste de movimiento de inventario de productos de forma masiva
         $arrayMovInv = [];
         $cantidadxitem = array_column($upDateSubproductos, 'stock', 'id');

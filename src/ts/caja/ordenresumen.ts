@@ -243,11 +243,13 @@
         datos.append('idemisor', selectEmisor.value);
         datos.append('idcaja', (document.querySelector('#selectCaja') as HTMLSelectElement).value);
         try {
-          const url = "/admin/api/creditos/cambiarEmisor";  //va al controlador cajacontrolador para cambiar el emisor en tabla creditos y facturas.
+          const url = "/admin/api/caja/cambiarEmisor";  //va al controlador cajacontrolador para cambiar el emisor en tabla creditos y facturas.
           const respuesta = await fetch(url, {method: 'POST', body: datos});
           const resultado = await respuesta.json();
           if(resultado.exito!=undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            (document.querySelector('#nitEmisor') as HTMLSpanElement).textContent = 'NIT: '+resultado.emisor.nit;
+            (document.querySelector('#nombreEmisor') as HTMLSpanElement).textContent = resultado.emisor.nombre;
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }

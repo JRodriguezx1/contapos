@@ -11,7 +11,7 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="selectEmisor">Emisor</label>
             <select id="selectEmisor" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
-                <option value=""><?php echo $sucursal->negocio;?></option>
+                <option value="0"><?php echo $sucursal->negocio;?></option>
                 <?php foreach($emisores as $value):  ?>
                       <option 
                         value="<?php echo $value->id;?>" 
@@ -27,7 +27,7 @@
             <label class="formulario__label" for="selectCaja">Caja Facturadora</label>
             <select id="selectCaja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" disabled>
                 <?php foreach($cajas as $value):  ?>
-                      <option value="<?php echo $value->id;?>" data-emisor="<?php echo $value->idemisor;?>">
+                      <option value="<?php echo $value->id;?>" data-emisor="<?php echo $value->idemisor??0;?>" <?php echo ($factura->idemisor==$value->idemisor)?'selected':'';?> >
                         <?php echo $value->nombre;?>
                       </option>
                 <?php endforeach; ?>

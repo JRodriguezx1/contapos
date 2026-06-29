@@ -453,6 +453,7 @@ class creditosService {
             $cuotasRepo = new cuotasRepository();
             $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($credito->id);
             
+            
             $arrayCierresCaja = [];
             foreach($cuotas as $cuota){
                 if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
@@ -481,6 +482,42 @@ class creditosService {
             //$alertas['error'][] = "Error al anular el credito. {$th->getMessage()}";
             //$getDB->rollback();
         //}
+        return $alertas;
+    }
+
+
+    public static function descontarAbonosCreditosXCierresCaja(int $idcredito):array{
+        $alertas = [];
+        $cuotasRepo = new cuotasRepository();
+        $cuotas = $cuotasRepo->obtenerPorCredito_cierracaja($idcredito);
+        $arrayCierresCaja = [];
+        foreach($cuotas as $cuota){
+            if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
+                $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
+                $obj->abonostotales -= $cuota->cuotapagada;
+                $obj->abonosenefectivo -= $cuota->valorcuota_efectivo;
+                $obj->abonoscreditos -= $cuota->cuotapagada;
+            }else{
+                $obj = new stdClass;
+                $obj->id = $cuota->cierrecaja_id;
+                $obj->abonostotales = $cuota->abonostotales_caja-$cuota->cuotapagada;
+                $obj->abonosenefectivo = $cuota->abonosenefectivo_caja-$cuota->valorcuota_efectivo;
+                $obj->abonoscreditos = $cuota->abonosCreditos_caja-$cuota->cuotapagada;
+                $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
+            }
+        }
+
+        //descontar los abonos de los creditos en cierre de caja
+        if(empty($arrayCierresCaja)){
+            $alertas['exito'][] = "No hay abonos del credito registrado en cajas";
+            return $alertas;
+        }
+        $rc = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
+        if($rc){
+            $alertas['exito'][] = "Cierre de caja actualizado";
+        }else{
+            $alertas['error'][] = "Error al actualizar cierre de caja";
+        }
         return $alertas;
     }
 

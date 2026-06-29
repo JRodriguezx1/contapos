@@ -56,8 +56,8 @@
 
     <div class="mt-4 pb-4 text-slate-600 text-xl">
         <button id="btnEmisor" class="btn-xs btn-light">Emisor</button>
-        <span id="nitEmisor">NIT: 4188502-8</span>, 
-        <span id="nombreEmisor">Nombre emisor</span>
+        <span id="nitEmisor">NIT: <?php echo $factura->nitemisor ?? $sucursal->nit; ?></span>, 
+        <span id="nombreEmisor"><?= $factura->nombreemisor ?? $sucursal->negocio; ?></span>
     </div>
 </div>
 

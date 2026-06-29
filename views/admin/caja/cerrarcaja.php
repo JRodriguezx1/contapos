@@ -149,7 +149,7 @@
                             <!-- DETALLE DE IMPUESTOS-->
                             <div class="mt-32 mb-12">
                                 <p class="text-sky-400 text-center  font-bold">Detalle de Impuestos</p>
-                                <table class="tabla2" width="100%" id="tablaDetalleImpuestos">
+                                <table id="tablaDetalleImpuestos" class="tabla2" width="100%">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Tarifa</th>
@@ -172,7 +172,7 @@
                             <!-- DETALLE GASTOS DE LA CAJA-->
                             <div class="mt-32 mb-12">
                                 <p class="text-sky-400 text-center  font-bold">Detalle gastos de la caja</p>
-                                <table class="tabla2" width="100%" id="tablaDetalleCaja">
+                                <table id="tablaDetalleCaja" class="tabla2" width="100%">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Categoria gasto</th>
@@ -192,7 +192,7 @@
 
                             <!-- DETALLE ABONOS-->
                             <div class="mt-32 mb-12">
-                                <table class="tabla2" width="100%" id="tablaAbonos">
+                                <table id="tablaAbonos" class="tabla2" width="100%">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th>Abonos creditos</th>
@@ -201,8 +201,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonoscreditos??0, "0", ",", ".");?></td>
-                                            <td class=""> + <strong>$ </strong><?php echo number_format($ultimocierre->abonosseparados??0, "0", ",", ".");?></td>
+                                            <td id="abonoscreditos" class=""><strong>$ </strong><?php echo number_format($ultimocierre->abonoscreditos??0, "0", ",", ".");?></td>
+                                            <td id="abonosseparados" class=""> + <strong>$ </strong><?php echo number_format($ultimocierre->abonosseparados??0, "0", ",", ".");?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -211,7 +211,7 @@
                         </div>
 
                         <div class="tlg:basis-1/2">
-                            <table class="tabla2 mb-12" width="100%" id="tablaMediosPago">
+                            <table id="tablaMediosPago" class="tabla2 mb-12" width="100%">
                                 <thead>
                                     <tr>
                                         <th colspan="2" class="w-full bg-gray-100 text-gray-700 p-3 text-center">Medios de pagos</th>
@@ -311,7 +311,7 @@
                             
                             <div class="overflow-x-auto">
                                 <p class="text-sky-400 font-bold text-center">Analisis Sobrantes y Faltantes</p>
-                                <table class="tabla2 w-full min-w-[500px] mb-12" width="100%" id="sobranteFaltante">
+                                <table id="sobranteFaltante" class="tabla2 w-full min-w-[500px] mb-12" width="100%">
                                     <thead>
                                         <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                             <th class="p-2">Medios de pago</th>
@@ -333,7 +333,7 @@
                                 </table>
                             </div>
 
-                            <table class="tabla2 mb-12" width="100%" id="ventasXUsuario">
+                            <table id="ventasXUsuario" class="tabla2 mb-12" width="100%">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-700 p-3 text-center">
                                         <th>Ventas por usuario</th>
@@ -365,7 +365,7 @@
                     <h5 class="text-sky-400 font-bold uppercase text-center mb-3">Ventas del dia</h5>
                     <!-- Facturas del dia -->
                     <div class="overflow-x-auto">
-                        <table class="display responsive nowrap tabla w-full min-w-[700px]" id="tablaVentas">
+                        <table id="tablaVentas" class="display responsive nowrap tabla w-full min-w-[700px]">
                             <thead>
                             <tr class="bg-gray-100 text-gray-700 text-center">
                                 <th class="p-2">N.</th>
@@ -416,7 +416,7 @@
     <?php endif; ?>
 
     <!-- Ventana Modal Arqueo de caja -->
-    <dialog class="p-14 w-[600px] max-w-full" id="modalArqueocaja">
+    <dialog id="modalArqueocaja" class="p-14 w-[600px] max-w-full">
         <h4 class="font-semibold text-gray-700 mb-4">Arqueo de caja</h4>
         <div id="divmsjalerta2"></div>
         <form id="formArqueocaja" class="formulario" action="/" method="POST">

@@ -94,6 +94,7 @@
                       resultado.caja.nombre,
                       resultado.caja.nombreconsecutivo.nombre,
                       resultado.caja.negocio,
+                      $('#idEmisorCaja option:selected').text(),
                       `<div class="acciones-btns" id="${resultado.caja.id}" data-caja="${resultado.caja.nombre}">
                           <button class="btn-md btn-turquoise editarCaja"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button class="btn-md btn-red eliminarCaja"><i class="fa-solid fa-trash-can"></i></button>
@@ -105,7 +106,8 @@
                   const datosActuales = (tablaCajas as any).row(indiceFila+=info.start).data();
                   /*CAJA*/      datosActuales[1] = resultado.caja[0].nombre;
                   /*FACT AUTO*/ datosActuales[2] = $('#idtipoconsecutivo option:selected').text();
-                  /*NEGOCIO*/   datosActuales[3] = $('#negociogestioncaja option:selected').text();
+                  /*SEDE*/   datosActuales[3] = $('#negociogestioncaja option:selected').text();
+                  /*EMISOR*/   datosActuales[4] = $('#idEmisorCaja option:selected').text();
                   (tablaCajas as any).row(indiceFila).data(datosActuales).draw();
                   (tablaCajas as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }

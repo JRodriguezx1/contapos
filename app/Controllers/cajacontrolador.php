@@ -548,6 +548,10 @@ class cajacontrolador{
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
     $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $emisores = emisores::whereArray(['idsucursal'=>$idsucursal, 'estado'=>1]);
+    $nombreEmisores = array_column($emisores, 'nombre', 'id');
+    $nitEmisores = array_column($emisores, 'nit', 'id');
+    $factura->nombreemisor = $nombreEmisores[$factura->idemisor] ?? NULL;
+    $factura->nitemisor = $nitEmisores[$factura->idemisor] ?? NULL;
     $conflocal = config_local::getParamCaja();
     $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'usuarios'=>$usuarios, 'emisores'=>$emisores, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
