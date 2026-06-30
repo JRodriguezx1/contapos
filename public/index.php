@@ -168,6 +168,7 @@ $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 've
 $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 'ventasxtransaccion']);
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
 $router->get('/admin/reportes/ventaProductosUsuarios', [reportescontrolador::class, 'ventaProductosUsuarios']);
+$router->get('/admin/reportes/reporteEmisores', [reportescontrolador::class, 'reporteEmisores']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
 $router->get('/admin/reportes/remisiones', [reportescontrolador::class, 'remisiones']);
 $router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
@@ -354,6 +355,7 @@ $router->post('/admin/api/reportes/reportesGenerales', [reportescontrolador::cla
 $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 'ventasxtransaccionanual']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/reporteEmisores', [reportescontrolador::class, 'apiReporteEmisores']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifacturaspagas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/reportes/remisiones', [reportescontrolador::class, 'apiRemisiones']);  //fetch llamado desde remisiones.ts
 $router->post('/admin/api/reportes/creditos/estadosFinancieros', [reportescontrolador::class, 'estadosFinancierosCreditos']);  //fetch llamado desde reportes/creditos.ts

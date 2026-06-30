@@ -277,7 +277,7 @@
                                         <td id="realVentas" class="text-blue-400 font-medium"> = $<?php echo number_format(($ultimocierre->ingresoventas??0)+($ultimocierre->creditocapital??0)-($ultimocierre->domicilios??0)-($ultimocierre->gastoscaja??0), "0", ",", ".");?></td>
                                     </tr>
                                     <tr>  
-                                        <td class="text-blue-600 font-medium">Base grabable</td>
+                                        <td class="text-blue-600 font-medium">Base gravable</td>
                                         <td id="totalBaseGravable" class="text-blue-600 font-medium"> = $<?php echo number_format($ultimocierre->basegravable??0, "0", ",", ".");?></td>
                                     </tr>
                                     <tr>   

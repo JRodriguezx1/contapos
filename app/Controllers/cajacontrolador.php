@@ -30,6 +30,7 @@ use App\services\cajaService;
 use App\services\whatsAppService;
 use App\classes\Traits\DocumentTrait;
 use App\Models\configuraciones\emisores;
+use App\Repositories\creditos\creditosRepository;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
@@ -528,8 +529,11 @@ class cajacontrolador{
     if(!is_numeric($id))return;
     $idsucursal = id_sucursal();
     $sucursal = sucursales::find('id', $idsucursal);
+    $repoCredito = new creditosRepository();
 
     $factura = facturas::uniquewhereArray(['id'=>$id, 'id_sucursal'=>$idsucursal]);
+    if($factura->tipoventa == 'Credito')$factura->ref_creditoid = $repoCredito->uniqueWhere(['factura_id'=>$factura->id])->id;
+  
     if($factura){
       $productos = ventas::idregistros('idfactura', $id);
       $cliente = clientes::find('id', $factura->idcliente);

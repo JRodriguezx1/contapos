@@ -34,13 +34,14 @@
                 data: estadosFinancierosCreditos,
                 columns: [
                     {title: 'N°', data: 'num_orden'},
+                    {title: 'Emisor', data: 'nombreEmisor', render: (data:string) => `<div class="w-48 whitespace-normal">${data??'Negocio'}</div>`},
                     {title: 'Fecha', data: 'fechainicio'},
                     {title: 'Credito', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     {title: 'Costo', data: 'costo_total', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                    {title: 'Utilidad Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                    {title: 'Utilidad Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Utl. Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Utl. Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     {title: 'Pagado', data: 'valor_pagado', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                    {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                    {title: 'Utl Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     {
                         title: 'Estado',
                         data: 'estado',

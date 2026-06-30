@@ -12,7 +12,7 @@
             <div class="basis-1/2">
                 <div class="formulario__campo">
                     <label class="formulario__label" for="cliente">Cliente</label>
-                    <select id="cliente" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"  multiple="multiple" name="cliente_id" required>
+                    <select id="cliente" class=""  multiple="multiple" name="cliente_id" required>
                         <?php foreach($clientes as $cliente):  
                             if($cliente->id>1):   ?>
                                 <option value="<?php echo $cliente->id;?>" ><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
@@ -109,7 +109,7 @@
                 <div class="mb-4 md:w-full">
                     <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
                     <div class="mt-2 grid grid-cols-1">
-                        <select id="articulo" name="articulo" autocomplete="articulo-name" class="bg-gray-50 border !border-gray-300 text-gray-900 rounded-lg focus:!border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
+                        <select id="articulo" name="articulo" autocomplete="articulo-name" class="" multiple="multiple" required>
                            
                         </select>
                     </div>

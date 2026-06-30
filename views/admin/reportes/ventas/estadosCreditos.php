@@ -51,7 +51,23 @@
   <div class="mt-4">
     
     <table id="tablaEstdosFinancierosCreditos" class="display responsive nowrap tabla" width="100%">
-
+      <thead>
+          <tr>
+              <th>Nº</th>
+              <th>Emisor</th>
+              <th>Fecha</th>
+              <th>Credito</th>
+              <th>Costo</th>
+              <th>Utl. Comercial</th>
+              <th>Utl. Proyectada</th>
+              <th>Pagado</th>
+              <th>Utl. Realizada</th>
+              <th>Estado</th>
+          </tr>
+      </thead>
+      <tbody class="text-xl">
+          
+      </tbody>
     </table>
   </div>
 </div>

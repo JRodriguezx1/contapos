@@ -353,6 +353,7 @@
         const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
         const datos = new FormData();
         datos.append('id', idorden!);
+        datos.append('idemisor', btnCaja.selectedOptions[0].dataset.idemisor??'');
         //datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value);
         //datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLInputElement).dataset.idvendedor!);
         datos.append('idcaja', btnCaja.value);

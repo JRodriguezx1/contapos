@@ -2,6 +2,7 @@
 
     if(
         !document.querySelector('.ventasgenerales') &&
+        !document.querySelector('.reporteEmisores') &&
         !document.querySelector('.remisiones') &&
         !document.querySelector('.cuotasCreditos') &&
         !document.querySelector('.movimientosinventarios') &&

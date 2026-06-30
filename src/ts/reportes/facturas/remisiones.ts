@@ -19,7 +19,8 @@
 
 
     async function callApiReporte(dateinicio:string, datefin:string){
-        
+        document.querySelector('#fecha1')!.textContent = dateinicio;
+        document.querySelector('#fecha2')!.textContent = datefin;
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);

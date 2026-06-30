@@ -77,7 +77,7 @@ class creditosRepository extends operationRepository{
     //estado financiero solo de separados
     public function estadosFinancierosCreditos(string $fechainicio, string $fechafin, int $idsucursal):array{
 
-        $sql = "SELECT c.id, c.idestadocreditos as estado, c.num_orden, c.fechainicio, ps.costo_total, c.capital+c.valorinterestotal as capitalTotal,
+        $sql = "SELECT c.id, c.idestadocreditos as estado, c.num_orden, c.fechainicio, e.nombre AS nombreEmisor, ps.costo_total, c.capital+c.valorinterestotal as capitalTotal,
                     c.capital - ps.costo_total AS utilidad_comercial,
                     c.capital - ps.costo_total + c.valorinterestotal AS utilidad_proyectada,
                     IFNULL(ct.pagado, 0)+ c.abonototalantiguo AS valor_pagado,
@@ -86,6 +86,8 @@ class creditosRepository extends operationRepository{
                         GREATEST(0, IFNULL(ct.pagado,0)+ c.abonototalantiguo - ps.costo_total)
                     ) AS utilidad_realizada
                 FROM $this->table c
+
+                LEFT JOIN emisores e ON e.id = c.idemisor
 
                 LEFT JOIN (
                     SELECT idcredito, SUM(costo * cantidad) AS costo_total
@@ -97,7 +99,7 @@ class creditosRepository extends operationRepository{
                     FROM cuotas GROUP BY id_credito
                 ) ct ON ct.id_credito = c.id
 
-                WHERE c.idtipofinanciacion = 2 AND c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
+                WHERE c.idestadocreditos != 3 AND c.fechainicio >= '$fechainicio' AND c.fechainicio <= '$fechafin' AND c.id_fksucursal = $idsucursal;";
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }
@@ -190,6 +192,16 @@ class creditosRepository extends operationRepository{
 
     public function deudaTotalXcliente(int $idcliente, int $idsucursal):array{
         return $this->fetchAllStd("SELECT * FROM creditos WHERE cliente_id = $idcliente AND idestadocreditos = 2 AND id_fksucursal = $idsucursal;");  
+    }
+
+
+    public function creditosXclienteXemisor(string $col, int $id, string $orden = "ASC"):?array{
+        $idsucursal = id_sucursal();
+        $sql = "SELECT e.nombre as nombreEmisor, c.id as id, c.created_at, c.idtipofinanciacion, c.capital, c.numcuota, c.saldopendiente, c.idestadocreditos, c.montocuota FROM {$this->table} c 
+                LEFT JOIN emisores e ON e.id = c.idemisor 
+                WHERE c.$col = {$id} AND c.id_fksucursal = $idsucursal ORDER BY c.id $orden;";
+        $rows = $this->fetchAllStd($sql);
+        return $rows ?? [];
     }
 
     
