@@ -4,7 +4,7 @@ namespace App\Models\inventario;
 
 class productos_sub extends \App\Models\ActiveRecord{
     protected static $tabla = 'productos_sub';
-    protected static $columnasDB = ['id', 'id_producto', 'id_subproducto', 'cantidadsubproducto', 'costo'];
+    protected static $columnasDB = ['id', 'id_producto', 'id_subproducto', 'cantidadsubproducto', 'costo', 'grupos_insumos', 'seleccionado', 'permite_aumentar', 'precio_extra'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -12,6 +12,11 @@ class productos_sub extends \App\Models\ActiveRecord{
         $this->id_subproducto = $args['id_subproducto']??'';
         $this->cantidadsubproducto = $args['cantidadsubproducto']??'';
         $this->costo = $args['costo']??0;
+        $this->grupos_insumos = $args['grupos_insumos']??NULL;
+        $this->seleccionado = $args['seleccionado']??1;
+        $this->permite_aumentar = $args['permite_aumentar']??1;
+        $this->precio_extra = $args['precio_extra']??0;
+        $this->created_at = $args['created_at']??'';
     }
 
     public function validar():array
@@ -19,6 +24,7 @@ class productos_sub extends \App\Models\ActiveRecord{
         if(!$this->id_producto)self::$alertas['error'][] = "Error intenta nuevamnete";
         if(strlen($this->id_subproducto)>31)self::$alertas['error'][] = "Error intenta nuevamnete";
         if(!$this->cantidadsubproducto || !is_numeric($this->cantidadsubproducto))self::$alertas['error'][] = "cantidad del subproducto no especificado";
+        if($this->grupos_insumos == 0)$this->grupos_insumos = '';
         return self::$alertas;
     }
 

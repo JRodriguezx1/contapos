@@ -53,7 +53,7 @@
 
                 <div class="formulario__campo">
                     <label class="block text-xl font-semibold text-slate-700 text-left" for="unidadesMedidas">Nueva unidad de medida</label>
-                    <select id="unidadesMedidas" class="border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="cajaid" required>
+                    <select id="unidadesMedidas" class="border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
                         
                     </select>
                 </div>

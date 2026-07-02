@@ -1,3 +1,22 @@
+interface insumo {
+    id:string, 
+    id_producto:string, 
+    id_subproducto:string, 
+    id_unidadmedida:string, 
+    insumoprocesado:string, 
+    cantidadsubproducto:string, 
+    costo:string, 
+    precio_compra:string, 
+    sku:string, 
+    stock:string, 
+    unidadmedida:string,
+    nombre:string, 
+    grupos_insumos:{id:string, nombre:string, minimo:string, maximo:string, tipo:string}|null, 
+    seleccionado:string, 
+    permite_aumentar:string,
+    precio_extra:string
+}
+
 type productsapi = {
       id:string,
       idcategoria: string,
@@ -33,7 +52,8 @@ type productsapi = {
       fecha_ingreso: string,
       estado: string,
       visible: string,
-      preciosadicionales:{id:string, idproducto:string, precio:string, estado:string, created_at:string}[]
+      preciosadicionales:{id:string, idproducto:string, precio:string, estado:string, created_at:string}[],
+      insumos: insumo[]
     };
 
 

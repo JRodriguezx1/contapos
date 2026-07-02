@@ -401,3 +401,11 @@ function formatearMoneda(input: HTMLInputElement): void {
     //input.value = partes.join(',');
     input.value = entera+(decimales.length ? ',' + decimales.join('') : '');
 }
+
+
+function obtenerNumero(input: HTMLInputElement):number|null{
+    const valor = input.value.replace(/\./g, '').replace(',', '.').trim();
+    if (valor === '')return null;
+    const numero = Number(valor);
+    return Number.isNaN(numero) ? null : numero;
+}

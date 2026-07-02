@@ -5,16 +5,15 @@
     </svg>
     <span class="sr-only">Atrás</span>
   </a>
-  <div class="w-full md:w-4/5 mx-auto rounded-lg shadow-lg px-6 pt-8">
+  <div class="w-full tlg:w-5/6 mx-auto rounded-lg shadow-lg px-6 pt-8">
     <h4 class=" text-gray-700 font-semibold"><?php echo $producto->nombre;?> - "<?php echo $producto->unidadmedida;?>"</h4>
 
     <form id="formAddSubproducto" class="formulario" action="/" method="POST">
       <div class="border-b border-gray-900/10 pb-10 mb-3">
         <p class="mt-2 text-xl text-gray-600">Producto compuesto de materias primas para su ensamblaje o produccion.</p>
+        
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          
-          <input id="idproducto" type="hidden" value="<?php echo $producto->id;?>">
-          
+          <input id="idproducto" type="hidden" value="<?php echo $producto->id;?>">  
           <div class="sm:col-span-6">
             <label for="subproducto" class="block text-2xl font-medium text-gray-600">Subproducto</label>
             <div class="mt-2">
@@ -70,7 +69,34 @@
                      required>
             </div>
           </div>
-          
+        </div>
+
+        <div class="pt-4">
+          <p class="font-semibold text-2xl text-gray-600 text-center uppercase">Variaciones</p>
+          <div class="flex flex-wrap gap-4">
+            <div class="flex-1 basis-56">
+                <label class="block text-xl font-semibold text-slate-700 text-left" for="tipoGrupo">Tipo de grupo</label>
+                <select id="tipoGrupo" class="border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                  <option value="0">Insumo por defecto</option>
+                  <option value="1">Seleccion multiple</option>
+                  <option value="2">Seleecion unica</option>
+                </select>
+            </div>
+            <div class="flex-1 basis-56">
+                <label class="block text-xl font-semibold text-slate-700 text-left" for="marcadoDefecto">Marcado por defecto</label>
+                <select id="marcadoDefecto" class="border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                  <option value="0">No</option>
+                  <option value="1" selected>Si</option>
+                </select>
+            </div>
+            <div class="flex-1 basis-56">
+                <label class="block text-xl font-semibold text-slate-700 text-left" for="permitirAumentar">Permitir aumentar</label>
+                <select id="permitirAumentar" class="border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required>
+                  <option value="0" selected>No</option>
+                  <option value="1">Si</option>
+                </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -81,10 +107,24 @@
 
       <div>
         <h5 class="mb-2 mt-4 text-slate-600 font-medium">Lista de insumos de produccion</h5>
-          <div class="w-full md:w-4/5 mx-auto bg-white md:px-14 pt-4 pb-14 listaSubproductos">
+          <div class="w-full lg:w-5/6 mx-auto bg-white lg:px-8 pt-4 pb-14 listaSubproductos">
             <?php foreach($subproductosenlazados as $value): ?>
               <div id="<?php echo $value->id_subproducto;?>" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">
-                <p class="m-0"><strong><?php echo $value->cantidadsubproducto." ".$value->unidadmedida;?></strong>.  <?php echo $value->nombresubproducto;?></p>
+                <div class="flex-1">  
+                  <p class="m-0"><strong><?php echo $value->cantidadsubproducto." ".$value->unidadmedida;?></strong>.  <?php echo $value->nombre;?></p>
+                  <div class="mt-3 flex flex-wrap gap-4 text-lg">
+                    <span class="rounded-md px-4 py-1 bg-slate-100 text-slate-700">
+                      📦 Grupo: <strong><?= $value->grupos_insumos; ?></strong>
+                    </span>
+                    <span class="rounded-md px-4 py-1 font-medium <?= $value->seleccionado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'; ?>">
+                      <?= $value->seleccionado ? '✔ Seleccionado' : '✖ No seleccionado'; ?>
+                    </span>
+                    <span class="rounded-md px-4 py-1 font-medium <?= $value->permite_aumentar ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'; ?>">
+                        <?= $value->permite_aumentar ? '➕ Permite aumentar' : '🚫 Cantidad fija'; ?>
+                    </span>
+                  </div>
+
+                </div>
                 <button type="button"><span id="<?php echo $value->id_subproducto;?>" class="material-symbols-outlined">cancel</span></button>
               </div>
             <?php endforeach; ?>

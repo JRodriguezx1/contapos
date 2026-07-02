@@ -68,10 +68,11 @@
                 percentcomision: 0,
                 fecha_ingreso: '',
                 estado: '1',
-                visible: '1'
+                visible: '1',
+                insumos: []
             });
 
-            POS.actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false, otrosproductos!.valorunidad+'');
+            POS.actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false, otrosproductos!.valorunidad+'', null);
             miDialogoOtrosProductos.close();
             document.removeEventListener("click", POS.cerrarDialogoExterno);
             (e.target as HTMLFormElement).reset();

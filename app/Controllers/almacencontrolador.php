@@ -20,6 +20,7 @@ use App\Models\detallecompra;
 use App\Models\inventario\costosinsumos;
 use App\Models\inventario\costosproductos;
 use App\Models\inventario\detalletrasladoinv;
+use App\Models\inventario\grupos_insumos;
 use App\Models\inventario\movimientos_insumos;
 use App\Models\inventario\movimientos_productos;
 use App\Models\inventario\precios_personalizados;
@@ -323,27 +324,16 @@ class almacencontrolador{
 
 
   public static function componer(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    //$productos = productos::all();
     $producto = productos::find('id', $_GET['id']);
     $subproductos = subproductos::all();
                                       // segunda tabla,   ON t1.id_subproducto = t2.id
-    $subproductosasociados = productos_sub::unJoinWhereArray(subproductos::class, "id_subproducto", "id", ['productos_sub.id_producto'=>$producto->id]);
-    $subproductosenlazados = [];
-    foreach($subproductosasociados as $value){
-        $newobj = new stdClass();
-        $newobj->ID = $value['ID'];
-        $newobj->id_producto =  $value['id_producto'];
-        $newobj->id_subproducto = $value['id_subproducto'];
-        $newobj->cantidadsubproducto =  $value['cantidadsubproducto'];
-        $newobj->nombresubproducto = $value['nombre'];
-        $newobj->id_unidadmedida = $value['id_unidadmedida'];
-        $newobj->unidadmedida =  $value['unidadmedida'];
-        $subproductosenlazados[] = $newobj;
-    }
+    $subproductosenlazados = productos_sub::unJoinWhereArrayObj(subproductos::class, "id_subproducto", "id", ['productos_sub.id_producto'=>$producto->id]);
+    $gi = array_column(grupos_insumos::whereArray(['activo'=>1]), 'nombre', 'id');
+    foreach($subproductosenlazados as $value)
+      $value->grupos_insumos = $gi[$value->grupos_insumos]??'Insumo por defecto';
     $router->render('admin/almacen/componer', ['titulo'=>'Almacen', 'producto'=>$producto, /*'productos'=>$productos,*/ 'subproductos'=>$subproductos, 'subproductosenlazados'=>$subproductosenlazados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
 
@@ -485,26 +475,24 @@ class almacencontrolador{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
       $excelproductos = productos::all();
       if(isset($_POST['downexcel'])){
-        //debuguear(isset($_POST['downexcel']));
+        if(ob_get_length())
         ob_clean();
-
-                if(!empty($excelproductos)){
-                    $filename = "excelproductos.xls";
-                    header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-                    header("Content-Disposition: attachment; filename=".$filename);
-
-                    $mostrar_columnas = false;
-
-                    foreach($excelproductos as $value){
-                        if(!$mostrar_columnas){
-                            echo implode("\t", array_keys((array)$value)) . "\n";
-                            $mostrar_columnas = true;
-                        }
-                        echo implode("\t", array_values((array)$value)) . "\n";
-                    }
-                }else{ echo 'No hay datos a exportar'; }
-                exit;
-            } 
+        if(!empty($excelproductos)){
+            header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+            header("Content-Disposition: attachment; filename=excelproductos.xls");
+            // BOM UTF-8
+            echo "\xEF\xBB\xBF";
+            $mostrar_columnas = false;
+            foreach($excelproductos as $value){
+                if(!$mostrar_columnas){
+                    echo implode("\t", array_keys((array)$value)) . "\n";
+                    $mostrar_columnas = true;
+                }
+                echo implode("\t", array_values((array)$value)) . "\n";
+            }
+        }else{ echo 'No hay datos a exportar'; }
+        exit;
+      } 
     }
   }
 
@@ -664,13 +652,14 @@ class almacencontrolador{
     echo json_encode($alertas);
   }
 
-  public static function allproducts(){
+  public static function allproducts():void{
     //session_start();
     isadmin();
     //$productos = productos::all(); 
     $productos = productos::unJoinWhereArrayObj(stockproductossucursal::class, 'id', 'productoid', ['sucursalid'=>id_sucursal()]);
     ////////////// calcular el impuesto como global o como discriminado por producto /////////////////////
     $conflocal = config_local::getParamGlobal();
+    $gi = grupos_insumos::sqlLibreIndexKey('SELECT *FROM grupos_insumos WHERE activo = 1;', 'id');
     foreach($productos as $index=>$producto){
       //unset($productos[$index]->descripcion);
       if($conflocal['discriminar_impuesto_por_producto']->valor_final == 0){ //si es 0, es no, toma el impuesto global
@@ -680,8 +669,13 @@ class almacencontrolador{
       $producto->categoria = categorias::uncampo('id', $producto->idcategoria, 'nombre');
       $producto->preciosadicionales = precios_personalizados::idregistros('idproductoid', $producto->id);
       $producto->precio_original = $producto->precio_venta;
+      $producto->insumos = productos_sub::unJoinWhereArrayObj(subproductos::class, 'id_subproducto', 'id', ['id_producto'=>$producto->id]);
+      foreach($producto->insumos as $value){
+        $value->grupos_insumos = $gi[$value->grupos_insumos]??null;
+      }
     }
    echo json_encode($productos);
+   return;
   }
 
 
@@ -963,7 +957,7 @@ class almacencontrolador{
       if(empty($alertas)){
         $existe = productos_sub::uniquewhereArray(['id_producto'=>$_POST['id_producto'], 'id_subproducto'=>$_POST['id_subproducto']]);
         if($existe){//actualizar
-          $existe->compara_objetobd_post($_POST);
+          $existe->compara_objetobd_post((array)$ensamblar);
           $ra = $existe->actualizar();
           if($ra){
             $alertas['exito'][] = "subproducto asociado y actualizado al producto principal.";
