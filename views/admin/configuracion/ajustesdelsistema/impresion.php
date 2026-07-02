@@ -226,5 +226,81 @@
             </label>
         </div>
 
+
+        <!-- Impresion de tamaño de fuente de los datos de factura -->
+        <div>
+            <label for="medidaFuenteDatosFactura" class="block text-xl font-medium text-gray-700 mb-1">
+                Tamaño de fuenta para los datos de factura
+            </label>
+            <span class="block mb-1 text-sm text-gray-500">
+                Seleccione el tamaño de fuente
+            </span>
+            <select
+                id="medidaFuenteDatosFactura"
+                name="medida_de_fuente_de_los_datos_de_factura"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
+            >
+                <option value="1" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 1?'selected':''; ?>>T1 normal</option>
+                <option value="2" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 2?'selected':''; ?>>T1 bold</option>
+                <option value="3" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 3?'selected':''; ?>>T2 normal</option>
+                <option value="4" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 4?'selected':''; ?>>T2 bold</option>
+                <option value="5" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 5?'selected':''; ?>>T3 normal</option>
+                <option value="6" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 6?'selected':''; ?>>T3 bold</option>
+                <option value="7" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 7?'selected':''; ?>>T4 normal</option>
+                <option value="8" <?php echo $conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final == 8?'selected':''; ?>>T4 bold</option>
+            </select>
+        </div>
+
+
+        <!-- Impresion de tamaño de fuente en factura apartado cliente -->
+        <div>
+            <label for="medidaFuenteSeccionClienteFactura" class="block text-xl font-medium text-gray-700 mb-1">
+                Tamaño de fuenta seccion cliente en factura
+            </label>
+            <span class="block mb-1 text-sm text-gray-500">
+                Seleccione el tamaño de fuente
+            </span>
+            <select
+                id="medidaFuenteSeccionClienteFactura"
+                name="medida_de_fuente_del_apartado_cliente_en_factura"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
+            >
+                <option value="1" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 1?'selected':''; ?>>T1 normal</option>
+                <option value="2" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 2?'selected':''; ?>>T1 bold</option>
+                <option value="3" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 3?'selected':''; ?>>T2 normal</option>
+                <option value="4" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 4?'selected':''; ?>>T2 bold</option>
+                <option value="5" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 5?'selected':''; ?>>T3 normal</option>
+                <option value="6" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 6?'selected':''; ?>>T3 bold</option>
+                <option value="7" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 7?'selected':''; ?>>T4 normal</option>
+                <option value="8" <?php echo $conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final == 8?'selected':''; ?>>T4 bold</option>
+            </select>
+        </div>
+
+
+        <!-- Impresion de tamaño de fuente los productos en factura -->
+        <div>
+            <label for="medidaFuenteProductosFactura" class="block text-xl font-medium text-gray-700 mb-1">
+                Tamaño de fuenta para los productos en factura
+            </label>
+            <span class="block mb-1 text-sm text-gray-500">
+                Seleccione el tamaño de fuente
+            </span>
+            <select
+                id="medidaFuenteProductosFactura"
+                name="medida_de_fuente_de_los_productos_en_factura"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 hover:border-indigo-500"
+            >
+                <option value="1" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 1?'selected':''; ?>>T1 normal</option>
+                <option value="2" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 2?'selected':''; ?>>T1 bold</option>
+                <option value="3" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 3?'selected':''; ?>>T2 normal</option>
+                <option value="4" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 4?'selected':''; ?>>T2 bold</option>
+                <option value="5" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 5?'selected':''; ?>>T3 normal</option>
+                <option value="6" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 6?'selected':''; ?>>T3 bold</option>
+                <option value="7" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 7?'selected':''; ?>>T4 normal</option>
+                <option value="8" <?php echo $conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final == 8?'selected':''; ?>>T4 bold</option>
+            </select>
+        </div>
+
+
     </div>
 </div>

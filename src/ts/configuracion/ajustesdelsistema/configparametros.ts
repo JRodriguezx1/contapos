@@ -5,6 +5,9 @@
     const claves = document.querySelectorAll<HTMLInputElement>('.keyinput');
     const porcentaje_de_impuesto = document.querySelector('#porcentaje_de_impuesto') as HTMLSelectElement;
     const indicador_caja = document.querySelector('#indicador_caja') as HTMLSelectElement;
+    const medidaFuenteDatosFactura = document.querySelector('#medidaFuenteDatosFactura') as HTMLSelectElement;
+    const medidaFuenteSeccionClienteFactura = document.querySelector('#medidaFuenteSeccionClienteFactura') as HTMLSelectElement;
+    const medidaFuenteProductosFactura = document.querySelector('#medidaFuenteProductosFactura') as HTMLSelectElement;
 
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
@@ -71,6 +74,12 @@
     porcentaje_de_impuesto?.addEventListener('input', parametrosSistemaTipoSelect);
     //////////////////   Indicadores de caja   /////////////////////
     indicador_caja?.addEventListener('input', parametrosSistemaTipoSelect);
+    //////////////////   Indicadores de caja   /////////////////////
+    medidaFuenteDatosFactura?.addEventListener('input', parametrosSistemaTipoSelect);
+    //////////////////   Indicadores de caja   /////////////////////
+    medidaFuenteSeccionClienteFactura?.addEventListener('input', parametrosSistemaTipoSelect);
+    //////////////////   Indicadores de caja   /////////////////////
+    medidaFuenteSeccionClienteFactura?.addEventListener('input', parametrosSistemaTipoSelect);
 
 
     function parametrosSistemaTipoSelect(e:Event){

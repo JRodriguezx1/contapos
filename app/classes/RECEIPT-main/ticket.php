@@ -1,21 +1,35 @@
 <?php
 
 	# Incluyendo librerias necesarias #
+
+use App\Models\parametrizacion\config_local;
+
     require __DIR__ ."/code128.php";
     //require __DIR__ ."/../../public/build/img/logoj2blanco.png";
 
     class ticketPOS{
         
         private $pdf;
+        private $conflocal;
+        private $fontSizeDatosFactura;
+        private $fontSizeCliFactura;
+        private $fontSizeProductsFactura;
+        private $matrizFontSize =[];
 
         public function __construct(){
             $this->pdf = new PDF_Code128('P','mm',array(80,258));
             $this->pdf->SetMargins(4,10,4);
             $this->pdf->AddPage();
+            $this->conflocal = config_local::getParamGlobal();
+            $this->fontSizeDatosFactura = $this->conflocal['medida_de_fuente_de_los_datos_de_factura']->valor_final;
+            $this->fontSizeCliFactura = $this->conflocal['medida_de_fuente_del_apartado_cliente_en_factura']->valor_final;
+            $this->fontSizeProductsFactura = $this->conflocal['medida_de_fuente_de_los_productos_en_factura']->valor_final;
+            $this->matrizFontSize = [1=>['', 8], 2=>['B', 8], 3=>['', 9], 4=>['B', 9], 5=>['', 10], 6=>['B', 10], 7=>['', 12], 8=>['B', 12]];
         }
 
 
         public function generar($sucursal, $lineasencabezado, $factura, $facturaElectronica, $cliente, $direccion, $productos=[], object|null $emisor = null){
+
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             if(!$emisor)
@@ -69,6 +83,9 @@
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(5);
 
+            $fs = $this->matrizFontSize[$this->fontSizeCliFactura];
+            $this->pdf->SetFont('Arial',$fs[0],$fs[1]);
+            
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: ".($cliente??null)?->nombre??''),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".($cliente??null)?->identificacion??''),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".($cliente??null)?->telefono??''),0,'C',false);
