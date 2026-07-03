@@ -107,10 +107,12 @@ $router->post('/admin/almacen/crear_unidadmedida', [almacencontrolador::class, '
 $router->post('/admin/almacen/editarunidademedida', [almacencontrolador::class, 'editarunidademedida']);
 $router->post('/admin/almacen/downexcelproducts', [almacencontrolador::class, 'downexcelproducts']);
 $router->post('/admin/almacen/uploadExcel', [almacencontrolador::class, 'uploadExcel']);
+$router->post('/admin/almacen/uploadInsumosExcel', [almacencontrolador::class, 'uploadInsumosExcel']);
 $router->post('/admin/almacen/downexcelinsumos', [almacencontrolador::class, 'downexcelinsumos']);
 $router->get('/admin/almacen/cambioPrecios', [almacencontrolador::class, 'cambioPrecios']);
 $router->get('/admin/almacen/estadisticas', [almacencontrolador::class, 'estadisticas']);
 $router->get('/admin/almacen/productosParaFormulas', [almacencontrolador::class, 'productosParaFormulas']);
+$router->get('/admin/almacen/conversionUnidades', [almacencontrolador::class, 'conversionUnidades']);
 ////// area de traslados de inventario  //////
 $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
 $router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);
@@ -166,6 +168,7 @@ $router->get('/admin/reportes/ventasgenerales', [reportescontrolador::class, 've
 $router->get('/admin/reportes/ventasxtransaccion', [reportescontrolador::class, 'ventasxtransaccion']);
 $router->get('/admin/reportes/ventasxcliente', [reportescontrolador::class, 'vistaVentasxcliente']);
 $router->get('/admin/reportes/ventaProductosUsuarios', [reportescontrolador::class, 'ventaProductosUsuarios']);
+$router->get('/admin/reportes/reporteEmisores', [reportescontrolador::class, 'reporteEmisores']);
 $router->get('/admin/reportes/facturaspagas', [reportescontrolador::class, 'facturaspagas']);
 $router->get('/admin/reportes/remisiones', [reportescontrolador::class, 'remisiones']);
 $router->get('/admin/reportes/creditos', [reportescontrolador::class, 'creditos']);
@@ -205,6 +208,7 @@ $router->post('/admin/configuracion/crear_empleado', [configcontrolador::class, 
 $router->get('/suspendido', [suscripcioncontrolador::class, 'suspendido']);
 //// Descargas /////
 $router->get('/admin/descarga/plantillaimportarproductos', [archivocontroller::class, 'descargarExcel']);
+$router->get('/admin/descarga/plantillaImportarInsumos', [archivocontroller::class, 'descargarInsumosExcel']);
 $router->get('/admin/descarga/instruccionesimportarproductos', [archivocontroller::class, 'descargarInstrucciones']);
 $router->get('/admin/descarga/logo', [archivocontroller::class, 'descargarLogo']);
 
@@ -224,7 +228,10 @@ $router->post('/admin/api/eliminarSubProducto', [almacencontrolador::class, 'eli
 $router->post('/admin/api/setrendimientoestandar', [almacencontrolador::class, 'setrendimientoestandar']);  //establecer rendimiento estandar de la formula de salida
 $router->post('/admin/api/ensamblar', [almacencontrolador::class, 'ensamblar']);  //asociar un o unos subproductos a un producto principal
 $router->get('/admin/api/desasociarsubproducto', [almacencontrolador::class, 'desasociarsubproducto']);
+$router->get('/admin/api/almacen/allUnidadesMedida', [almacencontrolador::class, 'allUnidadesMedida']); //trae todas las unidades de medida
 $router->get('/admin/api/allConversionesUnidades', [almacencontrolador::class, 'allConversionesUnidades']); //trae todos los sub-productos con todas las unidades equivalentes
+$router->post('/admin/api/almacen/crearNuevaConversionUnidad', [almacencontrolador::class, 'crearNuevaConversionUnidad']);
+$router->get('/admin/api/almacen/eliminarConversionUnidad', [almacencontrolador::class, 'eliminarConversionUnidad']);
 $router->post('/admin/api/actualizarcostos', [almacencontrolador::class, 'actualizarcostos']);  //actualizar costos, api llamada desde ajustarcostos.ts
 $router->post('/admin/api/actualizarPreciosVenta', [almacencontrolador::class, 'actualizarPreciosVenta']);  //actualizar precios, api llamada desde ajustarprecios.ts
 $router->get('/admin/api/totalitems', [almacencontrolador::class, 'totalitems']);  //api llamada desde compras.ts para obtener los productos simples y subproductos
@@ -261,6 +268,7 @@ $router->post('/admin/api/eliminarPedidoGuardado', [cajacontrolador::class, 'eli
 $router->post('/admin/api/sendOrdenEmailToCustemer', [cajacontrolador::class, 'sendOrdenEmailToCustemer']);  //api llamada desde ordenresumen.ts para enviar detalle de orden por email
 $router->get('/admin/api/getInvoice', [cajacontrolador::class, 'getInvoice']); //obtener detalle invoice en caja.ts para imprimir
 $router->get('/admin/api/caja/despacharOrden', [cajacontrolador::class, 'despacharOrden']); //despachar orden desdes ordenresumen.ts
+$router->post('/admin/api/caja/cambiarEmisor', [cajacontrolador::class, 'cambiarEmisor']); //llamada desde ordenresumen.ts
 
 $router->post('/admin/api/facturar', [ventascontrolador::class, 'facturar']);  //aip llamada desde ventas.ts cuando se factura
 $router->post('/admin/api/facturarCotizacion', [ventascontrolador::class, 'facturarCotizacion']);  //api llamada desde ordenresumen.ts cuando se factura una cotizacion guardada
@@ -288,6 +296,9 @@ $router->post('/admin/api/comisiones/comisionesXUser', [comisionescontrolador::c
 $router->post('/admin/api/comisiones/liquidarComision', [comisionescontrolador::class, 'liquidarComision']);
 $router->get('/admin/api/comisiones/eliminarMovimientoComision', [comisionescontrolador::class, 'eliminarMovimientoComision']);
 $router->get('/admin/api/comisiones/detalleFacturaComision', [comisionescontrolador::class, 'detalleFacturaComision']);
+
+$router->post('/admin/api/parqueadero/createUpdateTarifa', [parqueaderocontrolador::class, 'createUpdateTarifa']);
+$router->get('/admin/api/parqueadero/allTarifas', [parqueaderocontrolador::class, 'allTarifas']);  //lamadas desde parqueadero.ts
 
 $router->post('/admin/api/consultafechazetadiario', [reportescontrolador::class, 'consultafechazetadiario']); //aip llamada desde fechazetadiario.ts
 
@@ -344,6 +355,7 @@ $router->post('/admin/api/reportes/reportesGenerales', [reportescontrolador::cla
 $router->get('/admin/api/ventasxtransaccionanual', [reportescontrolador::class, 'ventasxtransaccionanual']);  //fetch llamado desde reportes.ts
 $router->get('/admin/api/ventasxtransaccionmes', [reportescontrolador::class, 'ventasxtransaccionmes']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/ventasxcliente', [reportescontrolador::class, 'ventasxcliente']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/reporteEmisores', [reportescontrolador::class, 'apiReporteEmisores']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaspagas', [reportescontrolador::class, 'apifacturaspagas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/reportes/remisiones', [reportescontrolador::class, 'apiRemisiones']);  //fetch llamado desde remisiones.ts
 $router->post('/admin/api/reportes/creditos/estadosFinancieros', [reportescontrolador::class, 'estadosFinancierosCreditos']);  //fetch llamado desde reportes/creditos.ts

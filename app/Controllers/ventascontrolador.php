@@ -295,7 +295,7 @@ class ventascontrolador{
               $Ctz = false;
             }
             //procesar si es credito....
-            if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
+            if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor, $factura->idemisor);
             if(!empty($alertas['error'])){
               $facturadelete = facturas::find('id', $r[1]);
               $facturadelete->eliminar_registro();
@@ -890,11 +890,11 @@ class ventascontrolador{
         /////////// calcular cantidad de facturas y discriminar por tipo
         $cierrecaja->totalfacturaseliminadas += 1;
         if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
-          $cierrecaja->facturaselectronicaselimnadas += -1;
+          $cierrecaja->facturaselectronicaselimnadas += 1;
           $cierrecaja->valorfe -= $factura->total;
           $cierrecaja->descuentofe -= $factura->descuento;
         }else{
-          $cierrecaja->facturasposeliminadas += -1;
+          $cierrecaja->facturasposeliminadas += 1;
           $cierrecaja->valorpos -= $factura->total;
           $cierrecaja->descuentopos += $factura->descuento;
         }
@@ -905,10 +905,12 @@ class ventascontrolador{
           $cierrecaja->ventasenefectivo =  $cierrecaja->ventasenefectivo - $mediospago;
           //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
           $cierrecaja->ingresoventas =  $cierrecaja->ingresoventas - $factura->total;
+        }else{
+          $cierrecaja->creditocapital -= $factura->total;
+          $cierrecaja->creditos -= ($factura->total-$factura->abono);
         }
 
-
-
+        $cierrecaja->domicilios -= $factura->valortarifa;
         $cierrecaja->totaldescuentos = $cierrecaja->totaldescuentos - $factura->descuento;
         $cierrecaja->valorimpuestototal -= $factura->valorimpuestototal;
         $cierrecaja->basegravable -= $factura->base;

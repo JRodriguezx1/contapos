@@ -11,7 +11,8 @@ abstract class operationRepository extends BaseRepository{
 
     public function insert(object $entity): array
     {
-        $data = $entity->toArray();
+        $data = get_object_vars($entity);
+        if(method_exists($entity, 'toArray'))$data = $entity->toArray();
         $cols = implode(', ', array_keys($data));
         $vals = implode("', '", array_map( fn($v)=>$this->escape((string)$v), array_values($data) ));
         $sql = "INSERT INTO {$this->table} ({$cols}) VALUES ('{$vals}');";
@@ -82,6 +83,34 @@ abstract class operationRepository extends BaseRepository{
         $query .= " WHERE id = {$id} LIMIT 1";
         $resultado = self::$db->query($query);
         return $resultado;
+    }
+
+
+    public function upsert(object $entity): array
+    {
+        $data = get_object_vars($entity);
+        if(method_exists($entity, 'toArray'))$data = $entity->toArray();
+
+        $cols = array_keys($data);
+        $vals = array_map(fn($v) => $v === null?'NULL':"'".$this->escape((string)$v)."'", array_values($data));
+        $updates = [];
+
+        foreach ($cols as $col) {
+            if ($col === 'id')continue; // normalmente no actualizamos la PK
+            $updates[] = "{$col} = VALUES({$col})";
+        }
+
+        $sql = sprintf(
+            "INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
+            $this->table,
+            implode(', ', $cols),
+            implode(', ', $vals),
+            implode(', ', $updates)
+        );
+
+        $resultado = self::$db->query($sql);
+        if(!$resultado)throw new \Exception(self::$db->error);
+        return [$resultado, self::$db->insert_id];
     }
 
 

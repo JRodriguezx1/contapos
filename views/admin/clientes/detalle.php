@@ -116,10 +116,10 @@
         <table id="tablaCreditos" class="tabla">
             <thead>
                 <tr class="bg-gray-100 text-left">
+                    <th class="p-3">Emisor</th>
                     <th class="p-3">Fecha</th>
                     <th class="p-3">Tipo</th>
                     <th class="p-3">Credito</th>
-                    <th class="p-3">Cuota</th>
                     <th class="p-3">N° Cuota</th>
                     <th class="p-3">Saldo pendiente</th>
                     <th class="p-3">Estado</th>
@@ -129,10 +129,10 @@
             <tbody>
                 <?php foreach($creditos as $value): ?>
                 <tr class="border-b">
+                    <td class=""><?php echo $value->nombreEmisor??'Negocio';?></td>
                     <td class=""><?php echo $value->created_at;?></td>
                     <td class=""><?php echo $value->idtipofinanciacion==1?'Credito':'Separado';?></td>
                     <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>
-                    <td class="">$<?php echo number_format($value->montocuota,'2', ',', '.'); ?></td>
                     <td class=""><?php echo $value->numcuota;?></td>
                     <td class="<?php echo $value->saldopendiente>0?'text-red-500':'';?>">$<?php echo number_format($value->saldopendiente,'2', ',', '.'); ?></td>
                     <td class="pendiente"><?php echo $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');?></td>

@@ -8,7 +8,8 @@
               <th>N.</th>
               <th>Caja</th>
               <th>Facturador automatico</th>
-              <th>Negocio</th>
+              <th>Sede</th>
+              <th>Emisor</th>
               <th class="accionesth">Acciones</th>
           </tr>
       </thead>
@@ -19,6 +20,7 @@
               <td class="" ><?php echo $value->nombre; ?></td> 
               <td class=""><?php echo $value->nombreconsecutivo->nombre;?></td>
               <td class=""><?php echo $value->negocio;?></td>
+              <td class=""><?php echo isset($nombreEmisores[$value->idemisor])? $nombreEmisores[$value->idemisor]: $negocio->negocio;?></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-caja="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarCaja"><i class="fa-solid fa-pen-to-square" title="Actualizar datos de caja"></i></button>
@@ -54,7 +56,7 @@
                 </select>
             </div>
             <div class="formulario__campo">
-                <label class="formulario__label" for="negociogestioncaja">Negocio</label>
+                <label class="formulario__label" for="negociogestioncaja">Sede</label>
                 <select id="negociogestioncaja" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" name="negocio" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     

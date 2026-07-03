@@ -114,15 +114,16 @@
         <div id="productos" class="list grid gap-4 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-4 border-solid border-t-2 border-gray-400 pt-4"> <!-- contenedor de los productos -->
           <?php foreach($productos as $producto): 
             if($producto->visible==1&&$producto->estado==1):?>
-            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="relative producto rounded-lg bg-slate-200 flex gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->ID;?>">
-                <img 
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="relative producto rounded-lg bg-slate-200 flex gap-3 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->ID;?>">
+                <img
+                    loading="lazy"
                     src="/build/img/<?php echo ($producto->foto!=null&&$producto->foto!='null'&&$producto->foto!='undefined')?$producto->foto:'default-product.png';?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
                     class="block object-contain h-24 min-w-24 w-24 rounded-md" 
                     alt="Imagen de <?php echo $producto->nombre; ?>">
                 
                 <div class="flex flex-col justify-between grow overflow-hidden">
-                    <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
+                    <p class="card-producto m-0 text-xl leading-5 text-slate-500 line-clamp-3"><?php echo $producto->nombre;?></p>
                     
                     <p class="precioVenta m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
                 </div>

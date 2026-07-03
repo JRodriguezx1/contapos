@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Repositories\parqueadero;
+
+
 class PDOParqueoRepository
 {
     private $db; // Tu conexión PDO

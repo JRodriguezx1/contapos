@@ -8,7 +8,7 @@
     <h4 class="text-gray-600 mb-12 mt-12 ">Unidades de Medida</h4>
     <?php include __DIR__. "/../../templates/alertas.php"; ?>
     <button id="btnCrearUnidadMedida" class="btn-md btn-turquoise !py-4 !px-6">Crear unidad</button>
-    <table class="display responsive nowrap tabla" width="100%" id="tablaUnidadesMedida">
+    <table id="tablaUnidadesMedida" class="display responsive nowrap tabla" width="100%">
       <thead>
           <tr>
               <th>Nº</th>

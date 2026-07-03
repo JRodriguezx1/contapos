@@ -4,15 +4,15 @@ namespace App\Models\inventario;
 
 class subproductos extends \App\Models\ActiveRecord {
     protected static $tabla = 'subproductos';
-    protected static $columnasDB = ['id', 'id_unidadmedida', 'unidadmedida', 'insumoprocesado', 'nombre', 'sku', 'proveedor', 'descripcion', 'medidas', 'color', 'uso', 'stock', 'stockminimo', 'precio_compra', 'fecha_ingreso'];
+    protected static $columnasDB = ['id', 'id_unidadmedida', 'insumoprocesado', 'unidadmedida', 'nombre', 'sku', 'proveedor', 'descripcion', 'medidas', 'color', 'uso', 'stock', 'stockminimo', 'precio_compra', 'fecha_ingreso'];
     
     //public $id;
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
         $this->id_unidadmedida = $args['id_unidadmedida']??1;
-        $this->unidadmedida = $args['unidadmedida'] ?? '';
         $this->insumoprocesado = $args['insumoprocesado']??0; //0 = si es comprado, 1 = si es producido en planta
+        $this->unidadmedida = $args['unidadmedida'] ?? '';
         $this->nombre = $args['nombre'] ?? '';
         $this->sku = $args['sku'] ?? '';
         $this->proveedor = $args['proveedor'] ?? '';
@@ -32,7 +32,7 @@ class subproductos extends \App\Models\ActiveRecord {
         
         if(!$this->nombre)self::$alertas['error'][] = 'El Nombre del producto es Obligatorio';
         
-        if(strlen($this->nombre)>51)self::$alertas['error'][] = 'El Nombre del producto no debe superar los 52 caracteres';
+        if(strlen($this->nombre)>95)self::$alertas['error'][] = 'El Nombre del producto no debe superar los 52 caracteres';
         
         if($this->sku)
           if(strlen($this->sku)>15)self::$alertas['error'][] = 'El codigo del producto no debe ser mayor a 15 digitos';
@@ -44,7 +44,7 @@ class subproductos extends \App\Models\ActiveRecord {
     }
 
     
-    public function equivalencias($idsubproducto, $idunidadbase):array {
+    public function equivalencias(int $idsubproducto, int $idunidadbase):array|null {
       $arrayunidadesmedida = ['1'=>'unidad', '2'=>'gramos', '3'=>'libras', '4'=>'kilogramos', '5'=>'milimetros', '6'=>'centimetros', '7'=>'metros', '8'=>'mililitros', '9'=>'litros'];
       $equivalencias = [];
       // Factores de conversión
@@ -93,7 +93,7 @@ class subproductos extends \App\Models\ActiveRecord {
       ];
 
       // Verificar si la unidad base está en los factores de conversión
-      if (array_key_exists($idunidadbase, $factores)) {
+      if(array_key_exists($idunidadbase, $factores)){
         // Generar conversiones para cada unidad destino
         foreach ($factores[$idunidadbase] as $unidaddestino => $factorconversion) {
           $equivalencias[] = (object) [
@@ -105,6 +105,21 @@ class subproductos extends \App\Models\ActiveRecord {
               'nombreunidaddestino' => $arrayunidadesmedida[$unidaddestino],
               'factorconversion' => $factorconversion
           ];
+        }
+      }else{
+        $nuevaunidadmedida = unidadesmedida::find('id', $idunidadbase);
+        if($nuevaunidadmedida){
+            $equivalencias[] = (object) [
+                'idproducto' => 'NULL',
+                'idsubproducto' => $idsubproducto,
+                'idunidadmedidabase' => $idunidadbase,
+                'idunidadmedidadestino' => $idunidadbase,
+                'nombreunidadbase' => $nuevaunidadmedida->nombre,
+                'nombreunidaddestino' => $nuevaunidadmedida->nombre,
+                'factorconversion' => 1
+            ];
+        }else{
+            return null;
         }
       }
       return $equivalencias;

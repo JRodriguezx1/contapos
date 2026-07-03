@@ -62,6 +62,9 @@
         <a href="/admin/reportes/ventaProductosUsuarios" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">package_2</span>Productos por usuario
         </a>
+        <a href="/admin/reportes/reporteEmisores" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
+          <span class="material-symbols-outlined">package_2</span>Reporte de emisores
+        </a>
       </div>
     </div>
 

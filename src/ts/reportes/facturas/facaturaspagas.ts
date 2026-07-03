@@ -151,23 +151,30 @@
             data: datosFacturasPagas,
             columns: [
                 {title: 'Orden', data: 'num_orden'},
-                {title: 'N° Factura', data: 'num_consecutivo'},
-                {title: 'Tipo', data: 'tipofacturador'},
+                {title: 'Fecha Pago', data: 'fechapago', render: (data:string) => `<div class="w-44 whitespace-normal">${data}</div>`},
+                {
+                    title: 'N° Factura', 
+                    data: null,
+                    orderable: false, 
+                    searchable: false,
+                    render: (data: any, type: any, row: any) => {return `${row.prefijo}${row.num_consecutivo}`}
+                },
+                {title: 'Tipo', data: 'tipofacturador', render: (data:string) => `<div class="w-48 whitespace-normal">${data}</div>`},
                 {title: 'Tipo Venta', data: 'tipoventa'},
-                { 
+                {
                     title: 'Abrir', 
                     data: null, 
                     orderable: false, 
                     searchable: false, 
                     render: (data: any, type: any, row: any) => {return `<a class="btn-ver btn-xs btn-light" target="_blank" href="/admin/caja/ordenresumen?id=${row.id}" data-id="${row.id}">Abrir</a>`}
                 },
-                {title: 'Cant vendida', data: 'totalunidades'},
+                {title: 'T. Unds', data: 'totalunidades'},
                 {title: 'B. gravable', data: 'base', render: (data:number) => `$${Number(data).toLocaleString()}`}, 
                 {title: 'Imp', data: 'valorimpuestototal'}, 
                 {title: 'Descuento', data: 'descuento'}, 
                 {title: 'Total', data: 'total', render: (data: number, type: string) => {
                                                                                             if (type === 'display') {
-                                                                                            return `$${data.toLocaleString('es-CO')}`;
+                                                                                            return `$${Number(data).toLocaleString('es-CO')}`;
                                                                                             }
                                                                                             return data; // para export, sort, filter
                                                                                         }}, 

@@ -3,7 +3,7 @@
   <div class="flex flex-wrap gap-4 mb-4">
         <a class="btn-command" href="/admin/almacen/categorias"><span class="material-symbols-outlined">tv_options_edit_channels</span>Categorias</a>
         <a class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href="/admin/almacen/productos"><span class="material-symbols-outlined">grid_view</span>Productos</a> 
-        <a class="btn-command text-center" href="/admin/almacen/subproductos"><span class="material-symbols-outlined">landscape</span>Sub Productos</a>
+        <a class="btn-command text-center" href="/admin/almacen/subproductos"><span class="material-symbols-outlined">landscape</span>Insumos</a>
         <!--<a class="btn-command" href="/admin/almacen/componer"><span class="material-symbols-outlined">precision_manufacturing</span>Componer</a>-->
         <a class="btn-command text-center" href="/admin/almacen/ajustarcostos"><span class="material-symbols-outlined">attach_money</span>Ajustar Costos</a>
         <a class="btn-command" href="/admin/almacen/compras"><span class="material-symbols-outlined">pallet</span>Compras</a>
@@ -176,6 +176,20 @@
                     functions
                 </span>
                 Motor de fórmulas
+            </span>
+
+            <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>
+        </a>
+
+        <a
+            class="flex items-center justify-between px-6 py-6 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-sm transition-all duration-200"
+            href="/admin/almacen/conversionUnidades">
+
+            <span class="flex items-center gap-3 text-gray-900 text-lg font-medium">
+                <span class="material-symbols-outlined text-indigo-600 text-4xl">
+                    design_services
+                </span>
+                Conversion de unidades
             </span>
 
             <i class="fa-solid fa-chevron-right text-gray-400 text-xl"></i>

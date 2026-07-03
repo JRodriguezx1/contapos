@@ -383,3 +383,21 @@ function bytesToBase64(data: string|Uint8Array) {
           binary += String.fromCharCode(data[i]);
     return btoa(binary);
 }
+
+
+function formatearMoneda(input: HTMLInputElement): void {
+    let valor = input.value.replace(/[^\d,]/g, '');
+    //const partes = valor.split(',');
+    // Formatear parte entera
+    //partes[0] = parseInt(partes[0] || '0').toLocaleString('es-CO');
+
+    let [entera, ...decimales] = valor.split(',');
+    entera= parseInt(entera || '0').toLocaleString('es-CO');
+    /*if (partes.length > 2) {
+      valor = partes[0] + ',' + partes.slice(1).join('');
+    }*/
+    // Máximo 2 decimales
+    //if (partes[1])partes[1] = partes[1].substring(0, 2);
+    //input.value = partes.join(',');
+    input.value = entera+(decimales.length ? ',' + decimales.join('') : '');
+}

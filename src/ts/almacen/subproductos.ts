@@ -1,7 +1,9 @@
 (()=>{
     if(document.querySelector('.subproductos')){
       const crearSubProducto = document.querySelector('#crearSubProducto');
+      const btnUploadExcel = document.querySelector('#btnUploadExcel');
       const miDialogoSubProducto = document.querySelector('#miDialogoSubProducto') as any;
+      const miDialogoImportarExcel = document.querySelector('#miDialogoImportarExcel') as HTMLDialogElement;
       let indiceFila=0, control=0, tablaSubProductos:HTMLElement;
       
       type subproductsapi = {
@@ -33,6 +35,12 @@
             console.log(error);
         }
       })();
+
+      
+      btnUploadExcel?.addEventListener('click', ()=>{
+        miDialogoImportarExcel.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+      });
   
       //////////////////  TABLA //////////////////////
       tablaSubProductos = ($('#tablaSubProductos') as any).DataTable(configdatatables);
@@ -40,7 +48,7 @@
       crearSubProducto?.addEventListener('click', (e):void=>{
         control = 0;
         limpiarformdialog();
-        document.querySelector('#modalSubProducto')!.textContent = "Crear sub producto";
+        document.querySelector('#modalSubProducto')!.textContent = "Crear insumo";
         (document.querySelector('#btnEditarCrearSubProducto') as HTMLInputElement).value = "Crear";
         miDialogoSubProducto.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
@@ -57,7 +65,7 @@
         let idsubproducto = (e.target as HTMLElement).parentElement?.id!;
         if((e.target as HTMLElement)?.tagName === 'I')idsubproducto = (e.target as HTMLElement).parentElement?.parentElement?.id!;
         control = 1;
-        document.querySelector('#modalSubProducto')!.textContent = "Actualizar producto";
+        document.querySelector('#modalSubProducto')!.textContent = "Actualizar insumo";
         (document.querySelector('#btnEditarCrearSubProducto') as HTMLInputElement)!.value = "Actualizar";
         unsubproducto = subproducts.find(x=>x.id === idsubproducto)!;
         $('#unidadmedida').val(unsubproducto?.id_unidadmedida??'');
@@ -122,8 +130,8 @@
         Swal.fire({
             customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
             icon: 'question',
-            title: 'Desea eliminar el sub prducto?',
-            text: "El sub prducto sera eliminado definitivamente.",
+            title: 'Desea eliminar el insumo?',
+            text: "El insumo sera eliminado definitivamente.",
             showCancelButton: true,
             confirmButtonText: 'Si',
             cancelButtonText: 'No',
@@ -157,8 +165,10 @@
         (document.querySelector('#formCrearUpdateSubProducto') as HTMLFormElement).action = "/admin/almacen/crear_subproducto";
       }
       function cerrarDialogoExterno(event:Event) {
-        if (event.target === miDialogoSubProducto || (event.target as HTMLInputElement).value === 'salir' || (event.target as HTMLInputElement).value === 'Actualizar') {
+        const f = event.target;
+        if (f === miDialogoSubProducto || f === miDialogoImportarExcel || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Actualizar') {
             miDialogoSubProducto.close();
+            miDialogoImportarExcel.close();
           document.removeEventListener("click", cerrarDialogoExterno);
         }
       }

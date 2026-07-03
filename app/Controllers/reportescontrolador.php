@@ -9,6 +9,7 @@ use App\Models\clientes\departments;
 use App\Models\compras;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\emisores;
 use App\Models\configuraciones\usuarios;
 use App\Models\detallecompra;
 use App\Models\felectronicas\adquirientes;
@@ -70,6 +71,13 @@ class reportescontrolador{
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
         $router->render('admin/reportes/ventas/ventaProductosUsuarios', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function reporteEmisores(Router $router){
+      isadmin();
+      if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+      $emisores = emisores::whereArray(['idsucursal'=>id_sucursal(), 'estado'=>1]);
+      $router->render('admin/reportes/ventas/reporteEmisores', ['titulo'=>'Reportes', 'emisores'=>$emisores, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
     public static function facturaspagas(Router $router){
@@ -438,6 +446,7 @@ class reportescontrolador{
 
     }
     echo json_encode(['productosVendidos'=>$productosVendidos, 'mediosPagos'=>$mediosPagos, 'totalDescuentos'=>$totalDescuentos, 'separados'=>$Separados, 'canalVenta'=>$canalVenta, 'ventasXusuario'=>$ventasXusuario, 'gastos'=>$gastos, 'resumenCreditos'=>$resumenCreditos, 'resumenVentas'=>$resumenVentas, 'totalabonos'=>$totalabonos]);
+    return;
   }
 
   
@@ -455,6 +464,7 @@ class reportescontrolador{
             GROUP BY DATE_FORMAT(fechapago, '%Y-%m') ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
+    return;
   }
 
   //transacciones acumuladas por dia durante mes y año elegido
@@ -471,6 +481,7 @@ class reportescontrolador{
             GROUP BY DATE(fechapago) ORDER BY fecha;";
     $datos = productos::camposJoinObj($sql);
     echo json_encode($datos);
+    return;
   }
 
   //Ventas acumuladas por cliente en un periodo determinado
@@ -488,6 +499,7 @@ class reportescontrolador{
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);
+    return;
   }
 
   public static function ventaProductsUsers(){
@@ -504,6 +516,38 @@ class reportescontrolador{
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);
+    return;
+  }
+
+  //Ventas acumuladas por emisor
+  public static function apiReporteEmisores():void{
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    $idemisor = $_POST['idemisor'];
+    $ingresos = [];
+    $ventasXEmisor = [];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT COALESCE(e.nombre, 'Negocio') as emisor, COUNT(t.id) AS numventas, SUM(t.subtotal) as subtotal, SUM(t.base) as base,
+              SUM(t.valorimpuestototal) as impuesto, SUM(t.descuento) as descuento, SUM(t.total) AS totalventas, SUM(t.totalMediosPago) AS ingresos
+              FROM (
+                  SELECT f.id, f.idemisor, f.subtotal, f.base, f.valorimpuestototal, f.descuento, f.total, SUM(fmp.valor) AS totalMediosPago
+                  FROM facturas f LEFT JOIN factmediospago fmp ON f.id = fmp.id_factura
+                  WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+                  GROUP BY f.id
+              ) t
+              LEFT JOIN emisores e ON e.id = t.idemisor
+              GROUP BY e.id;";
+      $ingresos = productos::camposJoinObj($sql);
+
+
+      $condicionEmisor = $idemisor===''?'IS NULL':'= '.(int)$idemisor;
+      $sql = "SELECT * FROM facturas f WHERE f.idemisor $condicionEmisor AND f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal;";
+      $ventasXEmisor = productos::camposJoinObj($sql);
+    }
+    echo json_encode(['ingresos'=>$ingresos, 'ventasXEmisor'=>$ventasXEmisor]);
+    return;
   }
 
 
@@ -527,7 +571,7 @@ class reportescontrolador{
     $idsucursal = id_sucursal();
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
-    $sql = "SELECT *FROM facturas WHERE fechapago BETWEEN '$fechainicio' AND '$fechafin' AND remision = 1 AND (estado = 'Remision' OR estado = 'Paga') AND id_sucursal = $idsucursal";
+    $sql = "SELECT *FROM facturas WHERE fechacreacion BETWEEN '$fechainicio' AND '$fechafin' AND remision = 1 AND (estado = 'Remision' OR estado = 'Paga') AND id_sucursal = $idsucursal";
     if($_SERVER['REQUEST_METHOD'] === 'POST' )
       $facturas = facturas::camposJoinObj($sql);
     echo json_encode($facturas);

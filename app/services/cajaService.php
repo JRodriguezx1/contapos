@@ -4,16 +4,20 @@ namespace App\services;
 
 use App\Models\caja\cierrescajas;
 use App\Models\caja\declaracionesdineros;
+use App\Models\caja\factmediospago;
 use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
+use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\emisores;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\tarifas;
 use App\Models\configuraciones\usuarios;
+use App\Models\factimpuestos;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
+use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use stdClass;
 
@@ -87,12 +91,13 @@ class cajaService {
         $vendedor = usuarios::find('id', $factura->idvendedor);
         $sucursal = sucursales::find('id', id_sucursal());
 
+        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        $emisor = null;
         if($factura->idemisor){
             $emisor = emisores::find('id', $factura->idemisor);
-        }else{
-            $emisor = null;
+            $lineasencabezado = $emisor->datosencabezados?explode("\n", $emisor->datosencabezados??''):[];
         }
-        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        
         return compact('factura', 'productos', 'cliente', 'direccion', 'tarifa', 'vendedor', 'lineasencabezado', 'sucursal', 'emisor');
     }
 
@@ -149,5 +154,113 @@ class cajaService {
         }
         
     }
-    
+
+
+    public static function cambiarEmisor(array $data):array{
+        $creditoRepo = new creditosRepository();
+        $idfactura = $data['id'];
+        $idemisor = $data['idemisor'];
+        $idNewCaja = $data['idcaja'];
+        $factura = facturas::find('id', $idfactura);
+        $credito = $creditoRepo->uniqueWhere(['factura_id'=>$factura->id]);
+        if($factura->idcaja == $idNewCaja)return ['error'=>['Debes elegir un emisor distinto al inicial']];
+        if(!$factura)return ['error'=>['No se encontro factura']];
+        //actualizar valores de la caja actual
+        $mediospago = factmediospago::uniquewhereArray(['id_factura'=>$factura->id, 'idmediopago'=>1])->valor??0; //me trae la factura que pago en efectivo
+        $factMP = factmediospago::idregistros('id_factura', $factura->id);
+        $cierrecajafactura = cierrescajas::find('id', $factura->idcierrecaja);
+        $tempcierrecaja = clone $cierrecajafactura;
+
+        ///// ACTUALIZAR CAJA ACTUAL
+        /////////// calcular cantidad de facturas y discriminar por tipo
+        $cierrecajafactura->totalfacturaseliminadas += 1;
+        if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
+          $cierrecajafactura->facturaselectronicaselimnadas += 1;
+          $cierrecajafactura->facturaselectronicas -= 1;
+          $cierrecajafactura->valorfe -= $factura->total;
+          $cierrecajafactura->descuentofe -= $factura->descuento;
+        }else{
+          $cierrecajafactura->facturasposeliminadas += 1;
+          $cierrecajafactura->facturaspos -= 1;
+          $cierrecajafactura->valorpos -= $factura->total;
+          $cierrecajafactura->descuentopos += $factura->descuento;
+        }
+
+        ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
+        if($factura->tipoventa=='Contado'){
+          $cierrecajafactura->ventasenefectivo -= $mediospago;
+          $cierrecajafactura->ingresoventas -= $factura->total;
+        }else{
+          $cierrecajafactura->creditocapital -= $factura->total;
+          $cierrecajafactura->creditos -= ($factura->total-$factura->abono);
+        }
+
+        $cierrecajafactura->domicilios -= $factura->valortarifa;
+        $cierrecajafactura->totaldescuentos -= $factura->descuento;
+        $cierrecajafactura->valorimpuestototal -= $factura->valorimpuestototal;
+        $cierrecajafactura->basegravable -= $factura->base;
+
+
+        $r1 = $cierrecajafactura->actualizar();
+        if(!$r1)return ['error'=>['Error al actualizar el emisor en la factura en el cierre de caja actual']];
+        
+        ///descuenta los abonos de creditos por caja 
+        if($factura->tipoventa=='Credito')$anularCredito = creditosService::descontarAbonosCreditosXCierresCaja($credito->id);  //me vuelve a actualizar el cierre de caja
+        if(isset($anularCredito['error'])){
+            $tempcierrecaja->actualizar();
+            return ['error'=>['Error al actualizar los abonos del emisor de la factura en los cierre de caja']];
+        }
+        
+
+        //ACTUALIZAR VALORES DE LA NUEVA CAJA
+        $ultimocierre = cierrescajas::uniquewhereArray(['idcaja' => $idNewCaja, 'estado'=>0]);
+        $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
+        if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
+            $ultimocierre->facturaselectronicas = $ultimocierre->facturaselectronicas + 1;  //total de facturas electronicas
+            $ultimocierre->valorfe += $factura->total;
+            $ultimocierre->descuentofe += $factura->descuento;
+        }else{
+            $ultimocierre->facturaspos = $ultimocierre->facturaspos + 1;   //total de facturas pos
+            $ultimocierre->valorpos += $factura->total;
+            $ultimocierre->descuentopos += $factura->descuento;
+        }
+        $ultimocierre->ventasenefectivo += $factura->tipoventa=='Contado'?$factura->total:0; 
+        ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
+        //////// establecer el id del  nuevo cierre de ccaja para las factmediospago ////////////
+        foreach($factMP as $obj){
+            $obj->cierrecajaid = $ultimocierre->id;
+            if($obj->idmediopago == 1)$ultimocierre->abonosenefectivo += ($credito?$obj->valor:0);
+        }
+
+        $ultimocierre->creditocapital += $credito?->capital??0;
+        $ultimocierre->creditos += ($credito?->capital??0)-($credito?->abonoinicial??0);  
+        $ultimocierre->abonoscreditos += $credito?->abonodecuotas??0;
+        $ultimocierre->abonostotales += $credito?->abonodecuotas??0;
+        $ultimocierre->domicilios += $factura->valortarifa;
+        
+        $ultimocierre->ingresoventas += ($credito?0:$factura->total);
+        $ultimocierre->totaldescuentos += $factura->descuento;
+        $ultimocierre->realventas += $factura->total; 
+        $ultimocierre->valorimpuestototal += $factura->valorimpuestototal;
+        $ultimocierre->basegravable += $factura->base;
+
+        //ACAATUALIZAR FACTURA
+        $factura->idemisor = $idemisor==0?NULL:$idemisor;
+        $factura->idcaja = $idNewCaja;
+        $factura->idcierrecaja = $ultimocierre->id;
+        $credito && $credito->idemisor = $idemisor;
+
+        $r2 = $factura->actualizar();
+        if($r2){
+            $ultimocierre->actualizar();
+            factmediospago::updatemultiregobj($factMP, ['cierrecajaid']);
+            if($credito)$creditoRepo->update($credito);
+        }else{
+            $tempcierrecaja->actualizar();
+            return ['error'=>['Error al actualizar el emisor en la factura']];
+        }
+        return ['exito'=>['Emisor actualizado en factura'], 'emisor'=>emisores::find('id', $factura->idemisor)];
+    }
+
+
 }

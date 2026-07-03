@@ -4,7 +4,7 @@ namespace App\Models;
 
 class compras extends \App\Models\ActiveRecord{
     protected static $tabla = 'compras';
-    protected static $columnasDB = ['id', 'id_sucursal_id', 'idusuario', 'idproveedor', 'idformapago', 'idorigencaja', 'idorigenbanco', 'nombreorigencaja', 'nombreorigenbanco', 'nombreusuario', 'nombreproveedor', 'formapago', 'nfactura', 'impuesto', 'origenpago', 'nombreorigenpago', 'cantidaditems', 'observacion', 'subtotal', 'valortotal', 'estado', 'fechacompra'];
+    protected static $columnasDB = ['id', 'id_sucursal_id', 'idusuario', 'idproveedor', 'idformapago', 'idorigencaja', 'idorigenbanco', 'nombreorigencaja', 'nombreorigenbanco', 'nombreusuario', 'nombreproveedor', 'formapago', 'nfactura', 'impuesto', 'valorimp', 'base', 'origenpago', 'nombreorigenpago', 'cantidaditems', 'observacion', 'subtotal', 'valortotal', 'estado', 'fechacompra'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -21,6 +21,8 @@ class compras extends \App\Models\ActiveRecord{
         $this->formapago = $args['formapago']??'Contado';
         $this->nfactura = $args['nfactura']??'';
         $this->impuesto = $args['impuesto']??0;
+        $this->valorimp = $args['valorimp']??0;
+        $this->base = $args['base']??0;
         $this->origenpago = $args['origenpago']??0;  //0 = caja,  1 = banco
         $this->nombreorigenpago = $args['nombreorigenpago']??'';
         $this->cantidaditems = $args['cantidaditems']??'';

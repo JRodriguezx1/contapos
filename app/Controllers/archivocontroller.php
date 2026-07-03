@@ -31,6 +31,28 @@ class archivocontroller{
     }
 
 
+    public static function descargarInsumosExcel()
+    {
+        $nombre = $_GET['file'] ?? 'Importar-insumos.xlsx';
+        $ruta = self::$basePath . '/' . $nombre;
+
+        if (!file_exists($ruta)) {
+            http_response_code(404);
+            echo "Archivo Excel no encontrado.";
+            return;
+        }
+
+        if(ob_get_level())ob_end_clean();
+
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header("Content-Disposition: attachment; filename=\"" . basename($ruta) . "\"");
+        header("Content-Length: " . filesize($ruta));
+        
+        readfile($ruta);
+        exit;
+    }
+
+
     public static function descargarInstrucciones()
     {
         $nombre = $_GET['file'] ?? 'instrucciones_importar_productos.png';

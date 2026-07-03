@@ -664,6 +664,7 @@
         console.log(dataPrinter);
 
         try {
+          //const url = "http://localhost:3100/api/print/printJob"; //llamado a la API server print nodejs/ts
           const url = "https://servidorimpresionposws-production.up.railway.app/api/print/printJob"; //llamado a la API server print nodejs/ts
           const respuesta = await fetch(url, {
             method: 'POST',

@@ -140,8 +140,8 @@
       </div>
 
       <div class="flex justify-between">
-        <span>IVA (0%):</span>
-        <span class="font-semibold">$0.00</span>
+        <span>IVA (<?php echo number_format($compra->impuesto??0, '2', ',', '.');?>%):</span>
+        <span class="font-semibold">$<?php echo number_format($compra->valorimp, '2', ',', '.');?></span>
       </div>
 
       <div class="border-t border-gray-200 pt-3 mt-3 flex justify-between text-lg font-bold text-gray-800">

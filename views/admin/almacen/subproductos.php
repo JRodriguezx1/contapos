@@ -5,14 +5,15 @@
     </svg>
     <span class="sr-only">Atrás</span>
   </a> 
-  <h4 class="text-gray-600 mb-12 mt-4">Sub Productos</h4>
+  <h4 class="text-gray-600 mb-12 mt-4">Insumos</h4>
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
   
-  <div class="flex flex-wrap gap-2">
-    <button id="crearSubProducto" class="btn-md btn-turquoise !py-4 !px-6 !w-auto">Crear sub producto</button>
+  <div class="flex flex-wrap gap-2 mb-4">
+    <button id="crearSubProducto" class="btn-md btn-turquoise !py-4 !px-6 !w-auto">Crear insumo</button>
     <form action="/admin/almacen/downexcelinsumos" method="POST">
         <button class="btn-md btn-light !py-2 !px-4" name="downexcel" title="Descargar en excel"><span class="material-symbols-outlined text-[24px] leading-none">download</span></button>
     </form>
+    <button id="btnUploadExcel" class="btn-md btn-light !py-2 !px-4" name="upexcel"><span class="material-symbols-outlined text-[24px] leading-none">upload</span></button>
   </div>
   
   <table class="display responsive nowrap tabla" width="100%" id="tablaSubProductos">
@@ -50,7 +51,7 @@
 
 
   <dialog id="miDialogoSubProducto" class="midialog-sm p-12">
-    <h4 id="modalSubProducto" class="font-semibold text-gray-700 mb-4">Crear Subproducto</h4>
+    <h4 id="modalSubProducto" class="font-semibold text-gray-700 mb-4">Crear Insumo</h4>
     <div id="divmsjalerta1"></div>
     <form id="formCrearUpdateSubProducto" class="formulario" action="/admin/almacen/crear_subproducto" method="POST">
         
@@ -102,4 +103,36 @@
         </div>
     </form>
   </dialog><!--fin crear/editar producto-->
+
+
+  <!-- MODAL IMPORTAR EXCEL -->
+  <dialog id="miDialogoImportarExcel" class="midialog-sm p-12">
+    <h4 class=" text-gray-700 font-semibold">Importar:</h4>
+    <form id="formImportarExcel" class="formulario" action="/admin/almacen/uploadInsumosExcel" enctype="multipart/form-data" method="POST">  
+      <div class="border-b border-gray-900/10 pb-10 mb-3">
+        <p class="mt-2 text-xl text-gray-600">Subir insumos por medio de archvio de excel.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-6">
+            <label for="archivoexcel" class="block text-2xl font-medium text-gray-600">Archivo Excel</label>
+            <div class="mt-2">
+              <input type="file" id="archivoexcel" name="archivoexcel" accept=".xlsx,.xls" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" required />
+            </div> 
+          </div>
+
+          <div class="sm:col-span-3">
+              <a class="btn-md btn-lima" href="/admin/descarga/plantillaImportarInsumos" target="_blank" rel="noopener noreferrer">Descargar plantilla</a> 
+          </div>
+          <div class="sm:col-span-3">
+              <a class="btn-md btn-blue" href="/admin/descarga/instruccionesimportarproductos" target="_blank" rel="noopener noreferrer">Instrucciones</a>
+          </div>
+        </div>
+      </div>
+        
+      <div class="text-right">
+          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px]" type="button" value="Cancelar">Cancelar</button>
+          <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px]" type="submit" value="Agregar">
+      </div>
+    </form>
+  </dialog>
 </div>

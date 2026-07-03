@@ -51,7 +51,7 @@
   <div class="mt-4">
     <table id="tablaFacturasProcesadas" class="display responsive nowrap tabla" width="100%">
       <thead></thead>
-      <tbody></tbody>
+      <tbody class="text-xl"></tbody>
     </table>
   </div>
 </div>

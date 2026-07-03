@@ -24,7 +24,7 @@
         id="item"
         type="text" 
         name="item" 
-        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-80 p-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-96 p-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
         placeholder="Seleccionar item"
         multiple="multiple"
       />

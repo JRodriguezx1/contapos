@@ -19,8 +19,8 @@
 
 
     async function callApiReporte(dateinicio:string, datefin:string){
-        console.log(dateinicio, datefin);
-        
+        document.querySelector('#fecha1')!.textContent = dateinicio;
+        document.querySelector('#fecha2')!.textContent = datefin;
         (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
         const datos = new FormData();
         datos.append('fechainicio', dateinicio);
@@ -48,7 +48,7 @@
             columns: [
                         {title: 'Id', data: 'id'},
                         {title: 'Fecha', data: 'fechacreacion', render: (data:string) => `<div class="w-36 whitespace-normal">${data}</div>`},
-                        {title: 'Fecha Entrega', data: 'fechaentrega',  render: (data:string) => `<div class="">${data}</div>`},
+                        {title: 'Fecha Entrega', data: 'fechaentrega',  render: (data:string) => `<div class="text-center">${data??'-'}</div>`},
                         {title: 'Usuario', data: 'vendedor',  render: (data:string) => `<div class="w-48 whitespace-normal">${data}</div>`},
                         {title: 'Cliente', data: 'cliente',  render: (data:string) => `<div class="w-48 whitespace-normal">${data}</div>`},
                         {title: 'Orden', data: 'num_orden'},

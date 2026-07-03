@@ -154,9 +154,10 @@ class facturas extends \App\Models\ActiveRecord {
                         'estado', mp.estado,
                         'nick', mp.nick
                     )
-                ) AS mediosdepago FROM facturas f
+                ) AS mediosdepago, cj.nombre as nombrecaja FROM facturas f
                 LEFT JOIN factmediospago sm ON sm.id_factura = f.id
                 LEFT JOIN mediospago mp ON mp.id = sm.idmediopago
+                LEFT JOIN caja cj ON f.idcaja = cj.id
                 WHERE f.$colum IN(";
 
                 foreach($array as $key => $value){

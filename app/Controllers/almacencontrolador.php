@@ -541,6 +541,33 @@ class almacencontrolador{
     $router->render('admin/almacen/productos', ['titulo'=>'Almacen', 'productos'=>$productos, 'categorias'=>$categorias, 'unidadesmedida'=>$unidadesmedida, 'producto'=>$producto, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
+
+  public static function uploadInsumosExcel(Router $router){
+    //session_start();
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $alertas = [];
+    $subproductos = subproductos::all();
+    $unidadesmedida = unidadesmedida::all();
+    $subproducto = new subproductos;
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && $_FILES['archivoexcel']['name']){ //para importar productos desde excel
+        $url_temp = $_FILES["archivoexcel"]["tmp_name"];
+        $extension = strtolower(pathinfo($_FILES['archivoexcel']['name'], PATHINFO_EXTENSION));
+        $extensiones_permitidas = ['xlsx', 'xls', 'csv'];
+        if(in_array($extension, $extensiones_permitidas)){
+          $alertas = inventarioService::importarInsumosExcel($url_temp);
+          if(empty($alertas))
+            $alertas['exito'][] = "Extension del archivo no valido";
+        }else{
+          $alertas['error'][] = "Extension del archivo no valido";
+        }
+    }
+    
+    $router->render('admin/almacen/subproductos', ['titulo'=>'Almacen', 'subproducto'=>$subproducto, 'subproductos'=>$subproductos, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
+
   public static function downexcelinsumos(Router $router){
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
       $excelproductos = subproductos::all();
@@ -589,6 +616,14 @@ class almacencontrolador{
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $productos = productos::all();
     $router->render('admin/almacen/productosParaFormulas', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all()]);
+  }
+
+
+  public static function conversionUnidades(Router $router){
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    $subproductos = subproductos::all();
+    $router->render('admin/almacen/conversionUnidades', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'sucursales'=>sucursales::all()]);
   }
 
 
@@ -976,6 +1011,13 @@ class almacencontrolador{
       }
     }
     echo json_encode($alertas);
+  }
+
+
+  public static function allUnidadesMedida():void{
+    $allUnidadesMedida = unidadesmedida::all();
+    echo json_encode($allUnidadesMedida);
+    return;
   }
 
 
@@ -1569,6 +1611,26 @@ class almacencontrolador{
       $items = stockproductossucursal::getProductosBajoStock(id_sucursal());
       echo json_encode($items);
       return; 
+    }
+
+
+    public static function crearNuevaConversionUnidad():void{
+      isadmin();
+      $alertas = [];
+      if($_SERVER['REQUEST_METHOD'] === 'POST') $alertas = inventarioService::crearNuevaConversionUnidad($_POST);
+      echo json_encode($alertas);
+      return;
+    }
+
+    public static function eliminarConversionUnidad():void{
+      $id = $_GET['id'];
+      if(!is_numeric($id)){
+        echo json_encode(['error'=>['id de la unidad de medida de conversion no es valida.']]);
+        return;
+      }
+      $alertas = inventarioService::eliminarConversionUnidad($id);  
+      echo json_encode($alertas);
+      return;
     }
 
 }

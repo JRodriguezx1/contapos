@@ -47,7 +47,7 @@ class productos extends \App\Models\ActiveRecord {
     public function validar_nuevo_producto():array {
         if(!$this->idcategoria || !is_numeric($this->idcategoria))self::$alertas['error'][] = 'La categoria del producto no seleccionada';
         if(!$this->nombre)self::$alertas['error'][] = 'El Nombre del producto es Obligatorio';
-        if(strlen($this->nombre)>51)self::$alertas['error'][] = 'El Nombre del producto no debe superar los 52 caracteres';
+        if(strlen($this->nombre)>89)self::$alertas['error'][] = 'El Nombre del producto no debe superar los 52 caracteres';
         if($this->sku)
           if(strlen($this->sku)>15)self::$alertas['error'][] = 'El codigo del producto no debe ser mayor a 15 digitos';
         if($this->descripcion)
@@ -70,7 +70,7 @@ class productos extends \App\Models\ActiveRecord {
     }
 
 
-    public function equivalencias($idproducto, $idunidadbase):array {
+    public function equivalencias(int $idproducto, int $idunidadbase):array|null {
       $arrayunidadesmedida = ['1'=>'unidad', '2'=>'gramos', '3'=>'libras', '4'=>'kilogramos', '5'=>'milimetros', '6'=>'centimetros', '7'=>'metros', '8'=>'mililitros', '9'=>'litros'];
       $equivalencias = [];
       // Factores de conversión
@@ -134,15 +134,19 @@ class productos extends \App\Models\ActiveRecord {
         }
       }else{
         $nuevaunidadmedida = unidadesmedida::find('id', $idunidadbase);
-        $equivalencias[] = (object) [
-            'idproducto' => $idproducto,
-            'idsubproducto' => 'NULL',
-            'idunidadmedidabase' => $idunidadbase,
-            'idunidadmedidadestino' => $idunidadbase,
-            'nombreunidadbase' => $nuevaunidadmedida->nombre,
-            'nombreunidaddestino' => $nuevaunidadmedida->nombre,
-            'factorconversion' => 1
-        ];
+        if($nuevaunidadmedida){
+            $equivalencias[] = (object) [
+                'idproducto' => $idproducto,
+                'idsubproducto' => 'NULL',
+                'idunidadmedidabase' => $idunidadbase,
+                'idunidadmedidadestino' => $idunidadbase,
+                'nombreunidadbase' => $nuevaunidadmedida->nombre,
+                'nombreunidaddestino' => $nuevaunidadmedida->nombre,
+                'factorconversion' => 1
+            ];
+        }else{
+            return null;
+        }
       }
       return $equivalencias;
     }

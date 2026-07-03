@@ -9,6 +9,7 @@ use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
+use App\Models\configuraciones\emisores;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\usuarios;
 use App\Models\creditos\creditos;
@@ -17,6 +18,7 @@ use App\Models\creditos\productosseparados;
 use App\Models\creditos\separadomediopago;
 use App\Models\factimpuestos;
 use App\Models\inventario\productos_sub;
+use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
 use App\Repositories\creditos\creditosRepository;
@@ -30,11 +32,11 @@ use stdClass;
 class creditosService {
 
     //metodo llamado desde ventascontrolador.php
-    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor){
+    public static function crearCredito(stdClass $valoresCredito, int $idfactura, int $idcliente, $totalunidades, $base, $valorimpuestototal, int $dctox100, $descuento, int $idcierrecaja, int $idcaja, int $idvendedor, int|string|null $idemisor = NULL){
         date_default_timezone_set('America/Bogota');
         $alertas = [];
         $credito = new creditosRepository();
-        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente, $totalunidades, $base, $valorimpuestototal, $dctox100, $descuento, $idvendedor); //llama metodo del repositorio
+        $entity = $credito->generarCredito((array)$valoresCredito, $idfactura, $idcliente, $totalunidades, $base, $valorimpuestototal, $dctox100, $descuento, $idvendedor, $idemisor); //llama metodo del repositorio
         $alertas = $entity->validar();
         if(empty($alertas)){
             $r = $credito->insert($entity);
@@ -125,12 +127,24 @@ class creditosService {
 
 
     public static function detallecredito(int $id):array{
+        $sucursal = sucursales::find('id', id_sucursal());
         $credito = new creditosRepository();
         $cuotasRepo = new cuotasRepository();
         $productos = new productsSeparadosRepository();
         $credito = $credito->find($id);
+
+        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
+        $emisor = null;
+        if($credito->idemisor){
+            $emisor = emisores::find('id', $credito->idemisor);
+            $lineasencabezado = $emisor->datosencabezados?explode("\n", $emisor->datosencabezados??''):[];
+        }
+
         $detalle = [
             'titulo' => 'Creditos',
+            'sucursal' => $sucursal,
+            'emisor' => $emisor,
+            'lineasencabezado' => $lineasencabezado,
             'credito' => $credito,
             'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
             'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],
@@ -439,6 +453,7 @@ class creditosService {
             $cuotasRepo = new cuotasRepository();
             $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($credito->id);
             
+            
             $arrayCierresCaja = [];
             foreach($cuotas as $cuota){
                 if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
@@ -467,6 +482,42 @@ class creditosService {
             //$alertas['error'][] = "Error al anular el credito. {$th->getMessage()}";
             //$getDB->rollback();
         //}
+        return $alertas;
+    }
+
+
+    public static function descontarAbonosCreditosXCierresCaja(int $idcredito):array{
+        $alertas = [];
+        $cuotasRepo = new cuotasRepository();
+        $cuotas = $cuotasRepo->obtenerPorCredito_cierracaja($idcredito);
+        $arrayCierresCaja = [];
+        foreach($cuotas as $cuota){
+            if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
+                $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
+                $obj->abonostotales -= $cuota->cuotapagada;
+                $obj->abonosenefectivo -= $cuota->valorcuota_efectivo;
+                $obj->abonoscreditos -= $cuota->cuotapagada;
+            }else{
+                $obj = new stdClass;
+                $obj->id = $cuota->cierrecaja_id;
+                $obj->abonostotales = $cuota->abonostotales_caja-$cuota->cuotapagada;
+                $obj->abonosenefectivo = $cuota->abonosenefectivo_caja-$cuota->valorcuota_efectivo;
+                $obj->abonoscreditos = $cuota->abonosCreditos_caja-$cuota->cuotapagada;
+                $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
+            }
+        }
+
+        //descontar los abonos de los creditos en cierre de caja
+        if(empty($arrayCierresCaja)){
+            $alertas['exito'][] = "No hay abonos del credito registrado en cajas";
+            return $alertas;
+        }
+        $rc = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
+        if($rc){
+            $alertas['exito'][] = "Cierre de caja actualizado";
+        }else{
+            $alertas['error'][] = "Error al actualizar cierre de caja";
+        }
         return $alertas;
     }
 

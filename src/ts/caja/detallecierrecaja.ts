@@ -75,15 +75,29 @@
           const ticket = await builder.generate(true); //true para version buffer bytes
           const base64 = bytesToBase64(ticket);
           if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
-          //descargar .bin a equipo
-          /*const blob = new Blob([ticket], { type: 'application/octet-stream' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'ticket.bin';
-          a.click();
-          URL.revokeObjectURL(url);*/
+
+        }else{
+          const dataPrinter = {
+            businessId: resultado.negocio,
+            sucursal: resultado.sucursal,
+            printerName: 'CAJA',
+            tipoTicket: 'ticket',
+            content: resultado
+          };
+          try {
+            const url = "https://servidorimpresionposws-production.up.railway.app/api/print/printJob"; //llamado a la API server print nodejs/ts
+            const respuesta = await fetch(url, {
+              method: 'POST',
+              headers: { "Accept": "application/json", "Content-Type": "application/json" },
+              body: JSON.stringify(dataPrinter)
+            });
+            const resultado = await respuesta.json();
+            console.log(resultado);
+          } catch (error) {
+            console.log(error);
+          }
         }
+
         window.open("/admin/printPDFPOS?id=" + idfactura, "_blank");  //controlador printcontrolador
       }catch(error){
         console.log(error);

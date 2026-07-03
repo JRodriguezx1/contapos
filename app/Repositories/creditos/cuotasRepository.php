@@ -42,7 +42,6 @@ class cuotasRepository extends operationRepository{
 
         foreach ($rows as &$row)
             $row->mediosdepago = $row->mediosdepago?json_decode($row->mediosdepago, false):[];
-        //debuguear($rows);
         return $rows;
     }
 
@@ -56,10 +55,6 @@ class cuotasRepository extends operationRepository{
                 WHERE c.id_credito = {$id} AND cc.estado = 0 
                 GROUP BY smp.id, c.id_sucursal_idfk, c.id_credito, c.cierrecaja_id, c.valorpagado, c.fechapagado, cc.estado, cc.ventasenefectivo, cc.abonosseparados, cc.ingresoventas;";
         $rows = $this->fetchAllStd($sql);
-
-        //foreach ($rows as &$row)
-          //  $row->mediosdepago = $row->mediosdepago?json_decode($row->mediosdepago, false):[];
-        //debuguear($rows);
         return $rows;
     }
 
@@ -72,6 +67,20 @@ class cuotasRepository extends operationRepository{
                 JOIN cierrescajas cc ON c.cierrecaja_id = cc.id
                 LEFT JOIN factmediospago fmp ON fmp.id_factura = cr.factura_id
                 WHERE c.id_credito = $id AND fmp.cierrecajaid = c.cierrecaja_id AND cc.estado = 0
+                GROUP BY c.id_sucursal_idfk, c.id_credito, c.cierrecaja_id, c.valorpagado, c.fechapagado, cc.estado, cc.ventasenefectivo, cc.abonosseparados, cc.ingresoventas;";
+        $rows = $this->fetchAllStd($sql);
+        return $rows;
+    }
+
+
+    public function obtenerPorCredito_cierracaja(int $id):array{
+        $sql = "SELECT c.id_sucursal_idfk, c.id_credito, c.cierrecaja_id, c.valorpagado as cuotapagada, c.fechapagado, cc.estado as estadoCierreCaja, 
+                cc.abonoscreditos as abonosCreditos_caja, cc.abonostotales as abonostotales_caja, cc.abonosenefectivo as abonosenefectivo_caja,
+                COALESCE(SUM(CASE WHEN fmp.idmediopago = 1 THEN fmp.valor ELSE 0 END), 0) AS valorcuota_efectivo
+                FROM cuotas c JOIN creditos cr ON c.id_credito = cr.id
+                JOIN cierrescajas cc ON c.cierrecaja_id = cc.id
+                LEFT JOIN factmediospago fmp ON fmp.id_factura = cr.factura_id
+                WHERE c.id_credito = $id AND fmp.cierrecajaid = c.cierrecaja_id
                 GROUP BY c.id_sucursal_idfk, c.id_credito, c.cierrecaja_id, c.valorpagado, c.fechapagado, cc.estado, cc.ventasenefectivo, cc.abonosseparados, cc.ingresoventas;";
         $rows = $this->fetchAllStd($sql);
 
