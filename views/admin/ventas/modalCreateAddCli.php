@@ -38,12 +38,12 @@
 
         <div class="formulario__campo">
             <label class="formulario__label text-lg font-medium text-gray-700" for="clientenuevoapellido">Apellido</label>
-            <input id="clientenuevoapellido" type="text" name="clientenuevoapellido" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+            <input id="clientenuevoapellido" type="text" name="clientenuevoapellido" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
         </div>
 
         <div class="formulario__campo">
             <label class="formulario__label text-lg font-medium text-gray-700" for="identificacion">Documento</label>
-            <input id="identificacion" name="identificacion" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+            <input id="identificacion" name="identificacion" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
         </div>
 
         <div class="formulario__campo">
@@ -79,7 +79,7 @@
 
                 <div class="formulario__campo">
                     <label class="formulario__label text-lg font-medium text-gray-700" for="tipodocumento">Tipo documento</label>
-                    <select id="tipodocumento" name="tipodocumento" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+                    <select id="tipodocumento" name="tipodocumento" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
                     <option value="1">Registro civil</option>
                     <option value="2">Tarjeta de identidad</option>
                     <option value="3" selected>Cedula de ciudadania</option>
@@ -95,22 +95,22 @@
 
                 <div class="formulario__campo">
                     <label class="formulario__label text-lg font-medium text-gray-700" for="clientenuevoemail">Email</label>
-                    <input id="clientenuevoemail" name="clientenuevoemail" type="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+                    <input id="clientenuevoemail" name="clientenuevoemail" type="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
                 </div>
 
                 <div class="formulario__campo">
                     <label class="formulario__label text-lg font-medium text-gray-700" for="departamento">Departamento</label>
-                    <input id="departamento" type="text" name="departamento" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+                    <input id="departamento" type="text" name="departamento" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
                 </div>
 
                 <div class="formulario__campo">
                     <label class="formulario__label text-lg font-medium text-gray-700" for="ciudad">Ciudad</label>
-                    <input id="ciudad" type="text" name="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+                    <input id="ciudad" type="text" name="ciudad" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
                 </div>
 
                 <div class="formulario__campo">
                     <label class="formulario__label text-lg font-medium text-gray-700" for="clientenuevodireccion">Nueva direccion</label>
-                    <input id="clientenuevodireccion" type="text" name="clientenuevodireccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600">
+                    <input id="clientenuevodireccion" type="text" name="clientenuevodireccion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-12 text-lg focus:outline-none focus:ring-1 focus:border-indigo-600" <?= $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final==1?'required':''; ?>>
                 </div>
 
                 </div>
