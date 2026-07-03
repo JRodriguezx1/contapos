@@ -71,10 +71,12 @@
 
     btnEditarCrearAbono.addEventListener('click', ()=>{
       btnEditarCrearAbono.disabled = true;
+      (document.querySelector('#caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdateAbono') as HTMLFormElement).submit();
     });
     btnEditarCrearPagoTotal.addEventListener('click', ()=>{
       btnEditarCrearPagoTotal.disabled = true;
+      (document.querySelector('#PagoTotal_caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdatePagoTotal') as HTMLFormElement).submit();
     });
     
