@@ -1,6 +1,6 @@
 <div class="box parqueadero">
     <div>
-        <h4 class="font-semibold text-slate-800 tracking-tight">Módulo de Parqueadero</h1>
+        <h4 class="font-semibold text-slate-800 tracking-tight">Módulo de Parqueadero</h4>
         <p class="text-lg text-slate-500">Gestión de ingresos, salidas y tarifas en tiempo real.</p>
     </div>
 

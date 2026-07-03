@@ -98,6 +98,9 @@
             e.preventDefault();
             const subproducto = $('#subproducto').find('option:selected');
             const unidadmedida:string = $('#unidadmedida').find('option:selected').text();
+            const tipoGrupo = (document.querySelector('#tipoGrupo') as HTMLSelectElement)?.value || '0';
+            const marcadoDefecto = (document.querySelector('#marcadoDefecto') as HTMLSelectElement)?.value || '1';
+            const permitirAumentar = (document.querySelector('#permitirAumentar') as HTMLSelectElement)?.value || '1';
             let AmountSubpx:number = factorC*Number(amount.value);
             (async ()=>{ 
                 const datos = new FormData();
@@ -105,6 +108,10 @@
                 datos.append('id_subproducto', $('#subproducto').val()as string);
                 datos.append('cantidadsubproducto', AmountSubpx.toString());
                 datos.append('costo', (Number(subproducto.data('costo'))*AmountSubpx)+'');
+                datos.append('grupos_insumos', tipoGrupo);
+                datos.append('seleccionado', marcadoDefecto);
+                datos.append('permite_aumentar', permitirAumentar);
+                
                 try {
                     const url = "/admin/api/ensamblar";  //asocia el producto con el sub producto en la tabla productos_sub
                     const respuesta = await fetch(url, {method: 'POST', body: datos}); 
@@ -112,7 +119,14 @@
                     if(resultado.exito !== undefined){
                       msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                         /////validar si es el mismo subproducto, y actualizar 
-                        validarSubproducto($('#subproducto').val()as string, unidadmedida, subproducto.data('subproducto'));
+                        validarSubproducto(
+                          $('#subproducto').val() as string,
+                          unidadmedida,
+                          subproducto.data('subproducto'),
+                          tipoGrupo,
+                          marcadoDefecto,
+                          permitirAumentar
+                        );
                         ////// reset form ///////
                         ($('#subproducto') as any).val([]).trigger('change');
                         //$(`#subproducto option[value="${$('#subproducto').val()}"]`).remove();
@@ -127,14 +141,32 @@
         });
 
 
-        function validarSubproducto(idsubproducto:string, unidadmedida:string, subproducto:string){
+        function validarSubproducto(idsubproducto:string, unidadmedida:string, subproducto:string, tipoGrupo:string, marcadoDefecto:string, permitirAumentar:string){
+            const tipoGrupoText = (document.querySelector(`#tipoGrupo option[value="${tipoGrupo}"]`) as HTMLOptionElement)?.textContent?.trim() || tipoGrupo;
             const sub = document.querySelector(`.listaSubproductos div[id="${idsubproducto}"]`);
+            const detailsHtml = `
+                <div class="flex-1">
+                  <p class="m-0"><strong>${Number(amount.value).toFixed(2)} ${unidadmedida}</strong>.  ${subproducto}</p>
+                  <div class="mt-3 flex flex-wrap gap-4 text-lg">
+                    <span class="rounded-md px-4 py-1 bg-slate-100 text-slate-700">
+                      📦 Grupo: <strong>${tipoGrupoText}</strong>
+                    </span>
+                    <span class="rounded-md px-4 py-1 font-medium ${marcadoDefecto=='1'?'bg-green-100 text-green-800':'bg-red-100 text-red-700'}">
+                      ${marcadoDefecto=='1'?'✔ Seleccionado':'✖ No seleccionado'}
+                    </span>
+                    <span class="rounded-md px-4 py-1 font-medium ${permitirAumentar=='1'?'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'}">
+                        ${permitirAumentar=='1'?'➕ Permite aumentar':'🚫 Cantidad fija'}
+                    </span>
+                  </div>
+                </div>`;
             if(sub){
-                sub.querySelector('strong')!.textContent = amount.value+' '+unidadmedida;
+                const button = sub.querySelector('button');
+                sub.innerHTML = detailsHtml;
+                if(button) sub.appendChild(button);
             }else{
                 listaSubproductos?.insertAdjacentHTML('beforeend', `
                 <div id="${idsubproducto}" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">
-                    <p class="m-0"><strong>${amount.value} ${unidadmedida}</strong>.  ${subproducto}</p>
+                    ${detailsHtml}
                     <button type="button"><span id="${idsubproducto}" class="material-symbols-outlined">cancel</span></button>
                 </div>`
                 );

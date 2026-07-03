@@ -226,7 +226,7 @@ class cajaService {
         }
         $ultimocierre->ventasenefectivo += $factura->tipoventa=='Contado'?$factura->total:0; 
         ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
-        //////// establecer el id del  nuevo cierre de ccaja para las factmediospago ////////////
+        //////// establecer el id del  nuevo cierre de caja para las factmediospago ////////////
         foreach($factMP as $obj){
             $obj->cierrecajaid = $ultimocierre->id;
             if($obj->idmediopago == 1)$ultimocierre->abonosenefectivo += ($credito?$obj->valor:0);
@@ -248,18 +248,18 @@ class cajaService {
         $factura->idemisor = $idemisor==0?NULL:$idemisor;
         $factura->idcaja = $idNewCaja;
         $factura->idcierrecaja = $ultimocierre->id;
-        $credito && $credito->idemisor = $idemisor;
+        $credito && $credito->idemisor = $idemisor==0?NULL:$idemisor;
 
         $r2 = $factura->actualizar();
         if($r2){
             $ultimocierre->actualizar();
-            factmediospago::updatemultiregobj($factMP, ['cierrecajaid']);
+            if($factMP)factmediospago::updatemultiregobj($factMP, ['cierrecajaid']);
             if($credito)$creditoRepo->update($credito);
         }else{
             $tempcierrecaja->actualizar();
             return ['error'=>['Error al actualizar el emisor en la factura']];
         }
-        return ['exito'=>['Emisor actualizado en factura'], 'emisor'=>emisores::find('id', $factura->idemisor)];
+        return ['exito'=>['Emisor actualizado en factura'], 'emisor'=>$idemisor==0?sucursales::find('id', id_sucursal()):emisores::find('id', $factura->idemisor)];
     }
 
 

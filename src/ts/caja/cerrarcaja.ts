@@ -242,7 +242,7 @@
       document.querySelector('#totalDescuentos')!.textContent = '- $'+totaldescuentos.toLocaleString();
       document.querySelector('#totaldeventas')!.textContent = ' $'+(ventasContado+ventasACredito).toLocaleString();
       document.querySelector('#abonosTotales')!.textContent = '+ $'+abonostotales.toLocaleString();
-      document.querySelector('#ingresoCajaDelDia')!.textContent = '- $'+(ventasContado+abonostotales).toLocaleString();
+      document.querySelector('#ingresoCajaDelDia')!.textContent = ' $'+(ventasContado+abonostotales).toLocaleString();
       document.querySelector('#totalGastosCaja')!.textContent = '- $'+gastoscaja.toLocaleString();
       document.querySelector('#totalDomicilios')!.textContent = '= $'+(domicilios).toLocaleString();
       document.querySelector('#realVentas')!.textContent = '= $'+(ventasContado+ventasACredito-domicilios-gastoscaja).toLocaleString();

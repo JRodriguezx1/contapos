@@ -249,7 +249,7 @@
           if(resultado.exito!=undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             (document.querySelector('#nitEmisor') as HTMLSpanElement).textContent = 'NIT: '+resultado.emisor.nit;
-            (document.querySelector('#nombreEmisor') as HTMLSpanElement).textContent = resultado.emisor.nombre;
+            (document.querySelector('#nombreEmisor') as HTMLSpanElement).textContent = resultado.emisor.negocio?resultado.emisor.negocio:resultado.emisor.nombre;
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }

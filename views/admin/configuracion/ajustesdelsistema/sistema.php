@@ -21,7 +21,7 @@
             </label>
         </div>
 
-        <!-- activar venta modo rapido -->
+        <!-- activar modulo de venta rapido -->
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Activar el modo rapido de ventas</label>
             <label for="habilitar_venta_modo_rapido_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 cursor-pointer hover:border-indigo-500">
@@ -54,7 +54,7 @@
         </div>
 
 
-        <!-- activar canal de venta -->
+        <!-- Impresora principal de CAJA para Android por BT -->
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Impresora principal de CAJA para Android por BT</label>
             <label for="impresora_principal_de_CAJA_para_Android_por_BT_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1   cursor-pointer hover:border-indigo-500 ">
@@ -70,7 +70,7 @@
             </label>
         </div>
 
-        <!-- activar canal de venta -->
+        <!-- Activar calculadira de merma en modulo de ventas -->
         <div class="flex flex-col gap-2">
             <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Activar calculadira de merma en modulo de ventas</label>
             <label for="activar_calculadira_de_merma_en_modulo_de_ventas_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1   cursor-pointer hover:border-indigo-500 ">
@@ -86,9 +86,25 @@
             </label>
         </div>
 
+        <!-- Obigatorio todos los campos al momento de crear clientes -->
+        <div class="flex flex-col gap-2">
+            <label class="block text-xl font-medium text-gray-700 mb-1 mt-5 lg:mt-0">Obligatorio todos los campos al momento de crear cliente</label>
+            <label for="obligatorio_todos_los_campos_al_crear_cliente_si" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1   cursor-pointer hover:border-indigo-500 ">
+                <input id="obligatorio_todos_los_campos_al_crear_cliente_si" type="radio" name="obligatorio_todos_los_campos_al_crear_cliente" class="hidden peer" value="1" <?php echo $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final == 1?'checked':'';?>>
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                <span class="ms-3 text-xl font-medium text-gray-900">Si</span>
+            </label>
+
+            <label for="obligatorio_todos_los_campos_al_crear_cliente_no" class="flex items-center ps-4 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg select-none w-full p-2.5 h-14 text-xl focus:border-indigo-600 focus:outline-none focus:ring-1 cursor-pointer hover:border-indigo-500">
+                <input id="obligatorio_todos_los_campos_al_crear_cliente_no" type="radio" name="obligatorio_todos_los_campos_al_crear_cliente" class="hidden peer" value="0" <?php echo $conflocal['obligatorio_todos_los_campos_al_crear_cliente']->valor_final == 0?'checked':'';?>>
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-full peer-checked:bg-indigo-600 peer-checked:border-indigo-600"></div>
+                <span class="ms-3 text-xl font-medium text-gray-900">No</span>
+            </label>
+        </div>
+
         <div class="flex flex-col gap-2">
             <label for="valor_por_punto" class="block text-xl font-medium text-gray-700 mb-1 mt-5">
-                Establecer valor por punto
+                Establecer valor por punto (Fidelizacion)
             </label>
             <div class="flex items-center gap-3">
                 <input 

@@ -30,7 +30,7 @@
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     
-    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number}[]=[];
+    let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, insumos:insumo[]}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
     let indiceCarrito = 0, nombretarifa:string|undefined='', tipoventa:string="Contado";
@@ -143,15 +143,23 @@
       }
 
       const precio = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)?.precio_venta;
-      if(elementProduct)actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true, precio);
+      const productoConfigurado = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)!;
+      if(elementProduct)actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true, precio, productoConfigurado);
     });
+    
 
-    function printProduct(id:string, precio:string){ //recibe el id del producto
-      const uncarrito = carrito.find(x=>x.idproducto==id&&x.valorunidad==precio)!;
+    function printProduct(id:string, precio:string, index:number){ //recibe el id del producto
+      //const indice = carrito.findIndex(x => x.idproducto == id && x.valorunidad == precio);
+      //const uncarrito = carrito.find(x=>x.idproducto==id&&x.valorunidad==precio)!;
+    
+      //if(indice === -1)return;
+        const uncarrito = carrito[index];
+
       const tr = document.createElement('TR');
       tr.classList.add('productselect');
       tr.dataset.id = `${id}`;
       tr.dataset.precio = precio;
+      tr.dataset.indexcarrito = index+'';
       tr.insertAdjacentHTML('afterbegin', 
         `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5 nombreproducto">${uncarrito?.nombreproducto}</td>
         <td class="!px-0 !py-2">
@@ -174,12 +182,12 @@
     } //oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"
 
 
-    function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean, precio:string = '0'){
+    function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean, precio:string = '0', productoConfigurado:productsapi|null){
       ///limpiar el campo de buscar producto
       (document.querySelector('#buscarproducto') as HTMLInputElement).value = '';
       //const hackerList = POS.hackerList;
       //hackerList.search('');
-      const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio); //devuelve el index si el producto existe
+      const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio && mismaConfiguracion(x, productoConfigurado!)); //devuelve el index si el producto existe
       
       if(index>-1){
         if(cantidad < 0 && (carrito[index].stock + cantidad)<0){
@@ -203,8 +211,8 @@
 
         valorCarritoTotal();
         if(stateinput)
-        (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
-        (tablaventa?.querySelector(`TR[data-id="${id}"][data-precio="${precio}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
+        (tablaventa?.querySelector(`TR[data-indexcarrito="${index}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
+        (tablaventa?.querySelector(`TR[data-indexcarrito="${index}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
       }else{  //agregar a carrito si el producto no esta agregado en carrito, se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         if(cantidad < 0)cantidad = 0;
@@ -218,7 +226,7 @@
         }
         const valorcomision:number = (productototal*producto.percentcomision)/100;
         
-        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision:string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number} = {
+        var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision:string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number, insumos:insumo[]} = {
           id: '',
           idproducto: producto?.id!,
           tipoproducto: producto.tipoproducto,
@@ -239,14 +247,39 @@
           impuesto: producto.impuesto, //porcentaje de impuesto, es null si es excluido de iva
           valorimp: productovalorimp,
           descuento: 0,
-          total: productototal //valorunidad x cantidad
+          total: productototal, //valorunidad x cantidad
+          insumos: productoConfigurado?.insumos??[]
         }
         
         carrito = [...carrito, a];
+        const indice = carrito.length - 1;
         valorCarritoTotal();
-        printProduct(id, precio);
+        printProduct(id, precio, indice);
         POS.carrito = carrito;
       }
+    }
+
+
+    function mismaConfiguracion(productCarrito: any, producto2: productsapi):boolean {
+      const mapaProduct2 = new Map(producto2.insumos.map((ins:any) => [ins.id_subproducto, ins]));
+      // Deben ser el mismo producto
+      if(productCarrito.idproducto !== producto2.id)return false;
+
+      // Deben tener la misma cantidad de insumos
+      if(productCarrito.insumos.length !== producto2.insumos.length)return false;
+
+      for (const insumo1 of productCarrito.insumos) {
+        //const insumo2 = producto2.insumos.find((x:any) => x.id_subproducto == insumo1.id_subproducto);
+        const insumo2:any = mapaProduct2.get(insumo1.id_subproducto);
+        if (!insumo2)return false;
+        // Comparar selección
+        if (Number(insumo1.seleccionado) !== Number(insumo2.seleccionado))
+            return false;
+        // Comparar cantidad
+        if (Number(insumo1.cantidadsubproducto) !== Number(insumo2.cantidadsubproducto))
+            return false;
+      }
+      return true;
     }
 
     //evento al select del vendedor
@@ -317,17 +350,19 @@
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
       const precio = (elementProduct as HTMLElement).dataset.precio!;
+      const indexcarrito = Number((elementProduct as HTMLElement).dataset.indexcarrito!);
       //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
-      let productoCarrito;
+      let productoCarrito = carrito[indexcarrito];
 
-      for (let i = 0; i < carrito.length; i++) {
+      /*for (let i = 0; i < carrito.length; i++) {
         const item = carrito[i];
         if (item.idproducto == idProduct && item.valorunidad == precio) {
             indiceCarrito = i;
             productoCarrito = item;
             break;
         }
-      }
+      }*/
+
 
       if((e.target as HTMLElement).classList.contains('nombreproducto')){
         (document.querySelector('#inputMerma') as HTMLInputElement).value = '';
@@ -338,15 +373,20 @@
       }
       
       if((e.target as HTMLElement).classList.contains('menos')){
-        actualizarCarrito(idProduct, productoCarrito!.stock-1, false, true, productoCarrito?.valorunidad);
+        editarCantidad(indexcarrito, productoCarrito!.stock-1, false, true);
+        //actualizarCarrito(idProduct, productoCarrito!.stock-1, false, true, productoCarrito?.valorunidad, null);
       }
       if((e.target as HTMLElement).classList.contains('mas')){
-        actualizarCarrito(idProduct, productoCarrito!.stock+1, false, true, productoCarrito?.valorunidad);
+        editarCantidad(indexcarrito, productoCarrito!.stock+1, false, true);
+        //actualizarCarrito(idProduct, productoCarrito!.stock+1, false, true, productoCarrito?.valorunidad, null);
       }
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        carrito = carrito.filter(x=>x.idproducto != idProduct || x.valorunidad != precio);
+        //carrito = carrito.filter(x=>x.idproducto != idProduct || x.valorunidad != precio);
+        carrito.splice(indexcarrito, 1);
+        while(tablaventa.firstChild)tablaventa.removeChild(tablaventa.firstChild);
+        carrito.forEach((item, i) =>printProduct(item.idproducto, item.valorunidad, i));
         valorCarritoTotal();
-        tablaventa?.querySelector(`TR[data-id="${idProduct}"][data-precio="${precio}"]`)?.remove();
+        //tablaventa?.querySelector(`TR[data-indexcarrito="${indexcarrito}"]`)?.remove();
       }
     });
 
@@ -357,7 +397,8 @@
       const fila = input?.closest('.productselect') as HTMLTableRowElement;
       const idProduct = fila.dataset.id!;
       const precio = fila.dataset.precio!;
-      const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
+      const indexcarrito = Number(fila.dataset.indexcarrito!);
+      //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
 
       let val = input.value;
       val = val.replace(/[^0-9.]/g, '');
@@ -367,17 +408,45 @@
       if (val === '' || isNaN(parseFloat(val))) val = '';
 
       input.value = val;
-      actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad);
+      editarCantidad(indexcarrito, Number(input.value), false, false);
+      //actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad, null);
     });
 
 
+    function editarCantidad(index:number, cantidad:number, control:boolean, stateinput:boolean){
+        if(cantidad < 0 && (carrito[index].stock + cantidad)<0){
+          cantidad = 0;
+          carrito[index].stock = 0;
+          carrito[index].total = 0;
+        }
+        if(control){ //cuando el producto se agrega desde la lista de productos
+          carrito[index].stock += cantidad;
+        }else{ //cuando el producto se agrega por el input cantidad
+          carrito[index].stock = cantidad;
+        }
+        
+        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].stock;
+        carrito[index].total = carrito[index].subtotal;
+        carrito[index].valorcomision = (carrito[index].subtotal*carrito[index].percentcomision)/100;
+        //calculo del impuesto y base por producto en el carrito de ventas
+        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
+        carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
+
+        valorCarritoTotal();
+        if(stateinput)
+        (tablaventa?.querySelector(`TR[data-indexcarrito="${index}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
+        (tablaventa?.querySelector(`TR[data-indexcarrito="${index}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
+    }
+
+
+    //calculadora que se ejecuta cuando se da clic sobre el nombre del producto
     document.querySelector('#btnMermaCantidad')?.addEventListener('click', (e:Event)=>{
       const inputMerma = (document.querySelector('#inputMerma') as HTMLInputElement).value;
       const {idproducto, stock, valorunidad} = carrito[indiceCarrito];
       let nuevaCantidad = stock - Number(inputMerma);
       if(nuevaCantidad<0)nuevaCantidad=0;
       (tablaventa?.querySelector(`TR[data-id="${idproducto}"][data-precio="${valorunidad}"] .inputcantidad`) as HTMLInputElement).value = nuevaCantidad+'';
-      actualizarCarrito(idproducto, nuevaCantidad, false, false, valorunidad);
+      actualizarCarrito(idproducto, nuevaCantidad, false, false, valorunidad, null);
       miDialogoCalculadora.close();
       document.removeEventListener("click", cerrarDialogoExterno);
     });
@@ -698,7 +767,7 @@
             const resultado = await respuesta.json();
             datosfactura = resultado.factura;
             carrito = resultado.productos;
-            carrito.forEach(item =>printProduct(item.idproducto, item.valorunidad));
+            carrito.forEach(item =>printProduct(item.idproducto, item.valorunidad, (carrito.length-1)));
             //valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
             (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.num_orden;
             $('#selectCliente').val(datosfactura.idcliente).trigger('change');
