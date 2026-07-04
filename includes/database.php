@@ -6,7 +6,7 @@ $db = mysqli_connect(
     $_ENV['DB_PASS'] ?? '', 
     /*$_ENV['DB_NAME'] ?? ''*/$selectDB['namedb']
 );
-mysqli_set_charset($db, "utf8");
+mysqli_set_charset($db, "utf8mb4");
 
 if (!$db) {
     echo "Error: No se pudo conectar a MySQL.";

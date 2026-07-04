@@ -143,7 +143,8 @@
       }
 
       const precio = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)?.precio_venta;
-      const productoConfigurado = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)!;
+      const productoConfigurado = structuredClone(products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)!);
+      filtrarInsumos(productoConfigurado);
       if(elementProduct)actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true, precio, productoConfigurado);
     });
     
@@ -153,7 +154,7 @@
       //const uncarrito = carrito.find(x=>x.idproducto==id&&x.valorunidad==precio)!;
     
       //if(indice === -1)return;
-        const uncarrito = carrito[index];
+      const uncarrito = carrito[index];
 
       const tr = document.createElement('TR');
       tr.classList.add('productselect');
@@ -225,6 +226,16 @@
           producto.percentcomision = Number(selectVendedor.options[selectVendedor.selectedIndex].dataset.comision);
         }
         const valorcomision:number = (productototal*producto.percentcomision)/100;
+
+        //obtener nombre de insumo cuando es radiobutton o checkbox
+        let insumos = productoConfigurado?.insumos||[];
+        //obtener el ultimo insumo de seleccion unica
+        let seleccionUnica:insumo|undefined;
+        for(let i = insumos.length-1; i>=0; i--)
+          if(insumos[i].seleccionado === "1" &&insumos[i].grupos_insumos?.tipo === "0"){
+            seleccionUnica = insumos[i];
+            break
+          }
         
         var a:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, nombreproducto: string, rendimientoestandar:string, foto:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision:string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total:number, insumos:insumo[]} = {
           id: '',
@@ -232,7 +243,7 @@
           tipoproducto: producto.tipoproducto,
           tipoproduccion: producto.tipoproduccion,
           idcategoria: producto.idcategoria,
-          nombreproducto: producto.nombre,
+          nombreproducto:`${producto.nombre} ${seleccionUnica?.nombre?'('+seleccionUnica.nombre+')':''}`,
           rendimientoestandar: producto.rendimientoestandar,
           foto: producto.foto,
           costo: producto.precio_compra,
@@ -767,7 +778,7 @@
             const resultado = await respuesta.json();
             datosfactura = resultado.factura;
             carrito = resultado.productos;
-            carrito.forEach(item =>printProduct(item.idproducto, item.valorunidad, (carrito.length-1)));
+            carrito.forEach((item, i) =>printProduct(item.idproducto, item.valorunidad, i));
             //valorCarritoTotal(); //recalcula impuestos de la cotizacion y valores totales
             (document.querySelector('#npedido') as HTMLInputElement).value = datosfactura.num_orden;
             $('#selectCliente').val(datosfactura.idcliente).trigger('change');

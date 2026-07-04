@@ -174,5 +174,16 @@ class productos extends \App\Models\ActiveRecord {
         $array = self::camposJoinObj($sql);
         return $array;
     }
+
+
+    public static function formatExportExcel():array{
+        $idsucursal = id_sucursal();
+        $sql = "SELECT p.id as ID, p.idcategoria AS ID_CATEGORIA, p.idunidadmedida AS ID_UNIDAD, p.nombre AS NOMBRE_PRODUCTO, p.impuesto AS IMPUESTO, 
+                p.tipoproducto AS TIPO_PRODUCTO, p.tipoproduccion AS TIPO_PRODUCCION, p.sku AS SKU, p.preciopersonalizado AS PRECIO_ADICIONAL, 
+                sps.stock AS STOCK, sps.stockminimo AS STOCK_MINIMO, p.precio_compra AS PRECIO_COMPRA, p.precio_venta AS PRECIO_VENTA 
+                FROM productos p JOIN stockproductossucursal sps ON p.id = sps.productoid WHERE sps.sucursalid = $idsucursal;";
+        $array = self::camposJoinObj($sql);
+        return $array;
+    }
     
 }

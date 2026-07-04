@@ -174,24 +174,26 @@ class ventascontrolador{
         if(!isset($acumulador['productosSimples'][$objeto->idproducto])){
           $acumulador['productosSimples'][$objeto->idproducto] = $obj;
           $acumulador['soloIdproductos'][] = $obj->id;
-        }else{
+        }else{ //cuando es el mismo producto pero con precio distinto
           $acumulador['productosSimples'][$objeto->idproducto]->stock += $obj->stock;
         }
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
         if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
           $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
-        }else{
+        }else{ //cuando es el mismo producto pero con precio distinto
           $acumulador['productosCompuestos'][$objeto->idproducto]->stock += $obj->stock;
         }
         $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->stock/(float)$objeto->rendimientoestandar, 4);
       }
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
+
+    //debuguear($carrito);
     
 
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos'], id_sucursal());
-    //////// sumar los subproductos repetidos
+    //////// sumar los subproductos(insumos) repetidos
     $reduceSub = [];
     $soloIdInsumos =[];
     foreach($descontarSubproductos as $idx => $obj){

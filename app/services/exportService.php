@@ -3,39 +3,31 @@
 namespace App\services;
 
 use App\Models\ActiveRecord;
-use App\Models\inventario\conversionunidades;
-use App\Models\inventario\productos;
-use App\Models\inventario\stockinsumossucursal;
-use App\Models\inventario\stockproductossucursal;
-use App\Models\inventario\subproductos;
-use App\Models\sucursales;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use stdClass;
-
-class inventarioService {
-    
-    
 
 
-    public static function exportproducts(array $date):array{
-        
-    }
+class exportService {    
 
-    public static function eliminarConversionUnidad(int $id):array{
-        $alertas = [];
-        $getDB = conversionunidades::getDB();
-        $cv = conversionunidades::find('id', $id);
-        $getDB->begin_transaction();
-        try {
-            $cv->eliminar_registro();
-            $getDB->commit();
-            $alertas['exito'][] = "Conversion de unidad eliminada exitosamente";
-        } catch (\Throwable $th) {
-            $getDB->rollback();
-            $alertas['error'][] = "Error, intenta nuevamente. {$th->getMessage()}";
+    public static function exportproducts(array $datos, string $filename):void{
+        if (empty($datos))exit('No hay datos para exportar.');
+        while (ob_get_level())ob_end_clean();
+        header("Content-Type: text/csv; charset=utf-8");
+        header("Content-Disposition: attachment; filename=$filename");
+        // BOM UTF-8
+        echo "\xEF\xBB\xBF";
+        $salida = fopen('php://output', 'w');
+        $mostrarColumnas = false;
+        foreach($datos as $value){
+             $value = (array)$value;
+            if(!$mostrarColumnas){
+                fputcsv($salida, array_keys($value), ';');
+                $mostrarColumnas = true;
+            }
+            fputcsv($salida, array_values($value), ';');
         }
-        return $alertas;
+        fclose($salida);
+        exit;
     }
+
 
 
 }

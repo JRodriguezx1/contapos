@@ -136,4 +136,14 @@ class subproductos extends \App\Models\ActiveRecord {
         $array = self::camposJoinObj($query);
         return $array;
       }
+
+
+      public static function formatExportExcel():array{
+        $idsucursal = id_sucursal();
+        $sql = "SELECT s.id as ID, s.id_unidadmedida AS ID_UNIDAD, s.insumoprocesado AS INSUMO_PROCESADO, s.nombre AS NOMBRE_INSUMO,
+                s.sku AS SKU, sis.stock AS STOCK, sis.stockminimo AS STOCK_MINIMO, s.precio_compra AS PRECIO_COMPRA 
+                FROM subproductos s JOIN stockinsumossucursal sis ON s.id = sis.subproductoid WHERE sis.sucursalid = $idsucursal;";
+        $array = self::camposJoinObj($sql);
+        return $array;
+    }
 }
