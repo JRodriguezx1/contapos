@@ -3,7 +3,7 @@ namespace App\Models\caja;
 
 class cierrescajas extends \App\Models\ActiveRecord {
     protected static $tabla = 'cierrescajas';
-    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturaseliminadas', 'facturaselectronicaselimnadas', 'facturasposeliminadas', 'valorfeeliminado', 'valorposeliminado', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'creditocapital', 'creditos', 'abonostotales', 'abonosenefectivo', 'abonoscreditos', 'abonosseparados', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
+    protected static $columnasDB = ['id', 'idsucursal_id', 'idcaja', 'id_usuario', 'nombrecaja', 'nombreusuario', 'fechainicio', 'fechacierre', 'ncambiosaventa', 'totalcotizaciones', 'totalfacturaseliminadas', 'facturaselectronicaselimnadas', 'facturasposeliminadas', 'valorfeeliminado', 'valorposeliminado', 'totalfacturas', 'facturaselectronicas', 'facturaspos', 'valorfe', 'valorpos', 'descuentofe', 'descuentopos', 'basecaja', 'ventasenefectivo', 'creditocapital', 'creditos', 'abonostotales', 'abonosenefectivo', 'abonoscreditos', 'abonosseparados', 'gastoscaja', 'gastosbanco', 'dineroencaja', 'domicilios', 'ndomicilios', 'realencaja', 'ingresoventas', 'descuentocontado', 'descuentocredito', 'totaldescuentos', 'realventas', 'valorimpuestototal', 'basegravable', 'estado', 'dato1', 'dato2'];
 
     public function __construct($args = [])
     {
@@ -44,6 +44,8 @@ class cierrescajas extends \App\Models\ActiveRecord {
         $this->ndomicilios = $args['ndomicilios'] ?? 0;
         $this->realencaja = $args['realencaja'] ?? 0;
         $this->ingresoventas = $args['ingresoventas'] ?? 0;  //total ingreso de ventas
+        $this->descuentocontado = $args['descuentocontado'] ?? 0;
+        $this->descuentocredito = $args['descuentocredito'] ?? 0;
         $this->totaldescuentos = $args['totaldescuentos'] ?? 0;  //descuentos
         $this->realventas = $args['realventas'] ?? 0;  //ingreso real = total ingreso - descuentos
         $this->valorimpuestototal = $args['valorimpuestototal'] ?? 0;

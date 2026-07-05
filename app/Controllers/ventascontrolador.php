@@ -332,6 +332,7 @@ class ventascontrolador{
             foreach($mediospago as $obj){
               $obj->id_factura = $r[1];
               $obj->cierrecajaid = $ultimocierre->id;
+              $obj->idcuota = $alertas['idcuota']??'NULL';
               if($obj->idmediopago == 1){
                 $ultimocierre->ventasenefectivo +=  ($_POST['tipoventa']=='Contado'?$obj->valor:0);
                 $ultimocierre->abonosenefectivo += ($_POST['tipoventa']=='Credito'?$obj->valor:0);
@@ -348,6 +349,8 @@ class ventascontrolador{
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
             
             $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?0:$factura->total);
+            $ultimocierre->descuentocontado += ($_POST['tipoventa']=='Credito'?0:$factura->descuento);
+            $ultimocierre->descuentocredito += ($_POST['tipoventa']=='Contado'?0:$factura->descuento);
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             $ultimocierre->basegravable += $factura->base;
@@ -705,6 +708,7 @@ class ventascontrolador{
             foreach($mediospago as $obj){
               $obj->id_factura = $factura->id;
               $obj->cierrecajaid = $ultimocierre->id;
+              $obj->idcuota = 'NULL';
               if($obj->idmediopago == 1){
                 $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
               }

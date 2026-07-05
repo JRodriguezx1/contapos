@@ -141,10 +141,10 @@
     }
 
 
-    function updateMP(mediosPagoUpdate:{id:string, idcuota:string, mediopago_id:string, valor:string}){
-      const {mediopago_id} = mediosPagoUpdate;
+    function updateMP(mediosPagoUpdate:{id:string, idcuota:string, mediopago_id?:string, idmediopago?:string, valor:string}){
+      const {mediopago_id, idmediopago} = mediosPagoUpdate;
       contentMP.textContent = selectMediopago.options[selectMediopago.selectedIndex].textContent;
-      contentMP.dataset.idmediopago = mediopago_id;
+      contentMP.dataset.idmediopago = mediopago_id??idmediopago;
     }
 
 

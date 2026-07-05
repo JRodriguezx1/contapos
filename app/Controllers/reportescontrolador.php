@@ -158,12 +158,17 @@ class reportescontrolador{
 
     
     public static function facturaselectronicaspendientes(Router $router){
-        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-
         $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function recibosCaja(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $router->render('admin/reportes/facturas/recibosCaja', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function inventarioxproducto(Router $router){

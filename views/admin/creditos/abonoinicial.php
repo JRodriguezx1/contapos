@@ -51,6 +51,8 @@
                 >
             </div>
         </div>
+
+        <textarea id="detalle" class="formulario__textarea mb-4" name="detalle" placeholder="Observacion" rows="4"></textarea>
         
         <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
             <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>

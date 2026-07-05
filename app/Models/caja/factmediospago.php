@@ -6,13 +6,14 @@ use App\Models\contracts\mediosPagoContract;
 
 class factmediospago extends \App\Models\ActiveRecord{
     protected static $tabla = 'factmediospago';
-    protected static $columnasDB = ['id', 'cierrecajaid', 'idmediopago', 'id_factura', 'valor'];
+    protected static $columnasDB = ['id', 'cierrecajaid', 'id_factura', 'idcuota', 'idmediopago', 'valor'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
-         $this->cierrecajaid = $args['cierrecajaid']??'';
-        $this->idmediopago = $args['idmediopago']??'';
+        $this->cierrecajaid = $args['cierrecajaid']??'';
         $this->id_factura = $args['id_factura']??'';
+        $this->idcuota = $args['idcuota']??'';
+        $this->idmediopago = $args['idmediopago']??'';
         $this->valor = $args['valor']??'';
     }
 

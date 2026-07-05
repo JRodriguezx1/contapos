@@ -38,6 +38,9 @@
             </select>
         </div>
 
+        <input class="hidden" type="text" name="concepto" value="PAGO DEUDA TOTAL A FACTURA">
+        <textarea id="pagoTotal_detalle" class="formulario__textarea mb-4" name="detalle" placeholder="Observacion" rows="4"></textarea>
+
         <div class="text-right border-t border-gray-200 pt-12 mt-8">
             <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
             <input id="btnEditarCrearPagoTotal" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">

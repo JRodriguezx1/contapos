@@ -178,6 +178,7 @@ $router->get('/admin/reportes/creditos/creditos-anulados', [reportescontrolador:
 $router->get('/admin/reportes/facturasanuladas', [reportescontrolador::class, 'facturasanuladas']);
 $router->get('/admin/reportes/facturaselectronicas', [reportescontrolador::class, 'facturaselectronicas']);
 $router->get('/admin/reportes/facturaselectronicaspendientes', [reportescontrolador::class, 'facturaselectronicaspendientes']);
+$router->get('/admin/reportes/recibosCaja', [reportescontrolador::class, 'recibosCaja']);
 $router->get('/admin/reportes/inventarioxproducto', [reportescontrolador::class, 'inventarioxproducto']);
 $router->get('/admin/reportes/movimientosinventarios', [reportescontrolador::class, 'movimientosinventarios']);
 $router->get('/admin/reportes/compras', [reportescontrolador::class, 'compras']);
@@ -363,6 +364,7 @@ $router->post('/admin/api/reportes/creditos/cuotasCreditos', [reportescontrolado
 $router->post('/admin/api/facturasanuladas', [reportescontrolador::class, 'apifacturasanuladas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/facturaselectronicas', [reportescontrolador::class, 'apifacturaselectronicas']);  //fetch llamado desde reportes.ts
 $router->post('/admin/api/electronicaspendientes', [reportescontrolador::class, 'apielectronicaspendientes']);  //fetch llamado desde reportes.ts
+$router->post('/admin/api/reportes/recibosCaja', [reportescontrolador::class, 'apirecibosCaja']);  //fetch llamado desde recibosCaja.ts
 $router->post('/admin/api/movimientoInventario', [reportescontrolador::class, 'movimientoInventario']);  //fetch llamado desde movimientosinventarios.ts
 $router->post('/admin/api/reportecompras', [reportescontrolador::class, 'reportecompras']);  //fetch llamado desde reportecompras.ts
 $router->post('/admin/api/eliminarcompra', [reportescontrolador::class, 'eliminarcompra']);  //fetch llamado desde reportecompras.ts

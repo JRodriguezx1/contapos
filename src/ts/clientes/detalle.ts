@@ -133,7 +133,7 @@
         async function imprimirTotalCuotasXcliente(){
             if(id!=null&&!Number.isNaN(id)){
                 try {
-                    const url = `/admin/api/totalCuotasXcliente?id=${id}`; //llamado a la API REST ventascontrolador, detalle producto compuesto
+                    const url = `/admin/api/totalCuotasXcliente?id=${id}`; //llamado a la API REST 
                     const respuesta = await fetch(url); 
                     const resultado:{capital:string, fechafin:string, fechainicio:string, fechapagado:string, idestadocreditos:string, interestotal:string, num_orden:string, numerocuota:string, valorpagado:string}[] = await respuesta.json();
 

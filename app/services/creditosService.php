@@ -47,8 +47,10 @@ class creditosService {
                 $valoresCredito->valorpagado = $valoresCredito->abonoinicial;
                 //crear cuota con repositorio
                 $cuotasRepo = new cuotasRepository();
+                $valoresCredito->num_orden = $cuotasRepo->calcularNumOrden(id_sucursal());
                 $rc = $cuotasRepo->insert(new cuotas((array)$valoresCredito));
                 $alertas['exito'][] = "Credito creado con exito";
+                $alertas['idcuota'] = $rc[1];
                 //acatualizar deuda de cliente
                 $cliente = clientes::find('id', $idcliente);
                 $cliente->totaldebe += $valoresCredito->montototal;
@@ -146,7 +148,7 @@ class creditosService {
             'emisor' => $emisor,
             'lineasencabezado' => $lineasencabezado,
             'credito' => $credito,
-            'cuotas' => $cuotasRepo->obtenerPorCredito_Mediopago($credito->id),
+            'cuotas' => $credito->idtipofinanciacion==1?$cuotasRepo->obtenerPorCredito_Mediopago($credito->id):$cuotasRepo->obtenerPorSeparado_Mediopago($credito->id),
             'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],
             'cliente' => clientes::find('id', $credito->cliente_id),  //$credito->cliente_id
             'cajas' => caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]),
@@ -164,19 +166,20 @@ class creditosService {
 
     public static function registrarAbono(array $datos){
         $alertas = [];
+        $idsucursal = id_sucursal();
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($datos['id_credito']);
         if($credito->idestadocreditos == 2){
 
             //si es abono en efectivo, registrar al efectivo del cierre de caja y en el abono del cierre de caja
-            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$datos['cajaid'], 'idsucursal_id'=>id_sucursal()]);
+            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$datos['cajaid'], 'idsucursal_id'=>$idsucursal]);
             if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
-                $ultimocierre = new cierrescajas(['idcaja'=>$datos['cajaid'], 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
+                $ultimocierre = new cierrescajas(['idcaja'=>$datos['cajaid'], 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'estado'=>0, 'idsucursal_id'=>$idsucursal]);
                 $ruc = $ultimocierre->crear_guardar();
                 $ultimocierre->id = $ruc[1];
             }
 
-            $cuota = new cuotas($datos+['cierrecaja_id' => $ultimocierre->id]);
+            $cuota = new cuotas($datos+['cierrecaja_id' => $ultimocierre->id, 'idusuario'=>$_SESSION['id']]);
             $cuota->preparar($credito);
             $alertas = $cuota->validar();
             //validar que la cuota no supera al saldo pendiente
@@ -187,11 +190,12 @@ class creditosService {
                 $getDB = $cuotaRepo::getDB();
                 $getDB->begin_transaction();
                 try {
+                    $cuota->num_orden = $cuotaRepo->calcularNumOrden($idsucursal);
                     $r = $cuotaRepo->insert($cuota);
                     $objMedioPago = new separadomediopago(['idcuota'=>$r[1], 'mediopago_id'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
 
                     if(isset($credito->factura_id)){ //si es credito abonado
-                        $factmediospago = new factmediospago(['cierrecajaid'=>$ultimocierre->id, 'id_factura'=>$credito->factura_id, 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
+                        $factmediospago = new factmediospago(['cierrecajaid'=>$ultimocierre->id, 'id_factura'=>$credito->factura_id, 'idcuota'=>$r[1], 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
                         $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
                     }else{
                         $payment = new paymentService(new separadoMediopagoRepository());
@@ -329,9 +333,7 @@ class creditosService {
         $credito = $creditoRepo->find($idcredito);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
 
-        $repo = new separadoMediopagoRepository();
-        $mediospago = $repo->uniqueWhere(['idcuota'=>$datos['id'], 'mediopago_id'=>$datos['idmediopago']]);
-        
+
         $cuotaRepo = new cuotasRepository();
         $cuota = $cuotaRepo->find($datos['id']);
         
@@ -340,8 +342,17 @@ class creditosService {
             return ['error'=>['Cierre de caja realizado para la cuota pagada']];
 
 
-        $mediospago->mediopago_id = $idnuevomediopago;
-        $r = $repo->update($mediospago);
+        if($credito->idtipofinanciacion == 2){
+            $repo = new separadoMediopagoRepository();
+            $mediospago = $repo->uniqueWhere(['idcuota'=>$datos['id'], 'mediopago_id'=>$datos['idmediopago']]);
+            $mediospago->mediopago_id = $idnuevomediopago;
+            $r = $repo->update($mediospago);
+        }else{
+            $mediospago = factmediospago::uniquewhereArray(['id_factura'=>$credito->factura_id, 'idcuota'=>$datos['id'], 'idmediopago'=>$datos['idmediopago']]);
+            $mediospago->idmediopago = $idnuevomediopago;
+            $r = $mediospago->actualizar();
+        }
+
         if($r){
             //actualizar efectivo en caja si corresponde
             if($datos['idmediopago'] == 1 && $idnuevomediopago!=1)
@@ -538,7 +549,7 @@ class creditosService {
         if($cierrecaja->estado == 1)return ['error'=>['Caja se encuentra cerrada para esta cuota']];
 
         if($credito->idtipofinanciacion == 1){  //credito
-            $cuotaMP = factmediospago::find('id_factura', $credito->factura_id);
+            $cuotaMP = factmediospago::uniquewhereArray(['id_factura'=>$credito->factura_id, 'idcuota'=>$cuota->id]);
             if($cuotaMP)$cc = $cuotaMP->eliminar_registro();
             $cierrecaja->abonoscreditos -= $cuota->valorpagado;
         }else{  //separado
@@ -743,6 +754,7 @@ class creditosService {
         $arrayCuotas = [];
         $arrayMPPendientes = [];
         $arrayFactMPPendientes = [];
+        $num_orden = $cuotaRepo->calcularNumOrden(id_sucursal());
         foreach($creditosCliente as $index => $value){
             // guardar saldo original
             $saldoCredito = $value->saldopendiente;
@@ -759,6 +771,8 @@ class creditosService {
             $getModelCuota->cierrecaja_id = $cierrecaja->id;
             $getModelCuota->cajaid = $idcaja;
             $getModelCuota->mediopagoid = $idmediodepago;
+            $getModelCuota->idusuario = $_SESSION['id'];
+            $getModelCuota->num_orden = $num_orden++;
             $getModelCuota->numerocuota += 1;
             $getModelCuota->montocuota = $value->montocuota;
             $getModelCuota->valorpagado = $saldoCredito;
@@ -766,6 +780,8 @@ class creditosService {
             $getModelCuota->registrarencaja = 1;
             $getModelCuota->cuotaantigua = 0;
             $getModelCuota->fechacuotaantigua = 'NULL';
+            $getModelCuota->concepto = 'PAGO DEUDA TOTAL A FACTURA';
+            $getModelCuota->detalle = '';
             $getModelCuota->estado = 1;
             $arrayCuotas[] = $getModelCuota;
 
@@ -782,6 +798,7 @@ class creditosService {
                 $arrayFactMPPendientes[$index] = [
                     'cierrecajaid' => $cierrecaja->id,
                     'id_factura' => $value->factura_id,
+                    'idcuota'=>'NULL',
                     'idmediopago' => $idmediodepago,
                     'valor' => $saldoCredito
                 ];
@@ -814,6 +831,7 @@ class creditosService {
                     $objFactMP = new stdClass;
                     $objFactMP->cierrecajaid = $arrayFactMPPendientes[$key]['cierrecajaid'];
                     $objFactMP->id_factura = $arrayFactMPPendientes[$key]['id_factura'];
+                    $objFactMP->idcuota = $idcuota;
                     $objFactMP->idmediopago = $arrayFactMPPendientes[$key]['idmediopago'];
                     $objFactMP->valor = $arrayFactMPPendientes[$key]['valor'];
                     $arrayFactMediosPago[] = $objFactMP;
