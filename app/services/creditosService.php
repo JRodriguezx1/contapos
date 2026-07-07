@@ -556,6 +556,7 @@ class creditosService {
         $alertas = [];
         $cs = true;
         $cc = true;
+        $repoMovimientocaja = new movimientos_cajaRepository();
         $creditoRepo = new creditosRepository();
         $separdoMediopago = new separadoMediopagoRepository();
         $cuotaRepo = new cuotasRepository();
@@ -570,6 +571,9 @@ class creditosService {
         if($credito->idtipofinanciacion == 1){  //credito
             $cuotaMP = factmediospago::uniquewhereArray(['id_factura'=>$credito->factura_id, 'idcuota'=>$cuota->id]);
             if($cuotaMP)$cc = $cuotaMP->eliminar_registro();
+            //buscar movimiento de caja
+            //$repoMovimientocaja->uniqueWhere([]);
+
             $cierrecaja->abonoscreditos -= $cuota->valorpagado;
         }else{  //separado
             $cs = $separdoMediopago->delete_regs('idcuota', [$cuota->id]);
