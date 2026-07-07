@@ -461,6 +461,7 @@ class creditosService {
     public static function anularCredito(int $idfactura):array{
         $alertas = [];
 
+        $repoMovimientocaja = new movimientos_cajaRepository();
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->uniqueWhere(['factura_id'=>$idfactura]);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
@@ -474,6 +475,11 @@ class creditosService {
             return $alertas;
         }
 
+        //cambiar estado del credito en el movimiento de caja
+        $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>1, 'id_documento'=>$credito->id]);
+        $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
+        $movCaja->estado = 0;
+
         //$getDB = $creditoRepo->getConexion();
         //$getDB->begin_transaction();
         //try {
@@ -482,7 +488,7 @@ class creditosService {
 
             $cuotasRepo = new cuotasRepository();
             $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($credito->id);
-            
+            $repoMovimientocaja->update($movCaja);
             
             $arrayCierresCaja = [];
             foreach($cuotas as $cuota){
@@ -571,9 +577,11 @@ class creditosService {
         if($credito->idtipofinanciacion == 1){  //credito
             $cuotaMP = factmediospago::uniquewhereArray(['id_factura'=>$credito->factura_id, 'idcuota'=>$cuota->id]);
             if($cuotaMP)$cc = $cuotaMP->eliminar_registro();
-            //buscar movimiento de caja
-            //$repoMovimientocaja->uniqueWhere([]);
-
+            //buscar movimiento de caja y actualizar
+            $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>2, 'id_documento'=>$cuota->id]);
+            $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
+            $movCaja->estado = 0;
+            $repoMovimientocaja->update($movCaja);
             $cierrecaja->abonoscreditos -= $cuota->valorpagado;
         }else{  //separado
             $cs = $separdoMediopago->delete_regs('idcuota', [$cuota->id]);

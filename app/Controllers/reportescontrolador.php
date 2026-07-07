@@ -718,6 +718,20 @@ class reportescontrolador{
     echo json_encode($datos);
   }
 
+
+  public static function apirecibosCaja():void{
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos??[]);
+    return;
+  }
+
   //Reporte movimiento de inventarios  llamada desde movimientosinventarios.ts
   public static function movimientoInventario(){
     //session_start();
