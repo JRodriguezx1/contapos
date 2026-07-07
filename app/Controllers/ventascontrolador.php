@@ -32,6 +32,7 @@ use App\Repositories\ventas\canalVentaRepository;
 use App\services\creditosService;
 use App\services\stockService;
 use App\services\comisionesService;
+use App\services\contableService;
 use App\services\whatsAppService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
@@ -111,6 +112,7 @@ class ventascontrolador{
   public static function facturar(){
     //session_start();
     $comisionServicio = new comisionesService();
+    $contableService = new contableService();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     date_default_timezone_set('America/Bogota');
@@ -398,6 +400,23 @@ class ventascontrolador{
 
                 if($invPro){
                   if($invSub){
+                    //crear registro de movimento de caja
+                    $numFactura = $factura->prefijo.$factura->num_consecutivo;
+                    $contableService->createMovimiento([
+                      'fk_tipo_movimientocaja'=>$factura->tipoventa=='Contado'?1:11,
+                      'fk_tipo_documento'=>1,
+                      'id_documento'=>$r[1],
+                      'fk_tipo_tercero'=>1,
+                      'id_tercero'=>$factura->idcliente,
+                      'fk_caja'=>$factura->idcaja,
+                      'fk_usuario'=>$factura->idvendedor,
+                      'naturaleza'=>'I',
+                      'numero_documento'=>$numFactura,
+                      'num_orden'=>null,
+                      'valor'=>$factura->tipoventa=='Contado'?$factura->total:$factura->abono,
+                      'concepto'=>$factura->tipoventa=='Contado'?'PAGO DE CONTADO':'ABONO INICIAL',
+                      'observacion'=>$factura->tipoventa=='Contado'?'PAGO DE CONTADO A FACTURA':'ABONO INICIAL A FACTURA CREDITO'
+                    ]);
 
                     $alertas['exito'][] = "Pago procesado con exito";
                     $alertas['idfactura'] = $r[1];
@@ -557,6 +576,7 @@ class ventascontrolador{
     //session_start();
     isadmin();
     $comisionServicio = new comisionesService();
+    $contableService = new contableService();
     $getDB = facturas::getDB();
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
@@ -669,7 +689,7 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
-              $fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
+              $fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa, $factura->observacion);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               if($factura->valorgananciauser>0)
                 $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
@@ -769,6 +789,22 @@ class ventascontrolador{
                   
                 if($invPro){
                   if($invSub){
+                    $numFactura = $factura->prefijo.$factura->num_consecutivo;
+                    $contableService->createMovimiento([
+                      'fk_tipo_movimientocaja'=>1,
+                      'fk_tipo_documento'=>1,
+                      'id_documento'=>1,
+                      'fk_tipo_tercero'=>$factura->idcliente,
+                      'id_tercero'=>$factura->idcliente,
+                      'fk_caja'=>$factura->idcaja,
+                      'fk_usuario'=>$factura->idvendedor,
+                      'naturaleza'=>'I',
+                      'numero_documento'=>$numFactura,
+                      'num_orden'=>null,
+                      'valor'=>$factura->total,
+                      'concepto'=>'PAGO DE CONTADO A FACTURA'
+                    ]);
+                    
                     $alertas['idfactura'] = $factura->id;
                     $alertas['exito'][] = "Pago procesado con exito";
                   }else{

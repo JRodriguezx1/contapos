@@ -19,13 +19,13 @@
     <div class="w-full overflow-x-auto lg:overflow-visible mb-6">
       <div class="flex w-max lg:w-auto lg:inline-flex rounded-2xl shadow-md border border-gray-300">
           <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-indigo-600 text-white transition"
-            data-tab="ingresos">
-            Ingresos
+            data-tab="recibosCaja">
+            Recibos Caja
           </button>
 
           <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
             data-tab="ventasXemisor">
-            ventas Emisor
+            -
           </button>
       </div>
     </div>
@@ -63,18 +63,20 @@
     <!-- Tab content -->
   <div id="tab-content">
 
-    <div id="ingresos" class="tab-pane">
-      <table id="tablaReporteEmisores" class="display responsive nowrap tabla" width="100%">
+    <div id="recibosCaja" class="tab-pane">
+      <table id="tablaRecibosCaja" class="display responsive nowrap tabla" width="100%">
           <thead>
             <tr>
+                <th>Num</th>
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Documento</th>
+                <th>Cliente</th>
+                <th>Medio Pago</th>
+                <th>Detalle</th>
+                <th>Cajero</th>
+                <th>Valor pagado</th>
                 <th>Emisor</th>
-                <th>N° Ventas</th>
-                <th>Subtotal</th>
-                <th>Base Gravable</th>
-                <th>Impuesto</th>
-                <th>Descuento</th>
-                <th>Total</th>
-                <th>Ingresos</th>
             </tr>
           </thead>
         <tbody class="text-xl"></tbody>
@@ -84,32 +86,12 @@
     <!-- ventas por emisor -->
     <div id="ventasXemisor" class="tab-pane hidden">
 
-      <h3 class="text-lg font-semibold mb-4">💳 Ventas por emisor</h3>
-
-      <div class="flex items-center gap-3 mb-4">
-        <select id="selectEmisor" class=" w-96"  multiple="multiple" required>
-          <?php foreach($emisores as $value):   ?>
-            <option value="<?php echo $value->id;?>" ><?php echo $value->nombre;?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
+      <h3 class="text-lg font-semibold mb-4">🏷️ Ventas por emisor</h3>
 
       <table id="tablaventasXemisor" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
-            <th class="">Orden</th>
-            <th class="">Fecha Pago</th>
-            <th class="">N° Factura</th>
-            <th class="">Tipo</th>
-            <th class="">Tipo Venta</th>
-            <th class="">Abrir</th>
-            <th class="">Subtotal</th>
-            <th class="">B. Gravable</th>
-            <th class="">Imp</th>
-            <th class="">Descuento</th>
-            <th class="">Total</th>
-            <th class="">Vendedor</th>
-            <th class="">Caja</th>
+            
           </tr>
         </thead>
         <tbody class="text-xl"></tbody>

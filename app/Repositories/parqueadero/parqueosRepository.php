@@ -3,7 +3,7 @@
 namespace App\Repositories\parqueadero;
 
 
-class PDOParqueoRepository
+class parqueosRepository
 {
     private $db; // Tu conexión PDO
 

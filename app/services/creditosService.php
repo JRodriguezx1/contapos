@@ -21,6 +21,7 @@ use App\Models\inventario\productos_sub;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
+use App\Repositories\contable\movimientos_cajaRepository;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\productsSeparadosRepository;
@@ -167,6 +168,7 @@ class creditosService {
     public static function registrarAbono(array $datos){
         $alertas = [];
         $idsucursal = id_sucursal();
+        $contableService = new contableService();
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($datos['id_credito']);
         if($credito->idestadocreditos == 2){
@@ -197,6 +199,23 @@ class creditosService {
                     if(isset($credito->factura_id)){ //si es credito abonado
                         $factmediospago = new factmediospago(['cierrecajaid'=>$ultimocierre->id, 'id_factura'=>$credito->factura_id, 'idcuota'=>$r[1], 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
                         $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
+                        
+                        $contableService->createMovimiento([
+                            'fk_tipo_movimientocaja'=>2,
+                            'fk_tipo_documento'=>2,
+                            'id_documento'=>$r[1],
+                            'fk_tipo_tercero'=>1,
+                            'id_tercero'=>$credito->cliente_id,
+                            'fk_caja'=>$datos['cajaid'],
+                            'fk_usuario'=>$cuota->idusuario,
+                            'naturaleza'=>'I',
+                            'numero_documento'=>'C'.$cuota->num_orden,
+                            'num_orden'=>null,
+                            'valor'=>$cuota->valorpagado,
+                            'concepto'=>'ABONO A FACTURA',
+                            'observacion'=>"PAGO N $cuota->numerocuota - ".$cuota->detalle
+                        ]);
+
                     }else{
                         $payment = new paymentService(new separadoMediopagoRepository());
                         $payment->registrarPagos([$objMedioPago], $r[1]);
@@ -744,6 +763,7 @@ class creditosService {
         $cuotaRepo = new cuotasRepository();
         $sepadoMPRepo = new separadoMediopagoRepository();
         $factmediospago = new factmediospago();
+        $repoMovimientocaja = new movimientos_cajaRepository();
         $getDB = $creditoRepo->getConexion();
         
         $cierrecaja = cierrescajas::uniquewhereArray(['idcaja'=>$idcaja, 'idsucursal_id'=>id_sucursal(), 'estado'=>0]);
@@ -754,8 +774,10 @@ class creditosService {
         $arrayCuotas = [];
         $arrayMPPendientes = [];
         $arrayFactMPPendientes = [];
+        $arrayMovCajaPendientes = [];
         $num_orden = $cuotaRepo->calcularNumOrden(id_sucursal());
         foreach($creditosCliente as $index => $value){
+            $value->numcuota+=1;
             // guardar saldo original
             $saldoCredito = $value->saldopendiente;
             // acumulador total
@@ -772,11 +794,11 @@ class creditosService {
             $getModelCuota->cajaid = $idcaja;
             $getModelCuota->mediopagoid = $idmediodepago;
             $getModelCuota->idusuario = $_SESSION['id'];
-            $getModelCuota->num_orden = $num_orden++;
-            $getModelCuota->numerocuota += 1;
+            $getModelCuota->num_orden = $num_orden;
+            $getModelCuota->numerocuota = $value->numcuota;
             $getModelCuota->montocuota = $value->montocuota;
             $getModelCuota->valorpagado = $saldoCredito;
-            $getModelCuota->fechapago = date('Y-m-d H:i:s');
+            $getModelCuota->fechapagado = date('Y-m-d H:i:s');
             $getModelCuota->registrarencaja = 1;
             $getModelCuota->cuotaantigua = 0;
             $getModelCuota->fechacuotaantigua = 'NULL';
@@ -786,7 +808,7 @@ class creditosService {
             $arrayCuotas[] = $getModelCuota;
 
             if($value->idtipofinanciacion == 2){ //si es separado abonado
-                $abonosSeparados += $saldoCredito;
+                $abonosSeparados += $saldoCredito; //para indicador cierre caja
                 $arrayMPPendientes[$index] = [
                     'mediopago_id' => $idmediodepago,
                     'valor' => $saldoCredito,
@@ -794,7 +816,7 @@ class creditosService {
             }
 
             if($value->idtipofinanciacion == 1){ //si es credito abonado
-                $abonosCreditos += $saldoCredito;
+                $abonosCreditos += $saldoCredito; //para indicador cierre caja
                 $arrayFactMPPendientes[$index] = [
                     'cierrecajaid' => $cierrecaja->id,
                     'id_factura' => $value->factura_id,
@@ -802,7 +824,25 @@ class creditosService {
                     'idmediopago' => $idmediodepago,
                     'valor' => $saldoCredito
                 ];
+                //arreglo de movimientos de caja
+                $arrayMovCajaPendientes[$index] = [
+                    'fk_tipo_movimientocaja'=>2,
+                    'fk_tipo_documento'=>2,
+                    'id_documento'=>null,
+                    'fk_tipo_tercero'=>1,
+                    'id_tercero'=>$idcliente,
+                    'fk_caja'=>$idcaja,
+                    'fk_usuario'=>$_SESSION['id'],
+                    'naturaleza'=>'I',
+                    'numero_documento'=>'C'.$num_orden,
+                    'num_orden'=>null,
+                    'valor'=>$saldoCredito,
+                    'concepto'=>'ABONO A FACTURA',
+                    'observacion'=>"PAGO N $value->numcuota PAGO DEUDA TOTAL A FACTURA"
+                ];
+
             }
+            $num_orden++;
         }
         
 
@@ -818,6 +858,8 @@ class creditosService {
             //crear los arreglos de objetos de medios de pago para separados y creditos para insertar los medios de pago asociados a las cuotas creadas
             $arraySeparadosMP=[];
             $arrayFactMediosPago = [];
+            $arrayMovCaja = [];
+            $numOrdenMovCaja = $repoMovimientocaja->getNumOrden(id_sucursal());
 
             foreach($idsCuotas as $key => $idcuota){
                 if($creditosCliente[$key]->idtipofinanciacion == 2){ //si es separado abonado
@@ -835,10 +877,29 @@ class creditosService {
                     $objFactMP->idmediopago = $arrayFactMPPendientes[$key]['idmediopago'];
                     $objFactMP->valor = $arrayFactMPPendientes[$key]['valor'];
                     $arrayFactMediosPago[] = $objFactMP;
+
+                    //completar arreglo de movimiento de caja
+                    $objMovCaja = new stdClass;
+                    $objMovCaja->fk_tipo_movimientocaja = $arrayMovCajaPendientes[$key]['fk_tipo_movimientocaja'];
+                    $objMovCaja->fk_tipo_documento = $arrayMovCajaPendientes[$key]['fk_tipo_documento'];
+                    $objMovCaja->id_documento =  $idcuota;
+                    $objMovCaja->fk_tipo_tercero = $arrayMovCajaPendientes[$key]['fk_tipo_tercero'];
+                    $objMovCaja->id_tercero = $arrayMovCajaPendientes[$key]['id_tercero'];
+                    $objMovCaja->fk_caja = $arrayMovCajaPendientes[$key]['fk_caja'];
+                    $objMovCaja->fk_usuario = $arrayMovCajaPendientes[$key]['fk_usuario'];
+                    $objMovCaja->naturaleza = $arrayMovCajaPendientes[$key]['naturaleza'];
+                    $objMovCaja->numero_documento = $arrayMovCajaPendientes[$key]['numero_documento'];
+                    $objMovCaja->num_orden = $numOrdenMovCaja++;
+                    $objMovCaja->valor = $arrayMovCajaPendientes[$key]['valor'];
+                    $objMovCaja->fecha_anulacion = 'NULL';
+                    $objMovCaja->concepto = $arrayMovCajaPendientes[$key]['concepto'];
+                    $objMovCaja->observacion = $arrayMovCajaPendientes[$key]['observacion'];
+                    $arrayMovCaja[] = $objMovCaja;
                 }
             }
             
             if($arraySeparadosMP)$sepadoMPRepo->crear_varios_reg_arrayobj($arraySeparadosMP);
+            if($arrayMovCaja)$repoMovimientocaja->crear_varios_reg_arrayobj($arrayMovCaja);
             $getDB->commit();
 
             //crear las facturas para los separados

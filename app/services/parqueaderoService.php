@@ -2,7 +2,7 @@
 
 namespace App\services;
 
-use App\Models\caja\cierrescajas;
+
 use App\Models\configuraciones\usuarios;
 use App\Models\parqueadero\tipo_vehiculo;
 use App\Models\sucursales;

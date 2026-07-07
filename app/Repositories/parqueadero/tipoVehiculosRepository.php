@@ -4,7 +4,7 @@ namespace App\Repositories\parqueadero;
 
 use App\Models\parqueadero\tipo_vehiculo;
 use App\Repositories\operationRepository;
-use PDO;
+//use PDO;
 
 class tipoVehiculosRepository extends operationRepository{
 

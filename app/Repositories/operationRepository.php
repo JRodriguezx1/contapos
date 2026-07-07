@@ -5,6 +5,7 @@ namespace App\Repositories;
 abstract class operationRepository extends BaseRepository{
 
     protected string $table;
+    protected string $idsucursal;
     protected string $entityClass;  //entidad o modelo
     protected array $allowedColumns = [];
 
@@ -36,8 +37,15 @@ abstract class operationRepository extends BaseRepository{
             $model = new $this->entityClass($array);
             $row = [];
             //mapeo
-            foreach($this->allowedColumns as $colDB)
-                $row[$colDB] = $model->$colDB??null;
+            if($this->allowedColumns){
+                foreach($this->allowedColumns as $colDB)
+                    $row[$colDB] = $model->$colDB??null;
+            }else{
+                foreach($model as $llave => $colDB){
+                    if($llave == 'id' || $llave == 'created_at')continue;
+                    $row[$llave] = $model->$llave??null;
+                }
+            }
             
             //tomar el arreglo de valores del objeto instanciado y se sanatiza
             $datos = array_map( fn($v)=>$this->escape((string)$v), array_values($row) );
@@ -262,4 +270,14 @@ abstract class operationRepository extends BaseRepository{
     public function querySQL(string $query):array{
         return $this->fetchAll($query);
     }
+
+    
+    public function getNumOrden(int $idsucursal): int {
+        $sql = "SELECT COALESCE(MAX(num_orden), 0)+1 AS next_num FROM {$this->table} WHERE {$this->idsucursal} = $idsucursal;";
+        $resultado = self::$db->query($sql);
+        $r = $resultado->fetch_assoc();
+        $resultado->free();
+        return array_shift($r);
+    }
+    
 }
