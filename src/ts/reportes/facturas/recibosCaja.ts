@@ -6,15 +6,18 @@
     const tablaRecibosCaja = ($('#tablaRecibosCaja') as any);
 
     interface i_ingresosEmisores {
+        id: string,
         num_orden:string,
-        fechapagada:string,
+        fecha:string,
         concepto:string,
-        documento:string,
-        cliente:string,
+        numero_documento:string,
+        tercero:string,
         mediopago:string,
-        detalle:string,
+        observacion:string,
         cajero:string,
-        valorpagado:string,
+        caja: string,
+        valor:string,
+        valormediopago:string,
         emisor:string
     }
 
@@ -35,7 +38,8 @@
             const url = "/admin/api/reportes/recibosCaja"; //llama a la api que esta en reportescontrolador.php
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
-            ingresosEmisores = resultado.ingresos;
+            ingresosEmisores = resultado;
+            console.log(ingresosEmisores);
             reporteRecibosCaja();
            (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
         } catch (error) {
@@ -52,16 +56,15 @@
             pageLength: 25,
             order: [[ 1, 'desc' ]],
             columns: [
-                        {title: 'Num', data: 'num_orden', render: (data:string) => `<div class="w-48 whitespace-normal">${data}</div>`},
-                        {title: 'Fecha', data: 'fechapagada'},
-                        {title: 'Concepto', data: 'concepto', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Documento', data: 'documento', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Cliente', data: 'cliente', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Medio Pago', data: 'mediopago', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Detalle', data: 'detalle', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Cajero', data: 'cajero', render: (data:number) => `<p class="m-0 font-semibold"> $${Number(data).toLocaleString()} </p>`},
-                        {title: 'Detalle', data: 'detalle', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Cajero', data: 'cajero', render: (data:number) => `<p class="m-0 font-semibold"> $${Number(data).toLocaleString()} </p>`}            
+                        {title: 'Num', data: 'num_orden'},
+                        {title: 'Fecha', data: 'fecha', render: (data:string) => `<div class="w-44 whitespace-normal">${data}</div>`},
+                        {title: 'Concepto', data: 'concepto'},
+                        {title: 'Tercero', data: 'tercero', render: (data:string) => `<div class="w-44 whitespace-normal">${data}</div>`},
+                        {title: 'Medio Pago', data: 'mediopago'},
+                        {title: 'Cajero', data: 'cajero'},
+                        {title: 'Valor pagado', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Emisor', data: 'emisor', render: (data:string) => `${data==null?'Negocio':''}`},
+                        {title: 'Observacion', data: 'observacion', render: (data:string) => `<div class="w-52 whitespace-normal">${data}</div>`}        
             ],
             language: {
                 search: 'Busqueda',

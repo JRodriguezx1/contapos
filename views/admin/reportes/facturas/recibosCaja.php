@@ -70,13 +70,12 @@
                 <th>Num</th>
                 <th>Fecha</th>
                 <th>Concepto</th>
-                <th>Documento</th>
-                <th>Cliente</th>
+                <th>Tercero</th>
                 <th>Medio Pago</th>
-                <th>Detalle</th>
                 <th>Cajero</th>
-                <th>Valor pagado</th>
+                <th>Valor recibido</th>
                 <th>Emisor</th>
+                <th>Observacion</th>
             </tr>
           </thead>
         <tbody class="text-xl"></tbody>

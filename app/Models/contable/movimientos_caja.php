@@ -10,7 +10,7 @@ class movimientos_caja
     public int $fk_tipo_documento;
     public ?int $id_documento;  //id de la factura, id de la cuota etc
     public int $fk_tipo_tercero;
-    public ?int $id_tercero;
+    public ?int $id_tercero; //id del cliente, o deun proveedor o banco
     public int $fk_caja;
     public int $fk_usuario;
     public string $naturaleza;
