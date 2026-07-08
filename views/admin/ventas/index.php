@@ -438,27 +438,39 @@
   <!-- MODAL PARA CALCULADORA-->
 <dialog id="miDialogoCalculadora" class="rounded-2xl border border-gray-200 w-[95%] max-w-xl md:max-w-2xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
-    <div class="text-center border-b border-gray-200 pb-4 mb-5">
-        <h4 class="text-2xl md:text-3xl font-bold text-indigo-700">Calculadora</h4>
-        <p class="mt-2 text-base md:text-lg text-gray-600">Ingresar merma para recalcular cantidad.</p>
+    <div class="text-center border-b border-slate-200 pb-6 mb-8">
+      <h4 class="flex items-center justify-center gap-3 text-3xl font-bold text-slate-800">
+          <span class="material-symbols-outlined text-indigo-600 text-4xl">
+              inventory_2
+          </span>
+
+          Registrar merma
+      </h4>
+      <p class="mt-3 text-lg text-slate-500">
+          Ingrese la cantidad de material que será descontada.
+          El sistema recalculará automáticamente la producción.
+      </p>
     </div>
 
     <form id="formMerma" class="text-center">
         <div class="grid grid-cols-1 gap-5">
-            <div>
-                <label for="inputMerma" class="block text-lg md:text-xl font-medium text-gray-700 mb-3">Cantidad a descontar</label>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-8">
+                <label for="inputMerma" class="block uppercase tracking-wider text-sm font-semibold text-slate-500 mb-5">Cantidad a descontar</label>
                 <input
                     id="inputMerma"
                     type="number"
                     min="0"
                     name="merma"
                     data-merma=""
-                    class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-3 h-14 md:h-16 text-lg md:text-xl focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 transition"
+                    class="miles bg-white border border-slate-300 rounded-xl block w-full h-16 text-center text-3xl font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 transition"
                     required>
+                    <p class="mt-4 text-sm text-slate-500">
+                    La cantidad ingresada se descontará del inventario del producto.
+                    </p>
             </div>
 
             <div class="flex justify-center gap-4 pt-4 border-t border-gray-200">
-                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px] md:!w-[160px] salir">Salir</button>
+                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[140px] md:!w-[160px] salir">Cancelar</button>
                 <button id="btnMermaCantidad" type="button" class="btn-md btn-indigo !py-4 !px-6 !w-[140px] md:!w-[160px]">Aplicar</button>
             </div>
 

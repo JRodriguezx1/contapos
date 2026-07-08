@@ -146,28 +146,66 @@
             const sub = document.querySelector(`.listaSubproductos div[id="${idsubproducto}"]`);
             const detailsHtml = `
                 <div class="flex-1">
-                  <p class="m-0"><strong>${Number(amount.value).toFixed(2)} ${unidadmedida}</strong>.  ${subproducto}</p>
-                  <div class="mt-3 flex flex-wrap gap-4 text-lg">
-                    <span class="rounded-md px-4 py-1 bg-slate-100 text-slate-700">
-                      📦 Grupo: <strong>${tipoGrupoText}</strong>
-                    </span>
-                    <span class="rounded-md px-4 py-1 font-medium ${marcadoDefecto=='1'?'bg-green-100 text-green-800':'bg-red-100 text-red-700'}">
-                      ${marcadoDefecto=='1'?'✔ Seleccionado':'✖ No seleccionado'}
-                    </span>
-                    <span class="rounded-md px-4 py-1 font-medium ${permitirAumentar=='1'?'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'}">
-                        ${permitirAumentar=='1'?'➕ Permite aumentar':'🚫 Cantidad fija'}
-                    </span>
-                  </div>
-                </div>`;
+                    <div class="mb-3">
+                        <p class="text-2xl font-semibold text-slate-800">
+                            ${subproducto}
+                        </p>
+
+                        <p class="mt-2 text-indigo-600 font-semibold text-lg">
+                            ${Number(amount.value).toFixed(2)} ${unidadmedida}
+                        </p>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap gap-4 text-lg">
+                        <span class="rounded-md px-4 py-1.5 bg-slate-100 text-slate-700">
+                            📦 Grupo: ${tipoGrupoText}
+                        </span>
+
+                        <span class="rounded-md px-4 py-1.5 font-medium ${
+                            marcadoDefecto == '1'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-rose-100 text-rose-700'
+                        }">
+                            ${
+                                marcadoDefecto == '1'
+                                    ? '✔ Seleccionado'
+                                    : '✖ No seleccionado'
+                            }
+                        </span>
+
+                        <span class="rounded-md px-4 py-1.5 font-medium ${
+                            permitirAumentar == '1'
+                                ? 'bg-indigo-100 text-indigo-700'
+                                : 'bg-amber-100 text-amber-700'
+                        }">
+                            ${
+                                permitirAumentar == '1'
+                                    ? '➕ Permite aumentar'
+                                    : '🚫 Cantidad fija'
+                            }
+                        </span>
+                    </div>
+                </div>
+            `;
             if(sub){
                 const button = sub.querySelector('button');
                 sub.innerHTML = detailsHtml;
                 if(button) sub.appendChild(button);
             }else{
                 listaSubproductos?.insertAdjacentHTML('beforeend', `
-                <div id="${idsubproducto}" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">
+                <div id="${idsubproducto}" class="mb-5 flex justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200 items-center"  role="alert">
                     ${detailsHtml}
-                    <button type="button"><span id="${idsubproducto}" class="material-symbols-outlined">cancel</span></button>
+                    <button
+                        type="button"
+                        class="self-start mt-1 rounded-full p-2 text-slate-400 transition-all duration-200 hover:bg-red-100 hover:text-red-600">
+
+                        <span
+                            id="${idsubproducto}"
+                            class="material-symbols-outlined">
+
+                            close
+                        </span>
+                    </button>
                 </div>`
                 );
             }

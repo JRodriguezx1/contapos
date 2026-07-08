@@ -270,65 +270,167 @@
 
     <!-- MODAL CAMBIO MEDIO DE PAGO -->
     <dialog id="cambioMedioPago"
-        class="rounded-2xl border border-gray-200 w-[95%] max-w-[48rem] p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
+        class="rounded-2xl border border-gray-200 w-[95%] max-w-[58rem] p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
         <!-- Encabezado -->
-        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
-                💳 Cambio medio de pago
+        <div class="flex justify-between items-center border-b border-slate-200 pb-6 mb-8">
+            <h4 class="flex items-center gap-3 text-3xl font-bold text-slate-800">
+                <span class="material-symbols-outlined text-indigo-600 text-4xl">
+                    payments
+                </span>
+                Cambiar medio de pago
             </h4>
-            <button type="button" id="btnCerrarCambioMedioPago"
+
+            <button
+                type="button"
+                id="btnCerrarCambioMedioPago"
                 class="p-2 rounded-lg hover:bg-gray-100 transition"
                 onclick="document.getElementById('cambioMedioPago').close()">
+
                 <i class="fa-solid fa-xmark text-gray-600 text-2xl"></i>
             </button>
         </div>
 
         <div id="divmsjalerta2"></div>
 
-        <form id="formCambioMedioPago" class="formulario space-y-6" action="/admin/caja/cambioMedioPago" method="POST">
-
-            <!-- Factura y total -->
-            <div class="text-center">
-                <label id="numfactura" class="text-gray-700 text-2xl font-medium block mb-2">
-                    Factura N° :
+        <form id="formCambioMedioPago"
+            class="formulario space-y-6"
+            action="/admin/caja/cambioMedioPago"
+            method="POST">
+            <!-- Factura -->
+            <div class="text-center mb-5">
+                <label
+                    id="numfactura"
+                    class="text-xl font-semibold text-slate-600">
                 </label>
-                <p class="text-gray-600 text-3xl font-light m-0 mb-6">
-                    Total Pagado: $
-                    <span id="totalPagado" class="text-gray-800 font-semibold">0</span>
+            </div>
+
+            <!-- Tarjeta Total -->
+            <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-8 text-center mb-8">
+                <p class="uppercase tracking-[0.25em] text-sm font-semibold text-emerald-700">
+                    Total pagado
+                </p>
+
+                <p class="mt-4 text-6xl font-bold text-emerald-700">
+                    $<span id="totalPagado">0</span>
                 </p>
             </div>
 
             <!-- Diferencia -->
-            <div class="text-center">
-                <span class="block text-2xl uppercase text-gray-700 font-medium">Diferencia</span>
-                <span id="diferencia" class="block text-indigo-600 text-4xl font-bold mb-10">0</span>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 mb-8 text-center">
+                <p class="uppercase tracking-[0.25em] text-sm font-semibold text-slate-500">
+                    Diferencia
+                </p>
+
+                <p
+                    id="diferencia"
+                    class="mt-3 text-5xl font-bold text-indigo-600">
+
+                    0
+                </p>
+                <p class="mt-2 text-sm text-slate-500">
+                    Debe quedar en cero para aplicar el cambio.
+                </p>
             </div>
 
-            <!-- Medios de pago -->
-            <div id="mediospagos" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                <?php foreach($mediospago as $index => $value): ?>
-                <div class="w-full">
-                    <label class="text-gray-700 text-xl font-medium">
-                        <?php echo $value->mediopago ?? ''; ?>:
-                    </label>
-                    <input id="<?php echo $value->id ?? ''; ?>"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-xl focus:outline-none focus:ring-1 mediopago <?php echo $value->mediopago ?? ''; ?>"
-                        type="text"
-                        value="0"
-                        oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+            <!-- Tarjeta Medios de pago -->
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-8 mb-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-symbols-outlined text-indigo-600 text-4xl">
+                        account_balance_wallet
+                    </span>
+
+                    <h5 class="text-2xl font-bold text-slate-800">
+                        Medios de pago
+                    </h5>
                 </div>
-                <?php endforeach; ?>
+
+                <!-- NUEVA ALERTA -->
+                <div
+                    id="ayudaCambioMedioPago"
+                    class="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+
+                    <span class="material-symbols-outlined text-amber-600 mt-0.5">
+                        info
+                    </span>
+
+                    <div class="text-sm leading-6 text-amber-800">
+
+                        <strong>Importante:</strong>
+
+                        Para cambiar un medio de pago,
+                        primero reduzca el valor del
+                        <strong>medio actual</strong>
+                        y luego registre ese mismo valor
+                        en el nuevo medio.
+
+                        La diferencia debe quedar en
+                        <strong>$0</strong>.
+
+                    </div>
+                </div>
+
+                <div
+                    id="mediospagos"
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
+
+                    <?php foreach($mediospago as $index => $value): ?>
+                        <div class="contenedor-medio-pago relative pt-8 w-full">
+
+                            <!-- Esta etiqueta la mostrará luego el JavaScript -->
+                            <span
+                                class="medio-actual hidden absolute top-0 left-0 rounded-full bg-indigo-100  text-indigo-700 text-xs font-semibold px-3 py-1">
+                                ① Medio de pago actual
+                            </span>
+
+                            <label
+                                class="block text-lg font-semibold text-slate-700 mb-2">
+
+                                <?php echo $value->mediopago ?? ''; ?>
+                            </label>
+
+                            <input
+                                id="<?php echo $value->id ?? ''; ?>"
+                                class="bg-white
+                                    border
+                                    border-slate-300
+                                    text-slate-800
+                                    rounded-xl
+                                    block
+                                    w-full
+                                    p-3
+                                    mt-1
+                                    h-16
+                                    text-xl
+                                    text-center
+                                    font-semibold
+                                    focus:border-indigo-600
+                                    focus:outline-none
+                                    focus:ring-2
+                                    focus:ring-indigo-200
+                                    transition
+                                    mediopago
+                                    input-medio-pago
+                                    <?php echo $value->mediopago ?? ''; ?>"
+                                type="text"
+                                value="0"
+                                oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
             <!-- Botones -->
             <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-                <button type="button"
+                <button
+                    type="button"
                     class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]"
                     onclick="document.getElementById('cambioMedioPago').close()">
                     Cancelar
                 </button>
-                <input id="btnEnviarCambioMedioPago"
+
+                <input
+                    id="btnEnviarCambioMedioPago"
                     class="btn-md btn-indigo !py-4 !px-6 !w-[136px]"
                     type="submit"
                     value="Aplicar">
