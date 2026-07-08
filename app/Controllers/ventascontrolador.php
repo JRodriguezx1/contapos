@@ -32,6 +32,7 @@ use App\Repositories\ventas\canalVentaRepository;
 use App\services\creditosService;
 use App\services\stockService;
 use App\services\comisionesService;
+use App\services\contableService;
 use App\services\whatsAppService;
 //use App\Models\configuraciones\negocio;
 use MVC\Router;  //namespace\clase
@@ -111,6 +112,7 @@ class ventascontrolador{
   public static function facturar(){
     //session_start();
     $comisionServicio = new comisionesService();
+    $contableService = new contableService();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
     date_default_timezone_set('America/Bogota');
@@ -174,24 +176,26 @@ class ventascontrolador{
         if(!isset($acumulador['productosSimples'][$objeto->idproducto])){
           $acumulador['productosSimples'][$objeto->idproducto] = $obj;
           $acumulador['soloIdproductos'][] = $obj->id;
-        }else{
+        }else{ //cuando es el mismo producto pero con precio distinto
           $acumulador['productosSimples'][$objeto->idproducto]->stock += $obj->stock;
         }
       }elseif($objeto->tipoproducto == 1 && $objeto->tipoproduccion == 0){  //producto compuesto e inmediato es decir por cada venta se descuenta sus insumos
         if(!isset($acumulador['productosCompuestos'][$objeto->idproducto])){
           $acumulador['productosCompuestos'][$objeto->idproducto] = $obj;
-        }else{
+        }else{ //cuando es el mismo producto pero con precio distinto
           $acumulador['productosCompuestos'][$objeto->idproducto]->stock += $obj->stock;
         }
         $acumulador['productosCompuestos'][$objeto->idproducto]->porcion = round((float)$acumulador['productosCompuestos'][$objeto->idproducto]->stock/(float)$objeto->rendimientoestandar, 4);
       }
       return $acumulador;
     }, ['productosSimples'=>[], 'productosCompuestos'=>[]]);
+
+    //debuguear($carrito);
     
 
     //////// Selecciona y trae la cantidad subproductos del producto compuesto a descontar del inventario
     $descontarSubproductos = productos_sub::cantidadSubproductosXventa($resultArray['productosCompuestos'], id_sucursal());
-    //////// sumar los subproductos repetidos
+    //////// sumar los subproductos(insumos) repetidos
     $reduceSub = [];
     $soloIdInsumos =[];
     foreach($descontarSubproductos as $idx => $obj){
@@ -330,6 +334,7 @@ class ventascontrolador{
             foreach($mediospago as $obj){
               $obj->id_factura = $r[1];
               $obj->cierrecajaid = $ultimocierre->id;
+              $obj->idcuota = $alertas['idcuota']??'NULL';
               if($obj->idmediopago == 1){
                 $ultimocierre->ventasenefectivo +=  ($_POST['tipoventa']=='Contado'?$obj->valor:0);
                 $ultimocierre->abonosenefectivo += ($_POST['tipoventa']=='Credito'?$obj->valor:0);
@@ -346,6 +351,8 @@ class ventascontrolador{
             //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
             
             $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?0:$factura->total);
+            $ultimocierre->descuentocontado += ($_POST['tipoventa']=='Credito'?0:$factura->descuento);
+            $ultimocierre->descuentocredito += ($_POST['tipoventa']=='Contado'?0:$factura->descuento);
             $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
             $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
             $ultimocierre->basegravable += $factura->base;
@@ -393,6 +400,23 @@ class ventascontrolador{
 
                 if($invPro){
                   if($invSub){
+                    //crear registro de movimento de caja
+                    $numFactura = $factura->prefijo.$factura->num_consecutivo;
+                    $contableService->createMovimiento([
+                      'fk_tipo_movimientocaja'=>$factura->tipoventa=='Contado'?1:11,
+                      'fk_tipo_documento'=>1,
+                      'id_documento'=>$r[1],
+                      'fk_tipo_tercero'=>1,
+                      'id_tercero'=>$factura->idcliente,
+                      'fk_caja'=>$factura->idcaja,
+                      'fk_usuario'=>$factura->idvendedor,
+                      'naturaleza'=>'I',
+                      'numero_documento'=>$numFactura,
+                      'num_orden'=>null,
+                      'valor'=>$factura->tipoventa=='Contado'?$factura->total:$factura->abono,
+                      'concepto'=>$factura->tipoventa=='Contado'?'PAGO DE CONTADO':'ABONO INICIAL',
+                      'observacion'=>$factura->tipoventa=='Contado'?'PAGO DE CONTADO A FACTURA':'ABONO INICIAL A FACTURA CREDITO'
+                    ]);
 
                     $alertas['exito'][] = "Pago procesado con exito";
                     $alertas['idfactura'] = $r[1];
@@ -552,6 +576,7 @@ class ventascontrolador{
     //session_start();
     isadmin();
     $comisionServicio = new comisionesService();
+    $contableService = new contableService();
     $getDB = facturas::getDB();
     $factura = facturas::find('id', $_POST['id']);
     $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
@@ -664,7 +689,7 @@ class ventascontrolador{
               $r = $factura->crear_guardar();
               $consecutivo->siguientevalor = $numConsecutivo + 1;
               $c = $consecutivo->actualizar();
-              $fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);  //llamada al trait para crear el json y guardar la FE en DB
+              $fe = self::createInvoiceElectronic($productos, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa, $factura->observacion);  //llamada al trait para crear el json y guardar la FE en DB
               //....
               if($factura->valorgananciauser>0)
                 $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
@@ -703,6 +728,7 @@ class ventascontrolador{
             foreach($mediospago as $obj){
               $obj->id_factura = $factura->id;
               $obj->cierrecajaid = $ultimocierre->id;
+              $obj->idcuota = 'NULL';
               if($obj->idmediopago == 1){
                 $ultimocierre->ventasenefectivo =  $ultimocierre->ventasenefectivo + $obj->valor;
               }
@@ -763,6 +789,22 @@ class ventascontrolador{
                   
                 if($invPro){
                   if($invSub){
+                    $numFactura = $factura->prefijo.$factura->num_consecutivo;
+                    $contableService->createMovimiento([
+                      'fk_tipo_movimientocaja'=>1,
+                      'fk_tipo_documento'=>1,
+                      'id_documento'=>1,
+                      'fk_tipo_tercero'=>$factura->idcliente,
+                      'id_tercero'=>$factura->idcliente,
+                      'fk_caja'=>$factura->idcaja,
+                      'fk_usuario'=>$factura->idvendedor,
+                      'naturaleza'=>'I',
+                      'numero_documento'=>$numFactura,
+                      'num_orden'=>null,
+                      'valor'=>$factura->total,
+                      'concepto'=>'PAGO DE CONTADO A FACTURA'
+                    ]);
+                    
                     $alertas['idfactura'] = $factura->id;
                     $alertas['exito'][] = "Pago procesado con exito";
                   }else{

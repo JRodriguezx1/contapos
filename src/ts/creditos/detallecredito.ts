@@ -71,10 +71,12 @@
 
     btnEditarCrearAbono.addEventListener('click', ()=>{
       btnEditarCrearAbono.disabled = true;
+      (document.querySelector('#caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdateAbono') as HTMLFormElement).submit();
     });
     btnEditarCrearPagoTotal.addEventListener('click', ()=>{
       btnEditarCrearPagoTotal.disabled = true;
+      (document.querySelector('#PagoTotal_caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdatePagoTotal') as HTMLFormElement).submit();
     });
     
@@ -139,10 +141,10 @@
     }
 
 
-    function updateMP(mediosPagoUpdate:{id:string, idcuota:string, mediopago_id:string, valor:string}){
-      const {mediopago_id} = mediosPagoUpdate;
+    function updateMP(mediosPagoUpdate:{id:string, idcuota:string, mediopago_id?:string, idmediopago?:string, valor:string}){
+      const {mediopago_id, idmediopago} = mediosPagoUpdate;
       contentMP.textContent = selectMediopago.options[selectMediopago.selectedIndex].textContent;
-      contentMP.dataset.idmediopago = mediopago_id;
+      contentMP.dataset.idmediopago = mediopago_id??idmediopago;
     }
 
 

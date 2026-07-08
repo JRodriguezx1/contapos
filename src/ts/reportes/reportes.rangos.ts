@@ -7,7 +7,8 @@
         !document.querySelector('.cuotasCreditos') &&
         !document.querySelector('.movimientosinventarios') &&
         !document.querySelector('.estadosfinancierosCreditos') &&
-        !document.querySelector('.comisiones'))return;
+        !document.querySelector('.estadosfinancierosCreditos') &&
+        !document.querySelector('.recibosCaja'))return;
 
      const POS = (window as any).POS;
 

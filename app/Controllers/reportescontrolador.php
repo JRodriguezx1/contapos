@@ -158,12 +158,17 @@ class reportescontrolador{
 
     
     public static function facturaselectronicaspendientes(Router $router){
-        //session_start();
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-
         $router->render('admin/reportes/facturas/electronicaspendientes', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+    public static function recibosCaja(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $router->render('admin/reportes/facturas/recibosCaja', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
     public static function inventarioxproducto(Router $router){
@@ -711,6 +716,40 @@ class reportescontrolador{
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos);
+  }
+
+
+  public static function apirecibosCaja():void{
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT mc.id, mc.num_orden, mc.fecha, mc.concepto, mc.observacion, u.nombre AS cajero, mc.valor, e.nombre AS emisor, mc.numero_documento,
+                  COALESCE(cl.nombre) AS tercero, /* Nombre del tercero */
+                  mp.mediopago, /* Medio de pago */
+                  fmp.valor AS valormediopago, /* Valor pagado por ese medio */
+                  c.nombre AS caja /* Caja */
+              FROM movimientos_caja mc
+              /* Medios de pago */
+              LEFT JOIN factmediospago fmp
+                    ON(mc.fk_tipo_documento = 1 AND mc.id_documento = fmp.id_factura)
+                    OR(mc.fk_tipo_documento = 2 AND mc.id_documento = fmp.idcuota)
+
+              LEFT JOIN mediospago mp ON mp.id = fmp.idmediopago
+              /* Clientes */
+              LEFT JOIN clientes cl ON mc.fk_tipo_tercero = 1 AND cl.id = mc.id_tercero
+              /* Usuario */
+              LEFT JOIN usuarios u ON u.id = mc.fk_usuario
+              /* Caja */
+              LEFT JOIN caja c ON c.id = mc.fk_caja
+              /* Emisor */
+              LEFT JOIN emisores e ON e.id = c.idemisor
+              WHERE mc.fecha >= '$fechainicio' AND fecha <= '$fechafin';";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos??[]);
+    return;
   }
 
   //Reporte movimiento de inventarios  llamada desde movimientosinventarios.ts

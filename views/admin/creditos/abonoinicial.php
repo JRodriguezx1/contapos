@@ -7,7 +7,7 @@
         </button>
     </div>
     <div id="divmsjalerta2"></div>
-    <form id="formCrearUpdateAbono" class="formulario" action="/admin/creditos/registrarAbono" enctype="multipart/form-data" method="POST">
+    <form id="formCrearUpdateAbono" class="formulario" action="/admin/creditos/registrarAbono" method="POST">
         <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
         <input class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">
         <div class="formulario__campo">
@@ -16,9 +16,15 @@
         </div>
         <div class="formulario__campo">
             <label class="formulario__label" for="caja">Caja</label>
-            <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="cajaid" required>
+            <select 
+                id="caja" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                name="cajaid"
+                <?= $conflocal['restringir_caja_facturadora_a_caja_inicial_del_credito']->valor_final==1?'disabled':''; ?> 
+                required
+            >
                 <?php foreach($cajas as $value):  ?>
-                      <option value="<?php echo $value->id;?>" ><?php echo $value->nombre;?></option>
+                      <option value="<?php echo $value->id;?>" data-idemisor="<?= $value->idemisor ?>" <?=($credito->idemisor==$value->idemisor)?'selected':'';?> ><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -33,7 +39,7 @@
         <div class="formulario__campo">
             <label class="formulario__label" for="abono">Abono</label>
             <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
-                <input 
+                <input
                     id="abono" 
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text"
@@ -45,6 +51,8 @@
                 >
             </div>
         </div>
+
+        <textarea id="detalle" class="formulario__textarea mb-4" name="detalle" placeholder="Observacion" rows="4"></textarea>
         
         <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
             <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>

@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div class="tlg:row-start-3 tlg:row-end-3 col-start-1 col-end-3">
+    <div class="tlg:row-start-3 tlg:row-end-3 col-start-1 col-end-4">
       <h5 class="mb-5 mt-14">Reportes de Facturas</h5>
       <div class="flex flex-wrap gap-4 mb-4">
         <a href="/admin/reportes/facturaspagas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
@@ -85,6 +85,9 @@
         </a>
         <a href="/admin/reportes/facturaselectronicaspendientes" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
           <span class="material-symbols-outlined">speaker_notes</span>Electronicas Pendientes
+        </a>
+        <a href="/admin/reportes/recibosCaja" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
+          <span class="material-symbols-outlined">point_of_sale</span>Recibos de caja
         </a>
       </div>
 

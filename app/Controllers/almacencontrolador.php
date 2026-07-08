@@ -30,6 +30,7 @@ use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\traslado_inv;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
+use App\services\exportService;
 use App\services\inventarioService;
 use App\services\stockService;
 use MVC\Router;  //namespace\clase
@@ -472,28 +473,12 @@ class almacencontrolador{
 
 
   public static function downexcelproducts(Router $router){
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
-      $excelproductos = productos::all();
-      if(isset($_POST['downexcel'])){
-        if(ob_get_length())
-        ob_clean();
-        if(!empty($excelproductos)){
-            header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-            header("Content-Disposition: attachment; filename=excelproductos.xls");
-            // BOM UTF-8
-            echo "\xEF\xBB\xBF";
-            $mostrar_columnas = false;
-            foreach($excelproductos as $value){
-                if(!$mostrar_columnas){
-                    echo implode("\t", array_keys((array)$value)) . "\n";
-                    $mostrar_columnas = true;
-                }
-                echo implode("\t", array_values((array)$value)) . "\n";
-            }
-        }else{ echo 'No hay datos a exportar'; }
-        exit;
-      } 
-    }
+    if($_SERVER['REQUEST_METHOD'] !== 'POST' ) //para exportar a excel productos
+      return;
+    if(!isset($_POST['downexcel']))
+      return; 
+    $excelproductos = productos::formatExportExcel();
+    exportService::exportproducts($excelproductos, 'excelproductos');
   }
 
 
@@ -557,28 +542,10 @@ class almacencontrolador{
 
 
   public static function downexcelinsumos(Router $router){
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){ //para exportar a excel productos
-      $excelproductos = subproductos::all();
-      if(isset($_POST['downexcel'])){
-        //debuguear(isset($_POST['downexcel']));
-          if(!empty($excelproductos)){
-              $filename = "excelinsumos.xls";
-              header("Content-Type: application/vnd.ms-excel");
-              header("Content-Disposition: attachment; filename=".$filename);
-
-              $mostrar_columnas = false;
-
-              foreach($excelproductos as $value){
-                  if(!$mostrar_columnas){
-                      echo implode("\t", array_keys((array)$value)) . "\n";
-                      $mostrar_columnas = true;
-                  }
-                  echo implode("\t", array_values((array)$value)) . "\n";
-              }
-          }else{ echo 'No hay datos a exportar'; }
-          exit;
-        } 
-    }
+    if($_SERVER['REQUEST_METHOD'] !== 'POST' )return;
+    if(!isset($_POST['downexcel']))return; 
+    $excelinsumos = subproductos::formatExportExcel();
+    exportService::exportproducts($excelinsumos, 'excelinsumos.csv');
   }
 
 

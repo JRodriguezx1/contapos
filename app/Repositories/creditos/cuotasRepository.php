@@ -24,7 +24,15 @@ class cuotasRepository extends operationRepository{
         return new $this->entityClass();
     }
 
-    public function obtenerPorCredito_Mediopago(int $id):array{
+    public function calcularNumOrden(int $idsucursal): int {
+        $sql = "SELECT COALESCE(MAX(num_orden), 0)+1 AS next_num FROM cuotas WHERE id_sucursal_idfk = $idsucursal;";
+        $resultado = self::$db->query($sql);
+        $r = $resultado->fetch_assoc();
+        $resultado->free();
+        return array_shift($r);
+    }
+
+    public function obtenerPorSeparado_Mediopago(int $id):array{
         $sql = "SELECT c.*, JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', mp.id,
@@ -39,7 +47,27 @@ class cuotasRepository extends operationRepository{
                 LEFT JOIN mediospago mp ON mp.id = sm.mediopago_id
                 WHERE c.id_credito = {$id} GROUP BY c.id;";
         $rows = $this->fetchAllStd($sql);
+        foreach ($rows as &$row)
+            $row->mediosdepago = $row->mediosdepago?json_decode($row->mediosdepago, false):[];
+        return $rows;
+    }
 
+
+    public function obtenerPorCredito_Mediopago(int $id):array{
+        $sql = "SELECT c.*, JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id', mp.id,
+                        'idcuota', fm.idcuota,
+                        'idmediopago', fm.idmediopago,
+                        'valor', fm.valor,
+                        'mediopago', mp.mediopago,
+                        'estado', mp.estado
+                    )
+                ) AS mediosdepago FROM cuotas c
+                LEFT JOIN factmediospago fm ON fm.idcuota = c.id
+                LEFT JOIN mediospago mp ON mp.id = fm.idmediopago
+                WHERE c.id_credito = {$id} GROUP BY c.id;";
+        $rows = $this->fetchAllStd($sql);
         foreach ($rows as &$row)
             $row->mediosdepago = $row->mediosdepago?json_decode($row->mediosdepago, false):[];
         return $rows;

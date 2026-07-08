@@ -17,6 +17,7 @@ use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
+use App\Repositories\contable\movimientos_cajaRepository;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use stdClass;
@@ -157,6 +158,7 @@ class cajaService {
 
 
     public static function cambiarEmisor(array $data):array{
+        $repoMovimientocaja = new movimientos_cajaRepository();
         $creditoRepo = new creditosRepository();
         $idfactura = $data['id'];
         $idemisor = $data['idemisor'];
@@ -244,7 +246,7 @@ class cajaService {
         $ultimocierre->valorimpuestototal += $factura->valorimpuestototal;
         $ultimocierre->basegravable += $factura->base;
 
-        //ACAATUALIZAR FACTURA
+        //ACTUALIZAR FACTURA
         $factura->idemisor = $idemisor==0?NULL:$idemisor;
         $factura->idcaja = $idNewCaja;
         $factura->idcierrecaja = $ultimocierre->id;
@@ -255,6 +257,11 @@ class cajaService {
             $ultimocierre->actualizar();
             if($factMP)factmediospago::updatemultiregobj($factMP, ['cierrecajaid']);
             if($credito)$creditoRepo->update($credito);
+            
+            //actualizar movimiento de caja
+            $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>1, 'id_documento'=>$credito->id]);
+            $movCaja->fk_caja = $idNewCaja;
+            $repoMovimientocaja->update($movCaja);
         }else{
             $tempcierrecaja->actualizar();
             return ['error'=>['Error al actualizar el emisor en la factura']];

@@ -409,3 +409,15 @@ function obtenerNumero(input: HTMLInputElement):number|null{
     const numero = Number(valor);
     return Number.isNaN(numero) ? null : numero;
 }
+
+
+function filtrarInsumos(productoConfigurado:Partial<productsapi>|undefined){
+    const insumos = productoConfigurado?.insumos??[];
+    const ultimoSeleccionUnica:insumo|undefined  = insumos.filter(i=>i.grupos_insumos?.tipo === "0"&&i.seleccionado === "1").at(-1);
+
+    const nuevosElementos:insumo[] = [
+              ...(ultimoSeleccionUnica  ? [ultimoSeleccionUnica ] : []),
+              ...insumos.filter(i=>i.grupos_insumos?.tipo === "1" &&i.seleccionado === "1")
+    ];
+    insumos.splice(0, insumos.length, ...nuevosElementos);
+  }
