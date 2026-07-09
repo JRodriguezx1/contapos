@@ -430,6 +430,7 @@ class ventascontrolador{
                     ];
                     //$cliente = clientes::find('id', $factura->idcliente);
                     $alertas['dataInvoice'] = [
+                      'host' => negocionSucursal()->host,
                       'negocio' => negocionSucursal()->negocio,
                       'sucursal' => negocionSucursal()->nombre,
                       'nit' => negocionSucursal()->nit,

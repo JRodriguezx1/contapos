@@ -859,6 +859,7 @@ class cajacontrolador{
           for($i = count($mediospagoDB); $i<count($nuevosmediospago); $i++){
             $crearMP[$j]['cierrecajaid'] = $mediospagoDB[0]->cierrecajaid;
             $crearMP[$j]['id_factura'] = $mediospagoDB[0]->id_factura;
+            $crearMP[$j]['idcuota'] = $mediospagoDB[0]->idcuota??'NULL';
             $crearMP[$j]['idmediopago'] = $nuevosmediospago[$i]->idmediopago;
             $crearMP[$j]['valor'] = $nuevosmediospago[$i]->valor;
             $j++;

@@ -133,6 +133,7 @@ interface Resolution {
     tokenfacturaelectronica: string | null;
 }
 interface DataInvoice {
+    host: string;
     negocio: string;
     sucursal:string;
     nit: string;

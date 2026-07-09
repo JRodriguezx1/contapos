@@ -242,7 +242,7 @@
 
         if(printerBT !== '1'){
           const dataPrinter = {
-            businessId: resultado.negocio,
+            businessId: resultado.host,
             sucursal: resultado.sucursal,
             printerName: 'CAJA',
             tipoTicket: 'ticket',

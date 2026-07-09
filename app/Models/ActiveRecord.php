@@ -107,6 +107,7 @@ class ActiveRecord {
                 $string2 .= "('".join("', '", array_values($atributos))."'), ";
             }
         }
+        $string2 = str_replace("'NULL'", 'NULL', $string2);
         $string1 = join(', ', array_keys($atributos));
         $sql = "INSERT INTO ".static::$tabla."(".$string1.") VALUES".$string2;
         $resultado = self::$db->query($sql);

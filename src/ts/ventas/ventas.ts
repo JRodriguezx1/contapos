@@ -33,7 +33,7 @@
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, insumos:insumo[]}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
-    let indiceCarrito = 0, nombretarifa:string|undefined='', tipoventa:string="Contado";
+    let indexcarrito:number, nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     
@@ -361,7 +361,7 @@
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
       const precio = (elementProduct as HTMLElement).dataset.precio!;
-      const indexcarrito = Number((elementProduct as HTMLElement).dataset.indexcarrito!);
+      indexcarrito = Number((elementProduct as HTMLElement).dataset.indexcarrito!);
       //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
       let productoCarrito = carrito[indexcarrito];
 
@@ -408,7 +408,7 @@
       const fila = input?.closest('.productselect') as HTMLTableRowElement;
       const idProduct = fila.dataset.id!;
       const precio = fila.dataset.precio!;
-      const indexcarrito = Number(fila.dataset.indexcarrito!);
+      indexcarrito = Number(fila.dataset.indexcarrito!);
       //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
 
       let val = input.value;
@@ -453,11 +453,11 @@
     //calculadora que se ejecuta cuando se da clic sobre el nombre del producto
     document.querySelector('#btnMermaCantidad')?.addEventListener('click', (e:Event)=>{
       const inputMerma = (document.querySelector('#inputMerma') as HTMLInputElement).value;
-      const {idproducto, stock, valorunidad} = carrito[indiceCarrito];
+      const {stock} = carrito[indexcarrito];
       let nuevaCantidad = stock - Number(inputMerma);
       if(nuevaCantidad<0)nuevaCantidad=0;
-      (tablaventa?.querySelector(`TR[data-id="${idproducto}"][data-precio="${valorunidad}"] .inputcantidad`) as HTMLInputElement).value = nuevaCantidad+'';
-      actualizarCarrito(idproducto, nuevaCantidad, false, false, valorunidad, null);
+      (tablaventa?.querySelector(`TR[data-indexcarrito="${indexcarrito}"] .inputcantidad`) as HTMLInputElement).value = nuevaCantidad+'';
+      editarCantidad(indexcarrito, nuevaCantidad, false, false);
       miDialogoCalculadora.close();
       document.removeEventListener("click", cerrarDialogoExterno);
     });
@@ -734,7 +734,7 @@
 
       if(printerBT !== '1'){
         const dataPrinter = {
-          businessId: datainvoice.negocio,
+          businessId: datainvoice.host,
           sucursal: datainvoice.sucursal,
           printerName: 'CAJA',
           tipoTicket: 'ticket',
