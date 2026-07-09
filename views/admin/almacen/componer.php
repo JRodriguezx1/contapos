@@ -6,11 +6,29 @@
     <span class="sr-only">Atrás</span>
   </a>
   <div class="w-full tlg:w-5/6 mx-auto rounded-lg shadow-lg px-6 pt-8">
-    <h4 class=" text-gray-700 font-semibold"><?php echo $producto->nombre;?> - "<?php echo $producto->unidadmedida;?>"</h4>
+    <div class="flex items-start gap-4">
+
+        <span class="material-symbols-outlined text-indigo-600 text-6xl">
+            precision_manufacturing
+        </span>
+
+        <div>
+            <h2 class="text-4xl font-bold text-slate-800">
+                <?php echo $producto->nombre;?>
+            </h2>
+
+            <span class="inline-flex mt-3 px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-lg font-semibold mb-4">
+                Unidad: <?php echo $producto->unidadmedida;?>
+            </span>
+        </div>
+
+    </div>
 
     <form id="formAddSubproducto" class="formulario" action="/" method="POST">
-      <div class="border-b border-gray-900/10 pb-10 mb-3">
-        <p class="mt-2 text-xl text-gray-600">Producto compuesto de materias primas para su ensamblaje o produccion.</p>
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 mb-8">
+        <p class="mt-4 text-xl text-slate-500 leading-relaxed">
+            Configure los insumos necesarios para fabricar este producto compuesto.
+        </p>
         
         <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <input id="idproducto" type="hidden" value="<?php echo $producto->id;?>">  
@@ -71,8 +89,16 @@
           </div>
         </div>
 
-        <div class="pt-4">
-          <p class="font-semibold text-2xl text-gray-600 text-center uppercase">Variaciones</p>
+        <div class="mt-8 pt-6 border-t border-slate-200">
+          <div class="flex items-center justify-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-indigo-600">
+                  tune
+              </span>
+
+              <p class="font-semibold text-2xl text-slate-700 uppercase tracking-wide">
+                  Variaciones
+              </p>
+          </div>
           <div class="flex flex-wrap gap-4">
             <div class="flex-1 basis-56">
                 <label class="block text-xl font-semibold text-slate-700 text-left" for="tipoGrupo">Tipo de grupo</label>
@@ -100,32 +126,72 @@
         </div>
       </div>
 
-      <div class="text-right">
+      <div class="flex justify-end gap-4 pt-6 mt-6 border-t border-slate-200">
           <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddSubproducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] crearAddSubproducto" type="submit" value="Asociar">
+          <input id="btnCrearAddSubproducto" class="btn-md btn-indigo !py-4 px-6 !w-[125px] crearAddSubproducto" type="submit" value="Asociar">
       </div>
 
       <div>
         <h5 class="mb-2 mt-4 text-slate-600 font-medium">Lista de insumos de produccion</h5>
-          <div class="w-full lg:w-5/6 mx-auto bg-white lg:px-8 pt-4 pb-14 listaSubproductos">
+          <div class="w-full pt-4 pb-14 listaSubproductos">
             <?php foreach($subproductosenlazados as $value): ?>
-              <div id="<?php echo $value->id_subproducto;?>" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">
-                <div class="flex-1">  
-                  <p class="m-0"><strong><?php echo $value->cantidadsubproducto." ".$value->unidadmedida;?></strong>.  <?php echo $value->nombre;?></p>
-                  <div class="mt-3 flex flex-wrap gap-4 text-lg">
-                    <span class="rounded-md px-4 py-1 bg-slate-100 text-slate-700">
-                      📦 Grupo: <strong><?= $value->grupos_insumos; ?></strong>
-                    </span>
-                    <span class="rounded-md px-4 py-1 font-medium <?= $value->seleccionado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'; ?>">
-                      <?= $value->seleccionado ? '✔ Seleccionado' : '✖ No seleccionado'; ?>
-                    </span>
-                    <span class="rounded-md px-4 py-1 font-medium <?= $value->permite_aumentar ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'; ?>">
-                        <?= $value->permite_aumentar ? '➕ Permite aumentar' : '🚫 Cantidad fija'; ?>
-                    </span>
-                  </div>
+              <div id="<?php echo $value->id_subproducto;?>"
+                  class="mb-5 flex justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200 items-center"
+                  role="alert">
+                <div class="flex-1 pr-6">  
+                  <div>
+                    <div class="mb-3">
+                        <p class="text-2xl font-semibold text-slate-800">
+                            <?php echo $value->nombre;?>
+                        </p>
 
+                        <p class="mt-2 text-indigo-600 font-semibold text-lg">
+                            <?php echo $value->cantidadsubproducto." ".$value->unidadmedida;?>
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-4 mt-4 text-lg">
+                        <span class="rounded-md px-4 py-1.5 bg-slate-100 text-slate-700">
+
+                            📦 <?php echo $value->grupos_insumos;?>
+
+                        </span>
+
+                        <span class="rounded-md px-4 py-1.5 font-medium
+                            <?= $value->seleccionado
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-rose-100 text-rose-700'; ?>">
+
+                            <?= $value->seleccionado
+                                ? '✔ Seleccionado'
+                                : '✖ No seleccionado'; ?>
+
+                        </span>
+
+                        <span class="rounded-md px-4 py-1.5 font-medium
+                            <?= $value->permite_aumentar
+                                ? 'bg-indigo-100 text-indigo-700'
+                                : 'bg-amber-100 text-amber-700'; ?>">
+
+                            <?= $value->permite_aumentar
+                                ? '➕ Permite aumentar'
+                                : '🚫 Cantidad fija'; ?>
+
+                        </span>
+                    </div>
+                  </div>
                 </div>
-                <button type="button"><span id="<?php echo $value->id_subproducto;?>" class="material-symbols-outlined">cancel</span></button>
+                <button
+                    type="button"
+                    class="self-start mt-1 rounded-full p-2 text-slate-400 transition-all duration-200 hover:bg-red-100 hover:text-red-600">
+
+                    <span
+                        id="<?php echo $value->id_subproducto;?>"
+                        class="material-symbols-outlined">
+
+                        close
+
+                    </span>
+                </button>
               </div>
             <?php endforeach; ?>
             <!--        

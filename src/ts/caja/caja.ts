@@ -152,10 +152,70 @@
         totalPagado.textContent = Number(target.parentElement!.dataset.totalpagado??'0').toLocaleString();
       }
       facturamediospago();     //muestra los valores de los medios de pago de cada factura
+
       if(estadofactura == "Eliminada")document.querySelector('#btnEnviarCambioMedioPago')?.classList.add('!hidden');
       if(estadofactura == "Paga")document.querySelector('#btnEnviarCambioMedioPago')?.classList.remove('!hidden');
       modalcambioMedioPago.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
+    }
+
+    function resaltarMediosActuales(){
+        // Ocultar todas las etiquetas y quitar resaltados anteriores
+        document.querySelectorAll('.medio-actual').forEach(etiqueta=>{
+            etiqueta.classList.add('hidden');
+        });
+
+        document.querySelectorAll('.input-medio-pago').forEach(input=>{
+            input.classList.remove(
+                'border-indigo-500',
+                'ring-2',
+                'ring-indigo-200',
+                'bg-indigo-50'
+            );
+        });
+
+        // Contar cuántos medios tienen saldo
+        let cantidadConSaldo = 0;
+
+        mediosPago.forEach(input => {
+            const valor = parseInt(
+                input.value.replace(/[,.]/g, '')
+            );
+
+            if (valor > 0) {
+                cantidadConSaldo++;
+            }
+        });
+
+        // Resaltar los medios que tienen saldo
+        mediosPago.forEach(input=>{
+            const valor = parseInt(
+                input.value.replace(/[,.]/g,'')
+            );
+
+            if(valor > 0){
+                const contenedor = input.closest('.contenedor-medio-pago');
+
+                const etiqueta = contenedor?.querySelector('.medio-actual') as HTMLElement;
+
+                if(etiqueta){
+                    etiqueta.classList.remove('hidden');
+
+                    if(cantidadConSaldo === 1){
+                        etiqueta.textContent = '① Medio de pago actual';
+                    }else{
+                        etiqueta.textContent = '✓ Registrado originalmente';
+                    }
+                }
+
+                input.classList.add(
+                    'border-indigo-500',
+                    'ring-2',
+                    'ring-indigo-200',
+                    'bg-indigo-50'
+                );
+            }
+        });
     }
 
     function facturamediospago(){  //muestra los valores de los medios de pago de cada factura
@@ -190,6 +250,7 @@
                 break;
               }
           });
+          resaltarMediosActuales();
         } catch (error) {
             console.log(error);
         }
@@ -199,17 +260,37 @@
     mediosPago.forEach(mp =>{
       mp.addEventListener('input', (e)=>{
         let totalmediospago = 0;
-        mediosPago.forEach((item, index)=>{ //sumar todos los medios de pago
-          totalmediospago += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
+
+        mediosPago.forEach((item)=>{ // sumar todos los medios de pago
+          totalmediospago += parseInt(
+            (item as HTMLInputElement).value.replace(/[,.]/g, '')
+          );
         });
 
-        if(totalmediospago<=parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))){
-          mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
-          document.querySelector('#diferencia')!.textContent = (parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))-totalmediospago).toLocaleString();
+        if(totalmediospago <= parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))){
+
+          // Guardar el último valor válido del input
+          mapMediospago.set(
+            (e.target as HTMLInputElement).id,
+            parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, ''))
+          );
+
+          // Actualizar diferencia
+          document.querySelector('#diferencia')!.textContent =
+            (
+              parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))
+              - totalmediospago
+            ).toLocaleString();
+
         }else{
+          // Restaurar el último valor válido
           if(mapMediospago.has((e.target as HTMLInputElement).id)){
-            (e.target as HTMLInputElement).value = mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
-          }else{ (e.target as HTMLInputElement).value = '0'; }
+            (e.target as HTMLInputElement).value =
+              mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
+
+          }else{
+            (e.target as HTMLInputElement).value = '0';
+          }
         }
       });
     });
