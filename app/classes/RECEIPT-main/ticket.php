@@ -111,6 +111,8 @@ use App\Models\parametrizacion\config_local;
 
 
 
+            $fs = $this->matrizFontSize[$this->fontSizeProductsFactura];
+            $this->pdf->SetFont('Arial',$fs[0],$fs[1]);
             /*----------  Detalles de la tabla  ----------*/
             foreach($productos as $value){
                 $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false); //nombre producto
@@ -125,7 +127,7 @@ use App\Models\parametrizacion\config_local;
             /*----------  Fin Detalles de la tabla  ----------*/
 
 
-
+            $this->pdf->SetFont('Arial','',10);
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
 
             $this->pdf->Ln(5);

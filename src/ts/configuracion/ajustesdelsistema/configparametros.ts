@@ -79,7 +79,7 @@
     //////////////////   Indicadores de caja   /////////////////////
     medidaFuenteSeccionClienteFactura?.addEventListener('input', parametrosSistemaTipoSelect);
     //////////////////   Indicadores de caja   /////////////////////
-    medidaFuenteSeccionClienteFactura?.addEventListener('input', parametrosSistemaTipoSelect);
+    medidaFuenteProductosFactura?.addEventListener('input', parametrosSistemaTipoSelect);
 
 
     function parametrosSistemaTipoSelect(e:Event){
