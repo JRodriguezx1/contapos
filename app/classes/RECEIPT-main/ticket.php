@@ -192,7 +192,15 @@ use App\Models\parametrizacion\config_local;
                 }
             }
 
-            $this->pdf->Ln(16);
+            $this->pdf->Ln(14);
+
+            //////////////  OBSERVACIONES //////////////
+            if($factura->observacion){
+                $this->pdf->SetFont('Arial','',10);
+                $this->pdf->Cell(0,4,iconv("UTF-8", "ISO-8859-1","OBSERVACION:"),0,'l',false);
+                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1",$factura->observacion),0,'l',false);
+                $this->pdf->Ln(8);
+            }
 
             //////////////  RESOLUCION  ////////////
             if($facturaElectronica != null){
