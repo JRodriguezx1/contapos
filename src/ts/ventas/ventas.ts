@@ -706,6 +706,7 @@
 
 
     async function printTicketPOS(idfactura:string, datainvoice:DataInvoice){
+      console.log(datainvoice);
       ////// cuando no es impresora CAJA por BT
       const isAndroid = /Android/i.test(navigator.userAgent);
 

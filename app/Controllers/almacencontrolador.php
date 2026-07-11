@@ -1319,7 +1319,7 @@ class almacencontrolador{
         $ra = $productostock->actualizar();
 
         /////  registrar movimiento de inventario a productos
-        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ingreso de unidades', 'referencia'=>'sumar unidades a inventario', 'cantidad'=>$cantidad, 'stockanterior'=>($productostock->stock-$cantidad), 'stocknuevo'=>$productostock->stock, 'comentario'=>'ingresando nuevas unidades a inventario']);
+        $movpro = new movimientos_productos(['idfksucursal'=>id_sucursal(), 'idproducto_id'=>$iditem, 'id_usuarioid'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ingreso de unidades', 'referencia'=>"sumar unidades a inventario, aux=$stockaux", 'cantidad'=>$cantidad, 'stockanterior'=>($productostock->stock-$cantidad), 'stocknuevo'=>$productostock->stock, 'comentario'=>'ingresando nuevas unidades a inventario']);
         $rm = $movpro->crear_guardar();
         
         $producto = productos::find('id', $iditem);
@@ -1372,7 +1372,7 @@ class almacencontrolador{
          $ra = $insumo->actualizar();
         if($ra){
           // registrar ingreso de movimientos de inventario a insumos
-          $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ingreso de unidades', 'referencia'=>'ingreso manual de unidades a inventario', 'cantidad'=>$cantidad, 'stockanterior'=>($insumo->stock-$cantidad), 'stocknuevo'=>$insumo->stock, 'comentario'=>'ingresando nuevas unidades a inventario']);
+          $movsub = new movimientos_insumos(['fksucursal_id'=>id_sucursal(), 'id_subproductoid'=>$iditem, 'idusuario_id'=>$_SESSION['id'], 'nombreusuario'=>$_SESSION['nombre'], 'tipo'=>'ingreso de unidades', 'referencia'=>"ingreso manual de unidades a inventario, aux=$stockaux", 'cantidad'=>$cantidad, 'stockanterior'=>($insumo->stock-$cantidad), 'stocknuevo'=>$insumo->stock, 'comentario'=>'ingresando nuevas unidades a inventario']);
           $rm = $movsub->crear_guardar();
           $alertas['exito'][] = "Stock del insumo - subproducto actualizado con exito";
           $alertas['item'][] = $insumo;
