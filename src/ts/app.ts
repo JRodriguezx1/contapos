@@ -424,6 +424,21 @@ function filtrarInsumos(productoConfigurado:Partial<productsapi>|undefined){
 }
 
 
-selectSucursal.addEventListener('click', ()=>{
+//evento para el cambio de sucursal
+selectSucursal.addEventListener('click', async()=>{
 
+  const datos = {
+      idsucursal: "Juan",
+      edad: 30,
+      ciudad: "Bogotá"
+  };
+
+  const url = "/admin/api/changeSucursal/select";
+                const respuesta = await fetch(url, {
+                                            method: 'POST', 
+                                            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                                            body: JSON.stringify(datos) 
+                                        });
+
+  
 });
