@@ -305,32 +305,35 @@
                 </label>
             </div>
 
-            <!-- Tarjeta Total -->
-            <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-8 text-center mb-8">
-                <p class="uppercase tracking-[0.25em] text-sm font-semibold text-emerald-700">
-                    Total pagado
-                </p>
+            <!-- Total pagado + Diferencia -->
+            <div class="grid grid-cols-2 gap-6 mb-8">
+                <!-- Tarjeta Total -->
+                <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-2 flex flex-col justify-center items-center text-center">
+                    <p class="uppercase tracking-[0.25em] text-sm font-semibold text-emerald-700">
+                        Total pagado
+                    </p>
 
-                <p class="mt-4 text-6xl font-bold text-emerald-700">
-                    $<span id="totalPagado">0</span>
-                </p>
-            </div>
+                    <p class="mt-4 text-5xl font-bold text-emerald-700">
+                        $<span id="totalPagado">0</span>
+                    </p>
+                </div>
 
-            <!-- Diferencia -->
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 mb-8 text-center">
-                <p class="uppercase tracking-[0.25em] text-sm font-semibold text-slate-500">
-                    Diferencia
-                </p>
+                <!-- Tarjeta Diferencia -->
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-2 flex flex-col justify-center items-center text-center">
+                    <p class="uppercase tracking-[0.25em] text-sm font-semibold text-slate-500">
+                        Diferencia
+                    </p>
 
-                <p
-                    id="diferencia"
-                    class="mt-3 text-5xl font-bold text-indigo-600">
+                    <p
+                        id="diferencia"
+                        class="mt-3 text-5xl font-bold text-indigo-600">
+                        0
+                    </p>
 
-                    0
-                </p>
-                <p class="mt-2 text-sm text-slate-500">
-                    Debe quedar en cero para aplicar el cambio.
-                </p>
+                    <p class="mt-3 text-base text-slate-500">
+                        ✓ Debe ser 0
+                    </p>
+                </div>
             </div>
 
             <!-- Tarjeta Medios de pago -->
@@ -354,7 +357,7 @@
                         info
                     </span>
 
-                    <div class="text-sm leading-6 text-amber-800">
+                    <div class="text-base leading-6 text-amber-800">
 
                         <strong>Importante:</strong>
 
@@ -372,19 +375,19 @@
 
                 <div
                     id="mediospagos"
-                    class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4 sm:gap-y-6">
 
                     <?php foreach($mediospago as $index => $value): ?>
-                        <div class="contenedor-medio-pago relative pt-8 w-full">
+                        <div class="contenedor-medio-pago relative pt-6 sm:pt-8 w-full">
 
                             <!-- Esta etiqueta la mostrará luego el JavaScript -->
                             <span
-                                class="medio-actual hidden absolute top-0 left-0 rounded-full bg-indigo-100  text-indigo-700 text-xs font-semibold px-3 py-1">
+                                class="medio-actual hidden absolute top-0 left-0 rounded-full bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-1">
                                 ① Medio de pago actual
                             </span>
 
                             <label
-                                class="block text-lg font-semibold text-slate-700 mb-2">
+                                class="block text-base sm:text-lg font-semibold text-slate-700 mb-1 sm:mb-2">
 
                                 <?php echo $value->mediopago ?? ''; ?>
                             </label>
@@ -400,8 +403,8 @@
                                     w-full
                                     p-3
                                     mt-1
-                                    h-16
-                                    text-xl
+                                    h-14 sm:h-16
+                                    text-lg sm:text-xl
                                     text-center
                                     font-semibold
                                     focus:border-indigo-600
