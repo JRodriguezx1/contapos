@@ -111,6 +111,8 @@ use App\Models\parametrizacion\config_local;
 
 
 
+            $fs = $this->matrizFontSize[$this->fontSizeProductsFactura];
+            $this->pdf->SetFont('Arial',$fs[0],$fs[1]);
             /*----------  Detalles de la tabla  ----------*/
             foreach($productos as $value){
                 $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false); //nombre producto
@@ -125,7 +127,7 @@ use App\Models\parametrizacion\config_local;
             /*----------  Fin Detalles de la tabla  ----------*/
 
 
-
+            $this->pdf->SetFont('Arial','',10);
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
 
             $this->pdf->Ln(5);
@@ -190,7 +192,15 @@ use App\Models\parametrizacion\config_local;
                 }
             }
 
-            $this->pdf->Ln(16);
+            $this->pdf->Ln(14);
+
+            //////////////  OBSERVACIONES //////////////
+            if($factura->observacion){
+                $this->pdf->SetFont('Arial','',10);
+                $this->pdf->Cell(0,4,iconv("UTF-8", "ISO-8859-1","OBSERVACION:"),0,'l',false);
+                $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1",$factura->observacion),0,'l',false);
+                $this->pdf->Ln(8);
+            }
 
             //////////////  RESOLUCION  ////////////
             if($facturaElectronica != null){

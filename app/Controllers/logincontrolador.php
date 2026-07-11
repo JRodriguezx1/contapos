@@ -243,7 +243,7 @@ class logincontrolador{
 
     public static function mensaje(Router $router){
         $router->render('auth/mensaje', ['titulo'=>'mensaje']);
-    } 
+    }
 
 
     /*
@@ -266,6 +266,32 @@ class logincontrolador{
         $alertas = usuarios::getAlertas();
         $router->render('auth/confirmar_cuenta', ['alertas'=>$alertas, 'titulo'=>'confirmacion de cuenta', 'negocio'=>negocio::get(1)]);
     }*/
+
+
+    ////////////////   API   ////////////////
+
+    public static function changeSucursal(){
+        isadmin();
+        $alertas = [];
+        $sucursal = sucursales::find('id', id_sucursal());
+        if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+            http_response_code(405); // Método no permitido
+            echo json_encode(['error' => 'Método no permitido']);
+            exit;
+        }
+        $detalleSuscrip = json_decode(file_get_contents('php://input'), true);
+        
+        $_SESSION['id'] = $usuario->id;
+        $_SESSION['idsucursal'] = $usuario->nickname =="soportej2"?$_POST['idsucursal']:$usuario->idsucursal;
+        $_SESSION['sucursal'] = sucursales::find('id', $usuario->nickname =="soportej2"?$_POST['idsucursal']:$usuario->idsucursal);
+        $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
+        $_SESSION['email'] = $usuario->email;
+        $_SESSION['login'] = true;
+        $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
+        $_SESSION['porcentajeganancia'] = $usuario->porcentajeganancia;
+        $_SESSION['permisos'] = $listapermisos;
+        $_SESSION['configLocal'] = config_local::getParamGlobal();
+    } 
 
      
 } //cierre de la clase

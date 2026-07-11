@@ -355,6 +355,7 @@ trait DocumentTrait
         // 3. Estructura Principal (DataInvoice)
         $dataInvoice = [
             // Datos extraídos de $sucursal
+            'host' => $sucursal->host,
             'negocio' => $sucursal->negocio,
             'sucursal' => $sucursal->nombre,
             'nit' => $sucursal->nit,

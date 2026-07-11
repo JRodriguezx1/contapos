@@ -385,7 +385,7 @@ CREATE TABLE `clientes` (
   `apellido` varchar(35) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `tipodocumento` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `identificacion` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `telefono` varchar(14) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `telefono` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `email` varchar(55) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
   `total_compras` int DEFAULT NULL,
@@ -2786,6 +2786,7 @@ CREATE TABLE `sucursales` (
   `youtube` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `logo` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
   `estado` tinyint(1) DEFAULT '1',
+  `host` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `timezone` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT 'America/Bogota',
   `version` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -2801,7 +2802,7 @@ CREATE TABLE `sucursales` (
 
 LOCK TABLES `sucursales` WRITE;
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
-INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,'America/Bogota','2.1','2025-09-08 00:26:46');
+INSERT INTO `sucursales` VALUES (1,1,0.00,NULL,0.00,NULL,0.00,NULL,'Negocio SAS','Sede centro',NULL,'Quindio','sin ciudad','sin direccion','sintelefono',NULL,'','','','',NULL,NULL,NULL,NULL,NULL,1,NULL,'America/Bogota','2.1','2025-09-08 00:26:46');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3269,4 +3270,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-06 18:56:04
+-- Dump completed on 2026-07-11 18:05:56
