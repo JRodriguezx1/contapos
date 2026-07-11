@@ -3,6 +3,7 @@ const sidebar = document.querySelector('.sidebar') as HTMLElement|null;  //selec
 const btnmenux = document.querySelector('#mobile-menux');
 const barra = document.querySelector('.barra-mobile') as HTMLElement|null;
 const nametop:HTMLElement|null = document.querySelector('.nametop');
+const selectSucursal = document.querySelector('#selectSucursal') as HTMLSelectElement;
 declare let Chart:any; //declare le indica a typescript que la variable chart viene de manera externa
 declare const Swal: any;
 declare var moment: any;
@@ -420,4 +421,9 @@ function filtrarInsumos(productoConfigurado:Partial<productsapi>|undefined){
               ...insumos.filter(i=>i.grupos_insumos?.tipo === "1" &&i.seleccionado === "1")
     ];
     insumos.splice(0, insumos.length, ...nuevosElementos);
-  }
+}
+
+
+selectSucursal.addEventListener('click', ()=>{
+
+});
