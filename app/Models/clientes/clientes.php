@@ -37,7 +37,7 @@ class clientes extends \App\Models\ActiveRecord {
         
         if(!$this->telefono)self::$alertas['error'][] = 'El telefono del cliente es Obligatorio';
 
-        if(!is_numeric($this->telefono) || strlen($this->telefono) >10)self::$alertas['error'][] = 'El telefono es incorrecto o debe ser de 10 digitos';
+        if(strlen($this->telefono) >30)self::$alertas['error'][] = 'El dato del telefono no puede superar los 30 caracteres';
 
         if($this->email)if(!filter_var($this->email, FILTER_VALIDATE_EMAIL)) self::$alertas['error'][] = 'Email no válido';
 
