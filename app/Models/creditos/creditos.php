@@ -25,6 +25,7 @@ class creditos {
         $this->frecuenciapago = $args['frecuenciapago']??'';
         $this->fechainicio = $args['fechainicio']??date('Y-m-d');
         $this->fechafin = $args['fechafin']??date('Y-m-d H:i:s');
+        $this->diasenmora = $args['diasenmora']??0;
         $this->interes = $args['interes']??'';
         $this->interesxcuota = $args['interesxcuota']??0;
         $this->interestotal = $args['interestotal']??0;
@@ -81,6 +82,7 @@ class creditos {
             'frecuenciapago' => $this->frecuenciapago, 
             'fechainicio' => $this->fechainicio, 
             'fechafin' => $this->fechafin,
+            'diasenmora' => $this->diasenmora,
             'interes' => $this->interes, 
             'interesxcuota' => $this->interesxcuota, 
             'interestotal' => $this->interestotal, 
