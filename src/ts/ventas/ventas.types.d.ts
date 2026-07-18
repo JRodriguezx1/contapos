@@ -102,6 +102,8 @@ interface CarritoItem {
     valorunidad: number;
     cantidad: number;
     stock?: number;
+    promediostock: number;
+    prioridadcomision: string;
     percentcomision: number; 
     valorcomision: number;
     subtotal: number;
@@ -110,6 +112,7 @@ interface CarritoItem {
     valorimp: number;
     descuento: number;
     total: number;
+    insumos:insumo[];
 }
 interface Resolution {
     consecutivoremplazo: string | null;

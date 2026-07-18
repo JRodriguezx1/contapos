@@ -84,5 +84,36 @@ class productos_sub extends \App\Models\ActiveRecord{
         }
         return $arreglo;
     }
+
+    /**
+     * Obtiene la receta autorizada de varios productos junto con el promedio de
+     * stock de la sucursal. Se utiliza para validar en el servidor la
+     * configuracion de insumos enviada por el carrito.
+     */
+    public static function recetasParaVenta(array $idsProductos, int $sucursalid):array
+    {
+        $idsProductos = array_values(array_unique(array_filter(
+            array_map('intval', $idsProductos),
+            fn(int $id):bool => $id > 0
+        )));
+
+        if(empty($idsProductos))return [];
+
+        $ids = implode(', ', $idsProductos);
+        $sql = "SELECT ps.*, p.rendimientoestandar AS rendimiento_producto,
+                       sis.promediostock,
+                       sp.nombre AS nombre_insumo,
+                       gi.tipo AS tipo_variacion
+                FROM productos_sub ps
+                INNER JOIN productos p ON p.id = ps.id_producto
+                INNER JOIN subproductos sp ON sp.id = ps.id_subproducto
+                LEFT JOIN grupos_insumos gi ON gi.id = ps.grupos_insumos
+                LEFT JOIN stockinsumossucursal sis
+                  ON sis.subproductoid = ps.id_subproducto
+                 AND sis.sucursalid = $sucursalid
+                WHERE ps.id_producto IN ($ids);";
+
+        return self::camposJoinObj($sql);
+    }
 }
 ?>

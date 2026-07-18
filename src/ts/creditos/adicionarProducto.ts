@@ -41,9 +41,10 @@
             valorimp:number,   //se calcula para productos nuevos agregados
             subtotal:number,   //se calcula para productos nuevos agregados
             total:number,      //se calcula para productos nuevos agregados
+            insumos?:insumo[];
         }
 
-        interface i_allProducts {
+        /*interface i_allProducts {
             id:string,  //id del producto
             idunidadmedida:string, 
             nombre:string,
@@ -60,7 +61,7 @@
             precio_venta:number
             habilitarventa:string, 
             visible:string,
-        }
+        }*/
 
         interface Item {
             id_impuesto: number,
@@ -72,8 +73,8 @@
 
         let factimpuestos:Item[] = [];
         let carrito:i_itemDetalle[]=[];
-        let allproducts:i_allProducts[] = [];
-        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string, promediostock:number}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
+        let allproducts:productsapi[] = [];
+        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string, precio:string, promediostock:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
         const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, total: 0}; //datos global de la venta
         const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
 
@@ -89,8 +90,8 @@
             try {
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
-                const resultado:i_allProducts[] = await respuesta.json();
-                filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida, promediostock: item.promediostock }));
+                const resultado:productsapi[] = await respuesta.json();
+                filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida, precio: item.precio_venta+'', promediostock: item.promediostock??'1' }));
                 activarselect2();
                 allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
             } catch (error) {
@@ -132,10 +133,10 @@
                             valorimp: Number(item.valorimp),
                             subtotal: Number(item.subtotal),
                             total: Number(item.total),
-                            factor: 1
+                            factor: 1,
                         }
                     });
-                    carrito.forEach(c =>printItemTable(c.idproducto, c.unidadmedida, c.cantidad, c.nombreproducto, c.valorunidad, c.total));
+                    carrito.forEach((c, i) =>printItemTable(c.unidadmedida, c.cantidad, c.nombreproducto, c.valorunidad, c.total, i));
                     //obtener datos del credito
 
                     dataCredit.capital = Number(resultado[0].capital);
@@ -173,71 +174,90 @@
         btnAddItem.addEventListener('click', (e)=>{
             let cantidad = parseFloat((document.querySelector('#cantidad') as HTMLInputElement).value);
             let datos = ($('#articulo') as any).select2('data')[0];
-            console.log(datos);
-            if(datos){
-                const index = carrito.findIndex(x=>x.idproducto==datos.id);
+            if(!datos)return;
+            const itemselected = allproducts.find(x=>x.id == datos.id);
+            if(itemselected){
+                const productoConfigurado = structuredClone(itemselected);
+                //filtrarInsumos(productoConfigurado);
+                const index = carrito.findIndex(x=>x.idproducto==datos.id /*&& x.valorunidad == Number(datos.precio) && mismaConfiguracion(x, productoConfigurado!)*/);
                 if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-                    //const itemselected = filteredData.find(x=>x.id==datos.id&&x.tipo==datos.tipo)!;
-                    const productSelected = allproducts.find(x=>x.id==datos.id)!;
 
-                    const productototal = Number(productSelected.precio_venta)*cantidad;
-                    const productovalorimp = productototal*constImp[productSelected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+                    const productototal = Number(productoConfigurado.precio_venta)*cantidad;
+                    const productovalorimp = productototal*constImp[productoConfigurado.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
 
                     const item:i_itemDetalle = {
                         id: '',
                         idcredito: idcreditoURL!,
-                        idproducto:productSelected.id,
-                        idunidadmedida: productSelected.idunidadmedida,
+                        idproducto:productoConfigurado.id,
+                        idunidadmedida: productoConfigurado.idunidadmedida,
                         //tipo: itemselected.tipo,  ////tipo = 0 es producto (simple o compuesto produccion),  1 = subproducto
-                        tipoproducto: productSelected.tipoproducto, 
-                        tipoproduccion: productSelected.tipoproduccion,
-                        promediostock: Number(productSelected.promediostock),
-                        rendimientoestandar: productSelected.rendimientoestandar,
-                        nombreproducto: productSelected.nombre, 
-                        unidadmedida: productSelected.unidadmedida,
-                        preciopersonalizado: productSelected.preciopersonalizado,
-                        sku: productSelected.sku,
-                        costo: Number(productSelected.precio_compra),
-                        valorunidad: Number(productSelected.precio_venta),
+                        tipoproducto: productoConfigurado.tipoproducto, 
+                        tipoproduccion: productoConfigurado.tipoproduccion,
+                        promediostock: Number(productoConfigurado.promediostock),
+                        rendimientoestandar: productoConfigurado.rendimientoestandar,
+                        nombreproducto: productoConfigurado.nombre, 
+                        unidadmedida: productoConfigurado.unidadmedida,
+                        preciopersonalizado: '0',
+                        sku: productoConfigurado.sku,
+                        costo: Number(productoConfigurado.precio_compra),
+                        valorunidad: Number(productoConfigurado.precio_venta),
                         descuento: 0,
                         cantidad: cantidad,
                         stock: cantidad,
                         base: productototal-productovalorimp,
-                        impuesto: productSelected.impuesto,
+                        impuesto: productoConfigurado.impuesto,
                         valorimp: productovalorimp,
                         subtotal: productototal,
                         total: productototal,
                         factor: 1,
                     }
                     carrito = [...carrito, item];
-                    printItemTable(productSelected.id, productSelected.unidadmedida, cantidad, productSelected.nombre, productSelected.precio_venta, item.total);
+                    const indice = carrito.length - 1;
+                    printItemTable(productoConfigurado.unidadmedida, cantidad, productoConfigurado.nombre, Number(productoConfigurado.precio_venta), item.total, indice);
                     valorCarritoTotal();
                 }else{
                     carrito[index].cantidad = cantidad;
+                    carrito[index].stock = cantidad;
                     carrito[index].subtotal = (carrito[index].valorunidad)*carrito[index].cantidad;
                     carrito[index].total = carrito[index].subtotal;
                     //calculo del impuesto y base por producto en el carrito deventas
                     carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
                     carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
                     //calcular valores
-                    const tr = document.querySelector(`[data-id="${carrito[index].idproducto}"]`)!;
+                    const tr = document.querySelector(`[data-index="${index}"]`)!;
                     tr.children[1].textContent = carrito[index].cantidad+'';
                     valorCarritoTotal();
                 }
-
             }
         });
 
-        function printItemTable(id:string, unidadmedida:string, cantidad:number, nombre:string, valorunidad:number, total:number){
-            //let options = `<option data-factor="1" value="" >${unidadmedida}</option>`;
-            /*
-            options = "";
-            const productounidades = allConversionUnidades.filter(x => x.idproducto == id); 
-            productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
-            */
+
+        /*function mismaConfiguracion(productCarrito: any, producto2: productsapi):boolean {
+            const mapaProduct2 = new Map(producto2.insumos.map((ins:any) => [ins.id_subproducto, ins]));
+            // Deben ser el mismo producto
+            if(productCarrito.idproducto !== producto2.id)return false;
+
+            // Deben tener la misma cantidad de insumos
+            if(productCarrito.insumos.length !== producto2.insumos.length)return false;
+
+            for (const insumo1 of productCarrito.insumos) {
+                //const insumo2 = producto2.insumos.find((x:any) => x.id_subproducto == insumo1.id_subproducto);
+                const insumo2:any = mapaProduct2.get(insumo1.id_subproducto);
+                if (!insumo2)return false;
+                // Comparar selección
+                if (Number(insumo1.seleccionado) !== Number(insumo2.seleccionado))
+                    return false;
+                // Comparar cantidad
+                if (Number(insumo1.cantidadsubproducto) !== Number(insumo2.cantidadsubproducto))
+                    return false;
+            }
+            return true;
+        }*/
+
+        function printItemTable(unidadmedida:string, cantidad:number, nombre:string, valorunidad:number, total:number, indice:number){
             const tr = document.createElement('TR');
             tr.classList.add('itemselect');
-            tr.dataset.id = `${id}`;
+            tr.dataset.index = `${indice}`;
             tr.insertAdjacentHTML('afterbegin', 
                 `<td class="p-4">${nombre}</td>
                 <td class="p-4">${cantidad}</td>
@@ -300,12 +320,13 @@
         //////////////////////////////////// evento a la tabla de los productos seleccionados  ///////////////////////////////////
         tablaItems?.addEventListener('click', (e:Event)=>{
             const elementItem = (e.target as HTMLElement)?.closest('.itemselect'); //seleccionamos el tr de la tabla
-            const iditem = (elementItem as HTMLElement).dataset.id!;
-            //const tipoitem = (elementItem as HTMLElement).dataset.tipo!;
+            const indexcarrito = Number((elementItem as HTMLElement).dataset.index!);
         
             if((e.target as HTMLElement).classList.contains('eliminarItem')){ //se trae todoscon true menos el que coincida con iditem y tipoitem
-                carrito = carrito.filter(x => x.idproducto!==iditem);
-                tablaItems?.querySelector(`TR[data-id="${iditem}"]`)?.remove();
+                carrito.splice(indexcarrito, 1);
+                while(tablaItems.firstChild)tablaItems.removeChild(tablaItems.firstChild);
+                carrito.forEach((item, i) =>printItemTable(item.unidadmedida, item.cantidad, item.nombreproducto, item.valorunidad, item.total, i));
+                //tablaItems?.querySelector(`TR[data-id="${iditem}"]`)?.remove();
             }
             valorCarritoTotal();
             //itemCarrito.cantidad = itemCarrito.cantidadcomprado*itemCarrito.factor;

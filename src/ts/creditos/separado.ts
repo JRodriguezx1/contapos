@@ -5,7 +5,7 @@
      
     const btnCrearSeparado = document.querySelector('#btnCrearSeparado');
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
-    const tablaSeparado = document.querySelector('#tablaSeparado tbody');
+    const tablaSeparado = document.querySelector('#tablaSeparado tbody') as HTMLBodyElement;
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
 
@@ -29,8 +29,9 @@
     }
 
     let allConversionUnidades:conversionunidadesapi[] = [];
-    let filteredData: {id:string, text:string, tipo:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, promediostock: string, rendimientoestandar:string, precio_compra:string, precio_venta:string}[];   //tipo = 0 es producto simple,  1 = subproducto
-    let carrito:{id:string, idproducto:string,  tipoproducto: string, tipoproduccion:string, foto:string,costo:number, valorunidad:string, nombreproducto:string,  rendimientoestandar:string, unidad:string, stock: number, promediostock: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra: number}[]=[];
+    let carrito:CarritoItem[]=[];
+    let allproducts:productsapi[] = [];
+    let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string, precio:string}[];   //tipo = 0 es producto simple,  1 = subproducto
     const valorTotal = {subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let factimpuestos:Item[] = [], tipoventa:string="Contado";
     const mapMediospago = new Map();
@@ -52,9 +53,10 @@
         try {
             const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y subproductos
             const respuesta = await fetch(url); 
-            const resultado:{id:string, nombre:string, tipoproducto:string, tipoproduccion:string, impuesto:string, sku:string, unidadmedida:string, promediostock:string, rendimientoestandar:string, precio_compra:string, precio_venta:string, visible:string, habilitarventa:string}[] = await respuesta.json();
-            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo: item.tipoproducto??'0', tipoproduccion: item.tipoproduccion??'0', impuesto: item.impuesto, sku: item.sku, unidadmedida: item.unidadmedida, promediostock: item.promediostock, rendimientoestandar: item.rendimientoestandar, precio_compra: item.precio_compra, precio_venta: item.precio_venta }));
-            activarselect2(filteredData);
+            const resultado:productsapi[] = await respuesta.json();
+            filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida, precio:item.precio_venta }));
+            activarselect2();
+            allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
         } catch (error) {
             console.log(error);
         }
@@ -74,7 +76,7 @@
     document.querySelector('#contenedorCanalVenta')?.classList.add('hidden');
     document.querySelector('#canalVenta')?.removeAttribute('required');
 
-    function activarselect2(filteredData:{id:string, text:string, tipo:string, sku:string, unidadmedida:string, promediostock:string}[]){
+    function activarselect2(){
       ($('#articulo') as any).select2({ 
           data: filteredData,
           placeholder: "Selecciona un item",
@@ -97,94 +99,109 @@
     $("#articulo").on('change', (e)=>{
         let datos = ($('#articulo') as any).select2('data')[0];
         if(datos){
-          let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
-          if(itemselected != undefined)cantidad += itemselected.stock;
-          actualizarCarrito(datos.id, cantidad, true);
+          const itemselected = allproducts.find(x=>x.id == datos.id)!
+          const productoConfigurado = structuredClone(itemselected);
+          filtrarInsumos(productoConfigurado);
+          actualizarCarrito(datos.id, datos.precio, productoConfigurado);
           $("#articulo").val('null').trigger('change');
         }
     });
 
-    function actualizarCarrito(id:string, cantidad:number = 1, stateinput:boolean){
-      const index = carrito.findIndex(x=>x.idproducto==id);
+    function actualizarCarrito(id:string, precio:number = 1, productoConfigurado:productsapi|null){
+      const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio && mismaConfiguracion(x, productoConfigurado!));
       if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-          const itemselected = filteredData.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
+          const productototal = Number(productoConfigurado?.precio_venta);
+          const productovalorimp = productototal*constImp[productoConfigurado?.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
           
-          const productototal = Number(itemselected.precio_venta)*cantidad;
-          const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
-          
-          const item:{id: string, idproducto: string, tipoproducto: string, tipoproduccion:string, foto:string, costo:number, valorunidad:string, nombreproducto: string, rendimientoestandar:string, unidad: string, stock: number, promediostock: number, factor: number, precio_venta: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, precio_compra:number} = {
+          const item:CarritoItem = {
               id: '',
-              idproducto: itemselected?.id!,
-              tipoproducto: itemselected.tipo,  ////tipo = 0 es producto simple,  1 = subproducto
-              tipoproduccion: itemselected.tipoproduccion,
+              idproducto: productoConfigurado?.id!,
+              tipoproducto: productoConfigurado?.tipoproducto!,  ////tipo = 0 es producto simple,  1 = subproducto
+              tipoproduccion: productoConfigurado?.tipoproduccion!,
               foto: '',
-              costo: Number(itemselected.precio_compra),
-              valorunidad: itemselected.precio_venta,
-              nombreproducto: itemselected.text,
-              rendimientoestandar: itemselected.rendimientoestandar,
-              unidad: itemselected.unidadmedida,
+              costo: productoConfigurado?.precio_compra!,
+              valorunidad: Number(productoConfigurado?.precio_venta),
+              nombreproducto: productoConfigurado?.nombre!,
+              rendimientoestandar: productoConfigurado?.rendimientoestandar!,
+              cantidad: 1,
               stock: 1,
-              promediostock: Number(itemselected.promediostock),
-              factor: 1,
-              impuesto: itemselected.impuesto,
-              precio_venta: productototal,
+              promediostock: Number(productoConfigurado?.promediostock),
+              prioridadcomision: productoConfigurado?.prioridadcomision!,
+              percentcomision: productoConfigurado?.percentcomision!,
+              valorcomision: 0,
+              impuesto: productoConfigurado?.impuesto!,
               subtotal: productototal,
               base: productototal-productovalorimp,
               valorimp: productovalorimp,
               descuento: 0,
-              total: Number(itemselected.precio_venta),
-              precio_compra: Number(itemselected.precio_compra),
+              total: productototal,
+              insumos: productoConfigurado?.insumos??[]
           }
           carrito = [...carrito, item];
           POS.carrito = carrito;
-          printItemTable(id);
       }else{  //si ya existe en el carrito, sumar
-        if(cantidad <= 0){
-          cantidad = 0;
-          carrito[index].total = 0;
-          //carrito = carrito.filter(x=>x.iditem != id);
-        }
-        
-        carrito[index].stock = cantidad;
-        /*const total:number = carrito[index].stock*carrito[index].precio_venta;
-        carrito[index].subtotal = total;
-        carrito[index].total = total;*/
-        carrito[index].subtotal = (carrito[index].precio_venta)*carrito[index].stock;
-        carrito[index].total = carrito[index].subtotal;
-        //calculo del impuesto y base por producto en el carrito deventas
-        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
-        carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
-
-        if(stateinput)
-          (tablaSeparado?.querySelector(`TR[data-id="${id}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
-        (tablaSeparado?.querySelector(`TR[data-id="${id}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
-        valorCarritoTotal();
+        sumarcantidad(carrito[index], carrito[index].cantidad+1, index);
       }
-      //console.log(carrito);
-      /*if(cantidad<1){
-          carrito = carrito.filter(x=>x.iditem != id);
-      }*/
+      printItemTable();
     }
 
-    function printItemTable(id:string){
-        const uncarrito = carrito.find(x=>x.idproducto==id)!;
-        let options:string = '';
 
-        const productounidades = allConversionUnidades.filter(x => x.idproducto === id); 
-        productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
+    function mismaConfiguracion(productCarrito: any, producto2: productsapi):boolean {
+        const mapaProduct2 = new Map(producto2.insumos.map((ins:any) => [ins.id_subproducto, ins]));
+        // Deben ser el mismo producto
+        if(productCarrito.idproducto !== producto2.id)return false;
 
-        const tr = document.createElement('TR');
-        tr.classList.add('productselect');
-        tr.dataset.id = `${id}`;
-        //tr.dataset.tipo = `${item.tipo}`;
-        tr.insertAdjacentHTML('afterbegin', `
-          <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${uncarrito.nombreproducto}</td> 
-          <td class="!p-2 !py-0 text-xl text-gray-500 leading-5"><select class="formulario__select selectunidad">${options}</select></td>
-          <td class="!p-2 !py-0"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" name="inputcantidad" value="${uncarrito.stock}"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
-          <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${uncarrito.precio_venta*uncarrito.stock}</td>
-          <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
-        tablaSeparado?.appendChild(tr);
+        // Deben tener la misma cantidad de insumos
+        if(productCarrito.insumos.length !== producto2.insumos.length)return false;
+
+        for (const insumo1 of productCarrito.insumos) {
+            //const insumo2 = producto2.insumos.find((x:any) => x.id_subproducto == insumo1.id_subproducto);
+            const insumo2:any = mapaProduct2.get(insumo1.id_subproducto);
+            if (!insumo2)return false;
+            // Comparar selección
+            if (Number(insumo1.seleccionado) !== Number(insumo2.seleccionado))
+                return false;
+            // Comparar cantidad
+            if (Number(insumo1.cantidadsubproducto) !== Number(insumo2.cantidadsubproducto))
+                return false;
+        }
+        return true;
+    }
+
+
+    function sumarcantidad(productoCarrito:CarritoItem, cantidad:number, index:number){
+        if(cantidad < 0)cantidad = 0;
+        productoCarrito.cantidad = cantidad;
+        productoCarrito.stock = cantidad;
+        productoCarrito.subtotal = (productoCarrito.valorunidad)*productoCarrito.cantidad;
+        productoCarrito.total = productoCarrito.subtotal;
+        productoCarrito.valorcomision = (productoCarrito.subtotal*productoCarrito.percentcomision)/100;
+        //calculo del impuesto y base por producto en el carrito deventas
+        productoCarrito.valorimp = parseFloat((productoCarrito.total*constImp[productoCarrito.impuesto??0]).toFixed(3));
+        productoCarrito.base = parseFloat((productoCarrito.total-productoCarrito.valorimp).toFixed(3));
+        (tablaSeparado?.querySelector(`TR[data-indexcarrito="${index}"] .inputcantidad`) as HTMLInputElement).value = carrito[index].stock+'';
+        (tablaSeparado?.querySelector(`TR[data-indexcarrito="${index}"]`)?.children?.[3] as HTMLElement).textContent = "$"+productoCarrito.total.toLocaleString();
         valorCarritoTotal();
+    }
+
+
+    function printItemTable(){
+        while(tablaSeparado.firstChild)tablaSeparado.removeChild(tablaSeparado.firstChild);
+        let options:string = '';
+        ///const productounidades = allConversionUnidades.filter(x => x.idproducto === id); 
+        //productounidades.forEach(u=>options+=`<option data-factor="${u.factorconversion}" value="${u.idproducto}" >${u.nombreunidaddestino}</option>`);
+        carrito.forEach((item, i)=>{
+          const tr = document.createElement('TR') as HTMLTableRowElement;
+          tr.classList.add('productselect');
+          tr.dataset.indexcarrito = i+'';
+          tr.insertAdjacentHTML('afterbegin', `
+            <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${item.nombreproducto}</td> 
+            <td class="!p-2 !py-0 text-xl text-gray-500 leading-5"><select class="formulario__select selectunidad">${options}</select></td>
+            <td class="!p-2 !py-0"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" name="inputcantidad" value="${item.stock}"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
+            <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${item.total.toLocaleString()}</td>
+            <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
+          tablaSeparado?.appendChild(tr);
+        });
     }
 
     function valorCarritoTotal(){
@@ -240,11 +257,12 @@
     tablaSeparado?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
       const idProduct = (elementProduct as HTMLElement).dataset.id!;
-      //const precio = (elementProduct as HTMLElement).dataset.precio!;
-      const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
-      if((e.target as HTMLElement).classList.contains('menos')){
-        actualizarCarrito(idProduct, productoCarrito!.stock-1, true);
-      }
+      const precio = (elementProduct as HTMLElement).dataset.precio!;
+      const indexcarrito = Number((elementProduct as HTMLElement).dataset.indexcarrito!);
+      let productoCarrito = carrito[indexcarrito];
+      
+      if((e.target as HTMLElement).classList.contains('menos'))
+        sumarcantidad(productoCarrito, productoCarrito.cantidad-1, indexcarrito);
       
       if((e.target as HTMLElement).classList.contains('inputcantidad')){
         if((e.target as HTMLElement).dataset.event != "eventInput"){
@@ -257,20 +275,19 @@
             if (val === '' || isNaN(parseFloat(val))) val = '0';
 
             (e.target as HTMLInputElement).value = val;
-            actualizarCarrito(idProduct, Number((e.target as HTMLInputElement).value), false);
+            sumarcantidad(productoCarrito, Number(val), indexcarrito);
           });
           (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
         }
       }
 
-      if((e.target as HTMLElement).classList.contains('mas')){
-        actualizarCarrito(idProduct, productoCarrito!.stock+1, true);
-      }
+      if((e.target as HTMLElement).classList.contains('mas'))
+        sumarcantidad(productoCarrito, productoCarrito.cantidad+1, indexcarrito);
       
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        carrito = carrito.filter(x=>x.idproducto != idProduct);
+        carrito.splice(indexcarrito, 1);
+        printItemTable();
         valorCarritoTotal();
-        tablaSeparado?.querySelector(`TR[data-id="${idProduct}"]`)?.remove();
       }
     });
 
@@ -331,7 +348,7 @@
       valoresCredito.cliente_id = (document.querySelector('#cliente') as HTMLSelectElement).value;
       valoresCredito.valorpagado = valoresCredito.abonoinicial;
       valoresCredito.cajaid = btnCaja.value;
-      valoresCredito.totalunidades = carrito.reduce((total, producto)=>producto.stock+total, 0)+'';
+      valoresCredito.totalunidades = carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'';
       valoresCredito.base = valorTotal.base.toFixed(3);
       valoresCredito.valorimpuestototal = valorTotal.valorimpuestototal+'';
       valoresCredito.dctox100 = valorTotal.dctox100+'';
@@ -344,13 +361,13 @@
       datos.append('cantidadcuotas', $('#cantidadcuotas').val()as string);
       datos.append('montocuota', $('#montocuota').val()as string);
       datos.append('frecuenciapago', $('#frecuenciapago').val()as string);
-      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.stock>0)));  //envio de todos los productos con sus cantidades
+      datos.append('carrito', JSON.stringify(carrito.filter(x=>x.cantidad>0)));  //envio de todos los productos con sus cantidades
       datos.append('mediospago', JSON.stringify(Array.from(mapMediospago, ([mediopago_id, valor])=>({mediopago_id, idcuota:0, valor}))));
       datos.append('valorefectivo', mapMediospago.get('1')??'0');
       datos.append('factimpuestos', JSON.stringify(factimpuestos));
       datos.append('valoresCredito', JSON.stringify(valoresCredito));
 
-      datos.append('totalunidades', carrito.reduce((total, producto)=>producto.stock+total, 0)+'');
+      datos.append('totalunidades', carrito.reduce((total, producto)=>producto.cantidad+total, 0)+'');
       datos.append('base', valorTotal.base.toFixed(3));
       datos.append('valorimpuestototal', valorTotal.valorimpuestototal+''); //valor total del impuesto. 
       datos.append('dctox100', valorTotal.dctox100+'');

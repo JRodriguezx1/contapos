@@ -71,8 +71,9 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function update(object $entity){
-        $data = $entity->toArray();
+    public function update(object $entity):bool{
+        $data = get_object_vars($entity);
+        if(method_exists($entity, 'toArray'))$data = $entity->toArray();
         $sets = [];
         $id = $entity->id;;
         $query = "UPDATE {$this->table} SET ";

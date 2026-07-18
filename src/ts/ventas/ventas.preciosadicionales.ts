@@ -48,7 +48,7 @@
     document.removeEventListener("click", POS.cerrarDialogoExterno);
     const precioLibre = obtenerNumero(inputPrecioLibre);
     const prioridadValor = precioLibre!=null?precioLibre:seleccionado?.checked?seleccionado.value:producto?.precio_venta;
-    filtrarInsumos(productoConfigurado);
+    filtrarInsumos(productoConfigurado); //esta en app.ts
     if(producto != undefined)POS.actualizarCarrito(producto.id, cantidadTotal==0?1:cantidadTotal, true, true, prioridadValor+'', productoConfigurado);
   });
 
@@ -111,6 +111,7 @@
     insumosgrupo.forEach(insumogrupo =>renderGrupo(insumogrupo, listaInsumos));
     eventosCheckbox();
     eventosRadio();
+    eventosCantidadInsumo();
   }
 
   function agruparInsumos() {
@@ -214,8 +215,9 @@
             <label class="text-slate-600 text-xl">Cantidad</label>
             <input
               type="number"
-              class="w-36 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block p-3 mt-2 h-10 text-lg focus:outline-none focus:ring-1" 
-              value="${insumo.cantidadsubproducto}" min="1"
+              class="inputCantidadInsumo w-36 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block p-3 mt-2 h-10 text-lg focus:outline-none focus:ring-1"
+              data-idinsumo="${insumo.id_subproducto}"
+              value="${insumo.cantidadsubproducto}" min="${insumo.cantidadsubproducto}" step="any"
             >
         </div>`;
   }
@@ -229,6 +231,31 @@
   function eventosRadio() {
     const radios = document.querySelectorAll<HTMLInputElement>(".inputInsumoRadio");
     radios.forEach(radio => radio.addEventListener("change", actualizarRadio));
+  }
+
+  function eventosCantidadInsumo() {
+    const cantidades = document.querySelectorAll<HTMLInputElement>(".inputCantidadInsumo");
+    cantidades.forEach(input => input.addEventListener("change", actualizarCantidadInsumo));
+  }
+
+  function actualizarCantidadInsumo(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const idInsumo = Number(input.dataset.idinsumo);
+    const insumo = productoConfigurado?.insumos?.find(
+      item => Number(item.id_subproducto) === idInsumo
+    );
+    if(!insumo)return;
+
+    const cantidadBase = Number(
+      producto?.insumos?.find(item => Number(item.id_subproducto) === idInsumo)?.cantidadsubproducto ?? 0
+    );
+    const cantidad = Number(input.value);
+    const cantidadValida = Number.isFinite(cantidad) && cantidad >= cantidadBase
+      ? cantidad
+      : cantidadBase;
+
+    insumo.cantidadsubproducto = cantidadValida.toString();
+    input.value = cantidadValida.toString();
   }
 
 

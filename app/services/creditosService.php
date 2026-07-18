@@ -18,6 +18,7 @@ use App\Models\creditos\productosseparados;
 use App\Models\creditos\separadomediopago;
 use App\Models\factimpuestos;
 use App\Models\inventario\productos_sub;
+use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
@@ -69,6 +70,19 @@ class creditosService {
         $alertas = [];
         $separado = new creditosRepository();
         $getDB = $separado->getConexion();
+
+        // Resolver en el servidor los productos e insumos que realmente se
+        // descontaran, usando la configuracion predeterminada enviada por el front.
+        $inventarioSeparado = ventasService::prepararInventarioXVenta($carrito, id_sucursal());
+        $conflocal = config_local::getParamCaja();
+        if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){
+            $erroresStock = ventasService::validarDisponibilidadInventario($inventarioSeparado, id_sucursal());
+            if(!empty($erroresStock)){
+                $alertas['error'] = $erroresStock;
+                return $alertas;
+            }
+        }
+
         //$alertas = $separado->validar();
         //if(empty($alertas)){
         $getDB->begin_transaction();
@@ -100,9 +114,14 @@ class creditosService {
               $obj->stockaux = $obj->promediostock>0?$obj->stock/$obj->promediostock:0;
             }
             $repo = new productsSeparadosRepository();
-            $repo->crear_varios_reg_arrayobj($carrito);
+            [$productosCreados] = $repo->crear_varios_reg_arrayobj($carrito);
+            if(!$productosCreados)
+                throw new \RuntimeException('No fue posible guardar los productos del separado.');
+
             //descontar de inventario
-            $a = ventasService::reducirIventarioXVenta($carrito); //no se ha convertido a repositorio los metodos internos
+            $inventarioActualizado = ventasService::descontarInventarioXVenta($inventarioSeparado,id_sucursal(),'separado','descuento de unidades por separado',false);
+            if(!$inventarioActualizado)
+                throw new \RuntimeException('No fue posible descontar el inventario del separado.');
 
             //$ultimocierre->ventasenefectivo += $valorefectivo;
             $ultimocierre->creditocapital += $valoresCredito['capital'];
@@ -396,11 +415,15 @@ class creditosService {
         $productosRepo = new productsSeparadosRepository();
         
         $credito = $creditoRepo->find($idcredito);
+        if(!$credito)return ['error'=>['El separado no existe.']];
         if($credito->idestadocreditos != 2 )return ['error'=>['El separado debe estar abierto para anular.']];
-        
+
+        $getDB = $creditoRepo->getConexion();
+        $getDB->begin_transaction();
         try {
             //cambiar estado del separado
-            $creditoRepo->anularCredito($credito->id);
+            if(!$creditoRepo->anularCredito($credito->id))
+                throw new \RuntimeException('No fue posible cambiar el estado del separado.');
             //Anular valores de la cuota de caja abierta
             $cuotasRepo = new cuotasRepository();
             $cuotas = $cuotasRepo->obtenerPorSeparado_cierracajaAbierto($credito->id);
@@ -429,28 +452,31 @@ class creditosService {
             }
             
             //descontar los abonos de los separados en cierre de caja si esta abierta
-            if(!empty($arrayCierresCaja))
+            if(!empty($arrayCierresCaja)){
                 $r = cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonosseparados']);
+                if(!$r)throw new \RuntimeException('No fue posible actualizar los cierres de caja.');
+            }
             //eliminar los medios de pago de las cuotas relacionadas donde el cierre de caja este abierto
-            if(!empty($idseparadomediopago))
-                $separdoMediopago->delete_regs('id', $idseparadomediopago);
+            if(!empty($idseparadomediopago) && !$separdoMediopago->delete_regs('id', $idseparadomediopago))
+                throw new \RuntimeException('No fue posible eliminar los medios de pago del separado.');
+
             //devolver a inventario
             $productos = $productosRepo->obtenerPorCredito($credito->id);
-            foreach($productos as $obj){
-              $obj->idproducto = $obj->idproducto;
-              $obj->stock = $obj->cantidad;
-              $obj->stockaux =  $obj->promediostock>0?$obj->cantidad/$obj->promediostock:0;
-            }
-            ventasService::addIventarioXVenta($productos);
+            $inventarioSeparado = ventasService::prepararInventarioXVenta($productos, id_sucursal());
+            $inventarioActualizado = ventasService::devolverInventarioXVenta($inventarioSeparado, id_sucursal(), 'devolucion', 'retorno de unidades por anulacion de separado', false);
+            if(!$inventarioActualizado)
+                throw new \RuntimeException('No fue posible devolver el inventario del separado.');
 
             //acatualizar deuda de cliente
             $cliente = clientes::find('id', $credito->cliente_id);
             $cliente->totaldebe -= $credito->saldopendiente;
             $cliente->actualizar();
-            
+
+            $getDB->commit();
             $alertas['exito'][] = "Separado anulado correctamente";
         } catch (\Throwable $th) {
-           $alertas['error'][] = "Error al anular el separado. {$th->getMessage()}"; 
+           $getDB->rollback();
+           $alertas['error'][] = "Error al anular el separado. {$th->getMessage()}";
         }
 
         return $alertas;
@@ -580,6 +606,7 @@ class creditosService {
             //buscar movimiento de caja y actualizar
             $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>2, 'id_documento'=>$cuota->id]);
             $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
+            $movCaja->observacion .= ' - Cuota anulada manualmente';
             $movCaja->estado = 0;
             $repoMovimientocaja->update($movCaja);
             $cierrecaja->abonoscreditos -= $cuota->valorpagado;
@@ -658,105 +685,156 @@ class creditosService {
 
     //metodo llamado desde adicionarproducto.ts para editar los productos del credito/separado
     public static function editarOrdenCreditoSeparado(int $idcredito, $idsdetalleproductos, $nuevosproductosFront, $dataCredit){
-        $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = []; $arrayDownInv=[]; $arrayUpInv = []; $arrayProductsEliminar = [];
-        $r1 = true; $r2 = true; $r3 = true;
+        $alertas = [];
         $creditoRepo = new creditosRepository();
-        $credito = $creditoRepo->find($idcredito);
         $productosRepo = new productsSeparadosRepository();
-        $detalleProductosDB = $productosRepo->findAll('idcredito', $idcredito);
+        $getDB = $creditoRepo->getConexion();
 
-        //Sincronizar id de la DB y del front si coinciden en el id de productosseparados id de idproducto
-        foreach($nuevosproductosFront as $itemfront){
-            
-          foreach($detalleProductosDB as $itemDB){
-            if($itemfront->idcredito == $itemDB->idcredito){
-              if($itemfront->idproducto == $itemDB->idproducto){
-                $itemfront->id = $itemDB->id;
-                $idsdetalleproductos[] = $itemDB->id;
-                if($itemDB->cantidad < $itemfront->cantidad){ //descontar diferencia a inv
-                    $diferencia = $itemfront->cantidad-$itemDB->cantidad;
-                    $itemClone = clone $itemDB;
-                    $itemClone->idproducto = $itemDB->idproducto;
-                    $itemClone->cantidad = $diferencia;
-                    $itemClone->stock = $diferencia;
-                    $itemClone->stockaux = $itemClone->promediostock>0?$itemClone->stock/$itemClone->promediostock:0;
-                    $arrayDownInv[] = $itemClone;
-                }elseif ($itemDB->cantidad > $itemfront->cantidad){ //aumentar diferencia a inv
-                    $diferencia = $itemDB->cantidad-$itemfront->cantidad;
-                    $itemClone = clone $itemDB;
-                    $itemClone->idproducto = $itemDB->idproducto;
-                    $itemClone->cantidad = $diferencia;
-                    $itemClone->stock = $diferencia;
-                    $itemClone->stockaux = $itemClone->promediostock>0?$itemClone->stock/$itemClone->promediostock:0;
-                    $arrayUpInv[] = $itemClone;
+        if(!is_array($nuevosproductosFront) || empty($nuevosproductosFront))
+            return ['error'=>['El separado debe contener al menos un producto.']];
+
+        $getDB->begin_transaction();
+        try {
+            $credito = $creditoRepo->find($idcredito);
+            if(!$credito)throw new \RuntimeException('El separado no existe.');
+            if((int)$credito->idtipofinanciacion !== 2)
+                throw new \RuntimeException('El registro no corresponde a un separado.');
+            if((int)$credito->idestadocreditos !== 2)
+                throw new \RuntimeException('El separado debe estar abierto para editarse.');
+        
+            $totalPagado = (float)$credito->montototal - (float)$credito->saldopendiente;
+            $nuevoMontoTotal = (float)$dataCredit['montototal'];
+            $nuevoSaldo = (float)$dataCredit['saldopendiente'];
+            if($nuevoMontoTotal + 0.001 < $totalPagado)
+                throw new \RuntimeException('El nuevo total no puede ser inferior al valor abonado.');
+            if(abs($nuevoSaldo - ($nuevoMontoTotal - $totalPagado)) > 0.01)
+                throw new \RuntimeException('El saldo pendiente no corresponde al total y los abonos del separado.');
+
+            $detalleProductosDB = $productosRepo->findAll('idcredito', $idcredito) ?? [];
+            $detallePorId = [];
+            foreach($detalleProductosDB as $itemDB)$detallePorId[(int)$itemDB->id] = $itemDB;
+
+            $idsConservados = [];
+            $productosVistos = [];
+            $nuevosproductos = [];
+            $arrayactualizar = [];
+            $arrayDownInv = [];
+            $arrayUpInv = [];
+
+            foreach($nuevosproductosFront as $itemfront){
+                $idProducto = (int)($itemfront->idproducto ?? 0);
+                $cantidadNueva = (float)($itemfront->cantidad ?? 0);
+                if($idProducto <= 0 || $cantidadNueva <= 0)
+                    throw new \RuntimeException('El producto y su cantidad deben ser validos.');
+                if(isset($productosVistos[$idProducto]))
+                    throw new \RuntimeException("El producto #$idProducto esta repetido en el separado.");
+                $productosVistos[$idProducto] = true;
+
+                foreach(['subtotal', 'base', 'valorimp', 'descuento', 'total'] as $campo)
+                    $itemfront->$campo = (float)$itemfront->$campo;
+
+                $itemfront->cantidad = $cantidadNueva;
+                $itemfront->stock = $cantidadNueva;
+                $itemfront->idcredito = $idcredito;
+                $idDetalle = (int)($itemfront->id ?? 0);
+
+                if($idDetalle > 0){
+                    if(!isset($detallePorId[$idDetalle]))
+                        throw new \RuntimeException('Una linea no pertenece al separado.');
+
+                    $itemDB = $detallePorId[$idDetalle];
+                    if((int)$itemDB->idproducto !== $idProducto)
+                        throw new \RuntimeException('El producto de una linea existente no puede cambiarse.');
+
+                    $idsConservados[$idDetalle] = true;
+                    $arrayactualizar[] = $itemfront;
+                    $diferencia = $cantidadNueva - (float)$itemDB->cantidad;
+
+                    if($diferencia != 0.0){
+                        $itemInventario = clone $itemDB;
+                        $itemInventario->cantidad = abs($diferencia);
+                        $itemInventario->stock = abs($diferencia);
+                        $promedioStock = (float)($itemInventario->promediostock ?? 0);
+                        $itemInventario->stockaux = $promedioStock > 0 ? $itemInventario->stock / $promedioStock: 0;
+
+                        if($diferencia > 0)$arrayDownInv[] = $itemInventario;
+                        else $arrayUpInv[] = $itemInventario;
+                    }
+                }else{
+                    $promedioStock = (float)($itemfront->promediostock ?? 0);
+                    $itemfront->stockaux = $promedioStock > 0 ? $cantidadNueva / $promedioStock: 0;
+                    $nuevosproductos[] = $itemfront;
                 }
-                break;
-              }
             }
-          }
-          
-        }
 
-
-        ///IDs a eliminar de la DB
-        foreach($detalleProductosDB as $key => $value){
-            $value->idproducto = $value->idproducto;
-            if(!in_array($value->id, $idsdetalleproductos)){
-                $value->stockaux = $value->promediostock>0?$value->cantidad/$value->promediostock:0;
-                $arrayIdeliminar[] = $value->id;
-                $arrayProductsEliminar[] = $value;
+            $arrayIdeliminar = [];
+            $arrayProductsEliminar = [];
+            foreach($detalleProductosDB as $itemDB){
+                if(isset($idsConservados[(int)$itemDB->id]))continue;
+                $itemDB->stock = (float)$itemDB->cantidad;
+                $promedioStock = (float)($itemDB->promediostock ?? 0);
+                $itemDB->stockaux = $promedioStock > 0 ? $itemDB->stock / $promedioStock: 0;
+                $arrayIdeliminar[] = (int)$itemDB->id;
+                $arrayProductsEliminar[] = $itemDB;
             }
-        }
 
-        //registros a insertar
-        foreach ($nuevosproductosFront as $value){
-            if(is_numeric($value->id))$arrayactualizar[] = $value;
-            if($value->id==''){
-                $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
-                $nuevosproductos[] = $value;
+            $lineasDescontar = array_merge($nuevosproductos, $arrayDownInv);
+            $lineasDevolver = array_merge($arrayUpInv, $arrayProductsEliminar);
+            $inventarioDescontar = ventasService::prepararInventarioXVenta($lineasDescontar, id_sucursal());
+            $inventarioDevolver = ventasService::prepararInventarioXVenta($lineasDevolver, id_sucursal());
+
+            // Primero se retorna lo reducido o eliminado para que ese stock pueda
+            // cubrir los aumentos realizados dentro de la misma edicion.
+            if(!empty($lineasDevolver)){
+                $inventarioDevuelto = ventasService::devolverInventarioXVenta($inventarioDevolver, id_sucursal(), 'devolucion', 'retorno de unidades por edicion de separado', false);
+                if(!$inventarioDevuelto)
+                    throw new \RuntimeException('No fue posible devolver el inventario del separado.');
             }
-        }
 
+            $conflocal = config_local::getParamCaja();
+            if(!empty($lineasDescontar)&& (int)$conflocal['permitir_venta_de_productos_sin_stock']->valor_final === 0){
+                $erroresStock = ventasService::validarDisponibilidadInventario($inventarioDescontar, id_sucursal());
+                if(!empty($erroresStock))throw new \RuntimeException(implode(' ', $erroresStock));
+            }
 
-        //acatualizar deuda de cliente
-        $cliente = clientes::find('id', $credito->cliente_id);
-        $cliente->totaldebe += ($dataCredit['saldopendiente'] - $credito->saldopendiente);
-        $cliente->actualizar();
+            if(!empty($arrayIdeliminar) && !$productosRepo->delete_regs('id', $arrayIdeliminar))
+                throw new \RuntimeException('No fue posible eliminar los productos retirados del separado.');
 
+            if(!empty($nuevosproductos)){
+                [$productosInsertados] = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
+                if(!$productosInsertados)
+                    throw new \RuntimeException('No fue posible agregar los productos al separado.');
+            }
 
-        //ACTUALIZAR VALORES GLOBALES DEL CREDITO
-        $credito->capital = $dataCredit['capital'];
-        $credito->saldopendiente = $dataCredit['saldopendiente'];
-        $credito->montocuota = $dataCredit['montocuota'];
-        $credito->montototal = $dataCredit['montototal'];
-        $credito->totalunidades = $dataCredit['totalunidades'];
-        $ru = $creditoRepo->update($credito);
-        
-        
-        //ACTUALIZAR CREDITO
-        if($arrayIdeliminar)$r1 = $productosRepo->delete_regs('id', $arrayIdeliminar);
-        if($nuevosproductos)$r2 = $productosRepo->crear_varios_reg_arrayobj($nuevosproductos);
-        if($nuevosproductosFront)$r3 = $productosRepo->updatemultiregobj($arrayactualizar, ['cantidad']);
+            if(!empty($arrayactualizar) && !$productosRepo->updatemultiregobj($arrayactualizar, ['cantidad', 'subtotal', 'base', 'valorimp', 'descuento', 'total']))
+                throw new \RuntimeException('No fue posible actualizar los productos del separado.');
 
+            $saldoAnterior = (float)$credito->saldopendiente;
+            $credito->capital = (float)$dataCredit['capital'];
+            $credito->saldopendiente = $nuevoSaldo;
+            $credito->montocuota = (float)$dataCredit['montocuota'];
+            $credito->montototal = $nuevoMontoTotal;
+            $credito->totalunidades = (float)$dataCredit['totalunidades'];
+            if(!$creditoRepo->update($credito))
+                throw new \RuntimeException('No fue posible actualizar los valores del separado.');
 
-        //ACTUALIZAR EL INVENTARIO
-        //productos nuevos a descontar de inv
-        if($nuevosproductos)ventasService::reducirIventarioXVenta($nuevosproductos);
-        //productos a actualizar con $arrayDownInv y arrayUpInv actualizar su inventario
-        if($arrayDownInv)ventasService::reducirIventarioXVenta($arrayDownInv);
-        if($arrayUpInv)ventasService::addIventarioXVenta($arrayUpInv);
-        //productos enteros a devolver a inventario
-        if($arrayIdeliminar){
-            //$productsReturnInv = $productosRepo->IN_Where('id', $arrayIdeliminar, ['idcredito', $idcredito]);
-            ventasService::addIventarioXVenta($arrayProductsEliminar);
-        }
+            $cliente = clientes::find('id', $credito->cliente_id);
+            if(!$cliente)throw new \RuntimeException('No fue posible encontrar el cliente del separado.');
+            $cliente->totaldebe = (float)$cliente->totaldebe + ($nuevoSaldo - $saldoAnterior);
+            if(!$cliente->actualizar())
+                throw new \RuntimeException('No fue posible actualizar la deuda del cliente.');
 
-        if($r1&&$r2&&$r3){
-            //actualizar el credito en general
-            
+            if(!empty($lineasDescontar)){
+                $inventarioActualizado = ventasService::descontarInventarioXVenta($inventarioDescontar, id_sucursal(), 'separado', 'descuento de unidades por edicion de separado', false);
+                if(!$inventarioActualizado)
+                    throw new \RuntimeException('No fue posible descontar el inventario del separado.');
+            }
+
+            $getDB->commit();
             $alertas['exito'][] = "Credito Orden: $credito->num_orden, actualizada correctamente";
-        }else{
-            $alertas['error'][] = "Error, intenta actualizar la orden dle credito nuevamnete";
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            $alertas['error'][] = 'Error al actualizar el separado. '.$th->getMessage();
         }
 
         return $alertas;
