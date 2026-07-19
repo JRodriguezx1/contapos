@@ -161,7 +161,7 @@
       tr.dataset.id = `${id}`;
       tr.dataset.precio = precio;
       tr.dataset.indexcarrito = index+'';
-      tr.insertAdjacentHTML('afterbegin', 
+      tr.insertAdjacentHTML('afterbegin',    
         `<td class="!px-0 !py-2 text-xl text-gray-500 leading-5 nombreproducto">${uncarrito?.nombreproducto}</td>
         <td class="!px-0 !py-2">
           <div class="flex items-center gap-2 px-4">

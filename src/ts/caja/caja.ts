@@ -204,7 +204,7 @@
                     if(cantidadConSaldo === 1){
                         etiqueta.textContent = '① Medio de pago actual';
                     }else{
-                        etiqueta.textContent = '✓ Registrado originalmente';
+                        etiqueta.textContent = '✓ Pago original';
                     }
                 }
 

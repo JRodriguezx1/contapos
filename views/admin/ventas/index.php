@@ -179,7 +179,7 @@
         <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
         <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="contenidocarrito">
+      <div id="contenidocarrito">  
         <div class="formulario__campo">
             <label class="formulario__label" for="vendedor">vendedor</label>
             <div class="formulario__dato flex items-center gap-2">
