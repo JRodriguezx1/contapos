@@ -13,6 +13,7 @@
             <thead>
                 <tr>
                     <th>id</th>
+                    <th>Documento</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>telefono</th>
@@ -24,7 +25,8 @@
                 <?php foreach($clientes as $cliente): ?>
                     <?php if($cliente->id != 1){ ?>
                     <tr>
-                        <td class=""><?php echo $cliente->id; ?></td> 
+                        <td class=""><?php echo $cliente->id; ?></td>
+                        <td class=""><?php echo $cliente->identificacion; ?></td> 
                         <td class=""><?php echo $cliente->nombre; ?></td>         
                         <td class=""><?php echo $cliente->apellido; ?></td> 
                         <td class=""><?php echo $cliente->telefono; ?></td> 

@@ -21,6 +21,23 @@ class direcciones extends \App\Models\ActiveRecord{
         $this->created_at = $args['created_at']??'';
     }
 
+    /** Columnas controladas que los repositorios pueden persistir. */
+    public function toArray():array
+    {
+        return [
+            'idcliente'=>$this->idcliente,
+            'idtarifa'=>$this->idtarifa,
+            'iddepartamento'=>$this->iddepartamento,
+            'idciudad'=>$this->idciudad,
+            'pais'=>$this->pais,
+            'departamento'=>$this->departamento,
+            'ciudad'=>$this->ciudad,
+            'direccion'=>$this->direccion,
+            'codigopostal'=>$this->codigopostal,
+            'observacion'=>$this->observacion,
+        ];
+    }
+
 
     public function validarDireccion(){
         //if(!$this->departamento)self::$alertas['error'][] = "departamento no especificado";

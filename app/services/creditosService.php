@@ -253,7 +253,7 @@ class creditosService {
                     if(($credito->saldopendiente-$cuota->valorpagado) <= 0 && $credito->factura_id == null)
                         $idf = creditosService::registrarFactura($credito, $ultimocierre, $cuota->valorpagado);
 
-                    $credito->actualizarCredito($cuota->valorpagado, isset($idf)?$idf:null);
+                    $credito->actualizarCredito($cuota->valorpagado, isset($idf)?$idf:$credito->factura_id);
                     $creditoRepo->update($credito);
 
                     $getDB->commit();
