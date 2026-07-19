@@ -108,364 +108,333 @@ class ventascontrolador{
 
   ///////////  API REST llamada desde ventas.ts cuando se procesa un pago  ////////////
   public static function facturar(){
-    //session_start();
-    $comisionServicio = new comisionesService();
-    $contableService = new contableService();
     isadmin();
     if(!tienePermiso('Habilitar modulo de venta')&&userPerfil()>3)return;
+
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      echo json_encode(['error'=>['Metodo del endpoint no valido.']]);
+      return;
+    }
+
     date_default_timezone_set('America/Bogota');
     $getDB = facturas::getDB();
-    $carrito = json_decode($_POST['carrito']); //[{id: "1", idcategoria: "3", nombre: "xxx", cantidad: "4"}, {}]
-    $mediospago = json_decode($_POST['mediosPago']); //[{id: "1", id_factura: "3", idmediopago: "1", valor: "400050"}, {}]
-    $factimpuestos = json_decode($_POST['factimpuestos']);
-    $valoresCredito = json_decode($_POST['valoresCredito']);
-    $datosAdquiriente = json_decode($_POST['datosAdquiriente']);
-    $factura = new facturas($_POST);
-    $factura->id_sucursal = id_sucursal();
-    $factmediospago = new factmediospago();
-    $detalleimpuestos = new factimpuestos();
-    $alertas = [];
-    $invSub = true;
-    $invPro = true;
-    $c = true;
+    $sucursalId = id_sucursal();
+    $estado = (string)($_POST['estado'] ?? '');
+    $tipoVenta = (string)($_POST['tipoventa'] ?? 'Contado');
 
-    
-    //////// EXTRAER LOS PRODUCTOS ACTUALIZADOS, ELIMINADOS O NUEVOS DEL CARRITO POR SI SE ACTUALIZA LA COTIZACION ////////
-    foreach($carrito as $value){ //si en carrito un id, viene vacio o null es porque desde el front se agrego y el front no save el id de la tabla venta
-      $value->cantidad = $value->stock; //para la tabla venta
-      $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
+    if(!in_array($estado, ['Paga', 'Guardado', 'Remision'], true)){
+      echo json_encode(['error'=>['Estado de la solicitud no valido.']]);
+      return;
+    }
+    if($estado === 'Paga' && !in_array($tipoVenta, ['Contado', 'Credito'], true)){
+      echo json_encode(['error'=>['El tipo de venta no es valido.']]);
+      return;
+    }
+    if(isset($_POST['id']) && $_POST['id'] !== '' && !is_numeric($_POST['id'])){
+      echo json_encode(['error'=>['El identificador de la orden no es valido.']]);
+      return;
     }
 
+    // Todos los JSON del formulario se normalizan en un unico lugar. Esto evita
+    // continuar con null cuando el navegador envia un cuerpo incompleto o invalido.
+    try {
+      $decodificarArray = static function(string $campo):array{
+        $valor = json_decode($_POST[$campo] ?? '[]');
+        if(json_last_error() !== JSON_ERROR_NONE || !is_array($valor))
+          throw new \InvalidArgumentException("El campo {$campo} no contiene un arreglo JSON valido.");
+        return $valor;
+      };
+      $decodificarObjeto = static function(string $campo):object{
+        $valor = json_decode($_POST[$campo] ?? '{}');
+        if(json_last_error() !== JSON_ERROR_NONE || !is_object($valor))
+          throw new \InvalidArgumentException("El campo {$campo} no contiene un objeto JSON valido.");
+        return $valor;
+      };
 
+      $carrito = $decodificarArray('carrito');
+      $mediospago = $decodificarArray('mediosPago');
+      $factimpuestos = $decodificarArray('factimpuestos');
+      $valoresCredito = $decodificarObjeto('valoresCredito');
+      $datosAdquiriente = $decodificarObjeto('datosAdquiriente');
+    }catch(\Throwable $th){
+      echo json_encode(['error'=>[$th->getMessage()]]);
+      return;
+    }
+
+    if(empty($carrito)){
+      echo json_encode(['error'=>['El carrito no contiene productos para procesar.']]);
+      return;
+    }
+
+    $facturaSolicitud = new facturas($_POST);
+    $facturaSolicitud->id_sucursal = $sucursalId;
+    $alertasFactura = $facturaSolicitud->validar_nueva_factura();
+    if(!empty($alertasFactura['error'])){
+      echo json_encode($alertasFactura);
+      return;
+    }
+
+    // Normalizar cantidades antes de resolver receta, variaciones e inventario.
+    foreach($carrito as $linea){
+      $linea->cantidad = (float)($linea->stock ?? $linea->cantidad ?? 0);
+      $promedio = (float)($linea->promediostock ?? 0);
+      $linea->stockaux = $promedio > 0 ? $linea->cantidad / $promedio : 0;
+    }
+
+    $inventarioVenta = ventasService::prepararInventarioXVenta($carrito, $sucursalId);
     $conflocal = config_local::getParamCaja();
-    $inventarioVenta = ventasService::prepararInventarioXVenta($carrito, id_sucursal());
-
-    // prepararInventarioXVenta agrega a cada objeto los insumos ya validados.
-    // Se reconstruyen los grupos para que los clones de una cotizacion editada
-    // conserven ese detalle resuelto.
-    $carritoupdate=[];
-    $carritoinsert=[];
-    foreach($carrito as $value){
-      if(!empty($value->id)){
-        $carritoupdate[] = clone $value;
-      }else{
-        $carritoinsert[] = $value;
-      }
-    }
-
-    if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){
-      $erroresStock = ventasService::validarDisponibilidadInventario($inventarioVenta, id_sucursal());
+    if(($conflocal['permitir_venta_de_productos_sin_stock']->valor_final ?? 0) == 0){
+      $erroresStock = ventasService::validarDisponibilidadInventario($inventarioVenta, $sucursalId);
       if(!empty($erroresStock)){
-        $alertas['error'] = $erroresStock;
-        echo json_encode($alertas);
+        echo json_encode(['error'=>$erroresStock]);
         return;
       }
     }
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      //////////validar datos de factura, de ventas y medios de pago
-      
-      //si viene id, es cotizacion cargada en modulo de venta
-      if(!empty($_POST['id'])){
-        if(!is_numeric($_POST['id']))return;  //validar que el id de la cotizacion/Remision sea numero
-        $factura = facturas::find('id', $_POST['id']);
-        $ultimocierre = cierrescajas::find('id', $factura->idcierrecaja);
-        if($factura->cotizacion == 1 && $factura->cambioaventa == 0 || $factura->estado == 'Remision' && $factura->cambioaventa == 0){ //validar que la cotizacion aun se encuentre en estado de cotizacion
-          if($ultimocierre->estado==1 || $factura->idcaja != $_POST['idcaja'] && $_POST['estado']=='Paga'){ //si la cotizacion que se va a pagar, cambio de caja o si su cierre caja esta cerrado
-            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
+    // Las lineas con id pertenecen a una cotizacion recuperada; las demas son
+    // productos agregados durante su edicion.
+    $lineasActualizar = [];
+    $lineasInsertar = [];
+    foreach($carrito as $linea){
+      if(!empty($linea->id))$lineasActualizar[] = clone $linea;
+      else $lineasInsertar[] = $linea;
+    }
+
+    $idOrdenOrigen = (int)($_POST['id'] ?? 0);
+    $ordenOrigen = null;
+    if($idOrdenOrigen > 0){
+      $ordenOrigen = facturas::find('id', $idOrdenOrigen);
+      $esCotizacionORemision = $ordenOrigen && ( (int)$ordenOrigen->cotizacion === 1 || (int)$ordenOrigen->remision === 1 || $ordenOrigen->estado === 'Remision' );
+
+      if(!$ordenOrigen || (int)$ordenOrigen->id_sucursal !== $sucursalId || !$esCotizacionORemision || (int)$ordenOrigen->cambioaventa !== 0){
+        echo json_encode(['error'=>['La cotizacion o remision no esta disponible para procesar.']]);
+        return;
+      }
+    }
+
+    // Editar una cotizacion/remision existente no genera factura, pagos ni
+    // inventario. actualizarLineasCotizacion administra su propia transaccion.
+    if($ordenOrigen && $estado !== 'Paga'){
+      $tipoOrdenValido = ($estado === 'Guardado' && (int)$ordenOrigen->cotizacion === 1) || ($estado === 'Remision' && ((int)$ordenOrigen->remision === 1 || $ordenOrigen->estado === 'Remision'));
+      if(!$tipoOrdenValido){
+        echo json_encode(['error'=>['No es posible cambiar el tipo de la orden recuperada.']]);
+        return;
+      }
+
+      $ordenAnterior = clone $ordenOrigen;
+      try {
+        $ordenOrigen->compara_objetobd_post($_POST);
+        $ordenOrigen->id_sucursal = $sucursalId;
+        $ordenOrigen->estado = $estado;
+        $ordenOrigen->cotizacion = $estado === 'Guardado' ? 1 : 0;
+        $ordenOrigen->remision = $estado === 'Remision' ? 1 : 0;
+        $ordenOrigen->cambioaventa = 0;
+        if(!$ordenOrigen->actualizar())
+          throw new \RuntimeException('No fue posible actualizar el encabezado de la orden.');
+
+        foreach($lineasInsertar as $linea){
+          $linea->idfactura = $ordenOrigen->id;
+          $linea->dato1 = '';
+          $linea->dato2 = '';
+          if((int)($linea->idproducto ?? 0) < 0 && (int)($linea->idcategoria ?? 0) < 0){
+            $linea->idproducto = 1;
+            $linea->idcategoria = 1;
           }
-          if($_POST['estado']=='Paga'){  //si es una cotizacion/Remision que se va a pagar
-            //$factura->compara_objetobd_post($_POST);
-            //$factura->cotizacion = 1;
-            $factura->cambioaventa = 1;
-            $factura->estado = 'Aceptada';
-            $idctz = $factura->id;
-          }else{
-            $factura->compara_objetobd_post($_POST);
-          }
-        
-          $Ctz = $factura->actualizar();
-          $r[0] = 1;
-        }else{
-          return;
         }
+
+        ventasService::actualizarLineasCotizacion($lineasActualizar,$lineasInsertar, (int)$ordenOrigen->id);
+        echo json_encode(['exito'=>['Orden actualizada con exito.']]);
+        return;
+      }catch(\Throwable $th){
+        // El servicio revierte sus lineas; se restaura tambien el encabezado.
+        try {
+          $ordenAnterior->actualizar();
+        }catch(\Throwable $ignorado){}
+        echo json_encode(['error'=>['Error al actualizar la orden. '.$th->getMessage()]]);
+        return;
+      }
+    } //fin edicion cotizacion/remision
+
+    $comisionServicio = new comisionesService();
+    $contableService = new contableService();
+    $factmediospago = new factmediospago();
+    $detalleimpuestos = new factimpuestos();
+
+    // Venta pagada, cotizacion nueva y remision nueva comparten una sola
+    // transaccion. Los servicios internos reciben false para no abrir otra.
+    $getDB->begin_transaction();
+    try {
+      $idCaja = (int)($_POST['idcaja'] ?? 0);
+      if($idCaja <= 0)throw new \RuntimeException('Caja no valida.');
+      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$idCaja, 'idsucursal_id'=>$sucursalId,]);
+
+      // El modulo de ventas conserva su comportamiento: si no existe cierre
+      // abierto para la caja seleccionada, lo crea dentro de esta transaccion.
+      if(!$ultimocierre){
+        $cajaSeleccionada = caja::find('id', $idCaja);
+        if(!$cajaSeleccionada)throw new \RuntimeException('La caja seleccionada no existe.');
+        $ultimocierre = new cierrescajas(['idcaja'=>$idCaja, 'nombrecaja'=>$cajaSeleccionada->nombre, 'estado'=>0, 'idsucursal_id'=>$sucursalId,]);
+        [$cierreCreado, $idCierre] = $ultimocierre->crear_guardar();
+        if(!$cierreCreado)throw new \RuntimeException('No fue posible abrir el cierre de caja.');
+        $ultimocierre->id = $idCierre;
+      }
+
+      // Al pagar una orden recuperada se conserva la original como Aceptada y
+      // se crea una factura nueva relacionada por sus numeros de orden.
+      if($ordenOrigen){
+        $numeroOrdenOrigen = $ordenOrigen->num_orden;
+        $factura = clone $ordenOrigen;
+        $factura->compara_objetobd_post($_POST);
+        $factura->id = null;
+        $factura->referencia = $numeroOrdenOrigen;
+        $factura->cambioaventa = 1;
       }else{
-        $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['idcaja'], 'idsucursal_id'=>id_sucursal()]);
-      }
-      
-      if(!isset($ultimocierre) && $_POST['estado']=='Paga' || !isset($ultimocierre)&&empty($_POST['id'])&&($_POST['estado']=='Guardado' || $_POST['estado']=='Remision')){ // si la caja esta cerrada y se hace apertura con la venta o cotizacion
-        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['idcaja'], 'nombrecaja'=>caja::find('id', $_POST['idcaja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-        $ruc = $ultimocierre->crear_guardar();
-        if(!$ruc[0])$ultimocierre->estado = 1;
-        $ultimocierre->id = $ruc[1];
+        $factura = $facturaSolicitud;
       }
 
+      $factura->id_sucursal = $sucursalId;
+      $factura->idcaja = $idCaja;
+      $factura->idcierrecaja = $ultimocierre->id;
+      $factura->num_orden = facturas::calcularNumOrden($sucursalId);
 
-      $tempultimocierre = clone $ultimocierre;
-      if($ultimocierre->estado == 0){ //si cierre de caja esta abierto
-        
-        if(!empty($_POST['id'])&&$_POST['estado']=='Paga'){ //crear nuevo registro para cotizacion que se va a facturar
-          $factura->compara_objetobd_post($_POST);
-          //$factura->cotizacion = 1;
-          $factura->fechapago = date('Y-m-d H:i:s');
-          $factura->cambioaventa = 1;
-          $factura->referencia = $factura->num_orden;  //numero de orden de la cotizacion, que toma ya la factura como referencia
-          $factura->estado =  'Paga';
-          $ultimocierre->ncambiosaventa = $ultimocierre->ncambiosaventa +1;
-        }
+      // Cotizacion o remision nueva: solo encabezado, lineas e indicador de caja.
+      if($estado !== 'Paga'){
+        $factura->estado = $estado;
+        $factura->cotizacion = $estado === 'Guardado' ? 1 : 0;
+        $factura->remision = $estado === 'Remision' ? 1 : 0;
+        $factura->cambioaventa = 0;
+        [$facturaCreada, $idFactura] = $factura->crear_guardar();
+        if(!$facturaCreada)throw new \RuntimeException('No fue posible guardar la orden.');
 
-        //si es nueva venta, o nueva cotizacion o nueva remision
-        if($_POST['estado']=='Paga' || empty($_POST['id'])&&$_POST['estado']=='Guardado' || empty($_POST['id'])&&$_POST['estado']=='Remision'){
-          $factura->idcierrecaja = $ultimocierre->id;
-          //calcular ultimo num_orden
-          $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
-          //calcular siguiente consecutivo solo para facturas que se paguen
-          if($_POST['estado']=='Paga'){
-            $getDB->begin_transaction();
-            try {
-              $consecutivo = consecutivos::findForUpdate('id', $_POST['idconsecutivo']);
-              $numConsecutivo = $consecutivo->siguientevalor;
-              $factura->num_consecutivo = $numConsecutivo;
-              $factura->prefijo = $consecutivo->prefijo;
-              $factura->abono = $valoresCredito->abonoinicial??0;
-              $factura->habilitada = 1;
-              $r = $factura->crear_guardar();
-              $consecutivo->siguientevalor = $numConsecutivo + 1;
-              $c = $consecutivo->actualizar();
-              $fe = self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $r[1], $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa, $factura->observacion);  //llamada al trait para crear el json y guardar la FE en DB
-              //....
-              //procesar si es credito....
-              //if($_POST['tipoventa']=='Credito')$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor);
-              //aplicar comision
-              if($factura->valorgananciauser>0)
-                $comisionServicio->crearComision($r[1], $factura->idvendedor, $factura->total, $factura->porcentgananciauser, $factura->valorgananciauser);
-              //aplicar puntos a cliente
-              
-              $getDB->commit();
-            } catch (\Throwable $th) {
-              $getDB->rollback();
-              $alerta['error'][] = "Error al procesar el pago, y al obtener el consecutivo.";
-              $alerta['error'][] = $th->getMessage();
-              $r[0] = false;
-              $Ctz = false;
-            }
-            //procesar si es credito....
-            if($_POST['tipoventa']=='Credito' && $r[0])$alertas = creditosService::crearCredito($valoresCredito, $r[1], $_POST['idcliente'], $factura->totalunidades, $factura->base, $factura->valorimpuestototal, $factura->dctox100, $factura->descuento, $factura->idcierrecaja, $factura->idcaja, $factura->idvendedor, $factura->idemisor);
-            if(!empty($alertas['error'])){
-              $facturadelete = facturas::find('id', $r[1]);
-              $facturadelete->eliminar_registro();
-              echo json_encode($alertas);
-              return;
-            }
+        foreach($carrito as $linea){
+          $linea->idfactura = $idFactura;
+          $linea->dato1 = '';
+          $linea->dato2 = '';
+          if((int)($linea->idproducto ?? 0) < 0 && (int)($linea->idcategoria ?? 0) < 0){
+            $linea->idproducto = 1;
+            $linea->idcategoria = 1;
           }
-          if($_POST['estado']=='Guardado' || $_POST['estado']=='Remision')$r = $factura->crear_guardar();  //crear remision o cotizacion segun estado que se envia desde ventas.ts
         }
+        ventasService::guardarLineasVenta($carrito, false);
 
-        if($r[0]&&$c || $Ctz){
-          /////////   si se pago   ////////////////
-          if($factura->estado == "Paga"){
-            if(!empty($_POST['id'])){
-              //obtener la factura cotizacion para establecer la referencia con la factura
-              $facturacotizacion = facturas::find('id', $idctz);
-              $facturacotizacion->referencia = $factura->num_orden;
-              $rctz = $facturacotizacion->actualizar();
-            }
-            /////////// calcular cantidad de facturas y discriminar por tipo
-            $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
-            if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
-              $ultimocierre->facturaselectronicas = $ultimocierre->facturaselectronicas + 1;  //total de facturas electronicas
-              $ultimocierre->valorfe += $factura->total;
-              $ultimocierre->descuentofe += $factura->descuento;
-            }else{
-              $ultimocierre->facturaspos = $ultimocierre->facturaspos + 1;   //total de facturas pos
-              $ultimocierre->valorpos += $factura->total;
-              $ultimocierre->descuentopos += $factura->descuento;
-            }
-            ///////// calcular ventas en efectivo, total descuentos, total ingreso de ventas
-            foreach($mediospago as $obj){
-              $obj->id_factura = $r[1];
-              $obj->cierrecajaid = $ultimocierre->id;
-              $obj->idcuota = $alertas['idcuota']??'NULL';
-              if($obj->idmediopago == 1){
-                $ultimocierre->ventasenefectivo +=  ($_POST['tipoventa']=='Contado'?$obj->valor:0);
-                $ultimocierre->abonosenefectivo += ($_POST['tipoventa']=='Credito'?$obj->valor:0);
-              }
-            }
-            //////// establecer el id de factura para factimpuestos ////////////
-            foreach($factimpuestos as $obj)$obj->facturaid = $r[1];
+        if($estado === 'Guardado')$ultimocierre->totalcotizaciones += 1;
+        if(!$ultimocierre->actualizar())
+          throw new \RuntimeException('No fue posible actualizar el cierre de caja.');
 
-            $ultimocierre->creditocapital += $valoresCredito->capital;  //acumulado de los creditos total
-            $ultimocierre->creditos += $valoresCredito->capital-$valoresCredito->abonoinicial;  //acumulados de los creditos menos el abono incial
-            $ultimocierre->abonoscreditos += $valoresCredito->abonoinicial; //acumulado de los abonos de solo creditos
-            $ultimocierre->abonostotales += $valoresCredito->abonoinicial;
-            $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
-            //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
-            
-            $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?0:$factura->total);
-            $ultimocierre->descuentocontado += ($_POST['tipoventa']=='Credito'?0:$factura->descuento);
-            $ultimocierre->descuentocredito += ($_POST['tipoventa']=='Contado'?0:$factura->descuento);
-            $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
-            $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
-            $ultimocierre->basegravable += $factura->base;
-            //////////// Guardar los productos de la venta en tabla ventas //////////////
-            foreach($carrito as $obj){
-              $obj->dato1 = '';
-              $obj->dato2 = '';
-              $obj->idfactura = $r[1];
-              if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){ //para productos "Otros"
-                $obj->id = 1;
-                $obj->idproducto = 1;
-                $obj->idcategoria = 1;
-              }
-            }
+        $getDB->commit();
+        $mensaje = $estado === 'Guardado' ? 'Cotizacion guardada con exito.' : 'Remision generada con exito.';
+        echo json_encode(['exito'=>[$mensaje]]);
+        return;
+      } //fin Cotizacion o remision nueva
 
-            $r3[0] = true;
-            $r2[0] = true;
-            $r1 = ventasService::guardarLineasVenta($carrito, (int)$r[1]);
-            if(!empty($mediospago))$r2 = $factmediospago->crear_varios_reg_arrayobj($mediospago); //crear los distintos metodos de pago en tabla factmediospago
-            if(!empty($factimpuestos))$r3 = $detalleimpuestos->crear_varios_reg_arrayobj($factimpuestos);
 
-            if($r1[0] && $r2[0] && $r3[0]){
-              $ru = $ultimocierre->actualizar();
-              if($ru){
+      // A partir de aqui siempre se procesa una factura pagada.
+      $idConsecutivo = (int)($_POST['idconsecutivo'] ?? 0);
+      $consecutivo = consecutivos::findForUpdate('id', $idConsecutivo);
+      if(!$consecutivo || (int)$consecutivo->id_sucursalid !== $sucursalId)
+        throw new \RuntimeException('El consecutivo seleccionado no es valido.');
 
-                if($_POST['entregado']==1 || $_POST['entregado']==0&&$_POST['entrega']=='Presencial'){
-                  $inventarioActualizado = ventasService::descontarInventarioXVenta(
-                    $inventarioVenta,
-                    id_sucursal()
-                  );
-                  $invPro = $inventarioActualizado;
-                  $invSub = $inventarioActualizado;
-                }
+      $factura->estado = 'Paga';
+      $factura->cotizacion = 0;
+      $factura->remision = 0;
+      $factura->fechapago = date('Y-m-d H:i:s');
+      $factura->fechaentrega = (int)$factura->entregado === 1 ? date('Y-m-d H:i:s') : '';
+      $factura->num_consecutivo = $consecutivo->siguientevalor;
+      $factura->prefijo = $consecutivo->prefijo;
+      $factura->abono = $valoresCredito->abonoinicial ?? 0;
+      $factura->habilitada = 1;
 
-                if($invPro){
-                  if($invSub){
-                    //crear registro de movimento de caja
-                    $numFactura = $factura->prefijo.$factura->num_consecutivo;
-                    $contableService->createMovimiento([
-                      'fk_tipo_movimientocaja'=>$factura->tipoventa=='Contado'?1:11,
-                      'fk_tipo_documento'=>1,
-                      'id_documento'=>$r[1],
-                      'fk_tipo_tercero'=>1,
-                      'id_tercero'=>$factura->idcliente,
-                      'fk_caja'=>$factura->idcaja,
-                      'fk_usuario'=>$factura->idvendedor,
-                      'naturaleza'=>'I',
-                      'numero_documento'=>$numFactura,
-                      'num_orden'=>null,
-                      'valor'=>$factura->tipoventa=='Contado'?$factura->total:$factura->abono,
-                      'concepto'=>$factura->tipoventa=='Contado'?'PAGO DE CONTADO':'ABONO INICIAL',
-                      'observacion'=>$factura->tipoventa=='Contado'?'PAGO DE CONTADO A FACTURA':'ABONO INICIAL A FACTURA CREDITO'
-                    ]);
+      [$facturaCreada, $idFactura] = $factura->crear_guardar();
+      if(!$facturaCreada)throw new \RuntimeException('No fue posible crear la factura.');
 
-                    $alertas['exito'][] = "Pago procesado con exito";
-                    $alertas['idfactura'] = $r[1];
-                    $alertas['dataInvoice'] = ventasService::dataInvoiceForPrinterServer($datosAdquiriente, $factura, $consecutivo);
+      $consecutivo->siguientevalor += 1;
+      if(!$consecutivo->actualizar())
+        throw new \RuntimeException('No fue posible actualizar el consecutivo.');
 
-                  }else{
-                    $alertas['error'][] = "Error en sistema intentalo nuevamente";
-                    //ELIMINAR FACTURA por error en actualizar inventario
-                    //revertir la ultima actualizacion de la tabla cierrecaja
-                    $facturadelete = facturas::find('id', $r[1]);
-                    $facturadelete->eliminar_registro();
-                    $tempultimocierre->actualizar();
-                    ///*revertir el inventario sumando lo que se desconto de productos simples
-                  }
-                }else{
-                  $alertas['error'][] = "Error en sistema intentalo nuevamente";
-                  //ELIMINAR FACTURA por error en actualizar inventario
-                  //revertir la ultima actualizacion de la tabla cierrecaja
-                  $facturadelete = facturas::find('id', $r[1]);
-                  $facturadelete->eliminar_registro();
-                  $tempultimocierre->actualizar();
-                }
-              }else{
-                $alertas['error'][] = "Error en sistema intentalo nuevamente";
-                //ELIMINAR FACTURA por error en actualizar tabla cierre caja
-                $facturadelete = facturas::find('id', $r[1]);
-                $facturadelete->eliminar_registro();
-              }
-            }else{
-              $alertas['error'][] = "Error en sistema intentalo nuevamente";
-              //ELIMINAR FACTURA por error al crear el detalle de productos y medios de pago
-              $facturadelete = facturas::find('id', $r[1]);
-              $facturadelete->eliminar_registro();
-            }
-
-          }else{
-            ////////////// SI ES COTIZACION O REMISION ///////////////
-            if(($factura->cambioaventa == 0 && !empty($_POST['id']) && is_numeric($_POST['id'])) && ($factura->cotizacion == 1 && $_POST['estado']=='Guardado' || $factura->cotizacion == 0 && $_POST['estado']=='Remision')){
-              //algoritmo si se cambia la cotizacion/remision como productos, cantidades valores etc.
-              /*$carritoupdate=[];
-              $carritoinsert=[];
-              $idsProductsupdate=[];
-              foreach($carrito as $value){
-                if(!empty($value->id)){
-                  $carritoupdate[] = $value;
-                  $idsProductsupdate[] = $value->id;
-                }else{
-                  $carritoinsert[] = $value;
-                }
-              }*/
-              foreach($carritoinsert as $obj){
-                $obj->dato1 = '';
-                $obj->dato2 = '';
-                $obj->idfactura = $factura->id;
-                if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
-                  $obj->id = 1;  //este es el id de Otros.
-                  $obj->idproducto = 1;
-                  $obj->idcategoria = 1;
-                }
-              }
-              ventasService::actualizarLineasCotizacion($carritoupdate, $carritoinsert, (int)$factura->id);
-
-              $alertas['exito'][] = "Orden actualizada con exito";
-              echo json_encode($alertas);
-              return;
-
-            }else{
-              if($_POST['estado']=='Guardado')
-              $ultimocierre->totalcotizaciones = $ultimocierre->totalcotizaciones + 1;
-              //////////// Guardar los productos de la venta en tabla ventas //////////////
-              foreach($carrito as $obj){
-                $obj->dato1 = '';
-                $obj->dato2 = '';
-                $obj->idfactura = $r[1];
-                if($obj->idproducto<0&&$obj->idcategoria<0&&$obj->id==''){  //para productos "Otros"
-                  $obj->id = 1;  //este es el id de Otros.
-                  $obj->idproducto = 1;
-                  $obj->idcategoria = 1;
-                }
-              }
-              
-              $rc = ventasService::guardarLineasVenta($carrito, (int)$r[1]);
-            }
-
-            if($rc[0]){
-              $ru = $ultimocierre->actualizar();
-              if($ru){
-                $alertas['exito'][] = "Cotizacion/Remision guardada con exito";
-              }else{
-                $alertas['error'][] = "Error en sistema intentalo nuevamente";
-                //borrar la factura automaticamente tambien se borra los productos en la tabla venta
-                $facturadelete = facturas::find('id', $r[1]);  //tomo la factura recien creada arriba
-                $facturadelete->eliminar_registro();
-              }
-            }else{
-              $alertas['error'][] = "Error en sistema intentalo nuevamente";
-              //borrar la factura
-              $facturadelete = facturas::find('id', $r[1]);
-              $facturadelete->eliminar_registro();
-            }
-          }
-        }else{
-          $alertas['error'][] = "Error en sistema al guardar la venta, intenta nuevamente";
-        } //Fin crear guardar
-      }else{
-        $alertas['error'][] = "Cierre de caja cerrado, verifica el estado de orden";
+      if($ordenOrigen){
+        $ordenOrigen->estado = 'Aceptada';
+        $ordenOrigen->cambioaventa = 1;
+        $ordenOrigen->referencia = $factura->num_orden;
+        if(!$ordenOrigen->actualizar())
+          throw new \RuntimeException('No fue posible relacionar la orden con la factura.');
+        $ultimocierre->ncambiosaventa += 1;
       }
-    } // Fin POST
-    echo json_encode($alertas);
+
+      // Guarda localmente el JSON de factura electronica cuando el consecutivo
+      // seleccionado corresponde a este tipo de documento.
+      self::createInvoiceElectronic($carrito, $datosAdquiriente, $factura->idconsecutivo, $idFactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa, $factura->observacion);
+
+      // El credito participa en la transaccion de la factura y entrega el id de
+      // cuota que debe relacionarse con los medios de pago del abono inicial.
+      $idCuota = 'NULL';
+      if($tipoVenta === 'Credito'){
+        $resultadoCredito = creditosService::crearCredito( $valoresCredito, $idFactura, (int)$factura->idcliente, $factura->totalunidades, $factura->base, $factura->valorimpuestototal, (int)$factura->dctox100, $factura->descuento, (int)$factura->idcierrecaja, (int)$factura->idcaja, (int)$factura->idvendedor, $factura->idemisor );
+        if(!empty($resultadoCredito['error']))throw new \RuntimeException(implode(' ', $resultadoCredito['error']));
+        $idCuota = $resultadoCredito['idcuota'] ?? 'NULL';
+      }
+
+      // Este servicio prepara los FK de pagos/impuestos y actualiza todos los
+      // acumulados generales del cierre de caja.
+      $ultimocierre->descuentocontado += $tipoVenta === 'Credito' ? 0 : $factura->descuento;
+      $ultimocierre->descuentocredito += $tipoVenta === 'Contado' ? 0 : $factura->descuento;
+      ventasService::datosDelCierreCajaXVenta($ultimocierre, $factura, $mediospago, $factimpuestos, [true, $idFactura], $valoresCredito );
+      foreach($mediospago as $pago)$pago->idcuota = $idCuota;
+
+      foreach($carrito as $linea){
+        $linea->idfactura = $idFactura;
+        $linea->dato1 = '';
+        $linea->dato2 = '';
+        if((int)($linea->idproducto ?? 0) < 0 && (int)($linea->idcategoria ?? 0) < 0){
+          $linea->idproducto = 1;
+          $linea->idcategoria = 1;
+        }
+      }
+      ventasService::guardarLineasVenta($carrito, false);
+
+      if(!empty($mediospago))$factmediospago->crear_varios_reg_arrayobj($mediospago);
+      if(!empty($factimpuestos))$detalleimpuestos->crear_varios_reg_arrayobj($factimpuestos);
+
+      // Una venta a domicilio pendiente de despacho descuenta inventario cuando
+      // se marque como entregada; las ventas presenciales lo hacen de inmediato.
+      if((int)$factura->entregado === 1 || $factura->entrega === 'Presencial'){
+        ventasService::descontarInventarioXVenta($inventarioVenta, $sucursalId, 'venta', 'descuento de unidades por venta', false);
+      }
+
+      $numFactura = $factura->prefijo.$factura->num_consecutivo;
+      $movimientoCaja = $contableService->createMovimiento([
+        'fk_tipo_movimientocaja'=>$tipoVenta === 'Contado' ? 1 : 11,
+        'fk_tipo_documento'=>1,
+        'id_documento'=>$idFactura,
+        'fk_tipo_tercero'=>1,
+        'id_tercero'=>$factura->idcliente,
+        'fk_caja'=>$factura->idcaja,
+        'fk_usuario'=>$factura->idvendedor,
+        'naturaleza'=>'I',
+        'numero_documento'=>$numFactura,
+        'num_orden'=>null,
+        'valor'=>$tipoVenta === 'Contado' ? $factura->total : $factura->abono,
+        'concepto'=>$tipoVenta === 'Contado' ? 'PAGO DE CONTADO' : 'ABONO INICIAL',
+        'observacion'=>$tipoVenta === 'Contado' ? 'PAGO DE CONTADO A FACTURA' : 'ABONO INICIAL A FACTURA CREDITO',
+      ]);
+      if(!($movimientoCaja[0] ?? false))
+        throw new \RuntimeException('No fue posible registrar el movimiento de caja.');
+
+      if((float)$factura->valorgananciauser > 0){
+        $comisionServicio->crearComision( $idFactura, (int)$factura->idvendedor, (float)$factura->total, (float)$factura->porcentgananciauser, (float)$factura->valorgananciauser );
+      }
+
+      $dataInvoice = ventasService::dataInvoiceForPrinterServer($datosAdquiriente, $factura, $consecutivo);
+
+      $getDB->commit();
+      $respuesta = [ 'exito'=>['Pago procesado con exito.'], 'idfactura'=>$idFactura, 'dataInvoice'=>$dataInvoice, ];
+      if($tipoVenta === 'Credito' && $idCuota !== 'NULL')$respuesta['idcuota'] = $idCuota;
+      echo json_encode($respuesta);
+      return;
+    }catch(\Throwable $th){
+      $getDB->rollback();
+      echo json_encode(['error'=>['Error al procesar la solicitud. '.$th->getMessage()]]);
+      return;
+    }
   }
 
 

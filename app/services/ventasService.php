@@ -658,7 +658,7 @@ class ventasService {
     }*/
 
 
-    public static function datosDelCierreCajaXVenta($ultimocierre, $factura, $mediospago, $factimpuestos, $r, $valoresCredito):bool{
+    public static function datosDelCierreCajaXVenta(object $ultimocierre, object $factura, array $mediospago, $factimpuestos, array $r, $valoresCredito):bool{
         /////////// calcular cantidad de facturas y discriminar por tipo
         $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
         if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){

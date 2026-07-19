@@ -169,7 +169,7 @@ class creditosService {
             'lineasencabezado' => $lineasencabezado,
             'credito' => $credito,
             'cuotas' => $credito->idtipofinanciacion==1?$cuotasRepo->obtenerPorCredito_Mediopago($credito->id):$cuotasRepo->obtenerPorSeparado_Mediopago($credito->id),
-            'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : [ventas::find('idfactura', $credito->factura_id)],
+            'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : ventas::idregistros('idfactura', $credito->factura_id),
             'cliente' => clientes::find('id', $credito->cliente_id),  //$credito->cliente_id
             'cajas' => caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]),
             'factura' => facturas::find('id', $credito->factura_id),

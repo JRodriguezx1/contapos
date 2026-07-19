@@ -86,7 +86,7 @@ use App\Models\parametrizacion\config_local;
             $fs = $this->matrizFontSize[$this->fontSizeCliFactura];
             $this->pdf->SetFont('Arial',$fs[0],$fs[1]);
             
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: ".($cliente??null)?->nombre??''),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: ".($cliente?->nombre??'').' '.$cliente?->apellido??''),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".($cliente??null)?->identificacion??''),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".($cliente??null)?->telefono??''),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Dirección: ".$direccion->direccion.': '.$direccion->ciudad.' - '.$direccion->departamento),0,'C',false);
@@ -267,7 +267,7 @@ use App\Models\parametrizacion\config_local;
             $this->pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
             $this->pdf->Ln(5);
 
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: ".$cliente->nombre),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cliente: ".$cliente?->nombre.' '.$cliente?->apellido??''),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Documento: ".$cliente->identificacion),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$cliente->telefono),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Dirección: ".$direccion->direccion.': '.$direccion->ciudad.' - '.$direccion->departamento),0,'C',false);
