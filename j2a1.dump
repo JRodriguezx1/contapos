@@ -732,6 +732,7 @@ CREATE TABLE `creditos` (
   `frecuenciapago` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish_ci DEFAULT NULL,
   `fechainicio` date DEFAULT NULL,
   `fechafin` datetime DEFAULT NULL,
+  `diasenmora` int DEFAULT '0',
   `interes` tinyint(1) NOT NULL,
   `interesxcuota` decimal(6,2) DEFAULT '0.00',
   `interestotal` decimal(6,2) DEFAULT '0.00',
@@ -1990,7 +1991,7 @@ CREATE TABLE `movimientos_insumos` (
   `idusuario_id` int DEFAULT NULL,
   `nombreusuario` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `tipo` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `referencia` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `referencia` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `cantidad` decimal(12,2) DEFAULT NULL,
   `stockanterior` decimal(12,2) NOT NULL,
   `stocknuevo` decimal(12,2) NOT NULL,
@@ -2029,7 +2030,7 @@ CREATE TABLE `movimientos_productos` (
   `id_usuarioid` int DEFAULT NULL,
   `nombreusuario` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `tipo` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `referencia` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `referencia` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `cantidad` decimal(12,2) NOT NULL,
   `stockanterior` decimal(12,2) NOT NULL,
   `stocknuevo` decimal(12,2) NOT NULL,
@@ -3210,6 +3211,44 @@ LOCK TABLES `usuarios_permisos` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `venta_insumos`
+--
+
+DROP TABLE IF EXISTS `venta_insumos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `venta_insumos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `venta_id` int NOT NULL,
+  `subproducto_id` int DEFAULT NULL,
+  `grupo_insumo_id` int DEFAULT NULL,
+  `nombre_insumo` varchar(99) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `cantidad_configurada` decimal(12,2) NOT NULL,
+  `cantidad_consumida` decimal(12,2) NOT NULL,
+  `stockaux_consumido` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `es_fijo` tinyint(1) NOT NULL DEFAULT '0',
+  `tipo_variacion` tinyint DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `venta_id_vi_idx` (`venta_id`),
+  KEY `subproducto_id_vi_idx` (`subproducto_id`),
+  KEY `grupo_insumo_id_idx` (`grupo_insumo_id`),
+  CONSTRAINT `grupo_insumo_id` FOREIGN KEY (`grupo_insumo_id`) REFERENCES `grupos_insumos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `subproducto_id_vi` FOREIGN KEY (`subproducto_id`) REFERENCES `subproductos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `venta_id_vi` FOREIGN KEY (`venta_id`) REFERENCES `ventas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `venta_insumos`
+--
+
+LOCK TABLES `venta_insumos` WRITE;
+/*!40000 ALTER TABLE `venta_insumos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `venta_insumos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ventas`
 --
 
@@ -3270,4 +3309,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-11 18:05:56
+-- Dump completed on 2026-07-18  0:39:44

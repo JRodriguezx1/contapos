@@ -71,20 +71,28 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function update(object $entity){
-        $data = $entity->toArray();
+    public function update(object $entity):bool{
+        $data = get_object_vars($entity);
+        if(method_exists($entity, 'toArray'))$data = $entity->toArray();
         $sets = [];
-        $id = $entity->id;;
+        // La PK nunca se toma como expresion SQL; se normaliza a entero.
+        $id = (int)$entity->id;
         $query = "UPDATE {$this->table} SET ";
         foreach( $data as $key => $value){
             if($value === null || $value == ''){
                 $sets[] = "{$key}=NULL";
                 continue;
             }
-            if(is_numeric($value)){
+            // Los valores de formularios llegan como string. Aunque contengan
+            // solo digitos (telefono, identificacion), deben conservar ceros
+            // iniciales y signos; solo los tipos PHP numericos van sin comillas.
+            if(is_int($value) || is_float($value)){
                 $sets[] = "{$key}={$value}";
                 continue;
             }
+            // Los repositorios reciben entidades hidratadas desde formularios;
+            // escapar aqui protege todos los UPDATE contra comillas e inyeccion.
+            $value = $this->escape((string)$value);
             $sets[] = "{$key}='{$value}'";
         }
         $query .= implode(', ', $sets);

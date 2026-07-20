@@ -725,8 +725,9 @@ class reportescontrolador{
     $fechainicio = $_POST['fechainicio'];
     $fechafin = $_POST['fechafin'];
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $sql = "SELECT mc.id, mc.num_orden, mc.fecha, mc.concepto, mc.observacion, u.nombre AS cajero, mc.valor, e.nombre AS emisor, mc.numero_documento,
-                  COALESCE(cl.nombre) AS tercero, /* Nombre del tercero */
+      $sql = "SELECT mc.id, mc.num_orden, mc.fecha, mc.concepto, mc.observacion, u.nombre AS cajero, mc.valor, e.nombre AS emisor, mc.numero_documento, mc.estado AS estadoMov,
+                  cl.identificacion as documento,
+                  CONCAT(cl.nombre, ' ', COALESCE(cl.apellido, '')) AS tercero, /* Nombre del tercero */
                   mp.mediopago, /* Medio de pago */
                   fmp.valor AS valormediopago, /* Valor pagado por ese medio */
                   c.nombre AS caja /* Caja */
@@ -745,7 +746,7 @@ class reportescontrolador{
               LEFT JOIN caja c ON c.id = mc.fk_caja
               /* Emisor */
               LEFT JOIN emisores e ON e.id = c.idemisor
-              WHERE mc.fecha >= '$fechainicio' AND fecha <= '$fechafin';";
+              WHERE mc.id_sucursal=$idsucursal AND mc.fecha >= '$fechainicio' AND fecha <= '$fechafin';";
       $datos = productos::camposJoinObj($sql);
     }
     echo json_encode($datos??[]);

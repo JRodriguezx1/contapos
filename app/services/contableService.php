@@ -26,14 +26,13 @@ class contableService{
     }
 
 
-    /*public function createUpdateTarifa(array $data):array{
-        return $this->repoMovimientocaja->upsert(new movimientos_caja($data));
+    public function anularMovimiento(int $typeDocument, int $idDcoument, string $observacion = ''):bool{
+        $movCaja = $this->repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>$typeDocument, 'id_documento'=>$idDcoument]);
+        $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
+        $movCaja->observacion .= ('-'.$observacion);
+        $movCaja->estado = 0;
+        return $this->repoMovimientocaja->update($movCaja);
     }
-
-
-    public function allTarifas():array{
-        return $this->repoMovimientocaja->allActive();
-    }*/
     
 
     

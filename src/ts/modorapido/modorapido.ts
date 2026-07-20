@@ -28,7 +28,7 @@
         let factimpuestos:Item[] = [];
         let carrito:CarritoItem[]=[];
         let allproducts:productsapi[] = [];
-        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
+        let filteredData: {id:string, text:string, tipo:string, tipoproducto:string, tipoproduccion:string, sku:string, unidadmedida:string, precio:string}[];   //tipoproducto = 0 es producto simple,  1 = compuesto,  si no viene es subproducto, tipo=0 es producto(simple o compuesto), tipo=1 es subproducto
         const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
         let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
         //const dataCredit = {capital:0, abonoinicial:0, saldopendiente:0, cantidadcuotas:0, interes:'0', interestotal:0, valorinterestotal:0, montototal:0, descuentocredito: 0};
@@ -56,7 +56,7 @@
                 const url = "/admin/api/allproducts"; //llamado a la API REST en el controlador almacencontrolador para treaer todas los productos simples y compuestos
                 const respuesta = await fetch(url);
                 const resultado:productsapi[] = await respuesta.json();
-                filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida }));
+                filteredData = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1').map(item => ({ id: item.id, text: item.nombre, tipo:item.tipoproducto??'1', tipoproducto: item.tipoproducto, tipoproduccion: item.tipoproduccion, sku: item.sku, unidadmedida: item.unidadmedida, precio:item.precio_venta }));
                 activarselect2();
                 allproducts = resultado.filter(x=>x.habilitarventa=='1'&&x.visible=='1');
             } catch (error) {
@@ -138,9 +138,9 @@
         function searchBarCode(barcode:string){
             const itemselected = allproducts.find(x=>x.sku==barcode);
             if(itemselected != undefined){
-                let cantidad = 1, productSelected = carrito.find(x=>x.idproducto==itemselected.id);
-                if(productSelected != undefined)cantidad += productSelected.cantidad;
-                agregarProducto(itemselected.id, cantidad);
+                const productoConfigurado = structuredClone(itemselected);
+                filtrarInsumos(productoConfigurado);
+                agregarProducto(itemselected.id, Number(itemselected.precio_venta), productoConfigurado);
             }
         }
 
@@ -148,72 +148,83 @@
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
             if(datos){
-                let cantidad = 1, itemselected = carrito.find(x=>x.idproducto==datos.id);
-                if(itemselected != undefined)cantidad += itemselected.cantidad;
-                agregarProducto(datos.id, cantidad);
+                const itemselected = allproducts.find(x=>x.id == datos.id)!
+                const productoConfigurado = structuredClone(itemselected);
+                filtrarInsumos(productoConfigurado);
+                agregarProducto(datos.id, datos.precio, productoConfigurado);
                 $("#articulo").val('null').trigger('change');
             }
         });
 
 
-        function agregarProducto(id:string, cantidad:number) {
-            const index = carrito.findIndex(x=>x.idproducto==id);
+        function agregarProducto(id:string, precio:number = 0, productoConfigurado:productsapi|null) {
+            const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio && mismaConfiguracion(x, productoConfigurado!));
+
             if(index == -1){  //si el item seleccionado no existe en el carrito, agregarlo.
-                const cantidad = 1;
-                const itemselected = allproducts.find(x=>x.id==id)!;
-                const productototal = Number(itemselected.precio_venta)*cantidad;
-                const productovalorimp = productototal*constImp[itemselected.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
+                //const itemselected = allproducts.find(x=>x.id==id)!;
+                const productototal = Number(productoConfigurado?.precio_venta);
+                const productovalorimp = productototal*constImp[productoConfigurado?.impuesto??'0']; //si producto.impuesto es null toma el valor de cero
                 
                 //varia segun la prioridad de la comision
-                if(itemselected.prioridadcomision === '0')  //si el porcentaje es por usuario
-                    itemselected.percentcomision = Number(percentComisionUser);
-                const valorcomision:number = (productototal*itemselected.percentcomision)/100;
-                
+                if(productoConfigurado?.prioridadcomision === '0')  //si el porcentaje es por usuario
+                    productoConfigurado.percentcomision = Number(percentComisionUser);
+                const valorcomision:number = (productototal*productoConfigurado?.percentcomision!)/100;  
+
                 const item:CarritoItem = {
                     id: '',
-                    idproducto: itemselected?.id!,
-                    tipoproducto: itemselected.tipoproducto,
-                    tipoproduccion: itemselected.tipoproduccion,
-                    idcategoria: itemselected.idcategoria,
-                    nombreproducto: itemselected.nombre,
-                    rendimientoestandar: itemselected.rendimientoestandar,
-                    foto: itemselected.foto,
-                    costo: itemselected.precio_compra,
-                    valorunidad: Number(itemselected.precio_venta),
-                    cantidad: cantidad,
-                    percentcomision: itemselected.percentcomision,
+                    idproducto: productoConfigurado?.id!,
+                    tipoproducto: productoConfigurado?.tipoproducto!,
+                    tipoproduccion: productoConfigurado?.tipoproduccion!,
+                    idcategoria: productoConfigurado?.idcategoria!,
+                    nombreproducto: productoConfigurado?.nombre!,
+                    rendimientoestandar: productoConfigurado?.rendimientoestandar!,
+                    foto: productoConfigurado?.foto!,
+                    costo: productoConfigurado?.precio_compra!,
+                    valorunidad: Number(productoConfigurado?.precio_venta),
+                    cantidad: 1,
+                    stock: 1,
+                    promediostock: Number(productoConfigurado?.promediostock),
+                    prioridadcomision: productoConfigurado?.prioridadcomision!,
+                    percentcomision: productoConfigurado?.percentcomision!,
                     valorcomision: valorcomision,
                     subtotal: productototal, //este es el subtotal del producto
                     base: productototal-productovalorimp,
-                    impuesto: itemselected.impuesto, //porcentaje de impuesto, es null si es excluido de iva
+                    impuesto: productoConfigurado?.impuesto!, //porcentaje de impuesto, es null si es excluido de iva
                     valorimp: productovalorimp,
                     descuento: 0,
-                    total: productototal //valorunidad x cantidad
+                    total: productototal, //valorunidad x cantidad
+                    insumos: productoConfigurado?.insumos??[]
                 }
                 carrito = [...carrito, item];
             }else{ //sumar cantidad cuando el item ya existe 
-                if(cantidad <= 0){
-                    cantidad = 0;
-                    carrito[index].total = 0;
-                    //carrito = carrito.filter(x=>x.iditem != id);
-                }
-                sumarcantidad(carrito[index], cantidad);
+                sumarcantidad(carrito[index], carrito[index].cantidad+1);
             }
             
-            while(tablaMR.firstChild)tablaMR.removeChild(tablaMR.firstChild);
-
-            carrito.forEach(item=>{
-                const tr = document.createElement('tr') as HTMLTableRowElement;
-                tr.classList.add('productselect');
-                tr.dataset.idproducto = `${item.idproducto}`;
-                tr.innerHTML = `<td class="py-2 pl-4">${item.nombreproducto}</td>
-                                <td class="py-2 text-center cursor-pointer cantidad"><input type="text" class="inputcantidad w-20 p-2 text-center" value="${item.cantidad}"></td>
-                                <td class="py-2 text-right">${item.valorunidad}</td>
-                                <td class="py-2 text-right totalFila">${item.total}</td>
-                                <td class="text-center"><div class="btn-xs btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></div></td>`;
-                tablaMR.prepend(tr);
-            });
+            printCarrito();
             valorCarritoTotal();
+        }
+        
+
+        function mismaConfiguracion(productCarrito: any, producto2: productsapi):boolean {
+            const mapaProduct2 = new Map(producto2.insumos.map((ins:any) => [ins.id_subproducto, ins]));
+            // Deben ser el mismo producto
+            if(productCarrito.idproducto !== producto2.id)return false;
+
+            // Deben tener la misma cantidad de insumos
+            if(productCarrito.insumos.length !== producto2.insumos.length)return false;
+
+            for (const insumo1 of productCarrito.insumos) {
+                //const insumo2 = producto2.insumos.find((x:any) => x.id_subproducto == insumo1.id_subproducto);
+                const insumo2:any = mapaProduct2.get(insumo1.id_subproducto);
+                if (!insumo2)return false;
+                // Comparar selección
+                if (Number(insumo1.seleccionado) !== Number(insumo2.seleccionado))
+                    return false;
+                // Comparar cantidad
+                if (Number(insumo1.cantidadsubproducto) !== Number(insumo2.cantidadsubproducto))
+                    return false;
+            }
+            return true;
         }
 
 
@@ -221,8 +232,8 @@
             const input = e.target as HTMLInputElement;
             if (!input.classList.contains('inputcantidad')) return;
             const fila = input?.closest('.productselect') as HTMLTableRowElement;
-            const idProduct = fila.dataset.idproducto!;
-            const productoCarrito = carrito.find(x=>x.idproducto==idProduct);
+            const indexcarrito = fila.dataset.indexcarrito!;
+            const productoCarrito = carrito[Number(indexcarrito)];
             
             if(productoCarrito==undefined)return;
                 
@@ -241,13 +252,14 @@
                 productoCarrito.total = 0;
                 //carrito = carrito.filter(x=>x.iditem != id);
             }
-                
+            fila.children[3].textContent = '$'+(productoCarrito.valorunidad*cantidad).toLocaleString();
             sumarcantidad(productoCarrito, cantidad);
             valorCarritoTotal();
         });
 
         function sumarcantidad(productoCarrito:CarritoItem, cantidad:number){
             productoCarrito.cantidad = cantidad;
+            productoCarrito.stock = cantidad;
             productoCarrito.subtotal = (productoCarrito.valorunidad)*productoCarrito.cantidad;
             productoCarrito.total = productoCarrito.subtotal;
             productoCarrito.valorcomision = (productoCarrito.subtotal*productoCarrito.percentcomision)/100;
@@ -290,13 +302,28 @@
         tablaMR?.addEventListener('click', (e:Event)=>{
             if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
                 const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
-                const idProduct = (elementProduct as HTMLElement).dataset.idproducto!;
-                carrito = carrito.filter(x=>x.idproducto != idProduct);
+                const indexcarrito = Number((elementProduct as HTMLElement).dataset.indexcarrito!);
+                carrito.splice(indexcarrito, 1);
+                printCarrito();
                 valorCarritoTotal();
-                tablaMR?.querySelector(`TR[data-idproducto="${idProduct}"]`)?.remove();
             }
         });
 
+
+        function printCarrito(){
+            while(tablaMR.firstChild)tablaMR.removeChild(tablaMR.firstChild);
+            carrito.forEach((item, i)=>{
+                const tr = document.createElement('tr') as HTMLTableRowElement;
+                tr.classList.add('productselect');
+                tr.dataset.indexcarrito = i+'';
+                tr.innerHTML = `<td class="py-2 pl-4">${item.nombreproducto}</td>
+                                <td class="py-2 text-center cursor-pointer cantidad"><input type="text" class="inputcantidad w-20 p-2 text-center" value="${item.cantidad}"></td>
+                                <td class="py-2 text-right">$${item.valorunidad.toLocaleString()}</td>
+                                <td class="py-2 text-right totalFila">$${item.total.toLocaleString()}</td>
+                                <td class="text-center"><div class="btn-xs btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></div></td>`;
+                tablaMR.prepend(tr);
+            });
+        }
 
         function printTarifaEnvio():void{
             tarifas = POS.tarifas;
@@ -395,6 +422,7 @@
             const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
             const datos = new FormData();
             //datos.append('id', datosfactura?.id??'');
+            datos.append('idemisor', btnCaja.selectedOptions[0].dataset.idemisor??'');
             datos.append('idcliente', (document.querySelector('#selectCliente') as HTMLSelectElement).value || '1');
             datos.append('idvendedor', (document.querySelector('#vendedor') as HTMLParagraphElement).dataset.idvendedor!);
             datos.append('idcaja', btnCaja.value);
@@ -417,6 +445,7 @@
             datos.append('tipoventa', tipoventa);
             datos.append('valoresCredito', JSON.stringify(valoresCredito));
             datos.append('cotizacion', ctz);  //1= cotizacion, 0 = no cotizacion pagada.
+            datos.append('remision', estado=='Remision'?'1':'0');
             datos.append('estado', estado);
             datos.append('porcentgananciauser', valorTotal.porcentgananciauser.toFixed(2));
             datos.append('valorgananciauser', valorTotal.valorgananciauser.toFixed(2));
@@ -429,7 +458,8 @@
             datos.append('observacion', document.querySelector<HTMLTextAreaElement>('#observacion')!.value);
             datos.append('departamento', '');
             //datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
-            //datos.append('entrega', modalidadEntrega.textContent!.replace(': ', ''));
+            datos.append('entrega', 'Presencial');
+            datos.append('entregado', estado=='Paga'?'1':'0'); //si es remision no se ha entregado, si es pago y entrega a domicilio se define segun el checkbox de despachar, si es pago y entrega presencial se marca como entregado
             datos.append('valortarifa', valorTotal.valortarifa+'');
             datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
             datos.append('opc1', '');
@@ -438,38 +468,45 @@
                 const url = "/admin/api/facturarModorapido";  //va al controlador ventascontrolador
                 const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                 const resultado = await respuesta.json();
-
-                if(estado == "Paga"){
-                    resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
-                    resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
-                    idmediopago,
-                    mediopago: mediosPagoDBMAP.get(idmediopago),
-                    valor,
-                    }));
-                }
+                console.log(resultado);
 
                 if(resultado.exito !== undefined){
                     msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                     btnPagar.disabled = false;
                     btnPagar.value = 'Pagar';
                     miDialogoFacturar.close();
+
+                    if(estado == "Paga"){
+                        resultado.dataInvoice.items = carrito.filter(x=>x.cantidad>0);
+                        resultado.dataInvoice.mediospago = Array.from(mapMediospago, ([idmediopago, valor])=>({
+                            idmediopago,
+                            mediopago: mediosPagoDBMAP.get(idmediopago),
+                            valor,
+                        }));
                 
-                    //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
-                    if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
-                    const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
-                    POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
-                    resultado.dataInvoice.cufe = resDian.cufe;
-                    resultado.dataInvoice.link = resDian.link;
-                    console.log(resDian);
+                        //ENVIAR FACTURA A DIAN SI ES FACTURACION ELECTRONICA
+                        if(btnTipoFacturador.options[btnTipoFacturador.selectedIndex].dataset.idtipofacturador == '1'){
+                            const resDian = await POS.sendInvoiceAPI.sendInvoice(resultado.idfactura);
+                            POS.gestionarAdquiriente.datosAdquiriente = {}; //reiniciar datos de adquiriente cada vez que se facture electronicamente
+                            resultado.dataInvoice.cufe = resDian.cufe;
+                            resultado.dataInvoice.link = resDian.link;
+                            console.log(resDian);
+                        }
+                        //IMPRIMIR TICKET POS
+                        if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
                     }
-                    //IMPRIMIR TICKET POS
-                    if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
                     vaciarventa();
                 }else{
-                    msjalertToast('error', '¡Error!', resultado.error[0]);
+                    btnPagar.disabled = false;
+                    btnPagar.value = 'Pagar';
+                    const mensajeError = resultado.error?.[0]??'No fue posible procesar la solicitud';
+                    msjalertToast('error', '¡Error!', mensajeError);
                 }
             } catch (error) {
                 console.log(error);
+                btnPagar.disabled = false;
+                btnPagar.value = 'Pagar';
+                msjalertToast('error', '¡Error!', 'No fue posible comunicarse con el servidor');
             }
         }
 
@@ -523,14 +560,20 @@
 
         function cerrarDialogoExterno(event:Event) {
             const f = event.target;
-            if (f=== miDialogoAddCliente || f=== miDialogoFacturarA || f === miDialogoGuardar || f === miDialogoFacturar || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.noguardar') || (f as HTMLInputElement).closest('.siguardar')) {
+            if (f=== miDialogoAddCliente || f=== miDialogoFacturarA || f === miDialogoGuardar || f === miDialogoFacturar || (f as HTMLInputElement).value === 'Cancelar' || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.cotizacion') || (f as HTMLInputElement).closest('.remision')) {
                 miDialogoFacturarA.close();
                 miDialogoFacturar.close();
                 miDialogoAddCliente.close();
                 miDialogoGuardar.close();
-                if((f as HTMLInputElement).closest('.siguardar')){
+                console.log(1);
+                if((f as HTMLInputElement).closest('.cotizacion')){
+                    console.log(3);
                     tipoventa = "";
-                    //procesarpedido('Guardado', '1');
+                    procesarpedido('Guardado', '1');
+                }
+                if((f as HTMLInputElement).closest('.remision')){
+                    tipoventa = "";
+                    procesarpedido('Remision', '0');
                 }
             }
         }

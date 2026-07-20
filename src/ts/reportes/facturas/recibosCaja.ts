@@ -58,13 +58,16 @@
             columns: [
                         {title: 'Num', data: 'num_orden'},
                         {title: 'Fecha', data: 'fecha', render: (data:string) => `<div class="w-44 whitespace-normal">${data}</div>`},
-                        {title: 'Concepto', data: 'concepto'},
+                        {title: 'Concepto', data: 'concepto', render: (data:string) => `<div class="w-44 whitespace-normal">${data}</div>`},
+                        {title: 'Documento', data: 'documento'},
                         {title: 'Tercero', data: 'tercero', render: (data:string) => `<div class="w-44 whitespace-normal">${data}</div>`},
                         {title: 'Medio Pago', data: 'mediopago'},
                         {title: 'Cajero', data: 'cajero'},
-                        {title: 'Valor pagado', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Emisor', data: 'emisor', render: (data:string) => `${data==null?'Negocio':''}`},
-                        {title: 'Observacion', data: 'observacion', render: (data:string) => `<div class="w-52 whitespace-normal">${data}</div>`}        
+                        {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Valor pagado', data: 'valormediopago', render: (data:number) => `$${Number(data).toLocaleString()}`},
+                        {title: 'Emisor', data: 'emisor', render: (data:string) => `<div class="w-44 whitespace-normal">${data==null?'Negocio':data}</div>`},
+                        {title: 'Observacion', data: 'observacion', render: (data:string) => `<div class="w-52 whitespace-normal">${data}</div>`},
+                        {title: 'Estado', data: 'estadoMov', render: (data:number) => `<div class="">${data==1?'Registrado':'Anulado'}</div>`}
             ],
             language: {
                 search: 'Busqueda',

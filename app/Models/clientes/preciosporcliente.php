@@ -11,8 +11,19 @@ class preciosporcliente extends \App\Models\ActiveRecord {
         $this->idcliente = $args['idcliente'] ?? '';
         $this->idproducto = $args['idproducto']??' ';
         $this->precioxcliente = $args['precioxcliente'] ?? 0;
-        $this->estado = $args['estado'] ?? '';
+        $this->estado = $args['estado'] ?? 1;
         $this->created_at = $args['created_at']??'';
+    }
+
+    /** Columnas controladas que los repositorios pueden persistir. */
+    public function toArray():array
+    {
+        return [
+            'idcliente'=>$this->idcliente,
+            'idproducto'=>$this->idproducto,
+            'precioxcliente'=>$this->precioxcliente,
+            'estado'=>$this->estado,
+        ];
     }
 
     // Validación para clientes nuevos

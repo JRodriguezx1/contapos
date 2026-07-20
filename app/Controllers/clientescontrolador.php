@@ -2,18 +2,17 @@
 
 namespace App\Controllers;
 
-use App\Models\ActiveRecord;
 use MVC\Router;  //namespace\clase
 use App\Models\configuraciones\usuarios;
-use App\Models\clientes\clientes;
-use App\Models\clientes\direcciones;
-use App\Models\clientes\preciosporcliente;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\mediospago;
 use App\Models\configuraciones\tarifas;
 use App\Models\inventario\productos;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
+use App\Repositories\clientes\clientesRepository;
+use App\Repositories\clientes\direccionesRepository;
+use App\Repositories\clientes\preciosPorClienteRepository;
 use App\Repositories\creditos\creditosRepository;
 use App\services\clientesService;
 use stdClass;
@@ -26,7 +25,9 @@ class clientescontrolador{
         isadmin();
         $alertas = [];
         $buscar = '';
-        $clientes = clientes::all();
+        // Las lecturas propias del modulo pasan por Repository; los catalogos
+        // externos (tarifas, sucursales, cajas) conservan su implementacion actual.
+        $clientes = (new clientesRepository())->all();
         $tarifas = tarifas::all();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
             
@@ -40,28 +41,19 @@ class clientescontrolador{
         $usuariotelexiste = $usuario->find('movil', $_POST['movil']);*/
         //session_start();
         isadmin();
-        $cliente = new clientes($_POST);
-        $direccion = new direcciones(['idtarifa'=>1, 'iddepartamento'=>1, 'idciudad'=>1, 'departamento'=>'No definido', 'ciudad'=>'No definido', 'direccion'=>'Tienda']);
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $alertas = $cliente->validar_nuevo_cliente();
-            $documentID = $cliente->validar_regDinamic('identificacion');
-            //$alertas = $direccion->validarDireccion();
-            if(empty($alertas) && !$documentID){ //si los campos cumplen los criterios y cliente no existe por documento 
-                try {
-                    $cli = $cliente->crear_guardar();
-                    $direccion->idcliente = $cli[1];
-                    $direccion->crear_guardar();
-                    $alertas['exito'][] = 'Cliente creado con exito.';
-                } catch (\Throwable $th) {
-                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente >>'.$th->getMessage();
-                }
-            }else{
-                if($documentID)$cliente::setAlerta('error', 'El cliente ya esta registrado');
-                $alertas = $cliente::getAlertas();
-            }
+            $clienteService = new clientesService();
+            $alertas = $clienteService->crearCliente($_POST, [
+                'idtarifa'=>1,
+                'iddepartamento'=>1,
+                'idciudad'=>1,
+                'departamento'=>'No definido',
+                'ciudad'=>'No definido',
+                'direccion'=>'Tienda',
+            ]);
         }
-        $clientes = clientes::all();
+        $clientes = (new clientesRepository())->all();
         $tarifas = tarifas::all();
         $router->render('admin/clientes/index', ['titulo'=>'Clientes', 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
@@ -135,8 +127,13 @@ class clientescontrolador{
         if(!is_numeric($id))return;
         $alertas = [];
         $conflocal = config_local::getParamGlobal();
-        $cliente = clientes::find('id', $id);
-        $indicadores = clientes::indicadoresVentasXcliente($cliente->id, id_sucursal());
+        $clientesRepo = new clientesRepository();
+        $cliente = $clientesRepo->find((int)$id);
+        if(!$cliente){
+            header('Location: /admin/clientes');
+            return;
+        }
+        $indicadores = $clientesRepo->indicadoresVentas($cliente->id, id_sucursal());
         $creditos = new creditosRepository;
         //$creditos = $creditos->findAll('cliente_id', $cliente->id, 'DESC');
         $creditos = $creditos->creditosXclienteXemisor('cliente_id', $cliente->id, 'DESC');
@@ -153,16 +150,22 @@ class clientescontrolador{
         if(!is_numeric($id))return;
         $alertas = [];
         $conflocal = config_local::getParamGlobal();
-        $cliente = clientes::find('id', $id);
+        $clientesRepo = new clientesRepository();
+        $preciosRepo = new preciosPorClienteRepository();
+        $cliente = $clientesRepo->find((int)$id);
+        if(!$cliente){
+            header('Location: /admin/clientes');
+            return;
+        }
         $productos = productos::whereArray(['visible'=>1]);
-        $arrayPreciosPorCliente = preciosporcliente::unJoinWhereArrayObj(productos::class, "idproducto", "id", ['preciosporcliente.idcliente'=>$cliente->id]);
+        $arrayPreciosPorCliente = $preciosRepo->conProductoPorCliente($cliente->id);
         $router->render('admin/clientes/preciosXCliente', ['titulo'=>'Clientes', 'conflocal'=>$conflocal, 'cliente'=>$cliente, 'productos'=>$productos, 'arrayPreciosPorCliente'=>$arrayPreciosPorCliente, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
     }
 
 
     ///////////////////////////////////  Apis ////////////////////////////////////
     public static function allclientes(){  //api llamado desde citas.js
-        $clientes = clientes::all();
+        $clientes = (new clientesRepository())->all();
         echo json_encode($clientes);
     }
     
@@ -172,10 +175,15 @@ class clientescontrolador{
         isadmin(); 
         $id = $_GET['id'];
         if(!is_numeric($id))return;
-        $cliente = clientes::find('id', $id);
-        $cliente->direcciones = clientes::direccionesANDTarifas($id);
+        $clientesRepo = new clientesRepository();
+        $cliente = $clientesRepo->find((int)$id);
+        if(!$cliente){
+            echo json_encode(['error'=>['Cliente no encontrado.']]);
+            return;
+        }
+        $cliente->direcciones = (new direccionesRepository())->conTarifaPorCliente((int)$id);
         //precios personalizados segun el cliente
-        $cliente->preciospersonalizados = preciosporcliente::idregistros("idcliente", $id);
+        $cliente->preciospersonalizados = (new preciosPorClienteRepository())->findAll('idcliente', (int)$id);
         echo json_encode($cliente);
     }
 
@@ -183,31 +191,10 @@ class clientescontrolador{
     public static function apiCrearCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea un cliente
         //session_start();
         isadmin();
-        $cliente = new clientes($_POST);
-        $direccion = new direcciones($_POST);
         $alertas = [];
        
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $alertas = $cliente->validar_nuevo_cliente();
-            $documentID = $cliente->validar_regDinamic('identificacion');
-            $alertas = $direccion->validarDireccion();
-            if(empty($alertas) && !$documentID){ //si los campos cumplen los criterios y cliente no existe por documento   
-                //guardar cliente recien creado en bd
-                try {
-                    $resultado = $cliente->crear_guardar();
-                    if(strlen($direccion->direccion)>3){
-                        $direccion->idcliente =  $resultado[1];
-                        $r1 = $direccion->crear_guardar();
-                        $alertas['exito'][] = 'Cliente Registrado correctamente';
-                    }
-                    $alertas['nextID'] = $resultado[1];
-                } catch (\Throwable $th) {
-                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente'.$th->getMessage();
-                }
-            }else{
-                if($documentID)$cliente::setAlerta('error', 'El cliente ya esta registrado');
-                $alertas = $cliente::getAlertas();
-            }
+            $alertas = (new clientesService())->crearCliente($_POST, $_POST);
         }
         echo json_encode($alertas);
     }
@@ -215,82 +202,20 @@ class clientescontrolador{
 
     public static function apiActualizarcliente(){
         //session_start();
-        $alertas = [];
-        $cliente = clientes::find('id', $_POST['idcliente']);
-        if(isset($_POST['iddireccion']))$direccion = direcciones::uniquewhereArray(['id'=>$_POST['iddireccion'], 'idcliente'=>$cliente->id]);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $cliente->compara_objetobd_post($_POST);
-            $alertas = $cliente->validar_nuevo_cliente();
-            $getDB = clientes::getDB();
-            if(empty($alertas)){
-                $getDB->begin_transaction();
-                try {
-                    $r = $cliente->actualizar();
-                    if(isset($_POST['direccion']) && strlen($_POST['direccion'])>3){
-                        if($direccion){  //actualizar direccion
-                            $direccion->compara_objetobd_post($_POST);
-                            $alertas = $direccion->validarDireccion();
-                            if(!empty($alertas)){
-                                $getDB->rollback();
-                                $alertas['error'][] = "Error al actualizar cliente";
-                                $alertas['cliente'][] = $cliente;
-                                echo json_encode($alertas);
-                                return;
-                            }
-                            $direccion->actualizar();
-                        }
-                        if(is_null($direccion)){ //crear direccion para el cliente a actualizar
-                            $direccion = new direcciones($_POST);
-                            $alertas = $direccion->validarDireccion();
-                            if(!empty($alertas)){
-                                $getDB->rollback();
-                                $alertas['error'][] = "Error al actualizar cliente";
-                                $alertas['cliente'][] = $cliente;
-                                echo json_encode($alertas);
-                                return;
-                            }
-                            $direccion->crear_guardar();
-                        }
-                    }
-                    $getDB->commit();
-                    $alertas['exito'][] = "Datos del cliente actualizados";
-                } catch (\Throwable $th) {
-                    $getDB->rollback();
-                    $alerta['error'][] = "Error al actualizar el cliente >>".$th->getMessage();
-                    //throw $th;
-                }
-            }
-        }
-        $alertas['cliente'][] = $cliente;
-        $alertas['nextID'] = $cliente->id;
+        isadmin();
+        $alertas = $_SERVER['REQUEST_METHOD'] === 'POST'
+            ? (new clientesService())->actualizarCliente($_POST)
+            : ['error'=>['Metodo no permitido.']];
         echo json_encode($alertas);  
     }
 
 
     public static function apiEliminarCliente(){
         //session_start();
-        $cliente = clientes::find('id', $_POST['id']);
-        $creditos = new creditosRepository;
-        $creditocliente = $creditos->where(['cliente_id'=>$cliente->id, 'idestadocreditos'=>2]);
-        if(count($creditocliente)>0){
-            $alertas['error'][] = "Cliente tiene credito pendiente";
-            echo json_encode($alertas);
-            return;
-        }
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            if(!empty($cliente)){
-                $r = $cliente->eliminar_registro();
-                if($r){
-                    ActiveRecord::setAlerta('exito', 'Cliente eliminado correctamente');
-                }else{
-                    ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
-                }
-            }else{
-                ActiveRecord::setAlerta('error', 'Cliente no encontrado');
-            }
-        }
-        $alertas = ActiveRecord::getAlertas();
+        isadmin();
+        $alertas = $_SERVER['REQUEST_METHOD'] === 'POST'
+            ? (new clientesService())->eliminarCliente((int)($_POST['id'] ?? 0))
+            : ['error'=>['Metodo no permitido.']];
         echo json_encode($alertas); 
     }
 
@@ -300,7 +225,7 @@ class clientescontrolador{
         isadmin();
         $id = $_GET['id'];
         if(!is_numeric($id))return;
-        $comprasXMesXCliente = clientes::comprasXMesXCliente($id, id_sucursal());
+        $comprasXMesXCliente = (new clientesRepository())->comprasPorMes((int)$id, id_sucursal());
         echo json_encode($comprasXMesXCliente);
     }
 
@@ -310,7 +235,7 @@ class clientescontrolador{
         isadmin();
         $id = $_GET['id'];
         if(!is_numeric($id))return;
-        $ventasXCategoriasXCliente = clientes::ventasXCategoriasXCliente($id, id_sucursal());
+        $ventasXCategoriasXCliente = (new clientesRepository())->ventasPorCategoria((int)$id, id_sucursal());
         echo json_encode($ventasXCategoriasXCliente);
     }
 

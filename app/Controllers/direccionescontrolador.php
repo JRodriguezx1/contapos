@@ -3,10 +3,9 @@
 namespace App\Controllers;
 
 use MVC\Router;  //namespace\clase
-use App\Models\configuraciones\usuarios;
-use App\Models\clientes\clientes;
-use App\Models\clientes\direcciones;
 use App\Models\configuraciones\tarifas;
+use App\Repositories\clientes\clientesRepository;
+use App\services\clientesService;
 
  
 class direccionescontrolador{
@@ -16,12 +15,13 @@ class direccionescontrolador{
         isadmin();
         $alertas = [];
         $buscar = '';
-        $clientes = clientes::all(); //me trae los usuario que esten confirmados y no admin
+        $clientesRepo = new clientesRepository();
+        $clientes = $clientesRepo->all();
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            if($_POST['filtro']!='all')
-                $clientes = usuarios::filtro_nombre($_POST['filtro'], $_POST['buscar'], 'id');
-                $buscar = $_POST['buscar'];
+            if(($_POST['filtro'] ?? 'all') !== 'all')
+                $clientes = $clientesRepo->buscar($_POST['filtro'], $_POST['buscar'] ?? '');
+            $buscar = $_POST['buscar'] ?? '';
 
         }
 
@@ -31,24 +31,11 @@ class direccionescontrolador{
     public static function crear(Router $router){
         //session_start();
         isadmin();
-        $direccion = new direcciones($_POST);
         $alertas = [];
-        $getDB = direcciones::getDB();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $alertas = $direccion->validarDireccion();
-            if(empty($alertas)){
-                $getDB->begin_transaction();
-                try {
-                    $direccion->crear_guardar();
-                    $getDB->commit();
-                    $alertas['exito'][] = 'Direccion creada correctamente';
-                } catch (\Throwable $th) {
-                $getDB->rollback();
-                $alertas['error'][] = "Hubo un error en el proceso, intentalo nuevamente {$th->getMessage()} ";
-                }
-            }
+            $alertas = (new clientesService())->crearDireccion($_POST);
         }
-        $clientes = clientes::all();
+        $clientes = (new clientesRepository())->all();
         $tarifas = tarifas::all();
         $router->render('admin/clientes/index', ['titulo'=>'clientes', 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'alertas'=>$alertas, 'user'=>$_SESSION]);
     }
@@ -60,21 +47,9 @@ class direccionescontrolador{
     public static function addDireccionCliente(){ //api llamada desde el modulo de ventas.ts cuando se crea una direccion
         //session_start();
         isadmin();
-        $direccion = new direcciones($_POST);
         $alertas = [];  
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $alertas = $direccion->validarDireccion();
-            if(empty($alertas)){ 
-                $resultado = $direccion->crear_guardar();
-                if($resultado){
-                    $direcciones = direcciones::idregistros('idcliente', $_POST['idcliente']);
-                    foreach($direcciones as $direccion)$direccion->tarifa = tarifas::find('id', $direccion->idtarifa);
-                    $alertas['direcciones'] = $direcciones;
-                    $alertas['exito'][] = 'Direccion Registrada correctamente';
-                }else{
-                    $alertas['error'][] = 'Hubo un error en el proceso, intentalo nuevamente';
-                }
-            }
+            $alertas = (new clientesService())->crearDireccion($_POST, true);
         }
         echo json_encode($alertas);
     }

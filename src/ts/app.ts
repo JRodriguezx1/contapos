@@ -553,15 +553,14 @@ function obtenerNumero(input: HTMLInputElement):number|null{
 }
 
 
-function filtrarInsumos(productoConfigurado:Partial<productsapi>|undefined){
-    const insumos = productoConfigurado?.insumos??[];
-    const ultimoSeleccionUnica:insumo|undefined  = insumos.filter(i=>i.grupos_insumos?.tipo === "0"&&i.seleccionado === "1").at(-1);
+function filtrarInsumos(productoConfigurado:Partial<productsapi>|undefined):void{
+  const insumos = productoConfigurado?.insumos;
+  if(!insumos?.length) return;
 
-    const nuevosElementos:insumo[] = [
-              ...(ultimoSeleccionUnica  ? [ultimoSeleccionUnica ] : []),
-              ...insumos.filter(i=>i.grupos_insumos?.tipo === "1" &&i.seleccionado === "1")
-    ];
-    insumos.splice(0, insumos.length, ...nuevosElementos);
+  const insumosActivos = insumos.filter(insumoActual =>
+    insumoActual.grupos_insumos === null || insumoActual.seleccionado === "1"
+  );
+  insumos.splice(0, insumos.length, ...insumosActivos);
 }
 
 

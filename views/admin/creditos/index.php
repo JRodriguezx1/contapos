@@ -17,6 +17,7 @@
             <th>id</th>
             <th>Fecha</th>
             <th>Tipo</th>
+            <th>CC</th>
             <th>Cliente</th>
             <th>Credito</th>
             <!--<th>Abono Inicial</th>
@@ -34,7 +35,8 @@
                 <td class=""><?php echo $value->ID; ?></td>
                 <td class=""><?php echo $value->fechainicio; ?></td>
                 <td class=""><?php echo $value->idtipofinanciacion==1?'Credito':'Separado'; ?></td>
-                <td class=""><?php echo $value->nombre.' '.$value->apellido; ?></td>         
+                <td class=""><?php echo $value->identificacion; ?></td>
+                <td class=""><?php echo $value->nombre.' '.$value->apellido; ?></td> 
                 <td class="">$<?php echo number_format($value->capital,'2', ',', '.'); ?></td>
                 <!--<td class="">$<?php // echo number_format($value->abonoinicial,'2', ',', '.'); ?></td>
                 <td class="">$<?php // echo number_format($value->capital-$value->abonoinicial,'2', ',', '.'); ?></td>-->

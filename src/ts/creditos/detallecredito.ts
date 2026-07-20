@@ -151,15 +151,15 @@
 
     document.querySelector('#formAjustarCredito')?.addEventListener('submit', e=>{
       e.preventDefault();
-      const v:number = validarPasswordDcto();
+      const v:number = validarPassword('divmsjalertaClaveAjustarCredito', inputPasswordAjustarCredito.value);
       if(!v)return;
       ajustarCreditoAntiguo();
     });
 
-    function validarPasswordDcto():number{
+    function validarPassword(divAlertString:string, claveUsuario:string):number{
       const clave = password.find(c => c.clave=='clave_para_ajustar_credito');
-      if(inputPasswordAjustarCredito && clave?.valor_final!==null && inputPasswordAjustarCredito.value !== clave?.valor_final){
-        msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalertaClaveAjustarCredito') as HTMLElement));
+      if(clave?.valor_final!==null && claveUsuario !== clave?.valor_final){
+        msjAlert('error', 'El password es invalido', (document.querySelector('#'+divAlertString) as HTMLElement));
         return 0;
       }
       return 1;
@@ -226,26 +226,59 @@
           icon: 'question',
           title: 'Desea anular el abono registrado',
           text: "El abono, seran anulado definitivamente.",
+          input: 'password',
+          inputPlaceholder: 'Ingresa tu contraseña',
+          inputAttributes: {
+              autocapitalize: 'off',
+              autocorrect: 'off'
+          },
           showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Si, anular',
+          cancelButtonText: 'No, cancelar',
+          showLoaderOnConfirm: true, // Muestra el spinner de carga en el botón de confirmar
+        
+          // Evita que dejen el campo vacío en el cliente
+          inputValidator: (value:string) => {
+              if (!value) 
+                  return '¡La contraseña es obligatoria!';
+              if(!validarPassword('divmsjalerta', value))
+                return '¡La contraseña es invalida!';
+          },
+          preConfirm: async()=>{
+            try {
+                const url = "/admin/api/creditos/anularAbono?id="+idabono;
+                const respuesta = await fetch(url); 
+                const resultado = await respuesta.json();
+
+                if (!respuesta.ok || resultado.error) {
+                    const mensajeError = resultado.error ? resultado.error[0] : 'No se pudo procesar la solicitud.';
+                    throw new Error(mensajeError);
+                }
+                return resultado;
+            } catch (error:any) {
+                  console.log(error);
+                  Swal.showValidationMessage(error.message);
+            }
+
+          },
+          allowOutsideClick: () => !Swal.isLoading() // Evita cerrar la alerta haciendo clic afuera mientras procesa
       }).then((result:any) => {
-          if (result.isConfirmed) {
-              (async ()=>{ 
+          if (result.isConfirmed && result.value) {
+              /*(async ()=>{ 
                   try {
                       const url = "/admin/api/creditos/anularAbono?id="+idabono;
                       const respuesta = await fetch(url); 
                       const resultado = await respuesta.json();
-                      if(resultado.exito !== undefined){
+                      if(resultado.exito !== undefined){*/
                         fila?.remove();
-                        Swal.fire(resultado.exito[0], '', 'success');
-                      }else{
+                        Swal.fire(result.value.exito[0], '', 'success');
+                      /*}else{
                           Swal.fire(resultado.error[0], '', 'error');
                       }
                   } catch (error) {
                       console.log(error);
                   }
-              })();//cierre de async()
+              })();//cierre de async()*/
           }
       });
     }

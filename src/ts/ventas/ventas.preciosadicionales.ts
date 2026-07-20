@@ -72,7 +72,7 @@
     document.removeEventListener("click", POS.cerrarDialogoExterno);
     const precioLibre = obtenerNumero(inputPrecioLibre);
     const prioridadValor = precioLibre!=null?precioLibre:seleccionado?.checked?seleccionado.value:producto?.precio_venta;
-    filtrarInsumos(productoConfigurado);
+    filtrarInsumos(productoConfigurado); //esta en app.ts
     if(producto != undefined)POS.actualizarCarrito(producto.id, cantidadTotal==0?1:cantidadTotal, true, true, prioridadValor+'', productoConfigurado);
   });
 
@@ -142,17 +142,7 @@
     renderObligatorios(obligatorios, listaInsumos);
     eventosCheckbox();
     eventosRadio();
-
-    document
-        .querySelectorAll<HTMLInputElement>(".inputInsumoRadio:checked")
-        .forEach(radio => {
-            const tarjeta = radio.closest(".tarjeta-radio-insumo");
-            tarjeta?.classList.add(
-                "border-indigo-400",
-                "bg-indigo-50",
-                "shadow-lg"
-            );
-        });
+    eventosCantidadInsumo();
   }
 
   function renderVariacionesVacias(contenedor: HTMLElement){
@@ -405,6 +395,31 @@
   function eventosRadio() {
     const radios = document.querySelectorAll<HTMLInputElement>(".inputInsumoRadio");
     radios.forEach(radio => radio.addEventListener("change", actualizarRadio));
+  }
+
+  function eventosCantidadInsumo() {
+    const cantidades = document.querySelectorAll<HTMLInputElement>(".inputCantidadInsumo");
+    cantidades.forEach(input => input.addEventListener("change", actualizarCantidadInsumo));
+  }
+
+  function actualizarCantidadInsumo(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const idInsumo = Number(input.dataset.idinsumo);
+    const insumo = productoConfigurado?.insumos?.find(
+      item => Number(item.id_subproducto) === idInsumo
+    );
+    if(!insumo)return;
+
+    const cantidadBase = Number(
+      producto?.insumos?.find(item => Number(item.id_subproducto) === idInsumo)?.cantidadsubproducto ?? 0
+    );
+    const cantidad = Number(input.value);
+    const cantidadValida = Number.isFinite(cantidad) && cantidad >= cantidadBase
+      ? cantidad
+      : cantidadBase;
+
+    insumo.cantidadsubproducto = cantidadValida.toString();
+    input.value = cantidadValida.toString();
   }
 
 

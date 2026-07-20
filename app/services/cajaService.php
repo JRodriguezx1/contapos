@@ -109,16 +109,6 @@ class cajaService {
         $factura = facturas::find('id', $id);
         $productos = ventas::idregistros('idfactura', $factura->id);
 
-        //CAMBIA EL id POR EL idproducto
-        $idsProductos = [];
-        foreach($productos as $value){
-        $value->id = $value->idproducto;
-        $value->stock = $value->cantidad;
-        $idsProductos[] = $value->idproducto;
-        $mapCarrito[$value->idproducto] = $value->stock;
-        $value->stockaux = $value->promediostock>0?$value->stock/$value->promediostock:0;
-        }
-
         /*
         $conflocal = config_local::getParamCaja();
         //////// CALCULAR PRODUCTOS AGOTADOS /////////
@@ -139,7 +129,24 @@ class cajaService {
             $factura->fechaentrega = date('Y-m-d H:i:s');
             $getDB->begin_transaction();
             try {
-                $resultArray = ventasService::reducirIventarioXVenta($productos);
+                $inventarioVenta = ventasService::prepararInventarioPersistido($productos, id_sucursal());
+                $conflocal = config_local::getParamCaja();
+                if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){
+                    $erroresStock = ventasService::validarDisponibilidadInventario($inventarioVenta, id_sucursal());
+                    if(!empty($erroresStock)){
+                        throw new \RuntimeException(implode(' | ', $erroresStock));
+                    }
+                }
+                $inventarioActualizado = ventasService::descontarInventarioXVenta(
+                    $inventarioVenta,
+                    id_sucursal(),
+                    'venta',
+                    'descuento de unidades por despacho de venta',
+                    false
+                );
+                if(!$inventarioActualizado){
+                    throw new \RuntimeException('No fue posible actualizar el inventario de la orden.');
+                }
                 $factura->actualizar();
                 $getDB->commit();
                 $alertas['exito'][] = "Orden despachada.";

@@ -15,12 +15,33 @@ class clientes extends \App\Models\ActiveRecord {
         $this->telefono = $args['telefono'] ?? '';
         $this->email = $args['email'] ?? '';
         $this->fecha_nacimiento = $args['fecha_nacimiento'] ?? '';
-        $this->total_compras = $args['total_compras '] ?? '';
+        // Las claves deben coincidir exactamente con las columnas recibidas
+        // desde Repository; anteriormente tenian un espacio final.
+        $this->total_compras = $args['total_compras'] ?? 0;
         $this->ultima_compra = $args['ultima_compra'] ?? '';
-        $this->totaldebe = $args['totaldebe '] ?? 0;
+        $this->totaldebe = $args['totaldebe'] ?? 0;
         $this->limitecredito = $args['limitecredito'] ?? 100000;
         $this->data1 = $args['data1'] ?? '';
         $this->created_at = $args['created_at']??'';
+    }
+
+    /** Columnas controladas que los repositorios pueden persistir. */
+    public function toArray():array
+    {
+        return [
+            'nombre'=>$this->nombre,
+            'apellido'=>$this->apellido,
+            'tipodocumento'=>$this->tipodocumento,
+            'identificacion'=>$this->identificacion,
+            'telefono'=>$this->telefono,
+            'email'=>$this->email,
+            'fecha_nacimiento'=>$this->fecha_nacimiento,
+            'total_compras'=>$this->total_compras,
+            'ultima_compra'=>$this->ultima_compra,
+            'totaldebe'=>$this->totaldebe,
+            'limitecredito'=>$this->limitecredito,
+            'data1'=>$this->data1,
+        ];
     }
 
     // Validación para clientes nuevos

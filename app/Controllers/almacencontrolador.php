@@ -1391,8 +1391,8 @@ class almacencontrolador{
     $alertas = [];
     $iditem = $_POST['iditem'];
     $cantidad = $_POST['cantidad'];
-    $stockaux = $_POST['stockaux'];
-    $promediostock = $_POST['promediostock'];
+    $stockaux = $_POST['stockaux']??0;
+    $promediostock = $_POST['promediostock']??1;
     
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       if($_POST['tipoitem'] == 0){ //si es producto
