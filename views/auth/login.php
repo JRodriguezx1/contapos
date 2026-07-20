@@ -1,145 +1,127 @@
-<!--
-<div class="lineaencabezado" style="background-color: <?php //echo $negocio[0]->colorprincipal??'';?>;">
-    <h1><?php //echo $negocio[0]->nombre??'';?></h1>
-</div>
+<div class="min-h-screen w-screen overflow-hidden bg-slate-100 px-5 py-5 md:px-8 md:py-8">
+  <div class="mx-auto flex min-h-[calc(100vh-4rem)] w-full items-center justify-center" style="max-width: 1320px;">
+    <div class="grid w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-[1fr_1.05fr]">
+      <section class="relative flex min-h-[18rem] flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-700 via-indigo-600 to-sky-500 px-6 py-6 text-white md:min-h-[22rem] md:px-10 md:py-8 lg:min-h-[72rem] lg:px-12 lg:py-12">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(255,255,255,.22),transparent_32%),linear-gradient(135deg,transparent_0%,transparent_45%,rgba(255,255,255,.12)_45%,rgba(255,255,255,.12)_100%)]"></div>
 
-<section class="slider">
-    <ul class="slider__contenido">
-        <li class="slider__slide1 slider__slide"></li>
-        <li class="slider__slide2 slider__slide"></li>
-    </ul>
-</section>
-
-<main class="auth bloqueauth">
-    <-- <a class="auth__btnatras bloqueauth__btnregresar" href="/">Regresar</a> --><!-- 
-    <a class="bloqueauth__logocliente" href="/">
-        <img loading="lazy" src="/build/img/<?php //echo $negocio[0]->logo??'';?>" alt="Logo Cliente">
-    </a>
-    
-    <h2 class="auth__heading bloqueauth__iniciarsesion" style="color: <?php //echo $negocio[0]->colorprincipal??'';?>;"><?php echo $titulo; ?></h2>
-    <?php //include __DIR__. "/../templates/alertas.php"; ?>
-    <p class="auth__texto bloqueauth__subtitulo">Inicia sesión y reserva tu cita</p>
-    <form class="formulario bloqueformulario" method="POST" action="/login">
-        <div class="formulario__campo bloqueformulario__campo">
-            <!-<label class="formulario__label bloqueformulario__label" for="">Correo Electrónico</label>
-            <input class="formulario__input bloqueformulario__input" type="email" placeholder="Ingresa tu correo electrónico" id="email" name="email">
-            --><!-- 
-            <label class="formulario__label" for="movil">Número de Teléfono</label>
-            <input class="formulario__input" type="number" placeholder="Ingresa tu número de telefónico" id="movil" name="movil">
-        </div>
-        <div class="formulario__campo ">
-            <label class="formulario__label" for="">Contraseña</label>
-            <input class="formulario__input" type="password" placeholder="Ingresa tu contraseña" id="password" name="password">
-        </div>
-        <input class="formulario__submit--login bloqueformulario__submit--login" type="submit" value="Iniciar Sesión" style="background-color: <?php echo $negocio[0]->colorprincipal??'';?>;">
-    </form>
-
-    <div class="acciones">
-        <a href="/registro" class="acciones__enlace">¿Aún no tienes cuenta? <br> Obtener una</a>
-        <--<a href="/olvide" class="acciones__enlace">Olvidaste tu password</a>-->
-        <!-- <a href="/" class="acciones__enlace">Home</a>
-    </div>
-</main>-->
-
-<div class="h-screen w-screen flex justify-center items-center bg-gray-100 px-6 transition-colors duration-300 relative overflow-hidden">
-
-  <!-- Fondo desenfocado / Light Glass Effect -->
-  <div class="absolute inset-0 bg-gradient-to-br from-blue-100/20 via-purple-100/20 to-indigo-200/20 backdrop-blur-md"></div>
-
-  <div class="relative z-10 grid gap-0 w-full max-w-[560px] md:max-w-xl mx-auto">
-
-    <?php include __DIR__. "/../templates/alertas.php"; ?>
-
-    <!-- Contenedor Principal Flotante -->
-    <div id="back-div" class="w-full relative rounded-[30px] shadow-2xl p-0 transition-transform duration-500 hover:scale-[1.02] bg-[linear-gradient(to_left,_rgba(37,99,235,0.9)_0%,_rgba(79,70,229,0.9)_85%,_rgba(147,51,234,0.9)_100%)] hover:bg-[linear-gradient(to_left,_rgba(126,34,206,0.9)_0%,_rgba(79,70,229,0.9)_85%,_rgba(37,99,235,0.9)_100%)] before:content-[''] before:absolute before:top-0 before:right-0 before:w-1/3 before:h-full before:bg-[radial-gradient(circle_at_90%_50%,rgba(255,255,255,0.25),transparent_70%)] before:rounded-[30px]">
-      <img src="/build/img/Logoj2blanco.png" class="w-56 sm:w-72 md:w-80 mx-auto mt-6 transition-transform duration-500 hover:scale-105" alt="logoj2">
-
-      <!-- Formulario con efecto glass y sombras internas -->
-      <div class="border-[10px] border-transparent rounded-[24px] bg-white/90 shadow-lg p-4 md:p-6 lg:p-8 m-2 backdrop-blur-md transition-colors duration-300">
-        <h1 class="pt-8 pb-6 font-bold text-2xl md:text-3xl text-center text-gray-800 uppercase">
-          Iniciar Sesión
-        </h1>
-
-        <form action="/login" method="post" class="space-y-4">
-
-          <div>
-            <label for="nickname" class="mb-2 block text-base md:text-lg text-gray-700">Usuario</label>
-            <input
-              id="nickname"
-              name="nickname"
-              type="text"
-              required
-              placeholder="Ingresa tu usuario"
-              class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
-            /> 
-          </div>
-
-          <div>
-            <label for="sucursal" class="block text-base md:text-lg font-medium mb-1 text-gray-700">Sede</label>
-            <span class="block mb-1 text-base text-gray-500 ">Seleccione una sede</span>
-            <select 
-              id="sucursal"
-              name="idsucursal"
-              class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
-            >
-              <?php foreach($sucursales as $value): ?>
-                <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <div>
-            <label for="password" class="mb-2 block text-base md:text-lg text-gray-700">Contraseña</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              placeholder="Ingresa tu contraseña"
-              class="w-full h-[4rem] md:h-[4.2rem] p-3 text-base md:text-lg text-gray-900 bg-white/80 border border-gray-300 rounded-2xl shadow-inner
-                     placeholder-gray-400/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-                     transition-all duration-300 ease-in-out hover:scale-[1.02] focus:scale-[1.03]"
-            />
-          </div>
-
-          <a href="#" class="group text-blue-500  hover:text-blue-400  text-base transition-all duration-200">
-            ¿Olvidaste tu contraseña?
-          </a>
-
-          <button
-            type="submit"
-            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white  shadow-lg mt-6 p-2 text-base md:text-lg rounded-2xl w-full
-                   hover:scale-105 hover:from-purple-700 hover:to-blue-700 transition duration-300 ease-in-out h-[4rem] md:h-[4.2rem]"
-          >
-            INICIAR SESIÓN
-          </button>
-        </form>
-
-        <div class="flex flex-col mt-4 items-center justify-center text-lg">
-          <h3 class="text-gray-700">
-            ¿No tienes una cuenta?
-            <a href="#" class="group text-blue-500  hover:text-blue-400  transition-all duration-200">
-              <span class="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat 
-                           group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                Regístrate
-              </span>
-            </a>
-          </h3>
+        <div class="relative z-10">
+          <img src="/build/img/Logoj2blanco.png" class="h-auto w-52 max-w-full md:w-80 lg:w-96" alt="Logo J2 Software POS">
         </div>
 
-        <div class="text-gray-500  flex text-center flex-col mt-4 items-center text-lg leading-snug">
-          <p class="cursor-default">
-            Al iniciar sesión, acepta
-            <a href="#" class="group text-blue-500  hover:text-blue-400  transition-all duration-200">
-              nuestros Términos y <br />Política de privacidad.
-            </a>
+        <div class="relative z-10 mt-5 max-w-xl md:mt-8">
+          <p class="mb-2 text-xs font-black uppercase tracking-[.2em] text-white/70 md:mb-3 md:text-sm lg:text-base">Sistema POS multisucursal</p>
+          <h1 class="m-0 text-3xl font-black leading-tight md:text-5xl lg:text-6xl">Ingresa a tu punto de venta</h1>
+          <p class="mb-0 mt-3 text-base font-medium leading-snug text-white/85 md:mt-4 md:text-lg md:leading-relaxed lg:text-xl">
+            Administra ventas, caja, reportes y operaciones desde una experiencia clara y segura.
           </p>
         </div>
-      </div>
+
+        <div class="relative z-10 mt-5 hidden gap-3 text-base font-semibold text-white/90 sm:grid sm:grid-cols-3 md:mt-8 lg:grid-cols-1 lg:text-lg xl:grid-cols-3">
+          <div class="rounded-2xl bg-white/12 px-4 py-3 ring-1 ring-white/15">
+            <i class="fa-solid fa-store mr-2"></i>Multisucursal
+          </div>
+          <div class="rounded-2xl bg-white/12 px-4 py-3 ring-1 ring-white/15">
+            <i class="fa-solid fa-cash-register mr-2"></i>Caja
+          </div>
+          <div class="rounded-2xl bg-white/12 px-4 py-3 ring-1 ring-white/15">
+            <i class="fa-solid fa-chart-line mr-2"></i>Reportes
+          </div>
+        </div>
+      </section>
+
+      <section class="flex items-center justify-center px-6 py-6 md:px-10 md:py-8 lg:px-16">
+        <div class="w-full max-w-xl lg:max-w-2xl">
+          <?php include __DIR__. "/../templates/alertas.php"; ?>
+
+          <div class="mb-6 md:mb-7">
+            <p class="mb-2 text-sm font-black uppercase tracking-[.22em] text-indigo-600 lg:text-base">Acceso seguro</p>
+            <h2 class="m-0 text-4xl font-black text-slate-900 lg:text-5xl">Iniciar sesi&oacute;n</h2>
+            <p class="mb-0 mt-2 text-lg font-medium text-slate-500 lg:text-xl">Selecciona tu sede e ingresa tus credenciales.</p>
+          </div>
+
+          <form action="/login" method="post" class="space-y-4 md:space-y-5">
+            <div>
+              <label for="nickname" class="mb-2 block text-base font-black text-slate-700 lg:text-lg">Usuario</label>
+              <div class="flex h-[4.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100 md:h-20 lg:h-24 lg:px-5">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-indigo-600 md:h-12 md:w-12 lg:h-14 lg:w-14">
+                  <i class="fa-solid fa-user"></i>
+                </span>
+                <input
+                  id="nickname"
+                  name="nickname"
+                  type="text"
+                  required
+                  placeholder="Ingresa tu usuario"
+                  class="h-full min-w-0 flex-1 border-0 bg-transparent text-lg font-semibold text-slate-900 outline-none placeholder:text-slate-400 lg:text-xl"
+                >
+              </div>
+            </div>
+
+            <div>
+              <label for="sucursal" class="mb-2 block text-base font-black text-slate-700 lg:text-lg">Sede</label>
+              <div class="flex h-[4.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100 md:h-20 lg:h-24 lg:px-5">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-indigo-600 md:h-12 md:w-12 lg:h-14 lg:w-14">
+                  <i class="fa-solid fa-building"></i>
+                </span>
+                <select
+                  id="sucursal"
+                  name="idsucursal"
+                  class="h-full min-w-0 flex-1 border-0 bg-transparent text-lg font-semibold text-slate-900 outline-none lg:text-xl"
+                >
+                  <?php foreach($sucursales as $value): ?>
+                    <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="mb-2 flex items-center justify-between gap-3">
+                <label for="password" class="block text-base font-black text-slate-700 lg:text-lg">Contrase&ntilde;a</label>
+                <a href="/olvide" class="text-base font-bold text-indigo-600 transition hover:text-indigo-500 lg:text-lg">
+                  &iquest;Olvidaste tu contrase&ntilde;a?
+                </a>
+              </div>
+
+              <div class="flex h-[4.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100 md:h-20 lg:h-24 lg:px-5">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-indigo-600 md:h-12 md:w-12 lg:h-14 lg:w-14">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  placeholder="Ingresa tu contrase&ntilde;a"
+                  class="h-full min-w-0 flex-1 border-0 bg-transparent text-lg font-semibold text-slate-900 outline-none placeholder:text-slate-400 lg:text-xl"
+                >
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="inline-flex h-20 w-full items-center justify-center gap-3 rounded-2xl bg-indigo-600 px-6 text-lg font-black uppercase tracking-wide text-white shadow-xl shadow-indigo-500/20 transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 lg:h-24 lg:text-xl"
+            >
+              <i class="fa-solid fa-right-to-bracket"></i>
+              Iniciar sesi&oacute;n
+            </button>
+          </form>
+
+          <div class="mt-8 border-t border-slate-200 pt-7 text-center">
+            <p class="m-0 text-base font-semibold text-slate-500 lg:text-lg">
+              &iquest;No tienes una cuenta?
+              <a href="/registro" class="font-black text-indigo-600 transition hover:text-indigo-500">Reg&iacute;strate</a>
+            </p>
+
+            <p class="mx-auto mb-0 mt-4 max-w-lg text-sm font-medium leading-relaxed text-slate-400 lg:text-base">
+              Al iniciar sesi&oacute;n, aceptas nuestros
+              <a href="#" class="font-bold text-indigo-600 transition hover:text-indigo-500">T&eacute;rminos</a>
+              y
+              <a href="#" class="font-bold text-indigo-600 transition hover:text-indigo-500">Pol&iacute;tica de privacidad</a>.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </div>
-
-
-
-

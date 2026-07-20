@@ -39,13 +39,22 @@
       if(!Number.isInteger(indiceFila))return;
 
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
-          icon: 'question',
-          title: 'Desea eliminar contacto?',
-          text: "El contacto de notificacion de whatsapp sera eliminado definitivamente.",
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
+          icon: 'warning',
+          title: 'Eliminar contacto',
+          html: 'El destino de notificacion de WhatsApp sera eliminado definitivamente.',
           showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Si, eliminar',
+          cancelButtonText: 'Cancelar',
+          buttonsStyling: false
       }).then((result:any) => {
           if (result.isConfirmed) {
               (async ()=>{ 
@@ -57,7 +66,21 @@
                       const resultado = await respuesta.json(); 
                       if(resultado.exito !== undefined){
                         fila.remove();
-                        Swal.fire(resultado.exito[0], '', 'success')
+                        Swal.fire({
+                          customClass: {
+                            popup: 'j2-confirm j2-confirm--success',
+                            icon: 'j2-confirm__icon',
+                            title: 'j2-confirm__title',
+                            htmlContainer: 'j2-confirm__text',
+                            actions: 'j2-confirm__actions j2-confirm__actions--single',
+                            confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                          },
+                          icon: 'success',
+                          title: 'Contacto eliminado',
+                          html: resultado.exito[0] ?? 'El contacto fue eliminado correctamente.',
+                          confirmButtonText: 'OK',
+                          buttonsStyling: false
+                        })
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
                       }
@@ -88,12 +111,12 @@
                 const tr = document.createElement('tr');
                 tr.id = resultado.data[1];
                 tr.insertAdjacentHTML('afterbegin', `
-                  <td class="">${nombreWS.value}</td>
-                  <td>${movilWS.value}</td>
-                  <td>${ tipoWS.value}</td>
-                  <td class=""><button class="test btn-xs btn-blueintense">Test</button></td>
-                  <td><button id="" data-state="" class="btn-xs btn-lima">Activo</button></td>
-                  <td class=""><button class="btn-md btn-red eliminarContacto" title="Eliminar contacto"><i class="fa-solid fa-trash-can"></i></button></td>`);
+                  <td><span class="config-whatsapp-contact"><i class="fa-brands fa-whatsapp"></i>${nombreWS.value}</span></td>
+                  <td><span class="config-whatsapp-pill config-whatsapp-pill--phone">${movilWS.value}</span></td>
+                  <td><span class="config-whatsapp-pill">${ tipoWS.value}</span></td>
+                  <td><button class="test config-whatsapp-action config-whatsapp-action--test" type="button">Test</button></td>
+                  <td><span class="config-whatsapp-status">Activo</span></td>
+                  <td><button class="config-whatsapp-icon-button eliminarContacto" type="button" title="Eliminar contacto"><i class="fa-solid fa-trash-can"></i></button></td>`);
                 tablaNumbersWS?.appendChild(tr);
                 (document.querySelector('#formCreateContactNotifcationWs') as HTMLFormElement)?.reset();
               }else{

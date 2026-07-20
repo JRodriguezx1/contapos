@@ -22,6 +22,8 @@
     const inputPerfil = document.querySelector('#perfilempleado') as HTMLInputElement;
 
     let indiceFila=0, control=0, tablaempleados:HTMLElement;
+    let selectPerfilEmpleadoActivo = false;
+    let cambiandoPerfilDesdeSelect2 = false;
       
     interface empleadoApi {
       id:string,
@@ -54,23 +56,32 @@
       }
     })();
 
+    const actualizarPermisosPerfil = (perfil:string):void=>{
+      const permisosOperativos = document.querySelector('#contentpermisos') as HTMLElement;
+      const permisosAdmin = document.querySelector('#contentpermisosadmin') as HTMLElement;
+
+      if(perfil == '2' || !perfil){
+        permisosOperativos.style.display = "none";
+        permisosAdmin.style.display = "none";
+      }
+      if(perfil == '3'){
+        permisosOperativos.style.display = "none";
+        permisosAdmin.style.display = "";
+      }
+      if(perfil == '4'){
+        permisosOperativos.style.display = "";
+        permisosAdmin.style.display = "none";
+      }
+    };
+
     inputPerfil.addEventListener('change', (e)=>{
-      if((e.target as HTMLSelectElement).value == '2'){
-        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
-        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
-      }
-      if((e.target as HTMLSelectElement).value == '3'){
-        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
-        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "block";
-      }
-      if((e.target as HTMLSelectElement).value == '4'){
-        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "block";
-        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
-      }
+      if(selectPerfilEmpleadoActivo && cambiandoPerfilDesdeSelect2)return;
+      actualizarPermisosPerfil((e.target as HTMLSelectElement).value);
     });
 
     //////////////////  TABLA //////////////////////
-    tablaempleados = ($('#tablaempleados') as any).DataTable(configdatatables);
+    tablaempleados = ($('#tablaempleados') as any).DataTable(configdatatablesToolbar);
+    modernizarToolbarDataTable('#tablaempleados');
 
     //////////////////// ventana modal al crear empleado  //////////////////////
     crearempleado.addEventListener('click', (e)=>{
@@ -85,6 +96,7 @@
       document.querySelector('#modalEmpleado')!.textContent = "Crear empleado";
       (document.querySelector('#btnEditarCrearEmpleado') as HTMLInputElement).value = "Crear";
       dialogoEmpleado.showModal();
+      activarSelectPerfilEmpleado();
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
@@ -135,22 +147,12 @@
       //inputDepartamento.value = unempleado?.departamento??'';
       //inputCiudad.value = unempleado?.ciudad??'';
       //inputDireccion.value = unempleado?.direccion??'';
-      $('#perfilempleado').val(unempleado?.perfil??'');
-      if(unempleado?.perfil == '2'){
-        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
-        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
-      }
-      if(unempleado?.perfil == '3'){
-        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "none";
-        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "block";
-      }
-      if(unempleado?.perfil == '4'){
-        (document.querySelector('#contentpermisos') as HTMLElement).style.display = "block";
-        (document.querySelector('#contentpermisosadmin') as HTMLElement).style.display = "none";
-      }
+      $('#perfilempleado').val(unempleado?.perfil??'').trigger('change');
+      actualizarPermisosPerfil(unempleado?.perfil??'');
       printpermisos(unempleado?.permisos??[]);
       indiceFila = (tablaempleados as any).row((e.target as HTMLElement).closest('tr')).index();
       dialogoEmpleado.showModal();
+      activarSelectPerfilEmpleado();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
@@ -284,15 +286,27 @@
     function eliminarEmpleado(e:Event){
       let idempleado = (e.target as HTMLElement).parentElement!.id, info = (tablaempleados as any).page.info();
       if((e.target as HTMLElement).tagName === 'I')idempleado = (e.target as HTMLElement).parentElement!.parentElement!.id;
+      const empleadoEliminar = empleadosapi.find(x => x.id == idempleado);
+      const nombreEmpleado = `${empleadoEliminar?.nombre ?? 'este empleado'} ${empleadoEliminar?.apellido ?? ''}`.trim();
       indiceFila = (tablaempleados as any).row((e.target as HTMLElement).closest('tr')).index();
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
-          icon: 'question',
-          title: 'Desea eliminar el empleado?',
-          text: "El empleado sera eliminado definitivamente.",
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
+          icon: 'warning',
+          title: 'Eliminar empleado',
+          html: `Esta accion eliminara definitivamente a <strong>${nombreEmpleado}</strong>.`,
           showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Eliminar',
+          cancelButtonText: 'Cancelar',
+          buttonsStyling: false,
+          reverseButtons: true,
       }).then((result:any) => {
           if (result.isConfirmed) {
               (async ()=>{ 
@@ -306,7 +320,21 @@
                         (tablaempleados as any).row(indiceFila).remove().draw(); 
                         (tablaempleados as any).page(info.page).draw('page');
                         empleadosapi = empleadosapi.filter(x=>x.id!=idempleado);
-                        Swal.fire(resultado.exito[0], '', 'success')
+                        Swal.fire({
+                          customClass: {
+                            popup: 'j2-confirm j2-confirm--success',
+                            icon: 'j2-confirm__icon',
+                            title: 'j2-confirm__title',
+                            htmlContainer: 'j2-confirm__text',
+                            actions: 'j2-confirm__actions j2-confirm__actions--single',
+                            confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                          },
+                          icon: 'success',
+                          title: 'Empleado eliminado',
+                          html: resultado.exito[0],
+                          confirmButtonText: 'Aceptar',
+                          buttonsStyling: false
+                        })
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
                       }
@@ -328,8 +356,36 @@
     }
 
     function limpiarformdialog(){
-      imginputfile.src = ' ';
+      imginputfile.removeAttribute('src');
       (document.querySelector('#formCrearUpdateEmpleado') as HTMLFormElement)?.reset();
+      if(selectPerfilEmpleadoActivo)$('#perfilempleado').val('').trigger('change');
+      else actualizarPermisosPerfil('');
+    }
+
+    function activarSelectPerfilEmpleado(){
+      if(selectPerfilEmpleadoActivo)return;
+      ($('#perfilempleado') as any).select2({
+        dropdownParent: $('#miDialogoEmpleado'),
+        dropdownCssClass: 'config-empleado-select2-dropdown',
+        placeholder: "-Seleccionar-",
+        width: '100%',
+        minimumResultsForSearch: Infinity
+      });
+      $('#perfilempleado').on('select2:selecting', ()=>{
+        cambiandoPerfilDesdeSelect2 = true;
+      });
+      $('#perfilempleado').on('select2:close', ()=>{
+        if(!cambiandoPerfilDesdeSelect2)return;
+        window.setTimeout(()=>{
+          actualizarPermisosPerfil(($('#perfilempleado').val() as string) || '');
+          cambiandoPerfilDesdeSelect2 = false;
+        }, 60);
+      });
+      $('#perfilempleado').on('change', ()=>{
+        if(cambiandoPerfilDesdeSelect2)return;
+        actualizarPermisosPerfil(($('#perfilempleado').val() as string) || '');
+      });
+      selectPerfilEmpleadoActivo = true;
     }
 
   }

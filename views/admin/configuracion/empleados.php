@@ -1,7 +1,21 @@
 <div class="empleados">
-    <h4 class="text-gray-600 text-center mb-4">Gestion de empleado</h4>
-    <button id="crearempleado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-auto">Crear Empleado</button>
-    <table id="tablaempleados" class="display responsive nowrap tabla" width="100%">
+    <section class="config-list-panel config-empleados-panel">
+        <div class="config-list-panel__header">
+            <div class="config-list-panel__title">
+                <span class="material-symbols-outlined">groups</span>
+                <div>
+                    <h2>Gesti&oacute;n de empleados</h2>
+                    <p>Administra usuarios, perfiles de acceso y credenciales del equipo.</p>
+                </div>
+            </div>
+            <button id="crearempleado" class="btn-md btn-indigo config-list-panel__action">
+                <i class="fa-solid fa-plus"></i>
+                Crear empleado
+            </button>
+        </div>
+
+        <div class="config-table-card">
+    <table id="tablaempleados" class="display responsive nowrap tabla config-data-table config-empleados-table" width="100%">
         <thead>
             <tr>
                 <th>N.</th>
@@ -17,12 +31,12 @@
                 if($value->perfil!=1): ?>
                 <tr> 
                     <td class=""><?php echo $index+1;?></td>        
-                    <td class=""><?php echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="" ><div class="text-center"><img style="width: 40px;" src="/build/img/<?php echo $value->img;?>" alt=""></div></td> 
-                    <td class=""><?php echo $value->nickname;?></td>
-                    <td class=""><?php echo $value->perfil==1?'root':($value->perfil==2?'Superior':($value->perfil==3?'Administrador':'Asesor'));?></td>
+                    <td class="config-employee-name"><?php echo $value->nombre.' '.$value->apellido;?></td> 
+                    <td class="" ><div class="config-employee-avatar" data-initials="<?php echo strtoupper(substr($value->nombre, 0, 1).substr($value->apellido ?? '', 0, 1));?>"><img src="/build/img/<?php echo $value->img;?>" alt="" onerror="this.style.display='none';"></div></td> 
+                    <td class="config-employee-user"><?php echo $value->nickname;?></td>
+                    <td class=""><span class="config-profile-badge"><?php echo $value->perfil==1?'root':($value->perfil==2?'Superior':($value->perfil==3?'Administrador':'Asesor'));?></span></td>
                     <td class="accionestd">
-                        <div class="acciones-btns" id="<?php echo $value->id;?>">
+                        <div class="acciones-btns" id="<?php echo $value->id;?>" data-empleado="<?php echo $value->nombre.' '.$value->apellido;?>">
                             <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i>
                             </button>
                             <button class="btn-md btn-lima updatePassword" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
@@ -35,21 +49,33 @@
             <?php endif; endforeach; ?>
         </tbody>
     </table>
+        </div>
+    </section>
 
-    <dialog class="midialog-md p-12" id="miDialogoEmpleado">
-        <h4 id="modalEmpleado" class="font-semibold text-gray-700 mb-4">Crear empleado</h4>
+    <dialog class="midialog-md config-empleado-dialog" id="miDialogoEmpleado">
+        <div class="config-empleado-dialog__header">
+            <span class="material-symbols-outlined">person_add</span>
+            <div>
+                <p>Empleado</p>
+                <h4 id="modalEmpleado">Crear empleado</h4>
+                <small>Registra los datos de acceso, perfil e imagen del empleado.</small>
+            </div>
+        </div>
         <div id="divmsjalertaempleado1"></div>
         <form id="formCrearUpdateEmpleado" class="formulario" action="/admin/configuracion/crear_empleado" enctype="multipart/form-data" method="POST">
             
-                <div class="formulario__campo">
+                <div class="formulario__campo config-empleado-dialog__photo">
                     <div class="formulario__contentinputfile">
                         <div class="formulario__imginputfile"><img id="imginputfile" src="" alt=""></div>
                         <p class="text-greymouse">Subir imagen</p>
                     </div>
                     <input id="upImage" class="formulario__inputfile" type="file" accept="image/*" name="img" hidden>
-                    <button id="customUpImage" class="text-white bg-gradient-to-br from-indigo-700 to-[#00CFCF] hover:bg-gradient-to-bl hover:from-[#00CFCF] hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-[#99fafa]  font-medium rounded-lg text-sm text-center !w-[23%] !mx-auto mb-2 !px-8 !py-4" type="button">Cargar Imagen</button>
+                    <button id="customUpImage" class="config-empleado-dialog__upload" type="button">
+                        <i class="fa-solid fa-camera"></i>
+                        Cargar imagen
+                    </button>
                 </div>
-            <div class="grid grid-cols-1 gap-x-6 sm:grid-cols-6">
+            <div class="grid grid-cols-1 gap-x-6 sm:grid-cols-6 config-empleado-dialog__grid">
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label flex items-center gap-1 group relative" for="nombre">
                         Nombre
@@ -448,23 +474,40 @@
                 </div>
             </div>
 
-            <div class="text-right">
-                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEditarCrearEmpleado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
+            <div class="config-empleado-dialog__actions">
+                <button class="btn-md btn-turquoise" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEditarCrearEmpleado" class="btn-md btn-indigo" type="submit" value="Crear">
             </div>
         </form>
     </dialog><!--fin crear empleado-->
 
-    <dialog class="midialog-md p-12" id="miDialogoContraseña">
-        <h4 class="text-gray-600 font-semibold">Cambiar contraseña</h4>
+    <dialog class="midialog-md config-empleado-password-dialog" id="miDialogoContraseña">
+        <div class="config-empleado-dialog__header">
+            <div class="config-empleado-dialog__icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <div>
+                <span>Credenciales</span>
+                <h4>Cambiar contraseña</h4>
+                <p>Actualiza la clave de acceso del empleado seleccionado.</p>
+            </div>
+        </div>
         <div id="divmsjalertaempleado2"></div>
-        <form id="formContraseña" class="formulario" method="POST">
-            <h5 id="nombreEmpleadoPass" class="mt-2 text-xl text-gray-500">Julian Rodriguez</h5>
-            <label for="cambiocontraseña"></label>
-            <input id="changePassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1 mt-6" type="password" value="" required>
-            <div class="text-right mt-6">
-                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEnviarContrasela" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Actualizar">
+        <form id="formContraseña" class="formulario config-empleado-password-dialog__form" method="POST">
+            <div class="config-empleado-password-dialog__user">
+                <span><i class="fa-solid fa-user-lock"></i></span>
+                <div>
+                    <small>Empleado</small>
+                    <h5 id="nombreEmpleadoPass">Julian Rodriguez</h5>
+                </div>
+            </div>
+            <div class="formulario__campo">
+                <label class="formulario__label" for="changePassword">Nueva contraseña</label>
+                <input id="changePassword" class="formulario__input" type="password" placeholder="Ingrese la nueva contraseña" value="" required>
+            </div>
+            <div class="config-empleado-dialog__actions">
+                <button class="btn-md btn-turquoise" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEnviarContrasela" class="btn-md btn-indigo" type="submit" value="Actualizar">
             </div>
         </form>
     </dialog><!--fin Act/ediar contraseña por empleado-->

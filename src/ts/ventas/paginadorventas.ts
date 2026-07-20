@@ -18,11 +18,40 @@
       if(productos.length)
       var hackerList = new List('hacker-list', options);
       POS.hackerList = hackerList;  //exportar
+      const setCategoriaActiva = (categoriaActiva: string) => {
+        filtrocategorias.forEach((categoriaEl) => {
+          const item = categoriaEl as HTMLElement;
+          const check = item.querySelector('i');
+          const activo = item.dataset.categoria === categoriaActiva;
+
+          item.classList.toggle('categoria-activa', activo);
+          item.classList.toggle('bg-indigo-50', activo);
+          item.classList.toggle('text-indigo-700', activo);
+          item.classList.toggle('font-semibold', activo);
+          item.classList.toggle('text-slate-700', !activo);
+          check?.classList.toggle('hidden', !activo);
+        });
+      };
+
+      POS.reiniciarCatalogoVentas = ():void => {
+        if(inputBuscar)inputBuscar.value = '';
+        const categorySelect = document.querySelector('#categorySelect');
+        if(categorySelect)categorySelect.textContent = 'Todos';
+        setCategoriaActiva('Todos');
+        if(hackerList){
+          hackerList.search('');
+          hackerList.filter();
+          hackerList.show(1, options.page);
+          hackerList.update();
+        }
+      };
 
       filtrocategorias.forEach(element => {
         element.addEventListener('click', (e)=>{
-          const categoria:string = (e.target as HTMLElement).dataset.categoria!;
+          const categoriaItem = (e.target as HTMLElement).closest('.filtrocategorias') as HTMLElement | null;
+          const categoria:string = categoriaItem?.dataset.categoria || 'Todos';
           document.querySelector('#categorySelect')!.textContent = categoria;
+          setCategoriaActiva(categoria);
           if(hackerList)
             hackerList.filter((item: any)=>{
               hackerList.search('');
@@ -66,14 +95,14 @@
         menuCategorias?.classList.toggle('hidden');
         if(!menuCategorias?.classList.contains('hidden'))document.addEventListener('click', cerrarMenuCategorias);
       });
-      // cerrar al hacer click en una categoría
+      // cerrar al hacer click en una categorÃ­a
       document.querySelectorAll('.filtrocategorias').forEach(el => {
         el.addEventListener('click', () => {
           menuCategorias?.classList.add('hidden');
           document.removeEventListener('click', cerrarMenuCategorias);
         });
       });
-      // cerrar al hacer click fuera del menú
+      // cerrar al hacer click fuera del menÃº
       function cerrarMenuCategorias() {
         menuCategorias?.classList.add('hidden');
         document.removeEventListener('click', cerrarMenuCategorias);

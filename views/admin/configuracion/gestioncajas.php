@@ -1,8 +1,21 @@
 <div class="gestioncajas">
 
-  <h4 class="text-gray-600 mb-8 mt-12">Gestion de cajas facturadoras</h4>
-  <button id="crearCaja" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[144px]">Crear caja</button>
-  <table id="tablaCajas" class="display responsive nowrap tabla" width="100%">
+  <div class="config-section-heading">
+    <div class="config-section-heading__icon">
+      <i class="fa-solid fa-cash-register"></i>
+    </div>
+    <div>
+      <h4>Gestion de cajas facturadoras</h4>
+      <p>Administra las cajas, facturadores y emisores asociados a la operacion.</p>
+    </div>
+    <button id="crearCaja" class="btn-md btn-indigo config-section-heading__action" type="button">
+      <i class="fa-solid fa-plus"></i>
+      Crear caja
+    </button>
+  </div>
+
+  <div class="config-table-card">
+  <table id="tablaCajas" class="display responsive nowrap tabla config-data-table" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -17,10 +30,21 @@
           <?php foreach($cajas as $index => $value): ?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
-              <td class="" ><?php echo $value->nombre; ?></td> 
-              <td class=""><?php echo $value->nombreconsecutivo->nombre;?></td>
-              <td class=""><?php echo $value->negocio;?></td>
-              <td class=""><?php echo isset($nombreEmisores[$value->idemisor])? $nombreEmisores[$value->idemisor]: $negocio->negocio;?></td>
+              <td>
+                <span class="config-caja-name">
+                  <span class="config-caja-name__icon"><i class="fa-solid fa-cash-register"></i></span>
+                  <span><?php echo $value->nombre; ?></span>
+                </span>
+              </td> 
+              <td class="">
+                <span class="config-table-pill config-table-pill--invoice"><?php echo $value->nombreconsecutivo->nombre;?></span>
+              </td>
+              <td class="">
+                <span class="config-table-pill config-table-pill--branch"><?php echo $value->negocio;?></span>
+              </td>
+              <td class="">
+                <span class="config-table-pill config-table-pill--issuer"><?php echo isset($nombreEmisores[$value->idemisor])? $nombreEmisores[$value->idemisor]: $negocio->negocio;?></span>
+              </td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-caja="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarCaja"><i class="fa-solid fa-pen-to-square" title="Actualizar datos de caja"></i></button>
@@ -33,6 +57,7 @@
           <?php endforeach; ?>
       </tbody>
   </table>
+  </div>
 
   <dialog id="miDialogoCaja" class="midialog-sm rounded-lg shadow-lg p-12">
     <h4 id="modalCaja" class="font-semibold text-gray-700 mb-4 mt-10">Crear caja</h4>

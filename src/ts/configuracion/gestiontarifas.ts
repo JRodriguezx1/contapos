@@ -13,6 +13,44 @@
       };
   
       let tarifas:tarifasapi[]=[], unatarifa:tarifasapi|undefined;
+
+      function escapeHtmlTarifa(valor:any):string{
+        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[caracter] as string));
+      }
+
+      function formatoMonedaTarifa(valor:any):string{
+        return '$' + Number(valor ?? 0).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      }
+
+      function renderNombreTarifa(nombre:any):string{
+        return `<span class="config-tarifa-name">
+          <span class="config-tarifa-name__icon"><i class="fa-solid fa-percent"></i></span>
+          <span>${escapeHtmlTarifa(nombre)}</span>
+        </span>`;
+      }
+
+      function renderPillTarifa(valor:any, modificador:string):string{
+        return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlTarifa(valor)}</span>`;
+      }
+
+      function filaTarifa(numero:number, tarifa:any):any[]{
+        return [
+          numero,
+          renderNombreTarifa(tarifa?.nombre),
+          renderPillTarifa(formatoMonedaTarifa(tarifa?.valor), 'money'),
+          `<div class="acciones-btns" id="${escapeHtmlTarifa(tarifa?.id)}" data-tarifa="${escapeHtmlTarifa(tarifa?.nombre)}">
+              <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn-md btn-red eliminarTarifa"><i class="fa-solid fa-trash-can"></i></button>
+          </div>`
+        ];
+      }
+
       (async ()=>{
         try {
             const url = "/admin/api/alltarifas"; //llamado a la API REST y se trae todos las tarifas
@@ -23,8 +61,9 @@
         }
       })();
 
-     //////////////////  TABLA //////////////////////
-    tablaTarifas = ($('#tablaTarifas') as any).DataTable(configdatatables);
+    //////////////////  TABLA //////////////////////
+  tablaTarifas = ($('#tablaTarifas') as any).DataTable(configdatatablesToolbar);
+   modernizarToolbarDataTable('#tablaTarifas');
 
     crearTarifa.addEventListener('click', ()=>{
         control = 0;
@@ -83,22 +122,13 @@
                 if(!control){ //si es crear registro
                   /// actualizar el arregle de la tarifa ///
                   tarifas = [...tarifas, resultado.tarifa];
-                  (tablaTarifas as any).row.add([
-                      (tablaTarifas as any).rows().count() + 1,
-                      resultado.tarifa.nombre,
-                      resultado.tarifa.valor,
-                      `<div class="acciones-btns" id="${resultado.tarifa.id}" data-tarifa="${resultado.tarifa.nombre}">
-                          <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square"></i></button>
-                          <button class="btn-md btn-red eliminarTarifa"><i class="fa-solid fa-trash-can"></i></button>
-                      </div>`
-                  ]).draw(false); // draw(false) evita recargar toda la tabla
+                  (tablaTarifas as any).row.add(filaTarifa((tablaTarifas as any).rows().count() + 1, resultado.tarifa)).draw(false); // draw(false) evita recargar toda la tabla
                 }else{ //si es actualizar
                   /// actualizar el arregle de tarifas ///
                   tarifas.forEach(a=>{if(a.id == unatarifa?.id)a = Object.assign(a, resultado.tarifa[0]);});
-                  const datosActuales = (tablaTarifas as any).row(indiceFila+=info.start).data();
-                  /*TARIFA*/ datosActuales[1] = resultado.tarifa[0].nombre;
-                  /*VALOR*/  datosActuales[2] = '$'+Number(resultado.tarifa[0].valor).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                  (tablaTarifas as any).row(indiceFila).data(datosActuales).draw();
+                  indiceFila += info.start;
+                  const datosActuales = (tablaTarifas as any).row(indiceFila).data();
+                  (tablaTarifas as any).row(indiceFila).data(filaTarifa(datosActuales[0], resultado.tarifa[0])).draw();
                   (tablaTarifas as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }
               }else{

@@ -1,17 +1,31 @@
 <div class="gestionDian">
-    <h4 class="text-gray-600 mb-12 mt-4">Gestionar Dian</h4>
-    <div class="flex flex-wrap gap-2 mt-4 mb-4 pb-4">
-        <button id="btnAdquirirCompañia" class="btn-command text-center"><span class="material-symbols-outlined">arrow_and_edge</span>Adquirir compañia</button>
-        <button id="btnCrearCompañia" class="btn-command text-center"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
-        <button id="btnObtenerresolucion" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
-        <button id="BtnSetpruebas" class="btn-command text-center"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>  
-        <button id="btnDocumentos" class="btn-command text-center"><span class="material-symbols-outlined">inbox</span>Recepción documentos</button>  
+    <div class="config-section-heading">
+        <div class="config-section-heading__icon">
+            <i class="fa-solid fa-file-invoice"></i>
+        </div>
+        <div>
+            <h4>Gestionar DIAN</h4>
+            <p>Administra companias, resoluciones y procesos de facturacion electronica.</p>
+        </div>
+    </div>
+    <div class="config-dian-actions">
+        <button id="btnAdquirirCompañia" class="config-dian-action" type="button"><span class="material-symbols-outlined">arrow_and_edge</span>Adquirir compañia</button>
+        <button id="btnCrearCompañia" class="config-dian-action" type="button"><span class="material-symbols-outlined">data_saver_on</span>Crear compañia</button>
+        <button id="btnObtenerresolucion" class="config-dian-action config-dian-action--primary" type="button"><span class="material-symbols-outlined">install_desktop</span>Obtener resolucion</button>
+        <button id="BtnSetpruebas" class="config-dian-action" type="button"><span class="material-symbols-outlined">component_exchange</span>Set pruebas</button>
+        <button id="btnDocumentos" class="config-dian-action" type="button"><span class="material-symbols-outlined">inbox</span>Recepción documentos</button>
     </div>
 
-    <div class="h-8 bg-slate-100"></div>
+    
 
-    <h5 class="text-gray-600 mt-8 mb-3">Lista de compañias: <?php //echo OPENSSL_VERSION_TEXT; ?></h5>
-    <table class="display responsive nowrap tabla" width="100%" id="tablaCompañias">
+    <div class="config-table-card config-dian-card">
+      <div class="config-dian-card__header">
+          <div>
+              <h5>Lista de compañias</h5>
+              <p>Companias configuradas para procesos DIAN y resoluciones.</p>
+          </div>
+      </div>
+    <table class="display responsive nowrap tabla config-data-table config-dian-table" width="100%" id="tablaCompañias">
       <thead>
           <tr>
               <th>id</th>
@@ -24,20 +38,35 @@
       <tbody>
           <?php foreach($companias as $index => $value): ?>
           <tr id="company<?php echo $value->identification_number;?>"> 
-              <td class=""><?php echo $value->id;?></td>        
-              <td class="" ><?php echo $value->business_name; ?></td> 
-              <td class=""><?php echo $value->identification_number;?></td>
-              <td class="" ><?php echo $value->idsoftware; ?></td> 
-              <td class="accionestd"><div class="acciones-btns"> <button id="<?php echo $value->id;?>"><span class="material-symbols-outlined eliminarcompañia">delete</span></button></div></td>
+              <td><?php echo $value->id;?></td>
+              <td>
+                <span class="config-dian-company-name">
+                  <span class="config-dian-company-name__icon"><i class="fa-solid fa-building-user"></i></span>
+                  <span><?php echo $value->business_name; ?></span>
+                </span>
+              </td>
+              <td><span class="config-table-pill config-table-pill--document"><?php echo $value->identification_number;?></span></td>
+              <td><span class="config-table-pill config-table-pill--software"><?php echo $value->idsoftware; ?></span></td>
+              <td class="accionestd"><div class="acciones-btns"> <button id="<?php echo $value->id;?>" class="config-dian-delete" type="button" title="Eliminar compañia"><span class="material-symbols-outlined eliminarcompañia">delete</span></button></div></td>
           </tr>
           <?php endforeach; ?>
       </tbody>
     </table>
+    </div>
 
-    <dialog id="miDialogoCompañia" class="midialog-sm p-12 rounded-lg shadow-lg">
-        <h4 id="modalCompañia" class="font-semibold text-gray-700 mb-4 mt-10">Crear compañia</h4>
+    <dialog id="miDialogoCompañia" class="midialog-sm config-dian-company-dialog">
+        <div class="config-dian-dialog__header">
+            <div class="config-dian-dialog__icon">
+                <i class="fa-solid fa-building-user"></i>
+            </div>
+            <div>
+                <span>Compania</span>
+                <h4 id="modalCompañia">Crear compañia</h4>
+                <p>Registra la informacion fiscal y tecnica para facturacion electronica.</p>
+            </div>
+        </div>
         <div id="divmsjalertaCompañia"></div>
-        <form id="formCrearUpdateCompañia" class="formulario" method="POST">
+        <form id="formCrearUpdateCompañia" class="formulario config-dian-dialog__form config-dian-company-dialog__form" method="POST">
 
             <div class="formulario__campo">
                 <label class="formulario__label" for="type_document_identification_id">Tipo Documento</label>
@@ -58,7 +87,7 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="numero_documento">Numero de Documento</label>
                 <div class="formulario__dato">
-                    <input id="identification_number" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numerodel documento" name="identification_number" value="" required>
+                    <input id="identification_number" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="Numero del documento" name="identification_number" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
@@ -69,7 +98,7 @@
             <div class="formulario__campo">
                 <label class="formulario__label" for="password">Contraseña</label>
                 <div class="formulario__dato">
-                    <input id="password" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Contraseña del certificaod digital" name="password" value="" required>
+                    <input id="password" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="password" placeholder="Contraseña del certificado digital" name="password" value="" required>
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
@@ -173,17 +202,26 @@
                 </div>
             </div>
         
-            <div class="text-right">
+            <div class="config-dian-dialog__actions">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>
                 <input id="btnEditarCrearCompañia" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
             </div>
         </form>
     </dialog><!--fin crear/editar compañia-->
 
-    <dialog id="miDialogoAdquirirCompañia" class="midialog-sm p-12">
-        <h4 class="font-semibold text-gray-700 mb-4">Aquirir compañia</h4>
+    <dialog id="miDialogoAdquirirCompañia" class="midialog-sm config-dian-acquire-dialog">
+        <div class="config-dian-dialog__header">
+            <div class="config-dian-dialog__icon">
+                <i class="fa-solid fa-building-circle-arrow-right"></i>
+            </div>
+            <div>
+                <span>DIAN</span>
+                <h4>Adquirir compañia</h4>
+                <p>Consulta y vincula la informacion fiscal desde el certificado digital.</p>
+            </div>
+        </div>
         <div id="divmsjalertaAdquirirCompañia"></div>
-        <form id="formAdquirirCompañia" class="formulario" action="/admin/config/AdquirirCompañia" method="POST">
+        <form id="formAdquirirCompañia" class="formulario config-dian-dialog__form" action="/admin/config/AdquirirCompañia" method="POST">
             
             <div class="formulario__campo">
                 <label class="formulario__label" for="nitcompany">Numero de RUT</label>
@@ -193,9 +231,9 @@
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="adquirirCompañiaPassword">Contraseña</label>
-                <input id="adquirirCompañiaPassword" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Contraseña del certificaod digital" name="adquirirCompañiaPassword" value="" required>
+                <input id="adquirirCompañiaPassword" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" type="password" placeholder="Contraseña del certificado digital" name="adquirirCompañiaPassword" value="" required>
             </div>
-            <div class="text-right">
+            <div class="config-dian-dialog__actions">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
                 <input id="btnEnviarAdquirirCompañia" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Enviar">
             </div>
@@ -216,19 +254,19 @@
                     <?php endforeach; ?>                 
                 </select>
             </div>
-            <div class="mb-4 listResolutions"><!--lista de resoluciones-->
-                <h3 class="text-lg font-semibold ">📃 Lista de resoluciones</h3>
-                <table id="tablaListResolutions" class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
-                    <thead class="bg-gray-100 text-gray-700 text-xl">
+            <div class="listResolutions config-dian-resolution-card"><!--lista de resoluciones-->
+                <h3><i class="fa-solid fa-file-signature"></i> Lista de resoluciones</h3>
+                <table id="tablaListResolutions" class="config-data-table config-dian-resolution-table">
+                    <thead>
                         <tr>
-                            <th class="px-4 py-2 border">Prefijo</th>
-                            <th class="px-4 py-2 border">N° Resolucion</th>
-                            <th class="px-4 py-2 border">Rango</th>
-                            <th class="px-4 py-2 border">Fecha fin</th>
-                            <th class="px-4 py-2 border">Descargar</th>
+                            <th>Prefijo</th>
+                            <th>N° Resolucion</th>
+                            <th>Rango</th>
+                            <th>Fecha fin</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="text-lg text-center">
+                    <tbody>
                         
                     </tbody>
                 </table>
@@ -240,10 +278,19 @@
         </form>
     </dialog><!--fin obtener resolucion-->
 
-    <dialog id="miDialogosetpruebas" class="midialog-sm p-12">
-        <h4 class="font-semibold text-gray-700 mb-4">Set de pruebas</h4>
+    <dialog id="miDialogosetpruebas" class="midialog-sm config-dian-test-dialog">
+        <div class="config-dian-dialog__header">
+            <div class="config-dian-dialog__icon">
+                <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <div>
+                <span>DIAN</span>
+                <h4>Set de pruebas</h4>
+                <p>Asocia una compania al identificador de pruebas autorizado.</p>
+            </div>
+        </div>
         <div id="divmsjalertasetpruebas"></div>
-        <form id="formSetPruebas" class="formulario" action="/admin/config/setpruebas" method="POST">
+        <form id="formSetPruebas" class="formulario config-dian-dialog__form" action="/admin/config/setpruebas" method="POST">
             <div class="formulario__campo">
                 <label class="formulario__label" for="selectSetCompañia">Seleccionar compañia</label>
                 <select id="selectSetCompañia" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="setcompañia" required>
@@ -260,12 +307,114 @@
                     <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                 </div>
             </div>
-            <div class="text-right">
+            <div class="config-dian-dialog__actions">
                 <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
                 <input id="btnEnviarSetPruebas" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Enviar">
             </div>
         </form>
     </dialog><!--fin set pruebas-->
+
+    <dialog id="miDialogoRecepcionDocumentos" class="midialog-sm config-dian-documents-dialog">
+        <div class="config-dian-dialog__header">
+            <div class="config-dian-dialog__icon">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <div>
+                <span>DIAN</span>
+                <h4>Recepcion de documentos</h4>
+                <p>Centraliza los soportes recibidos del cliente para el proceso de facturacion electronica.</p>
+            </div>
+        </div>
+        <div id="divmsjalertaRecepcionDocumentos"></div>
+        <form id="formRecepcionDocumentos" class="formulario config-dian-dialog__form config-dian-documents-dialog__form" method="POST" enctype="multipart/form-data">
+            <div class="formulario__campo config-dian-documents-dialog__company">
+                <label class="formulario__label" for="recepcionDocumentosCompania">Compania</label>
+                <select id="recepcionDocumentosCompania" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white h-14 text-xl focus:outline-none focus:ring-1" name="compania_id" required>
+                    <option value="" disabled selected>-Seleccionar-</option>
+                    <?php foreach($companias as $value): ?>
+                        <option value="<?php echo $value->id;?>"><?php echo $value->business_name;?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="config-dian-documents-dialog__section">
+                <div>
+                    <h5>Documentos fiscales</h5>
+                    <p>Archivos base para validar la informacion tributaria y habilitacion DIAN.</p>
+                </div>
+                <div class="config-dian-documents-dialog__grid">
+                    <label class="config-dian-document-upload" for="documentoRut">
+                        <span><i class="fa-solid fa-file-invoice"></i></span>
+                        <strong>RUT</strong>
+                        <small>PDF o imagen</small>
+                        <input id="documentoRut" type="file" name="documento_rut" accept=".pdf,.jpg,.jpeg,.png,.webp">
+                    </label>
+                    <label class="config-dian-document-upload" for="documentoResolucion">
+                        <span><i class="fa-solid fa-file-signature"></i></span>
+                        <strong>Resolucion FE</strong>
+                        <small>Documento DIAN</small>
+                        <input id="documentoResolucion" type="file" name="documento_resolucion" accept=".pdf,.jpg,.jpeg,.png,.webp">
+                    </label>
+                    <label class="config-dian-document-upload" for="documentoCamaraComercio">
+                        <span><i class="fa-solid fa-building-columns"></i></span>
+                        <strong>Camara de comercio</strong>
+                        <small>Certificado vigente</small>
+                        <input id="documentoCamaraComercio" type="file" name="documento_camara_comercio" accept=".pdf,.jpg,.jpeg,.png,.webp">
+                    </label>
+                </div>
+            </div>
+
+            <div class="config-dian-documents-dialog__section">
+                <div>
+                    <h5>Identidad y marca</h5>
+                    <p>Soportes de contacto, representante y recursos graficos del cliente.</p>
+                </div>
+                <div class="config-dian-documents-dialog__grid">
+                    <label class="config-dian-document-upload" for="documentoCedula">
+                        <span><i class="fa-solid fa-id-card"></i></span>
+                        <strong>Cedula</strong>
+                        <small>Representante legal</small>
+                        <input id="documentoCedula" type="file" name="documento_cedula" accept=".pdf,.jpg,.jpeg,.png,.webp">
+                    </label>
+                    <label class="config-dian-document-upload" for="documentoLogo">
+                        <span><i class="fa-solid fa-image"></i></span>
+                        <strong>Logo</strong>
+                        <small>PNG, JPG o WEBP</small>
+                        <input id="documentoLogo" type="file" name="documento_logo" accept=".jpg,.jpeg,.png,.webp,.svg">
+                    </label>
+                    <label class="config-dian-document-upload" for="documentoCartaProductos">
+                        <span><i class="fa-solid fa-list-check"></i></span>
+                        <strong>Carta productos/servicios</strong>
+                        <small>PDF, Excel o Word</small>
+                        <input id="documentoCartaProductos" type="file" name="documento_carta_productos" accept=".pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp">
+                    </label>
+                </div>
+            </div>
+
+            <div class="config-dian-documents-dialog__section">
+                <div>
+                    <h5>Anexos adicionales</h5>
+                    <p>Incluye contrato, poder, cuenta bancaria, certificado de responsabilidad u otros soportes recibidos.</p>
+                </div>
+                <label class="config-dian-document-upload config-dian-document-upload--wide" for="documentosAdicionales">
+                    <span><i class="fa-solid fa-paperclip"></i></span>
+                    <strong>Otros documentos</strong>
+                    <small>Seleccion multiple de archivos</small>
+                    <input id="documentosAdicionales" type="file" name="documentos_adicionales[]" accept=".pdf,.jpg,.jpeg,.png,.webp,.xlsx,.xls,.doc,.docx,.zip,.rar" multiple>
+                </label>
+            </div>
+
+            <div class="formulario__campo">
+                <label class="formulario__label" for="observacionesRecepcionDocumentos">Observaciones</label>
+                <textarea id="observacionesRecepcionDocumentos" class="formulario__input" name="observaciones" rows="3" placeholder="Notas internas sobre documentos pendientes, vigencias o aclaraciones del cliente."></textarea>
+            </div>
+
+            <div class="config-dian-dialog__actions">
+                <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Cancelar">Cancelar</button>
+                <button id="btnGuardarRecepcionDocumentos" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit">Guardar documentos</button>
+            </div>
+        </form>
+    </dialog><!--fin recepcion documentos-->
 
     
 </div>

@@ -8,6 +8,14 @@
     const medidaFuenteDatosFactura = document.querySelector('#medidaFuenteDatosFactura') as HTMLSelectElement;
     const medidaFuenteSeccionClienteFactura = document.querySelector('#medidaFuenteSeccionClienteFactura') as HTMLSelectElement;
     const medidaFuenteProductosFactura = document.querySelector('#medidaFuenteProductosFactura') as HTMLSelectElement;
+    const resaltarParametroGuardado = (elemento:HTMLElement|null)=>{
+      if(!elemento)return;
+      const contenedor = elemento.closest('.config-system-content .accordion_tab_content > .grid > div, .config-whatsapp-event') as HTMLElement|null;
+      const objetivo = contenedor ?? elemento;
+      objetivo.classList.remove('config-param-saved');
+      window.setTimeout(()=>objetivo.classList.add('config-param-saved'), 20);
+      window.setTimeout(()=>objetivo.classList.remove('config-param-saved'), 1800);
+    };
 
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
@@ -17,12 +25,12 @@
         const seleccionado = document.querySelector(`input[name="${grupo}"]:checked`) as HTMLInputElement;
 
         //console.log(`${grupo}, Opción seleccionada: ${seleccionado.value}`);
-        cambiarparametro(grupo, seleccionado.value);
+        cambiarparametro(grupo, seleccionado.value, seleccionado);
       });
     });
 
     ////////////// inputs tipo radio  ////////////////
-    function cambiarparametro(clave:string, valor:string){
+    function cambiarparametro(clave:string, valor:string, elemento?:HTMLElement){
       const datos = new FormData();
       datos.append(clave, valor);
       (async ()=>{
@@ -31,6 +39,7 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
+              resaltarParametroGuardado(elemento ?? null);
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             }else{
               msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -56,8 +65,7 @@
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();
               if(resultado.exito !== undefined){
-                inputClave.style.color = "#02db02";
-                inputClave.style.fontWeight = "500";
+                resaltarParametroGuardado(inputClave);
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
@@ -92,6 +100,7 @@
               const respuesta = await fetch(url, {method: 'POST', body: datos}); 
               const resultado = await respuesta.json();
               if(resultado.exito !== undefined){
+                resaltarParametroGuardado(select);
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);

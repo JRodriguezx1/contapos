@@ -1,77 +1,102 @@
 <!-- MODAL OTROS PRODUCTOS -->
-  <dialog id="miDialogoOtrosProductos" class="midialog-md p-12">
-    <div class="text-center border-b border-slate-200 pb-6 mb-6">
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100 mb-4">
-            <i class="fa-solid fa-box-open text-indigo-600 text-3xl"></i>
-        </div>
+<dialog id="miDialogoOtrosProductos" class="midialog-md !max-w-4xl p-0 overflow-hidden">
+  <div class="p-8 sm:p-10 lg:p-12">
+    <div class="flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-6 mb-7">
+      <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 shadow-sm">
+        <i class="fa-solid fa-box-open text-3xl"></i>
+      </div>
 
-        <h4 class="text-3xl font-bold text-indigo-700">
-            Producto personalizado
+      <div class="min-w-0">
+        <p class="text-base font-bold uppercase tracking-wide text-indigo-600">Producto libre</p>
+        <h4 class="text-3xl sm:text-4xl font-bold text-slate-900 leading-tight">
+          Producto personalizado
         </h4>
-
         <p class="mt-2 text-lg text-slate-500">
-            Agregue un producto o servicio que no exista en el catálogo.
+          Agregue un producto o servicio que no exista en el cat&aacute;logo.
         </p>
+      </div>
     </div>
 
-    <form id="formOtrosProductos" class="formulario">  
-      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-6 mt-4">
-        <div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-6">
+    <form id="formOtrosProductos" class="formulario">
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
+        <div class="mb-5 flex items-start gap-3 border-b border-slate-200 pb-4">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
+            <i class="fa-solid fa-pen-to-square text-xl"></i>
+          </div>
+          <div>
+            <h5 class="text-2xl font-bold text-slate-900">Datos del producto</h5>
+            <p class="text-base text-slate-500">Ingrese el nombre, impuesto, cantidad y valor final a cobrar.</p>
+          </div>
+        </div>
 
-          <div class="sm:col-span-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-12">
+          <div class="md:col-span-12">
             <label for="nombreotros" class="block text-lg font-semibold text-slate-700">Nombre</label>
-            <div class="mt-2">
-              <input id="nombreotros" type="text" name="nombreotros" autocomplete="given-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" placeholder="Ej. Servicio técnico, Transporte, Instalación..." required>
-            </div> 
+            <input
+              id="nombreotros"
+              type="text"
+              name="nombreotros"
+              autocomplete="off"
+              class="mt-2 block h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-xl text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Ej. Servicio t&eacute;cnico, transporte, instalaci&oacute;n..."
+              required
+            >
           </div>
 
-          <div class="sm:col-span-6 md:col-span-3">
+          <div class="md:col-span-6">
             <label class="block text-lg font-semibold text-slate-700" for="impuesto">Impuesto</label>
-                <select
-                id="impuesto"
-                name="porcentaje_de_impuesto"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
-                >
-                    <span class="text-indigo-600 font-bold">
-                        <optgroup label="IVA">
-                    </span>
-                    <option value="0" >Exento – 0%</option>
-                    <option value="5" >Bienes / Servicios al 5%</option>
-                    <option value="16" >Contratos antes Ley 1819 – 16%</option>
-                    <option value="19" >Tarifa general – 19%</option>
-                    <option value="" >Excluido de IVA</option> <!-- valor por defecto -->
-                    </optgroup>
-                    <span class="text-indigo-600 font-bold">
-                        <optgroup class="text-indigo-60" label="INC">
-                    </span>
-                    <option value="8">Impuesto Nacional al Consumo – 8%</option>
-                    </optgroup>
-                </select>
+            <select
+              id="impuesto"
+              name="porcentaje_de_impuesto"
+              class="mt-2 block h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-xl text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            >
+              <optgroup label="IVA">
+                <option value="0">Exento - 0%</option>
+                <option value="5">Bienes / Servicios al 5%</option>
+                <option value="16">Contratos antes Ley 1819 - 16%</option>
+                <option value="19">Tarifa general - 19%</option>
+                <option value="">Excluido de IVA</option>
+              </optgroup>
+              <optgroup label="INC">
+                <option value="8">Impuesto Nacional al Consumo - 8%</option>
+              </optgroup>
+            </select>
           </div>
 
-          <div class="sm:col-span-3">
-            <div class="flex gap-5">
-              <div class=" w-5/12">
-                <label for="cantidadotros" class="block text-lg font-semibold text-slate-700">Cantidad</label>
-                <input id="cantidadotros" type="number" name="cantidadotros" min="1" step="0.01"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
-                  placeholder="" required>
-              </div>
+          <div class="md:col-span-3">
+            <label for="cantidadotros" class="block text-lg font-semibold text-slate-700">Cantidad</label>
+            <input
+              id="cantidadotros"
+              type="number"
+              name="cantidadotros"
+              min="1"
+              step="0.01"
+              class="mt-2 block h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-xl text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="1"
+              required
+            >
+          </div>
 
-              <div class=" w-7/12">
-                <label for="preciootros" class="block text-lg font-semibold text-slate-700">Precio total</label>
-                <input id="preciootros" type="number" name="preciootros" min="0"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
-                  placeholder="Valor" required>
-              </div>
-            </div>
+          <div class="md:col-span-3">
+            <label for="preciootros" class="block text-lg font-semibold text-slate-700">Precio total</label>
+            <input
+              id="preciootros"
+              type="number"
+              name="preciootros"
+              min="0"
+              class="mt-2 block h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-xl text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Valor"
+              required
+            >
+            <p class="mt-2 text-sm text-slate-500">Valor final de la l&iacute;nea, antes de calcular la unidad.</p>
           </div>
         </div>
       </div>
-        
-      <div class="text-right">
-          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px]" type="button" value="Cancelar">Cancelar</button>
-          <input class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px]" type="submit" value="Agregar">
+
+      <div class="mt-7 grid grid-cols-2 gap-3 border-t border-slate-200 pt-5">
+        <button class="btn-md btn-turquoise !m-0 !w-full !py-4" type="button" value="Cancelar">Cancelar</button>
+        <input class="btn-md btn-indigo !m-0 !w-full !py-4" type="submit" value="Agregar">
       </div>
     </form>
-  </dialog>
+  </div>
+</dialog>

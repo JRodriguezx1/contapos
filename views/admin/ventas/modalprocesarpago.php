@@ -1,261 +1,273 @@
 <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
-  <dialog id="miDialogoFacturar" class="midialog-md !p-12">
-      <h4 class="text-3xl font-semibold m-0 text-neutral-800">
-          Procesar venta
-      </h4>
-      <hr class="my-4 border-t border-neutral-300">
-      <form id="formfacturar" class="formulario" method="POST">
-          <div id="divmsjalertaprocesarpago"></div>
-          <div class="mt-2 mb-8 rounded-2xl border border-emerald-100 bg-emerald-50 p-8 text-center">
-              <p class="uppercase tracking-widest text-sm font-semibold text-emerald-700">
-                  TOTAL DE LA VENTA
-              </p>
+<dialog id="miDialogoFacturar" class="midialog-md !max-w-5xl !p-0 overflow-hidden">
+  <form id="formfacturar" class="formulario flex max-h-[80vh] flex-col" method="POST">
+    <div class="venta-pago-modal__body overflow-y-auto p-6 sm:p-8 pb-5">
+      <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="m-0 text-sm font-bold uppercase tracking-wide text-indigo-600">Venta</p>
+          <h4 class="m-0 text-3xl font-bold leading-tight text-slate-900">
+            Procesar venta
+          </h4>
+        </div>
 
-              <p id="totalPagar"
-                class="mt-3 text-6xl font-bold text-emerald-600"
-                style="font-family:'Tektur', serif;">
-                  $0
-              </p>
-          </div>
+        <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-6 py-4 text-right min-w-[18rem]">
+          <p class="m-0 text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
+            Total de la venta
+          </p>
+          <p id="totalPagar"
+            class="m-0 mt-1 text-5xl font-bold text-emerald-600"
+            style="font-family:'Tektur', serif;">
+              $0
+          </p>
+        </div>
+      </div>
 
-          <div class="rounded-2xl bg-slate-50 border border-slate-200 p-6 mt-2">
-              <div class="flex items-center gap-3 mb-6">
-                  <span class="material-symbols-outlined text-indigo-600">
-                      shopping_cart
-                  </span>
+      <div id="divmsjalertaprocesarpago" class="mt-4"></div>
 
-                  <p class="text-xl font-semibold text-slate-700">
-                      Información de la venta
-                  </p>
+      <div class="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,.88fr)]">
+        <div class="space-y-5">
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <div class="mb-5 flex items-start gap-3">
+              <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-indigo-100 text-indigo-600">
+                <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+              </div>
+              <div>
+                <h5 class="m-0 text-2xl font-bold text-slate-900">Informaci&oacute;n de la venta</h5>
+                <p class="m-0 text-base text-slate-500">Caja, facturador y canal principal.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="formulario__campo !mb-0">
+                <label class="formulario__label !text-lg !mb-2" for="caja">Caja</label>
+                <select id="caja" class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500" name="caja" required>
+                  <?php foreach($cajas as $index => $value):?>
+                    <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>" data-idemisor="<?php echo $value->idemisor;?>"><?php echo $value->nombre;?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
 
-              <div class="flex justify-start gap-12">
-                <div class="formulario__campo w-96">
-                  <label class="formulario__label" for="caja">Caja</label>
-                  <select id="caja" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1" name="caja" required>
-                      <?php foreach($cajas as $index => $value):?>
-                        <option value="<?php echo $value->id;?>" data-idfacturador="<?php echo $value->idtipoconsecutivo;?>" data-idemisor="<?php echo $value->idemisor;?>"><?php echo $value->nombre;?></option>
-                      <?php endforeach; ?>
-                  </select>
-                </div>
-                <div class="formulario__campo w-96">
-                  <label class="formulario__label" for="facturador">Facturador</label>
-                  <select id="facturador" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1 w-full" name="facturador" required>
-                    <?php foreach($consecutivos as $index => $value):?>
-                      <option data-idtipofacturador="<?php echo $value->idtipofacturador;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
+              <div class="formulario__campo !mb-0">
+                <label class="formulario__label !text-lg !mb-2" for="facturador">Facturador</label>
+                <select id="facturador" class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500" name="facturador" required>
+                  <?php foreach($consecutivos as $index => $value):?>
+                    <option data-idtipofacturador="<?php echo $value->idtipofacturador;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
 
               <?php if($conflocal['habilitar_canal_de_venta']->valor_final): ?>
-              <div id="contenedorCanalVenta" class=" grid grid-cols-1 xsp:grid-cols-2 gap-12 gap-y-0">
-                <div class=" max-w-96 mx-auto xsp:mx-0">
-                  <label class="formulario__label" for="canalventa">Canal de venta</label>
-                  <select id="canalVenta" class="bg-gray-50 border border-gray-300 w-full mt-2 text-gray-900 rounded-lg block p-2 text-lg focus:outline-none focus:ring-1" name="canalventa" required>
-                    <?php foreach($canalesVenta as $index => $value):?>
-                      <option data-idCanalVenta="<?php echo $value->id;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
+              <div id="contenedorCanalVenta" class="formulario__campo !mb-0 md:col-span-2">
+                <label class="formulario__label !text-lg !mb-2" for="canalVenta">Canal de venta</label>
+                <select id="canalVenta" class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500" name="canalventa" required>
+                  <?php foreach($canalesVenta as $index => $value):?>
+                    <option data-idCanalVenta="<?php echo $value->id;?>" value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <?php endif; ?>
-          
-              <div id="inputscreditos" class="grid grid-cols-1 md:grid-cols-2 gap-12 gap-y-0 mt-6">
-                <!-- Abono inicial -->
-                <div id="campoabonoinicial" class="formulario__campo">
-                  <label class="formulario__label" for="abonoinicial">Abono inicial</label>
-                  <input id="abonoinicial" name="abonoinicial" type="text" placeholder="0" value="0"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2 text-xl focus:outline-none focus:ring-1"
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
-                  >
-                </div>
-
-                <!-- Aplicar interes -->
-                <div class="formulario__campo">
-                  <label class="formulario__label" for="saldoPendiente">Aplicar interes</label>
-                  <select id="interes" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2 text-xl focus:outline-none focus:ring-1" name="interes">
-                    <option value="" disabled selected>-Seleccionar-</option>
-                    <option value="1">Si</option>
-                    <option value="0">No</option>
-                  </select>
-                </div>
-
-                <!-- Plazo (cuotas) -->
-                <div id="campocantidadcuotas" class="formulario__campo">
-                  <label class="formulario__label" for="cantidadcuotas">Plazo (cuotas)</label>
-                  <input id="cantidadcuotas" name="cantidadcuotas" type="text" min="1" placeholder="Ingrese cantidad de días del palzo" value="1"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2 text-xl focus:outline-none focus:ring-1"
-                    oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
-                  >
-                </div>
-
-                <!-- Valor de la cuota -->
-                <div id="campomontocuota" class="formulario__campo">
-                  <label class="formulario__label" for="montocuota">Valor de la cuota</label>
-                  <input id="montocuota" name="montocuota" type="text" readonly
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2 text-xl focus:outline-none focus:ring-1">
-                </div>
             </div>
-          </div>
 
-          <p id="abonoTotal" class="text-gray-600 text-2xl text-center font-light m-0 hidden">Abono Inicial $: <span id="valorAbono" class="text-gray-700 font-semibold"> 0 </span></p>
+            <div id="inputscreditos" class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div id="campoabonoinicial" class="formulario__campo !mb-0">
+                <label class="formulario__label !text-lg !mb-2" for="abonoinicial">Abono inicial</label>
+                <input id="abonoinicial" name="abonoinicial" type="text" placeholder="0" value="0"
+                  class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500"
+                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
+                >
+              </div>
 
-          <div class="accordion mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+              <div class="formulario__campo !mb-0">
+                <label class="formulario__label !text-lg !mb-2" for="interes">Aplicar inter&eacute;s</label>
+                <select id="interes" class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500" name="interes">
+                  <option value="" disabled selected>-Seleccionar-</option>
+                  <option value="1">S&iacute;</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
+
+              <div id="campocantidadcuotas" class="formulario__campo !mb-0">
+                <label class="formulario__label !text-lg !mb-2" for="cantidadcuotas">Plazo (cuotas)</label>
+                <input id="cantidadcuotas" name="cantidadcuotas" type="text" min="1" placeholder="Cantidad de cuotas" value="1"
+                  class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500"
+                  oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
+                >
+              </div>
+
+              <div id="campomontocuota" class="formulario__campo !mb-0">
+                <label class="formulario__label !text-lg !mb-2" for="montocuota">Valor de la cuota</label>
+                <input id="montocuota" name="montocuota" type="text" readonly
+                  class="bg-white border border-slate-300 text-slate-900 rounded-xl block w-full p-3 h-13 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500">
+              </div>
+            </div>
+          </section>
+
+          <p id="abonoTotal" class="hidden m-0 text-center text-2xl font-light text-slate-600">Abono inicial: <span id="valorAbono" class="font-semibold text-slate-800">0</span></p>
+
+          <section class="accordion rounded-2xl border border-slate-200 bg-slate-50 p-5">
             <input type="checkbox" id="first">
-            <label
-                class="etiqueta flex items-center justify-between cursor-pointer !pb-0"
-                for="first">
-                <div>
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-indigo-600">
-                            payments
-                        </span>
-
-                        <h5 class="text-3xl font-semibold text-slate-800">
-                            Métodos de pago
-                        </h5>
-                    </div>
-
-                    <p class="mt-2 ml-12 text-slate-500 text-lg text-left">
-                        Se abrirá para registrar uno o varios medios de pago.
-                    </p>
+            <label class="etiqueta !flex cursor-pointer items-center justify-between gap-4 !pb-0 pr-3" for="first">
+              <div class="flex items-start gap-3">
+                <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-indigo-100 text-indigo-600">
+                  <span class="material-symbols-outlined text-2xl">payments</span>
                 </div>
+                <div>
+                  <h5 class="m-0 text-2xl font-bold text-slate-900">M&eacute;todos de pago</h5>
+                  <p class="m-0 mt-1 text-base text-slate-500">Registre uno o varios medios de pago.</p>
+                </div>
+              </div>
+
+              <span class="ml-auto mr-2 inline-flex h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 text-lg font-semibold text-white shadow-sm">
+                <span class="material-symbols-outlined text-xl">add</span>
+                Agregar
+              </span>
             </label>
+
             <div class="wrapper">
               <div class="wrapper-content">
-                <div id="mediospagos" class="content grid grid-cols-2 gap-x-8 gap-y-6 max-w-2xl mx-auto">
+                <div id="mediospagos" class="content grid grid-cols-1 gap-4 pt-5 md:grid-cols-2">
                   <?php foreach($mediospago as $index => $value):?>
                     <div class="flex flex-col">
-                        <label
-                            class="text-center text-lg font-medium text-slate-700 mb-2">
+                      <label class="mb-2 text-lg font-semibold text-slate-700">
+                        <?php echo $value->mediopago ?? ''; ?>
+                      </label>
 
-                            <?php echo $value->mediopago ?? ''; ?>
-
-                        </label>
-
-                        <input
-                            id="<?php echo $value->id ?? ''; ?>"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-64 mx-auto p-2.5 h-14 text-xl text-center focus:outline-none focus:ring-1 mediopago <?php echo $value->mediopago ?? ''; ?>"
-                            type="text"
-                            value="0"
-                            <?php echo $value->mediopago == 'Efectivo' ? 'readonly' : ''; ?>
-                            oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                      <input
+                        id="<?php echo $value->id ?? ''; ?>"
+                        class="mediopago <?php echo $value->mediopago ?? ''; ?> block h-13 w-full rounded-xl border border-slate-300 bg-white p-3 text-right text-xl text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                        type="text"
+                        value="0"
+                        <?php echo $value->mediopago == 'Efectivo' ? 'readonly' : ''; ?>
+                        oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
                     </div>
                   <?php endforeach; ?>
                 </div>
               </div>
             </div>
-          </div> <!-- fin accordion  -->
+          </section>
+        </div>
 
-          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
-            <div class="grid grid-cols-2 gap-8 items-center">
-                <!-- EFECTIVO -->
-                <div class="flex flex-col items-center">
-                    <label
-                        class="block text-lg font-semibold text-slate-700 mb-3 text-center"
-                        for="recibio">
+        <aside class="space-y-5">
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1">
+              <div>
+                <label class="mb-2 flex items-center gap-2 text-lg font-semibold text-slate-700" for="recibio">
+                  <span class="material-symbols-outlined text-emerald-600">payments</span>
+                  Efectivo recibido
+                </label>
+                <input
+                  id="recibio"
+                  class="block h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-right text-2xl font-semibold text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                  type="text"
+                  placeholder="0"
+                  oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+              </div>
 
-                        💵 Efectivo recibido
-
-                    </label>
-
-                    <input
-                        id="recibio"
-                        class="formulario__input
-                              !w-72
-                              !text-3xl
-                              !border-0
-                              !border-b-2
-                              !border-indigo-500
-                              !rounded-none
-                              bg-transparent
-                              text-center"
-                        type="text"
-                        placeholder="0"
-                        oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
-                </div>
-
-                <!-- CAMBIO -->
-                <div class="flex flex-col items-center">
-                    <p class="text-lg text-slate-500 mb-3">
-                        Cambio a entregar
-                    </p>
-
-                    <p
-                        id="cambio"
-                        class="text-5xl font-bold text-emerald-600">
-                        $0
-                    </p>
-                </div>
+              <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                <p class="m-0 text-sm font-semibold uppercase tracking-wide text-emerald-700">
+                  Cambio a entregar
+                </p>
+                <p id="cambio" class="m-0 mt-2 text-4xl font-bold text-emerald-600">
+                  $0
+                </p>
+              </div>
             </div>
-          </div>
-          
-        <!-- Opción imprimir factura -->
-        <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
-          <div class="flex items-center justify-center gap-3 mb-5">
-              <span class="material-symbols-outlined text-indigo-600">
-                  print
-              </span>
+          </section>
 
-              <p
-                  id="textPrint"
-                  class="text-xl font-semibold text-slate-700">
-                  ¿Desea imprimir factura?
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <div class="mb-4 flex items-center gap-3">
+              <span class="material-symbols-outlined text-indigo-600">print</span>
+              <p id="textPrint" class="m-0 text-xl font-bold text-slate-800">
+                &iquest;Imprimir factura?
               </p>
-          </div>
-          <div class="flex justify-center gap-12">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="imprimir" value="1" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?> >
-              <span class="text-slate-700 font-medium text-lg">Sí</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="imprimir" value="0" class="w-5 h-5" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 0?'checked':'';?> >
-              <span class="text-slate-700 font-medium text-lg">No</span>
-            </label>
-          </div>
-        </div>
-        <!-- Fin opción imprimir factura -->
-
-        <div id="confirmarDespacho" class="hidden">
-          <label for="despachar" class="flex flex-col items-center cursor-pointer mb-6">
-            <span class="formulario__label block text-center mb-2">Despachar orden</span>
-            <input
-                id="despachar" 
-                name="despachar"
-                value="1" 
-                type="checkbox" 
-                class="sr-only peer"
-                <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?>
-                >
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
-                <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
             </div>
-          </label>
-        </div>
 
-
-          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
-              <label
-                  for="observacion"
-                  class="block text-xl font-semibold text-slate-700 mb-4">
-
-                  📝 Observación
+            <div class="grid grid-cols-2 gap-3">
+              <label class="cursor-pointer">
+                <input type="radio" name="imprimir" value="1" class="peer sr-only" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?> >
+                <span class="flex h-12 items-center justify-center rounded-xl border border-slate-300 bg-white text-lg font-semibold text-slate-700 transition peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white">S&iacute;</span>
               </label>
 
-              <textarea
-                  id="observacion"
-                  name="observacion"
-                  rows="4"
-                  placeholder="Escriba una observación (opcional)..."
-                  class="w-full rounded-xl border border-slate-300 p-4 text-lg resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
-              </textarea>
+              <label class="cursor-pointer">
+                <input type="radio" name="imprimir" value="0" class="peer sr-only" <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 0?'checked':'';?> >
+                <span class="flex h-12 items-center justify-center rounded-xl border border-slate-300 bg-white text-lg font-semibold text-slate-700 transition peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white">No</span>
+              </label>
+            </div>
+          </section>
+
+          <div id="confirmarDespacho" class="hidden">
+            <label for="despachar" class="mb-6 flex cursor-pointer flex-col items-center">
+              <span class="formulario__label mb-2 block text-center">Despachar orden</span>
+              <input
+                id="despachar"
+                name="despachar"
+                value="1"
+                type="checkbox"
+                class="peer sr-only"
+                <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?>
+                >
+              <div class="relative h-6 w-11 rounded-full bg-gray-200 transition peer-checked:bg-indigo-600">
+                <div class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition peer-checked:translate-x-5"></div>
+              </div>
+            </label>
           </div>
 
-          <div class="mt-10 flex justify-end gap-5">
-              <button class="btn-md btn-turquoise transition-all duration-200 hover:scale-105 !py-4 !px-6 !w-[160px]" type="button" value="Cancelar">Cancelar</button>
-              <input id="btnPagar" class="btn-md btn-indigo transition-all duration-200 hover:scale-105 !py-4 px-6 !w-[160px]" type="submit" value="Pagar">
-          </div>
-          
-      </form>
-  </dialog>
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <label for="observacion" class="mb-3 flex items-center gap-2 text-xl font-bold text-slate-800">
+              <span class="material-symbols-outlined text-indigo-600">edit_note</span>
+              Observaci&oacute;n
+            </label>
+
+            <textarea
+              id="observacion"
+              name="observacion"
+              rows="5"
+              placeholder="Escriba una observaci&oacute;n (opcional)..."
+              class="w-full resize-none rounded-xl border border-slate-300 bg-white p-4 text-lg text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"></textarea>
+          </section>
+        </aside>
+      </div>
+
+    </div>
+
+    <div class="venta-pago-modal__footer flex shrink-0 justify-end gap-4 border-t border-slate-200 bg-white px-6 py-3 sm:px-8 sm:py-3">
+      <button class="btn-md btn-turquoise transition-all duration-200 hover:scale-105 !py-4 !px-6 !w-[160px]" type="button" value="Cancelar">Cancelar</button>
+      <input id="btnPagar" class="btn-md btn-indigo transition-all duration-200 hover:scale-105 !py-4 px-6 !w-[160px]" type="submit" value="Pagar">
+    </div>
+  </form>
+</dialog>
+
+<style>
+  @media (max-width: 640px) {
+    #miDialogoFacturar {
+      height: auto !important;
+      max-height: calc(100dvh - 2rem) !important;
+      overflow: hidden !important;
+    }
+
+    #miDialogoFacturar #formfacturar {
+      height: auto !important;
+      max-height: calc(100dvh - 2rem) !important;
+      min-height: 0 !important;
+      overflow: hidden !important;
+    }
+
+    #miDialogoFacturar .venta-pago-modal__body {
+      flex: 0 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding-bottom: 1rem !important;
+    }
+
+    #miDialogoFacturar .venta-pago-modal__footer {
+      bottom: 0;
+      margin: 0 !important;
+      position: sticky;
+      z-index: 2;
+    }
+
+    #miDialogoFacturar #confirmarDespacho label {
+      margin-bottom: 1rem !important;
+    }
+  }
+</style>

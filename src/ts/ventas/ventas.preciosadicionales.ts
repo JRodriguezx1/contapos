@@ -128,29 +128,49 @@
   /////////// INSUMOS DINAMICAMENTE  /////////////
   function cargarInsumos(){
     const listaInsumos = document.querySelector('#listaInsumos') as HTMLElement;
-    //while(listaInsumos.firstChild)listaInsumos.removeChild(listaInsumos.firstChild);
     listaInsumos.innerHTML = "";
+
     const { obligatorios, insumosgrupo } = agruparInsumos();
+    if(insumosgrupo.size === 0 && obligatorios.length === 0){
+        renderVariacionesVacias(listaInsumos);
+        return;
+    }
+
+    insumosgrupo.forEach(insumogrupo =>
+        renderGrupo(insumogrupo, listaInsumos)
+    );
     renderObligatorios(obligatorios, listaInsumos);
-    insumosgrupo.forEach(insumogrupo =>renderGrupo(insumogrupo, listaInsumos));
     eventosCheckbox();
     eventosRadio();
 
     document
         .querySelectorAll<HTMLInputElement>(".inputInsumoRadio:checked")
         .forEach(radio => {
-
             const tarjeta = radio.closest(".tarjeta-radio-insumo");
-
             tarjeta?.classList.add(
                 "border-indigo-400",
                 "bg-indigo-50",
                 "shadow-lg"
             );
-
-        });    
+        });
   }
 
+  function renderVariacionesVacias(contenedor: HTMLElement){
+      contenedor.insertAdjacentHTML(
+          "beforeend",
+          `<div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+              <span class="material-symbols-outlined text-indigo-500 text-5xl mb-3">
+                  inventory_2
+              </span>
+              <h5 class="text-2xl font-bold text-slate-800">
+                  Sin variaciones configuradas
+              </h5>
+              <p class="mt-2 text-lg text-slate-500">
+                  Este producto no tiene insumos u opciones adicionales para seleccionar.
+              </p>
+          </div>`
+      );
+  }
   function agruparInsumos() {
     const obligatorios = producto?.insumos?.filter(i => i.grupos_insumos === null) ?? [];
     
@@ -172,7 +192,7 @@
       if(insumos.length===0) return;
 
       let html = `
-          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 mb-8">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 mt-5">
               <div class="flex items-center gap-3 mb-4">
                   <span class="material-symbols-outlined text-emerald-600 text-3xl">
                       check_circle
@@ -183,17 +203,18 @@
                           Incluidos
                       </h5>
 
-                      <p class="text-slate-500 text-sm">
+                      <p class="text-slate-500 text-lg leading-6">
                           Estos insumos vienen incluidos con el producto.
                       </p>
                   </div>
               </div>
+
+              <div class="space-y-2">
       `;
 
       insumos.forEach(insumo=>{
           html += `
-              <div class="flex items-center gap-3 rounded-xl bg-white border border-slate-200 px-4 py-3 mb-2">
-
+              <div class="flex items-center gap-3 rounded-xl bg-white border border-slate-200 px-4 py-3">
                   <span class="material-symbols-outlined text-emerald-500">
                       done
                   </span>
@@ -201,73 +222,61 @@
                   <span class="font-medium text-slate-700">
                       ${insumo.nombre}
                   </span>
-
               </div>
           `;
       });
 
-      html += `</div>`;
+      html += `</div></div>`;
       contenedor.insertAdjacentHTML("beforeend", html);
   }
-
   //   insumos = [{idproducto:1, idsubproducto: 3, seleccionado: 1}]
   function renderGrupo(insumos:any[], contenedor:HTMLElement){
     const grupo = insumos[0].grupos_insumos;
-    contenedor.insertAdjacentHTML(
-        "beforeend",
-        `<div class="border-t border-slate-200 pt-8 mt-8">
-            <div class="flex items-center gap-2 mb-2">
-                <span class="material-symbols-outlined text-indigo-500 text-2xl">
+    const panel = document.createElement("div");
+    panel.className = "rounded-2xl border border-slate-200 bg-slate-50 p-5";
+    panel.innerHTML = `
+        <div class="flex items-start justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
+            <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl mt-1">
                     ${Number(grupo.tipo) === 0 ? 'radio_button_checked' : 'check_box'}
                 </span>
 
-                <h3 class="text-2xl font-bold text-slate-800">
-                    ${grupo.nombre}
-                </h3>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800">
+                        ${grupo.nombre}
+                    </h3>
+                    <p class="text-slate-500 text-lg leading-6 mt-1">
+                        ${Number(grupo.tipo) === 0
+                            ? 'Seleccione solamente una opci&oacute;n.'
+                            : 'Puede seleccionar una o varias opciones.'}
+                    </p>
+                </div>
             </div>
+        </div>
 
-            <p class="text-slate-500 text-sm mb-5">
-                ${Number(grupo.tipo) === 0
-                    ? 'Seleccione solamente una opción.'
-                    : 'Puede seleccionar una o varias opciones.'}
-            </p>
-        </div>`
-    );
+        <div class="space-y-3" data-opciones-grupo></div>
+    `;
+
+    contenedor.appendChild(panel);
+    const opciones = panel.querySelector('[data-opciones-grupo]') as HTMLElement;
+
     if(Number(grupo.tipo)===0){
-        renderRadios(insumos, contenedor);
+        renderRadios(insumos, opciones);
     }else{
-        renderCheckbox(insumos, contenedor);
+        renderCheckbox(insumos, opciones);
     }
   }
-
   function renderRadios(insumos:any[], contenedor:HTMLElement){
       insumos.forEach(insumo=>{
           contenedor.insertAdjacentHTML(
               "beforeend",
               `<label
-                  class="group flex justify-between items-center p-5
-                  rounded-2xl
-                  bg-white
-                  tarjeta-radio-insumo
-                  border
-                  border-slate-200
-                  cursor-pointer
-                  transition-all
-                  duration-300
-                  hover:border-indigo-300
-                  hover:bg-indigo-50
-                  hover:shadow-md
-                  hover:-translate-y-1">
+                  class="group flex items-center justify-between gap-4 rounded-2xl bg-white tarjeta-radio-insumo border border-slate-200 cursor-pointer px-4 py-4 transition-all duration-300 hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md">
 
-                  <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-4 min-w-0">
                       <input
                           type="radio"
-                          class="inputInsumoRadio
-                          w-5
-                          h-5
-                          accent-indigo-600
-                          cursor-pointer"
-
+                          class="inputInsumoRadio w-6 h-6 accent-indigo-600 cursor-pointer shrink-0"
                           data-idproducto="${producto?.id}"
                           data-idinsumo="${insumo.id_subproducto}"
                           data-idgrupo="${insumo.grupos_insumos.id}"
@@ -275,19 +284,14 @@
                           ${Number(insumo.seleccionado) ? "checked" : ""}
                       >
 
-                      <div>
-                        <div>
-                            <p class="text-xl font-semibold text-slate-800">
-                                ${insumo.nombre}
-                            </p>
-                        </div>
-                      </div>
+                      <p class="text-xl font-semibold text-slate-800 leading-6 truncate">
+                          ${insumo.nombre}
+                      </p>
                   </div>
               </label>`
           );
       });
   }
-
   function renderCheckbox(insumos:any[], contenedor:HTMLElement){
       insumos.forEach(insumo=>{
         // Temporal hasta conectar con backend
@@ -296,46 +300,24 @@
           contenedor.insertAdjacentHTML(
               "beforeend",
               `<label
-                  class="
-                  tarjeta-checkbox-insumo
-                  block
-                  rounded-2xl
-                  border
-                  border-slate-200
-                  bg-white
-                  p-5
-                  cursor-pointer
-                  transition-all
-                  duration-300
-                  hover:border-indigo-300
-                  hover:bg-indigo-50
-                  hover:shadow-md
-                  hover:-translate-y-1
-                  ">
+                  class="tarjeta-checkbox-insumo block rounded-2xl border border-slate-200 bg-white p-4 cursor-pointer transition-all duration-300 hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md">
 
                   <div class="flex items-center justify-between gap-4">
-                      <div class="flex items-center gap-4 flex-1">
+                      <div class="flex items-center gap-4 flex-1 min-w-0">
                           <input
                               type="checkbox"
-                              class="
-                              inputInsumoCheckbox
-                              w-5
-                              h-5
-                              accent-indigo-600
-                              cursor-pointer
-                              "
+                              class="inputInsumoCheckbox w-6 h-6 accent-indigo-600 cursor-pointer shrink-0"
                               data-idproducto="${producto?.id}"
                               data-idinsumo="${insumo.id_subproducto}"
                               data-idgrupo="${insumo.grupos_insumos.id}"
                               ${Number(insumo.seleccionado) ? "checked":""}
                           >
 
-                          <div>
-                              <p class="text-xl font-semibold text-slate-800">
-                                  ${insumo.nombre}
-                              </p>
-                          </div>
+                          <p class="text-xl font-semibold text-slate-800 leading-6 truncate">
+                              ${insumo.nombre}
+                          </p>
                       </div>
+
                       ${htmlPrecioExtra(insumo)}
                   </div>
 
@@ -344,8 +326,6 @@
           );
       });
   }
-
-
   function htmlPrecioExtra(insumo: insumo): string {
       const precioExtra = Number(insumo.precio_extra);
 
@@ -353,26 +333,8 @@
 
       return `
           <span
-              class="
-                  badge-precio-extra
-                  inline-flex
-                  items-center
-                  gap-1
-                  rounded-full
-                  bg-emerald-100
-                  border
-                  border-emerald-200
-                  px-3
-                  py-1.5
-                  text-base
-                  font-bold
-                  text-emerald-700
-                  shadow-sm
-                  transition-transform
-                  duration-200
-              ">
-
-              <span class="material-symbols-outlined text-lg">
+              class="badge-precio-extra inline-flex items-center gap-1.5 rounded-full bg-emerald-100 border border-emerald-200 px-3 py-1.5 text-base font-bold text-emerald-700 shadow-sm transition-transform duration-200 shrink-0">
+              <span class="material-symbols-outlined text-base">
                   add
               </span>
 
@@ -380,82 +342,37 @@
           </span>
       `;
   }
-
-
   function htmlCantidad(insumo: insumo): string {
     if (Number(insumo.permite_aumentar) === 0) return "";
 
     return `
         <div
-            class="
-                contenedor-cantidad
-                overflow-hidden
-                transition-all
-                duration-300
-                ease-out
-                ${Number(insumo.seleccionado)
-                    ? 'max-h-40 opacity-100 mt-6 translate-y-0'
-                    : 'max-h-0 opacity-0 mt-0 translate-y-2'}
-            ">
+            class="contenedor-cantidad overflow-hidden transition-all duration-300 ease-out ${Number(insumo.seleccionado)
+                ? 'max-h-40 opacity-100 mt-5 translate-y-0'
+                : 'max-h-0 opacity-0 mt-0 translate-y-2'}">
 
-            <p class="mb-4 text-sm font-semibold text-slate-500 text-center">
+            <p class="mb-3 text-base font-semibold text-slate-600 text-center">
                 Cantidad a agregar
             </p>
-            <div class="flex justify-center mt-3 ml-9">
+            <div class="flex justify-center mt-3">
                 <div class="inline-flex items-center rounded-2xl border border-slate-300 overflow-hidden shadow-sm bg-white">
 
                     <button
                         type="button"
-                        class="
-                            btnCantidadMenos
-                            w-14
-                            h-14
-                            active:scale-95
-                            transition-all
-                            duration-150
-                          bg-indigo-50
-                          hover:bg-indigo-100
-                          text-indigo-600
-                            text-2xl
-                            font-bold                          
-                        ">
-                        −
+                        class="btnCantidadMenos w-14 h-14 active:scale-95 transition-all duration-150 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-2xl font-bold">
+                        -
                     </button>
 
                     <input
                         type="number"
                         value="1"
                         min="1"
-
-                        class="
-                            inputCantidadInsumo
-                            w-28
-                            h-14
-                            text-center
-                            text-lg
-                            font-bold
-                            border-x
-                            border-slate-300
-                            outline-none
-                            focus:ring-0
-                        "
+                        class="inputCantidadInsumo w-28 h-14 text-center text-lg font-bold border-x border-slate-300 outline-none focus:ring-0"
                     >
 
                     <button
                         type="button"
-                        class="
-                            btnCantidadMas
-                            w-14
-                            h-14
-                            active:scale-95
-                            transition-all
-                            duration-150
-                          bg-indigo-50
-                          hover:bg-indigo-100
-                          text-indigo-600
-                            text-2xl
-                            font-bold                          
-                        ">
+                        class="btnCantidadMas w-14 h-14 active:scale-95 transition-all duration-150 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-2xl font-bold">
                         +
                     </button>
                 </div>
@@ -463,8 +380,6 @@
         </div>
     `;
 }
-
-
   function eventosCheckbox() {
       const checkboxes = document.querySelectorAll<HTMLInputElement>(".inputInsumoCheckbox");
 
@@ -478,6 +393,7 @@
                   .closest(".tarjeta-checkbox-insumo")
                   ?.classList.add(
                       "border-indigo-400",
+                      "bg-indigo-50",
                       "ring-2",
                       "ring-indigo-100",
                       "shadow-md"
@@ -513,6 +429,7 @@
     if (checkbox.checked) {
         tarjeta.classList.add(
             "border-indigo-400",
+            "bg-indigo-50",
             "ring-2",
             "ring-indigo-100",
             "shadow-md",
@@ -534,11 +451,12 @@
         contenedorCantidad?.classList.add(
             "max-h-40",
             "opacity-100",
-            "mt-6"
+            "mt-5"
         );
     } else {
         tarjeta.classList.remove(
             "border-indigo-400",
+            "bg-indigo-50",
             "ring-2",
             "ring-indigo-100",
             "shadow-md",
@@ -547,7 +465,7 @@
         contenedorCantidad?.classList.remove(
             "max-h-40",
             "opacity-100",
-            "mt-6"
+            "mt-5"
         );
     
         contenedorCantidad?.classList.add(
@@ -650,6 +568,9 @@
     abrirDialogo(elementProduct: HTMLElement) {
       (document.querySelector('#textCardProduct') as HTMLParagraphElement).textContent = elementProduct.querySelector('.card-producto')?.textContent??'';
       miDialogoPreciosAdicionales.showModal();
+        const inputPrecioLibre = document.querySelector('#precioLibre') as HTMLInputElement;
+
+        inputPrecioLibre.value = "";
       cantidadTotal = 0;
       textCantidadCalculada.textContent = '0';
       lastOperation.textContent = '0';
