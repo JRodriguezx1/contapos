@@ -24,6 +24,20 @@ class creditosRepository extends operationRepository{
     public function getConexion(){ return self::getDB(); }
 
 
+    /**
+     * Obtiene y bloquea el credito asociado a una factura.
+     *
+     * Llamado por creditosService::anularCredito() dentro de la transaccion
+     * abierta por facturacionService::procesarAnulacionEnTransaccion(). El
+     * bloqueo evita que el mismo credito cambie mientras se esta anulando.
+     */
+    public function buscarPorFacturaParaActualizar(int $idFactura):?creditos{
+        if($idFactura <= 0)return null;
+        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE factura_id = {$idFactura} LIMIT 1 FOR UPDATE");
+        return $rows ? new $this->entityClass($rows[0]) : null;
+    }
+
+
     public function generarSeparado(object $entity):array{
         if(!isset($entity->frecuenciapago))$entity->frecuenciapago = date('j');
         $entity->abonodecuotas = $entity->abonoinicial;

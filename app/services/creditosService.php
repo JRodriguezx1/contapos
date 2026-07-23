@@ -483,71 +483,81 @@ class creditosService {
     }
 
 
-    //llamado desde ventascontrolador cuando se elimina o anula una factura tipo credito
+    /**
+     * Revierte el credito asociado a una factura anulada.
+     * Llamado desde facturacionService::anularFacturaPagada().
+     */
     public static function anularCredito(int $idfactura):array{
-        $alertas = [];
-
-        $repoMovimientocaja = new movimientos_cajaRepository();
         $creditoRepo = new creditosRepository();
-        $credito = $creditoRepo->uniqueWhere(['factura_id'=>$idfactura]);
-        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+        $credito = $creditoRepo->buscarPorFacturaParaActualizar($idfactura);
+        if(!$credito)return ['error'=>['No se encontro el credito asociado a la factura.']];
+        if((int)$credito->idestadocreditos !== 2)
+            return ['error'=>['El credito debe estar abierto para anular.']];
 
-        //acatualizar deuda de cliente
+        // El cliente conserva como deuda solo el saldo aun pendiente. Los
+        // abonos ya fueron descontados de totaldebe cuando se registraron.
         $cliente = clientes::find('id', $credito->cliente_id);
+        if(!$cliente)return ['error'=>['No se encontro el cliente asociado al credito.']];
         $cliente->totaldebe -= $credito->saldopendiente;
-        $cli = $cliente->actualizar();
-        if(!$cli){
-            $alertas['error'][] = "No se puede eliminar el credito, intenta nuevamente";
-            return $alertas;
+        if(!$cliente->actualizar())
+            return ['error'=>['No fue posible actualizar la deuda del cliente.']];
+
+        if(!$creditoRepo->anularCredito((int)$credito->id))
+            return ['error'=>['No fue posible cambiar el estado del credito.']];
+
+        $cuotasRepo = new cuotasRepository();
+        $resumenPorCierre = $cuotasRepo->obtenerPorCredito_cierracajaAbierto((int)$credito->id);
+
+        if(!empty($resumenPorCierre)){
+            // Indexar los descuentos permite relacionarlos con los cierres
+            // bloqueados sin depender del orden retornado por la consulta.
+            $descuentosPorCierre = [];
+            foreach($resumenPorCierre as $resumen){
+                $idCierre = (int)$resumen->cierrecaja_id;
+                if($idCierre <= 0)
+                    return ['error'=>['Una cuota no tiene un cierre de caja valido.']];
+                $descuentosPorCierre[$idCierre] = $resumen;
+            }
+
+            // Una sola consulta adquiere todos los bloqueos en orden de ID. A
+            // partir de aqui sus acumulados no pueden cambiar hasta el commit.
+            $cierresBloqueados = cierrescajas::findManyForUpdate(array_keys($descuentosPorCierre));
+            if(count($cierresBloqueados) !== count($descuentosPorCierre))
+                return ['error'=>['No fue posible bloquear todos los cierres de caja de los abonos.']];
+
+            $arrayCierresCaja = [];
+            foreach($cierresBloqueados as $cierre){
+                $idCierre = (int)$cierre->id;
+                if((int)$cierre->estado !== 0)
+                    return ['error'=>["El cierre de caja #{$idCierre} fue cerrado mientras se anulaba el credito."]];
+
+                $descuento = $descuentosPorCierre[$idCierre] ?? null;
+                if(!$descuento)
+                    return ['error'=>["No se encontro el resumen de abonos del cierre #{$idCierre}."]];
+
+                // Construir los valores desde la fila ya bloqueada evita
+                // sobrescribir abonos registrados por otra solicitud.
+                $obj = new stdClass();
+                $obj->id = $idCierre;
+                $obj->abonostotales = (float)$cierre->abonostotales - (float)$descuento->cuotapagada;
+                $obj->abonosenefectivo = (float)$cierre->abonosenefectivo - (float)$descuento->valorcuota_efectivo;
+                $obj->abonoscreditos = (float)$cierre->abonoscreditos - (float)$descuento->cuotapagada;
+                $arrayCierresCaja[] = $obj;
+            }
+
+            // Los valores fueron calculados bajo bloqueo, pero se escriben en
+            // un solo UPDATE CASE para conservar la eficiencia del flujo anterior.
+            if(!cierrescajas::updatemultiregobj( $arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos'] ))
+                return ['error'=>['No fue posible actualizar los abonos de los cierres de caja.']];
         }
 
-        //cambiar estado del credito en el movimiento de caja
-        $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>1, 'id_documento'=>$credito->id]);
-        $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
-        $movCaja->estado = 0;
-
-        //$getDB = $creditoRepo->getConexion();
-        //$getDB->begin_transaction();
-        //try {
-            //cambiar estado del credito
-            $creditoRepo->anularCredito($credito->id);
-
-            $cuotasRepo = new cuotasRepository();
-            $cuotas = $cuotasRepo->obtenerPorCredito_cierracajaAbierto($credito->id);
-            $repoMovimientocaja->update($movCaja);
-            
-            $arrayCierresCaja = [];
-            foreach($cuotas as $cuota){
-                if(isset($arrayCierresCaja[$cuota->cierrecaja_id])){
-                    $obj = $arrayCierresCaja[$cuota->cierrecaja_id];
-                    $obj->abonostotales -= $cuota->cuotapagada;
-                    $obj->abonosenefectivo -= $cuota->valorcuota_efectivo;
-                    $obj->abonoscreditos -= $cuota->cuotapagada;
-                }else{
-                    $obj = new stdClass;
-                    $obj->id = $cuota->cierrecaja_id;
-                    $obj->abonostotales = $cuota->abonostotales_caja-$cuota->cuotapagada;
-                    $obj->abonosenefectivo = $cuota->abonosenefectivo_caja-$cuota->valorcuota_efectivo;
-                    $obj->abonoscreditos = $cuota->abonosCreditos_caja-$cuota->cuotapagada;
-                    $arrayCierresCaja[$cuota->cierrecaja_id] = $obj;
-                }
-            }
-            
-            //descontar los abonos de los separados en cierre de caja si esta abierta
-            if(empty($arrayCierresCaja)){
-                $alertas['exito'][] = "Credito anulado correctamente";
-                return $alertas;
-            }
-            cierrescajas::updatemultiregobj($arrayCierresCaja, ['abonostotales', 'abonosenefectivo', 'abonoscreditos']);
-            //$getDB->commit();
-        //} catch (\Throwable $th) {
-            //$alertas['error'][] = "Error al anular el credito. {$th->getMessage()}";
-            //$getDB->rollback();
-        //}
-        return $alertas;
+        // El movimiento tipo documento 1 pertenece a la factura, no al
+        // credito. facturacionService lo anula una sola vez usando idfactura.
+        return ['exito'=>['Credito anulado correctamente.']];
     }
 
 
+    //llamada cuando se cambia de emisor
     public static function descontarAbonosCreditosXCierresCaja(int $idcredito):array{
         $alertas = [];
         $cuotasRepo = new cuotasRepository();

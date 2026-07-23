@@ -3,7 +3,7 @@ namespace App\Models\ventas;
 
 class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'idemisor', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'habilitada', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'idemisor', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'fechaanulacion', 'habilitada', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -61,6 +61,7 @@ class facturas extends \App\Models\ActiveRecord {
         $this->fechaentrega = $this->entregado == 1?date('Y-m-d H:i:s'):'';
         $this->fechacreacion = $args['fechacreacion'] ?? date('Y-m-d H:i:s');
         $this->fechapago = $this->estado=='Paga'?date('Y-m-d H:i:s'):'';
+        $this->fechaanulacion = $args['fechaanulacion']??null;
         $this->habilitada = $args['habilitada']??0;
         $this->opc1 = $args['opc1'] ?? '';
         $this->opc2 = $args['opc2'] ?? '';

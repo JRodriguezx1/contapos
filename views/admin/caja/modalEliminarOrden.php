@@ -122,7 +122,8 @@
                             <td class="px-6 py-3" data-qty="<?php echo $value->cantidad??0;?>">
 
                                 <input
-                                    id="<?php echo $value->idproducto;?>"
+                                    id="<?php echo $value->id;?>"
+                                    data-idproducto="<?php echo $value->idproducto;?>"
                                     data-nombre="<?php echo $value->nombreproducto??'';?>"
                                     data-tipoproducto="<?php echo $value->tipoproducto;?>"
                                     data-tipoproduccion="<?php echo $value->tipoproduccion;?>"
@@ -131,8 +132,8 @@
                                     class="inputInv block w-full rounded-xl px-3 py-2 text-lg text-gray-700 border border-slate-300 bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 focus:outline-none"
                                     type="text"
                                     name=""
-                                    value="<?php echo $value->cantidad??0;?>"
-                                    oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||0)"
+                                    value="<?php echo number_format($value->cantidad??0, 2, ',', '.');?>"
+                                    oninput="formatearMoneda(this)"
                                     required>
                             </td>
                         </tr>

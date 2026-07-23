@@ -499,6 +499,21 @@ class ActiveRecord {
         return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
     }
 
+
+    /**
+     * Bloquea varias filas por su llave primaria dentro de una transaccion.
+     * Los IDs se ordenan para que operaciones concurrentes adquieran los
+     * bloqueos en el mismo orden y reduzcan la posibilidad de interbloqueos.
+     */
+    public static function findManyForUpdate(array $ids):array{
+        $ids = array_values(array_unique(array_filter( array_map('intval', $ids), static fn(int $id):bool => $id > 0 )));
+        sort($ids, SORT_NUMERIC);
+        if(empty($ids))return [];
+
+        $sql = "SELECT * FROM ".static::$tabla." WHERE id IN (".implode(', ', $ids).")"." ORDER BY id ASC FOR UPDATE";
+        return self::consultar_Sql($sql);
+    }
+
     //metodo de consulta libre utilizando lenguaje sql de inner_join
     public static function inner_join($consulta){
         $resultado = self::consultar_sql($consulta);

@@ -274,7 +274,7 @@
       inputsInv.forEach(inputinv =>{
         inputinv.addEventListener('input', e=>{
           const qty = (e.target as HTMLInputElement);
-          if(qty.value != qty.parentElement?.dataset.qty){
+          if(obtenerNumero(qty) != Number(qty.parentElement?.dataset.qty)){
             qty.classList.add('border-2', 'border-rose-600');
             if(!document.querySelector('.alerta'))
               msjAlert('error', 'Cantidad diferente a devolver a inventario', (document.querySelector('#divmsjalerta1') as HTMLElement));
@@ -346,7 +346,7 @@
       ////////////////// evento al bton pagar del modal facturar //////////////////////
       document.querySelector('#formfacturarCotizacion')?.addEventListener('submit', e=>{
         e.preventDefault();
-        procesarpedido('Guardado');
+        procesarpedido('Paga');
       });
 
       async function procesarpedido(estado:string){ //////PROCESAR PAGO DE COTIZACION SiN CAMBIAR DATOS DE LOS PRODUCTOS//////
@@ -372,6 +372,7 @@
         datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
         datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
         datos.append('transaccion', '');
+        datos.append('tipoventa', 'Contado');
         datos.append('estado', estado);
         datos.append('cambioaventa', '1');  //cambioaventa por defecto es 0
         //datos.append('subtotal', valorTotal.subtotal+'');
@@ -444,7 +445,7 @@
 
       function eliminarorden():void{
         ///////*** crear arreglo de obj de los productos y sus cantidades ***///////
-        type producto = {id:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string , promediostock: string};
+        type producto = {id:string, idventa:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string , promediostock: string};
         var products:producto[] = [];
 
         const v:number = validarPassword('clave_para_eliminar_factura', 'divmsjalerta1', inputEliminarClave);
@@ -452,7 +453,9 @@
 
         inputsInv.forEach(inputinv =>{
           const v = inputinv as HTMLInputElement;
-          products = [...products, {id: v.id, idproducto: v.id, nombre: v.dataset.nombre??'', tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: v.value, promediostock: v.dataset.promediostock??'0'}];
+          const n:number|null = obtenerNumero(v);
+          if(n !== null)
+            products = [...products, {id: v.id, idventa: v.id, idproducto: v.dataset.idproducto??'', nombre: v.dataset.nombre??'', tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: n+'', promediostock: v.dataset.promediostock??'0'}];
         });
 
         (async ()=>{
