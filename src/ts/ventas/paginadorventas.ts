@@ -51,8 +51,10 @@
 
         const productosku = items[0].elm as HTMLElement;
         const products = POS.products as productsapi[];
-        const precio = products.find(x=>x.id == productosku.dataset.id)?.precio_venta;
-        POS.actualizarCarrito(productosku.dataset.id, 1, true, true, precio);
+        const productoItem = products.find(x=>x.id == productosku.dataset.id);
+        const productoConfigurado = structuredClone(productoItem);
+        filtrarInsumos(productoConfigurado);
+        POS.actualizarCarrito(productosku.dataset.id, 1, true, true, productoItem?.precio_venta, productoConfigurado);
 
         inputBuscar.value = '';
         hackerList.search('');
