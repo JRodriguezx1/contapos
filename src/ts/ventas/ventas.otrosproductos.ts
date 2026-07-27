@@ -73,6 +73,7 @@
             });
 
             POS.actualizarCarrito(otrosproductos.id+'', cantidadotros, false, false, otrosproductos!.valorunidad+'', null);
+            POS.mostrarFeedbackCarrito?.(otrosproductos!.nombre || 'Producto personalizado', cantidadotros);
             miDialogoOtrosProductos.close();
             document.removeEventListener("click", POS.cerrarDialogoExterno);
             (e.target as HTMLFormElement).reset();

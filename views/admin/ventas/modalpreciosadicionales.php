@@ -1,4 +1,4 @@
-<!-- MODAL SELECCIÓN DE PRECIOS ADICIONALES -->
+<!-- MODAL SELECCIÃƒâ€œN DE PRECIOS ADICIONALES -->
 <dialog id="miDialogoPreciosAdicionales"
     class="rounded-2xl border border-gray-200  w-[96%] max-w-4xl p-8 bg-white  backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
 
@@ -10,14 +10,25 @@
         <?php if($user['perfil']<4):  ?>
             <input id="btn4" name="config" type="radio">
         <?php endif;  ?>
-
-            <div class="flex justify-center mb-6">
-                <div class="inline-flex rounded-xl shadow-sm overflow-hidden border border-slate-200 bg-slate-50 btnsetup btnsetup-precios p-1">
-                    <label class="px-5 py-2.5 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300 cursor-pointer btn1" for="btn1">Precios adicionales</label>
-                    <label class="px-5 py-2.5 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300 cursor-pointer btn2" for="btn2">Variacion</label>
-                    <label class="px-5 py-2.5 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300 cursor-pointer btn3" for="btn3">Anotacion</label>
+            <div class="flex justify-center mb-7 precios-adicionales-tabs-wrap">
+                <div class="precios-adicionales-tabs btnsetup btnsetup-precios">
+                    <label class="precios-adicionales-tab btn1" for="btn1">
+                        <span class="material-symbols-outlined">payments</span>
+                        <span>Precios</span>
+                    </label>
+                    <label class="precios-adicionales-tab btn2" for="btn2">
+                        <span class="material-symbols-outlined">swap_vert</span>
+                        <span>Variaci&oacute;n</span>
+                    </label>
+                    <label class="precios-adicionales-tab btn3" for="btn3">
+                        <span class="material-symbols-outlined">edit_note</span>
+                        <span>Anotaci&oacute;n</span>
+                    </label>
                     <?php if($user['perfil']<4):  ?>
-                        <label class="px-5 py-2.5 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300 cursor-pointer btn4" for="btn4">Comisión</label>
+                        <label class="precios-adicionales-tab btn4" for="btn4">
+                            <span class="material-symbols-outlined">percent</span>
+                            <span>Comisi&oacute;n</span>
+                        </label>
                     <?php endif;  ?>
                 </div>
             </div>
@@ -35,11 +46,11 @@
                         </span>
                     </div>
 
-                    <!-- Información -->
+                    <!-- InformaciÃƒÂ³n -->
                     <div class="flex-1">
                         <!-- <p
                             class="uppercase tracking-[0.25em] text-xs font-bold text-indigo-600">
-                            Configuración
+                            ConfiguraciÃƒÂ³n
                         </p> -->
 
                         <h3
@@ -73,23 +84,23 @@
                             Seleccionar precio
                         </h4>
 
-                        <p class="text-slate-500 text-base">
+                        <p class="text-slate-500 text-lg leading-7">
                             Elija uno de los precios disponibles o registre un precio libre.
                         </p>
                     </div>
                 </div>
 
                 <!-- Contenido -->
-                <form id="formPreciosAdicioanles" class="space-y-6">
+                <form id="formPreciosAdicioanles" class="space-y-5">
                     <!-- Lista de precios -->
                     <div id="listaPrecios" class="space-y-3 blockInputRadio"> </div>
 
-                    <!-- Botón agregar precio -->
-                    <div class="flex justify-center my-6">
+                    <!-- BotÃƒÂ³n agregar precio -->
+                    <div class="flex justify-center my-5">
                         <button
                             type="button"
                             id="btnMostrarNuevoPrecio"
-                            class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-5 py-3 text-indigo-700 font-semibold transition hover:bg-indigo-100 hover:border-indigo-300">
+                            class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-4 py-2.5 text-lg text-indigo-700 font-semibold shadow-sm transition hover:bg-indigo-50 hover:border-indigo-300">
 
                             <i
                                 id="iconPrecioLibre"
@@ -106,10 +117,10 @@
                     <div
                         id="nuevoPrecioContainer"
                         class="overflow-hidden max-h-0 opacity-0 -translate-y-2 transition-all duration-500 ease-in-out">
-                        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+                        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
                             <!-- Encabezado -->
-                            <div class="flex items-center gap-3 mb-5">
-                                <span class="material-symbols-outlined text-emerald-600 text-4xl">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="material-symbols-outlined text-emerald-600 text-3xl">
                                     attach_money
                                 </span>
 
@@ -118,7 +129,7 @@
                                         Precio personalizado
                                     </h5>
 
-                                    <p class="text-slate-500 text-base">
+                                    <p class="text-slate-500 text-lg leading-7">
                                         Registre un precio diferente para este producto.
                                     </p>
                                 </div>
@@ -128,7 +139,7 @@
                             <div class="max-w-sm mx-auto">
                                 <label
                                     for="precioLibre"
-                                    class="block text-base font-semibold text-slate-700 mb-3 text-center">
+                                    class="block text-lg font-semibold text-slate-700 mb-3 text-center">
                                     Precio libre
                                 </label>
 
@@ -143,13 +154,14 @@
                                         rounded-2xl
                                         block
                                         w-full
-                                        h-16
+                                        h-14
                                         px-4
                                         text-center
                                         text-3xl
                                         font-bold
                                         text-emerald-700
                                         placeholder:text-slate-400
+                                        placeholder:text-3xl
                                         focus:border-emerald-500
                                         focus:outline-none
                                         focus:ring-2
@@ -157,8 +169,8 @@
                                         transition"
                                     oninput="formatearMoneda(this)">
 
-                                <p class="mt-3 text-center text-sm text-slate-500">
-                                    Este valor reemplazará el precio seleccionado.
+                                <p class="mt-3 text-center text-base text-slate-500 leading-6">
+                                    Este valor reemplazar&aacute; el precio seleccionado.
                                 </p>
                             </div>
                         </div>
@@ -166,7 +178,7 @@
                         <!--
                         <div id="autorizacionSupervisor" class="mt-6 bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
                             <h6 class="text-base font-semibold text-gray-800 flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-lock text-indigo-600"></i> Autorización requerida
+                                <i class="fa-solid fa-lock text-indigo-600"></i> AutorizaciÃƒÂ³n requerida
                             </h6>
 
                             <p class="text-gray-600 text-sm mb-3">
@@ -200,7 +212,7 @@
                     <!-- Calculadora -->
                     <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
                         <!-- Encabezado -->
-                        <div class="flex items-center gap-3 mb-5">
+                        <div class="flex items-center gap-3 mb-4">
                             <span class="material-symbols-outlined text-indigo-600 text-4xl">
                                 calculate
                             </span>
@@ -210,7 +222,7 @@
                                     Calculadora de cantidades
                                 </h5>
 
-                                <p class="text-slate-500 text-base">
+                                <p class="text-slate-500 text-lg leading-7">
                                     Sume o reste cantidades antes de agregarlas al producto.
                                 </p>
                             </div>
@@ -264,20 +276,20 @@
 
                         <!-- Historial -->
                         <div class="mt-6">
-                            <p class="text-sm uppercase tracking-widest font-semibold text-slate-500 text-center">
+                            <p class="text-base uppercase tracking-[0.20em] font-bold text-slate-500 text-center">
                                 Operaciones
                             </p>
 
                             <p
                                 id="lastOperation"
-                                class="mt-2 text-center text-lg text-slate-600 min-h-[28px]">
+                                class="mt-3 text-center text-xl font-semibold text-slate-700 min-h-[32px]">
                                 0
                             </p>
                         </div>
 
                         <!-- Resultado -->
                         <div class="mt-6 rounded-xl bg-emerald-50 border border-emerald-200 p-5">
-                            <p class="text-center uppercase tracking-[0.25em] text-sm font-semibold text-emerald-700">
+                            <p class="text-center uppercase tracking-[0.20em] text-base font-bold text-emerald-700">
                                 Resultado
                             </p>
 
@@ -304,7 +316,7 @@
                             Configurar variaciones
                         </h4>
 
-                        <p class="text-slate-500 text-base">
+                        <p class="text-slate-500 text-lg leading-7">
                             Personalice los insumos incluidos y seleccione las variaciones del producto.
                         </p>
                     </div>
@@ -312,256 +324,195 @@
                 <!-- Lista de precios -->
                 <div id="listaInsumos" class="space-y-3 blockInputRadio"> </div>
             </div>
-
             <div class="contenido3 accordion_tab_content">
-                <div class="flex items-center gap-3 pb-5 mb-6 border-b border-slate-200">
-                    <span class="material-symbols-outlined text-indigo-600 text-4xl">
-                        edit_note
-                    </span>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 mb-6">
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 text-4xl shadow-sm">
+                            edit_note
+                        </span>
 
-                    <div>
-                        <h4 class="text-2xl font-bold text-slate-800">
-                            Anotación del producto
-                        </h4>
-
-                        <p class="text-slate-500 text-base">
-                            Agregue información adicional si es necesario.
-                        </p>
+                        <div>
+                            <p class="text-base font-bold uppercase tracking-wide text-indigo-600">
+                                Nota del producto
+                            </p>
+                            <h4 class="text-3xl font-bold text-slate-900 leading-tight">
+                                Anotaci&oacute;n del producto
+                            </h4>
+                            <p class="mt-1 text-lg leading-6 text-slate-500">
+                                Agregue una instrucci&oacute;n o detalle puntual para este producto.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- NUEVA TARJETA -->
-                <div class="rounded-2xl border border-yellow-300 bg-amber-50 bg-gradient-to-br from-amber-50 to-white p-6">
-                    <div class="flex items-center gap-3 mb-5">
-                        <span class="material-symbols-outlined text-amber-600 text-4xl">
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-200">
+                        <span class="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 text-3xl">
                             sticky_note_2
                         </span>
 
                         <div>
-
-                            <h5 class="text-2xl font-bold text-slate-800">
-                                Detalle
+                            <h5 class="text-2xl font-bold text-slate-900">
+                                Detalle de la anotaci&oacute;n
                             </h5>
+                            <p class="text-lg leading-6 text-slate-500">
+                                Esta nota acompa&ntilde;ar&aacute; el producto en la venta actual.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- AQUÍ VA EL TEXTAREA -->
+                    <label for="anotacion" class="block mb-2 text-lg font-bold text-slate-700">
+                        Anotaci&oacute;n
+                    </label>
                     <textarea
                         id="anotacion"
-                        rows="5"
-                        placeholder="Escriba una nota para este producto"
+                        rows="6"
+                        placeholder="Ej. Sin cebolla, color rojo, entregar empacado, observaci&oacute;n especial..."
                         class="
                             w-full
+                            min-h-[150px]
                             rounded-2xl
                             border
                             border-slate-300
-                            bg-white/90
+                            bg-slate-50
                             px-5
                             py-4
                             text-lg
-                            text-slate-700
+                            text-slate-800
                             leading-7
-                            placeholder:text-slate-500
-                            resize-none
+                            placeholder:text-slate-400
+                            resize-y
                             outline-none
                             transition-all
                             duration-300
                             focus:border-indigo-500
+                            focus:bg-white
                             focus:ring-2
                             focus:ring-indigo-200
                         "></textarea>
 
-                    <p class="mt-3 text-base text-slate-500 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-base text-amber-500">
-                            tips_and_updates
+                    <div class="mt-4 flex min-h-[56px] items-center gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-lg text-slate-600">
+                        <span class="material-symbols-outlined flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-xl text-indigo-600">
+                            info
                         </span>
-                        La nota solo se aplicará a este producto durante la venta.
-                    </p>
-                </div>
-            </div>
-
-            <div class="contenido4 accordion_tab_content">
-                <div class="flex items-center gap-3 pb-5 mb-6 border-b border-slate-200">
-                    <span class="material-symbols-outlined text-indigo-600 text-4xl">
-                        payments
-                    </span>
-
-                    <div>
-                        <h4 class="text-2xl font-bold text-slate-800">
-                            Comisión del producto
-                        </h4>
-
-                        <p class="text-slate-500 text-base">
-                            Defina el porcentaje de comisión que se aplicará para este producto.
+                        <p class="m-0 leading-6">
+                            La anotaci&oacute;n solo se aplicar&aacute; a este producto durante la venta.
                         </p>
                     </div>
                 </div>
-
-                <div class="
-                    rounded-2xl
-                    border
-                    border-sky-200
-                    bg-sky-50
-                    p-6
-                ">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="material-symbols-outlined text-sky-600 text-4xl">
+            </div>
+            <div class="contenido4 accordion_tab_content">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 mb-6">
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 text-4xl shadow-sm">
                             percent
                         </span>
 
                         <div>
-                            <h5 class="text-2xl font-bold text-slate-800">
-                                Comisión
+                            <p class="text-base font-bold uppercase tracking-wide text-indigo-600">
+                                Comisi&oacute;n
+                            </p>
+                            <h4 class="text-3xl font-bold text-slate-900 leading-tight">
+                                Comisi&oacute;n del producto
+                            </h4>
+                            <p class="mt-1 text-lg leading-6 text-slate-500">
+                                Defina el porcentaje de comisi&oacute;n que recibir&aacute; el vendedor por este producto.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-200">
+                        <span class="material-symbols-outlined flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 text-3xl">
+                            savings
+                        </span>
+
+                        <div>
+                            <h5 class="text-2xl font-bold text-slate-900">
+                                Porcentaje de comisi&oacute;n
                             </h5>
+                            <p class="text-lg leading-6 text-slate-500">
+                                Ingrese un valor entre 0 y 100.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- ========================= -->
-                    <!-- INPUT -->
-                    <!-- ========================= -->
-                    <div class="w-full max-w-lg mx-auto">
-                        <label
-                            class="block mb-3 text-center text-lg font-semibold text-slate-700">
-                            Ingresar porcentaje
-                        </label>
+                    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.75fr)]">
+                        <div class="rounded-2xl border border-indigo-100 bg-indigo-50 p-5">
+                            <label for="comisionproducto" class="block mb-3 text-lg font-bold text-slate-800">
+                                Porcentaje
+                            </label>
 
-                        <div class="flex">
-                            <input
-                                id="comisionproducto"
-                                type="text"
-                                placeholder="0"
-                                value=""
-                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'); if(parseFloat(this.value) > 100){this.value = 100;}"
+                            <div class="flex overflow-hidden rounded-2xl border border-slate-300 bg-white shadow-sm transition-all duration-300 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-200">
+                                <input
+                                    id="comisionproducto"
+                                    type="text"
+                                    placeholder="0"
+                                    value=""
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'); if(parseFloat(this.value) > 100){this.value = 100;}"
+                                    class="h-16 min-w-0 flex-1 border-0 bg-white px-5 text-center text-4xl font-bold text-slate-900 outline-none focus:ring-0"
+                                    required
+                                >
 
-                                class="
-                                    flex-1
-                                    h-14
-                                    rounded-l-xl
-                                    border
-                                    border-slate-300
-                                    border-r-0
-                                    bg-white/90
-                                    px-5
-                                    text-center
-                                    text-2xl
-                                    font-bold
-                                    text-slate-700
-                                    outline-none
-                                    transition-all
-                                    duration-300
-                                    focus:border-sky-500
-                                    focus:ring-2
-                                    focus:ring-sky-200
-                                "
-                                required
-                            >
-
-                            <div
-                                class="
-                                    flex
-                                    items-center
-                                    justify-center
-                                    w-16
-                                    h-14
-                                    rounded-r-xl
-                                    border
-                                    border-slate-300
-                                    bg-slate-100
-                                    text-2xl
-                                    font-bold
-                                    text-slate-600
-                                ">
-                                <i class="fa-solid fa-percent"></i>
+                                <div class="flex h-16 w-20 shrink-0 items-center justify-center border-l border-slate-200 bg-slate-50 text-3xl font-bold text-indigo-600">
+                                    <i class="fa-solid fa-percent"></i>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- ========================= -->
-                    <!-- TEXTO DE AYUDA -->
-                    <!-- ========================= -->
-                    <div class="max-w-md mx-auto mt-5">
-                        <p class="
-                            text-base
-                            text-slate-500
-                            flex
-                            items-center
-                            justify-center
-                            gap-2
-                            text-center
-                        ">
-                            <span class="material-symbols-outlined text-base text-sky-500">
-                                info
-                            </span>
-                            La comisión se calculará automáticamente al realizar la venta.
-                        </p>
-                    </div>
-
-                    <!-- ========================= -->
-                    <!-- RESUMEN -->
-                    <!-- ========================= -->
-                    <div
-                        class="
-                            mt-8
-                            rounded-2xl
-                            border
-                            border-slate-200
-                            bg-white/80
-                            p-6
-                        ">
-
-                        <div class="flex items-center gap-3 mb-5">
-                            <span class="material-symbols-outlined text-emerald-600 text-3xl">
-                                paid
-                            </span>
-
-                            <div>
-                                <h6 class="text-xl font-bold text-slate-800">
-                                    Cálculo de comisión
-                                </h6>
-
-                                <p class="text-base text-slate-500">
-                                    Así se calculará la comisión de este producto.
+                            <div class="mt-4 flex min-h-[56px] items-center gap-3 rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-lg text-slate-600">
+                                <span class="material-symbols-outlined flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-xl text-indigo-600">
+                                    info
+                                </span>
+                                <p class="m-0 leading-6">
+                                    La comisi&oacute;n se calcular&aacute; autom&aacute;ticamente al realizar la venta.
                                 </p>
                             </div>
                         </div>
 
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-500">
-                                    Venta del producto
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="material-symbols-outlined flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-2xl text-emerald-600">
+                                    paid
                                 </span>
 
-                                <span
-                                    id="vistaPreviaVenta"
-                                    class="font-semibold text-slate-800">
-                                    $0
-                                </span>
+                                <div>
+                                    <h6 class="text-xl font-bold text-slate-900">
+                                        Vista previa
+                                    </h6>
+                                    <p class="text-base text-slate-500">
+                                        C&aacute;lculo estimado
+                                    </p>
+                                </div>
                             </div>
 
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-500">
-                                    Comisión
-                                </span>
+                            <div class="space-y-3 text-lg">
+                                <div class="flex items-center justify-between gap-4 rounded-xl bg-white px-4 py-3">
+                                    <span class="text-slate-500">
+                                        Venta
+                                    </span>
+                                    <span id="vistaPreviaVenta" class="font-bold text-slate-900">
+                                        $0
+                                    </span>
+                                </div>
 
-                                <span
-                                    id="vistaPreviaPorcentaje"
-                                    class="text-xl font-bold text-sky-700">
-                                    0%
-                                </span>
-                            </div>
+                                <div class="flex items-center justify-between gap-4 rounded-xl bg-white px-4 py-3">
+                                    <span class="text-slate-500">
+                                        Comisi&oacute;n
+                                    </span>
+                                    <span id="vistaPreviaPorcentaje" class="font-bold text-indigo-700">
+                                        0%
+                                    </span>
+                                </div>
 
-                            <hr class="border-slate-200">
-
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-slate-700">
-                                    El vendedor recibirá
-                                </span>
-
-                                <span
-                                    id="vistaPreviaComision"
-                                    class="text-4xl font-bold text-emerald-600">
-                                    $0
-                                </span>
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-4">
+                                    <span class="block text-base font-bold uppercase tracking-wide text-emerald-700">
+                                        Vendedor recibe
+                                    </span>
+                                    <span id="vistaPreviaComision" class="mt-1 block text-4xl font-bold text-emerald-700">
+                                        $0
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -570,11 +521,12 @@
         </div>
 
         <!-- Botones inferiores -->
-        <div class="text-right pt-6 border-t border-gray-200  flex justify-end gap-3">
-            <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
-            <button id="aplicarOpcionesProducto" type="button" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]" value="Seleccionar">Seleccionar</button>
+        <div class="mt-4 border-t border-slate-200 pt-5" style="display:grid; grid-template-columns:minmax(0, 1fr) 150px 150px; gap:12px; align-items:center; width:100%;">
+            <div></div>
+            <button type="button" class="btn-md btn-turquoise" style="width:150px; min-height:48px; display:inline-flex; align-items:center; justify-content:center; padding:10px 16px;" value="Cancelar">Cancelar</button>
+            <button id="aplicarOpcionesProducto" type="button" class="btn-md btn-indigo" style="width:150px; min-height:48px; display:inline-flex; align-items:center; justify-content:center; padding:10px 16px;" value="Seleccionar">Seleccionar</button>
         </div>
-    </div>
+</div>
 
 
 

@@ -1,8 +1,20 @@
 <div class="gestionfacturadores">
 
-  <h4 class="text-gray-600 mb-12 mt-4">Gestion de facturadores</h4>
-  <button id="crearFacturador" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-auto">Crear facturador</button>
-  <table id="tablaFacturadores" class="display responsive nowrap tabla" width="100%" id="tablaFacturadores">
+  <div class="config-section-heading">
+    <div class="config-section-heading__icon">
+      <i class="fa-solid fa-receipt"></i>
+    </div>
+    <div>
+      <h4>Gestion de facturadores</h4>
+      <p>Administra consecutivos, rangos, fechas y estado de facturacion.</p>
+    </div>
+    <button id="crearFacturador" class="btn-md btn-indigo config-section-heading__action" type="button">
+      <i class="fa-solid fa-plus"></i>
+      Crear facturador
+    </button>
+  </div>
+  <div class="config-table-card">
+  <table id="tablaFacturadores" class="display responsive nowrap tabla config-data-table" width="100%">
       <thead>
           <tr>
               <th>Nº</th>
@@ -20,12 +32,17 @@
             if($value->estado==1)?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
-              <td class="" ><?php echo $value->nombre; ?></td> 
-              <td class=""><?php echo $value->nombretipofacturador;?></td>
-              <td class="" ><?php echo $value->rangoinicial.' - '.$value->rangofinal; ?></td> 
-              <td class=""><?php echo $value->siguientevalor;?></td>
-              <td class="" ><?php echo $value->fechafin; ?></td>
-              <td class=""><?php echo $value->estado==1?'Activo':'Expirada';?></td>
+              <td>
+                <span class="config-facturador-name">
+                  <span class="config-facturador-name__icon"><i class="fa-solid fa-receipt"></i></span>
+                  <span><?php echo $value->nombre; ?></span>
+                </span>
+              </td> 
+              <td><span class="config-table-pill config-table-pill--type"><?php echo $value->nombretipofacturador;?></span></td>
+              <td><span class="config-table-pill config-table-pill--range"><?php echo $value->rangoinicial.' - '.$value->rangofinal; ?></span></td> 
+              <td><span class="config-table-pill config-table-pill--next"><?php echo $value->siguientevalor;?></span></td>
+              <td><span class="config-table-pill config-table-pill--date"><?php echo $value->fechafin; ?></span></td>
+              <td><span class="config-table-status <?php echo $value->estado==1?'config-table-status--active':'config-table-status--expired';?>"><?php echo $value->estado==1?'Activo':'Expirada';?></span></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-facturador="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square" title="Actualizar facturador"></i></button>
@@ -38,6 +55,7 @@
           <?php endforeach; ?>
       </tbody>
   </table>
+  </div>
 
   <dialog id="miDialogoFacturador" class="midialog-sm p-12 rounded-lg shadow-lg">
     <h4 id="modalFacturador" class="font-semibold text-gray-700 mb-4 mt-10">Crear facturador</h4>

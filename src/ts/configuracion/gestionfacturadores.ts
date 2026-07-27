@@ -29,6 +29,54 @@
       };
   
       let facturadores:facturadoresapi[]=[], unfacturador:facturadoresapi|undefined;
+
+      function escapeHtmlFacturador(valor:any):string{
+        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[caracter] as string));
+      }
+
+      function nombreTipoFacturador(facturador:any):string{
+        const tipo = facturador?.nombretipofacturador;
+        return escapeHtmlFacturador(typeof tipo === 'object' ? tipo?.nombre : tipo);
+      }
+
+      function renderNombreFacturador(nombre:any):string{
+        return `<span class="config-facturador-name">
+          <span class="config-facturador-name__icon"><i class="fa-solid fa-receipt"></i></span>
+          <span>${escapeHtmlFacturador(nombre)}</span>
+        </span>`;
+      }
+
+      function renderPillFacturador(valor:any, modificador:string):string{
+        return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlFacturador(valor)}</span>`;
+      }
+
+      function renderEstadoFacturador(estado:any):string{
+        const activo = Number(estado) === 1;
+        return `<span class="config-table-status ${activo ? 'config-table-status--active' : 'config-table-status--expired'}">${activo ? 'Activo' : 'Expirada'}</span>`;
+      }
+
+      function filaFacturador(numero:number, facturador:any):any[]{
+        return [
+          numero,
+          renderNombreFacturador(facturador?.nombre),
+          renderPillFacturador(nombreTipoFacturador(facturador), 'type'),
+          renderPillFacturador(`${facturador?.rangoinicial ?? ''} - ${facturador?.rangofinal ?? ''}`, 'range'),
+          renderPillFacturador(facturador?.siguientevalor, 'next'),
+          renderPillFacturador(facturador?.fechafin, 'date'),
+          renderEstadoFacturador(facturador?.estado),
+          `<div class="acciones-btns" id="${escapeHtmlFacturador(facturador?.id)}" data-facturador="${escapeHtmlFacturador(facturador?.nombre)}">
+              <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
+              ${Number(facturador?.id) > 1 ? '<button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>' : ''}
+          </div>`
+        ];
+      }
+
       (async ()=>{
         try {
             const url = "/admin/api/allfacturadores"; //llamado a la API REST y se trae todos los consecutivos
@@ -40,8 +88,9 @@
         }
       })();
 
-     //////////////////  TABLA //////////////////////
-    tablaFacturadores = ($('#tablaFacturadores') as any).DataTable(configdatatables);
+    //////////////////  TABLA //////////////////////
+  tablaFacturadores = ($('#tablaFacturadores') as any).DataTable(configdatatablesToolbar);
+   modernizarToolbarDataTable('#tablaFacturadores');
 
     crearFacturador.addEventListener('click', ()=>{
         control = 0;
@@ -122,31 +171,15 @@
                 if(!control){ //si es crear registro
                   /// actualizar el arregle del facturador///
                   facturadores = [...facturadores, resultado.facturador];
-                  (tablaFacturadores as any).row.add([
-                      (tablaFacturadores as any).rows().count() + 1,
-                      resultado.facturador.nombre,
-                      resultado.facturador.nombretipofacturador.nombre,
-                      resultado.facturador.rangoinicial,
-                      resultado.facturador.siguientevalor,
-                      resultado.facturador.fechafin,
-                      resultado.facturador.estado==1?'Activo':'Inactivo',
-                      `<div class="acciones-btns" id="${resultado.facturador.id}" data-facturador="${resultado.facturador.nombre}">
-                          <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
-                          <button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>
-                      </div>`
-                  ]).draw(false); // draw(false) evita recargar toda la tabla
+                  (tablaFacturadores as any).row.add(filaFacturador((tablaFacturadores as any).rows().count() + 1, resultado.facturador)).draw(false); // draw(false) evita recargar toda la tabla
                   crearConsecutivoGestionCaja(resultado.facturador.id, resultado.facturador.nombre);
                 }else{ //si es actualizar
                   /// actualizar el arregle de facturadores ///
                   facturadores.forEach(a=>{if(a.id == unfacturador?.id)a = Object.assign(a, resultado.facturador[0]);});
-                  const datosActuales = (tablaFacturadores as any).row(indiceFila+=info.start).data();
-                  /*xx*/datosActuales[1] = resultado.facturador[0].nombre;
-                  /*x*/ datosActuales[2] = resultado.facturador[0].nombretipofacturador;
-                  /*x*/ datosActuales[3] = resultado.facturador[0].rangoinicial;
-                        datosActuales[4] = resultado.facturador[0].siguientevalor;
-                        datosActuales[5] = resultado.facturador[0].fechafin;
-                        datosActuales[6] = resultado.facturador[0].estado==1?'Activo':'Inactivo';
-                  (tablaFacturadores as any).row(indiceFila).data(datosActuales).draw();
+                  indiceFila += info.start;
+                  const datosActuales = (tablaFacturadores as any).row(indiceFila).data();
+                  const filaActualizada = filaFacturador(datosActuales[0], resultado.facturador[0]);
+                  (tablaFacturadores as any).row(indiceFila).data(filaActualizada).draw();
                   (tablaFacturadores as any).page(info.page).draw('page'); //me mantiene la pagina actual
                   actualizarConsecutivoGestionCaja(unfacturador!.id, resultado.facturador[0].nombre);
                 }

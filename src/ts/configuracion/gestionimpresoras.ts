@@ -11,11 +11,54 @@
       nombre: string,
       nombrecompartido: string,
       estacion: string,
+      mm: string,
       estado: string,
       created_at: string
     };
 
     let impresoras:printersApi[]=[], unPrinter:printersApi|undefined;
+
+    function escapeHtmlImpresora(valor:any):string{
+      return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[caracter] as string));
+    }
+
+    function renderNombreImpresora(nombre:any):string{
+      return `<span class="config-printer-name">
+        <span class="config-printer-name__icon"><i class="fa-solid fa-print"></i></span>
+        <span>${escapeHtmlImpresora(nombre)}</span>
+      </span>`;
+    }
+
+    function renderPillImpresora(valor:any, modificador:string):string{
+      return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlImpresora(valor)}</span>`;
+    }
+
+    function renderEstadoImpresora(estado:any):string{
+      const activa = String(estado) === '1' || String(estado).toLowerCase() === 'activa' || String(estado).toLowerCase() === 'activo';
+      return `<span class="config-table-status ${activa ? 'config-table-status--active' : 'config-table-status--inactive'}">${activa ? 'Activa' : 'Inactiva'}</span>`;
+    }
+
+    function filaImpresora(numero:number, impresora:any):any[]{
+      return [
+        numero,
+        renderNombreImpresora(impresora?.nombre),
+        renderPillImpresora(impresora?.nombrecompartido, 'shared'),
+        renderPillImpresora(impresora?.estacion, 'station'),
+        renderPillImpresora(`${impresora?.mm ?? ''} mm`, 'paper'),
+        renderEstadoImpresora(impresora?.estado),
+        `<div class="acciones-btns" id="${escapeHtmlImpresora(impresora?.id)}" data-impresora="${escapeHtmlImpresora(impresora?.nombre)}">
+            <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn-md btn-red eliminarImpresora"><i class="fa-solid fa-trash-can"></i></button>
+        </div>`
+      ];
+    }
+
     (async ()=>{
       try {
           const url = "/admin/api/allPrinters"; //llamado a la API REST y se trae todos las impresoras
@@ -26,8 +69,9 @@
       }
     })();
 
-     //////////////////  TABLA //////////////////////
-    tablaImpresoras = ($('#tablaImpresoras') as any).DataTable(configdatatables);
+    //////////////////  TABLA //////////////////////
+  tablaImpresoras = ($('#tablaImpresoras') as any).DataTable(configdatatablesToolbar);
+   modernizarToolbarDataTable('#tablaImpresoras');
 
     crearImpresora.addEventListener('click', ()=>{
         control = 0;
@@ -56,6 +100,7 @@
       unPrinter = impresoras.find(x => x.id==idimpresora); //me trae a lA impresora seleccionada
       (document.querySelector('#nombreImpresora')as HTMLInputElement).value = unPrinter?.nombre!;
       (document.querySelector('#nombreCompartido')as HTMLInputElement).value = unPrinter?.nombrecompartido!;
+      (document.querySelector('#anchoPapel')as HTMLInputElement).value = unPrinter?.mm!;
       (document.querySelector('#estacion')as HTMLInputElement).value = unPrinter?.estacion!;
       
       indiceFila = (tablaImpresoras as any).row((e.target as HTMLElement).closest('tr')).index();
@@ -74,8 +119,9 @@
         (async ()=>{ 
           const datos = new FormData();
           datos.append('id', unPrinter?.id?unPrinter?.id:'');
-          datos.append('nombre', $('#nombreIMpresora').val()as string);
-          datos.append('nombrecompartido', $('#nombrecompartido').val()as string);
+          datos.append('nombre', $('#nombreImpresora').val()as string);
+          datos.append('nombrecompartido', $('#nombreCompartido').val()as string);
+          datos.append('mm', $('#anchoPapel').val()as string);
           datos.append('estacion', $('#estacion').val()as string);
           try {
               const url = "/admin/api/"+urlApi;
@@ -88,25 +134,13 @@
                 if(!control){ //si es crear registro
                   /// actualizar el arregle de las impresoras ///
                   impresoras = [...impresoras, resultado.printer];
-                  (tablaImpresoras as any).row.add([
-                      (tablaImpresoras as any).rows().count() + 1,
-                      resultado.printer.nombre,
-                      resultado.printer.nombrecompartido,
-                      resultado.printer.estacion,
-                      resultado.printer.created_at,
-                      `<div class="acciones-btns" id="${resultado.printer.id}">
-                          <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square"></i></button>
-                          <button class="btn-md btn-red eliminarImpresora"><i class="fa-solid fa-trash-can"></i></button>
-                      </div>`
-                  ]).draw(false); // draw(false) evita recargar toda la tabla
+                  (tablaImpresoras as any).row.add(filaImpresora((tablaImpresoras as any).rows().count() + 1, resultado.printer)).draw(false); // draw(false) evita recargar toda la tabla
                 }else{ //si es actualizar
                   /// actualizar el arregle de impresoras ///
                   impresoras.forEach(a=>{if(a.id == unPrinter?.id)a = Object.assign(a, resultado.printer[0]);});
-                  const datosActuales = (tablaImpresoras as any).row(indiceFila+=info.start).data();
-                  /*NOMBRE*/      datosActuales[1] = resultado.printer[0].nombre;
-                  /*NOMBRECOMPARTIDO*/ datosActuales[2] = resultado.printer[0].nombrecompartido;
-                  /*ESTACION*/ datosActuales[3] = resultado.printer[0].estacion;
-                  (tablaImpresoras as any).row(indiceFila).data(datosActuales).draw();
+                  indiceFila += info.start;
+                  const datosActuales = (tablaImpresoras as any).row(indiceFila).data();
+                  (tablaImpresoras as any).row(indiceFila).data(filaImpresora(datosActuales[0], resultado.printer[0])).draw();
                   (tablaImpresoras as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }
               }else{

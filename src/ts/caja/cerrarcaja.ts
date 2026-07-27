@@ -12,6 +12,13 @@
     const inputsmediospago = document.querySelectorAll<HTMLInputElement>('.inputmediopago');
     const formArqueocaja = document.querySelector('#formArqueocaja') as HTMLFormElement;
     const formCambiarCaja = document.querySelector('#formCambiarCaja') as HTMLFormElement;
+    const inputsDenominaciones = Array.from(document.querySelectorAll<HTMLInputElement>('.denominacion'));
+    const arqueoTotal = document.querySelector<HTMLElement>('#arqueoTotal');
+    const formatoPesos = new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      maximumFractionDigits: 0
+    });
 
     btnArqueocaja?.addEventListener('click', ():void=>{
       modalArqueocaja.showModal();
@@ -27,6 +34,11 @@
       modalCambiarCaja.showModal();
       document.addEventListener("click", cerrarDialogoExterno);
     });
+
+    inputsDenominaciones.forEach(input=>{
+      input.addEventListener('input', actualizarVistaArqueo);
+    });
+    actualizarVistaArqueo();
     
 
     //////////////////     Arqueo de caja      //////////////////////
@@ -56,11 +68,25 @@
 
     function sumatoriaDenominaciones():void{
       const ef = document.querySelector('#Efectivo') as HTMLInputElement;
-      const inputsDenominaciones = Array.from( document.querySelectorAll<HTMLInputElement>('.denominacion'));
-      const sum = inputsDenominaciones.reduce((total, denominaicon)=>(Number(denominaicon.dataset.moneda)*Number(denominaicon.value))+total, 0);
+      const sum = inputsDenominaciones.reduce((total, denominacion)=>(Number(denominacion.dataset.moneda)*valorEntero(denominacion.value))+total, 0);
       ef.value = sum+'';
       const eventInput = new Event('input');  //crea un evento
       ef.dispatchEvent(eventInput); // se dispara el evento de manera manual, --->abajo<--, es decir cuando se introduce un valor en el campo efectivo se dispara el evento.
+    }
+
+    function actualizarVistaArqueo():void{
+      const totalArqueado = inputsDenominaciones.reduce((total, input)=>{
+        const subtotal = Number(input.dataset.moneda) * valorEntero(input.value);
+        const subtotalElemento = input.closest('.arqueo-row')?.querySelector<HTMLElement>('.arqueo-row-total');
+        if(subtotalElemento) subtotalElemento.textContent = formatoPesos.format(subtotal);
+        return total + subtotal;
+      }, 0);
+
+      if(arqueoTotal) arqueoTotal.textContent = formatoPesos.format(totalArqueado);
+    }
+
+    function valorEntero(valor:string):number{
+      return Number(valor.replace(/[^\d]/g, '')) || 0;
     }
 
     ///////////  eventos a los inputs medios de pago de declarar valores /////////////
@@ -309,14 +335,14 @@
                         <td class="">${row.id}</td>
                         <td>
                             <div data-estado="${row.estado}" data-totalpagado="${row.total}" id="${row.id}" class="mediosdepago max-w-full flex flex-wrap gap-2">
-                                ${row.mediosdepago.map(mp=>`<button class="btn-xs btn-light">${mp.mediopago}</button>`).join(' ')}
+                                ${row.mediosdepago.map(mp=>`<button class="cierre-badge cierre-badge--neutral">${mp.mediopago}</button>`).join(' ')}
                             </div>
                         </td>
-                        <td class="${row.estado=='Paga'?'btn-xs btn-lima':'btn-xs btn-blueintense'}">${row.estado}</td>
-                        <td class="">$ ${Number(row.subtotal).toLocaleString()}</td>
-                        <td class="">$ ${Number(row.total).toLocaleString()}</td>
+                        <td><span class="cierre-badge ${row.estado=='Paga'?'cierre-badge--success':'cierre-badge--info'}">${row.estado}</span></td>
+                        <td class="cierre-number">$ ${Number(row.subtotal).toLocaleString()}</td>
+                        <td class="cierre-number">$ ${Number(row.total).toLocaleString()}</td>
                         <td class="accionestd"><div class="acciones-btns" id="${row.id}">
-                                <a class="btn-xs btn-turquoise" href="/admin/caja/ordenresumen?id=${row.id}">Ver</a> <button class="btn-xs btn-light"><i class="fa-solid fa-print"></i></button>
+                                <a class="cierre-table-action" href="/admin/caja/ordenresumen?id=${row.id}">Ver</a> <button class="cierre-badge cierre-badge--neutral"><i class="fa-solid fa-print"></i></button>
                             </div>
                         </td>
                       `;

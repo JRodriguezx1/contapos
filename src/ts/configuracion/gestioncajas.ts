@@ -26,7 +26,8 @@
       })();
 
      //////////////////  TABLA //////////////////////
-    tablaCajas = ($('#tablaCajas') as any).DataTable(configdatatables);
+   tablaCajas = ($('#tablaCajas') as any).DataTable(configdatatablesToolbar);
+    modernizarToolbarDataTable('#tablaCajas');
 
     crearCaja.addEventListener('click', ()=>{
         control = 0;

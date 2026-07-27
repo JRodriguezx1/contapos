@@ -1,8 +1,20 @@
 <div class="tarifas">
 
-  <h4 class="text-gray-600 mb-8 mt-12">Gestion de tarifas</h4>
-  <button id="crearTarifa" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[144px]">Crear tarifa</button>
-  <table id="tablaTarifas" class="display responsive nowrap tabla" width="100%">
+  <div class="config-section-heading">
+    <div class="config-section-heading__icon">
+      <i class="fa-solid fa-percent"></i>
+    </div>
+    <div>
+      <h4>Gestion de tarifas</h4>
+      <p>Administra valores de tarifas disponibles para ventas y operaciones.</p>
+    </div>
+    <button id="crearTarifa" class="btn-md btn-indigo config-section-heading__action" type="button">
+      <i class="fa-solid fa-plus"></i>
+      Crear tarifa
+    </button>
+  </div>
+  <div class="config-table-card">
+  <table id="tablaTarifas" class="display responsive nowrap tabla config-data-table" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -15,8 +27,13 @@
           <?php foreach($tarifas as $index => $value): ?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
-              <td class="" ><?php echo $value->nombre; ?></td> 
-              <td class="">$<?php echo number_format($value->valor??0, '2', ',', '.');?></td>
+              <td>
+                <span class="config-tarifa-name">
+                  <span class="config-tarifa-name__icon"><i class="fa-solid fa-percent"></i></span>
+                  <span><?php echo $value->nombre; ?></span>
+                </span>
+              </td> 
+              <td><span class="config-table-pill config-table-pill--money">$<?php echo number_format($value->valor??0, '2', ',', '.');?></span></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-tarifa="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square" title="Actualizar datos del tarifa"></i></button>
@@ -27,6 +44,7 @@
           <?php endforeach; ?>
       </tbody>
   </table>
+  </div>
 
   <dialog id="miDialogoTarifa" class="midialog-sm rounded-lg shadow-lg p-12">
     <h4 id="modalTarifa" class="font-semibold text-gray-700 mb-4 mt-10">Crear tarifa</h4>

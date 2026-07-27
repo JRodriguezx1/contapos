@@ -3,7 +3,12 @@ const sidebar = document.querySelector('.sidebar') as HTMLElement|null;  //selec
 const btnmenux = document.querySelector('#mobile-menux');
 const barra = document.querySelector('.barra-mobile') as HTMLElement|null;
 const nametop:HTMLElement|null = document.querySelector('.nametop');
-const selectSucursal = document.querySelector('#selectSucursal') as HTMLSelectElement;
+//const selectSucursal = document.querySelector('#selectSucursal') as HTMLSelectElement;
+const sucursalSeleccionada = document.querySelector('#sucursalSeleccionada') as HTMLElement|null;
+const opcionesSucursal = document.querySelectorAll('.js-sucursal-option') as NodeListOf<HTMLElement>;
+const toggleSucursalMenu = document.querySelector('#toggleSucursalMenu') as HTMLElement|null;
+const sucursalMenuLista = document.querySelector('#sucursalMenuLista') as HTMLElement|null;
+const iconSucursalMenu = document.querySelector('#iconSucursalMenu') as HTMLElement|null;
 declare let Chart:any; //declare le indica a typescript que la variable chart viene de manera externa
 declare const Swal: any;
 declare var moment: any;
@@ -20,7 +25,7 @@ declare let deudatotalCiente:string;
 
 (window as any).POS = (window as any).POS || {};
 
- // Submódulos
+ // Submdulos
   if (!(window as any).POS.gestionarDescuentos) {
     (window as any).POS.gestionarDescuentos = {};
   }
@@ -43,233 +48,22 @@ if(btnmenux){
 }
 /////////////////////// animacion del sidebar toggle ///////////////////////////
 document.querySelector('.sidebartoggle')!.addEventListener('click', (e)=>{
-  if(sidebar)sidebar?.classList.toggle('minsidebar');
-  if(nametop)nametop.classList.toggle('noneElement');
-  $('.btnav').toggleClass('noneElement');
+  if(sidebar)sidebar.classList.toggle('sidebar-fija');
 });
 
-//------------------------------------------------------------------------------------------------------------------//
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES /////////////////////
-const configdatatables = {
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-  "responsive": true,
-  "deferRender": true,
-  "retrieve": true,
-  "processing": true,
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  }
-}
-
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA 25 REGISTROS /////////////////////
-const configdatatables25reg = {
-  pageLength: 25,
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-  "responsive": true,
-  "deferRender": true,
-  "retrieve": true,
-  "processing": true,
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  }
-}
-
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA GENERAL /////////////////////
-const configdatatablesgenerico = {
-  layout: {
-        topStart: {
-            buttons: [
-              {extend: 'copyHtml5', text: 'Copia'}, 
-              {extend: 'excelHtml5', title: 'informe'}, 
-              {extend: 'csvHtml5', title: 'informe'}, 
-              {extend: 'pdfHtml5', title: 'informe'}, 
-              {extend: 'print', title: 'informe', text: 'Imprimir'},
-              'colvis'
-            ],
-            pageLength: 'pageLength'
-        }
-  },
-  pageLength: 25,
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-  "responsive": true,
-  "deferRender": true,
-  "retrieve": true,
-  "processing": true,
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  }
-}
-
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK RAPIDO /////////////////////
-const configdatatablesstockrapido = {
-  layout: {
-        topStart: {
-            buttons: [
-              {extend: 'copyHtml5', text: 'Copia'}, 
-              {extend: 'excelHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
-              {extend: 'csvHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
-              {extend: 'pdfHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
-              {extend: 'print', exportOptions: {columns: [1, 3, 4]}, title: 'Stock-inventario', text: 'Imprimir'},
-              'colvis'
-            ],
-            pageLength: 'pageLength'
-        }
-  },
-  pageLength: 25,
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-  "responsive": true,
-  "deferRender": true,
-  "retrieve": true,
-  "processing": true,
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  }
-}
-
-///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA AJUSTAR COSTOS /////////////////////
-const configdatatablesajustarcostos = {
-  layout: {
-        topStart: {
-            buttons: [
-              {extend: 'copyHtml5', text: 'Copia'}, 
-              {extend: 'excelHtml5', exportOptions: {columns: [1, 3, 4, 5, 6]}, title: 'costo por producto'}, 
-              {extend: 'csvHtml5', exportOptions: {columns: [1, 3, 4, 5, 6]}, title: 'costo por producto'}, 
-              {extend: 'pdfHtml5', exportOptions: {columns: [1, 3, 4, 5, 6]}, title: 'costo por producto'}, 
-              {extend: 'print', exportOptions: {columns: [1, 3, 4, 5, 6]}, title: 'costo por producto', text: 'Imprimir'},
-              'colvis'
-            ],
-            pageLength: 'pageLength'
-        }
-  },
-  pageLength: 25,
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-  "responsive": true,
-  "deferRender": true,
-  "retrieve": true,
-  "processing": true,
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  }
-}
-
-///////////////////// CONFIGURACION DEL PLUGIN DATATABLES PARA CAJA/////////////////////
-const configdatatablescaja = {
-  "paging": false,
-  "order": [[ 4, 'desc' ]],
-  "searching": false,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-  "responsive": true,
-  "deferRender": true,
-  "retrieve": true,
-  "processing": true,
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      lengthMenu: '_MENU_ Entradas por pagina',
-      info: 'Mostrando 1 de _MAX_ registros',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  }
-}
-
-
-///////////////////// CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK BAJO/////////////////////
-const configdatatablesstockbajo = {
-  destroy: true,
-  lengthChange: false,
-  pageLength: 25,
-  //responsive: true,
-  order: [[ 3, 'asc' ]],
-  language: {
-      search: 'Busqueda',
-      emptyTable: 'No Hay datos disponibles',
-      zeroRecords:    "No se encontraron registros coincidentes",
-      info: 'Mostrando pagina _PAGE_ de _PAGES_',
-      infoEmpty: 'No hay entradas a mostrar',
-      infoFiltered: ' (filtrado desde _MAX_ registros)',
-      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
-  },
-  layout: {
-      topStart: {
-          buttons: [
-              {extend: 'excelHtml5', title: 'Stock bajo'},  
-              {extend: 'pdfHtml5', title: 'Stock bajo'}, 
-              {extend: 'print', title: 'Stock bajo', text: 'Imprimir'},
-              'colvis'
-          ],
-          pageLength: 'pageLength'
-      }
-  }
-}
 
 ///////////////////// FUNCION QUE IMPRIME MENSAJE TIPO ALERTA /////////////////////
 function msjAlert(tipo:string, msj:string, divmsjalerta:HTMLElement):void{
-  divmsjalerta.insertAdjacentHTML('beforeend', `<div class="alerta alerta__${tipo}">
-      <p><i class="fa-solid fa-circle-exclamation"></i> ${msj}</p></div>`
+  const esError = tipo === 'error';
+  const titulo = esError ? 'Atencion requerida' : 'Operacion exitosa';
+  const icono = esError ? 'fa-circle-exclamation' : 'fa-circle-check';
+  divmsjalerta.insertAdjacentHTML('beforeend', `<div class="alerta alerta__${tipo}" role="alert">
+      <span class="alerta__icono"><i class="fa-solid ${icono}"></i></span>
+      <span class="alerta__contenido">
+        <strong>${titulo}</strong>
+        <span>${msj}</span>
+      </span>
+    </div>`
   );
   borrarMsjAlert(divmsjalerta);
 }
@@ -283,16 +77,30 @@ function borrarMsjAlert(divmsj:HTMLElement):void{  //se aplica de manera global
   if(document.querySelector('.alerta'))setTimeout(()=>{ while(divmsj.firstChild)divmsj.removeChild(divmsj.firstChild);}, 5000);
 }
 //////////////////// FUNCION QUE IMPRIME UN MENSAJE FORMATO TOAST ////////////////////
-//msjalertToast('error', '¡Error!', 'debe seleccionar una imagen')
+//msjalertToast('error', 'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!', 'debe seleccionar una imagen')
 function msjalertToast(icono:string, tipo:string, msj:string){
     Swal.fire({
-    icon: icono,  // Puedes cambiar el ícono (success, error, warning, info, etc.)
+    icon: icono,
     title: tipo,
     text: msj,
     toast: true,
-    position: 'top-end',  
-    showConfirmButton: false,  
-    timer: 2700  
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3200,
+    timerProgressBar: true,
+    showClass: {
+      popup: 'animate__animated animate__fadeInRight animate__faster'
+    },
+    hideClass: {
+      popup: 'animate__animated animate__fadeOutRight animate__faster'
+    },
+    customClass: {
+      popup: `j2-toast j2-toast--${icono}`,
+      icon: 'j2-toast__icon',
+      title: 'j2-toast__title',
+      htmlContainer: 'j2-toast__text',
+      timerProgressBar: 'j2-toast__progress'
+    }
     });
 }
 
@@ -324,16 +132,30 @@ if(document.querySelector('#tabulacion')){ // view/admin/adminconfig/index.php
           const target = e.target as HTMLElement;
           paginas.forEach(pagina =>pagina.style.display = "none"); ////quitamos la class mostrarseccion a todas las secciones
           document.querySelector<HTMLElement>(`.${target.id}`)!.style.display = "block"; //añadimos la class mostrarseccion a la la seccion o pagina correspondiente
+          ajustarDataTable();
       });
   });
 }
 
-function mesyañoactual():[string, number]
+let dataTableTimer:number|undefined;
+function ajustarDataTable(){
+  if(dataTableTimer)window.clearTimeout(dataTableTimer);
+  window.setTimeout(()=>{
+      try{
+        (($.fn as any).dataTable)?.tables({ visible: true, api: true }).columns.adjust().responsive?.recalc();
+      }catch(error){
+        console.log(error);
+      }
+  }, 0);
+}
+
+
+function mesyanoactual():[string, number]
 {
   const fecha = new Date();
   const mesTexto:string = fecha.toLocaleString('es-CO', { month: 'long' });
-  const año:number = fecha.getFullYear();
-  return [mesTexto, año];
+  const ano:number = fecha.getFullYear();
+  return [mesTexto, ano];
 }
 
 function getDgv(nit: number): number {
@@ -397,7 +219,7 @@ function formatearMoneda(input: HTMLInputElement): void {
     /*if (partes.length > 2) {
       valor = partes[0] + ',' + partes.slice(1).join('');
     }*/
-    // Máximo 2 decimales
+    // MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ximo 2 decimales
     //if (partes[1])partes[1] = partes[1].substring(0, 2);
     //input.value = partes.join(',');
     input.value = entera+(decimales.length ? ',' + decimales.join('') : '');
@@ -423,13 +245,53 @@ function filtrarInsumos(productoConfigurado:Partial<productsapi>|undefined):void
 }
 
 
+ function formatCantidadBadge(cantidad:number): string{
+    if(cantidad >= 1000000){
+    return (cantidad / 1000000).toLocaleString('es-CO', {maximumFractionDigits: 1}) + 'M';
+    }
+    if(cantidad >= 10000){
+    return (cantidad / 1000).toLocaleString('es-CO', {maximumFractionDigits: 1}) + 'K';
+    }
+    return cantidad.toLocaleString('es-CO');
+  }
+
+  function ajustarAnchoCantidad(input:HTMLInputElement, cantidad:number|string): void{
+    const largo = String(cantidad || 0).length;
+    input.style.width = `${Math.min(Math.max(largo + 2, 5), 10)}ch`;
+  }
+
+function cerrarMenuSucursal():void{
+  sucursalMenuLista?.classList.add('hidden');
+  iconSucursalMenu?.classList.remove('rotate-180');
+}
+
+toggleSucursalMenu?.addEventListener('click', (event:MouseEvent)=>{
+  event.stopPropagation();
+  sucursalMenuLista?.classList.toggle('hidden');
+  iconSucursalMenu?.classList.toggle('rotate-180');
+});
+
+opcionesSucursal.forEach((opcion)=>{
+  opcion.addEventListener('click', ()=>{
+    const value = opcion.dataset.sucursalvalue || '';
+    const label = opcion.dataset.sucursallabel || opcion.textContent?.trim() || 'Cambiar de Sede';
+    if(sucursalSeleccionada){
+      sucursalSeleccionada.textContent = label;
+
+    }
+    cerrarMenuSucursal();
+  });
+});
+
+document.addEventListener('click', (event:MouseEvent)=>cerrarMenuSucursal());
+
 //evento para el cambio de sucursal
-selectSucursal.addEventListener('click', async()=>{
+/*selectSucursal.addEventListener('click', async()=>{
 
   const datos = {
       idsucursal: "Juan",
       edad: 30,
-      ciudad: "Bogotá"
+      ciudad: "Bogota"
   };
 
   const url = "/admin/api/changeSucursal/select";
@@ -440,4 +302,4 @@ selectSucursal.addEventListener('click', async()=>{
                                         });
 
   
-});
+});*/

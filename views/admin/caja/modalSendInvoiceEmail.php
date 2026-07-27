@@ -1,75 +1,75 @@
 <dialog id="miDialogoEnviarEmailCliente"
-    class="rounded-2xl border border-gray-200 w-[95%] max-w-lg p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
+    class="w-[95%] max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-black/40 transition-all duration-300 ease-out open:scale-100 open:opacity-100">
 
-    <!-- Encabezado -->
-    <div class="text-center border-b border-gray-200 pb-4 mb-4">
-
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100 mb-4">
-            <i class="fa-solid fa-envelope text-indigo-600 text-4xl"></i>
+    <div class="px-8 pb-8 pt-7 text-center">
+        <div class="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-lg shadow-indigo-600/10 ring-1 ring-indigo-100">
+            <i class="fa-solid fa-envelope text-4xl"></i>
         </div>
 
         <h4 id="modalEnviarEmail"
-            class="text-3xl font-bold text-indigo-700">
+            class="m-0 text-3xl font-black leading-tight text-slate-900">
             Enviar por correo
         </h4>
 
-        <p class="mt-2 text-gray-500 text-lg">
-            Envíe el detalle de la orden al correo electrónico del cliente.
+        <p class="mx-auto mt-2 max-w-sm text-lg font-medium leading-7 text-slate-500">
+            Envie el detalle de la orden al correo electronico del cliente.
         </p>
-
     </div>
 
-    <div id="divmsjalertaEnviarEmail"></div>
+    <div class="border-t border-slate-200 px-8 pb-8 pt-6">
+        <div id="divmsjalertaEnviarEmail"></div>
 
-    <form id="formEnviarEmailCliente"
-        class="formulario"
-        method="POST">
+        <form id="formEnviarEmailCliente"
+            class="formulario"
+            method="POST">
 
-        <!-- Correo -->
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/90 p-5">
+                <div class="mb-3 flex items-center gap-3 text-left">
+                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-indigo-600 shadow-sm">
+                        <i class="fa-solid fa-at text-lg"></i>
+                    </span>
 
-            <label
-                for="inputEmail"
-                class="block text-lg font-semibold text-slate-700 mb-3">
+                    <label
+                        for="inputEmail"
+                        class="m-0 block text-lg font-black text-slate-800">
+                        Correo del cliente
+                    </label>
+                </div>
 
-                Correo del cliente
-            </label>
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-xl bg-indigo-50 text-indigo-500">
+                        <i class="fa-solid fa-envelope text-base"></i>
+                    </span>
 
-            <div class="relative">
+                    <input
+                        id="inputEmail"
+                        class="h-16 w-full rounded-2xl border border-slate-300 bg-white py-3 pl-16 pr-4 text-lg font-semibold text-slate-900 placeholder:font-medium placeholder:text-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-100"
+                        type="email"
+                        placeholder="cliente@email.com"
+                        required>
+                </div>
 
-                <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
-                <input
-                    id="inputEmail"
-                    class="w-full h-14 pl-12 pr-4 bg-white border border-slate-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600"
-                    type="email"
-                    placeholder="cliente@email.com"
-                    required>
-
+                <p class="m-0 mt-3 text-left text-sm font-medium leading-6 text-slate-500">
+                    Se enviara una copia de la orden a este correo.
+                </p>
             </div>
 
-            <p class="text-sm text-slate-500 mt-3">
-                Se enviará una copia de la orden a este correo.
-            </p>
+            <div class="mt-6 grid grid-cols-2 gap-3 border-t border-slate-200 pt-6">
+                <button
+                    class="inline-flex h-16 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-xl font-black text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
+                    type="button"
+                    value="Salir">
+                    Cancelar
+                </button>
 
-        </div>
-
-        <!-- Botones -->
-        <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
-
-            <button
-                class="btn-md btn-turquoise !py-4 !w-[120px]"
-                type="button"
-                value="Salir">
-
-                Salir
-            </button>
-
-            <input
-                id="btnEnviarEmailCliente"
-                class="btn-md btn-indigo !py-4 !w-[120px]"
-                type="submit"
-                value="Enviar">
-        </div>
-    </form>
+                <button
+                    id="btnEnviarEmailCliente"
+                    class="inline-flex h-16 items-center justify-center rounded-xl bg-indigo-600 px-5 text-xl font-black text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
+                    type="submit">
+                    <i class="fa-solid fa-paper-plane mr-2"></i>
+                    Enviar
+                </button>
+            </div>
+        </form>
+    </div>
 </dialog>

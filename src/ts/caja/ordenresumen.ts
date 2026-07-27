@@ -150,13 +150,22 @@
       btnDespachar?.addEventListener('click', ()=>{
         if(Number.isNaN(idorden))return;
         Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          customClass: {
+            popup: 'j2-confirm j2-confirm--dispatch',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--confirm',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
           icon: 'question',
           title: 'Desea despachar la orden?',
           text: "La orden sera registrada como despachada y entregada.",
           showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Despachar',
+          cancelButtonText: 'Cancelar',
+          buttonsStyling: false,
       }).then((result:any) => {
           if (result.isConfirmed) {
             (async ()=>{
@@ -421,10 +430,10 @@
         (document.querySelector('#abrirOrden') as HTMLElement).style.display = "none";
         (document.querySelector('#estadoOrden') as HTMLElement).textContent = "Paga";
       }
-  
+
       function cerrarDialogoExterno(event:Event) {
-        const f = event.target;
-        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoMasOpciones || f === miDialogoRemision || f === miDialogoSelectEmisor || f === miDialogoSelectUser || f === miDialogoProductoCompuesto || (f as HTMLElement).id == 'btnXCerrarMasOpciones' || (f as HTMLElement).id == 'btnXCerrarRemision' || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || (f as HTMLInputElement).closest('.noeliminar') || (f as HTMLElement).id == 'btnXCerrarModalProductoCompuesto' || (f as HTMLElement).id == 'btnXCerrarModalSelectUser' || (f as HTMLElement).id == 'btnXCerrarModalSelectEmisor') {
+        const f = event.target as HTMLElement;
+        if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoMasOpciones || f === miDialogoRemision || f === miDialogoSelectEmisor || f === miDialogoSelectUser || f === miDialogoProductoCompuesto || f.id == 'btnXCerrarMasOpciones' || f.id == 'btnXCerrarRemision' || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || f.closest('.noeliminar') || f.id == 'btnXCerrarModalProductoCompuesto' || f.id == 'btnXCerrarModalSelectUser' || f.id == 'btnXCerrarModalSelectEmisor') {
             miDialogoFacturar.close();
             miDialogoEliminarOrden.close();
             miDialogoEnviarEmailCliente.close();
@@ -459,6 +468,11 @@
         });
 
         (async ()=>{
+          const btnConfirmar = document.querySelector<HTMLButtonElement>('.sieliminar');
+          if(btnConfirmar){
+            btnConfirmar.disabled = true;
+            btnConfirmar.classList.add('opacity-70', 'cursor-not-allowed');
+          }
           const datos = new FormData();
           datos.append('id', idorden!); //id de la factura
           datos.append('observacioneliminacion', (document.querySelector('#observacionEliminacion') as HTMLTextAreaElement).value);
@@ -478,8 +492,17 @@
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);
               }
+              if(resultado.exito === undefined && btnConfirmar){
+                btnConfirmar.disabled = false;
+                btnConfirmar.classList.remove('opacity-70', 'cursor-not-allowed');
+              }
           } catch (error) {
               console.log(error);
+              msjalertToast('error', 'Error', 'No se pudo eliminar la orden. Intenta nuevamente.');
+              if(btnConfirmar){
+                btnConfirmar.disabled = false;
+                btnConfirmar.classList.remove('opacity-70', 'cursor-not-allowed');
+              }
           }
         })();
       }
@@ -524,6 +547,10 @@
 
 
       function validarPassword(llave:string, divAlert:string, input:HTMLInputElement):number{
+        if(!claveEliminarOrden){
+          msjAlert('error', 'Las claves de seguridad aun se estan cargando. Intenta nuevamente.', (document.querySelector('#'+divAlert) as HTMLElement));
+          return 0;
+        }
         const clave = claveEliminarOrden.find(c => c.clave==llave);
         if(clave?.valor_final!==null && input.value !== clave?.valor_final){
           msjAlert('error', 'El password es invalido', (document.querySelector('#'+divAlert) as HTMLElement));

@@ -1,4 +1,4 @@
-<!--<aside class="dashboard__sidebar">
+﻿<!--<aside class="dashboard__sidebar">
     <nav class="dashboard__menu">
         <a href="/admin/dashboard" class="dashboard__enlace <?php echo validar_string_url('/dashboard')?'dashboard__enlace--actual':''; ?>">
             <i class="fa-solid fa-house"></i>
@@ -45,6 +45,7 @@
 
 <aside class="sidebar mp-6 relative">
     <div class="uptask flex flex-col items-center">
+        <img class="sidebar-mini-logo" src="/build/img/logo-j2-mini-blanco-limpio.png" alt="JDOS">
         <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2blanco.png" alt="logoj2">
 
         <div class="menux mt-2">
@@ -52,7 +53,7 @@
         </div>
     </div>
     
-    <nav class="sidebar-nav"> <!-- el tamaño de las letras de los links <a> estan definidos en 1.6rem en gloables.scss -->
+    <nav class="sidebar-nav"> <!-- el tamaÃ±o de las letras de los links <a> estan definidos en 1.6rem en gloables.scss -->
         <?php if(tienePermiso('Mostrar dashboard') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Inicio')?'activo':''; ?>" href="/admin/dashboard"><span class="material-symbols-outlined">home</span> <label class="btnav"> Inicio</label> </a>
         <?php endif; ?>
@@ -71,7 +72,7 @@
         <?php if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Ventas')?'activo':''; ?>" href="/admin/ventas<?php echo (getConfigLocal()['habilitar_venta_modo_rapido']??null)?->valor_final == 1?'/modorapido':''; ?>"><span class="material-symbols-outlined">storefront</span> <label class="btnav"> Ventas</label></a>
         <?php endif; ?>
-        <?php if(tienePermiso('Habilitar módulo de credito/separados') || userPerfil()<=3): ?>
+        <?php if(tienePermiso('Habilitar mÃ³dulo de credito/separados') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Creditos')?'activo':''; ?>" href="/admin/creditos"><span class="material-symbols-outlined">swap_horiz</span> <label class="btnav"> Creditos</label></a>
         <?php endif; ?>
         <?php if(tienePermiso('Habilitar modulo de reportes')&&userPerfil()==3 || userPerfil()<3): ?>
@@ -90,6 +91,11 @@
     <p class="text-white text-xl font-semibold text-center absolute bottom-0 inset-x-0">JDOS  <?php echo $_SESSION['sucursal']->version; ?></p>
     <!--<div class="cerrar-sesion-mobile">
         <p>Bienvenido: <span> <?php // echo $_SESSION['nombre']; ?></span></p>
-        <a class="cerrar-sesion" href="/logout">Cerrar Sesión</a>
+        <a class="cerrar-sesion" href="/logout">Cerrar SesiÃ³n</a>
     </div>-->
 </aside>
+
+
+
+
+

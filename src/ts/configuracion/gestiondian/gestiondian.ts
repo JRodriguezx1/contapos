@@ -4,9 +4,11 @@
     const btnCrearCompañia = document.querySelector('#btnCrearCompañia') as HTMLButtonElement;
     const btnObtenerresolucion = document.querySelector('#btnObtenerresolucion') as HTMLButtonElement;
     const BtnSetpruebas = document.querySelector('#BtnSetpruebas') as HTMLButtonElement;
+    const btnDocumentos = document.querySelector('#btnDocumentos') as HTMLButtonElement;
     const formCrearUpdateCompañia = document.querySelector('#formCrearUpdateCompañia') as HTMLFormElement;
     const miDialogoAdquirirCompañia = POS.gestionAdquirirCompany.miDialogoAdquirirCompañia
     const miDialogoCompañia = document.querySelector('#miDialogoCompañia') as any;
+    const miDialogoRecepcionDocumentos = document.querySelector('#miDialogoRecepcionDocumentos') as any;
     const miDialogoGetResolucion = POS.gestionarGetResolutions.miDialogoGetResolucion
     const miDialogosetpruebas = POS.gestionarSetPruebas.miDialogosetpruebas;
     const selectResolucioncompañia = POS.gestionarGetResolutions.selectResolucioncompañia;
@@ -80,6 +82,44 @@
     }
     
     let companiesAll:companiesDian[];
+
+    function escapeHtmlDian(valor:unknown):string{
+      return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[caracter] as string));
+    }
+
+    function filaCompañiaDian(id:string, businessName:unknown, identificationNumber:unknown, idsoftware:unknown):string{
+      const idSeguro = escapeHtmlDian(id);
+      const nombreSeguro = escapeHtmlDian(businessName);
+      const documentoSeguro = escapeHtmlDian(identificationNumber);
+      const softwareSeguro = escapeHtmlDian(idsoftware);
+
+      return `
+        <tr id="company${documentoSeguro}">
+          <td>${idSeguro}</td>
+          <td>
+            <span class="config-dian-company-name">
+              <span class="config-dian-company-name__icon"><i class="fa-solid fa-building-user"></i></span>
+              <span>${nombreSeguro}</span>
+            </span>
+          </td>
+          <td><span class="config-table-pill config-table-pill--document">${documentoSeguro}</span></td>
+          <td><span class="config-table-pill config-table-pill--software">${softwareSeguro}</span></td>
+          <td class="accionestd">
+            <div class="acciones-btns">
+              <button id="${idSeguro}" class="config-dian-delete" type="button" title="Eliminar compañia">
+                <span class="material-symbols-outlined eliminarcompañia">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>`;
+    }
+
     (async()=>{
       companiesAll = await getCompañiasLocal<{id:string, identification_number:string, business_name:string, idsoftware:string, token:string}>();
       POS.companiesAll = companiesAll; //exponer globalmente
@@ -108,6 +148,17 @@
 
         miDialogosetpruebas.showModal();
         document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    btnDocumentos?.addEventListener('click', ()=>{
+        (document.querySelector('#formRecepcionDocumentos') as HTMLFormElement)?.reset();
+        miDialogoRecepcionDocumentos?.showModal();
+        document.addEventListener("click", cerrarDialogoExterno);
+    });
+
+    document.querySelector('#formRecepcionDocumentos')?.addEventListener('submit', (e:Event)=>{
+      e.preventDefault();
+      msjalertToast('info', 'Formulario preparado', 'El cargue de documentos queda listo para conectar al guardado.');
     });
 
 
@@ -328,15 +379,7 @@
                 tr.remove();
               }
 
-              tablaCompañias?.insertAdjacentHTML('beforeend', `
-                <tr class="" id="company${datoscompañia.identification_number}">
-                  <td class="">${resultado.id}</td>
-                  <td class="">${datoscompañia.business_name}</td> 
-                  <td class="">${datoscompañia.identification_number}</td>
-                  <td class="">${datoscompañia.idsoftware}</td>
-                  <td class=""><div class="acciones-btns">  <button id="${resultado.id}"><span class="material-symbols-outlined eliminarcompañia">delete</span></button> </div></td>
-                </tr>`
-              );
+              tablaCompañias?.insertAdjacentHTML('beforeend', filaCompañiaDian(resultado.id, datoscompañia.business_name, datoscompañia.identification_number, datoscompañia.idsoftware));
 
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
               // añadir a los selects de obtener compañia para resoluciones y de set pruebas
@@ -364,13 +407,22 @@
     ///////    ELIMINAR COMPAÑIA    ///////
     function eliminarCompañia(id:string, identification_number:string, token:string){
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
           icon: 'question',
           title: 'Desea eliminar la compañia?',
-          text: "La compañia sera eliminado definitivamente.",
+          html: "La compañia sera eliminada definitivamente de la configuracion DIAN.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
+          buttonsStyling: false,
       }).then((result:any) => {
           if (result.isConfirmed) {
             sendDeleteCompany(id, identification_number, token)
@@ -395,8 +447,22 @@
             const resultadoLocal = await respuestaLocal.json(); 
             if(!isNaN(Number(id)) && resultadoLocal.exito !== undefined){
               document.querySelector('#company'+identification_number)?.remove();
-              msjalertToast('success', '¡Éxito!', resultado.message);
               deleteFromCompany(id);
+              Swal.fire({
+                customClass: {
+                  popup: 'j2-confirm j2-confirm--success',
+                  icon: 'j2-confirm__icon',
+                  title: 'j2-confirm__title',
+                  htmlContainer: 'j2-confirm__text',
+                  actions: 'j2-confirm__actions j2-confirm__actions--single',
+                  confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                },
+                icon: 'success',
+                title: 'Compañia eliminada',
+                html: resultado.message || 'La compañia fue eliminada correctamente.',
+                confirmButtonText: 'OK',
+                buttonsStyling: false,
+              });
             }
           }else{
             msjalertToast('error', '¡Error!', 'Error intentalo nuevamente');
@@ -450,11 +516,12 @@
 
 
     function cerrarDialogoExterno(event:Event) {
-      if(event.target === miDialogoAdquirirCompañia || event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
+      if(event.target === miDialogoAdquirirCompañia || event.target === miDialogoCompañia || event.target === miDialogosetpruebas || event.target === miDialogoGetResolucion || event.target === miDialogoRecepcionDocumentos || (event.target as HTMLInputElement).value === 'Salir' || (event.target as HTMLInputElement).value === 'Cancelar') {
         miDialogoAdquirirCompañia.close();  
         miDialogoCompañia.close();
         miDialogoGetResolucion.close();
         miDialogosetpruebas.close();
+        miDialogoRecepcionDocumentos?.close();
         document.removeEventListener("click", cerrarDialogoExterno);
       }
     }

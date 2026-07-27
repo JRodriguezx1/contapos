@@ -5,6 +5,16 @@
     const selectResolucioncompañia = document.querySelector('#selectResolucioncompañia') as HTMLSelectElement;
     const miDialogoGetResolucion = document.querySelector('#miDialogoGetResolucion') as any;
 
+    function escapeHtmlDianResolution(valor:unknown):string{
+      return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[caracter] as string));
+    }
+
     ///////    CONSULTAR RESOLUCIONES   ///////
     document.querySelector('#formGetResolucion')?.addEventListener('submit', (e:Event)=>{
       e.preventDefault();
@@ -35,13 +45,13 @@
       const tablaListResolutions = document.querySelector('#tablaListResolutions tbody') as HTMLTableElement;
       while(tablaListResolutions.firstChild)tablaListResolutions.removeChild(tablaListResolutions.firstChild);
       arrayResolutions.forEach(r =>{
-        tablaListResolutions.insertAdjacentHTML('beforeend', 
+        tablaListResolutions.insertAdjacentHTML('beforeend',
           `<tr>
-              <td class="px-4 py-2 border">${r.Prefix}</td>
-              <td class="px-3 py-2 border">${r.ResolutionNumber}</td>
-              <td class="px-3 py-2 border">${r.FromNumber} - ${r.ToNumber}</td>
-              <td class="px-3 py-2 border">${r.ValidDateTo}</td>
-              <td class="px-4 py-2 border text-2xl"><button class="downResolution" type="button" id="${r.ResolutionNumber}" data-company="${idcompany}">⏬</button></td>
+              <td><span class="config-table-pill config-table-pill--invoice">${escapeHtmlDianResolution(r.Prefix)}</span></td>
+              <td><span class="config-table-pill config-table-pill--document">${escapeHtmlDianResolution(r.ResolutionNumber)}</span></td>
+              <td><span class="config-table-pill config-table-pill--range">${escapeHtmlDianResolution(r.FromNumber)} - ${escapeHtmlDianResolution(r.ToNumber)}</span></td>
+              <td><span class="config-table-pill config-table-pill--date">${escapeHtmlDianResolution(r.ValidDateTo)}</span></td>
+              <td class="accionestd"><button class="downResolution" type="button" id="${escapeHtmlDianResolution(r.ResolutionNumber)}" data-company="${escapeHtmlDianResolution(idcompany)}" title="Asociar resolucion"><i class="fa-solid fa-download"></i></button></td>
           </tr>`
         )
       });
@@ -50,8 +60,8 @@
 
 
     async function descargarResolucion(e:Event, arrayResolutions:NumberRangeItem[], token:string){
-      const target = e.target as HTMLButtonElement;
-      if(target.classList.contains('downResolution')){
+      const target = (e.target as HTMLElement).closest('.downResolution') as HTMLButtonElement | null;
+      if(target){
         const idcompany:string = target.dataset.company!;
         const numberResolution = target.id;
         const resolutionSelected = arrayResolutions.find(x=>x.ResolutionNumber === numberResolution)!;
@@ -94,12 +104,12 @@
               const tablaFacturadores = ($('#tablaFacturadores') as any).DataTable(configdatatables);
               (tablaFacturadores as any).row.add([
                         (tablaFacturadores as any).rows().count() + 1,
-                        resultado.facturador.nombre,
-                        'ELECTRONICA',
-                        resolutionSelected?.FromNumber+' - '+resolutionSelected?.ToNumber,
-                        1,
-                        resolutionSelected?.ValidDateTo,
-                        'Activo',
+                        `<span class="config-facturador-name"><span class="config-facturador-name__icon"><i class="fa-solid fa-receipt"></i></span><span>${escapeHtmlDianResolution(resultado.facturador.nombre)}</span></span>`,
+                        '<span class="config-table-pill config-table-pill--type">ELECTRONICA</span>',
+                        `<span class="config-table-pill config-table-pill--range">${escapeHtmlDianResolution(resolutionSelected?.FromNumber)} - ${escapeHtmlDianResolution(resolutionSelected?.ToNumber)}</span>`,
+                        '<span class="config-table-pill config-table-pill--next">1</span>',
+                        `<span class="config-table-pill config-table-pill--date">${escapeHtmlDianResolution(resolutionSelected?.ValidDateTo)}</span>`,
+                        '<span class="config-table-status config-table-status--active">Activo</span>',
                         `<div class="acciones-btns" id="${resultado.facturador.id}" data-facturador="${resultado.facturador.nombre}">
                             <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>

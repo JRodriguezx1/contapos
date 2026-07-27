@@ -238,6 +238,15 @@
             //document.removeEventListener("click", POS.cerrarDialogoExterno);
         });*/
         
+    },
+
+    resaltarSelectorCliente():void{
+      if(!btnAddCliente)return;
+      btnAddCliente.classList.remove('cliente-required-pulse');
+      void btnAddCliente.offsetWidth;
+      btnAddCliente.classList.add('cliente-required-pulse');
+      btnAddCliente.scrollIntoView({behavior: 'smooth', block: 'center'});
+      setTimeout(()=>btnAddCliente.classList.remove('cliente-required-pulse'), 3600);
     }
     
   };

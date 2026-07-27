@@ -62,7 +62,9 @@ public static function suspendido(Router $router){
         $entity = new suscripcion_pagos($pago);
         $alertas = $entity->validar();
         if(empty($alertas)){
-            $sucursal->fecha_corte = date('Y-m-d', strtotime("+$entity->cantidad_plan {$plan->tipo_duracion}"));
+            $fechaBase = !empty($sucursal->fecha_corte) ? $sucursal->fecha_corte : $entity->fecha_pago;
+            $fechaCorte = new \DateTimeImmutable($fechaBase);
+            $sucursal->fecha_corte = $fechaCorte->modify("+{$entity->cantidad_plan} {$plan->tipo_duracion}")->format('Y-m-d');
             $sucursal->estado = 1;
             $sucursal->descuento = 0;
             $sucursal->cargo = 0;

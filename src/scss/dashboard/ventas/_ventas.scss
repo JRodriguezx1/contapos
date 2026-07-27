@@ -1,0 +1,138 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+@media (max-width: 991px) {
+
+  .producto {
+    position: relative;
+
+    //indicador ok cuando se selecciona un producto en modo movil
+    &.producto-agregado-feedback {
+        background-color: #ffffff;
+        border-color: #818cf8;
+        box-shadow: 0 0 0 .18rem rgba(99, 102, 241, .28), 0 1.2rem 2.4rem rgba(15, 23, 42, .10) !important;
+        position: relative;
+
+      &::after {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #22c55e;
+          border: .25rem solid #ffffff;
+          border-radius: 999px;
+          box-shadow: 0 .7rem 1.6rem rgba(34, 197, 94, .28);
+          color: #ffffff;
+          content: "\f00c";
+          font-family: "Font Awesome 6 Free";
+          font-size: 1.35rem;
+          font-weight: 900;
+          height: 2.8rem;
+          line-height: 1;
+          position: absolute;
+          right: .8rem;
+          top: .8rem;
+          width: 2.8rem;
+          z-index: 2;
+      }
+    }
+  }
+
+  //contandor de productos en el boton para abrir modal para facturar/cotizar
+  #carritoMovilBadge {
+    align-items: center;
+    background: #fff;
+    border: 2px solid #0ea5e9;
+    border-radius: 999px;
+    color: #4338ca;
+    display: none;
+    font-size: 1.2rem;
+    font-weight: 900;
+    height: 2.6rem;
+    justify-content: center;
+    min-width: 2.6rem;
+    padding: 0 .55rem;
+    position: absolute;
+    right: -.25rem;
+    top: -.35rem;
+    box-shadow: 0 .6rem 1.4rem rgba(15, 23, 42, .18);
+
+    &.is-visible {
+      display: inline-flex;
+    }
+  }
+
+  //contador animado tipo modal o toast al seleccionar producto en pantalla pequeña
+  #ventaCarritoToast {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, .98);
+    border: 1px solid #dbe4f0;
+    border-left: .45rem solid #16a34a;
+    border-radius: 1.2rem;
+    box-shadow: 0 1.4rem 3rem rgba(15, 23, 42, .18);
+    color: #0f172a;
+    gap: .9rem;
+    left: 50%;
+    max-width: calc(100vw - 3.2rem);
+    opacity: 0;
+    padding: 1rem 1.2rem;
+    pointer-events: none;
+    position: fixed;
+    top: 1rem;
+    transform: translate(-50%, -1.2rem);
+    transition: opacity .22s ease, transform .22s ease;
+    width: min(34rem, calc(100vw - 3.2rem));
+    z-index: 70;
+
+    &.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .venta-carrito-toast{
+    &__icon {
+      align-items: center;
+      background: #dcfce7;
+      border-radius: .9rem;
+      color: #16a34a;
+      display: inline-flex;
+      flex: 0 0 3.4rem;
+      height: 3.4rem;
+      justify-content: center;
+      width: 3.4rem;
+    }
+
+    &__title {
+      color: #0f172a;
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    &__meta {
+      color: #5c6b80;
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-top: .6rem;
+    }
+  }
+
+  @keyframes carritoFeedbackPulse {
+    0% {
+      transform: scale(1);
+    }
+
+    45% {
+      transform: scale(1.08);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+}

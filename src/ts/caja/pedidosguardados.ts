@@ -24,18 +24,57 @@
       })();*/
 
      //////////////////  TABLA //////////////////////
-    tablaPedidosGuardados = ($('#tablaPedidosGuardados') as any).DataTable(configdatatables);
+    tablaPedidosGuardados = ($('#tablaPedidosGuardados') as any).DataTable({
+      ...configdatatables,
+      responsive: {
+        details: false
+      },
+      columnDefs: [
+        { targets: 0, className: 'all dtr-control', responsivePriority: 1 },
+        { targets: 1, className: 'all', responsivePriority: 2 },
+        { targets: 2, responsivePriority: 3 },
+        { targets: 3, responsivePriority: 4 },
+        { targets: 4, responsivePriority: 9 },
+        { targets: 5, responsivePriority: 8 },
+        { targets: 6, responsivePriority: 5 },
+        { targets: 7, responsivePriority: 7 },
+        { targets: 8, responsivePriority: 6 },
+        { targets: 9, responsivePriority: 10, orderable: false, searchable: false }
+      ]
+    });
 
     document.querySelector('#tablaPedidosGuardados')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
       const target = e.target as HTMLElement;
+      const expandCell = target.closest('td.dtr-control') as HTMLTableCellElement|null;
+      if(expandCell && window.innerWidth <= 768){
+        const row = expandCell.closest('tr');
+        if(row){
+          const dataTableRow = (tablaPedidosGuardados as any).row(row);
+          if(dataTableRow.child.isShown()){
+            dataTableRow.child.hide();
+            row.classList.remove('parent');
+          }else{
+            const headers = Array.from(document.querySelectorAll<HTMLTableCellElement>('#tablaPedidosGuardados thead th'));
+            const cells = Array.from(row.querySelectorAll<HTMLTableCellElement>('td'));
+            const detailRows = cells.slice(2).map((cell, index) => {
+              const title = headers[index + 2]?.textContent?.trim() || '';
+              return `<li><span class="dtr-title">${title}</span><span class="dtr-data">${cell.innerHTML}</span></li>`;
+            }).join('');
+            dataTableRow.child(`<ul class="dtr-details">${detailRows}</ul>`, 'child').show();
+            row.classList.add('parent');
+          }
+        }
+      }
       if(target?.classList.contains("eliminarPedidoGuardado")||target.parentElement?.classList.contains("eliminarPedidoGuardado"))eliminarPedidoGuardado(e);
     });
 
 
     ////////////////////  Eliminar cotizacion por completo del sistema  //////////////////////
     function eliminarPedidoGuardado(e:Event){
-      let idpedidoguardado = (e.target as HTMLElement).parentElement!.id, info = (tablaPedidosGuardados as any).page.info();
-      if((e.target as HTMLElement).tagName === 'I')idpedidoguardado = (e.target as HTMLElement).parentElement!.parentElement!.id;
+      const target = e.target as HTMLElement;
+      const acciones = target.closest('.pg-actions, .acciones-btns') as HTMLElement|null;
+      let idpedidoguardado = acciones?.id || target.parentElement!.id, info = (tablaPedidosGuardados as any).page.info();
+      if(target.tagName === 'I' && !acciones)idpedidoguardado = target.parentElement!.parentElement!.id;
       indiceFila = (tablaPedidosGuardados as any).row((e.target as HTMLElement).closest('tr')).index();
       Swal.fire({
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},

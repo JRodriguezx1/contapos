@@ -90,16 +90,23 @@
 
 
         function actualizarDetalleSuscripcion(detalleSuscrip:{valorplan: number, fecha_corte: FormDataEntryValue, estado: FormDataEntryValue, descuento: number, detalledescuento: FormDataEntryValue, cargo: number, detallecargo: FormDataEntryValue}){
+            const formatoMoneda = (valor:number) => '$'+valor.toLocaleString('es-CO');
+            const total = detalleSuscrip.valorplan + detalleSuscrip.cargo - detalleSuscrip.descuento;
             (document.querySelector('#fecha_corteText') as HTMLParagraphElement).textContent = detalleSuscrip.fecha_corte as string;
-            (document.querySelector('#valorplanText') as HTMLParagraphElement).textContent = detalleSuscrip.valorplan.toLocaleString();
-            (document.querySelector('#valorplanResumen') as HTMLParagraphElement).textContent = '$'+detalleSuscrip.valorplan.toLocaleString();
+            (document.querySelector('#valorplanText') as HTMLParagraphElement).textContent = formatoMoneda(detalleSuscrip.valorplan);
+            (document.querySelector('#valorplanResumen') as HTMLParagraphElement).textContent = formatoMoneda(detalleSuscrip.valorplan);
+            (document.querySelector('#totalSuscripcionText') as HTMLParagraphElement).textContent = formatoMoneda(total);
             estadoText.textContent = detalleSuscrip.estado == '1'?"Activo":"Suspendido";
             if (detalleSuscrip.estado === '1') {
                 estadoText.classList.replace('bg-red-100', 'bg-green-100');
                 estadoText.classList.replace('text-red-700', 'text-green-700');
+                estadoText.classList.remove('config-subscription-status--paused');
+                estadoText.classList.add('config-subscription-status--active');
             } else {
                 estadoText.classList.replace('bg-green-100', 'bg-red-100');
                 estadoText.classList.replace('text-green-700', 'text-red-700');
+                estadoText.classList.remove('config-subscription-status--active');
+                estadoText.classList.add('config-subscription-status--paused');
             }
         }
 

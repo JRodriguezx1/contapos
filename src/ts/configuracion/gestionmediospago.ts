@@ -14,6 +14,47 @@
       };
   
       let mediospagos:mediospagoapi[]=[], unmediopago:mediospagoapi|undefined;
+
+      function escapeHtmlMedioPago(valor:any):string{
+        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[caracter] as string));
+      }
+
+      function renderNombreMedioPago(nombre:any):string{
+        return `<span class="config-payment-name">
+          <span class="config-payment-name__icon"><i class="fa-solid fa-credit-card"></i></span>
+          <span>${escapeHtmlMedioPago(nombre)}</span>
+        </span>`;
+      }
+
+      function renderEstadoMedioPago(id:any, estado:any):string{
+        if(Number(id) === 1)return '';
+        const activo = String(estado) === '1';
+        return `<button id="${escapeHtmlMedioPago(id)}" data-state="${activo ? '1' : '0'}" class="statemediopago config-table-status ${activo ? 'config-table-status--active' : 'config-table-status--inactive'}">${activo ? 'Activo' : 'Inactivo'}</button>`;
+      }
+
+      function renderAccionesMedioPago(medioPago:any):string{
+        if(Number(medioPago?.id) === 1)return '';
+        return `<div class="acciones-btns" id="${escapeHtmlMedioPago(medioPago?.id)}" data-mediopago="${escapeHtmlMedioPago(medioPago?.mediopago)}">
+          <button class="btn-md btn-turquoise editarMedioPago"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button class="btn-md btn-red eliminarMedioPago"><i class="fa-solid fa-trash-can"></i></button>
+        </div>`;
+      }
+
+      function filaMedioPago(numero:number, medioPago:any):any[]{
+        return [
+          numero,
+          renderNombreMedioPago(medioPago?.mediopago),
+          renderEstadoMedioPago(medioPago?.id, medioPago?.estado),
+          renderAccionesMedioPago(medioPago)
+        ];
+      }
+
       (async ()=>{
         try {
             const url = "/admin/api/allmediospago"; //llamado a la API REST y se trae todos las medios de pago
@@ -24,8 +65,9 @@
         }
       })();
 
-     //////////////////  TABLA //////////////////////
-    tablamediosPagos = ($('#tablamediosPagos') as any).DataTable(configdatatables);
+    //////////////////  TABLA //////////////////////
+  tablamediosPagos = ($('#tablamediosPagos') as any).DataTable(configdatatablesToolbar);
+   modernizarToolbarDataTable('#tablamediosPagos');
 
     crearMedioPago.addEventListener('click', ()=>{
         control = 0;
@@ -58,7 +100,7 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();  
             if(resultado.exito !== undefined){
-              const s1 = `<button id="${button.id}" data-state="${button.dataset.state=='0'?'1':'0'}" class="statemediopago btn-xs ${button.dataset.state=='0'?'btn-lima':'btn-red'}">${button.dataset.state=='0'?'Activo':'Inactivo'}</button>`;
+              const s1 = renderEstadoMedioPago(button.id, button.dataset.state=='0'?'1':'0');
               (tablamediosPagos as any).cell((tablamediosPagos as any).row(indiceFila+=info.start), 2).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
               (tablamediosPagos as any).page(info.page).draw('page'); //me mantiene la pagina actual
             }else{
@@ -109,22 +151,14 @@
                 if(!control){ //si es crear registro
                   /// actualizar el arregle de los medios de pagos ///
                   mediospagos = [...mediospagos, resultado.mediopago];
-                  (tablamediosPagos as any).row.add([
-                      (tablamediosPagos as any).rows().count() + 1,
-                      resultado.mediopago.mediopago,
-                      resultado.mediopago.estado == '1'?'Activo':'Inactivo',
-                      `<div class="acciones-btns" id="${resultado.mediopago.id}" data-mediopago="${resultado.mediopago.nombre}">
-                          <button class="btn-md btn-turquoise editarMedioPago"><i class="fa-solid fa-pen-to-square"></i></button>
-                          <button class="btn-md btn-red eliminarMedioPago"><i class="fa-solid fa-trash-can"></i></button>
-                      </div>`
-                  ]).draw(false); // draw(false) evita recargar toda la tabla
+                  (tablamediosPagos as any).row.add(filaMedioPago((tablamediosPagos as any).rows().count() + 1, resultado.mediopago)).draw(false); // draw(false) evita recargar toda la tabla
                 }else{ //si es actualizar
                   /// actualizar el arregle de medios de pagos ///
-                  mediospagos.forEach(a=>{if(a.id == unmediopago?.id)a = Object.assign(a, resultado.mediopago[0]);});
-                  const datosActuales = (tablamediosPagos as any).row(indiceFila+=info.start).data();
-                  /*MEDIO DE PAGO*/ datosActuales[1] = resultado.mediopago.mediopago;
-                  /*ESTADO*/        datosActuales[2] = resultado.mediopago.estado == '1'?'Activo':'Inactivo';
-                  (tablamediosPagos as any).row(indiceFila).data(datosActuales).draw();
+                  const medioActualizado = Array.isArray(resultado.mediopago) ? resultado.mediopago[0] : resultado.mediopago;
+                  mediospagos.forEach(a=>{if(a.id == unmediopago?.id)a = Object.assign(a, medioActualizado);});
+                  indiceFila += info.start;
+                  const datosActuales = (tablamediosPagos as any).row(indiceFila).data();
+                  (tablamediosPagos as any).row(indiceFila).data(filaMedioPago(datosActuales[0], medioActualizado)).draw();
                   (tablamediosPagos as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }
               }else{
@@ -185,7 +219,7 @@
     }
 
     function limpiarformdialog(){
-      (document.querySelector('#formCrearUpdateCaja') as HTMLFormElement)?.reset();
+      (document.querySelector('#formCrearUpdateMedioPago') as HTMLFormElement)?.reset();
     }
   }
 })();

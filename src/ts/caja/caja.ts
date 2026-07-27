@@ -1,4 +1,4 @@
-(():void=>{
+﻿(():void=>{
   if(document.querySelector('.caja')){
     const modalGastosIngresos:any = document.querySelector("#gastosIngresos");
     const modalcambioMedioPago:any = document.querySelector("#cambioMedioPago");
@@ -67,14 +67,14 @@
         tipodegasto.style.display = 'flex';
         document.querySelector('#tipodegasto')?.setAttribute("required", ""); //categoria de los gastos
         document.querySelector('#origengasto')?.classList.remove('hidden');  //origen del gasto ya sea por caja o banco
-        document.querySelector('#origengasto')?.classList.add('flex');
+        document.querySelector('#origengasto')?.classList.add('grid');
         showCajasBancos();
       }
       else{ // ingreso a caja
         tipodegasto.style.display = 'none';
         document.querySelector('#tipodegasto')?.removeAttribute("required");
         document.querySelector('#origengasto')?.classList.add('hidden');
-        document.querySelector('#origengasto')?.classList.remove('flex');
+        document.querySelector('#origengasto')?.classList.remove('grid');
         document.querySelector('#showcajas')?.classList.remove('hidden'); //mostar caja
         document.querySelector('#showbancos')?.classList.add('hidden'); //oculta banco
         document.querySelector('#banco')?.removeAttribute("required");
@@ -118,11 +118,11 @@
             const resultado = await respuesta.json();
             console.log(resultado);
             if(resultado){
-              msjalertToast('success', '¡Éxito!', 'Apertura de cajon enviada');
+              msjalertToast('success', 'Â¡Ã‰xito!', 'Apertura de cajon enviada');
               miDialogoAbrirCaja.close();
               document.removeEventListener("click", cerrarDialogoExterno);
             }else{
-              msjalertToast('error', '¡Error!', 'Error en el cajon monedero');
+              msjalertToast('error', 'Â¡Error!', 'Error en el cajon monedero');
             }
         } catch (error) {
             console.log(error);
@@ -174,7 +174,7 @@
             );
         });
 
-        // Contar cuántos medios tienen saldo
+        // Contar cuÃ¡ntos medios tienen saldo
         let cantidadConSaldo = 0;
 
         mediosPago.forEach(input => {
@@ -202,9 +202,9 @@
                     etiqueta.classList.remove('hidden');
 
                     if(cantidadConSaldo === 1){
-                        etiqueta.textContent = '① Medio de pago actual';
+                        etiqueta.textContent = 'â‘  Medio de pago actual';
                     }else{
-                        etiqueta.textContent = '✓ Pago original';
+                        etiqueta.textContent = 'âœ“ Pago original';
                     }
                 }
 
@@ -219,7 +219,7 @@
     }
 
     function facturamediospago(){  //muestra los valores de los medios de pago de cada factura
-      numfactura.textContent = 'Factura N° : '+idfactura;
+      numfactura.textContent = 'Factura NÂ° : '+idfactura;
       (async ()=>{
         try {
           const url = "/admin/api/mediospagoXfactura?id="+idfactura; //llamado a la API REST y se trae los medios de pago segun factura
@@ -269,7 +269,7 @@
 
         if(totalmediospago <= parseInt(totalPagado.textContent!.replace(/[,.]/g, ''))){
 
-          // Guardar el último valor válido del input
+          // Guardar el Ãºltimo valor vÃ¡lido del input
           mapMediospago.set(
             (e.target as HTMLInputElement).id,
             parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, ''))
@@ -283,7 +283,7 @@
             ).toLocaleString();
 
         }else{
-          // Restaurar el último valor válido
+          // Restaurar el Ãºltimo valor vÃ¡lido
           if(mapMediospago.has((e.target as HTMLInputElement).id)){
             (e.target as HTMLInputElement).value =
               mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
@@ -365,7 +365,7 @@
         ventana.onload = ()=>{
           ventana?.focus();
           ventana?.print();
-          setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+          setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana despuÃ©s de unos segundos
         };
       }
     }
@@ -412,10 +412,10 @@
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
           if(resultado.exito !== undefined){
-            msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            msjalertToast('success', 'Â¡Ã‰xito!', resultado.exito[0]);
             updateMP(resultado.mediosPagoUpdate);
           }else{
-            msjalertToast('error', '¡Error!', resultado.error[0]);
+            msjalertToast('error', 'Â¡Error!', resultado.error[0]);
           }
       } catch (error) {
           console.log(error);
@@ -445,7 +445,7 @@
     }
     
     function validarPasswordDcto():number{
-      const clave = claveAbrirCajon.find(c => c.clave=='clave_para_abrir_cajón_monedero');
+      const clave = claveAbrirCajon.find(c => c.clave=='clave_para_abrir_cajÃ³n_monedero');
       if(clave?.valor_final!==null && inputAbrirCaja.value !== clave?.valor_final){
         msjAlert('error', 'El password es invalido', (document.querySelector('#divmsjalerta3') as HTMLElement));
         return 0;

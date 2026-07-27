@@ -1,8 +1,20 @@
 <div class="gestionimpresoras">
 
-  <h4 class="text-gray-600 mb-8 mt-12">Gestion de impresoras</h4>
-  <button id="crearImpresora" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[144px]">Crear punto</button>
-  <table id="tablaImpresoras" class="display responsive nowrap tabla" width="100%">
+  <div class="config-section-heading">
+    <div class="config-section-heading__icon">
+      <i class="fa-solid fa-print"></i>
+    </div>
+    <div>
+      <h4>Gestion de impresoras</h4>
+      <p>Administra puntos de impresion, estaciones y ancho de papel.</p>
+    </div>
+    <button id="crearImpresora" class="btn-md btn-indigo config-section-heading__action" type="button">
+      <i class="fa-solid fa-plus"></i>
+      Crear punto
+    </button>
+  </div>
+  <div class="config-table-card">
+  <table id="tablaImpresoras" class="display responsive nowrap tabla config-data-table" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -18,11 +30,16 @@
           <?php foreach($impresoras as $index => $value): ?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
-              <td class="" ><?php echo $value->nombre; ?></td> 
-              <td class=""><?php echo $value->nombrecompartido;?></td>
-              <td class=""><?php echo $value->estacion;?></td>
-              <td class=""><?php echo $value->estacion;?></td>
-              <td class=""><?php echo $value->estado;?></td>
+              <td>
+                <span class="config-printer-name">
+                  <span class="config-printer-name__icon"><i class="fa-solid fa-print"></i></span>
+                  <span><?php echo $value->nombre; ?></span>
+                </span>
+              </td> 
+              <td><span class="config-table-pill config-table-pill--shared"><?php echo $value->nombrecompartido;?></span></td>
+              <td><span class="config-table-pill config-table-pill--station"><?php echo $value->estacion;?></span></td>
+              <td><span class="config-table-pill config-table-pill--paper"><?php echo $value->mm;?> mm</span></td>
+              <td><span class="config-table-status <?php echo $value->estado==1?'config-table-status--active':'config-table-status--inactive';?>"><?php echo $value->estado==1?'Activa':'Inactiva';?></span></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-impresora="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square" title="Actualizar punto de impresion"></i></button>
@@ -33,6 +50,7 @@
           <?php endforeach; ?>
       </tbody>
   </table>
+  </div>
 
   <dialog id="miDialogoIMpresora" class="midialog-sm rounded-lg shadow-lg p-12">
     <h4 id="modalIMpresora" class="font-semibold text-gray-700 mb-4 mt-10">Crear punto de impresora</h4>

@@ -1,8 +1,20 @@
 <div class="gestionbancos">
 
-  <h4 class="text-gray-600 mb-8 mt-12">Gestion de bancos</h4>
-  <button id="crearBanco" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[144px]">Crear banco</button>
-  <table id="tablaBancos" class="display responsive nowrap tabla" width="100%">
+  <div class="config-section-heading">
+    <div class="config-section-heading__icon">
+      <i class="fa-solid fa-building-columns"></i>
+    </div>
+    <div>
+      <h4>Gestion de bancos</h4>
+      <p>Administra cuentas bancarias disponibles para pagos y movimientos.</p>
+    </div>
+    <button id="crearBanco" class="btn-md btn-indigo config-section-heading__action" type="button">
+      <i class="fa-solid fa-plus"></i>
+      Crear banco
+    </button>
+  </div>
+  <div class="config-table-card">
+  <table id="tablaBancos" class="display responsive nowrap tabla config-data-table" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -16,9 +28,14 @@
           <?php foreach($bancos as $index => $value): ?>
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
-              <td class="" ><?php echo $value->nombre; ?></td> 
-              <td class=""><?php echo $value->numerocuenta;?></td>
-              <td class=""><?php echo $value->created_at;?></td>
+              <td>
+                <span class="config-bank-name">
+                  <span class="config-bank-name__icon"><i class="fa-solid fa-building-columns"></i></span>
+                  <span><?php echo $value->nombre; ?></span>
+                </span>
+              </td> 
+              <td><span class="config-table-pill config-table-pill--account"><?php echo $value->numerocuenta;?></span></td>
+              <td><span class="config-table-pill config-table-pill--date"><?php echo $value->created_at;?></span></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-banco="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square" title="Actualizar datos del banco"></i></button>
@@ -29,6 +46,7 @@
           <?php endforeach; ?>
       </tbody>
   </table>
+  </div>
 
   <dialog id="miDialogoBanco" class="midialog-sm rounded-lg shadow-lg p-12">
     <h4 id="modalBanco" class="font-semibold text-gray-700 mb-4 mt-10">Crear banco</h4>

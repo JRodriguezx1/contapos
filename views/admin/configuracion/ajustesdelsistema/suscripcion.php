@@ -1,225 +1,224 @@
-<div class="contenido10 configsuscripcion accordion_tab_content p-6 rounded-lg w-full space-y-6">
+<?php
+  $valorPlan = (float)($negocio->valorplan ?? 0);
+  $descuento = (float)($negocio->descuento ?? 0);
+  $cargo = (float)($negocio->cargo ?? 0);
+  $totalSuscripcion = $valorPlan + $cargo - $descuento;
+  $estadoActivo = (int)($negocio->estado ?? 0) === 1;
+?>
 
-  <!-- Botón que abre el modal -->
-  <div class="flex justify-end gap-4 items-center mb-6">
-      
-    <button id="btnDetalleSuscriptor" class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
-      Información del suscriptor
-    </button>
-    <button id="btnRegistrarPago" class="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg shadow-sm flex items-center justify-center gap-2 px-6 py-4 w-[248px] bg-transparent">
-      Registrar pago
-    </button>
-  </div>
+<div class="contenido10 configsuscripcion config-subscription accordion_tab_content p-6 rounded-lg w-full space-y-6">
 
-
-  <!-- Sección Suscripción -->
-  <div class="bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-6">Suscripción</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
+  <section class="config-subscription__hero">
+    <div class="config-subscription__title">
+      <span><i class="fa-solid fa-id-card"></i></span>
       <div>
-        <p class="text-lg text-gray-700 font-medium">Cuenta</p>
-        <p class="text-xl font-semibold"><?php echo $negocio->negocio??''; ?><small> - <?php echo $negocio->nombre??''; ?></small></p>
-      </div>
-
-      <div>
-        <p class="text-lg text-gray-700 font-medium">Estado</p>
-        <span id="estadoText" class="px-3 py-1 rounded-full text-base font-medium <?php echo $negocio->estado==1?'bg-green-100 text-green-700':'bg-red-100 text-red-700'; ?>"><?php echo $negocio->estado==1?'Activo':'Suspendido'; ?></span>
-      </div>
-
-      <div>
-        <p class="text-lg text-gray-700 font-medium">Fecha de inicio</p>
-        <p class="text-xl font-semibold"><?php echo $negocio->created_at; ?></p>
-      </div>
-
-      <div>
-        <p class="text-lg text-gray-700 font-medium">Próximo pago</p>
-        <p id="fecha_corteText" class="text-xl font-semibold"><?php echo $negocio->fecha_corte; ?></p>
-      </div>
-
-      <div>
-        <p class="text-lg text-gray-700 font-medium">Monto mensual</p>
-        <p id="valorplanText" class="text-xl font-semibold">$<?php echo number_format($negocio->valorplan, '0', ',', '.'); ?></p>
-      </div>
-
-      <div>
-        <p class="text-lg text-gray-700 font-medium">Días restantes</p>
-        <p id="diasRestantesText" class="text-xl font-semibold text-indigo-600"> - </p>
+        <small>SUSCRIPCION</small>
+        <h2>Control de suscripcion</h2>
+        <p>Consulta el estado de la cuenta, cobros vigentes e historial de pagos.</p>
       </div>
     </div>
-  </div>
+    <div class="config-subscription__actions">
+      <button id="btnDetalleSuscriptor" class="config-subscription__button config-subscription__button--light" type="button">
+        <i class="fa-solid fa-user-gear"></i>
+        Informacion del suscriptor
+      </button>
+      <button id="btnRegistrarPago" class="config-subscription__button config-subscription__button--primary" type="button">
+        <i class="fa-solid fa-receipt"></i>
+        Registrar pago
+      </button>
+    </div>
+  </section>
 
+  <section class="config-subscription__grid">
+    <article class="config-subscription-card config-subscription-card--main">
+      <div class="config-subscription-card__header">
+        <div>
+          <span>Cuenta</span>
+          <h3><?php echo $negocio->negocio ?? ''; ?></h3>
+          <p><?php echo $negocio->nombre ?? ''; ?></p>
+        </div>
+        <span id="estadoText" class="config-subscription-status <?php echo $estadoActivo ? 'config-subscription-status--active bg-green-100 text-green-700' : 'config-subscription-status--paused bg-red-100 text-red-700'; ?>">
+          <?php echo $estadoActivo ? 'Activo' : 'Suspendido'; ?>
+        </span>
+      </div>
 
-  <!-- Sección Resumen -->
-  <div class="bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-4">Resumen de cobros</h2>
-    <div class="space-y-2 text-lg">
-      <div class="flex justify-between">
-        <span class="font-medium text-gray-700">Valor base</span><span id="valorplanResumen" class="text-gray-800">$<?php echo number_format($negocio->valorplan, '0', ',', '.'); ?></span>
+      <div class="config-subscription-metrics">
+        <div>
+          <span>Fecha de inicio</span>
+          <strong><?php echo $negocio->created_at ?? ''; ?></strong>
+        </div>
+        <div>
+          <span>Proximo pago</span>
+          <strong id="fecha_corteText"><?php echo $negocio->fecha_corte ?? ''; ?></strong>
+        </div>
+        <div>
+          <span>Monto mensual</span>
+          <strong id="valorplanText">$<?php echo number_format($valorPlan, 0, ',', '.'); ?></strong>
+        </div>
+        <div>
+          <span>Dias restantes</span>
+          <strong id="diasRestantesText">-</strong>
+        </div>
       </div>
-      <div class="flex justify-between">
-        <span class="font-medium text-green-600">Descuento aplicado</span><span class="text-green-600">- $<?php echo number_format($negocio->descuento, '0', ',', '.'); ?></span>
+    </article>
+
+    <article class="config-subscription-card config-subscription-card--summary">
+      <div class="config-subscription-card__eyebrow">
+        <i class="fa-solid fa-calculator"></i>
+        Resumen de cobros
       </div>
-      <div class="flex justify-between">
-        <span class="font-medium text-red-600">Cargo adicional</span><span class="text-red-600">+ $<?php echo number_format($negocio->cargo, '0', ',', '.'); ?></span>
+      <div class="config-subscription-summary">
+        <div>
+          <span>Valor base</span>
+          <strong id="valorplanResumen">$<?php echo number_format($valorPlan, 0, ',', '.'); ?></strong>
+        </div>
+        <div class="is-discount">
+          <span>Descuento aplicado</span>
+          <strong>- $<?php echo number_format($descuento, 0, ',', '.'); ?></strong>
+        </div>
+        <div class="is-charge">
+          <span>Cargo adicional</span>
+          <strong>+ $<?php echo number_format($cargo, 0, ',', '.'); ?></strong>
+        </div>
       </div>
+      <div class="config-subscription-total">
+        <span>Total a pagar</span>
+        <strong id="totalSuscripcionText">$<?php echo number_format($totalSuscripcion, 0, ',', '.'); ?></strong>
+      </div>
+    </article>
+  </section>
+
+  <section class="config-subscription-history">
+    <div class="config-subscription-history__header">
+      <div>
+        <span><i class="fa-solid fa-clock-rotate-left"></i></span>
+        <div>
+          <h3>Historial de pagos</h3>
+          <p>Pagos registrados para la suscripcion actual.</p>
+        </div>
+      </div>
+      <small><?php echo count($suscripcionPagos ?? []); ?> registro<?php echo count($suscripcionPagos ?? []) === 1 ? '' : 's'; ?></small>
     </div>
 
-    <div class="flex justify-between items-center border-t pt-4 mt-4">
-      <span class="text-xl font-bold">Total a pagar</span>
-      <span class="text-xl font-bold text-indigo-700">$<?php echo number_format($negocio->valorplan+$negocio->cargo-$negocio->descuento, '0', ',', '.'); ?></span>
-    </div>
-
-    <div class="mt-6 flex gap-3">
-      
-  </div>
-
-  <!-- Sección Historial -->
-  <div class="bg-white p-6 rounded-xl shadow-md">
-    <h2 class="text-3xl font-bold mb-4">Historial de pagos</h2>
-    <table class="w-full text-left border-collapse">
-      <thead>
-        <tr class="text-gray-700 text-lg font-medium border-b">
-          <th class="pb-2">Fecha</th>
-          <th class="pb-2">Monto</th>
-          <th class="pb-2">Método</th>
-        </tr>
-      </thead>
-      <tbody class="text-base">
-        <?php foreach($suscripcionPagos as $value): ?>
-          <tr class="border-b">
-            <td class="py-2"><?php echo $value->fecha_pago; ?></td>
-            <td class="py-2 font-semibold">$<?php echo number_format($value->valor_pagado, '0', ',', '.'); ?></td>
-            <td class="py-2"><?php echo $value->mediopago; ?></td>
+    <div class="config-subscription-history__table">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Metodo</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          <?php foreach($suscripcionPagos as $value): ?>
+            <tr>
+              <td><?php echo $value->fecha_pago; ?></td>
+              <td><span class="config-subscription-pill">$<?php echo number_format($value->valor_pagado, 0, ',', '.'); ?></span></td>
+              <td><?php echo $value->mediopago; ?></td>
+            </tr>
+          <?php endforeach; ?>
+          <?php if(empty($suscripcionPagos)): ?>
+            <tr>
+              <td colspan="3" class="config-subscription-empty">Sin pagos registrados.</td>
+            </tr>
+          <?php endif; ?>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-
-  <!-- MODAL DETALLE DE LA SUSCRIPCION -->
-  <dialog id="miDialogoDetalleSuscripcion" class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
-
-      <!-- Encabezado -->
-      <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-          <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">Detalles de la Suscripción</h4>
-          <button class="p-2 rounded-lg hover:bg-gray-100 transition btnXCerrarRegistroPago">
-              <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
-          </button>
+  <dialog id="miDialogoDetalleSuscripcion" class="config-subscription-dialog">
+    <div class="config-subscription-dialog__header">
+      <span><i class="fa-solid fa-id-card"></i></span>
+      <div>
+        <small>SUSCRIPCION</small>
+        <h4>Detalle de la suscripcion</h4>
+        <p>Actualiza el plan, estado y fecha de corte de la cuenta.</p>
       </div>
-      <div id="divmsjalerta1"></div>
-      <form id="formDetalleSuscripcion" class="formulario space-y-6">
-          <div class="formulario__campo">
-              <label class="formulario__label text-lg font-medium text-gray-700" for="estado">Estado</label>
-              <select id="estado" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="estado" required>
-                  <option value="1" <?php echo $negocio->estado==1?'selected':'';?>>Activa</option>
-                  <option value="0" <?php echo $negocio->estado==0?'selected':'';?>>Suspendida</option>
-              </select>
-          </div>
+      <button class="config-subscription-dialog__close btnXCerrarRegistroPago" type="button" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-          <div class="formulario__campo">
-              <label class="formulario__label text-lg font-medium text-gray-700" for="idplan">Plan</label>
-              <select id="idplan" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 h-14 text-lg focus:outline-none focus:ring-1" name="idplan" required>
-                  <option value="2" <?php echo $negocio->idplan==2?'selected':'';?>>Plan mensual</option>
-                  <option value="1" <?php echo $negocio->idplan==1?'selected':'';?>>Plan anual</option>
-                  <option value="3" <?php echo $negocio->idplan==3?'selected':'';?>>Plan diario</option>
-              </select>
-          </div>
+    <div id="divmsjalerta1"></div>
+    <form id="formDetalleSuscripcion" class="formulario config-subscription-dialog__form">
+      <div class="config-subscription-dialog__grid">
+        <label>
+          <span>Estado</span>
+          <select id="estado" name="estado" required>
+            <option value="1" <?php echo $estadoActivo ? 'selected' : ''; ?>>Activa</option>
+            <option value="0" <?php echo !$estadoActivo ? 'selected' : ''; ?>>Suspendida</option>
+          </select>
+        </label>
 
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="fecha_corte">Fecha de corte</label>
-              <input 
-                  id="fecha_corte"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="date"  
-                  name="fecha_corte"
-                  value="<?php echo $negocio->fecha_corte; ?>"
-                  min="<?php echo date('Y-m-d');?>"
-                  required
-              >
-          </div>
+        <label>
+          <span>Plan</span>
+          <select id="idplan" name="idplan" required>
+            <option value="2" <?php echo ($negocio->idplan ?? '') == 2 ? 'selected' : ''; ?>>Plan mensual</option>
+            <option value="1" <?php echo ($negocio->idplan ?? '') == 1 ? 'selected' : ''; ?>>Plan anual</option>
+            <option value="3" <?php echo ($negocio->idplan ?? '') == 3 ? 'selected' : ''; ?>>Plan diario</option>
+          </select>
+        </label>
 
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="valorplan">Valor del plan</label>
-              <input 
-                  id="valorplan"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" 
-                  placeholder="Ingresa el monto" 
-                  name="valorplan"
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                  value="<?php echo $negocio->valorplan; ?>"
-                  required>
-          </div>
+        <label>
+          <span>Fecha de corte</span>
+          <input id="fecha_corte" type="date" name="fecha_corte" value="<?php echo $negocio->fecha_corte; ?>" min="<?php echo date('Y-m-d');?>" required>
+        </label>
 
+        <label>
+          <span>Valor del plan</span>
+          <input id="valorplan" type="text" placeholder="Ingresa el monto" name="valorplan" value="<?php echo $negocio->valorplan; ?>" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+        </label>
+      </div>
 
-          <!-- Botones -->
-          <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-              <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
-              <input id="btnEnviarDetalleSuscripcion" type="submit" value="Aplicar" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
-          </div>
-      </form>
+      <div class="config-subscription-dialog__actions">
+        <button type="button" value="Cancelar" class="config-subscription__button config-subscription__button--secondary">Cancelar</button>
+        <input id="btnEnviarDetalleSuscripcion" type="submit" value="Aplicar" class="config-subscription__button config-subscription__button--primary">
+      </div>
+    </form>
   </dialog>
 
-
-  <!-- MODAL REGISTRAR EL PAGO -->
-  <dialog id="miDialogoRegistrarPago" class="rounded-2xl border border-gray-200 w-[95%] max-w-3xl p-8 bg-white backdrop:bg-black/40 shadow-2xl transition-all scale-95 opacity-0 open:scale-100 open:opacity-100 duration-300 ease-out">
-      <!-- Encabezado -->
-      <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-          <h4 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
-              💰 Registrar pago de la suscripcion
-          </h4>
-          <button class="p-2 rounded-lg hover:bg-gray-100 transition btnXCerrarRegistroPago">
-              <i class="fa-solid fa-xmark text-gray-600 text-3xl"></i>
-          </button>
+  <dialog id="miDialogoRegistrarPago" class="config-subscription-dialog">
+    <div class="config-subscription-dialog__header">
+      <span><i class="fa-solid fa-receipt"></i></span>
+      <div>
+        <small>PAGO</small>
+        <h4>Registrar pago</h4>
+        <p>Guarda el pago recibido y actualiza la suscripcion.</p>
       </div>
-      <div id="divmsjalerta1"></div>
-      <form id="formRegistrarPago" class="formulario space-y-6">
+      <button class="config-subscription-dialog__close btnXCerrarRegistroPago" type="button" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="valor_pagado">Valor a registrar</label>
-              <input 
-                  id="valor_pagado"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresa el monto" name="valor_pagado" value=""
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                  required>
-          </div>
+    <div id="divmsjalerta1"></div>
+    <form id="formRegistrarPago" class="formulario config-subscription-dialog__form">
+      <div class="config-subscription-dialog__grid">
+        <label>
+          <span>Valor a registrar</span>
+          <input id="valor_pagado" type="text" placeholder="Ingresa el monto" name="valor_pagado" value="" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+        </label>
 
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="cantidad_plan">Cantidad del plan pago</label>
-              <input 
-                  id="cantidad_plan"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Ingresar la cantidad de renovaciones del plan" name="cantidad_plan" value="1"
-                  oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
-                  required>
-          </div>
+        <label>
+          <span>Cantidad del plan pago</span>
+          <input id="cantidad_plan" type="text" placeholder="Renovaciones del plan" name="cantidad_plan" value="1" oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}" required>
+        </label>
 
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="medio_pago">Medio de pago</label>
-              <input 
-                  id="medio_pago"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-14 text-lg focus:outline-none focus:ring-1"
-                  type="text" placeholder="Descripcion del medio de pago" name="medio_pago" value=""
-                  required>
-          </div>
+        <label class="config-subscription-dialog__wide">
+          <span>Medio de pago</span>
+          <input id="medio_pago" type="text" placeholder="Descripcion del medio de pago" name="medio_pago" value="" required>
+        </label>
 
-          <!-- Descripción -->
-          <div>
-              <label class="formulario__label text-lg font-medium text-gray-700" for="descripcion">Observacion</label>
-              <textarea id="descripcion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 mt-2 h-40 text-lg focus:outline-none focus:ring-1" name="descripcion" rows="4"></textarea>
-          </div>
+        <label class="config-subscription-dialog__wide">
+          <span>Observacion</span>
+          <textarea id="descripcion" name="descripcion" rows="4"></textarea>
+        </label>
+      </div>
 
-          <!-- Botones -->
-          <div class="text-right pt-6 border-t border-gray-200 flex justify-end gap-3">
-              <button type="button" class="btn-md btn-turquoise !py-4 !px-6 !w-[135px]" value="Cancelar">Cancelar</button>
-              <input id="btnEnviarRegistrarPago" type="submit" value="Aplicar" class="btn-md btn-indigo !py-4 !px-6 !w-[135px]">
-          </div>
-      </form>
+      <div class="config-subscription-dialog__actions">
+        <button type="button" value="Cancelar" class="config-subscription__button config-subscription__button--secondary">Cancelar</button>
+        <input id="btnEnviarRegistrarPago" type="submit" value="Aplicar" class="config-subscription__button config-subscription__button--primary">
+      </div>
+    </form>
   </dialog>
-  
 </div>
-
-

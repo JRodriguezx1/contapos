@@ -16,6 +16,41 @@
       };
   
       let bancos:bancosapi[]=[], unbanco:bancosapi|undefined;
+
+      function escapeHtmlBanco(valor:any):string{
+        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[caracter] as string));
+      }
+
+      function renderNombreBanco(nombre:any):string{
+        return `<span class="config-bank-name">
+          <span class="config-bank-name__icon"><i class="fa-solid fa-building-columns"></i></span>
+          <span>${escapeHtmlBanco(nombre)}</span>
+        </span>`;
+      }
+
+      function renderPillBanco(valor:any, modificador:string):string{
+        return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlBanco(valor)}</span>`;
+      }
+
+      function filaBanco(numero:number, banco:any):any[]{
+        return [
+          numero,
+          renderNombreBanco(banco?.nombre),
+          renderPillBanco(banco?.numerocuenta, 'account'),
+          renderPillBanco(banco?.created_at, 'date'),
+          `<div class="acciones-btns" id="${escapeHtmlBanco(banco?.id)}" data-banco="${escapeHtmlBanco(banco?.nombre)}">
+              <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="btn-md btn-red eliminarBanco"><i class="fa-solid fa-trash-can"></i></button>
+          </div>`
+        ];
+      }
+
       (async ()=>{
         try {
             const url = "/admin/api/allbancos"; //llamado a la API REST y se trae todos los bancos
@@ -26,8 +61,9 @@
         }
       })();
 
-     //////////////////  TABLA //////////////////////
-    tablaBancos = ($('#tablaBancos') as any).DataTable(configdatatables);
+    //////////////////  TABLA //////////////////////
+  tablaBancos = ($('#tablaBancos') as any).DataTable(configdatatablesToolbar);
+   modernizarToolbarDataTable('#tablaBancos');
 
     crearBanco.addEventListener('click', ()=>{
         control = 0;
@@ -86,23 +122,14 @@
                 if(!control){ //si es crear registro
                   /// actualizar el arregle de la banco ///
                   bancos = [...bancos, resultado.banco];
-                  (tablaBancos as any).row.add([
-                      (tablaBancos as any).rows().count() + 1,
-                      resultado.banco.nombre,
-                      resultado.banco.numerocuenta,
-                      resultado.banco.created_at,
-                      `<div class="acciones-btns" id="${resultado.banco.id}" data-banco="${resultado.banco.nombre}">
-                          <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square"></i></button>
-                          <button class="btn-md btn-red eliminarBanco"><i class="fa-solid fa-trash-can"></i></button>
-                      </div>`
-                  ]).draw(false); // draw(false) evita recargar toda la tabla
+                  (tablaBancos as any).row.add(filaBanco((tablaBancos as any).rows().count() + 1, resultado.banco)).draw(false); // draw(false) evita recargar toda la tabla
                 }else{ //si es actualizar
                   /// actualizar el arregle de bancos ///
                   bancos.forEach(a=>{if(a.id == unbanco?.id)a = Object.assign(a, resultado.banco[0]);});
-                  const datosActuales = (tablaBancos as any).row(indiceFila+=info.start).data();
-                  /*BANCO*/      datosActuales[1] = resultado.banco[0].nombre;
-                  /*NUM CUENTA*/ datosActuales[2] = resultado.banco[0].numerocuenta;
-                  (tablaBancos as any).row(indiceFila).data(datosActuales).draw();
+                  indiceFila += info.start;
+                  const datosActuales = (tablaBancos as any).row(indiceFila).data();
+                  const bancoActualizado = {...resultado.banco[0], created_at: resultado.banco[0].created_at ?? unbanco?.created_at};
+                  (tablaBancos as any).row(indiceFila).data(filaBanco(datosActuales[0], bancoActualizado)).draw();
                   (tablaBancos as any).page(info.page).draw('page'); //me mantiene la pagina actual
                 }
               }else{

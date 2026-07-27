@@ -5,6 +5,7 @@
     const miDialogoEmisor = document.querySelector('#miDialogoEmisor') as any;
 
     let indiceFila=0, control=0, tablaEmisores:HTMLElement;
+    let selectSucursalEmisorActivo = false;
 
     type emisoresApi = {
       id:string,
@@ -28,7 +29,8 @@
     })();
 
      //////////////////  TABLA //////////////////////
-    tablaEmisores = ($('#tablaEmisores') as any).DataTable(configdatatables);
+   tablaEmisores = ($('#tablaEmisores') as any).DataTable(configdatatablesToolbar);
+    modernizarToolbarDataTable('#tablaEmisores');
 
     crearEmisor.addEventListener('click', ()=>{
         control = 0;
@@ -36,6 +38,7 @@
         document.querySelector('#modalEmisor')!.textContent = "Crear nuevo emisor";
         (document.querySelector('#btnEditarCrearEmisor') as HTMLInputElement).value = "Crear";
         miDialogoEmisor.showModal();
+        activarSelectSucursalEmisor();
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
@@ -89,6 +92,7 @@
       
       indiceFila = (tablaEmisores as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoEmisor.showModal();
+      activarSelectSucursalEmisor();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
@@ -152,17 +156,29 @@
 
     ////////////////////  Eliminar emisor  //////////////////////
     function eliminarEmisor(e:Event){
-      let idemisor = (e.target as HTMLElement).parentElement!.id, info = (tablaEmisores as any).page.info();
+      const accion = (e.target as HTMLElement).closest('.acciones-btns') as HTMLElement|null;
+      let idemisor = accion?.id || (e.target as HTMLElement).parentElement!.id, info = (tablaEmisores as any).page.info();
       if((e.target as HTMLElement).tagName === 'I')idemisor = (e.target as HTMLElement).parentElement!.parentElement!.id;
+      const nombreEmisor = accion?.dataset.emisor || 'este emisor';
       indiceFila = (tablaEmisores as any).row((e.target as HTMLElement).closest('tr')).index();
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
-          icon: 'question',
-          title: 'Desea eliminar el emisor?',
-          text: "El emisor sera eliminado definitivamente.",
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
+          icon: 'warning',
+          title: 'Eliminar emisor',
+          html: `Se eliminara definitivamente <strong>${nombreEmisor}</strong>. Esta accion no se puede deshacer.`,
           showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Eliminar',
+          cancelButtonText: 'Cancelar',
+          reverseButtons: true,
+          buttonsStyling: false,
       }).then((result:any) => {
           if (result.isConfirmed) {
               (async ()=>{ 
@@ -175,7 +191,21 @@
                       if(resultado.exito !== undefined){
                         (tablaEmisores as any).row(indiceFila+info.start).remove().draw(); 
                         (tablaEmisores as any).page(info.page).draw('page'); 
-                        Swal.fire(resultado.exito[0], '', 'success')
+                        Swal.fire({
+                          customClass: {
+                            popup: 'j2-confirm j2-confirm--success',
+                            icon: 'j2-confirm__icon',
+                            title: 'j2-confirm__title',
+                            htmlContainer: 'j2-confirm__text',
+                            actions: 'j2-confirm__actions j2-confirm__actions--single',
+                            confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                          },
+                          icon: 'success',
+                          title: 'Emisor eliminado',
+                          html: resultado.exito[0],
+                          confirmButtonText: 'Aceptar',
+                          buttonsStyling: false
+                        })
                       }else{
                           Swal.fire(resultado.error[0], '', 'error')
                       }
@@ -196,6 +226,19 @@
 
     function limpiarformdialog(){
       (document.querySelector('#formCrearUpdateEmisor') as HTMLFormElement)?.reset();
+      if(selectSucursalEmisorActivo)($('#sucursalEmisor') as any).val('').trigger('change');
+    }
+
+    function activarSelectSucursalEmisor(){
+      if(selectSucursalEmisorActivo)return;
+      ($('#sucursalEmisor') as any).select2({
+        dropdownParent: $('#miDialogoEmisor'),
+        dropdownCssClass: 'config-emisor-select2-dropdown',
+        placeholder: "-Seleccionar-",
+        width: '100%',
+        minimumResultsForSearch: Infinity
+      });
+      selectSucursalEmisorActivo = true;
     }
 
   }
