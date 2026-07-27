@@ -135,7 +135,6 @@
         renderVariacionesVacias(listaInsumos);
         return;
     }
-
     renderObligatorios(obligatorios, listaInsumos);
     insumosgrupo.forEach(insumogrupo =>renderGrupo(insumogrupo, listaInsumos));
     eventosCheckbox();
@@ -288,16 +287,17 @@
           contenedor.insertAdjacentHTML(
               "beforeend",
               `<label
-                  class="tarjeta-checkbox-insumo block rounded-2xl border border-slate-200 bg-white p-4 cursor-pointer transition-all duration-300 hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md">
+                    data-idproducto="${producto?.id}"
+                    data-idinsumo="${insumo.id_subproducto}"
+                    data-idgrupo="${insumo.grupos_insumos.id}"
+                    class="tarjeta-checkbox-insumo block rounded-2xl border border-slate-200 bg-white p-4 cursor-pointer transition-all duration-300 hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md"
+                >
 
                   <div class="flex items-center justify-between gap-4">
                       <div class="flex items-center gap-4 flex-1 min-w-0">
                           <input
                               type="checkbox"
                               class="inputInsumoCheckbox w-6 h-6 accent-indigo-600 cursor-pointer shrink-0"
-                              data-idproducto="${producto?.id}"
-                              data-idinsumo="${insumo.id_subproducto}"
-                              data-idgrupo="${insumo.grupos_insumos.id}"
                               ${Number(insumo.seleccionado) ? "checked":""}
                           >
 
@@ -402,7 +402,8 @@
 
   function actualizarCantidadInsumo(e: Event) {
     const input = e.target as HTMLInputElement;
-    const idInsumo = Number(input.dataset.idinsumo);
+    const tarjeta = input.closest(".tarjeta-checkbox-insumo") as HTMLLabelElement;
+    const idInsumo = Number(tarjeta.dataset.idinsumo);
     const insumo = productoConfigurado?.insumos?.find(
       item => Number(item.id_subproducto) === idInsumo
     );
@@ -423,7 +424,8 @@
 
   function actualizarCheckbox(e: Event) {
     const checkbox = e.target as HTMLInputElement;
-    const idInsumo = Number(checkbox.dataset.idinsumo);
+    const tarjeta = checkbox.closest(".tarjeta-checkbox-insumo") as HTMLLabelElement;
+    const idInsumo = Number(tarjeta.dataset.idinsumo);
     const insumo = productoConfigurado?.insumos?.find(
         i => Number(i.id_subproducto) === idInsumo
     );
@@ -433,7 +435,6 @@
     insumo.seleccionado = checkbox.checked ? '1' : '0';
 
     // 🔥 Obtener la tarjeta
-    const tarjeta = checkbox.closest(".tarjeta-checkbox-insumo");
     const badge = tarjeta?.querySelector(".badge-precio-extra");
     const contenedorCantidad =
         tarjeta?.querySelector(".contenedor-cantidad");
