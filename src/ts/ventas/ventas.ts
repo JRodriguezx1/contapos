@@ -344,7 +344,6 @@
 
 
     function editarCantidad(index:number, cantidad:number, control:boolean, stateinput:boolean){
-        console.log(carrito);
         if(cantidad < 0 && (carrito[index].stock + cantidad)<0){
           cantidad = 0;
           carrito[index].stock = 0;
