@@ -757,348 +757,267 @@ body.dashboardno{
 
 
 // TABLA DE CARRITO DE VENTAS
+// 1. Unificamos la estructura repetida de la tabla para pantallas < 1573px
+@mixin card-table-layout {
+  display: block !important;
+  width: 100% !important;
+
+  tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  thead {
+    display: none !important;
+  }
+
+  .productselect {
+    background-color: #ffffff;
+    border: .1rem solid #e2e8f0 !important;
+    border-radius: .9rem;
+    display: grid !important;
+  }
+
+  td {
+    display: flex !important;
+    align-items: center;
+    border: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    min-width: 0;
+
+    &::before {
+      color: #64748b;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    &:nth-child(1) { grid-column: 1 / -1; }
+    
+    &:nth-child(2) {
+      grid-column: 1;
+      justify-content: flex-start;
+      &::before { content: "Cant."; }
+      
+      > div {
+        min-width: 0 !important;
+      }
+    }
+
+    &:nth-child(3) {
+      grid-column: 2;
+      justify-content: center;
+      &::before { content: "Und"; }
+    }
+
+    &:nth-child(4) {
+      grid-column: 3;
+      justify-content: flex-end;
+      &::before { content: "Total"; }
+    }
+
+    &:nth-child(5) {
+      grid-column: 4;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// 2. Estilos Base
 #contenedorDesktop,
 #contenidocarrito,
-#tablaventa{
+#tablaventa {
+  min-width: 0;
+}
+
+#tablaventa {
+  table-layout: fixed;
+
+  th, td {
     min-width: 0;
-}
+  }
 
-#tablaventa{
-    table-layout: fixed;
-}
-
-#tablaventa th,
-#tablaventa td{
-    min-width: 0;
-}
-
-#tablaventa .nombreproducto{
+  .nombreproducto {
     overflow-wrap: anywhere;
     word-break: normal;
-}
+  }
 
-@media (min-width: 1573px){
-    #contenedorDesktop{
-        overflow-x: hidden !important;
+  // ---------------------------------------------
+  // Pantallas Grandes (Desktop > 1573px)
+  // ---------------------------------------------
+  @media (min-width: 1573px) {
+    th, td {
+      padding-left: .45rem !important;
+      padding-right: .45rem !important;
+      font-size: 1.15rem !important;
+
+      // Anchos por columna
+      &:nth-child(1) { width: 31%; }
+      &:nth-child(2) { width: 24%; }
+      &:nth-child(3) { width: 14%; }
+      &:nth-child(4) { width: 23%; }
+      &:nth-child(5) { width: 8%; }
     }
 
-    #tablaventa th:nth-child(1),
-    #tablaventa td:nth-child(1){
-        width: 31%;
+    th {
+      white-space: nowrap;
     }
 
-    #tablaventa th:nth-child(2),
-    #tablaventa td:nth-child(2){
-        width: 24%;
-    }
-
-    #tablaventa th:nth-child(3),
-    #tablaventa td:nth-child(3){
-        width: 14%;
-    }
-
-    #tablaventa th:nth-child(4),
-    #tablaventa td:nth-child(4){
-        width: 23%;
-    }
-
-    #tablaventa th:nth-child(5),
-    #tablaventa td:nth-child(5){
-        width: 8%;
-    }
-
-    #tablaventa th,
-    #tablaventa td{
-        padding-left: .45rem !important;
-        padding-right: .45rem !important;
-    }
-
-    #tablaventa th{
-        font-size: 1.15rem !important;
-        white-space: nowrap;
-    }
-
-    #tablaventa td{
-        font-size: 1.15rem !important;
-    }
-
-    #tablaventa .nombreproducto{
-        font-size: 1.2rem !important;
-        line-height: 1.22 !important;
-        max-width: none !important;
-    }
-
-    #tablaventa td:nth-child(2) > div{
+    td:nth-child(2) {
+      > div {
         gap: .45rem !important;
         justify-content: center !important;
         min-width: 0 !important;
         width: 100% !important;
-    }
-
-    #tablaventa .inputcantidad{
-        font-size: 1.12rem !important;
-        height: 2.8rem !important;
-        max-width: 6.6rem !important;
-        min-width: 5.8rem !important;
-        padding-left: .35rem !important;
-        padding-right: .35rem !important;
-        width: 6.4rem !important;
-    }
-
-    #tablaventa .menos,
-    #tablaventa .mas{
-        font-size: 1.3rem !important;
-        height: 1.8rem !important;
-        width: 1.8rem !important;
-    }
-
-    #tablaventa td:nth-child(2) button{
+      }
+      button {
         height: 2.2rem !important;
         width: 2.2rem !important;
+      }
     }
 
-    #tablaventa td:nth-child(3),
-    #tablaventa td:nth-child(4){
-        font-size: 1.08rem !important;
-        white-space: nowrap;
+    td:nth-child(3),
+    td:nth-child(4) {
+      font-size: 1.08rem !important;
+      white-space: nowrap;
     }
 
-    #tablaventa .eliminarProducto{
-        height: 2.8rem !important;
-        width: 2.8rem !important;
+    .nombreproducto {
+      font-size: 1.2rem !important;
+      line-height: 1.22 !important;
+      max-width: none !important;
     }
+
+    .inputcantidad {
+      font-size: 1.12rem !important;
+      height: 2.8rem !important;
+      max-width: 6.6rem !important;
+      min-width: 5.8rem !important;
+      padding-left: .35rem !important;
+      padding-right: .35rem !important;
+      width: 6.4rem !important;
+    }
+
+    .menos, .mas {
+      font-size: 1.3rem !important;
+      height: 1.8rem !important;
+      width: 1.8rem !important;
+    }
+
+    .eliminarProducto {
+      height: 2.8rem !important;
+      width: 2.8rem !important;
+    }
+  }
+
+  // ---------------------------------------------
+  // Modos Card (Pantallas < 1573px)
+  // ---------------------------------------------
+  @media (max-width: 1572px) {
+    @include card-table-layout;
+  }
+
+  // Ajustes específicos entre 992px y 1572px
+  @media (min-width: 992px) and (max-width: 1572px) {
+    .productselect {
+      gap: .45rem .62rem;
+      grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
+      margin: .55rem;
+      padding: .65rem !important;
+    }
+
+    td {
+      font-size: 1.12rem !important;
+      gap: .28rem;
+
+      &::before { font-size: .9rem; }
+    }
+
+    .nombreproducto {
+      font-size: 1.22rem !important;
+      line-height: 1.18 !important;
+      margin-bottom: 0 !important;
+    }
+
+    td:nth-child(2) {
+      > div { gap: .34rem !important; }
+      button { height: 2.1rem !important; width: 2.1rem !important; }
+    }
+  }
+
+  // Ajustes específicos < 991px
+  @media (max-width: 991px) {
+    .productselect {
+      gap: .55rem .58rem;
+      grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
+      margin: .65rem;
+      padding: .75rem .65rem !important;
+    }
+
+    td {
+      font-size: 1.06rem !important;
+      gap: .26rem;
+
+      &::before { font-size: .9rem; }
+    }
+
+    .nombreproducto {
+      font-size: 1.22rem !important;
+      line-height: 1.2 !important;
+      margin-bottom: 0 !important;
+      max-width: none !important;
+    }
+
+    td:nth-child(2) {
+      > div { gap: .32rem !important; }
+      button { height: 2.1rem !important; width: 2.1rem !important; }
+    }
+  }
+
+  // Ajustes específicos < 460px
+  @media (max-width: 460px) {
+    .productselect {
+      gap: .5rem .42rem;
+      grid-template-columns: minmax(11.6rem, 1fr) minmax(6.1rem, auto) minmax(7.1rem, auto) 2.8rem;
+      padding-left: .55rem !important;
+      padding-right: .55rem !important;
+    }
+
+    td {
+      font-size: .96rem !important;
+      gap: .2rem;
+
+      &::before { font-size: .76rem; }
+    }
+
+    td:nth-child(2) {
+      > div { gap: .24rem !important; }
+      button { height: 2rem !important; width: 2rem !important; }
+    }
+
+    td:nth-child(3),
+    td:nth-child(4) {
+      font-size: .96rem !important;
+    }
+  }
 }
 
-@media (min-width: 992px) and (max-width: 1572px){
-    .ventas > .flex > div:first-child{
-        flex-basis: 60% !important;
-    }
-
-    #contenedorDesktop{
-        flex-basis: 40% !important;
-    }
-
-    #tablaventa,
-    #tablaventa tbody{
-        display: block !important;
-        width: 100% !important;
-    }
-
-    #tablaventa thead{
-        display: none !important;
-    }
-
-    #tablaventa .productselect{
-        background-color: #ffffff;
-        border: .1rem solid #e2e8f0 !important;
-        border-radius: .9rem;
-        display: grid !important;
-        gap: .45rem .62rem;
-        grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
-        margin: .55rem;
-        padding: .65rem !important;
-    }
-
-    #tablaventa td{
-        align-items: center;
-        border: 0 !important;
-        display: flex !important;
-        font-size: 1.12rem !important;
-        gap: .28rem;
-        min-width: 0;
-        padding: 0 !important;
-        width: auto !important;
-    }
-
-    #tablaventa td::before{
-        color: #64748b;
-        font-size: .9rem;
-        font-weight: 800;
-        letter-spacing: 0;
-        text-transform: uppercase;
-    }
-
-    #tablaventa td:nth-child(1){
-        grid-column: 1 / -1;
-    }
-
-    #tablaventa td:nth-child(2){
-        grid-column: 1;
-        justify-content: flex-start;
-    }
-
-    #tablaventa td:nth-child(2)::before{
-        content: "Cant.";
-    }
-
-    #tablaventa td:nth-child(3){
-        grid-column: 2;
-        justify-content: center;
-    }
-
-    #tablaventa td:nth-child(3)::before{
-        content: "Und";
-    }
-
-    #tablaventa td:nth-child(4){
-        grid-column: 3;
-        justify-content: flex-end;
-    }
-
-    #tablaventa td:nth-child(4)::before{
-        content: "Total";
-    }
-
-    #tablaventa td:nth-child(5){
-        grid-column: 4;
-        justify-content: flex-end;
-    }
-
-    #tablaventa .nombreproducto{
-        font-size: 1.22rem !important;
-        line-height: 1.18 !important;
-        margin-bottom: 0 !important;
-    }
-
-    #tablaventa td:nth-child(2) > div{
-        gap: .34rem !important;
-        min-width: 0 !important;
-    }
-
-    #tablaventa td:nth-child(2) button{
-        height: 2.1rem !important;
-        width: 2.1rem !important;
-    }
-
-    
+// Estilos globales de contenedores fuera de la tabla
+@media (min-width: 1573px) {
+  #contenedorDesktop {
+    overflow-x: hidden !important;
+  }
 }
 
-@media (max-width: 991px){
-    #tablaventa,
-    #tablaventa tbody{
-        display: block !important;
-        width: 100% !important;
-    }
+@media (min-width: 992px) and (max-width: 1572px) {
+  .ventas > .flex > div:first-child {
+    flex-basis: 60% !important;
+  }
 
-    #tablaventa thead{
-        display: none !important;
-    }
-
-    #tablaventa .productselect{
-        background-color: #ffffff;
-        border: .1rem solid #e2e8f0 !important;
-        border-radius: .9rem;
-        display: grid !important;
-        gap: .55rem .58rem;
-        grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
-        margin: .65rem;
-        padding: .75rem .65rem !important;
-    }
-
-    #tablaventa td{
-        align-items: center;
-        border: 0 !important;
-        display: flex !important;
-        font-size: 1.06rem !important;
-        gap: .26rem;
-        min-width: 0;
-        padding: 0 !important;
-        width: auto !important;
-    }
-
-    #tablaventa td::before{
-        color: #64748b;
-        font-size: .9rem;
-        font-weight: 800;
-        letter-spacing: 0;
-        text-transform: uppercase;
-    }
-
-    #tablaventa td:nth-child(1){
-        grid-column: 1 / -1;
-    }
-
-    #tablaventa td:nth-child(2){
-        grid-column: 1;
-        justify-content: flex-start;
-    }
-
-    #tablaventa td:nth-child(2)::before{
-        content: "Cant.";
-    }
-
-    #tablaventa td:nth-child(3){
-        grid-column: 2;
-        justify-content: center;
-    }
-
-    #tablaventa td:nth-child(3)::before{
-        content: "Und";
-    }
-
-    #tablaventa td:nth-child(4){
-        grid-column: 3;
-        justify-content: flex-end;
-    }
-
-    #tablaventa td:nth-child(4)::before{
-        content: "Total";
-    }
-
-    #tablaventa td:nth-child(5){
-        grid-column: 4;
-        justify-content: flex-end;
-    }
-
-    #tablaventa .nombreproducto{
-        font-size: 1.22rem !important;
-        line-height: 1.2 !important;
-        margin-bottom: 0 !important;
-        max-width: none !important;
-    }
-
-    #tablaventa td:nth-child(2) > div{
-        gap: .32rem !important;
-        min-width: 0 !important;
-    }
-
-    #tablaventa td:nth-child(2) button{
-        height: 2.1rem !important;
-        width: 2.1rem !important;
-    }
-
-}
-
-@media (max-width: 460px){
-    #tablaventa .productselect{
-        gap: .5rem .42rem;
-        grid-template-columns: minmax(11.6rem, 1fr) minmax(6.1rem, auto) minmax(7.1rem, auto) 2.8rem;
-        padding-left: .55rem !important;
-        padding-right: .55rem !important;
-    }
-
-    #tablaventa td{
-        font-size: .96rem !important;
-        gap: .2rem;
-    }
-
-    #tablaventa td::before{
-        font-size: .76rem;
-    }
-
-    #tablaventa td:nth-child(2) > div{
-        gap: .24rem !important;
-    }
-
-    #tablaventa td:nth-child(2) button{
-        height: 2rem !important;
-        width: 2rem !important;
-    }
-
-    #tablaventa td:nth-child(3),
-    #tablaventa td:nth-child(4){
-        font-size: .96rem !important;
-    }
+  #contenedorDesktop {
+    flex-basis: 40% !important;
+  }
 }
 // fin tabla de carrito de compras
 
