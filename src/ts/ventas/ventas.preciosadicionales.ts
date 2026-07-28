@@ -115,7 +115,6 @@
     historialCalculadora.length = 0;
   });
   //****FIN CALCULADORA
-
   
 
   /////////// INSUMOS DINAMICAMENTE  /////////////
@@ -404,57 +403,6 @@
     const tarjeta = radio.closest(".tarjeta-radio-insumo");
     tarjeta?.classList.add("border-indigo-400", "bg-indigo-50", "shadow-lg");  
   }
-
-
-  /*function filtrarInsumos(){
-    const insumos = productoConfigurado?.insumos??[];
-    const ultimoSeleccionUnica  = insumos.filter(i=>i.grupos_insumos?.tipo === "0"&&i.seleccionado === "1").at(-1);
-
-    const nuevosElementos:insumo[] = [
-              ...(ultimoSeleccionUnica  ? [ultimoSeleccionUnica ] : []),
-              ...insumos.filter(i=>i.grupos_insumos?.tipo === "1" &&i.seleccionado === "1")
-    ];
-    insumos.splice(0, insumos.length, ...nuevosElementos);
-  }*/
-  /*
-  function actualizarCheckbox(e: Event) {
-    const checkbox = e.target as HTMLInputElement;
-    const idInsumo = Number(checkbox.dataset.idinsumo);
-    const insumo = productoConfigurado?.insumos?.find(i => Number(i.id_subproducto) === idInsumo);
-    if (!insumo || !productoConfigurado) return;
-    insumo.seleccionado = checkbox.checked ?'1':'0';
-
-    if(insumo.seleccionado == '1'){
-      const existe = producto?.insumos?.some(i => Number(i.id_subproducto) === idInsumo);
-      if (!existe)productoConfigurado?.insumos?.push(insumo);
-    }else{
-       productoConfigurado.insumos = productoConfigurado?.insumos?.filter(i => Number(i.id_subproducto) !== idInsumo);
-    }
-
-  }
-
-
-  function actualizarRadio(e: Event) {
-    const radio = e.target as HTMLInputElement;
-    if(!radio.checked)return;
-
-    const idGrupo = Number(radio.dataset.idgrupo);
-    const idInsumo = Number(radio.dataset.idinsumo);
-    productoConfigurado!.insumos = productoConfigurado?.insumos?.filter(insumo => Number(insumo.grupos_insumos?.id) !== idGrupo);
-
-    console.log(productoConfigurado);
-    const seleccionado = producto?.insumos?.find(
-        i => Number(i.id_subproducto) === idInsumo
-    );
-
-    if(seleccionado&&productoConfigurado){
-      seleccionado.seleccionado = '1';
-      productoConfigurado.insumos?.push(seleccionado);
-    }
-  }
-  */
-
-
   ///////// FIN INSUMOS DINAMICOS  //////////
 
 
