@@ -290,7 +290,7 @@
 
         <!-- Apilamiento de productos -->
         <div class="mt-3 rounded-lg border border-slate-200 bg-white overflow-x-auto md:overflow-x-visible">
-          <table id="tablaventa" class="tabla w-full border-separate border-spacing-0" width="100%">
+          <table id="tablaventa" class="w-full border-separate border-spacing-0" width="100%">
               <thead class="bg-slate-50">
                   <tr class="rounded-t-xl overflow-hidden">
                        <th class="py-3 text-left pl-4 text-slate-700 font-semibold text-xl">Producto</th>

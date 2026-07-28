@@ -136,3 +136,352 @@
     }
   }
 }
+
+
+/*
+// 1. Unificamos la estructura repetida de la tabla para pantallas < 1573px
+@mixin card-table-layout {
+  display: block !important;
+  width: 100% !important;
+
+  tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  thead {
+    display: none !important;
+  }
+
+  .productselect {
+    background-color: #ffffff;
+    border: .1rem solid #e2e8f0 !important;
+    border-radius: .9rem;
+    display: grid !important;
+  }
+
+  td {
+    display: flex !important;
+    align-items: center;
+    border: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    min-width: 0;
+
+    &::before {
+      color: #64748b;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    &:nth-child(1) { grid-column: 1 / -1; }
+    
+    &:nth-child(2) {
+      grid-column: 1;
+      justify-content: flex-start;
+      &::before { content: "Cant."; }
+      
+      > div {
+        min-width: 0 !important;
+      }
+    }
+
+    &:nth-child(3) {
+      grid-column: 2;
+      justify-content: center;
+      &::before { content: "Und"; }
+    }
+
+    &:nth-child(4) {
+      grid-column: 3;
+      justify-content: flex-end;
+      &::before { content: "Total"; }
+    }
+
+    &:nth-child(5) {
+      grid-column: 4;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// 2. Estilos Base
+#contenedorDesktop,
+#contenidocarrito,
+#tablaventa {
+  min-width: 0;
+}
+
+#tablaventa {
+  table-layout: fixed;
+
+  th, td {
+    min-width: 0;
+  }
+
+  .nombreproducto {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  // ---------------------------------------------
+  // Pantallas Grandes (Desktop > 1573px)
+  // ---------------------------------------------
+  @media (min-width: 1573px) {
+    th, td {
+      padding-left: .45rem !important;
+      padding-right: .45rem !important;
+      font-size: 1.15rem !important;
+
+      // Anchos por columna
+      &:nth-child(1) { width: 31%; }
+      &:nth-child(2) { width: 24%; }
+      &:nth-child(3) { width: 14%; }
+      &:nth-child(4) { width: 23%; }
+      &:nth-child(5) { width: 8%; }
+    }
+
+    th {
+      white-space: nowrap;
+    }
+
+    td:nth-child(2) {
+      > div {
+        gap: .45rem !important;
+        justify-content: center !important;
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+      button {
+        height: 2.2rem !important;
+        width: 2.2rem !important;
+      }
+    }
+
+    td:nth-child(3),
+    td:nth-child(4) {
+      font-size: 1.08rem !important;
+      white-space: nowrap;
+    }
+
+    .nombreproducto {
+      font-size: 1.2rem !important;
+      line-height: 1.22 !important;
+      max-width: none !important;
+    }
+
+    .inputcantidad {
+      font-size: 1.12rem !important;
+      height: 2.8rem !important;
+      max-width: 6.6rem !important;
+      min-width: 5.8rem !important;
+      padding-left: .35rem !important;
+      padding-right: .35rem !important;
+      width: 6.4rem !important;
+    }
+
+    .menos, .mas {
+      font-size: 1.3rem !important;
+      height: 1.8rem !important;
+      width: 1.8rem !important;
+    }
+
+    .eliminarProducto {
+      height: 2.8rem !important;
+      width: 2.8rem !important;
+    }
+  }
+
+  // ---------------------------------------------
+  // Modos Card (Pantallas < 1573px)
+  // ---------------------------------------------
+  @media (max-width: 1572px) {
+    @include card-table-layout;
+  }
+
+  // Ajustes específicos entre 992px y 1572px
+  @media (min-width: 992px) and (max-width: 1572px) {
+    .productselect {
+      gap: .45rem .62rem;
+      grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
+      margin: .55rem;
+      padding: .65rem !important;
+    }
+
+    td {
+      font-size: 1.12rem !important;
+      gap: .28rem;
+
+      &::before { font-size: .9rem; }
+    }
+
+    .nombreproducto {
+      font-size: 1.22rem !important;
+      line-height: 1.18 !important;
+      margin-bottom: 0 !important;
+    }
+
+    td:nth-child(2) {
+      > div { gap: .34rem !important; }
+      button { height: 2.1rem !important; width: 2.1rem !important; }
+    }
+  }
+
+  // Ajustes específicos < 991px
+  @media (max-width: 991px) {
+    .productselect {
+      gap: .55rem .58rem;
+      grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
+      margin: .65rem;
+      padding: .75rem .65rem !important;
+    }
+
+    td {
+      font-size: 1.06rem !important;
+      gap: .26rem;
+
+      &::before { font-size: .9rem; }
+    }
+
+    .nombreproducto {
+      font-size: 1.22rem !important;
+      line-height: 1.2 !important;
+      margin-bottom: 0 !important;
+      max-width: none !important;
+    }
+
+    td:nth-child(2) {
+      > div { gap: .32rem !important; }
+      button { height: 2.1rem !important; width: 2.1rem !important; }
+    }
+  }
+
+  // Ajustes específicos < 460px
+  @media (max-width: 460px) {
+    .productselect {
+      gap: .5rem .42rem;
+      grid-template-columns: minmax(11.6rem, 1fr) minmax(6.1rem, auto) minmax(7.1rem, auto) 2.8rem;
+      padding-left: .55rem !important;
+      padding-right: .55rem !important;
+    }
+
+    td {
+      font-size: .96rem !important;
+      gap: .2rem;
+
+      &::before { font-size: .76rem; }
+    }
+
+    td:nth-child(2) {
+      > div { gap: .24rem !important; }
+      button { height: 2rem !important; width: 2rem !important; }
+    }
+
+    td:nth-child(3),
+    td:nth-child(4) {
+      font-size: .96rem !important;
+    }
+  }
+}
+
+// Estilos globales de contenedores fuera de la tabla
+@media (min-width: 1573px) {
+  #contenedorDesktop {
+    overflow-x: hidden !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1572px) {
+  .ventas > .flex > div:first-child {
+    flex-basis: 60% !important;
+  }
+
+  #contenedorDesktop {
+    flex-basis: 40% !important;
+  }
+}*/
+
+// TABLA DE CARRITO DE VENTAS
+#tablaventa {
+    thead {
+        display: none !important;
+    }
+
+    .productselect { //fila de la tabla <tr>
+        background-color: #ffffff;
+        border: .1rem solid #e2e8f0 !important;
+        border-radius: .9rem;
+        display: grid !important;
+        grid-template-columns: minmax(14rem, 1fr) minmax(6.8rem, auto) minmax(8rem, auto) 3rem;
+        margin: .55rem;
+        padding: .65rem;
+        gap: .4rem .6rem;
+    }
+
+    td {
+        display: flex !important;
+        align-items: center;
+        border: 0 !important;
+        padding: 0 !important;
+        width: auto !important;
+        min-width: 0;
+        gap: .26rem;
+        .nombreproducto {
+            margin-bottom: 0;
+            overflow-wrap: anywhere;
+            word-break: normal;
+            max-width: none !important;
+        }
+        &::before {
+        color: #64748b;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        }
+        &:nth-child(1) { 
+            grid-column: 1 / -1; 
+        }
+        &:nth-child(2) {
+            grid-column: 1;
+            justify-content: flex-start;
+            &::before { 
+                content: "Cant.";
+                font-size: 1rem; 
+            }
+            
+            > div {
+                min-width: 0 !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+            }
+            button { 
+                height: 2rem; 
+                width: 2rem; 
+            }
+        }
+        &:nth-child(3) {
+            grid-column: 2;
+            justify-content: center;
+            &::before { 
+                content: "Und";
+                font-size: 1rem;
+            }
+        }
+        &:nth-child(4) {
+            grid-column: 3;
+            justify-content: flex-end;
+            &::before { 
+                content: "Total";
+                font-size: 1rem;
+            }
+        }
+        &:nth-child(5) {
+            grid-column: 4;
+            justify-content: flex-end;
+        }
+    } //fin td
+}
+// fin tabla de carrito de compras
