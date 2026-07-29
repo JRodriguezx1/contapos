@@ -43,8 +43,8 @@
     </nav>
 </aside>-->
 
-<aside class="sidebar mp-6 relative">
-    <div class="uptask flex flex-col items-center">
+<aside class="sidebar relative">
+    <div class="uptask flex h-28 flex-col items-center justify-center p-0">
         <img class="sidebar-mini-logo" src="/build/img/logo-j2-mini-blanco-limpio.png" alt="JDOS">
         <img id="logoj2" class="w-80 h-28" src="/build/img/Logoj2blanco.png" alt="logoj2">
 
@@ -89,10 +89,6 @@
         <?php endif; ?>
     </nav>
     <p class="text-white text-xl font-semibold text-center absolute bottom-0 inset-x-0">JDOS  <?php echo $_SESSION['sucursal']->version; ?></p>
-    <!--<div class="cerrar-sesion-mobile">
-        <p>Bienvenido: <span> <?php // echo $_SESSION['nombre']; ?></span></p>
-        <a class="cerrar-sesion" href="/logout">Cerrar SesiÃ³n</a>
-    </div>-->
 </aside>
 
 

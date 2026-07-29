@@ -86,9 +86,9 @@
             </div>
         </div>
         
-        <div class="ventas-actions-grid mt-3 grid grid-cols-2 gap-2">
+        <div class="mt-3 grid grid-cols-2 gap-2 xlg:grid-cols-3">
           <div class="relative min-w-0">
-            <button id="btnCategorias" class="ventas-action-btn btn-md btn-indigo !mb-0 !w-full !py-3 px-4">Categorias</button>
+            <button id="btnCategorias" class="btn-md btn-indigo !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-[1.6rem] font-semibold !leading-[1.15]">Categorias</button>
             <div id="menuCategorias" class="absolute left-0 top-full z-30 mt-2 hidden w-80 max-w-[calc(100vw-3rem)] max-h-[24rem] overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 shadow-xl ring-1 ring-slate-900/5">
               <a data-categoria="Todos" class="filtrocategorias categoria-activa flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-4 py-3.5 text-left text-xl font-semibold text-indigo-700 bg-indigo-50 transition-colors hover:bg-indigo-50 hover:text-indigo-700">
                 <span class="truncate">Todos</span>
@@ -105,14 +105,14 @@
 
 
           <!-- Boton Otros -->
-          <button id="btnotros" class="ventas-action-btn btn-md btn-turquoise !mb-0 !w-full !py-3 px-4 flex items-center justify-center gap-2">
-            <i class="fas fa-th-large"></i>
+          <button id="btnotros" class="btn-md btn-turquoise !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-[1.6rem] font-semibold !leading-[1.15]">
+            <i class="fas fa-th-large text-[1.6rem] leading-none"></i>
             Otros
           </button>
 
           <!-- Boton Adquiriente -->
-          <button id="facturarA" class="ventas-action-btn ventas-action-adquiriente btn-md bg-white text-gray-800 font-semibold rounded-lg border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 !mb-0 !w-full !py-3 px-4 col-span-2 flex items-center justify-center gap-2">
-            <i class="fas fa-user"></i>
+          <button id="facturarA" class="btn-md col-span-2 rounded-lg border border-slate-300 bg-white !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-[1.6rem] font-semibold !leading-[1.15] text-slate-900 shadow-[0_2px_6px_rgba(15,23,42,0.08)] hover:border-slate-400 hover:bg-slate-50 hover:shadow-[0_8px_18px_rgba(15,23,42,0.10)] focus:outline-none focus:ring-2 focus:ring-indigo-400 xlg:col-span-1">
+            <i class="fas fa-user text-[1.6rem] leading-none"></i>
             Adquiriente
           </button>
         </div>
@@ -198,7 +198,7 @@
       </div>
       <div id="contenidocarrito" class="space-y-4">
           <div class="formulario__campo">
-              <div class="ventas-datos-card rounded-lg border border-slate-200 bg-white p-4">
+              <div class="rounded-xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 shadow-sm">
                   <div class="flex items-center gap-2 mb-3">
                       <span class="material-symbols-outlined text-sky-600 text-3xl">badge</span>
                       <div>
@@ -206,12 +206,12 @@
                            <p class="text-slate-500 text-lg leading-6 m-0">Vendedor, orden y domicilio.</p>
                       </div>
                   </div>
-                  <label class="ventas-datos-label formulario__label !text-lg !mb-1" for="vendedor">Vendedor</label>
-                  <div class="ventas-datos-field formulario__dato flex items-center gap-2 !mb-2">
+                  <label class="formulario__label !mb-1 !text-[1.25rem] !font-bold !tracking-normal !text-slate-700" for="vendedor">Vendedor</label>
+                  <div class="ventas-datos-field !mb-2">
                     <span class="material-symbols-outlined text-xl">person</span>
                     <select
                       id="vendedor"
-                      class="ventas-datos-control formulario__input bg-white border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full px-3 py-3 h-14 text-xl focus:outline-none focus:ring-1"
+                      class="ventas-datos-control"
                       <?php  if($user['perfil']>3)echo 'disabled';?>
                     >
                       <?php foreach($usuarios as $value): ?>
@@ -227,19 +227,19 @@
 
                 <div class="grid grid-cols-5 gap-3">
                   <div class="formulario__campo col-span-2 !mb-0">
-                       <label class="ventas-datos-label formulario__label !text-lg !mb-1 font-semibold text-slate-700" for="npedido">Orden</label>
-                       <div class="ventas-datos-field formulario__dato flex items-center gap-2">
+                       <label class="formulario__label !mb-1 !text-[1.25rem] !font-bold !tracking-normal !text-slate-700" for="npedido">Orden</label>
+                       <div class="ventas-datos-field">
                          <span class="material-symbols-outlined text-xl">tag</span>
-                         <input id="npedido" class="ventas-datos-control formulario__input bg-white border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full px-3 py-3 h-14 text-xl focus:outline-none focus:ring-1" type="number" placeholder="N. orden" name="pedido" value="<?php echo $num_orden;?>" readonly>
+                         <input id="npedido" class="ventas-datos-control" type="number" placeholder="N. orden" name="pedido" value="<?php echo $num_orden;?>" readonly>
                        </div>
                    </div>
                    <div class="formulario__campo col-span-3 !mb-0">
-                    <label class="ventas-datos-label formulario__label !text-lg !mb-1 font-semibold text-slate-700" for="valorDomicilio">Domicilio</label>
-                    <div class="ventas-datos-field formulario__dato flex items-center gap-2">
+                    <label class="formulario__label !mb-1 !text-[1.25rem] !font-bold !tracking-normal !text-slate-700" for="valorDomicilio">Domicilio</label>
+                    <div class="ventas-datos-field">
                       <span class="material-symbols-outlined text-xl">local_shipping</span>
                       <input
                         id="valorDomicilio"
-                        class="ventas-datos-control formulario__input bg-white border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full px-3 py-3 h-14 text-xl focus:outline-none focus:ring-1"
+                        class="ventas-datos-control"
                         type="text"
                         placeholder="Valor del domicilio"
                         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
@@ -363,40 +363,21 @@
                 </div>
             </div>
         </div>
-        <!--
-        <div class="text-center p-4 flex justify-center gap-x-8">
-          <button id="btnvaciar" class="btn-md !flex !flex-row btn-red !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
-            <span class="material-symbols-outlined text-2xl">delete</span>
-            <span class="font-medium text-2xl">Vaciar</span>
-          </button>
-
-          <button id="btnguardar" class="btn-md !flex !flex-row btn-turquoise !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
-            <span class="material-symbols-outlined text-2xl">save</span>
-            <span class="font-medium text-2xl">Guardar</span>
-          </button>
-
-          <button id="btnfacturar" class="btn-md !flex !flex-row btn-indigo !mt-4 sm:mt-0 !mb-4 !py-4 px-6 !w-[140px] items-center justify-center gap-1 between992:mt-3">
-            <span class="material-symbols-outlined text-2xl">receipt_long</span>
-            <span class="font-medium text-2xl">Facturar</span>
-          </button>
-        </div>-->
-
-        
         <div class="grid grid-cols-2 gap-2 p-0">
           
-          <button id="btnguardar" class="btn-md btn-turquoise !py-4 !px-4 !w-full flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-2xl">save</span>
-            <span class="font-medium text-2xl uppercase">Orden</span>
+          <button id="btnguardar" class="btn-md btn-turquoise !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !px-4 !py-0">
+            <span class="material-symbols-outlined text-2xl !leading-none">save</span>
+            <span class="text-2xl font-medium uppercase !leading-none">Orden</span>
           </button>
           
-          <button id="btnfacturar" class="btn-md btn-indigo !mt-0 sm:mt-0 !mb-0 !py-4 px-4 !w-full between992:mt-0 flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-2xl">receipt_long</span>
-            <span class="font-medium text-2xl uppercase">Facturar</span>
+          <button id="btnfacturar" class="btn-md btn-indigo !mt-0 !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4">
+            <span class="material-symbols-outlined text-2xl !leading-none">receipt_long</span>
+            <span class="text-2xl font-medium uppercase !leading-none">Facturar</span>
           </button>
           
-          <button id="btnaplicarcredito" class="col-span-2 text-gray-800 rounded-md border border-gray-300 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 !py-3 !px-6 !w-full flex items-center justify-center gap-2 mx-auto">
-            <span class="material-symbols-outlined text-2xl">payments</span>
-            <span class="font-medium text-2xl">Cr&eacute;dito</span>
+          <button id="btnaplicarcredito" class="col-span-2 mx-auto !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 rounded-md border border-gray-300 !px-6 !py-0 text-gray-800 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
+            <span class="material-symbols-outlined text-2xl !leading-none">payments</span>
+            <span class="text-2xl font-medium !leading-none">Cr&eacute;dito</span>
           </button>
         </div>
       </div>

@@ -24,29 +24,6 @@
         overflow: auto;
     }
 
-    /*.formulario{
-
-        input:not([type="submit"]){
-            background-color: v.$blanco;
-        }
-        input[type="submit"]{
-            @include m.boton(v.$indigo, v.$blanco);
-            text-transform: uppercase;
-            padding: 1rem;
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-    }*/
-
-    .enlace{
-        color: v.$indigo;
-        &:hover{
-            cursor: pointer;
-            color: darken(v.$indigo, 20%);
-        }
-
-    }
-
 //////////////////////////estilos al sidebar.php////////////////////////////
     .sidebar{
         transition: .5s all ease;
@@ -69,17 +46,7 @@
         &.mostrar{   //clase hecha en app.js
             display: block;
         }
-        .uptask{  //clase del h1 y de la x cerraren dispositivo movil
-            height: 7rem;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            h1{
-                color: v.$blanco;
-                margin: 0;
-                text-align: center;
-            }
+        .uptask{
             .menux{
                 img{ 
                     width: 1.8rem;
@@ -123,14 +90,6 @@
                 opacity: 1;
                 transform: scale(1);
             }
-        }
-
-        .noneElement{ //clase agregada en app.ts
-            display: none;
-        }
-        
-        &.minsidebar{ //clase agregada en app.ts
-            width: 8.5rem;
         }
 
         .sidebar-nav{
@@ -197,27 +156,6 @@
             }
         }
     
-    
-        .cerrar-sesion-mobile{  //clase al boton cerrar sesion que esta en el sidebar barra lateral
-            margin-top: 10rem;
-            @include m.tablet{
-               display: none;
-            }
-            p{
-                text-align: center;
-                margin: 0;
-                font-size: 1.4rem;
-                color: v.$cyan;
-                span{
-                    color: v.$blanco;
-                    font-weight: 700;
-                }
-            }
-            .cerrar-sesion{
-                @include m.boton(v.$indigo, v.$blanco);
-            }
-        }//cierre del .cerrar-sesion-mobile
-    
     }//cierre del .sidebar
 
 
@@ -237,18 +175,6 @@
         justify-content: space-between;
         @include m.tablet{
             display: none;
-        }
-        h1{
-            color: v.$blanco;
-            margin: 0;
-        }
-        .menu{  
-            img{   //iamgen de los 3 botoncitos
-                width: .8rem;
-                &:hover{
-                    cursor: pointer;
-                }
-            }
         }
     }
 
@@ -359,64 +285,7 @@
             padding: .8rem 1rem;
         }
 
-        .subscription-alert__body{
-            align-items: flex-start;
-            flex-direction: column;
-            gap: .2rem;
-        }
-
-        .subscription-alert__message{
-            display: -webkit-box;
-            overflow: hidden;
-            white-space: normal;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-        }
     }
-
-    .menu-mobile-bottom{
-        display: block;
-
-        @include m.tablet{
-            display: none;
-        }
-    }
-    
-///////////////////////estilos al header.php /////////////////////////////
-    .barra{
-        display: none;
-        background-color: v.$blanco;
-        /*background: rgb(239,242,247);
-        background: linear-gradient(90deg, rgba(239,242,247,1) 2%, rgba(255,255,255,1) 13%);*/
-        padding: 1rem 2rem;
-        box-shadow: 1px 12px 9px -13px rgba(0, 0, 0, .4);
-        @include m.tablet{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .toggleanduser{
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            .sidebartoggle{
-                cursor: pointer;
-            }
-            p{
-                margin: 0;
-                font-size: 1.4rem;
-                span{
-                    color: v.$indigo;
-                    font-weight: 700;
-                }
-            }
-        }
-        .cerrar-sesion{  // etiqueta <a> de cerrar sesion
-            @include m.boton(darken(v.$indigo, 20%), v.$blanco);
-            width: auto;
-        }
-    }
-    
 }
 
 
@@ -599,13 +468,6 @@ body.dashboardno{
             }
         }
 
-        .menu-mobile-bottom{
-            bottom: 1rem !important;
-            left: 50% !important;
-            position: fixed !important;
-            top: auto !important;
-            transform: translateX(-50%) !important;
-        }
     }
 }
 
@@ -624,10 +486,6 @@ body.dashboardno{
     }
 
     @media (max-width: 640px){
-        .precios-adicionales-tabs-wrap{
-            justify-content: flex-start;
-        }
-
         .precios-adicionales-tabs{
             gap: .45rem;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -646,58 +504,13 @@ body.dashboardno{
   content: none !important;
   display: none !important;
 }
-.ventas-action-btn{
-    align-items: center;
-    display: inline-flex !important;
-    font-size: 1.6rem !important;
-    font-weight: 600;
-    gap: .7rem;
-    height: 3.5rem !important;
-    justify-content: center;
-    line-height: 1.15;
-    min-height: 3.5rem;
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
-}
-
-.ventas-action-btn i{
-    font-size: 1.6rem;
-    line-height: 1;
-}
-
-#btnguardar,
-#btnfacturar,
-#btnaplicarcredito{
-    height: 3.5rem !important;
-    min-height: 3.5rem !important;
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
-}
-
-#btnguardar span,
-#btnfacturar span,
-#btnaplicarcredito span{
-    line-height: 1 !important;
-}
-
-.ventas-datos-card{
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
-    border-color: #dbe4f0 !important;
-    border-radius: 1.2rem !important;
-    box-shadow: 0 1rem 2.4rem rgba(15, 23, 42, .05);
-}
-
-.ventas-datos-label{
-    color: #334155 !important;
-    font-size: 1.25rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0 !important;
-}
-
 .ventas-datos-field{
+    align-items: center;
     background-color: #f8fafc;
     border: .1rem solid #dbe4f0;
     border-radius: 1rem;
+    display: flex;
+    gap: .5rem;
     padding: .45rem .55rem .45rem 1rem;
     transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
 }
@@ -720,30 +533,21 @@ body.dashboardno{
     width: 3.4rem;
 }
 
-.ventas-datos-control{
-    background-color: #ffffff !important;
-    border-color: #cbd5e1 !important;
-    border-radius: .95rem !important;
-    color: #0f172a !important;
-    font-size: 1.35rem !important;
-    font-weight: 600;
-    min-height: 4.4rem;
-    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
-}
-
 .ventas-datos-field .ventas-datos-control{
     background-color: transparent !important;
-    border-color: transparent !important;
+    border: 0 !important;
+    border-radius: .95rem !important;
     box-shadow: none !important;
+    color: #0f172a !important;
+    display: block;
+    flex: 1 1 auto;
+    font-size: 1.35rem !important;
+    font-weight: 600;
     min-height: 3.8rem;
-    padding-left: .4rem !important;
-}
-
-.ventas-datos-control:focus{
-    background-color: #ffffff !important;
-    border-color: #6366f1 !important;
-    box-shadow: 0 0 0 .32rem rgba(99, 102, 241, .14) !important;
+    min-width: 0;
     outline: none !important;
+    padding: .5rem .4rem !important;
+    width: 100%;
 }
 
 .ventas-datos-control::placeholder{
@@ -754,31 +558,6 @@ body.dashboardno{
 .ventas-datos-control[readonly]{
     color: #475569 !important;
 }
-
-
-#facturarA.ventas-action-btn{
-    background: #ffffff;
-    border-color: #cbd5e1;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, .08);
-    color: #0f172a;
-}
-
-#facturarA.ventas-action-btn:hover{
-    background: #f8fafc;
-    border-color: #94a3b8;
-    box-shadow: 0 8px 18px rgba(15, 23, 42, .10);
-}
-
-@include m.desktop{
-    .ventas-actions-grid{
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    }
-
-    .ventas-action-adquiriente{
-        grid-column: auto !important;
-    }
-}
-
 #addcliente.cliente-required-pulse{
     animation: clienteRequiredPulse 1.05s ease-in-out 3;
     border-color: #f59e0b !important;

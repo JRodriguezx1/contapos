@@ -10,7 +10,7 @@
         <?php if($user['perfil']<4):  ?>
             <input id="btn4" name="config" type="radio">
         <?php endif;  ?>
-            <div class="flex justify-center mb-7 precios-adicionales-tabs-wrap">
+            <div class="precios-adicionales-tabs-wrap mb-7 flex">
                 <div class="precios-adicionales-tabs btnsetup btnsetup-precios">
                     <label class="precios-adicionales-tab btn1" for="btn1">
                         <span class="material-symbols-outlined">payments</span>

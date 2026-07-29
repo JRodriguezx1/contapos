@@ -29,12 +29,8 @@
         </div>
     <?php endif; ?>
 </div>
-    <!-- <div class="menu">
-        <img id="mobile-menu" src="/build/img/menu.svg" alt="imagen menu">
-    </div> -->
-
     <!-- Menu flotante en la parte inferior -->
-    <div class="menu-mobile-bottom fixed z-30 w-full h-[7rem] max-w-[33rem] -translate-x-1/2 bg-white  border border-gray-200 rounded-full bottom-4 left-1/2  shadow-lg">
+    <div class="fixed bottom-4 left-1/2 z-30 h-[7rem] w-full max-w-[33rem] -translate-x-1/2 rounded-full border border-gray-200 bg-white shadow-lg md:hidden">
         <div class="grid h-full max-w-[33rem] grid-cols-5 mx-auto group">
             
             <?php if(tienePermiso('Habilitar modulo de configuracion')&&userPerfil()==3 || userPerfil()<3): ?>
@@ -101,10 +97,10 @@
         </div>
     </div>
 
-<div class="barra flex items-center justify-between">
+<div class="hidden items-center justify-between bg-white px-8 py-4 shadow-sm md:flex">
     <!-- izquierda -->
-    <div class="toggleanduser flex items-center gap-3">
-        <span class="sidebartoggle material-symbols-outlined">menu</span>
+    <div class="flex items-center gap-3">
+        <span class="sidebartoggle material-symbols-outlined cursor-pointer">menu</span>
         <span class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold px-6 py-2 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:scale-110 uppercase tracking-wide">
             <?php echo nombreSucursal(); ?>
         </span>
@@ -136,7 +132,7 @@
     <!-- derecha -->
     <div class="flex items-center gap-4 mr-4">
 
-        <a class="cerrar-sesion !bg-indigo-600 hover:!bg-indigo-700" href="/logout">
+        <a class="inline-block w-auto rounded-lg border-0 bg-indigo-600 px-8 py-4 text-center text-[1.4rem] font-bold text-white transition-colors duration-300 hover:bg-indigo-700" href="/logout">
             Cerrar Sesi&oacute;n
         </a>
 
@@ -283,7 +279,7 @@
         <?php if($user['perfil']<4): ?>
           <a class="font-semibold text-slate-500 transition-colors hover:text-indigo-700" href="/admin/comisiones">Comisiones</a>
         <?php endif; ?>
-        <a class="cerrar-sesion font-bold text-indigo-600 transition-colors hover:text-indigo-800" href="/logout">Cerrar sesi&oacute;n</a>
+        <a class="font-bold text-indigo-600 transition-colors hover:text-indigo-800" href="/logout">Cerrar sesi&oacute;n</a>
       </div>
       <p class="mt-3 text-base font-semibold text-slate-500">JDOS <?php echo $_SESSION['sucursal']->version; ?></p>
     </div>
