@@ -94,54 +94,6 @@
   color: #0f766e;
 }
 
-.ordenresumen-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .8rem;
-  margin-bottom: 1rem;
-}
-
-.ordenresumen-chip {
-  border-radius: 999px;
-  display: inline-flex;
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1;
-  padding: .85rem 1.2rem;
-}
-
-.ordenresumen-chip-muted {
-  background: #f1f5f9;
-  color: #334155;
-}
-
-.ordenresumen-chip-primary {
-  background: #eef2ff;
-  color: #4338ca;
-}
-
-.ordenresumen-chip-warning {
-  background: #fff7ed;
-  color: #c2410c;
-}
-
-.ordenresumen-emisor {
-  align-items: center;
-  border-bottom: 1px solid #dbe4f0;
-  color: #475569;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 1.45rem;
-  gap: .8rem;
-  margin-bottom: 1.6rem;
-  padding-bottom: 1.2rem;
-}
-
-.ordenresumen-emisor .btn-xs {
-  min-height: 3.2rem;
-  padding: .55rem 1rem;
-}
-
 .ordenresumen-metrics {
   display: grid;
   gap: 1rem;
@@ -179,13 +131,6 @@
 .ordenresumen-metric-label .material-symbols-outlined {
   color: #4d46e5;
   font-size: 2.2rem;
-}
-
-.ordenresumen-state {
-  color: #0f766e;
-  font-size: 1.55rem;
-  font-weight: 800;
-  margin: 0 0 .3rem;
 }
 
 .ordenresumen-main-grid {
@@ -231,16 +176,6 @@
 .ordenresumen-card-title .material-symbols-outlined,
 .ordenresumen-info-title .material-symbols-outlined {
   color: #4d46e5;
-}
-
-.ordenresumen-count-pill {
-  background: #eef2ff;
-  border-radius: 999px;
-  color: #4338ca;
-  font-size: 1.2rem;
-  font-weight: 700;
-  padding: .55rem .9rem;
-  white-space: nowrap;
 }
 
 .ordenresumen-table {
@@ -354,24 +289,11 @@
   padding: 1.35rem;
 }
 
-.ordenresumen-payment-summary p {
-  font-size: 1.35rem !important;
-}
-
-.ordenresumen-payment-summary #total {
-  font-size: 3.6rem !important;
-  white-space: nowrap;
-}
-
 #miDialogoEliminarOrden.orden-delete-dialog[open] {
   display: flex;
   flex-direction: column;
   max-height: calc(100dvh - 2.4rem);
   overflow: hidden;
-}
-
-#miDialogoEliminarOrden .orden-delete-dialog__header {
-  flex: 0 0 auto;
 }
 
 #miDialogoEliminarOrden .orden-delete-dialog__body {
@@ -420,10 +342,8 @@
   .ordenresumen-actions .btn-command {
     max-width: none;
     min-width: 0;
-    width: 100%;
   }
 
-  .ordenresumen-metrics,
   .ordenresumen-side {
     grid-template-columns: 1fr;
   }

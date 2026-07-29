@@ -1,6 +1,6 @@
 <!-- MODAL PARA ELIMINAR LA ORDEN-->
-<dialog class="midialog-sm orden-delete-dialog max-h-[calc(100dvh-2.4rem)] overflow-hidden !p-0 sm:!max-w-[54rem]" id="miDialogoEliminarOrden">
-    <div class="orden-delete-dialog__header relative shrink-0 bg-gradient-to-br from-red-600 via-rose-600 to-indigo-600 px-8 pb-8 pt-7 text-white">
+<dialog class="midialog-sm orden-delete-dialog !p-0 sm:!max-w-[54rem]" id="miDialogoEliminarOrden">
+    <div class="relative shrink-0 bg-gradient-to-br from-red-600 via-rose-600 to-indigo-600 px-8 pb-8 pt-7 text-white">
         <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,.16)_0%,rgba(255,255,255,0)_48%)]"></div>
 
         <div class="relative flex items-start gap-5">
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="orden-delete-dialog__body overflow-y-auto overscroll-contain px-8 pb-8 pt-6">
+    <div class="orden-delete-dialog__body overflow-y-auto overscroll-contain px-8 pt-6">
         <div id="divmsjalerta1"></div>
 
         <div class="mb-4 space-y-5">
@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        <div id="productsInv" class="orden-delete-dialog__products mt-6 hidden overflow-hidden rounded-2xl border border-slate-200 shadow-sm animate-fadeIn">
+        <div id="productsInv" class="orden-delete-dialog__products mt-6 hidden rounded-2xl border border-slate-200 shadow-sm animate-fadeIn">
             <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
                 <h3 class="text-xl font-semibold text-slate-700">
                     Productos a devolver
