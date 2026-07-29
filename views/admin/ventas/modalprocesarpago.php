@@ -104,7 +104,7 @@
 
           <p id="abonoTotal" class="hidden m-0 text-center text-2xl font-light text-slate-600">Abono inicial: <span id="valorAbono" class="font-semibold text-slate-800">0</span></p>
 
-          <section class="accordion rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <section class="accordion payment-methods-panel rounded-2xl border border-slate-200 bg-slate-50 p-5">
             <input type="checkbox" id="first">
             <label class="etiqueta !flex cursor-pointer items-center justify-between gap-4 !pb-0 pr-3" for="first">
               <div class="flex items-start gap-3">
@@ -117,11 +117,19 @@
                 </div>
               </div>
 
-              <span class="ml-auto mr-2 inline-flex h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 text-lg font-semibold text-white shadow-sm">
+              <span id="btnTogglePaymentMethods" class="payment-methods-toggle ml-auto mr-2 inline-flex h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 text-lg font-semibold text-white shadow-sm" role="button" tabindex="0">
                 <span class="material-symbols-outlined text-xl">add</span>
                 Agregar
               </span>
             </label>
+
+            <div id="paymentMethodsRequiredMessage" class="payment-methods-required-message hidden" role="alert" aria-live="polite">
+              <span class="material-symbols-outlined">error</span>
+              <div>
+                <strong>Falta asignar el abono</strong>
+                <p>Selecciona un medio de pago y registra el valor correspondiente al abono inicial.</p>
+              </div>
+            </div>
 
             <div class="wrapper">
               <div class="wrapper-content">
@@ -271,3 +279,4 @@
     }
   }
 </style>
+

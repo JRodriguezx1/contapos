@@ -1,163 +1,258 @@
-<div class="box reportes mb-20">
-  <h4 class="text-gray-600 mb-8">Reportes</h4>
-  <div class="w-full min-h-80 grid grid-cols-2 tlg:grid-cols-3 gap-4">
-    <!-- Gráfica de barras -->
-    <div class="col-span-2 tlg:col-span-2 flex flex-col">
-        <p class="text-gray-500 text-xl mb-2">Representacion grafica de ventas</p>
-    
-        <!-- Botones ajustados al texto -->
-        <div class="inline-flex self-start rounded-2xl shadow-md overflow-hidden border border-gray-300">
-            <button id="graficaVentaMensual" 
-                class="graficaventa px-6 py-3 text-base font-medium text-gray-600 bg-white 
-                    hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none 
-                    focus:ring-2 focus:ring-indigo-500 transition">
-                Mensual
-            </button>
-            <button id="graficaVentaDiario" 
-                class="graficaventa px-6 py-3 text-base font-medium text-gray-600 bg-white 
-                    hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none 
-                    focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-                Diario
-            </button>
+<div class="box reportes reportes-dashboard mb-20">
+  <div class="reportes-dashboard__shell">
+    <section class="reportes-dashboard__hero">
+      <div class="reportes-dashboard__hero-text">
+        <span>Analitica</span>
+        <h1>Centro de reportes</h1>
+        <p>Consulta ventas, cartera, facturacion, inventario y rentabilidad desde una vista mas clara.</p>
+      </div>
+      <div class="reportes-dashboard__hero-card">
+        <span class="material-symbols-outlined">query_stats</span>
+        <strong>Panel</strong>
+        <small>reportes disponibles</small>
+      </div>
+    </section>
+
+    <section class="reportes-dashboard__charts">
+      <article class="reportes-dashboard__chart reportes-dashboard__chart--wide">
+        <div class="reportes-dashboard__chart-header">
+          <div>
+            <span>Ventas</span>
+            <h2>Representacion grafica de ventas</h2>
+          </div>
+          <div class="reportes-dashboard__switch">
+            <button id="graficaVentaMensual" class="graficaventa" type="button">Mensual</button>
+            <button id="graficaVentaDiario" class="graficaventa" type="button">Diario</button>
+          </div>
         </div>
-
-
-        <!-- Gráfica -->
-        <div class="flex-1 h-[390px]">
-            <canvas id="chartventas" class="h-full w-full"></canvas>
+        <div class="reportes-dashboard__canvas">
+          <canvas id="chartventas"></canvas>
         </div>
-    </div>
+      </article>
 
+      <article class="reportes-dashboard__chart">
+        <div class="reportes-dashboard__chart-header">
+          <div>
+            <span>Inventario</span>
+            <h2>Productos principales</h2>
+          </div>
+        </div>
+        <div class="reportes-dashboard__canvas">
+          <canvas id="chartutilidad"></canvas>
+        </div>
+      </article>
+    </section>
 
-    <!-- Gráfica circular -->
-    <div class="col-span-2 xxs:col-span-1 tlg:col-start-3 tlg:col-end-4 flex flex-col">
-      <p class="text-gray-500 text-xl mb-2">Valor de los productos principales del inventario</p>
-      <div class="flex-1 h-[390px]">
-        <canvas id="chartutilidad" class="h-full w-full"></canvas>
+    <section class="reportes-dashboard__section">
+      <div class="reportes-dashboard__section-header">
+        <span class="material-symbols-outlined">payments</span>
+        <div>
+          <h2>Reportes de ventas</h2>
+          <p>Seguimiento comercial, cartera y operaciones de caja.</p>
+        </div>
       </div>
-    </div>
-
-    <!-- Reportes de Ventas -->
-    <div class="tlg:row-start-2 tlg:row-end-2 col-start-1 col-end-4">
-      <h5 class="mb-5">Reportes de Ventas</h5>
-      <div class="flex flex-wrap gap-4 mb-4">
-        <a href="/admin/reportes/ventasgenerales" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md   ">
-          <span class="material-symbols-outlined">payments</span>Ventas generales
+      <div class="reportes-dashboard__grid">
+        <a href="/admin/reportes/ventasgenerales" class="reportes-dashboard__link reportes-dashboard__link--primary">
+          <span class="material-symbols-outlined">payments</span>
+          <strong>Ventas generales</strong>
+          <small>Resumen de ventas</small>
         </a>
-        <a href="/admin/reportes/creditos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Estados Creditos
+        <a href="/admin/reportes/creditos" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          <strong>Estados creditos</strong>
+          <small>Cartera activa</small>
         </a>
-        <a href="/admin/caja/ultimoscierres" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white text-center border border-gray-200 rounded-lg shadow-md   ">
-          <span class="material-symbols-outlined">attach_money</span>Cierres de caja
+        <a href="/admin/caja/ultimoscierres" class="reportes-dashboard__link reportes-dashboard__link--primary">
+          <span class="material-symbols-outlined">point_of_sale</span>
+          <strong>Cierres de caja</strong>
+          <small>Control de caja</small>
         </a>
-        <a href="/admin/caja/zetadiario" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <i class="mb-1 text-3xl fa-solid fa-z"></i>Zeta diario
+        <a href="/admin/caja/zetadiario" class="reportes-dashboard__link">
+          <i class="fa-solid fa-z"></i>
+          <strong>Zeta diario</strong>
+          <small>Corte diario</small>
         </a>
-        <a href="/admin/reportes/ventasxtransaccion" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Ventas por transaccion
+        <a href="/admin/reportes/ventasxtransaccion" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">receipt_long</span>
+          <strong>Ventas por transaccion</strong>
+          <small>Detalle de movimientos</small>
         </a>
-        <a href="/admin/reportes/ventasxcliente" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Ventas por cliente
+        <a href="/admin/reportes/ventasxcliente" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">person_search</span>
+          <strong>Ventas por cliente</strong>
+          <small>Consumo por cliente</small>
         </a>
-        <a href="/admin/reportes/ventaProductosUsuarios" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">package_2</span>Productos por usuario
+        <a href="/admin/reportes/ventaProductosUsuarios" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">package_2</span>
+          <strong>Productos por usuario</strong>
+          <small>Gestion por vendedor</small>
         </a>
-        <a href="/admin/reportes/reporteEmisores" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">package_2</span>Reporte de emisores
-        </a>
-      </div>
-    </div>
-
-    <div class="tlg:row-start-3 tlg:row-end-3 col-start-1 col-end-4">
-      <h5 class="mb-5 mt-14">Reportes de Facturas</h5>
-      <div class="flex flex-wrap gap-4 mb-4">
-        <a href="/admin/reportes/facturaspagas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">request_quote</span>Facturas pagas
-        </a>
-        <a href="/admin/caja/pedidosguardados" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">receipt_long</span>Cotizaciones
-        </a>
-        <a href="/admin/reportes/facturasanuladas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">contract_delete</span>Facturas anuladas
-        </a>
-        <a href="/admin/reportes/facturaselectronicas" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Electronicas generadas
-        </a>
-        <a href="/admin/reportes/facturaselectronicaspendientes" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Electronicas Pendientes
-        </a>
-        <a href="/admin/reportes/recibosCaja" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">point_of_sale</span>Recibos de caja
+        <a href="/admin/reportes/reporteEmisores" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">business_center</span>
+          <strong>Reporte de emisores</strong>
+          <small>Operacion por emisor</small>
         </a>
       </div>
+    </section>
 
-      <h5 class="mb-5 mt-14">Reportes de Inventario</h5>
-      <div class="flex flex-wrap gap-4 mb-4">
-        <a href="/admin/reportes/inventarioxproducto" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">category</span>Inventario por producto
+    <section class="reportes-dashboard__section">
+      <div class="reportes-dashboard__section-header">
+        <span class="material-symbols-outlined">request_quote</span>
+        <div>
+          <h2>Reportes de facturas</h2>
+          <p>Consulta facturas, recibos y documentos electronicos.</p>
+        </div>
+      </div>
+      <div class="reportes-dashboard__grid">
+        <a href="/admin/reportes/facturaspagas" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">request_quote</span>
+          <strong>Facturas pagas</strong>
+          <small>Documentos pagados</small>
         </a>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">splitscreen_bottom</span>Inventario por categoria
-        </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">inventory</span>Inventario por sede
-        </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">inventory_2</span>Inventario general
-        </button>
-        <a href="/admin/reportes/movimientosinventarios" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 text-center text-slate-600">
-          <span class="material-symbols-outlined">speaker_notes</span>Movimientos de inventario
+        <a href="/admin/caja/pedidosguardados" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">receipt_long</span>
+          <strong>Cotizaciones</strong>
+          <small>Pedidos guardados</small>
         </a>
-        <a href="/admin/reportes/compras" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md   ">
-          <span class="material-symbols-outlined">speaker_notes</span>Compras
+        <a href="/admin/reportes/facturasanuladas" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">contract_delete</span>
+          <strong>Facturas anuladas</strong>
+          <small>Documentos anulados</small>
         </a>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md   ">
-          <span class="material-symbols-outlined">move_up</span>Rotacion de inventario
+        <a href="/admin/reportes/facturaselectronicas" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">description</span>
+          <strong>Electronicas generadas</strong>
+          <small>Facturacion electronica</small>
+        </a>
+        <a href="/admin/reportes/facturaselectronicaspendientes" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">pending_actions</span>
+          <strong>Electronicas pendientes</strong>
+          <small>Por gestionar</small>
+        </a>
+        <a href="/admin/reportes/recibosCaja" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">point_of_sale</span>
+          <strong>Recibos de caja</strong>
+          <small>Ingresos registrados</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="reportes-dashboard__section">
+      <div class="reportes-dashboard__section-header">
+        <span class="material-symbols-outlined">inventory_2</span>
+        <div>
+          <h2>Reportes de inventario</h2>
+          <p>Movimientos, compras y control de existencias.</p>
+        </div>
+      </div>
+      <div class="reportes-dashboard__grid">
+        <a href="/admin/reportes/inventarioxproducto" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">category</span>
+          <strong>Inventario por producto</strong>
+          <small>Existencias por articulo</small>
+        </a>
+        <button class="reportes-dashboard__link" type="button">
+          <span class="material-symbols-outlined">splitscreen_bottom</span>
+          <strong>Inventario por categoria</strong>
+          <small>Vista agrupada</small>
+        </button>
+        <button class="reportes-dashboard__link" type="button">
+          <span class="material-symbols-outlined">storefront</span>
+          <strong>Inventario por sede</strong>
+          <small>Stock por ubicacion</small>
+        </button>
+        <button class="reportes-dashboard__link" type="button">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <strong>Inventario general</strong>
+          <small>Balance completo</small>
+        </button>
+        <a href="/admin/reportes/movimientosinventarios" class="reportes-dashboard__link">
+          <span class="material-symbols-outlined">sync_alt</span>
+          <strong>Movimientos de inventario</strong>
+          <small>Entradas y salidas</small>
+        </a>
+        <a href="/admin/reportes/compras" class="reportes-dashboard__link reportes-dashboard__link--primary">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <strong>Compras</strong>
+          <small>Ordenes y compras</small>
+        </a>
+        <button class="reportes-dashboard__link reportes-dashboard__link--primary" type="button">
+          <span class="material-symbols-outlined">move_up</span>
+          <strong>Rotacion de inventario</strong>
+          <small>Indicadores de salida</small>
         </button>
       </div>
-    </div>
+    </section>
 
-    
+    <div class="reportes-dashboard__columns">
+      <section class="reportes-dashboard__section">
+        <div class="reportes-dashboard__section-header">
+          <span class="material-symbols-outlined">monitoring</span>
+          <div>
+            <h2>Utilidad y crecimiento</h2>
+            <p>Rentabilidad, gastos y comparativos.</p>
+          </div>
+        </div>
+        <div class="reportes-dashboard__grid reportes-dashboard__grid--compact">
+          <a href="/admin/reportes/utilidadRentabilidad" class="reportes-dashboard__link">
+            <span class="material-symbols-outlined">monitoring</span>
+            <strong>Utilidad rentabilidad</strong>
+            <small>Margenes del negocio</small>
+          </a>
+          <a href="/admin/reportes/utilidadxproducto" class="reportes-dashboard__link">
+            <span class="material-symbols-outlined">chart_data</span>
+            <strong>Utilidad por producto</strong>
+            <small>Margen por articulo</small>
+          </a>
+          <button class="reportes-dashboard__link" type="button">
+            <span class="material-symbols-outlined">category</span>
+            <strong>Utilidad por categoria</strong>
+            <small>Agrupacion por familia</small>
+          </button>
+          <a href="/admin/reportes/gastoseingresos" class="reportes-dashboard__link">
+            <span class="material-symbols-outlined">fact_check</span>
+            <strong>Gastos e ingresos</strong>
+            <small>Flujo operativo</small>
+          </a>
+          <button class="reportes-dashboard__link" type="button">
+            <span class="material-symbols-outlined">query_stats</span>
+            <strong>Comparacion interanual</strong>
+            <small>Evolucion por anos</small>
+          </button>
+          <button class="reportes-dashboard__link" type="button">
+            <span class="material-symbols-outlined">deployed_code_update</span>
+            <strong>Tasa de retorno</strong>
+            <small>Indicador de inversion</small>
+          </button>
+        </div>
+      </section>
 
-    <!-- Utilidad Gastos y Crecimiento -->
-    <div class="col-span-2">
-      <h5 class="mb-5 mt-14">Utilidad Gastos y Crecimiento</h5>
-      <div class="flex flex-wrap gap-4 mb-4">
-        <a href="/admin/reportes/utilidadRentabilidad" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">monitoring</span>Utilidad Rentabilidad
-        </a>
-        <a href="/admin/reportes/utilidadxproducto" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">chart_data</span>Utilidad por producto
-        </a>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">chart_data</span>Utilidad por categoria
-        </button>
-        <a href="/admin/reportes/gastoseingresos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">fact_check</span>Gastos e ingresos
-        </a>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">query_stats</span>Comparación interanual
-        </button>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">deployed_code_update</span>Tasa de retorno
-        </button>
-      </div>
-    </div>
-
-    <!-- Otros -->
-    <div class="col-span-2 tlg:col-span-1">
-      <h5 class="mb-5 mt-14">Otros</h5>
-      <div class="flex flex-wrap gap-4 mb-4">
-        <a href="/admin/reportes/clientesnuevos" class="flex flex-col items-center w-[120px] p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100    text-center text-slate-600">
-          <span class="material-symbols-outlined">person_add</span>Clientes nuevos
-        </a>
-        <a href="/admin/reportes/clientesrecurrentes" class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md   ">
-          <span class="material-symbols-outlined">person_check</span>Clientes recurrentes
-        </a>
-        <button class="flex flex-col items-center w-[120px] p-6 bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl !text-white border border-gray-200 rounded-lg shadow-md   ">
-          <span class="material-symbols-outlined">vpn_key_alert</span>Registro de actividad
-        </button>
-      </div>
+      <section class="reportes-dashboard__section">
+        <div class="reportes-dashboard__section-header">
+          <span class="material-symbols-outlined">group</span>
+          <div>
+            <h2>Otros reportes</h2>
+            <p>Clientes y actividad del sistema.</p>
+          </div>
+        </div>
+        <div class="reportes-dashboard__grid reportes-dashboard__grid--compact">
+          <a href="/admin/reportes/clientesnuevos" class="reportes-dashboard__link">
+            <span class="material-symbols-outlined">person_add</span>
+            <strong>Clientes nuevos</strong>
+            <small>Altas recientes</small>
+          </a>
+          <a href="/admin/reportes/clientesrecurrentes" class="reportes-dashboard__link reportes-dashboard__link--primary">
+            <span class="material-symbols-outlined">person_check</span>
+            <strong>Clientes recurrentes</strong>
+            <small>Frecuencia de compra</small>
+          </a>
+          <button class="reportes-dashboard__link reportes-dashboard__link--primary" type="button">
+            <span class="material-symbols-outlined">vpn_key_alert</span>
+            <strong>Registro de actividad</strong>
+            <small>Auditoria interna</small>
+          </button>
+        </div>
+      </section>
     </div>
   </div>
 </div>

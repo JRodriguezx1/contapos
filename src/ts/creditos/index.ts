@@ -55,8 +55,23 @@
 
     
     //////////////////  TABLA //////////////////////
-    Object.assign(configdatatablesgenerico, {order: [[ 0, 'desc' ]]});
-    let tablaCreditos = ($('#tablaCreditos') as any).DataTable(configdatatablesgenerico);
+    let tablaCreditos = ($('#tablaCreditos') as any).DataTable({
+      ...configdatatablesgenerico,
+      dom: 'Brtip',
+      buttons: [
+        {extend: 'copyHtml5', className: 'creditos-export-button creditos-export-button--copy', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-copy"></i></span><span>Copiar</span>', title: 'creditos-y-separados'},
+        {extend: 'excelHtml5', className: 'creditos-export-button creditos-export-button--excel', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-file-excel"></i></span><span>Excel</span>', title: 'creditos-y-separados'},
+        {extend: 'csvHtml5', className: 'creditos-export-button creditos-export-button--csv', text: '<span class="creditos-export-button__icon"><i class="fa-solid fa-file-csv"></i></span><span>CSV</span>', title: 'creditos-y-separados'},
+        {extend: 'pdfHtml5', className: 'creditos-export-button creditos-export-button--pdf', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-file-pdf"></i></span><span>PDF</span>', title: 'creditos-y-separados'},
+        {extend: 'print', className: 'creditos-export-button creditos-export-button--print', text: '<span class="creditos-export-button__icon"><i class="fa-solid fa-print"></i></span><span>Imprimir</span>', title: 'creditos-y-separados'},
+        {extend: 'colvis', className: 'creditos-export-button creditos-export-button--columns', text: '<span class="creditos-export-button__icon"><i class="fa-solid fa-table-columns"></i></span><span>Columnas</span>'}
+      ],
+      order: [[ 0, 'desc' ]]
+    });
+    modernizarToolbarDataTable('#tablaCreditos');
+    modernizarBotonesExportacionCreditos(tablaCreditos);
+    ocultarToolbarNativoCreditos();
+    ($('#tablaCreditos') as any).on('draw.dt', ocultarToolbarNativoCreditos);
 
 
     //evento a la tabla
@@ -73,13 +88,22 @@
       indiceFila = (tablaCreditos as any).row((e.target as HTMLElement).closest('tr')).index();
       
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
+          buttonsStyling: false,
           icon: 'question',
-          title: 'Desea eliminar el credito',
-          text: "El credito, seran anulado definitivamente.",
+          title: 'Desea anular el credito?',
+          text: "El credito sera anulado definitivamente.",
           showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
+          confirmButtonText: 'Si, anular',
+          cancelButtonText: 'Cancelar',
       }).then((result:any) => {
           if (result.isConfirmed) {
               (async ()=>{ 
@@ -91,19 +115,132 @@
                       const resultado = await respuesta.json();
                       if(resultado.exito !== undefined){
                         const datosActuales = (tablaCreditos as any).row(indiceFila).data();
-                        datosActuales[8] = '<div class=" text-red-500 font-semibold">Anulado</div>';
-                        datosActuales[9] = `<a class="btn-xs btn-bluedark" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver estadisticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>`;
+                        datosActuales[9] = '<span class="creditos-status creditos-status--danger">Anulado</span>';
+                        datosActuales[10] = `<div class="acciones-btns" id="${idcredito}"><a class="creditos-action creditos-action--detail" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a></div>`;
                         (tablaCreditos as any).row(indiceFila).data(datosActuales).draw();
                         (tablaCreditos as any).page(info.page).draw('page'); 
-                        Swal.fire(resultado.exito[0], '', 'success');
+                        Swal.fire({
+                          customClass: {
+                            popup: 'j2-confirm j2-confirm--success',
+                            icon: 'j2-confirm__icon',
+                            title: 'j2-confirm__title',
+                            htmlContainer: 'j2-confirm__text',
+                            actions: 'j2-confirm__actions j2-confirm__actions--single',
+                            confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                          },
+                          buttonsStyling: false,
+                          icon: 'success',
+                          title: 'Credito anulado',
+                          text: resultado.exito[0],
+                          confirmButtonText: 'OK'
+                        });
                       }else{
-                          Swal.fire(resultado.error[0], '', 'error');
+                          Swal.fire({
+                            customClass: {
+                              popup: 'j2-confirm j2-confirm--danger',
+                              icon: 'j2-confirm__icon',
+                              title: 'j2-confirm__title',
+                              htmlContainer: 'j2-confirm__text',
+                              actions: 'j2-confirm__actions j2-confirm__actions--single',
+                              confirmButton: 'j2-confirm__button j2-confirm__button--danger'
+                            },
+                            buttonsStyling: false,
+                            icon: 'error',
+                            title: 'No se pudo anular',
+                            text: resultado.error[0],
+                            confirmButtonText: 'OK'
+                          });
                       }
                   } catch (error) {
                       console.log(error);
+                      Swal.fire({
+                        customClass: {
+                          popup: 'j2-confirm j2-confirm--danger',
+                          icon: 'j2-confirm__icon',
+                          title: 'j2-confirm__title',
+                          htmlContainer: 'j2-confirm__text',
+                          actions: 'j2-confirm__actions j2-confirm__actions--single',
+                          confirmButton: 'j2-confirm__button j2-confirm__button--danger'
+                        },
+                        buttonsStyling: false,
+                        icon: 'error',
+                        title: 'No se pudo anular',
+                        text: 'Intenta nuevamente o revisa la conexion.',
+                        confirmButtonText: 'OK'
+                      });
                   }
               })();//cierre de async()
           }
+      });
+    }
+
+    function ocultarToolbarNativoCreditos():void{
+      const wrapper = document.querySelector('#tablaCreditos_wrapper');
+      wrapper?.querySelectorAll('.dataTables_length, .dataTables_filter').forEach((control)=>{
+        (control as HTMLElement).remove();
+      });
+    }
+
+    function modernizarBotonesExportacionCreditos(dataTable:any):void{
+      const wrapper = document.querySelector('#tablaCreditos_wrapper') as HTMLElement|null;
+      const botonesNativos = wrapper?.querySelector('.dt-buttons') as HTMLElement|null;
+      if(!wrapper || !botonesNativos || wrapper.querySelector('.creditos-export-toolbar'))return;
+
+      botonesNativos.classList.add('creditos-native-export-buttons');
+      botonesNativos.style.display = 'none';
+      botonesNativos.setAttribute('aria-hidden', 'true');
+
+      const acciones = [
+        {indice: 0, clase: 'copy', icono: 'fa-regular fa-copy', texto: 'Copiar'},
+        {indice: 1, clase: 'excel', icono: 'fa-regular fa-file-excel', texto: 'Excel'},
+        {indice: 2, clase: 'csv', icono: 'fa-solid fa-file-csv', texto: 'CSV'},
+        {indice: 3, clase: 'pdf', icono: 'fa-regular fa-file-pdf', texto: 'PDF'},
+        {indice: 4, clase: 'print', icono: 'fa-solid fa-print', texto: 'Imprimir'},
+        {indice: 5, clase: 'columns', icono: 'fa-solid fa-table-columns', texto: 'Columnas'}
+      ];
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'creditos-export-toolbar';
+      toolbar.innerHTML = `
+        <div class="creditos-export-menu">
+          <button type="button" class="creditos-export-trigger" aria-expanded="false">
+            <span><i class="fa-solid fa-download"></i></span>
+            Exportar
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="creditos-export-menu__list">
+          ${acciones.map((accion)=>`
+            <button type="button" class="creditos-export-chip creditos-export-chip--${accion.clase}" data-export-index="${accion.indice}">
+              <span class="creditos-export-chip__icon"><i class="${accion.icono}"></i></span>
+              <span>${accion.texto}</span>
+            </button>
+          `).join('')}
+          </div>
+        </div>
+      `;
+
+      botonesNativos.insertAdjacentElement('beforebegin', toolbar);
+      const trigger = toolbar.querySelector('.creditos-export-trigger') as HTMLButtonElement|null;
+      const menu = toolbar.querySelector('.creditos-export-menu') as HTMLElement|null;
+
+      trigger?.addEventListener('click', (event)=>{
+        event.stopPropagation();
+        const abierto = menu?.classList.toggle('is-open') ?? false;
+        trigger.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', ()=>{
+        menu?.classList.remove('is-open');
+        trigger?.setAttribute('aria-expanded', 'false');
+      });
+
+      toolbar.querySelectorAll('[data-export-index]').forEach((boton)=>{
+        boton.addEventListener('click', (event)=>{
+          event.stopPropagation();
+          dataTable.button(Number((boton as HTMLElement).dataset.exportIndex)).trigger();
+          menu?.classList.remove('is-open');
+          trigger?.setAttribute('aria-expanded', 'false');
+        });
       });
     }
 

@@ -1,64 +1,111 @@
-<div class="box cuotasCreditos">
-  <h4 class="text-gray-600 mb-6 border-b-2 pb-2 border-blue-600">Reporte de cuotas</h4>
-
-
+<div class="box cuotasCreditos report-cuotas">
   <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
-  <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
-    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-    </svg>
-    <span class="sr-only">Atrás</span>
-  </a>
-  
-  <h4 class="text-gray-600 mb-8 mt-4">Cuotas de creditos/separados</h4>
-  
-  <div class="flex flex-col gap-4">
-    <!-- Grupo de botones -->
-    <div class="inline-flex rounded-2xl shadow-md overflow-hidden border border-gray-300 self-start">
-      <button id="btnmesactual" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-        Mes actual
-      </button>
-      <button id="btnmesanterior" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-        Mes anterior
-      </button>
-      <button id="btnhoy" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-        Hoy
-      </button>
-      <button id="btnayer" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-        Ayer
-      </button>
-    </div>
 
-    <!-- Input y botón consultar -->
-    <div class="flex items-center gap-3">
-      <input 
-        type="text" 
-        name="datetimes" 
-        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-60 p-3 text-base     focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        placeholder="Seleccionar fecha"
-      />
-      <button id="consultarFechaPersonalizada" class="px-6 py-3 text-base font-medium bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-md transition">
-        Consultar
-      </button>
-    </div>
-  </div>
+  <div class="report-cuotas__shell">
+    <section class="report-cuotas__hero">
+      <a href="/admin/creditos" class="report-cuotas__back" aria-label="Volver a creditos">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
 
+      <div class="report-cuotas__title">
+        <p>Cartera</p>
+        <h1>Reporte de cuotas</h1>
+        <span>Consulta pagos de creditos y separados por rango de fechas.</span>
+      </div>
 
-  <div class="mt-4">
-    <p class="text-gray-500 text-xl">2026</p>
-    <table id="tablaCuotasCreditos" class="display responsive nowrap tabla" width="100%">
-      <thead class=" text-gray-700">
-          <tr>
-            <th class="px-4 py-2 border">Fecha</th>
-            <th class="px-4 py-2 border">Tipo</th>
-            <th class="px-4 py-2 border">Cliente</th>
-            <th class="px-4 py-2 border">Credito</th>
-            <th class="px-4 py-2 border">N° Cuota</th>
-            <th class="px-4 py-2 border">Valor</th>
-          </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
+      <div class="report-cuotas__stats" aria-label="Resumen del reporte">
+        <article class="report-cuotas__stat">
+          <span><i class="fa-solid fa-receipt"></i></span>
+          <div>
+            <strong id="cuotasCreditosTotalRegistros">0</strong>
+            <small>cuotas registradas</small>
+          </div>
+        </article>
+        <article class="report-cuotas__stat report-cuotas__stat--accent">
+          <span><i class="fa-solid fa-wallet"></i></span>
+          <div>
+            <strong id="cuotasCreditosTotalValor">$0</strong>
+            <small>valor pagado</small>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="report-cuotas__filters">
+      <div class="report-cuotas__filters-header">
+        <span><i class="fa-solid fa-calendar-days"></i></span>
+        <div>
+          <h2>Periodo de consulta</h2>
+          <p>Elige un atajo o define un rango personalizado.</p>
+        </div>
+      </div>
+
+      <div class="report-cuotas__quick-actions">
+        <button id="btnmesactual" class="report-cuotas__filter-button report-cuotas__filter-button--primary" type="button">
+          <i class="fa-regular fa-calendar-check"></i>
+          Mes actual
+        </button>
+        <button id="btnmesanterior" class="report-cuotas__filter-button" type="button">
+          <i class="fa-solid fa-calendar-minus"></i>
+          Mes anterior
+        </button>
+        <button id="btnhoy" class="report-cuotas__filter-button" type="button">
+          <i class="fa-regular fa-sun"></i>
+          Hoy
+        </button>
+        <button id="btnayer" class="report-cuotas__filter-button" type="button">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          Ayer
+        </button>
+      </div>
+
+      <div class="report-cuotas__custom-range">
+        <label for="cuotasCreditosRango">Rango personalizado</label>
+        <div class="report-cuotas__date-field">
+          <span><i class="fa-solid fa-calendar"></i></span>
+          <input
+            id="cuotasCreditosRango"
+            type="text"
+            name="datetimes"
+            placeholder="Seleccionar fecha"
+            autocomplete="off"
+            inputmode="none"
+            readonly
+          >
+        </div>
+        <button id="consultarFechaPersonalizada" class="report-cuotas__filter-button report-cuotas__filter-button--accent" type="button">
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+          Consultar
+        </button>
+      </div>
+    </section>
+
+    <section class="report-cuotas__table-card">
+      <div class="report-cuotas__table-header">
+        <div>
+          <h2>Cuotas de creditos/separados</h2>
+          <p>Detalle de pagos, medio utilizado y estado del credito.</p>
+        </div>
+        <span id="cuotasCreditosPeriodo">Sin periodo consultado</span>
+      </div>
+
+      <div class="report-cuotas__table-wrap">
+        <table id="tablaCuotasCreditos" class="display responsive nowrap tabla report-cuotas__table" width="100%">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Cliente</th>
+              <th>Credito</th>
+              <th>No. cuota</th>
+              <th>Valor</th>
+              <th>Medio de pago</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
   </div>
 </div>

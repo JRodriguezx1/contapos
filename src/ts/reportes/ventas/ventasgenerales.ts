@@ -1,9 +1,19 @@
-
+﻿
 (()=>{
 
     if(!document.querySelector('.ventasgenerales'))return;
 
     const POS = (window as any).POS;
+    const dataTablesLanguage = {
+        search: 'Busqueda',
+        emptyTable: 'No Hay datos disponibles',
+        zeroRecords: 'No se encontraron registros coincidentes',
+        lengthMenu: '_MENU_ Entradas por pagina',
+        info: 'Mostrando pagina _PAGE_ de _PAGES_',
+        infoEmpty: 'No hay entradas a mostrar',
+        infoFiltered: ' (filtrado desde _MAX_ registros)',
+        paginate: { first: '<<', last: '>>', next: '>', previous: '<' }
+    };
 
     const tablaProductosVendidos = ($('#tablaProductosVendidos') as any);
     const tablaMediosPagos = ($('#tablaMediosPagos') as any);
@@ -128,6 +138,7 @@
             destroy: true, // importante si recargas la tabla
             data: productosVendidos,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Producto', data: 'nombreproducto'},
@@ -146,6 +157,7 @@
             destroy: true, // importante si recargas la tabla
             data: mediosPagos,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Medio de Pago', data: 'mediopago'},
@@ -161,6 +173,7 @@
             destroy: true, // importante si recargas la tabla
             data: creditosSeparados,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {
@@ -183,6 +196,7 @@
             destroy: true, // importante si recargas la tabla
             data: canalVenta,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'asc' ]],
             columns: [
                         {title: 'Canal De Venta', data: 'canalVenta'},
@@ -199,6 +213,7 @@
             destroy: true, // importante si recargas la tabla
             data: ventasEmpleados,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Empleado', data: 'empleado'},
@@ -217,6 +232,7 @@
             destroy: true, // importante si recargas la tabla
             data: gastos,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Descripcion', data: 'descripcion'},
@@ -280,6 +296,7 @@
             destroy: true, // importante si recargas la tabla
             data: resumenVentas,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Ventas', data: 'ventas'},
@@ -295,6 +312,7 @@
             destroy: true, // importante si recargas la tabla
             data: resumenCreditos,
             pageLength: 25,
+            language: dataTablesLanguage,
             order: [[ 1, 'desc' ]],
             columns: [
                         {title: 'Creditos', data: 'creditos'},
@@ -344,7 +362,7 @@
                 </head>
                 <body class="p-6">
                     <div class="my-8 p-6">
-                        <h2 class="text-gray-600 text-3xl font-semibold my-12 pb-4 text-center">📊 Balance financiero General</h2>
+                        <h2 class="text-gray-600 text-3xl font-semibold my-12 pb-4 text-center">ðŸ“Š Balance financiero General</h2>
                         <p class="text-2xl text-gray-600 mb-0">PERIODO, <span class="text-gray-900 font-semibold ml-8">Inicio: ${dateStart} - Fin: ${dateEnd}</span></p>    
                     </div>
                     ${contentBalanceGeneral.innerHTML}
@@ -356,7 +374,7 @@
         ventana.onload = ()=>{
             ventana?.focus();
             ventana?.print();
-            setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana después de unos segundos
+            setTimeout(() => { ventana?.close(); }, 200); // Cerrar la ventana despuÃ©s de unos segundos
         };
       }
     });

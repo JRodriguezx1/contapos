@@ -1,4 +1,4 @@
-(()=>{
+﻿(()=>{
 
     if(
         !document.querySelector('.ventasgenerales') &&
@@ -20,14 +20,59 @@
     let fechainicio:string = "", fechafin:string = "";
 
     // SELECTOR DE FECHAS DEL CALENDARIO
-    ($('input[name="datetimes"]')as any).daterangepicker({
+    const esReporteCuotas = Boolean(document.querySelector('.cuotasCreditos'));
+    const esReporteVentasGenerales = Boolean(document.querySelector('.ventasgenerales'));
+    const usaCalendarioModerno = esReporteCuotas || esReporteVentasGenerales;
+    const dateRangeInput = ($('input[name="datetimes"]') as any);
+
+    function resaltarBotonConsultar(){
+      if(!usaCalendarioModerno || !consultarFechaPersonalizada)return;
+
+      consultarFechaPersonalizada.classList.remove('report-cuotas__filter-button--attention', 'ventas-generales__filter-btn--attention');
+      void consultarFechaPersonalizada.offsetWidth;
+      consultarFechaPersonalizada.classList.add(esReporteVentasGenerales ? 'ventas-generales__filter-btn--attention' : 'report-cuotas__filter-button--attention');
+      consultarFechaPersonalizada.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      setTimeout(()=>{
+        consultarFechaPersonalizada.classList.remove('report-cuotas__filter-button--attention', 'ventas-generales__filter-btn--attention');
+      }, 2400);
+    }
+
+    dateRangeInput.daterangepicker({
       timePicker: true,
+      autoUpdateInput: !usaCalendarioModerno,
       //startDate: moment().startOf('hour'),
       //endDate: moment().startOf('hour').add(32, 'hour'),
       startDate: moment().set({ hour: 0, minute: 0, second: 1 }),
       endDate: moment().set({ hour: 23, minute: 59, second: 59 }),
       locale: {
-        format: 'M/DD hh:mm A'
+        format: 'M/DD hh:mm A',
+        applyLabel: 'Aplicar',
+        cancelLabel: 'Cancelar',
+        daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        monthNames: [
+          'Enero',
+          'Febrero',
+          'Marzo',
+          'Abril',
+          'Mayo',
+          'Junio',
+          'Julio',
+          'Agosto',
+          'Septiembre',
+          'Octubre',
+          'Noviembre',
+          'Diciembre'
+        ]
+      }
+    });
+
+    dateRangeInput.on('show.daterangepicker', function(ev: Event, picker: any) {
+      if(esReporteCuotas){
+        picker.container.addClass('report-cuotas__calendar');
+      }
+      if(esReporteVentasGenerales){
+        picker.container.addClass('ventas-generales__calendar');
       }
     });
 
@@ -36,15 +81,27 @@
         var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
         fechainicio = startDate;
         fechafin = endDate;
+        if(usaCalendarioModerno){
+          ($(this) as any).val(`${picker.startDate.format('DD/MM/YYYY hh:mm A')} - ${picker.endDate.format('DD/MM/YYYY hh:mm A')}`);
+          resaltarBotonConsultar();
+        }
         //(document.querySelector('#fechainicio') as HTMLParagraphElement).textContent = fechainicio;
         //(document.querySelector('#fechafin') as HTMLParagraphElement).textContent = fechafin;
     });
 
+    $('input[name="datetimes"]').on('cancel.daterangepicker', function() {
+      if(usaCalendarioModerno){
+        ($(this) as any).val('');
+        fechainicio = '';
+        fechafin = '';
+      }
+    });
+
     btnmesactual?.addEventListener('click', (e:Event)=>{
         const hoy = new Date();
-        // Primer día del mes actual
+        // Primer dÃ­a del mes actual
         const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-        // Último día del mes actual
+        // Ãšltimo dÃ­a del mes actual
         const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
         const fechainiciobtn:string = primerDia.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDia.toISOString().split('T')[0];
@@ -55,9 +112,9 @@
     btnmesanterior?.addEventListener('click', (e:Event)=>{
         // Fecha actual
         const hoy = new Date();
-        // Primer día del mes anterior
+        // Primer dÃ­a del mes anterior
         const primerDiaMesAnterior = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
-        // Último día del mes anterior
+        // Ãšltimo dÃ­a del mes anterior
         const ultimoDiaMesAnterior = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
         const fechainiciobtn:string = primerDiaMesAnterior.toISOString().split('T')[0];
         const fechafinbtn:string = ultimoDiaMesAnterior.toISOString().split('T')[0];
@@ -76,9 +133,9 @@
     btnayer?.addEventListener('click', (e:Event)=>{
         // Fecha actual
         const hoy = new Date();
-        // Día anterior
+        // DÃ­a anterior
         const ayer = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1);
-        // Inicio y fin del día anterior
+        // Inicio y fin del dÃ­a anterior
         const inicioAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 0, 0, 0);
         const finAyer = new Date(ayer.getFullYear(), ayer.getMonth(), ayer.getDate(), 23, 59, 59);
         const fechainiciobtn:string = formatoFecha(inicioAyer);
@@ -87,20 +144,20 @@
     });
 
     function formatoFecha(fecha: Date): string {
-        const año = fecha.getFullYear();
+        const anio = fecha.getFullYear();
         const mes = String(fecha.getMonth() + 1).padStart(2, "0");
         const dia = String(fecha.getDate()).padStart(2, "0");
         const hora = String(fecha.getHours()).padStart(2, "0");
         const minuto = String(fecha.getMinutes()).padStart(2, "0");
         const segundo = String(fecha.getSeconds()).padStart(2, "0");
-        return `${año}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
+        return `${anio}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
     }
 
 
     ////// consulta por fecha personalizada
     consultarFechaPersonalizada.addEventListener('click', ()=>{
       if(fechainicio == '' || fechafin == ''){
-         msjalertToast('error', '¡Error!', "Elegir fechas a consultar");
+         msjalertToast('error', 'Â¡Error!', "Elegir fechas a consultar");
          return;
       }
     
@@ -108,3 +165,7 @@
     });
 
 })();
+
+
+
+

@@ -408,7 +408,7 @@
             let totalMediosPago:number = 0;
             for(let value of mapMediospago.values())totalMediosPago+=value;
             if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
-                msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+                POS.gestionSubirModalPagar.mostrarMensajeMetodosPago?.();
                 return;
             }
         

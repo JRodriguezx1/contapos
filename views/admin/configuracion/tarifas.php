@@ -46,24 +46,41 @@
   </table>
   </div>
 
-  <dialog id="miDialogoTarifa" class="midialog-sm rounded-lg shadow-lg p-12">
-    <h4 id="modalTarifa" class="font-semibold text-gray-700 mb-4 mt-10">Crear tarifa</h4>
-    <div id="divmsjalertaTarifa"></div>
-    <form id="formCrearUpdateTarifa" class="formulario" action="/admin/config/crear_Tarifa" method="POST">
-        <div class="empleado-grid">
-            <div class="formulario__campo">
-                <label class="formulario__label" for="nombreTarifa">Nombre</label>
-                <input id="nombreTarifa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del tarifa" name="nombre" value="" required>
+  <dialog id="miDialogoTarifa" class="midialog-sm config-caja-dialog config-param-dialog">
+    <div class="config-caja-dialog__header">
+      <span class="config-caja-dialog__icon">
+        <i class="fa-solid fa-percent"></i>
+      </span>
+      <div>
+        <span class="config-caja-dialog__eyebrow">Tarifa</span>
+        <h4 id="modalTarifa">Crear tarifa</h4>
+        <p>Define el nombre y valor que se usara en ventas y operaciones.</p>
+      </div>
+    </div>
+
+    <form id="formCrearUpdateTarifa" class="config-caja-dialog__form" action="/admin/config/crear_Tarifa" method="POST">
+        <div id="divmsjalertaTarifa"></div>
+
+        <div class="config-caja-dialog__grid">
+            <div class="config-caja-dialog__field">
+                <label for="nombreTarifa">Nombre</label>
+                <div class="config-caja-dialog__control">
+                  <span><i class="fa-solid fa-tag"></i></span>
+                  <input id="nombreTarifa" type="text" placeholder="Nombre de la tarifa" name="nombre" value="" required>
+                </div>
             </div>
-            <div class="formulario__campo">
-                <label class="formulario__label" for="valorTarifa">Valor tarifa</label>
-                <input id="valorTarifa" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la tarifa" name="valor" value="" required>
+            <div class="config-caja-dialog__field">
+                <label for="valorTarifa">Valor tarifa</label>
+                <div class="config-caja-dialog__control">
+                  <span><i class="fa-solid fa-dollar-sign"></i></span>
+                  <input id="valorTarifa" type="text" placeholder="Valor de la tarifa" name="valor" value="" required>
+                </div>
             </div>
         </div>  
         
-        <div class="text-right">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>
-            <input id="btnEditarCrearTarifa" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
+        <div class="config-caja-dialog__actions">
+            <button class="config-caja-dialog__button config-caja-dialog__button--ghost" type="button" value="Salir">Salir</button>
+            <input id="btnEditarCrearTarifa" class="config-caja-dialog__button config-caja-dialog__button--primary" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar Tarifa-->

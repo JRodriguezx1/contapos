@@ -1,209 +1,239 @@
 <div class="box crearseparado">
-    <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">
-      <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-      </svg>
-      <span class="sr-only">Atrás</span>
-    </a>
-    <h4 class="text-gray-600 mb-8">Sistema de separado</h4>
+  <?php include __DIR__. "/../../templates/alertas.php"; ?>
+
+  <div class="separado-shell">
+    <section class="separado-hero">
+      <a href="/admin/creditos" class="separado-back" aria-label="Volver a creditos">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <div class="separado-hero__content">
+        <p class="separado-eyebrow">Cartera</p>
+        <h1>Crear separado</h1>
+        <p>Selecciona cliente, productos, abono inicial y plazo para generar el separado.</p>
+      </div>
+      <div class="separado-hero__badge">
+        <span class="material-symbols-outlined">inventory_2</span>
+        <div>
+          <strong>Nuevo</strong>
+          <small>registro de separado</small>
+        </div>
+      </div>
+    </section>
+
     <div id="divmsjalerta"></div>
-    <div class="">
-        <form id="formCrearUpdateCredito" class="flex flex-col tlg:flex-row gap-4 gap-x-6 p-4" action="" method="POST">
-            <div class="basis-1/2">
-                <div class="formulario__campo">
-                    <label class="formulario__label" for="cliente">Cliente</label>
-                    <select id="cliente" class=""  multiple="multiple" name="cliente_id" required>
-                        <?php foreach($clientes as $cliente):  
-                            if($cliente->id>1):   ?>
-                                <option value="<?php echo $cliente->id;?>" ><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
-                        <?php endif; endforeach; ?>
-                    </select>             
-                </div>
-                
-                <div class="formulario__campo">
-                    <label class="formulario__label" for="abonoinicial">Abono inicial</label>
-                    <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
-                        <input 
-                            id="abonoinicial" 
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
-                            type="text" 
-                            placeholder="Abono inicial al capital" 
-                            name="abonoinicial" 
-                            value="<?php echo $credito->abonoinicial??'0';?>"
-                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
-                            required
-                        >
-                    </div>
-                </div>
-                
-                <div class="formulario__campo">
-                    <label class="formulario__label" for="cantidadcuotas">Cantidad de cuotas</label>
-                    <input 
-                        id="cantidadcuotas" 
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
-                        type="text" 
-                        placeholder="Cantidad de cuotas" 
-                        name="cantidadcuotas" 
-                        value="<?php echo $credito->cantidadcuotas??'1';?>"
-                        oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
-                        required
-                    >    
-                </div>
-                <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
-                <div class="formulario__campo">
-                    <label class="formulario__label" for="montocuota">Valor de la cuota</label>
-                    <input id="montocuota" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la cuota" name="montocuota" value="<?php echo $credito->montocuota??'';?>" readonly required>    
-                </div>
-                <div class="formulario__campo">
-                    <label class="formulario__label" for="frecuenciapago">Dia de pago</label>
-                    <select id="frecuenciapago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" name="frecuenciapago" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">26</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                    </select>          
-                </div>
 
-                <div class="formulario__campo">
-                    <label class="formulario__label" for="nota">Nota</label>
-                    <input 
-                        id="nota" 
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
-                        type="text" 
-                        placeholder="nota del separado" 
-                        name="nota"
-                        value="Plazo máximo de entrega: 1 mes"
-                    >    
-                </div>
+    <form id="formCrearUpdateCredito" class="separado-form" action="" method="POST">
+      <section class="separado-card separado-card--form">
+        <div class="separado-card__header">
+          <span class="material-symbols-outlined">person_add</span>
+          <div>
+            <h2>Datos del separado</h2>
+            <p>Informacion del cliente, abono inicial y condiciones de pago.</p>
+          </div>
+        </div>
 
+        <div class="separado-fields">
+          <div class="separado-field separado-field--full">
+            <label for="cliente">Cliente</label>
+            <div class="separado-input separado-input--select2">
+              <span><i class="fa-solid fa-user"></i></span>
+              <select id="cliente" name="cliente_id" required>
+                <option></option>
+                <?php foreach($clientes as $cliente): ?>
+                  <?php if($cliente->id>1): ?>
+                    <option value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </select>
             </div>
+          </div>
 
-                <!-- SELECCIONAR PRODUCTOS -->
-            <div class="basis-1/2">
-                <div class="mb-4 md:w-full">
-                    <label for="articulo" class="block text-2xl font-medium text-gray-600">Articulo</label>
-                    <div class="mt-2 grid grid-cols-1">
-                        <select id="articulo" name="articulo" autocomplete="articulo-name" class="" multiple="multiple" required>
-                           
-                        </select>
-                    </div>
-                </div>
-
-                <div class="border-solid border-t-2 border-blue-600 pt-4 mb-4 overflow-x-auto">
-                    <table class=" tabla" width="100%" id="tablaSeparado">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Unidad</th>
-                                <th>Cantidad</th>
-                                <th>Total</th>
-                                <th class="accionesth text-red-500"><i class="fa-solid fa-x"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div> <!-- FIn Apilamiento de productos -->
-                
-
-                <div class="">
-                    <button id="btndescuento" class="btn-xs btn-light ml-4" type="button">Descuento</button>
-                    <div class="flex justify-start gap-4 mt-6">
-                        <div class="text-end">
-                            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Sub Total:</p>
-                            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Impuesto:</p>
-                            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Descuento:</p>
-                            <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
-                        </div>
-                        <div>
-                            <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
-                            <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">% 0</p>
-                            <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ 0</p>
-                            <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ 0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-right border-t border-gray-200 pt-12 mt-4">
-                    <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
-                    <input id="btnCrearSeparado" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
-                </div>
+          <div class="separado-field">
+            <label for="abonoinicial">Abono inicial</label>
+            <div class="separado-input">
+              <span><i class="fa-solid fa-dollar-sign"></i></span>
+              <input
+                id="abonoinicial"
+                type="text"
+                placeholder="Abono inicial al capital"
+                name="abonoinicial"
+                value="<?php echo $credito->abonoinicial??'0';?>"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '';"
+                required
+              >
             </div>
-        </form>
+          </div>
+
+          <div class="separado-field">
+            <label for="cantidadcuotas">Cantidad de cuotas</label>
+            <div class="separado-input">
+              <span><i class="fa-solid fa-calendar-check"></i></span>
+              <input
+                id="cantidadcuotas"
+                type="text"
+                placeholder="Cantidad de cuotas"
+                name="cantidadcuotas"
+                value="<?php echo $credito->cantidadcuotas??'1';?>"
+                oninput="this.value = this.value.replace(/[,.]/g, '').replace(/\D/g, ''); if(this.value === '' || this.value === '0'){this.value = '';}"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="separado-field">
+            <label for="montocuota">Valor de la cuota</label>
+            <div class="separado-input separado-input--readonly">
+              <span><i class="fa-solid fa-receipt"></i></span>
+              <input id="montocuota" type="text" placeholder="Valor de la cuota" name="montocuota" value="<?php echo $credito->montocuota??'';?>" readonly required>
+            </div>
+          </div>
+
+          <div class="separado-field">
+            <label for="frecuenciapago">Dia de pago</label>
+            <div class="separado-input separado-input--select2">
+              <span><i class="fa-solid fa-calendar-day"></i></span>
+              <select id="frecuenciapago" name="frecuenciapago" required>
+                <option></option>
+                <?php for($dia = 1; $dia <= 30; $dia++): ?>
+                  <option value="<?php echo $dia; ?>"><?php echo $dia; ?></option>
+                <?php endfor; ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="separado-field separado-field--full">
+            <label for="nota">Nota</label>
+            <div class="separado-input">
+              <span><i class="fa-regular fa-note-sticky"></i></span>
+              <input
+                id="nota"
+                type="text"
+                placeholder="Nota del separado"
+                name="nota"
+                value="Plazo maximo de entrega: 1 mes"
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="separado-card separado-card--products">
+        <div class="separado-card__header">
+          <span class="material-symbols-outlined">shopping_bag</span>
+          <div>
+            <h2>Productos</h2>
+            <p>Agrega los articulos que quedaran reservados en el separado.</p>
+          </div>
+        </div>
+
+        <div class="separado-field separado-field--full">
+          <label for="articulo">Articulo</label>
+          <div class="separado-input separado-input--select2 separado-input--product">
+            <span><i class="fa-solid fa-magnifying-glass"></i></span>
+            <select id="articulo" name="articulo" autocomplete="articulo-name" required></select>
+          </div>
+        </div>
+
+        <div class="separado-products-table">
+          <table class="tabla separado-data-table" width="100%" id="tablaSeparado">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Unidad</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th class="accionesth"><i class="fa-solid fa-x"></i></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="separado-summary">
+          <button id="btndescuento" class="separado-discount" type="button">
+            <i class="fa-solid fa-tag"></i>
+            Descuento
+          </button>
+
+          <div class="separado-totals">
+            <div>
+              <span>Sub total</span>
+              <strong id="subTotal">$ 0</strong>
+            </div>
+            <div>
+              <span>Impuesto</span>
+              <strong id="impuesto">% 0</strong>
+            </div>
+            <div>
+              <span>Descuento</span>
+              <strong id="descuento">$ 0</strong>
+            </div>
+            <div class="separado-total">
+              <span>Total</span>
+              <strong id="total">$ 0</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="separado-actions">
+          <button class="separado-button separado-button--secondary" type="button" value="salir">
+            Salir
+          </button>
+          <input id="btnCrearSeparado" class="separado-button separado-button--primary" type="submit" value="Crear">
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <dialog id="miDialogoDescuento" class="separado-dialog">
+    <div class="separado-dialog__header">
+      <span class="material-symbols-outlined">sell</span>
+      <div>
+        <p>Descuento</p>
+        <h3>Aplicar descuento</h3>
+        <small>Define un valor o porcentaje para descontar del separado.</small>
+      </div>
     </div>
 
+    <form id="formDescuento" class="separado-dialog__body">
+      <div class="separado-segmented">
+        <label>
+          <input type="radio" name="tipodescuento" value="valor" checked>
+          <span>Valor</span>
+        </label>
+        <label>
+          <input type="radio" name="tipodescuento" value="porcentaje">
+          <span>Porcentaje</span>
+        </label>
+      </div>
 
-    <!-- MODAL PARA AGREGAR DESCUENTO -->
-  <dialog id="miDialogoDescuento" class="midialog-xs p-8">
-    <h4 class=" text-gray-700 font-semibold">Aplicar Descuento</h4>
-    
-    <form id="formDescuento" class=" border-b border-gray-900/10 pb-6 text-center">
-        <p class="mt-2 text-xl text-gray-600">Aplicar descuento al subtotal del pedido.</p>
-
-        <div class="inline-flex  border-[3px] border-indigo-600 rounded-xl select-none">   
-          <label class="flex  p-1 cursor-pointer">
-            <input type="radio" name="tipodescuento" value="valor" class="peer hidden" checked/>
-            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Valor </span>
-          </label>
-          <label class="flex  p-1 cursor-pointer">
-            <input type="radio" name="tipodescuento" value="porcentaje" class="peer hidden"/>
-            <span class="tracking-widest peer-checked:bg-indigo-600 peer-checked:text-white text-gray-700 p-2 rounded-lg transition duration-150 ease-in-out text-xl"> Porcentaje </span>
-          </label>
+      <div class="separado-field">
+        <label for="inputDescuento">Descuento</label>
+        <div class="separado-input">
+          <span><i class="fa-solid fa-percent"></i></span>
+          <input id="inputDescuento" type="number" min="0" name="descuento" data-descuento="" required>
         </div>
+      </div>
 
-        <div class="my-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div class="sm:col-start-2 col-span-4">
-            <label for="inputDescuento" class="block text-2xl font-medium text-gray-600">Descuento</label>
-            <div class="mt-2">
-              <input id="inputDescuento" type="number" min="0" name="descuento" data-descuento="" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" required>
-            </div>
-            
-            <div class="sm:col-start-2 col-span-4 mt-6">
-              <label for="inputDescuentoClave" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
-              <div class="mt-2">
-                <input id="inputDescuentoClave" type="password" name="descuentoclave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-                <div id="divmsjalertaClaveDcto"></div>
-              </div>
-              <div class="grid grid-cols-2 gap-3 mt-6">
-                <button type="button" class="btn-md btn-turquoise !py-4 !px-6 w-full salir">Salir</button>
-                <button id="btnCrearAddDir" type="submit" class="btn-md btn-indigo !py-4 !px-6 w-full crearAddDir">Aplicar</button>
-              </div>
-            </div>
+      <div class="separado-field">
+        <label for="inputDescuentoClave">Ingresar clave</label>
+        <div class="separado-input">
+          <span><i class="fa-solid fa-key"></i></span>
+          <input id="inputDescuentoClave" type="password" name="descuentoclave">
         </div>
-      </form>
+        <div id="divmsjalertaClaveDcto"></div>
+      </div>
+
+      <div class="separado-dialog__actions">
+        <button type="button" class="separado-button separado-button--secondary salir">Salir</button>
+        <button id="btnCrearAddDir" type="submit" class="separado-button separado-button--primary crearAddDir">Aplicar</button>
+      </div>
+    </form>
   </dialog>
 
-    <!--///////////////////// Modal procesar el pago boton facturar /////////////////////////-->
-    <?php include __DIR__. "/../ventas/modalprocesarpago.php"; ?>
+  <?php include __DIR__. "/../ventas/modalprocesarpago.php"; ?>
 
-
-    <script>
-        const getParam = <?= json_encode($conflocal) ?>;  //se inyecta el array de parametros de caja desde PHP a JavaScript y se utiliza en separados.ts junto con ahelper.modalpagar.ts
-    </script>
+  <script>
+    const getParam = <?= json_encode($conflocal) ?>;
+  </script>
 </div>

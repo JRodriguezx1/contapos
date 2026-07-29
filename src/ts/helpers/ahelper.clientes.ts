@@ -11,6 +11,7 @@
     const tel = document.querySelector('#telefono')! as HTMLInputElement;
     const doc = document.querySelector('#identificacion')! as HTMLInputElement;
     const dirEntrega = document.querySelector('#direccionEntrega')! as HTMLSelectElement;
+    const direccionPreferidaPorCliente = new Map<string, string>();
 
   const gestionClientes = {
     selectCliente,
@@ -39,13 +40,14 @@
         document.querySelector('#formAddCliente')?.addEventListener('submit', e=>{
             e.preventDefault();
             (async ()=>{
+                const direccionSeleccionada = dirEntrega.value;
                 const datos = new FormData();
                 datos.append('idcliente', selectCliente?.value??null); //id del cliente
                 datos.append('nombre', (document.querySelector('#nombreclientenuevo') as HTMLInputElement).value);
                 datos.append('apellido', (document.querySelector('#clientenuevoapellido') as HTMLInputElement).value || '  ');
                 datos.append('tipodocumento', (document.querySelector('#tipodocumento') as HTMLInputElement).value);
                 datos.append('telefono', (document.querySelector('#telefono') as HTMLInputElement).value);
-                datos.append('iddireccion', (document.querySelector('#direccionEntrega') as HTMLSelectElement).value);
+                datos.append('iddireccion', direccionSeleccionada);
                 //datos.append('idtarifa', (document.querySelector('#clientenuevotarifa') as HTMLSelectElement).value);
                 datos.append('tipodocumento', (document.querySelector('#tipodocumento') as HTMLInputElement).value);
                 datos.append('identificacion', (document.querySelector('#identificacion') as HTMLInputElement).value);
@@ -61,8 +63,10 @@
                     const resultado = await respuesta.json();
                     if(resultado.exito !== undefined){
                     msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+                    const clienteGuardado = resultado.nextID || selectCliente.value;
+                    if(clienteGuardado && direccionSeleccionada)direccionPreferidaPorCliente.set(clienteGuardado, direccionSeleccionada);
                     if(selectCliente.value=='')addClienteSelect(resultado.nextID);
-                    if(selectCliente.value!=='')$('#selectCliente').val(resultado.nextID).trigger('change');
+                    if(selectCliente.value!=='')$('#selectCliente').val(clienteGuardado).trigger('change');
                     //POS.limpiarformdialog();
                     }else{
                     msjalertToast('error', '¡Error!', resultado.error[0]);
@@ -141,6 +145,7 @@
             while(dirEntrega?.firstChild)dirEntrega.removeChild(dirEntrega?.firstChild);
             const setTarifas = new Set();
             POS.tarifas.length = 0;
+            const direccionPreferida = direccionPreferidaPorCliente.get(addrs.id);
             addrs.direcciones.forEach(dir =>{
                 const option = document.createElement('option');
                 option.textContent = dir.direccion;
@@ -155,11 +160,15 @@
                 setTarifas.add(dir.tarifa.id);
                 }
             });
+            if(direccionPreferida && addrs.direcciones.some(dir=>dir.id === direccionPreferida)){
+                dirEntrega.value = direccionPreferida;
+            }
             setTarifas.clear();
             POS.printTarifaEnvio();
             POS.valorCarritoTotal();
-            (document.querySelector('#departamento') as HTMLInputElement).value = addrs.direcciones[0]?.departamento??'No especificado';
-            (document.querySelector('#ciudad') as HTMLInputElement).value = addrs.direcciones[0]?.ciudad??'No especificado';
+            const direccionActual = addrs.direcciones.find(dir=>dir.id === dirEntrega.value) || addrs.direcciones[0];
+            (document.querySelector('#departamento') as HTMLInputElement).value = direccionActual?.departamento??'No especificado';
+            (document.querySelector('#ciudad') as HTMLInputElement).value = direccionActual?.ciudad??'No especificado';
         }
 
 
@@ -204,6 +213,7 @@
         ///////// Evento al select de direcciones ////////////
         dirEntrega?.addEventListener('change', (e)=>{
             const select = (e.target as HTMLSelectElement);
+            if(selectCliente.value && select.value)direccionPreferidaPorCliente.set(selectCliente.value, select.value);
             const x:string = select.options[select.selectedIndex].dataset.ciudad||'';
             (document.querySelector('#ciudad') as HTMLInputElement).value = x;
             POS.printTarifaEnvio();

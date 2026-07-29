@@ -7,7 +7,7 @@
       const miDialogoUpDireccion = document.querySelector('#miDialogoUpDireccion') as any;
       const selectdirecciones = document.querySelector('#selectdirecciones') as HTMLSelectElement;
       const btnCerrarUpDireccion = document.querySelector('#btnCerrarUpDireccion') as HTMLButtonElement;
-      let select2Init = false, indiceFila=0, control=0, tablaClientes:HTMLElement;
+      let select2Init = false, indiceFila=0, control=0, tablaClientes:HTMLElement, filaClienteActual:any = null;
       
       type direccionesapi = {
         id:string,
@@ -51,7 +51,14 @@
   
       document.addEventListener("click", cerrarDialogoExterno);
       //////////////////  TABLA //////////////////////
-      tablaClientes = ($('#tablaClientes') as any).DataTable(configdatatables);
+      tablaClientes = ($('#tablaClientes') as any).DataTable({
+        ...configdatatables,
+        dom: 'rtip',
+        order: [[0, 'desc']]
+      });
+      modernizarToolbarDataTable('#tablaClientes');
+      ocultarToolbarNativoClientes();
+      ($('#tablaClientes') as any).on('draw.dt', ocultarToolbarNativoClientes);
   
       btncrearCliente?.addEventListener('click', (e):void=>{
         control = 0;
@@ -76,7 +83,8 @@
         ($('#selectcliente') as any).select2({
           dropdownParent: $('#miDialogoCrearDireccion'),
           placeholder: "Seleccionar el cliente",
-          maximumSelectionLength: 1
+          minimumResultsForSearch: Infinity,
+          width: '100%'
         });
         select2Init = true;
       }
@@ -89,8 +97,13 @@
       });
   
       function editarClientes(e:Event){
-        let idcliente = (e.target as HTMLElement).parentElement?.id!;
-        if((e.target as HTMLElement)?.tagName === 'I')idcliente = (e.target as HTMLElement).parentElement?.parentElement?.id!;
+        const target = e.target as HTMLElement;
+        let idcliente = target.parentElement?.id!;
+        if(target?.tagName === 'I')idcliente = target.parentElement?.parentElement?.id!;
+        const currentRow = target.closest('tr');
+        const dataRow = currentRow?.classList.contains('child') ? currentRow.previousElementSibling : currentRow;
+        filaClienteActual = (tablaClientes as any).row(dataRow);
+        indiceFila = filaClienteActual.index();
         control = 1;
         document.querySelector('#modalCliente')!.textContent = "Actualizar cliente";
         (document.querySelector('#btnEditarCrearCliente') as HTMLInputElement)!.value = "Actualizar";
@@ -128,21 +141,36 @@
                 const resultado = await respuesta.json(); 
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-                  /// actualizar el arregle de clientes ///
-                  clientes.forEach(a=>{if(a.id == uncliente.id)a = Object.assign(a, resultado.cliente[0]);});
+                  /// actualizar el arreglo de clientes ///
+                  clientes = clientes.map(a => a.id == uncliente.id ? Object.assign(a, resultado.cliente?.[0] ?? {}) : a);
                   ///////// cambiar la fila completa, su contenido //////////
-                  const datosActuales = (tablaClientes as any).row(indiceFila).data();
-                  /*NOMBRE*/datosActuales[1] = $('#nombre').val();
-                  /*APELLIDO*/datosActuales[2] = $('#apellido').val();
-                  /*TELEFONO*/datosActuales[3] = $('#telefono').val();
-                  /*EMAIL*/datosActuales[4] = $('#email').val();
-                  
-                  (tablaClientes as any).row(indiceFila).data(datosActuales).draw();
-                  (tablaClientes as any).page(info.page).draw('page'); //me mantiene la pagina actual
+                  const filaApi = filaClienteActual || (tablaClientes as any).row(indiceFila);
+                  const datosActuales = filaApi.data();
+                  const nombre = ($('#nombre').val() as string) || '';
+                  const apellido = ($('#apellido').val() as string) || '';
+                  const identificacion = ($('#identificacion').val() as string) || '';
+                  const telefono = ($('#telefono').val() as string) || '';
+                  const email = ($('#email').val() as string) || '';
+                  filaApi.data(renderClienteRowData({
+                    id: uncliente.id,
+                    identificacion,
+                    nombre,
+                    apellido,
+                    telefono,
+                    email,
+                    acciones: datosActuales[6]
+                  })).draw(false);
+                  (tablaClientes as any).page(info.page).draw(false); //me mantiene la pagina actual
+                  try {
+                    (tablaClientes as any).columns.adjust().responsive.recalc();
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
                 miDialogoCliente.close();
+                filaClienteActual = null;
                 
             } catch (error) {
                 console.log(error);
@@ -207,16 +235,30 @@
         
 
       function eliminarClientes(e:Event){
-        let idcliente = (e.target as HTMLElement).parentElement!.id, info = (tablaClientes as any).page.info();
-        if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
-        indiceFila = (tablaClientes as any).row((e.target as HTMLElement).closest('tr')).index();
+        const target = e.target as HTMLElement;
+        let idcliente = target.parentElement!.id, info = (tablaClientes as any).page.info();
+        if(target.tagName === 'I')idcliente = target.parentElement!.parentElement!.id;
+        const currentRow = target.closest('tr');
+        const dataRow = currentRow?.classList.contains('child') ? currentRow.previousElementSibling : currentRow;
+        const filaApi = (tablaClientes as any).row(dataRow);
+        const cliente = clientes.find(x=>x.id === idcliente);
+        const nombreCliente = `${cliente?.nombre ?? 'este cliente'} ${cliente?.apellido ?? ''}`.trim();
         Swal.fire({
-            customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+            customClass: {
+              popup: 'j2-confirm j2-confirm--danger',
+              icon: 'j2-confirm__icon',
+              title: 'j2-confirm__title',
+              htmlContainer: 'j2-confirm__text',
+              actions: 'j2-confirm__actions',
+              confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+              cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+            },
+            buttonsStyling: false,
             icon: 'question',
-            title: 'Desea eliminar el cliente?',
-            text: "El cliente sera eliminado por completo.",
+            title: 'Eliminar cliente',
+            html: `Esta accion eliminara definitivamente a <strong>${escapeClienteHtml(nombreCliente)}</strong>.`,
             showCancelButton: true,
-            confirmButtonText: 'Si',
+            confirmButtonText: 'Si, eliminar',
             cancelButtonText: 'No',
         }).then((result:any) => {
             if (result.isConfirmed) {
@@ -228,14 +270,58 @@
                         const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                         const resultado = await respuesta.json();  
                         if(resultado.exito !== undefined){
-                          (tablaClientes as any).row(indiceFila+info.start).remove().draw(); 
-                          (tablaClientes as any).page(info.page).draw('page');
-                          Swal.fire(resultado.exito[0], '', 'success') 
+                          filaApi.remove().draw(false); 
+                          (tablaClientes as any).page(info.page).draw(false);
+                          clientes = clientes.filter(a => a.id !== idcliente);
+                          Swal.fire({
+                            customClass: {
+                              popup: 'j2-confirm j2-confirm--success',
+                              icon: 'j2-confirm__icon',
+                              title: 'j2-confirm__title',
+                              htmlContainer: 'j2-confirm__text',
+                              actions: 'j2-confirm__actions j2-confirm__actions--single',
+                              confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                            },
+                            buttonsStyling: false,
+                            icon: 'success',
+                            title: 'Cliente eliminado',
+                            text: resultado.exito[0],
+                            confirmButtonText: 'OK'
+                          }) 
                         }else{
-                            Swal.fire(resultado.error[0], '', 'error')
+                            Swal.fire({
+                              customClass: {
+                                popup: 'j2-confirm j2-confirm--danger',
+                                icon: 'j2-confirm__icon',
+                                title: 'j2-confirm__title',
+                                htmlContainer: 'j2-confirm__text',
+                                actions: 'j2-confirm__actions j2-confirm__actions--single',
+                                confirmButton: 'j2-confirm__button j2-confirm__button--danger'
+                              },
+                              buttonsStyling: false,
+                              icon: 'error',
+                              title: 'No se pudo eliminar',
+                              text: resultado.error[0],
+                              confirmButtonText: 'OK'
+                            })
                         }
                     } catch (error) {
                         console.log(error);
+                        Swal.fire({
+                          customClass: {
+                            popup: 'j2-confirm j2-confirm--danger',
+                            icon: 'j2-confirm__icon',
+                            title: 'j2-confirm__title',
+                            htmlContainer: 'j2-confirm__text',
+                            actions: 'j2-confirm__actions j2-confirm__actions--single',
+                            confirmButton: 'j2-confirm__button j2-confirm__button--danger'
+                          },
+                          buttonsStyling: false,
+                          icon: 'error',
+                          title: 'No se pudo eliminar',
+                          text: 'Intenta nuevamente o revisa la conexion.',
+                          confirmButtonText: 'OK'
+                        })
                     }
                 })();//cierre de async()
             }
@@ -249,6 +335,47 @@
       function limpiarformdialog(){
         (document.querySelector('#formCrearUpdateCliente') as HTMLFormElement)?.reset();
       }
+
+      function escapeClienteHtml(value:string):string{
+        return value.replace(/[&<>"']/g, (char) => {
+          const entities:{[key:string]:string} = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          };
+          return entities[char];
+        });
+      }
+
+      function renderClienteNombre(nombre:string):string{
+        return `<span class="clientes-name"><span class="clientes-name__icon"><i class="fa-solid fa-user"></i></span><span>${escapeClienteHtml(nombre)}</span></span>`;
+      }
+
+      function renderClientePill(value:string, type:string):string{
+        return `<span class="clientes-table-pill clientes-table-pill--${type}">${escapeClienteHtml(value)}</span>`;
+      }
+
+      function renderClienteRowData(cliente:{id:string, identificacion:string, nombre:string, apellido:string, telefono:string, email:string, acciones:string}):string[]{
+        return [
+          escapeClienteHtml(cliente.id),
+          renderClientePill(cliente.identificacion, 'document'),
+          renderClienteNombre(cliente.nombre),
+          escapeClienteHtml(cliente.apellido),
+          renderClientePill(cliente.telefono, 'phone'),
+          renderClientePill(cliente.email, 'email'),
+          cliente.acciones
+        ];
+      }
+
+      function ocultarToolbarNativoClientes():void{
+        const wrapper = document.querySelector('#tablaClientes_wrapper');
+        wrapper?.querySelectorAll('.dataTables_length, .dataTables_filter').forEach((control)=>{
+          (control as HTMLElement).remove();
+        });
+      }
+
       function cerrarDialogoExterno(event:Event) {
         if (event.target === miDialogoCliente || event.target === miDialogoCrearDireccion || event.target === miDialogoUpDireccion || (event.target as HTMLInputElement).value === 'salir') {
           miDialogoCliente.close();

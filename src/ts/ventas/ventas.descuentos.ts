@@ -79,6 +79,7 @@
       POS.valorTotal.total = POS.valorTotal.subtotal - POS.valorTotal.descuento + POS.valorTotal.valortarifa;
       document.querySelector('#total')!.textContent = '$ '+POS.valorTotal.total.toLocaleString();
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+POS.valorTotal.descuento.toLocaleString();
+      POS.gestionSubirModalPagar?.calculoTasaInteres?.();
       miDialogoDescuento.close();
       document.removeEventListener("click", POS.cerrarDialogoExterno);
     });

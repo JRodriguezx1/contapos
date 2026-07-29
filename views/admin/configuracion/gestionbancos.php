@@ -48,24 +48,41 @@
   </table>
   </div>
 
-  <dialog id="miDialogoBanco" class="midialog-sm rounded-lg shadow-lg p-12">
-    <h4 id="modalBanco" class="font-semibold text-gray-700 mb-4 mt-10">Crear banco</h4>
-    <div id="divmsjalertaBanco"></div>
-    <form id="formCrearUpdateBanco" class="formulario" action="/admin/config/crear_Banco" method="POST">
-        <div class="empleado-grid">
-            <div class="formulario__campo">
-                <label class="formulario__label" for="nombreBanco">Nombre</label>
-                <input id="nombreBanco" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del banco" name="nombre" value="" required>
+  <dialog id="miDialogoBanco" class="midialog-sm config-caja-dialog config-banco-dialog">
+    <div class="config-caja-dialog__header">
+      <span class="config-caja-dialog__icon">
+        <i class="fa-solid fa-building-columns"></i>
+      </span>
+      <div>
+        <span class="config-caja-dialog__eyebrow">Banco</span>
+        <h4 id="modalBanco">Crear banco</h4>
+        <p>Registra la cuenta bancaria disponible para pagos y movimientos.</p>
+      </div>
+    </div>
+
+    <form id="formCrearUpdateBanco" class="config-caja-dialog__form" action="/admin/config/crear_Banco" method="POST">
+        <div id="divmsjalertaBanco"></div>
+
+        <div class="config-caja-dialog__grid">
+            <div class="config-caja-dialog__field">
+                <label for="nombreBanco">Nombre</label>
+                <div class="config-caja-dialog__control">
+                  <span><i class="fa-solid fa-building-columns"></i></span>
+                  <input id="nombreBanco" type="text" placeholder="Nombre del banco" name="nombre" value="" required>
+                </div>
             </div>
-            <div class="formulario__campo">
-                <label class="formulario__label" for="numeroCuenta">Numero de cuenta</label>
-                <input id="numeroCuenta" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Numero de cuenta" name="numerocuenta" value="">
+            <div class="config-caja-dialog__field">
+                <label for="numeroCuenta">Numero de cuenta</label>
+                <div class="config-caja-dialog__control">
+                  <span><i class="fa-solid fa-credit-card"></i></span>
+                  <input id="numeroCuenta" type="text" placeholder="Numero de cuenta" name="numerocuenta" value="">
+                </div>
             </div>
         </div>
         
-        <div class="text-right">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="Salir">Salir</button>
-            <input id="btnEditarCrearBanco" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Crear">
+        <div class="config-caja-dialog__actions">
+            <button class="config-caja-dialog__button config-caja-dialog__button--ghost" type="button" value="Salir">Salir</button>
+            <input id="btnEditarCrearBanco" class="config-caja-dialog__button config-caja-dialog__button--primary" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar Banco-->

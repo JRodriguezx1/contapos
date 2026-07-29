@@ -1,4 +1,4 @@
-@use 'base/variables' as v;
+﻿@use 'base/variables' as v;
 @use 'base/mixins' as m;
 
 .inicio{
@@ -375,6 +375,27 @@
   text-align: right;
 }
 
+
+.dashboard-panel:has(.dashboard-chart){
+  background: linear-gradient(180deg, rgba(248,251,255,.98), rgba(255,255,255,1));
+}
+
+.dashboard-panel:has(.dashboard-chart) .dashboard-chart{
+  background: linear-gradient(180deg, #f8fbff, #fff);
+  border: 1px solid rgba(219, 228, 240, .86);
+  border-radius: .8rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+  padding: 1.2rem;
+}
+
+.dashboard-panel:has(.dashboard-chart) .dashboard-panel__head{
+  margin-bottom: 1rem;
+}
+
+.dashboard-panel:has(.dashboard-chart) .dashboard-panel__head > .material-symbols-outlined{
+  background: linear-gradient(135deg, rgba(79,70,229,.12), rgba(6,182,212,.13));
+  color: var(--dash-primary);
+}
 @media (max-width: 1200px){
   .dashboard-kpis--primary{
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -148,12 +148,21 @@
       if((e.target as HTMLElement).tagName === 'I')idbanco = (e.target as HTMLElement).parentElement!.parentElement!.id;
       indiceFila = (tablaBancos as any).row((e.target as HTMLElement).closest('tr')).index();
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
+          buttonsStyling: false,
           icon: 'question',
-          title: 'Desea eliminar el banco?',
-          text: "El banco sera eliminado definitivamente.",
+          title: 'Eliminar banco',
+          html: '<strong>Esta accion no se puede deshacer.</strong><br>El banco sera eliminado definitivamente.',
           showCancelButton: true,
-          confirmButtonText: 'Si',
+          confirmButtonText: 'Si, eliminar',
           cancelButtonText: 'No',
       }).then((result:any) => {
           if (result.isConfirmed) {
@@ -167,9 +176,37 @@
                       if(resultado.exito !== undefined){
                         (tablaBancos as any).row(indiceFila+info.start).remove().draw(); 
                         (tablaBancos as any).page(info.page).draw('page'); 
-                        Swal.fire(resultado.exito[0], '', 'success')
+                        Swal.fire({
+                          customClass: {
+                            popup: 'j2-confirm j2-confirm--success',
+                            icon: 'j2-confirm__icon',
+                            title: 'j2-confirm__title',
+                            htmlContainer: 'j2-confirm__text',
+                            actions: 'j2-confirm__actions j2-confirm__actions--single',
+                            confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                          },
+                          buttonsStyling: false,
+                          icon: 'success',
+                          title: 'Banco eliminado',
+                          text: resultado.exito[0],
+                          confirmButtonText: 'OK'
+                        })
                       }else{
-                          Swal.fire(resultado.error[0], '', 'error')
+                          Swal.fire({
+                            customClass: {
+                              popup: 'j2-confirm j2-confirm--danger',
+                              icon: 'j2-confirm__icon',
+                              title: 'j2-confirm__title',
+                              htmlContainer: 'j2-confirm__text',
+                              actions: 'j2-confirm__actions j2-confirm__actions--single',
+                              confirmButton: 'j2-confirm__button j2-confirm__button--danger'
+                            },
+                            buttonsStyling: false,
+                            icon: 'error',
+                            title: 'No se pudo eliminar',
+                            text: resultado.error[0],
+                            confirmButtonText: 'OK'
+                          })
                       }
                   } catch (error) {
                       console.log(error);

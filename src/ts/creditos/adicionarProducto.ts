@@ -161,15 +161,36 @@
             ($('#articulo') as any).select2({ 
                 width: '100%',
                 data: filteredData,
-                placeholder: "Selecciona un item",
+                placeholder: "",
                 maximumSelectionLength: 1,
+                dropdownCssClass: 'adicionar-producto-select2-dropdown',
             });  
+
+            const contenedorArticulo = document.querySelector('.adicionar-producto-input--select2') as HTMLElement|null;
+            contenedorArticulo?.addEventListener('click', (event)=>{
+                if((event.target as HTMLElement).closest('.select2-selection__choice__remove'))return;
+                ($('#articulo') as any).select2('open');
+            });
+
+            $('#articulo').on('select2:open', ()=>{
+                contenedorArticulo?.classList.add('is-select2-open');
+                const inputBusqueda = document.querySelector('.select2-container--open .select2-search__field') as HTMLInputElement|null;
+                inputBusqueda?.focus();
+            });
+            $('#articulo').on('select2:close', ()=> contenedorArticulo?.classList.remove('is-select2-open'));
         }
 
         $("#articulo").on('change', (e)=>{
             let datos = ($('#articulo') as any).select2('data')[0];
             if(datos)(document.querySelector('#unidadmedida') as HTMLInputElement).value = datos.unidadmedida;
         });
+
+        function limpiarSelectorArticulo():void{
+            ($('#articulo') as any).val(null).trigger('change');
+            (document.querySelector('#unidadmedida') as HTMLInputElement).value = '';
+            (document.querySelector('#cantidad') as HTMLInputElement).value = '1';
+            (document.querySelector('.adicionar-producto-input--select2') as HTMLElement|null)?.classList.remove('is-select2-open');
+        }
 
         btnAddItem.addEventListener('click', (e)=>{
             let cantidad = parseFloat((document.querySelector('#cantidad') as HTMLInputElement).value);
@@ -228,6 +249,7 @@
                     tr.children[1].textContent = carrito[index].cantidad+'';
                     valorCarritoTotal();
                 }
+                limpiarSelectorArticulo();
             }
         });
 

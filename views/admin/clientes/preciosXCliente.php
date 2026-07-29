@@ -1,28 +1,46 @@
-<div class="box preciosXCliente !pb-10">
-   <a href="/admin/clientes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2">
-    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-    </svg>
-    <span class="sr-only">Atrás</span>
-  </a>
-  <div class="w-full md:w-4/5 mx-auto rounded-lg shadow-lg px-6 pt-8">
-    <h4 class=" text-gray-700 font-semibold"><?php echo $cliente->nombre.' '.$cliente->apellido;?></h4>
+<div class="box preciosXCliente">
+  <div class="cliente-prices-shell">
+    <header class="cliente-prices-hero">
+      <a href="/admin/clientes" class="cliente-prices-back" title="Volver a clientes">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
 
-    <form id="formAddProducto" class="formulario" action="/" method="POST">
-      <div class="border-b border-gray-900/10 pb-10 mb-3">
-        <p class="mt-2 text-xl text-gray-600">Precios de venta personalizados por clinete</p>
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          
-          <input id="idcliente" type="hidden" value="<?php echo $cliente->id;?>">
-          
-          <div class="sm:col-span-4">
-            <label for="productos" class="block text-2xl font-medium text-gray-600">Productos</label>
-            <div class="mt-2">
-              <select id="productos" name="productos" autocomplete="productos-name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" multiple="multiple" required>
+      <div class="cliente-prices-hero__content">
+        <p class="cliente-prices-eyebrow">Precios personalizados</p>
+        <h1><?php echo $cliente->nombre.' '.$cliente->apellido;?></h1>
+        <p>Define precios especiales por producto para este cliente.</p>
+      </div>
+
+      <div class="cliente-prices-hero__badge">
+        <span><i class="fa-solid fa-user-tag"></i></span>
+        <div>
+          <strong><?php echo count($arrayPreciosPorCliente); ?></strong>
+          <small>precios activos</small>
+        </div>
+      </div>
+    </header>
+
+    <form id="formAddProducto" class="formulario cliente-prices-layout" action="/" method="POST">
+      <input id="idcliente" type="hidden" value="<?php echo $cliente->id;?>">
+
+      <section class="cliente-prices-card cliente-prices-card--form">
+        <div class="cliente-prices-card__header">
+          <span class="cliente-prices-card__icon"><i class="fa-solid fa-tags"></i></span>
+          <div>
+            <h2>Asociar producto</h2>
+            <p>Selecciona un producto y registra el precio de venta especial.</p>
+          </div>
+        </div>
+
+        <div class="cliente-prices-form-grid">
+          <div class="cliente-prices-field cliente-prices-field--product">
+            <label for="productos">Producto</label>
+            <div class="cliente-prices-select">
+              <select id="productos" name="productos" autocomplete="productos-name" multiple="multiple" required>
                 <?php foreach($productos as $value): ?>
-                  <option 
+                  <option
                     value="<?php echo $value->id;?>"
-                    data-producto="<?php echo $value->nombre;?>" 
+                    data-producto="<?php echo $value->nombre;?>"
                   >
                     <?php echo $value->nombre.', Unidad: '.$value->unidadmedida;?>
                   </option>
@@ -31,42 +49,56 @@
             </div>
           </div>
 
-
-          <div class="sm:col-span-2">
-            <label for="precioPersonalizado" class="block text-2xl font-medium text-gray-600">precio de venta</label>
-            <div class="mt-2">
+          <div class="cliente-prices-field">
+            <label for="precioPersonalizado">Precio de venta</label>
+            <div class="cliente-prices-control">
+              <span><i class="fa-solid fa-dollar-sign"></i></span>
               <input id="precioPersonalizado"
                      name="precioPersonalizado"
                      type="text"
                      autocomplete="precioPersonalizado ID"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                      maxlength="7"
+                     inputmode="numeric"
                      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                     placeholder="Ej: 25000"
                      required>
             </div>
           </div>
-          
         </div>
-      </div>
 
-      <div class="text-right">
-          <button class="btn-md btn-turquoise !py-4 !px-6 !w-[125px] salir" type="button" value="salir">Salir</button>
-          <input id="btnCrearAddProducto" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[125px] crearAddSubproducto" type="submit" value="Asociar">
-      </div>
+        <div class="cliente-prices-actions">
+          <a href="/admin/clientes" class="cliente-prices-button cliente-prices-button--ghost salir">
+            <i class="fa-solid fa-arrow-left"></i>
+            Salir
+          </a>
+          <input id="btnCrearAddProducto" class="cliente-prices-button cliente-prices-button--primary crearAddSubproducto" type="submit" value="Asociar">
+        </div>
+      </section>
 
-      <div>
-        <h5 class="mb-2 mt-4 text-slate-600 font-medium">Lista de precios personalizados</h5>
-          <div class="w-full md:w-4/5 mx-auto bg-white md:px-14 pt-4 pb-14 listaProductos">
-            <?php foreach($arrayPreciosPorCliente as $value): ?>
-              <div id="<?php echo $value->idproducto;?>" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">
-                <p class="m-0"><strong><?php echo number_format($value->precioxcliente??0, 0, ',', '.');?></strong>. - <?php echo $value->nombre;?></p>
-                <button type="button"><span id="<?php echo $value->idproducto;?>" class="material-symbols-outlined">cancel</span></button>
-              </div>
-            <?php endforeach; ?>
+      <section class="cliente-prices-card cliente-prices-card--list">
+        <div class="cliente-prices-card__header">
+          <span class="cliente-prices-card__icon"><i class="fa-solid fa-list-check"></i></span>
+          <div>
+            <h2>Lista de precios personalizados</h2>
+            <p>Productos con precio especial asignado para este cliente.</p>
           </div>
-      </div>
+        </div>
 
+        <div class="listaProductos cliente-prices-list">
+          <?php foreach($arrayPreciosPorCliente as $value): ?>
+            <div id="<?php echo $value->idproducto;?>" class="cliente-price-item" role="alert">
+              <span class="cliente-price-item__icon"><i class="fa-solid fa-box"></i></span>
+              <div class="cliente-price-item__content">
+                <strong>$<?php echo number_format($value->precioxcliente ?? 0, 0, ',', '.');?></strong>
+                <p><?php echo $value->nombre;?></p>
+              </div>
+              <button type="button" class="cliente-price-item__remove" title="Eliminar precio personalizado">
+                <span id="<?php echo $value->idproducto;?>" class="material-symbols-outlined">cancel</span>
+              </button>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </section>
     </form>
-  </div> 
-
+  </div>
 </div>

@@ -40,7 +40,7 @@
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, insumos:insumo[]}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
-    let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = [];
+    let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = []; 
     let indexcarrito:number, nombretarifa:string|undefined='', tipoventa:string="Contado";
     const promesas: Promise<any>[] = [];
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
@@ -843,7 +843,7 @@
       let totalMediosPago:number = 0;
       for(let value of mapMediospago.values())totalMediosPago+=value;
       if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
-        msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        POS.gestionSubirModalPagar.mostrarMensajeMetodosPago?.();
         return;
       }
 

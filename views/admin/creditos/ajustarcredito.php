@@ -1,13 +1,22 @@
 <!-- MODAL PARA AJUSTAR CREDITO-->
-  <dialog id="miDialogoAjustarCredito" class="midialog-sm p-12">
-    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-        <h4 id="modalAjustarCredito" class="font-semibold text-gray-700 mb-4">Ajustar Credito</h4>
-        <button class="rounded-lg hover:bg-gray-100 transition">
-            <i id="btnXCerrarModalAjustarCredito" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
+  <dialog id="miDialogoAjustarCredito" class="detalle-abono-dialog detalle-ajuste-dialog">
+    <div class="detalle-abono-dialog__header">
+        <div class="detalle-abono-dialog__title">
+            <span class="detalle-abono-dialog__icon detalle-ajuste-dialog__icon">
+                <i class="fa-solid fa-sliders"></i>
+            </span>
+            <div>
+                <p>Credito</p>
+                <h4 id="modalAjustarCredito">Ajustar credito</h4>
+                <span>Actualiza recargos, abonos anteriores y fecha inicial.</span>
+            </div>
+        </div>
+        <button type="button" class="detalle-abono-dialog__close" aria-label="Cerrar ajuste de credito">
+            <i id="btnXCerrarModalAjustarCredito" class="fa-solid fa-xmark"></i>
         </button>
     </div>
     <div id="divmsjalerta3"></div>
-    <form id="formAjustarCredito" class="formulario" >
+    <form id="formAjustarCredito" class="detalle-abono-dialog__form formulario" >
         
         <input id="idcredito" class="hidden" type="text" name="idcredito_ajustarcredito" value="<?php echo $credito->id;?>">
         <input id="capital" class="hidden" type="text" name="capital" value="<?php echo $credito->capital??'';?>">
@@ -15,15 +24,22 @@
         <input id="saldopendiente" class="hidden" type="text" name="saldopendiente" value="<?php echo $credito->saldopendiente??'';?>">
         <input id="montototal" class="hidden" type="text" name="montototal" value="<?php echo $credito->montototal??'';?>">
 
-        <p class="text-gray-600 text-3xl text-center font-light mb-10">Credito $: <span class="text-gray-700 font-semibold"><?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?></span></p>
+        <div class="detalle-abono-dialog__amount-card detalle-ajuste-dialog__amount">
+            <span><i class="fa-solid fa-file-invoice-dollar"></i></span>
+            <div>
+                <label>Credito actual</label>
+                <strong>$ <?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?></strong>
+            </div>
+        </div>
         
         <div class="recargo"></div>
-        <div class="formulario__campo">
-            <label class="formulario__label" for="recargo">Recargo interes</label>
-            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+        <div class="detalle-abono-dialog__grid">
+        <div class="detalle-abono-dialog__field">
+            <label for="recargo">Recargo interes</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-percent"></i></span>
                 <input 
                     id="recargo" 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text"
                     placeholder="Recargo de interes al credito"
                     value="<?php echo $credito->valorinterestotal??'';?>"
@@ -32,12 +48,12 @@
             </div>
         </div>
 
-        <div class="formulario__campo">
-            <label class="formulario__label" for="abonoTotalAntiguo">Abono total antiguo</label>
-            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+        <div class="detalle-abono-dialog__field">
+            <label for="abonoTotalAntiguo">Abono total antiguo</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-hand-holding-dollar"></i></span>
                 <input 
                     id="abonoTotalAntiguo" 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text"
                     placeholder="Monto antiguo pagado hasta la fecha"
                     value="<?php echo $credito->abonototalantiguo??'';?>"
@@ -46,29 +62,31 @@
             </div>
         </div>
 
-        <div class="formulario__campo">
-            <label class="formulario__label" for="ajustarFechaInicio">Ajustar fecha de inicio</label>
-            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+        <div class="detalle-abono-dialog__field detalle-abono-dialog__field--full">
+            <label for="ajustarFechaInicio">Ajustar fecha de inicio</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-calendar-days"></i></span>
                 <input 
                     id="ajustarFechaInicio" 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="date"
                     value="<?php echo $credito->fechainicio??'';?>"
                 >
             </div>
         </div>
 
-        <?php if(userPerfil()>3):  ?>
-            <label for="inputPasswordAjustarCredito" class="block text-2xl font-medium text-gray-600">Ingresar Clave</label>
-            <div class="mt-2">
-                <input id="inputPasswordAjustarCredito" type="password" name="ajustarCreditoClave" class="miles bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1">
-                <div id="divmsjalertaClaveAjustarCredito"></div>
+        <div class="detalle-abono-dialog__field detalle-abono-dialog__field--full">
+            <label for="inputPasswordAjustarCredito">Clave de autorizacion</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-key"></i></span>
+                <input id="inputPasswordAjustarCredito" type="password" name="ajustarCreditoClave" class="miles" placeholder="Ingresa la clave para ajustar el credito">
             </div>
-        <?php endif;  ?>
+            <div id="divmsjalertaClaveAjustarCredito"></div>
+        </div>
+        </div>
 
-        <div class="text-right border-t border-gray-200 pt-12 mt-8">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
-            <input id="btnEditarCrearAjustarCredito" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">
+        <div class="detalle-abono-dialog__actions">
+            <button class="detalle-abono-dialog__button detalle-abono-dialog__button--secondary" type="button" value="salir">Salir</button>
+            <input id="btnEditarCrearAjustarCredito" class="detalle-abono-dialog__button detalle-abono-dialog__button--primary" type="submit" value="Confirmar">
         </div>
     </form>
   </dialog><!--fin modal AjustarCredito-->

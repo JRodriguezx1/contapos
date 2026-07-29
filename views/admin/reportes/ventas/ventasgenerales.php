@@ -1,147 +1,89 @@
-<!-- Reportes Generales -->
-<div class="box ventasgenerales">
+﻿<!-- Reportes Generales -->
+<div class="box ventasgenerales ventas-generales">
   <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
-  <a href="/admin/reportes" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2    mb-6">
-    <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-    </svg>
-    <span class="sr-only">Atrás</span>
-  </a>
-  <h2 class="text-2xl font-semibold mb-4">📊 Reportes Generales</h2>
 
-  <!-- Descripción rango de fecha -->
-  <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-xl px-4 py-3 mb-6 flex items-center gap-2">
-    <span class="text-lg">📅</span>
-    <span class="text-sm md:text-base font-medium">Mostrando información del período:
-      <span id="fecha1" class="font-semibold"> - </span>
-      al
-      <span id="fecha2" class="font-semibold"> - </span>
-    </span>
-  </div>
+  <section class="ventas-generales__shell">
+    <header class="ventas-generales__hero">
+      <a href="/admin/reportes" class="ventas-generales__back" aria-label="Volver a reportes">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
 
-  <!-- Tabs -->
-  <div class="w-full overflow-x-auto lg:overflow-visible mb-6">
-    <div class="flex w-max lg:w-auto lg:inline-flex rounded-2xl shadow-md border border-gray-300">
+      <div class="ventas-generales__title">
+        <span>Ventas</span>
+        <h1>Reportes generales</h1>
+        <p>Consulta productos, medios de pago, cartera, canales y resumen financiero por periodo.</p>
+      </div>
 
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-indigo-600 text-white transition"
-          data-tab="productos">
-          Productos
+      <div class="ventas-generales__period-card">
+        <span><i class="fa-solid fa-calendar-check"></i></span>
+        <div>
+          <strong>Periodo activo</strong>
+          <small><span id="fecha1">-</span> al <span id="fecha2">-</span></small>
+        </div>
+      </div>
+    </header>
+
+    <section class="ventas-generales__filters">
+      <div class="ventas-generales__section-heading">
+        <span><i class="fa-solid fa-calendar-days"></i></span>
+        <div>
+          <h2>Periodo de consulta</h2>
+          <p>Elige un atajo o define un rango personalizado.</p>
+        </div>
+      </div>
+
+      <div class="ventas-generales__quick-actions">
+        <button id="btnmesactual" class="ventas-generales__filter-btn ventas-generales__filter-btn--primary" type="button">
+          <i class="fa-solid fa-calendar-check"></i> Mes actual
         </button>
-
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="medios">
-          Medios de Pago
+        <button id="btnmesanterior" class="ventas-generales__filter-btn" type="button">
+          <i class="fa-solid fa-calendar-minus"></i> Mes anterior
         </button>
-
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="creditosSeparados">
-          Creditos/Separados
+        <button id="btnhoy" class="ventas-generales__filter-btn" type="button">
+          <i class="fa-solid fa-sun"></i> Hoy
         </button>
-
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="ingresoCanalventa">
-          Ingreso canal de venta
+        <button id="btnayer" class="ventas-generales__filter-btn" type="button">
+          <i class="fa-solid fa-clock-rotate-left"></i> Ayer
         </button>
+      </div>
 
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="categorias">
-          Categorías
+      <div class="ventas-generales__range">
+        <label for="ventasGeneralesRango">Rango personalizado</label>
+        <div class="ventas-generales__date-field">
+          <span><i class="fa-solid fa-calendar"></i></span>
+          <input id="ventasGeneralesRango" type="text" name="datetimes" placeholder="Seleccionar fecha" autocomplete="off" readonly />
+        </div>
+        <button id="consultarFechaPersonalizada" class="ventas-generales__filter-btn ventas-generales__filter-btn--accent" type="button">
+          <i class="fa-solid fa-magnifying-glass-chart"></i> Consultar
         </button>
+      </div>
+    </section>
 
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="empleados">
-          Empleados
-        </button>
+    <section class="ventas-generales__content-card">
+      <div class="ventas-generales__section-heading ventas-generales__section-heading--tabs">
+        <span><i class="fa-solid fa-chart-simple"></i></span>
+        <div>
+          <h2>Detalle de reportes</h2>
+          <p>Alterna entre vistas para revisar el comportamiento de ventas.</p>
+        </div>
+      </div>
 
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="gastos">
-          Gastos
-        </button>
-
-        <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition"
-          data-tab="resumen">
-          Resumen
-        </button>
-    </div>
-  </div>
-
-
-  <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-    <!-- Grupo de botones -->
-    <div class="inline-flex rounded-2xl shadow-md overflow-hidden border border-gray-300 self-start">
-      <button id="btnmesactual" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-        Mes actual
-      </button>
-      <button id="btnmesanterior" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-        Mes anterior
-      </button>
-      <button id="btnhoy" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-        Hoy
-      </button>
-      <button id="btnayer" class="px-6 py-3 text-base font-medium text-gray-600 bg-white hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-l border-gray-300 transition">
-        Ayer
-      </button>
-    </div>
-    <!-- Input y botón consultar -->
-    <div class="flex items-center gap-3 mb-6">
-      <input 
-        type="text" 
-        name="datetimes" 
-        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:border-indigo-600 block w-60 lg:w-80 p-3 text-base     focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        placeholder="Seleccionar fecha"
-      />
-      <button id="consultarFechaPersonalizada" class="px-6 py-3 text-base font-medium bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-md transition">
-        Consultar
-      </button>
-    </div>
-  </div>
-
-  <!-- Botones de exportación estilo toolbar moderno -->
-  <!--<div class="flex flex-wrap gap-2 mb-4">
-    <button id="btnExcel" class="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-green-100 hover:text-green-700 px-4 py-2 rounded-lg shadow-sm transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3H8a2 2 0 00-2 2v14a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2z" />
-      </svg>
-      Excel
-    </button>
-
-    <button id="btnCopy" class="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-blue-100 hover:text-blue-700 px-4 py-2 rounded-lg shadow-sm transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8M8 8h8M4 4h16v16H4V4z" />
-      </svg>
-      Copiar
-    </button>
-
-    <button id="btnCSV" class="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-yellow-100 hover:text-yellow-700 px-4 py-2 rounded-lg shadow-sm transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4V4z" />
-      </svg>
-      CSV
-    </button>
-
-    <button id="btnPDF" class="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-red-100 hover:text-red-700 px-4 py-2 rounded-lg shadow-sm transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      PDF
-    </button>
-
-    <button id="btnPrint" class="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 px-4 py-2 rounded-lg shadow-sm transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9V4h12v5M6 14h12v6H6v-6z" />
-      </svg>
-      Imprimir
-    </button>
-  </div>-->
-
-      
-
-  <!-- Tab content -->
-  <div id="tab-content">
+      <div class="ventas-generales__tabs" role="tablist" aria-label="Reportes generales de ventas">
+        <button class="tab-btn ventas-generales__tab is-active bg-indigo-600 text-white" data-tab="productos" type="button"><i class="fa-solid fa-boxes-stacked"></i> Productos</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="medios" type="button"><i class="fa-solid fa-credit-card"></i> Medios de pago</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="creditosSeparados" type="button"><i class="fa-solid fa-handshake"></i> Creditos/Separados</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="ingresoCanalventa" type="button"><i class="fa-solid fa-route"></i> Canal de venta</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="categorias" type="button"><i class="fa-solid fa-folder-tree"></i> Categorias</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="empleados" type="button"><i class="fa-solid fa-user-tie"></i> Empleados</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="gastos" type="button"><i class="fa-solid fa-arrow-trend-down"></i> Gastos</button>
+        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="resumen" type="button"><i class="fa-solid fa-scale-balanced"></i> Resumen</button>
+      </div>
+      <!-- Tab content -->
+      <div id="tab-content" class="ventas-generales__tab-content">
 
     <!-- Productos -->
     <div id="productos" class="tab-pane">
-      <h3 class="text-lg font-semibold mb-4">📦 Ventas por Productos</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-boxes-stacked"></i> Ventas por productos</h3>
       <table id="tablaProductosVendidos" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -155,7 +97,7 @@
 
     <!-- Medios de Pago -->
     <div id="medios" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">💳 Ventas por Medio de Pago</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-credit-card"></i> Ventas por medio de pago</h3>
       <table id="tablaMediosPagos" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -176,7 +118,7 @@
 
     <!-- Creditos/Separados -->
     <div id="creditosSeparados" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">🤝 Creditos/Separados (SEPARADOS)</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-handshake"></i> Creditos/Separados</h3>
       <table id="tablacreditosSeparados" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -192,7 +134,7 @@
 
     <!-- Ingreso de canal de venta -->
     <div id="ingresoCanalventa" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">💸 Ingresos por canal de venta</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-route"></i> Ingresos por canal de venta</h3>
       <table id="tablaIngresoCanalventa" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -204,13 +146,13 @@
       </table>
     </div>
 
-    <!-- Categorías -->
+    <!-- CategorÃ­as -->
     <div id="categorias" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">📂 Ventas por Categoría</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-folder-tree"></i> Ventas por categoria</h3>
       <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
-            <th class="px-4 py-2 border">Categoría</th>
+            <th class="px-4 py-2 border">CategorÃ­a</th>
             <th class="px-4 py-2 border">Cantidad Vendida</th>
             <th class="px-4 py-2 border">Total Ventas</th>
           </tr>
@@ -220,7 +162,7 @@
 
     <!-- Empleados -->
     <div id="empleados" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">👨‍💼 Ventas por Empleados</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-user-tie"></i> Ventas por empleados</h3>
       <table id="tablaVentasXUsuario" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -237,7 +179,7 @@
 
     <!-- Gastos -->
     <div id="gastos" class="tab-pane hidden">
-      <h3 class="text-lg font-semibold mb-4">💸 Gastos</h3>
+      <h3 class="ventas-generales__pane-title"><i class="fa-solid fa-arrow-trend-down"></i> Gastos</h3>
       <table id="tablaGastos" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -256,7 +198,7 @@
        <!-- tabla balance general -->
       <?php include __DIR__. "/balanceGeneral.php"; ?>
 
-      <h3 class="text-lg font-semibold mb-4 mt-16">📈 Resumen Financiero De Ventas (Ventas de contado)</h3>
+      <h3 class="ventas-generales__pane-title ventas-generales__pane-title--spaced"><i class="fa-solid fa-chart-line"></i> Resumen financiero de ventas</h3>
       <table id="tablaResumenVentas" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -271,7 +213,7 @@
         </tbody>
       </table>
 
-      <h3 class="text-lg font-semibold mb-4 mt-12">📈 Resumen Financiero De creditos (Incluye Creditos y Seprados)</h3>
+      <h3 class="ventas-generales__pane-title ventas-generales__pane-title--spaced"><i class="fa-solid fa-wallet"></i> Resumen financiero de creditos</h3>
       <div class="w-full overflow-x-auto">
         <table id="tablaResumenCreditos" class="tabla">
           <thead class="bg-gray-100 text-gray-700">
@@ -291,7 +233,7 @@
 
       
       
-      <h3 class="text-lg font-semibold mb-4 mt-12">💸 Rentabilidad</h3>
+      <h3 class="ventas-generales__pane-title ventas-generales__pane-title--spaced"><i class="fa-solid fa-arrow-trend-up"></i> Rentabilidad</h3>
       <table id="tablaRentabilidad" class="display responsive nowrap tabla" width="100%">
         <thead class="bg-gray-100 text-gray-700">
           <tr>
@@ -315,7 +257,9 @@
 
     </div> <!-- fin resumen -->
 
-  </div>
+        </div>
+    </section>
+  </section>
 </div>
 
 <script>
@@ -324,21 +268,20 @@
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      // Resetear todas las pestañas a estado inactivo
       tabs.forEach(t => {
-        t.classList.remove('bg-indigo-600','text-white');
-        t.classList.add('bg-white','text-gray-600');
+        t.classList.remove('is-active', 'bg-indigo-600', 'text-white');
+        t.classList.add('bg-white', 'text-gray-600');
       });
 
-      // Ocultar todos los paneles
       panes.forEach(p => p.classList.add('hidden'));
 
-      // Activar la pestaña clickeada
-      tab.classList.add('bg-indigo-600','text-white');
-      tab.classList.remove('bg-white','text-gray-600');
+      tab.classList.add('is-active', 'bg-indigo-600', 'text-white');
+      tab.classList.remove('bg-white', 'text-gray-600');
 
-      // Mostrar el contenido correspondiente
-      document.getElementById(tab.dataset.tab).classList.remove('hidden');
+      document.getElementById(tab.dataset.tab)?.classList.remove('hidden');
     });
   });
 </script>
+
+
+

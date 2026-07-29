@@ -25,7 +25,39 @@
     let valoresCredito = {capital:0, abonoinicial:0, cantidadcuotas:1, montocuota:0, frecuenciapago:1, interes:0, interestotal:0, valorinterestotal:0, valorinteresxcuota:0, montototal:0};
 
     //eventos a los inputs medios de pago
-    mediospago.forEach(m=>{m.addEventListener('input', (e)=>{ calcularmediospago(e);});});
+    mediospago.forEach(m=>{
+      m.addEventListener('input', (e)=>{ calcularmediospago(e);});
+      m.addEventListener('focus', ()=>{
+        const valorActual = parseInt(m.value.replace(/[^\d]/g, ''))||0;
+        if(valorActual === 0)m.value = '';
+      });
+      m.addEventListener('blur', (e)=>{
+        if(m.value.trim() !== '')return;
+        m.value = '0';
+        if(!m.readOnly)calcularmediospago(e);
+      });
+    });
+
+    const botonAgregarMedioPago = document.querySelector('#btnTogglePaymentMethods') as HTMLElement|null;
+    const acordeonMediosPago = document.querySelector('#first') as HTMLInputElement|null;
+
+    function abrirMediosPago(){
+      if(acordeonMediosPago)acordeonMediosPago.checked = true;
+      const primerMedioEditable = Array.from(mediospago).find(input=>!input.readOnly && !input.disabled);
+      setTimeout(()=>primerMedioEditable?.focus(), 80);
+    }
+
+    botonAgregarMedioPago?.addEventListener('click', (event)=>{
+      event.preventDefault();
+      event.stopPropagation();
+      abrirMediosPago();
+    });
+
+    botonAgregarMedioPago?.addEventListener('keydown', (event)=>{
+      if(event.key !== 'Enter' && event.key !== ' ')return;
+      event.preventDefault();
+      abrirMediosPago();
+    });
 
     /////////////////////  evento al input recibido  //////////////////////////
     document.querySelector<HTMLInputElement>('#recibio')?.addEventListener('input', (e)=>{
@@ -40,7 +72,7 @@
         //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{
-            if(index>0)totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''));
+            if(index>0)totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''))||0;
         });
 
         if(POS.valorTotal.total<totalotrosmedios){
@@ -54,10 +86,12 @@
         }
         if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1');
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
+        ocultarMensajeMetodosPagoSiCorresponde();
         if(POS.tipoventa == "Credito")calculoTasaInteres();
         if(POS.tipoventa == "Contado")initvaloresCredito();
       },
       calculoTasaInteres,
+      mostrarMensajeMetodosPago,
       valoresCredito
       
     };
@@ -86,18 +120,68 @@
     }
 
     
+    function ocultarMensajeMetodosPagoSiCorresponde(){
+      const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
+      if(!mensaje)return;
+
+      let totalMediosPago = 0;
+      for(const value of POS.mapMediospago.values())totalMediosPago += Number(value);
+
+      if(totalMediosPago > 0){
+        mensaje.classList.add('hidden');
+        mensaje.classList.remove('payment-methods-required-message--visible');
+        document.querySelector('.payment-methods-panel')?.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
+      }
+    }
+
+    function ocultarMensajeMetodosPago(){
+      const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
+      if(!mensaje)return;
+
+      mensaje.classList.add('hidden');
+      mensaje.classList.remove('payment-methods-required-message--visible');
+      document.querySelector('.payment-methods-panel')?.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
+    }
+    function mostrarMensajeMetodosPago(){
+      const alertaSuperior = document.querySelector('#divmsjalertaprocesarpago') as HTMLElement;
+      const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
+      const panel = document.querySelector('.payment-methods-panel') as HTMLElement;
+
+      if(alertaSuperior)alertaSuperior.innerHTML = '';
+      if(acordeonMediosPago)acordeonMediosPago.checked = true;
+
+      if(mensaje){
+        mensaje.classList.remove('hidden', 'payment-methods-required-message--visible');
+        void mensaje.offsetWidth;
+        mensaje.classList.add('payment-methods-required-message--visible');
+      }
+
+      if(panel){
+        panel.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
+        void panel.offsetWidth;
+        panel.classList.add('payment-methods-panel--attention', 'separado-input--attention');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(()=>{
+          panel.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
+        }, 2200);
+      }
+
+      const primerMedioEditable = Array.from(mediospago).find(input=>!input.readOnly && !input.disabled);
+      setTimeout(()=>primerMedioEditable?.focus(), 180);
+    }
     function calcularmediospago(e:Event){
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
-          if(index>0&&POS.tipoventa=="Contado" || POS.tipoventa=="Credito")totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''));
+          if(index>0&&POS.tipoventa=="Contado" || POS.tipoventa=="Credito")totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''))||0;
         });
         if(totalotrosmedios<=POS.valorTotal.total&&POS.tipoventa == "Contado" || totalotrosmedios<=valoresCredito.abonoinicial&&POS.tipoventa == "Credito"){
           if(POS.tipoventa == "Contado"){
             POS.mapMediospago.set('1', POS.valorTotal.total-totalotrosmedios);
             if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1'); //se elimina medio de pago efectivo
           }
-          POS.mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
-          if((e.target as HTMLInputElement).value == '0' && POS.mapMediospago.has((e.target as HTMLInputElement).id))POS.mapMediospago.delete((e.target as HTMLInputElement).id);
+          const valorMedioPago = parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, ''))||0;
+          POS.mapMediospago.set((e.target as HTMLInputElement).id, valorMedioPago);
+          if(valorMedioPago == 0 && POS.mapMediospago.has((e.target as HTMLInputElement).id))POS.mapMediospago.delete((e.target as HTMLInputElement).id);
         }else{ //si la suma de los medios de pago superan el valor total, toma el ultimo input digitado y lo reestablece a su ultimo valor
           if(POS.mapMediospago.has((e.target as HTMLInputElement).id)){
             (e.target as HTMLInputElement).value = POS.mapMediospago.get((e.target as HTMLInputElement).id).toLocaleString();
@@ -109,6 +193,7 @@
           mediospago[0].value = (POS.mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
         }
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
+        ocultarMensajeMetodosPagoSiCorresponde();
     }
 
     function calcularCambio(recibido:string):void{
@@ -187,8 +272,10 @@
     function initMediosPagos(){
       mediospago.forEach(z=>z.value = '0');
       POS.mapMediospago.clear();
+      ocultarMensajeMetodosPago();
     }
 
     POS.gestionSubirModalPagar = gestionSubirModalPagar;
 
 })();
+

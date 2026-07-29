@@ -51,12 +51,18 @@
         function validarProducto(idproducto:string, producto:string){
             const pro = document.querySelector(`.listaProductos div[id="${idproducto}"]`);
             if(pro){
-                pro.querySelector('strong')!.textContent = '$'+Number(precioPersonalizado.value).toLocaleString();
+                pro.querySelector('strong')!.textContent = '$'+Number(precioPersonalizado.value).toLocaleString('es-CO');
             }else{
                 listaProductos?.insertAdjacentHTML('beforeend', `
-                <div id="${idproducto}" class="mb-4 flex items-center justify-between p-4 text-blue-600 bg-blue-100 rounded-lg shadow-md shadow-blue-500/30" role="alert">
-                    <p class="m-0"><strong>$${Number(precioPersonalizado.value).toLocaleString()}</strong>. - ${producto}</p>
-                    <button type="button"><span id="${idproducto}" class="material-symbols-outlined">cancel</span></button>
+                <div id="${idproducto}" class="cliente-price-item" role="alert">
+                    <span class="cliente-price-item__icon"><i class="fa-solid fa-box"></i></span>
+                    <div class="cliente-price-item__content">
+                        <strong>$${Number(precioPersonalizado.value).toLocaleString('es-CO')}</strong>
+                        <p>${escapePrecioClienteHtml(producto)}</p>
+                    </div>
+                    <button type="button" class="cliente-price-item__remove" title="Eliminar precio personalizado">
+                        <span id="${idproducto}" class="material-symbols-outlined">cancel</span>
+                    </button>
                 </div>`
                 );
             }
@@ -86,6 +92,19 @@
                     console.log(error);
                 }
             })();
+        }
+
+        function escapePrecioClienteHtml(value:string):string{
+            return value.replace(/[&<>"']/g, (char) => {
+                const entities:{[key:string]:string} = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return entities[char];
+            });
         }
 
 

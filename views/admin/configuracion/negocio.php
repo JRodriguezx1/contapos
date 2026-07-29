@@ -15,6 +15,28 @@
     </div>
 
     <form class="formulario config-business-form" action="/admin/configuracion/editarnegocio" enctype="multipart/form-data" method="POST">
+        <section class="config-business-branch">
+            <div class="config-business-branch__header">
+                <div class="config-business-branch__title">
+                    <span class="material-symbols-outlined">store</span>
+                    <div>
+                        <p>Nueva sede</p>
+                        <h3>Crear sucursal o sede</h3>
+                        <span>Registra puntos de operaci&oacute;n para cajas, ventas, emisores y facturadores.</span>
+                    </div>
+                </div>
+                <button id="abrirNuevaSede" class="config-business-branch__action" type="button">
+                    <i class="fa-solid fa-plus"></i>
+                    Crear sede
+                </button>
+            </div>
+
+            <div class="config-business-branch__summary">
+                <span class="material-symbols-outlined">account_tree</span>
+                <p>Crea una sede independiente sin modificar los datos principales del negocio.</p>
+            </div>
+        </section>
+
         <section class="config-business-card">
             <div class="config-business-card__header">
                 <span class="material-symbols-outlined">badge</span>
@@ -153,4 +175,94 @@
             </button>
         </div>
     </form>
+
+    <dialog id="miDialogoNuevaSede" class="midialog-md config-business-branch-dialog">
+        <div class="config-business-branch-dialog__hero">
+            <span class="material-symbols-outlined">store</span>
+            <div>
+                <p>Sede</p>
+                <h3>Crear nueva sucursal</h3>
+                <span>Completa los datos de contacto y operaci&oacute;n de la nueva sede.</span>
+            </div>
+        </div>
+
+        <form class="config-business-branch-dialog__form" action="#" method="POST" onsubmit="return false;">
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="nombreNuevaSede">Nombre de la sede</label>
+                <input id="nombreNuevaSede" class="formulario__input config-business-input" type="text" name="nombre_sede" placeholder="Ej: Sede norte">
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="ciudadNuevaSede">Ciudad</label>
+                <input id="ciudadNuevaSede" class="formulario__input config-business-input" type="text" name="ciudad_sede" placeholder="Ciudad de operaci&oacute;n">
+            </div>
+
+            <div class="formulario__campo config-business-field config-business-field--full">
+                <label class="formulario__label" for="direccionNuevaSede">Direcci&oacute;n</label>
+                <input id="direccionNuevaSede" class="formulario__input config-business-input" type="text" name="direccion_sede" placeholder="Direcci&oacute;n de la sede">
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="telefonoNuevaSede">Tel&eacute;fono</label>
+                <input id="telefonoNuevaSede" class="formulario__input config-business-input" type="number" name="telefono_sede" placeholder="Tel&eacute;fono fijo">
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="celularNuevaSede">Celular / WhatsApp</label>
+                <input id="celularNuevaSede" class="formulario__input config-business-input" type="number" min="3000000000" max="3777777777" name="celular_sede" placeholder="M&oacute;vil de contacto">
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="emailNuevaSede">Correo</label>
+                <input id="emailNuevaSede" class="formulario__input config-business-input" type="email" name="email_sede" placeholder="correo@sede.com">
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="responsableNuevaSede">Responsable</label>
+                <input id="responsableNuevaSede" class="formulario__input config-business-input" type="text" name="responsable_sede" placeholder="Encargado de la sede">
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="estadoNuevaSede">Estado</label>
+                <select id="estadoNuevaSede" class="formulario__input config-business-input" name="estado_sede">
+                    <option value="1">Activa</option>
+                    <option value="0">Inactiva</option>
+                </select>
+            </div>
+
+            <div class="formulario__campo config-business-field">
+                <label class="formulario__label" for="codigoNuevaSede">C&oacute;digo interno</label>
+                <input id="codigoNuevaSede" class="formulario__input config-business-input" type="text" name="codigo_sede" placeholder="Opcional">
+            </div>
+
+            <div class="formulario__campo config-business-field config-business-field--full">
+                <label class="formulario__label" for="observacionesNuevaSede">Observaciones</label>
+                <textarea id="observacionesNuevaSede" class="formulario__textarea config-business-input config-business-textarea config-business-textarea--sm" name="observaciones_sede" placeholder="Notas internas de la sede" rows="3"></textarea>
+            </div>
+
+            <div class="config-business-branch-dialog__footer">
+                <button id="cerrarNuevaSede" class="config-business-branch__ghost" type="button">Salir</button>
+                <button class="config-business-branch__submit" type="button">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Guardar sede
+                </button>
+            </div>
+        </form>
+    </dialog>
 </div>
+
+<script>
+    (() => {
+        const abrirNuevaSede = document.querySelector('#abrirNuevaSede');
+        const miDialogoNuevaSede = document.querySelector('#miDialogoNuevaSede');
+        const cerrarNuevaSede = document.querySelector('#cerrarNuevaSede');
+
+        abrirNuevaSede?.addEventListener('click', () => miDialogoNuevaSede?.showModal());
+        cerrarNuevaSede?.addEventListener('click', () => miDialogoNuevaSede?.close());
+        miDialogoNuevaSede?.addEventListener('click', (event) => {
+            if(event.target === miDialogoNuevaSede) {
+                miDialogoNuevaSede.close();
+            }
+        });
+    })();
+</script>

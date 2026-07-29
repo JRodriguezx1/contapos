@@ -1,114 +1,135 @@
-(function():void{
+﻿(function():void{
   if(document.querySelector('.inicio')){
-    
+    const formatoMoneda = new Intl.NumberFormat('es-CO', {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    });
+
+    const normalizarNumero = (valor:string | number | null | undefined):number => {
+      const numero = Number(valor ?? 0);
+      return Number.isFinite(numero) ? numero : 0;
+    };
+
+    const crearGradiente = (ctx:CanvasRenderingContext2D, colorInicio:string, colorFin:string):CanvasGradient => {
+      const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+      gradient.addColorStop(0, colorInicio);
+      gradient.addColorStop(1, colorFin);
+      return gradient;
+    };
+
+    const opcionesBase = {
+      animation: {
+        duration: 750,
+        easing: 'easeOutQuart'
+      },
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            boxHeight: 10,
+            boxWidth: 10,
+            color: '#475569',
+            font: {
+              size: 12,
+              weight: '700'
+            },
+            padding: 14,
+            usePointStyle: true
+          }
+        },
+        tooltip: {
+          backgroundColor: '#14233b',
+          bodyColor: '#fff',
+          borderColor: 'rgba(79, 70, 229, .25)',
+          borderWidth: 1,
+          cornerRadius: 10,
+          displayColors: true,
+          padding: 12,
+          titleColor: '#e0f2fe'
+        }
+      }
+    } as any;
+
     async function ventasgraficas($url:string, $dato:string){
       try{
-        const respuesta = await fetch($url); 
+        const respuesta = await fetch($url);
         const resultado = await respuesta.json();
         if($dato == 'ventasVsGastos')graficaVentasVsGastos(resultado);
         if($dato == 'ultimos7dias')ventas7dias(resultado);
       }catch(error){
-            console.log(error);
+        console.log(error);
       }
     }
+
     ventasgraficas('/admin/api/ventasVsGastos', 'ventasVsGastos');
     ventasgraficas('/admin/api/ultimos7dias', 'ultimos7dias');
 
-    // Ventas por horas (hoy) - ejemplo 24 horas o por horas de apertura (aquí 10 valores)
-    const ventasPorHoras = {
-      labels: ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"],
-      data:    [5, 12, 20, 35, 60, 48, 30, 22, 15, 10]
-    };
-
-
-    // Gastos por transacción (gráfico doughnut)
-    const gastosTransaccion = {
-      labels: ["Comisiones", "Materia Primas", "Servicios", "Otros"],
-      data:   [15, 50, 25, 10] // porcentajes o montos relativos
-    };
-
-
-    // ---------- Charts ----------
-
-    // Ventas por horas (line)
-    /*const ctxHoras = (document.getElementById('chartVentasHoras') as HTMLCanvasElement).getContext('2d');
-    new Chart(ctxHoras, {
-      type: 'line',
-      data: {
-        labels: ventasPorHoras.labels,
-        datasets: [{
-          label: 'Ventas (unidades)',
-          data: ventasPorHoras.data,
-          borderColor: '#6366F1',
-          backgroundColor: 'rgba(99,102,241,0.12)',
-          fill: true,
-          tension: 0.35,
-          pointRadius: 3
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true }
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: (ctx:any) => ` ${ctx.parsed.y} unidades`
-            }
-          },
-          legend: { display: false }
-        }
-      }
-    });*/
-
-    // Ingresos por día (bar)
     function ventas7dias(resultado:{dia:string, ventas_totales:string}[]){
-      const ctxIngresosDias = (document.getElementById('chartIngresosDias') as HTMLCanvasElement).getContext('2d');
+      const canvas = document.getElementById('chartIngresosDias') as HTMLCanvasElement | null;
+      const ctxIngresosDias = canvas?.getContext('2d');
+      if(!ctxIngresosDias)return;
+
+      const gradienteIngresos = crearGradiente(ctxIngresosDias, 'rgba(6, 182, 212, .92)', 'rgba(79, 70, 229, .16)');
+
       new Chart(ctxIngresosDias, {
         type: 'bar',
         data: {
           labels: resultado.map(x=>x.dia),
           datasets: [{
             label: 'Ingresos',
-            data: resultado.map(x=>x.ventas_totales),
-            backgroundColor: '#10B981'
+            data: resultado.map(x=>normalizarNumero(x.ventas_totales)),
+            backgroundColor: gradienteIngresos,
+            borderColor: 'rgba(6, 182, 212, .92)',
+            borderRadius: 10,
+            borderSkipped: false,
+            borderWidth: 1,
+            hoverBackgroundColor: 'rgba(79, 70, 229, .86)',
+            maxBarThickness: 58
           }]
         },
         options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
+          ...opcionesBase,
+          plugins: {
+            ...opcionesBase.plugins,
+            legend: {display: false},
+            tooltip: {
+              ...opcionesBase.plugins.tooltip,
+              displayColors: false,
+              callbacks: {
+                label: (context:any) => `Ingresos: $${formatoMoneda.format(normalizarNumero(context.parsed.y))}`
+              }
+            }
+          },
           scales: {
             y: {
               beginAtZero: true,
+              border: {display: false},
+              grid: {color: 'rgba(148, 163, 184, .16)', drawBorder: false},
+              ticks: {
+                color: '#64748b',
+                font: {size: 12, weight: '600'},
+                callback: (value:any) => formatoMoneda.format(normalizarNumero(value))
+              }
+            },
+            x: {
+              border: {display: false},
+              grid: {display: false},
+              ticks: {color: '#64748b', font: {size: 12, weight: '600'}}
             }
           }
         }
       });
     }
 
-    // Gastos por transacción (doughnut)
-    /*const ctxGastos = (document.getElementById('chartGastosTransaccion') as HTMLCanvasElement).getContext('2d');
-    new Chart(ctxGastos, {
-      type: 'doughnut',
-      data: {
-        labels: gastosTransaccion.labels,
-        datasets: [{
-          data: gastosTransaccion.data,
-          backgroundColor: ['#EF4444','#F59E0B','#3B82F6','#6B7280']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' }
-        }
-      }
-    });*/
-
     function graficaVentasVsGastos(resultado:{periodo:string[], ventastotales:string[], gastostotales:string[]}){
-      // Ventas vs Gastos (combinado: barras gastos + línea ventas)
-      const ctxVG = (document.getElementById('chartVentasGastos') as HTMLCanvasElement).getContext('2d');
+      const canvas = document.getElementById('chartVentasGastos') as HTMLCanvasElement | null;
+      const ctxVG = canvas?.getContext('2d');
+      if(!ctxVG)return;
+
+      const gradienteVentas = crearGradiente(ctxVG, 'rgba(79, 70, 229, .9)', 'rgba(79, 70, 229, .14)');
+      const gradienteGastos = crearGradiente(ctxVG, 'rgba(6, 182, 212, .18)', 'rgba(6, 182, 212, .02)');
+
       new Chart(ctxVG, {
         data: {
           labels: resultado.periodo,
@@ -116,41 +137,86 @@
             {
               type: 'bar',
               label: 'Ventas',
-              data: resultado.ventastotales,
-              backgroundColor: 'rgba(239,68,68,0.8)'
+              data: resultado.ventastotales.map(x=>normalizarNumero(x)),
+              backgroundColor: gradienteVentas,
+              borderColor: 'rgba(79, 70, 229, .92)',
+              borderRadius: 10,
+              borderSkipped: false,
+              borderWidth: 1,
+              maxBarThickness: 48,
+              order: 2
             },
             {
               type: 'line',
               label: 'Gastos',
-              data: resultado.gastostotales,
-              borderColor: '#4F46E5',
-              backgroundColor: 'rgba(79,70,229,0.15)',
-              tension: 0.3,
+              data: resultado.gastostotales.map(x=>normalizarNumero(x)),
+              borderColor: '#06b6d4',
+              backgroundColor: gradienteGastos,
+              borderWidth: 3,
               fill: true,
-              yAxisID: 'y1'
+              pointBackgroundColor: '#fff',
+              pointBorderColor: '#06b6d4',
+              pointBorderWidth: 2,
+              pointHoverRadius: 6,
+              pointRadius: 4,
+              tension: 0.35,
+              yAxisID: 'y1',
+              order: 1
             }
           ]
         },
         options: {
-          responsive: true,
-          plugins: { legend: { position: 'bottom' } },
+          ...opcionesBase,
+          plugins: {
+            ...opcionesBase.plugins,
+            legend: {
+              ...opcionesBase.plugins.legend,
+              position: 'bottom'
+            },
+            tooltip: {
+              ...opcionesBase.plugins.tooltip,
+              callbacks: {
+                label: (context:any) => `${context.dataset.label}: $${formatoMoneda.format(normalizarNumero(context.parsed.y))}`
+              }
+            }
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
           scales: {
             y: {
               beginAtZero: true,
+              border: {display: false},
+              grid: {color: 'rgba(148, 163, 184, .16)', drawBorder: false},
               position: 'left',
-              title: { display: true, text: 'Ventas (COP)' }
+              ticks: {
+                color: '#64748b',
+                font: {size: 12, weight: '600'},
+                callback: (value:any) => formatoMoneda.format(normalizarNumero(value))
+              },
+              title: {display: false}
             },
             y1: {
               beginAtZero: true,
+              border: {display: false},
+              grid: {drawOnChartArea: false},
               position: 'right',
-              grid: { drawOnChartArea: false },
-              title: { display: true, text: 'Gastos (COP)' }
+              ticks: {
+                color: '#64748b',
+                font: {size: 12, weight: '600'},
+                callback: (value:any) => formatoMoneda.format(normalizarNumero(value))
+              },
+              title: {display: false}
+            },
+            x: {
+              border: {display: false},
+              grid: {display: false},
+              ticks: {color: '#64748b', font: {size: 12, weight: '600'}}
             }
-          },
+          }
         }
       });
     }
-    
-
   }
 })();

@@ -1,24 +1,38 @@
 <!-- MODAL PARA ABONAR-->
-  <dialog id="miDialogoAbono" class="midialog-sm p-12">
-    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-        <h4 id="modalAbono" class="font-semibold text-gray-700 mb-4">Registrar abono</h4>
-        <button class="rounded-lg hover:bg-gray-100 transition">
-            <i id="btnXCerrarModalAbono" class="p-2 fa-solid fa-xmark text-gray-600 text-3xl"></i>
+  <dialog id="miDialogoAbono" class="detalle-abono-dialog">
+    <div class="detalle-abono-dialog__header">
+        <div class="detalle-abono-dialog__title">
+            <span class="detalle-abono-dialog__icon">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+            </span>
+            <div>
+                <p>Credito</p>
+                <h4 id="modalAbono">Registrar abono</h4>
+                <span>Aplica un pago parcial al saldo pendiente.</span>
+            </div>
+        </div>
+        <button type="button" class="detalle-abono-dialog__close" aria-label="Cerrar registro de abono">
+            <i id="btnXCerrarModalAbono" class="fa-solid fa-xmark"></i>
         </button>
     </div>
     <div id="divmsjalerta2"></div>
-    <form id="formCrearUpdateAbono" class="formulario" action="/admin/creditos/registrarAbono" method="POST">
+    <form id="formCrearUpdateAbono" class="detalle-abono-dialog__form formulario" action="/admin/creditos/registrarAbono" method="POST">
         <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
         <input class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">
-        <div class="formulario__campo">
-            <label class="formulario__label" for="montocuota">Valor de la cuota</label>
-            <input id="montocuota" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg font-semibold focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Valor de la cuota" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>    
+        <div class="detalle-abono-dialog__amount-card">
+            <span><i class="fa-solid fa-receipt"></i></span>
+            <div>
+                <label for="montocuota">Valor de la cuota</label>
+                <input id="montocuota" type="text" placeholder="Valor de la cuota" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>
+            </div>
         </div>
-        <div class="formulario__campo">
-            <label class="formulario__label" for="caja">Caja</label>
+        <div class="detalle-abono-dialog__grid">
+        <div class="detalle-abono-dialog__field">
+            <label for="caja">Caja</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-cash-register"></i></span>
             <select 
                 id="caja" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
                 name="cajaid"
                 <?= $conflocal['restringir_caja_facturadora_a_caja_inicial_del_credito']->valor_final==1?'disabled':''; ?> 
                 required
@@ -27,21 +41,25 @@
                       <option value="<?php echo $value->id;?>" data-idemisor="<?= $value->idemisor ?>" <?=($credito->idemisor==$value->idemisor)?'selected':'';?> ><?php echo $value->nombre;?></option>
                 <?php endforeach; ?>
             </select>
+            </div>
         </div>
-        <div class="formulario__campo">
-            <label class="formulario__label" for="mediopago">Medio de pago</label>
-            <select id="mediopago" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="mediopagoid" required>
+        <div class="detalle-abono-dialog__field">
+            <label for="mediopago">Medio de pago</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-credit-card"></i></span>
+            <select id="mediopago" name="mediopagoid" required>
                 <?php foreach($mediospago as $value):  ?>
                       <option value="<?php echo $value->id;?>" ><?php echo $value->mediopago;?></option>
                 <?php endforeach; ?>
             </select>
+            </div>
         </div>
-        <div class="formulario__campo">
-            <label class="formulario__label" for="abono">Abono</label>
-            <div class="formulario__dato focus-within:!border-indigo-600 border border-gray-300 rounded-lg flex items-center h-14 overflow-hidden">
+        <div class="detalle-abono-dialog__field detalle-abono-dialog__field--full">
+            <label for="abono">Abono</label>
+            <div class="detalle-abono-dialog__control">
+                <span><i class="fa-solid fa-dollar-sign"></i></span>
                 <input
                     id="abono" 
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
                     type="text"
                     placeholder="Abono de la deuda"
                     name="valorpagado"
@@ -52,10 +70,18 @@
             </div>
         </div>
 
-        <textarea id="detalle" class="formulario__textarea mb-4" name="detalle" placeholder="Observacion" rows="4"></textarea>
+        <div class="detalle-abono-dialog__field detalle-abono-dialog__field--full">
+            <label for="detalle">Observacion</label>
+            <textarea id="detalle" name="detalle" placeholder="Observacion" rows="4"></textarea>
+        </div>
+        </div>
         
-        <label for="imprimirComprobanteAbonoinicial" class="flex flex-col items-center cursor-pointer">
-            <span class="text-gray-600 mb-4 text-xl">Imprimir comprobante?</span>
+        <label for="imprimirComprobanteAbonoinicial" class="detalle-abono-dialog__switch">
+            <span class="detalle-abono-dialog__switch-copy">
+                <strong>Imprimir comprobante</strong>
+                <small>Genera el soporte del abono al confirmar.</small>
+            </span>
+            <input type="hidden" name="imprimirComprobanteAbonoinicial" value="0">
             <input 
                 id="imprimirComprobanteAbonoinicial" 
                 name="imprimirComprobanteAbonoinicial" 
@@ -64,14 +90,16 @@
                 class="sr-only peer"
                 <?php echo $conflocal['imprimir_factura_automaticamente']->valor_final == 1?'checked':'';?>
                 >
-            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 relative transition">
-                <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 peer-checked:translate-x-5 transition"></div>
+            <div class="detalle-abono-dialog__toggle">
+                <small class="detalle-abono-dialog__toggle-state detalle-abono-dialog__toggle-state--off">OFF</small>
+                <small class="detalle-abono-dialog__toggle-state detalle-abono-dialog__toggle-state--on">ON</small>
+                <span></span>
             </div>
         </label>
 
-        <div class="text-right border-t border-gray-200 pt-12 mt-8">
-            <button class="btn-md btn-turquoise !py-4 !px-6 !w-[136px]" type="button" value="salir">Salir</button>
-            <input id="btnEditarCrearAbono" class="btn-md btn-indigo !mb-4 !py-4 px-6 !w-[136px]" type="submit" value="Confirmar">
+        <div class="detalle-abono-dialog__actions">
+            <button class="detalle-abono-dialog__button detalle-abono-dialog__button--secondary" type="button" value="salir">Salir</button>
+            <input id="btnEditarCrearAbono" class="detalle-abono-dialog__button detalle-abono-dialog__button--primary" type="submit" value="Confirmar">
         </div>
     </form>
   </dialog><!--fin modal Abonoar-->

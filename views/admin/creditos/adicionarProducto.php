@@ -1,154 +1,135 @@
-<div class="adicionarProducto box !pb-28">
+<div class="adicionarProducto">
+  <div class="adicionar-producto-shell">
+    <section class="adicionar-producto-hero">
+      <a href="/admin/creditos/detallecredito?id=<?php echo $credito->id;?>" class="adicionar-producto-back" aria-label="Volver al detalle">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
 
-  <!-- Botón Atrás -->
-  <a href="/admin/creditos/detallecredito?id=<?php echo $credito->id;?>"
-    class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2   ">
-    <svg class="w-6 h-6 rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M1 5h12m0 0L9 1m4 4L9 9" />
-    </svg>
-    <span class="sr-only">Atrás</span>
-  </a>
-
-  <!-- Contenido principal -->
-  <section class="space-y-6 mt-8">
-
-    <!-- Información del traslado con emojis -->
-    <p class="text-gray-500">Credito #: <span id="numOrden"><?php echo $credito->id;?></span></p>
-    
-    <!--
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div class="flex justify-between items-center p-4 bg-indigo-50  border border-indigo-200  rounded-xl">
-        <div>
-          <p class="text-sm text-gray-500 ">Sede origen</p>
-          <p id="sedeorigen" class="text-lg font-semibold text-gray-900 ">
-            <?php echo $ordentraslado->sucursal_origen;?>
-          </p>
-        </div>
-        <span class="text-3xl">🏭</span>
+      <div class="adicionar-producto-hero__content">
+        <p class="adicionar-producto-eyebrow">Cartera</p>
+        <h1>Adicionar productos</h1>
+        <p>Agrega articulos al credito o separado y actualiza los valores asociados.</p>
       </div>
 
-      <div class="flex justify-between items-center p-4 bg-indigo-50  border border-indigo-200  rounded-xl">
+      <div class="adicionar-producto-hero__badge">
+        <span><i class="fa-solid fa-file-invoice-dollar"></i></span>
         <div>
-          <p class="text-sm text-gray-500 ">Sede destino</p>
-          <p id="sededestino" class="text-lg font-semibold text-gray-900 ">
-            <?php echo $ordentraslado->sucursal_destino;?>
-          </p>
+          <strong id="numOrden"><?php echo $credito->id;?></strong>
+          <small>credito actual</small>
         </div>
-        <span class="text-3xl">🚚</span>
       </div>
+    </section>
 
-      <div class="flex justify-between items-center p-4 bg-indigo-50  border border-indigo-200  rounded-xl">
-        <div>
-          <p class="text-sm text-gray-500 ">Tipo</p>
-          <p id="tipo" class="text-lg font-semibold text-gray-900 ">
-            <?php echo $ordentraslado->tipo;?>
-          </p>
+    <section class="adicionar-producto-layout">
+      <article class="adicionar-producto-card adicionar-producto-card--form">
+        <header class="adicionar-producto-card__header">
+          <span><i class="fa-solid fa-cart-plus"></i></span>
+          <div>
+            <h2>Nuevo articulo</h2>
+            <p>Selecciona el producto, confirma cantidad y unidad para agregarlo al separado.</p>
+          </div>
+        </header>
+
+        <div class="adicionar-producto-fields">
+          <div class="adicionar-producto-field adicionar-producto-field--full">
+            <label for="articulo">Articulo</label>
+            <div class="adicionar-producto-input adicionar-producto-input--select2" data-placeholder="Buscar articulo">
+              <span><i class="fa-solid fa-magnifying-glass"></i></span>
+              <select id="articulo" multiple="multiple">
+                <?php foreach($totalitems as $value): ?>
+                  <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="adicionar-producto-field">
+            <label for="cantidad">Cantidad</label>
+            <div class="adicionar-producto-input">
+              <span><i class="fa-solid fa-hashtag"></i></span>
+              <input id="cantidad" type="text" placeholder="Cantidad" value="1"
+                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';">
+            </div>
+          </div>
+
+          <div class="adicionar-producto-field">
+            <label for="unidadmedida">Unidad</label>
+            <div class="adicionar-producto-input">
+              <span><i class="fa-solid fa-ruler-combined"></i></span>
+              <input id="unidadmedida" type="text" placeholder="Unidad de medida" readonly>
+            </div>
+          </div>
         </div>
-        <span class="text-3xl">📋</span>
-      </div>
 
-      <div class="flex justify-between items-center p-4 bg-indigo-50  border border-indigo-200  rounded-xl">
-        <div>
-          <p class="text-sm text-gray-500 ">Estado</p>
-          <p id="estado" class="text-lg font-semibold text-gray-900 ">
-            <?php echo $ordentraslado->estado;?>
-          </p>
+        <button id="btnAddItem" class="adicionar-producto-button adicionar-producto-button--secondary" type="button">
+          <i class="fa-solid fa-plus"></i>
+          Agregar articulo
+        </button>
+
+        <div class="adicionar-producto-totals">
+          <div class="adicionar-producto-total">
+            <span>Sub total</span>
+            <strong id="subTotal">$ <?php echo number_format($credito->capital, 2, ',', '.');?></strong>
+          </div>
+          <div class="adicionar-producto-total">
+            <span>Recargo interes</span>
+            <strong id="interes">$ <?php echo number_format($credito->interes, 2, ',', '.');?></strong>
+          </div>
+          <div class="adicionar-producto-total">
+            <span>Impuesto</span>
+            <strong id="impuesto">$ <?php echo number_format($credito->valorimpuestototal,2, ',', '.');?></strong>
+          </div>
+          <div class="adicionar-producto-total">
+            <span>Abono inicial</span>
+            <strong id="abonoinicial">$ <?php echo number_format($credito->abonoinicial,2, ',', '.');?></strong>
+          </div>
+          <div class="adicionar-producto-total">
+            <span>Descuento</span>
+            <strong id="descuento">$ <?php echo number_format($credito->descuento,2, ',', '.');?></strong>
+          </div>
+          <div class="adicionar-producto-total adicionar-producto-total--grand">
+            <span>Total</span>
+            <strong id="total">$ <?php echo number_format($credito->montototal,2, ',', '.');?></strong>
+          </div>
         </div>
-        <span class="text-3xl">✅</span>
-      </div>
+      </article>
 
-      <div class="flex justify-between items-center p-4 bg-indigo-50  border border-indigo-200  rounded-xl">
-        <div>
-          <p class="text-sm text-gray-500 ">Usuario</p>
-          <p id="usuario" class="text-lg font-semibold text-gray-900 ">
-            <?php echo $ordentraslado->nombreusuario;?>
-          </p>
+      <article class="adicionar-producto-card adicionar-producto-card--products">
+        <header class="adicionar-producto-card__header">
+          <span><i class="fa-solid fa-boxes-stacked"></i></span>
+          <div>
+            <h2>Productos del credito</h2>
+            <p>Revisa los articulos incluidos antes de guardar los cambios.</p>
+          </div>
+        </header>
+
+        <div class="adicionar-producto-table-wrap">
+          <table id="tablaItems" class="adicionar-producto-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>Valor</th>
+                <th>Total</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
-        <span class="text-3xl">👤</span>
-      </div>
 
-      <div class="p-4 bg-indigo-50  border border-indigo-200  rounded-xl">
-        <textarea id="observacion" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-32 text-base focus:outline-none focus:ring-1 focus:ring-indigo-600"><?php echo $ordentraslado->observacion;?></textarea>
-      </div>
-
-    </div>-->
-
-    <!-- Sección productos -->
-    <h2 class="text-xl font-semibold mb-4 text-gray-800  pt-4 border-b border-gray-200  pb-2">
-      Productos del credito
-    </h2>
-
-    <div class="flex flex-col md:flex-row gap-2">
-      <select id="articulo" name=""
-        class="w-full rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600    h-14 text-base px-2"
-        multiple="multiple">
-        <?php foreach($totalitems as $value): ?>
-          <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
-        <?php endforeach; ?>  
-      </select>
-
-      <input id="cantidad" type="text"
-        class="w-full md:w-1/4 border rounded-lg p-2.5 bg-gray-50 border-gray-300 text-gray-900    focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 h-14 text-base text-center"
-        placeholder="Cant." value="1"
-        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';">
-
-      <input id="unidadmedida" type="text"
-        class="w-full md:w-1/4 border rounded-lg p-2.5 bg-gray-50 border-gray-300 text-gray-900    focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 h-14 text-base"
-        placeholder="Unidad" readonly>
-
-      <button id="btnAddItem"
-        class="px-4 h-14 w-full md:w-1/4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium transition">
-        Agregar
-      </button>
-    </div>
-
-    <!-- Tabla -->
-    <div class="overflow-x-auto bg-white  rounded-xl shadow border border-gray-200 ">
-      <table id="tablaItems" class="w-full text-left border-collapse text-[15px]">
-        <thead class="bg-indigo-100  text-indigo-800  uppercase text-sm tracking-wide">
-          <tr>
-            <th class="p-4 border-b border-gray-200 ">Producto</th>
-            <th class="p-4 border-b border-gray-200 ">Cantidad</th>
-            <th class="p-4 border-b border-gray-200 ">Unidad de medida</th>
-            <th class="p-4 border-b border-gray-200 ">Valor</th>
-            <th class="p-4 border-b border-gray-200 ">Total</th>
-            <th class="p-4 border-b border-gray-200  text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100  text-base">
-          <!-- Filas dinámicas -->
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Botón actualizar -->
-    <div class="flex justify-end mt-6">
-      <button id="btnUpdateCreditoSeparado"
-        class="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium text-base transition">
-        Actualizar
-      </button>
-    </div>
-
-    
-    <div class="flex justify-start gap-4 mt-6">
-        <div class="text-end">
-            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Sub Total:</p>
-            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Recargo Interes:</p>
-            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Impuesto:</p>
-            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Abono Inicial:</p>
-            <p class="m-0 mb-2 text-slate-500 text-2xl font-normal">Descuento:</p>
-            <p class="m-0 mb-2 text-slate-600 text-3xl font-semibold">Total:</p>
-        </div>
-        <div>
-            <p id="subTotal" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->capital, 2, ',', '.');?></p>
-            <p id="interes" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->interes, 2, ',', '.');?></p>
-            <p id="impuesto" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->valorimpuestototal,2, ',', '.');?></p>
-            <p id="abonoinicial" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->abonoinicial,2, ',', '.');?></p>
-            <p id="descuento" class="m-0 mb-2 text-slate-600 text-2xl font-semibold">$ <?php echo number_format($credito->descuento,2, ',', '.');?></p>
-            <p id="total" class="m-0 mb-2 text-green-500 text-3xl font-semibold" style="font-family: 'Tektur', serif;">$ <?php echo number_format($credito->montototal,2, ',', '.');?></p>
-        </div>
-    </div>
-    
-  </section>
+        <footer class="adicionar-producto-actions">
+          <a href="/admin/creditos/detallecredito?id=<?php echo $credito->id;?>" class="adicionar-producto-button adicionar-producto-button--light">
+            <i class="fa-solid fa-arrow-left"></i>
+            Salir
+          </a>
+          <button id="btnUpdateCreditoSeparado" class="adicionar-producto-button adicionar-producto-button--primary" type="button">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Actualizar
+          </button>
+        </footer>
+      </article>
+    </section>
+  </div>
 </div>

@@ -1,5 +1,8 @@
 <div class="p-6 min-h-screen detallecredito">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
+  <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
+    <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
+  <?php endif; ?>
   <div class="max-w-auto mx-auto bg-white shadow-lg rounded-2xl p-8">
     <!-- Título principal -->
     <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">
@@ -9,8 +12,8 @@
       <span class="sr-only">Atrás</span>
     </a>
     <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-      💳 Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
-    </h2>
+      Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
+    </h2> 
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->
@@ -84,7 +87,7 @@
     </div>
 
     <!-- Historial de abonos -->
-    <div class="mb-10">
+    <div class="mb-10 detalle-credito-table-card config-table-card">
       <h3 class="text-lg font-semibold text-gray-700 mb-4">📚 Historial de Abonos</h3>
       <table id="tablacuotas" class="w-full border border-gray-200 rounded-xl overflow-hidden">
         <thead class="bg-gray-100">
@@ -138,37 +141,53 @@
 
 
   <!-- MODAL DETALLE PRODUCTO-->
-  <dialog id="miDialogoDetalleProducto" class="midialog-md p-12">
-    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-      <h4 id="modalDetalleProducto" class="font-semibold text-gray-700 mb-4">Detalle producto</h4>
-      <button class="rounded-lg hover:bg-gray-100 transition">
-          <i id="btnXCerrarModalDetalleProducto" class="fa-solid fa-xmark text-gray-600 text-3xl p-2"></i>
+  <dialog id="miDialogoDetalleProducto" class="detalle-producto-dialog">
+    <div class="detalle-producto-dialog__header">
+      <div class="detalle-producto-dialog__title">
+        <span class="detalle-producto-dialog__icon">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </span>
+        <div>
+          <p>Productos</p>
+          <h4 id="modalDetalleProducto">Detalle producto</h4>
+          <span><?php echo count($productos); ?> articulos asociados al <?php echo $credito->idtipofinanciacion==1?'credito':'separado'; ?>.</span>
+        </div>
+      </div>
+      <button type="button" class="detalle-producto-dialog__close" aria-label="Cerrar detalle de producto">
+          <i id="btnXCerrarModalDetalleProducto" class="fa-solid fa-xmark"></i>
       </button>
     </div>
     <div id="divmsjalerta1"></div>
     <!-- TABLA DE PRODUCTOS -->
-    <div class="overflow-x-auto border border-gray-200 rounded-xl shadow-sm">
+    <div class="detalle-producto-dialog__body">
+    <div class="detalle-producto-dialog__table-wrap">
         <table id="tabladetalleProducto"
-            class="w-full text-left border-collapse">
-            <thead
-                class="bg-indigo-100 text-indigo-800 uppercase text-base tracking-wide">
+            class="detalle-producto-dialog__table">
+            <thead>
                 <tr>
-                    <th class="px-5 py-3 border-b border-gray-200">Producto</th>
-                    <th class="px-5 py-3 border-b border-gray-200">Cantidad</th>
-                    <th class="px-5 py-3 border-b border-gray-200">Unidad de medida</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Unidad de medida</th>
                 </tr>
             </thead>
-            <tbody class="text-gray-700 text-lg divide-y divide-gray-100">
+            <tbody>
                 <!-- Filas dinámicas -->
                 <?php foreach($productos as $value): ?>
                   <tr>
-                    <td class="px-4 py-2 border"><?php echo $value->nombreproducto; ?></td>
-                    <td class="px-4 py-2 border"><?php echo $value->cantidad; ?></td>
-                    <td class="px-4 py-2 border"><?php echo 'Unidades'; ?></td>
+                    <td data-label="Producto">
+                      <span class="detalle-producto-dialog__product"><?php echo $value->nombreproducto; ?></span>
+                    </td>
+                    <td data-label="Cantidad">
+                      <span class="detalle-producto-dialog__quantity"><?php echo $value->cantidad; ?></span>
+                    </td>
+                    <td data-label="Unidad">
+                      <span class="detalle-producto-dialog__unit"><?php echo 'Unidades'; ?></span>
+                    </td>
                   </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
     </div>
   </dialog><!--fin modal detalle producto-->
 

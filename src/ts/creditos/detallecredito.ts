@@ -13,6 +13,10 @@
     const miDialogoPagoTotal = document.querySelector('#miDialogoPagoTotal') as any;
     const miDialogoDetalleProducto = document.querySelector('#miDialogoDetalleProducto') as any;
     const modalcambioMedioPago:any = document.querySelector("#cambioMedioPago");
+    const selectCajaAbono = document.querySelector('#caja') as HTMLSelectElement | null;
+    const selectMedioPagoAbono = document.querySelector('#mediopago') as HTMLSelectElement | null;
+    const selectCajaPagoTotal = document.querySelector('#PagoTotal_caja') as HTMLSelectElement | null;
+    const selectMedioPagoTotal = document.querySelector('#PagoTotal_mediopago') as HTMLSelectElement | null;
     //const pagarTodo = document.querySelector('#pagarTodo') as HTMLButtonElement;
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numCuota = document.querySelector('#numCuota') as HTMLLabelElement;
@@ -45,9 +49,20 @@
 
     
     document.addEventListener("click", cerrarDialogoExterno);
+
+    inicializarSelectsAbono();
      
     //////////////////  TABLA //////////////////////
-    tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatables);
+    tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatablesToolbar);
+    modernizarToolbarDataTable('#tablacuotas');
+    pintarPaginadorCuotas();
+    [80, 250, 600, 1000].forEach((tiempo)=>window.setTimeout(pintarPaginadorCuotas, tiempo));
+    ($('#tablacuotas') as any).on('draw.dt', pintarPaginadorCuotas);
+
+    const autoPrintAbonoCredito = document.querySelector('#autoPrintAbonoCredito') as HTMLInputElement | null;
+    if(autoPrintAbonoCredito?.value){
+      window.setTimeout(()=>printPOSComprobanteAbono(autoPrintAbonoCredito.value), 450);
+    }
 
 
     btnajustarCredito?.addEventListener('click', ():void=>{
@@ -79,12 +94,116 @@
       (document.querySelector('#PagoTotal_caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdatePagoTotal') as HTMLFormElement).submit();
     });
+
+    function pintarPaginadorCuotas():void{
+      const wrapper = document.querySelector('#tablacuotas_wrapper');
+      if(!wrapper || !tablacuotas)return;
+
+      const info = (tablacuotas as any).page?.info?.();
+      const paginaActual = info ? String(info.page + 1) : '1';
+      const paginador = wrapper.querySelector('.dataTables_paginate, .dt-paging, .pagination');
+      if(!paginador)return;
+
+      paginador.querySelectorAll('.detalle-paginador-current').forEach((boton)=>{
+        boton.classList.remove('detalle-paginador-current');
+      });
+
+      const botonesActuales = Array.from(paginador.querySelectorAll<HTMLElement>(
+        '.paginate_button.current, .paginate_button.active, .dt-paging-button.current, .dt-paging-button.active, [aria-current="page"], .page-item.active .page-link, .page-link.active, span.current, button.current, a.current'
+      ));
+
+      if(!botonesActuales.length){
+        Array.from(paginador.querySelectorAll<HTMLElement>('a, button, span')).forEach((elemento)=>{
+          const texto = elemento.textContent?.trim();
+          const esControl = elemento.classList.contains('previous') || elemento.classList.contains('next') || elemento.classList.contains('first') || elemento.classList.contains('last');
+
+          if(texto === paginaActual && !esControl){
+            botonesActuales.push(elemento);
+          }
+        });
+      }
+
+      botonesActuales.forEach((elemento)=>{
+        elemento.classList.add('detalle-paginador-current');
+        elemento.setAttribute('aria-label', `Pagina ${paginaActual}`);
+        elemento.setAttribute('aria-current', 'page');
+
+        if(elemento.textContent?.trim() !== paginaActual){
+          elemento.textContent = paginaActual;
+        }
+      });
+    }
+
+    function inicializarSelectsAbono():void{
+      if(typeof ($ as any)?.fn?.select2 === 'undefined')return;
+
+      const opcionesSelect2Abono = {
+        dropdownCssClass: 'detalle-abono-select2-dropdown',
+        dropdownParent: $('#miDialogoAbono'),
+        minimumResultsForSearch: Infinity,
+        width: '100%'
+      };
+      const opcionesSelect2PagoTotal = {
+        ...opcionesSelect2Abono,
+        dropdownParent: $('#miDialogoPagoTotal')
+      };
+
+      if(selectCajaAbono && selectCajaAbono.dataset.select2DetalleAbono !== 'true'){
+        ($(selectCajaAbono) as any).select2({
+          ...opcionesSelect2Abono,
+          placeholder: 'Seleccionar caja'
+        });
+        selectCajaAbono.dataset.select2DetalleAbono = 'true';
+      }
+
+      if(selectMedioPagoAbono && selectMedioPagoAbono.dataset.select2DetalleAbono !== 'true'){
+        ($(selectMedioPagoAbono) as any).select2({
+          ...opcionesSelect2Abono,
+          placeholder: 'Seleccionar medio de pago'
+        });
+        selectMedioPagoAbono.dataset.select2DetalleAbono = 'true';
+      }
+
+      if(selectCajaPagoTotal && selectCajaPagoTotal.dataset.select2DetalleAbono !== 'true'){
+        ($(selectCajaPagoTotal) as any).select2({
+          ...opcionesSelect2PagoTotal,
+          placeholder: 'Seleccionar caja'
+        });
+        selectCajaPagoTotal.dataset.select2DetalleAbono = 'true';
+      }
+
+      if(selectMedioPagoTotal && selectMedioPagoTotal.dataset.select2DetalleAbono !== 'true'){
+        ($(selectMedioPagoTotal) as any).select2({
+          ...opcionesSelect2PagoTotal,
+          placeholder: 'Seleccionar medio de pago'
+        });
+        selectMedioPagoTotal.dataset.select2DetalleAbono = 'true';
+      }
+
+      habilitarAperturaSelect2Abono(selectCajaAbono);
+      habilitarAperturaSelect2Abono(selectMedioPagoAbono);
+      habilitarAperturaSelect2Abono(selectCajaPagoTotal);
+      habilitarAperturaSelect2Abono(selectMedioPagoTotal);
+    }
+
+    function habilitarAperturaSelect2Abono(select:HTMLSelectElement | null):void{
+      if(!select)return;
+      const control = select.closest('.detalle-abono-dialog__control') as HTMLElement | null;
+      if(!control || control.dataset.openSelect2 === 'true')return;
+
+      control.dataset.openSelect2 = 'true';
+      control.addEventListener('click', (event:Event):void=>{
+        const target = event.target as HTMLElement;
+        if(select.disabled || target.closest('.select2-container--disabled'))return;
+        ($(select) as any).select2('open');
+      });
+    }
     
 
-    const saldopendiente = (document.querySelector('#saldopendiente') as HTMLInputElement).value;
+    let saldopendiente = Number((document.querySelector('#saldopendiente') as HTMLInputElement).value || '0');
     document.querySelector('#abonoTotalAntiguo')?.addEventListener("input", (e:Event)=>{
       const abonoTotalAntiguo = (e.target as HTMLInputElement);
-      if(Number(abonoTotalAntiguo.value)>Number(saldopendiente))abonoTotalAntiguo.value = '';
+      if(Number(abonoTotalAntiguo.value)>saldopendiente)abonoTotalAntiguo.value = '';
     });
 
     ////////////// Evento a la tabla cuotas ///////////////
@@ -196,18 +315,51 @@
       const capital:number = Number((document.querySelector('#capital') as HTMLInputElement).value);
       const abonoinicial:number = Number((document.querySelector('#abonoinicial') as HTMLInputElement).value);
       const montototal:number = Number((document.querySelector('#montototal') as HTMLInputElement).value);
-      const saldopendiente:number = Number((document.querySelector('#saldopendiente') as HTMLInputElement).value);
+      const saldoPendienteInput = document.querySelector('#saldopendiente') as HTMLInputElement;
+      const nuevoSaldoPendiente = capital+Number(recargo)-abonoinicial-Number(abonototalantiguo);
       document.querySelector('#abonoInicialText')!.textContent = '$ '+abonototalantiguo;
       document.querySelector('#interesText')!.textContent = '$ '+recargo;
       document.querySelector('#creditoTotalText')!.textContent = '$ '+(capital - abonoinicial + Number(recargo)).toLocaleString();
-      document.querySelector('#saldopendientetext')!.textContent = '$ '+(capital+Number(recargo)-abonoinicial-Number(abonototalantiguo)).toLocaleString();
+      document.querySelector('#saldopendientetext')!.textContent = formatoMoneda(nuevoSaldoPendiente);
+      saldoPendienteInput.value = String(nuevoSaldoPendiente);
+      saldopendiente = nuevoSaldoPendiente;
+    }
+
+    function parseMoneda(valor:string):number{
+      const normalizado = valor.replace(/\$/g, '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+      const numero = Number(normalizado);
+      return Number.isFinite(numero) ? numero : 0;
+    }
+
+    function formatoMoneda(valor:number):string{
+      return '$ '+valor.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function valorPagadoFila(fila:HTMLTableRowElement | null):number{
+      const valorDataset = fila?.querySelector('.mediosdepago')?.getAttribute('data-totalpagado');
+      if(valorDataset !== null && valorDataset !== undefined)return Number(valorDataset) || 0;
+      return parseMoneda(fila?.children[3]?.textContent || '0');
+    }
+
+    function actualizarSaldoPendientePorAnulacion(valorAnulado:number):void{
+      const saldoPendienteInput = document.querySelector('#saldopendiente') as HTMLInputElement | null;
+      const saldoPendienteText = document.querySelector('#saldopendientetext') as HTMLElement | null;
+      const pagoTotalInput = document.querySelector('#PagoTotal_abono') as HTMLInputElement | null;
+      const pagoTotalText = document.querySelector('#PagoTotal_abono_text') as HTMLElement | null;
+      const saldoActual = saldoPendienteInput ? Number(saldoPendienteInput.value || '0') : parseMoneda(saldoPendienteText?.textContent || '0');
+      const nuevoSaldo = saldoActual + valorAnulado;
+      saldopendiente = nuevoSaldo;
+      if(saldoPendienteInput)saldoPendienteInput.value = String(nuevoSaldo);
+      if(pagoTotalInput)pagoTotalInput.value = String(nuevoSaldo);
+      if(saldoPendienteText)saldoPendienteText.textContent = formatoMoneda(nuevoSaldo);
+      if(pagoTotalText)pagoTotalText.textContent = formatoMoneda(nuevoSaldo);
     }
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
       if (f=== miDialogoAjustarCredito || f === miDialogoAbono || f === miDialogoDetalleProducto || f === modalcambioMedioPago || (f as HTMLInputElement).value === 'salir' || (f as HTMLInputElement).value === 'Cancelar' 
           || (f as HTMLElement).id == 'btnXCerrarModalDetalleProducto' || (f as HTMLElement).id == 'btnXCerrarModalAbono' || f === miDialogoPagoTotal
-          || (f as HTMLElement).id == 'btnXCerrarModalPagoTotal' ) {
+          || (f as HTMLElement).id == 'btnXCerrarModalPagoTotal' || (f as HTMLElement).id == 'btnXCerrarModalAjustarCredito' ) {
         miDialogoAbono.close();
         miDialogoPagoTotal.close();
         miDialogoDetalleProducto.close();
@@ -221,28 +373,37 @@
       const idabono = target.parentElement?.id;
       const fila = target.closest('tr');
       if(idabono==undefined)return;
+      const claveAnularAbono = password.find(c => c.clave === 'clave_para_anular_abono');
+      const claveConfigurada = claveAnularAbono?.valor_final?.trim();
       Swal.fire({
-          customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
-          icon: 'question',
-          title: 'Desea anular el abono registrado',
-          text: "El abono, seran anulado definitivamente.",
+          customClass: {
+            popup: 'j2-confirm j2-confirm--danger',
+            icon: 'j2-confirm__icon',
+            title: 'j2-confirm__title',
+            htmlContainer: 'j2-confirm__text',
+            input: 'j2-confirm__input',
+            actions: 'j2-confirm__actions',
+            confirmButton: 'j2-confirm__button j2-confirm__button--danger',
+            cancelButton: 'j2-confirm__button j2-confirm__button--cancel'
+          },
+          icon: 'warning',
+          title: 'Anular abono registrado',
+          html: '<strong>Esta accion reversara el abono seleccionado.</strong><br><span>El registro quedara anulado y se actualizara el historial del credito.</span>',
           input: 'password',
-          inputPlaceholder: 'Ingresa tu contraseña',
+          inputPlaceholder: claveConfigurada ? 'Ingresa la clave de anulacion' : 'Clave de autorizacion (opcional)',
           inputAttributes: {
-              autocapitalize: 'off',
-              autocorrect: 'off'
+            autocapitalize: 'off',
+            autocorrect: 'off'
           },
           showCancelButton: true,
-          confirmButtonText: 'Si, anular',
-          cancelButtonText: 'No, cancelar',
-          showLoaderOnConfirm: true, // Muestra el spinner de carga en el botón de confirmar
-        
-          // Evita que dejen el campo vacío en el cliente
+          confirmButtonText: 'Anular abono',
+          cancelButtonText: 'Cancelar',
+          reverseButtons: true,
+          showLoaderOnConfirm: true,
           inputValidator: (value:string) => {
-              if (!value) 
-                  return '¡La contraseña es obligatoria!';
-              if(!validarPassword('divmsjalerta', value))
-                return '¡La contraseña es invalida!';
+            if(!claveConfigurada) return;
+            if(!value) return 'La clave de anulacion es obligatoria.';
+            if(value !== claveConfigurada) return 'La clave de anulacion no corresponde.';
           },
           preConfirm: async()=>{
             try {
@@ -261,24 +422,26 @@
             }
 
           },
-          allowOutsideClick: () => !Swal.isLoading() // Evita cerrar la alerta haciendo clic afuera mientras procesa
+          allowOutsideClick: () => !Swal.isLoading()
       }).then((result:any) => {
           if (result.isConfirmed && result.value) {
-              /*(async ()=>{ 
-                  try {
-                      const url = "/admin/api/creditos/anularAbono?id="+idabono;
-                      const respuesta = await fetch(url); 
-                      const resultado = await respuesta.json();
-                      if(resultado.exito !== undefined){*/
-                        fila?.remove();
-                        Swal.fire(result.value.exito[0], '', 'success');
-                      /*}else{
-                          Swal.fire(resultado.error[0], '', 'error');
-                      }
-                  } catch (error) {
-                      console.log(error);
-                  }
-              })();//cierre de async()*/
+              const valorAnulado = valorPagadoFila(fila as HTMLTableRowElement | null);
+              fila?.remove();
+              actualizarSaldoPendientePorAnulacion(valorAnulado);
+              Swal.fire({
+                customClass: {
+                  popup: 'j2-confirm j2-confirm--success',
+                  icon: 'j2-confirm__icon',
+                  title: 'j2-confirm__title',
+                  htmlContainer: 'j2-confirm__text',
+                  actions: 'j2-confirm__actions j2-confirm__actions--single',
+                  confirmButton: 'j2-confirm__button j2-confirm__button--confirm'
+                },
+                icon: 'success',
+                title: 'Abono anulado',
+                html: '<strong>'+(result.value.exito?.[0] ?? 'El abono fue anulado correctamente.')+'</strong><br><span>El historial del credito quedo actualizado.</span>',
+                confirmButtonText: 'Entendido'
+              });
           }
       });
     }
