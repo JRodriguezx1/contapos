@@ -420,6 +420,7 @@
     });
 
     btnfacturar?.addEventListener('click', ()=>{
+      console.log(POS.gestionarDomiciliosVenta.tipoEntrega);
       if(POS.gestionarDomiciliosVenta.tipoEntrega && (selectCliente.value =='' || !dirEntrega.value)){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         POS.gestionClientes.resaltarSelectorCliente();

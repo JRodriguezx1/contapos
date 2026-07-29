@@ -17,7 +17,8 @@
         tipoEntrega = tipo == 'Presencial' ? 0 : 1;
         if(tipo === 'Domicilio' && selectCliente.value === ''){
             msjalertToast('warning', 'Cliente requerido', 'Selecciona un cliente para activar el domicilio.');
-        //resaltarSelectorCliente();
+            POS.gestionClientes.resaltarSelectorCliente();
+            console.log(tipoEntrega);
         }
         printTarifaEnvio();
         POS.valorCarritoTotal();
@@ -80,13 +81,17 @@
     }
 
     const reiniciarDomicilio = ():void=>{
-        tipoEntrega = 0,
+        tipoEntrega = 0;
         actualizarBotonesEntrega('Presencial');
     }
 
   const gestionarDomiciliosVenta = {
-    nombretarifa,
-    tipoEntrega,
+     get nombretarifa(): string {
+        return nombretarifa;
+    },
+    get tipoEntrega(): number {
+        return tipoEntrega;
+    },
     reiniciarDomicilio
 
   };
