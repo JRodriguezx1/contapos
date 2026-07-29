@@ -352,7 +352,7 @@ class inventarioService {
             if((!isset($celda) || trim($celda)=='') && $index>0 ) {
                 $s .= "col: $index, ";
                 $status = false;
-            }elseif($index==0&&isset($celda)&&!ctype_digit($celda) || $index!=3&&$index!=0&&!ctype_digit($celda)){
+            }elseif($index==0&&isset($celda)&&!ctype_digit($celda) || $index!=3&&$index!=0&&!is_numeric($celda)){
                 $s .= "col: $index, ";
                 $status = false;
             }

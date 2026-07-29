@@ -71,7 +71,7 @@
         <div class="hidden paginas pagina9"><?php include __DIR__. "/dian.php";?></div>
         <div class="hidden paginas pagina10"><?php include __DIR__. "/impresoras.php";?></div>
         <div class="hidden paginas pagina11">
-            <div class="config-system accordion_inv">
+            <div class="config-system accordion_inv paramSistem">
 
                 <input type="radio" name="config" id="btn1" checked>
                 <input type="radio" name="config" id="btn2">

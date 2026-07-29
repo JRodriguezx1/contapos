@@ -1,4 +1,4 @@
-<div class="box ordenresumen ordenresumen-page">
+<div class="ordenresumen ordenresumen-page">
     <button onclick="history.back()" class="ordenresumen-back" title="Volver">
         <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -13,39 +13,38 @@
             <button id="btneliminarorden" class="btn-command"><span class="material-symbols-outlined">delete</span>Eliminar orden</button>
         <?php endif; ?>
         <?php if($factura->estado=='Paga' || $factura->estado=='Eliminada'):?>
-            <button id="printcarta" class="btn-command !text-white bg-gradient-to-br from-indigo-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
+            <button id="printcarta" class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir factura</button>
         <?php endif; ?>
         <?php if($factura->estado=='Guardado'):?>
-            <button id="printcotizacion" class="btn-command text-center"><span class="material-symbols-outlined">print</span>Imprimir cotizaci&oacute;n</button>
+            <button id="printcotizacion" class="btn-command"><span class="material-symbols-outlined">print</span>Imprimir cotizaci&oacute;n</button>
         <?php endif; ?>
         <?php if($factura->tipoventa=='Credito'):?>
-            <a class="btn-command text-center" href="/admin/creditos/detallecredito?id=<?php echo $factura->ref_creditoid;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle cr&eacute;dito</a>
+            <a class="btn-command" href="/admin/creditos/detallecredito?id=<?php echo $factura->ref_creditoid;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle cr&eacute;dito</a>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
-            <button id="enviarEmail" class="btn-command text-center"><span class="material-symbols-outlined">mail</span>Enviar factura</button>
+            <button id="enviarEmail" class="btn-command"><span class="material-symbols-outlined">mail</span>Enviar factura</button>
         <?php endif; ?>
-            <!--<a class="btn-command text-center" href="/admin/caja/detalleorden?id=<?php //echo $factura->id;?>"><span class="material-symbols-outlined">format_list_bulleted</span>Detalle orden</a>-->
         <?php if($factura->cambioaventa == 0 && ($factura->estado=='Guardado' || $factura->estado == 'Remision')):?>
             <a id="abrirOrden" class="btn-command" href="/admin/ventas?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">app_registration</span>Abrir</a>
         <?php endif; ?>
         <?php if($factura->estado=='Paga'):?>
-            <a class="btn-command text-center" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura electr&oacute;nica</a>
+            <a class="btn-command" href="/admin/reportes/detalleInvoice?id=<?php echo $factura->id;?>"><span class="material-symbols-outlined">article_shortcut</span>Factura electr&oacute;nica</a>
         <?php endif; ?>
         <?php if($factura->entregado == 0 && ($factura->estado=='Paga'&&$factura->entrega == 'Domicilio' || $factura->estado == 'Remision')):?>
             <button id="btnDespachar" title="Solo para facturas pendientes de despachar y remisiones" class="btn-command"><span class="material-symbols-outlined">delivery_truck_speed</span>Marcar despachado</button>
         <?php endif; ?>
-        <button id="btnMasOpciones" class="btn-command text-center"><span class="material-symbols-outlined">apps</span>M&aacute;s</button>
+        <button id="btnMasOpciones" class="btn-command"><span class="material-symbols-outlined">apps</span>M&aacute;s</button>
     </div>
     
     
-    <div class="ordenresumen-chips">
-        <span id="numOrden" class="ordenresumen-chip ordenresumen-chip-muted">
+    <div class="mb-4 flex flex-wrap gap-[.8rem]">
+        <span id="numOrden" class="inline-flex rounded-full bg-slate-100 px-[1.2rem] py-[.85rem] text-[1.35rem] font-bold leading-none text-slate-700">
             Orden #<?php echo $factura->num_orden??'';?>
         </span>
-        <span id="referenciaFactura" class="ordenresumen-chip ordenresumen-chip-primary">
+        <span id="referenciaFactura" class="inline-flex rounded-full bg-indigo-50 px-[1.2rem] py-[.85rem] text-[1.35rem] font-bold leading-none text-indigo-700">
             Referencia: Orden-<?php echo $factura->referencia??'';?>
         </span>
-        <span id="textEstado" class="ordenresumen-chip ordenresumen-chip-warning">
+        <span id="textEstado" class="inline-flex rounded-full bg-orange-50 px-[1.2rem] py-[.85rem] text-[1.35rem] font-bold leading-none text-orange-700">
             <?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)
                 ? 'Pendiente de despacho'
                 : ($factura->entrega=='Presencial' && $factura->entregado==1? 'Presencial entregado':'Domicilio/Presencial entregado'); 
@@ -53,8 +52,8 @@
         </span>
     </div>
 
-    <div class="ordenresumen-emisor">
-        <button id="btnEmisor" class="btn-xs btn-light">Emisor</button>
+    <div class="mb-[1.6rem] flex flex-wrap items-center gap-[.8rem] border-b border-slate-200 pb-[1.2rem] text-[1.45rem] text-slate-600">
+        <button id="btnEmisor" class="btn-xs btn-light !min-h-[3.2rem] !px-4 !py-[.55rem]">Emisor</button>
         <span id="nitEmisor">NIT: <?php echo $factura->nitemisor ?? $sucursal->nit; ?></span>, 
         <span id="nombreEmisor"><?= $factura->nombreemisor ?? $sucursal->negocio; ?></span>
     </div>
@@ -62,7 +61,7 @@
     <div class="ordenresumen-metrics">
         <div class="ordenresumen-metric-card">
             <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined text-indigo-600">
+                <span class="material-symbols-outlined">
                     calendar_month
                 </span>
                 Fecha Orden
@@ -71,7 +70,7 @@
         </div>
         <div class="ordenresumen-metric-card">
             <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined text-indigo-600">
+                <span class="material-symbols-outlined">
                     payments
                 </span>
                 Fecha Pago
@@ -80,7 +79,7 @@
         </div>
         <div class="ordenresumen-metric-card">
             <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined text-indigo-600">
+                <span class="material-symbols-outlined">
                     badge
                 </span>
                 Vendedor
@@ -89,12 +88,12 @@
         </div>
         <div class="ordenresumen-metric-card">
             <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined text-indigo-600">
+                <span class="material-symbols-outlined">
                     inventory_2
                 </span>
                 Estado Orden
             </p>
-            <p id="estadoOrden" class="ordenresumen-state"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
+            <p id="estadoOrden" class="m-0 !mb-[.3rem] text-[1.55rem] font-extrabold text-teal-700"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
             <p class="m-0 text-gray-600 text-xl font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
         </div>
     </div>
@@ -105,36 +104,36 @@
         <div class="ordenresumen-products-card">
             <div class="ordenresumen-card-head">
                 <h3 class="ordenresumen-card-title">
-                    <span class="material-symbols-outlined text-indigo-600">
+                    <span class="material-symbols-outlined">
                         inventory_2
                     </span>
                     Productos de la orden
                 </h3>
 
-                <span class="ordenresumen-count-pill">
+                <span class="whitespace-nowrap rounded-full bg-indigo-50 px-[.9rem] py-[.55rem] text-[1.2rem] font-bold text-indigo-700">
                     <?php echo count($productos); ?> productos
                 </span>
             </div>
             <table class="ordenresumen-table">
                 <thead>
                     <tr>
-                        <th scope="col" class="px-6 py-3 rounded-s-lg">
+                        <th scope="col">
                             Nombre producto
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col">
                             Qty
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col">
                             Unidad
                         </th>
-                        <th scope="col" class="px-6 py-3 rounded-e-lg">
+                        <th scope="col">
                             Total
                         </th>
                     </tr>
                 </thead>
                 <tbody id="tablaDetalleProductos">
                     <?php foreach($productos as $index=>$value): ?>
-                        <tr class="bg-white">
+                        <tr>
                             <td scope="row" class="ordenresumen-product-cell">
                                 <div class="ordenresumen-product-info">
                                     <img 
@@ -150,13 +149,13 @@
                                     <?php endif; ?>
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
+                            <td>
                                 <?php echo $value->cantidad??'';?>
                             </td>
-                            <td class="px-6 py-4">
+                            <td>
                                 $<?php echo number_format($value->valorunidad??0, "0", ",", ".");?>
                             </td>
-                            <td class="px-6 py-4">
+                            <td>
                                 $<?php echo number_format($value->total??0, "0", ",", ".");?>
                             </td>
                         </tr>
@@ -164,11 +163,11 @@
                     
                 </tbody>
                 <tfoot>
-                    <tr class="font-semibold text-gray-900">
-                        <th scope="row" class="px-6 py-3">Total</th>
-                        <td class="px-6 py-3"><?php echo $factura->totalunidades;?></td>
-                        <td class="px-6 py-3"> - </td>
-                        <td class="px-6 py-3">$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <td><?php echo $factura->totalunidades;?></td>
+                        <td> - </td>
+                        <td>$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
                     </tr>
                 </tfoot>
             </table>
@@ -179,7 +178,7 @@
         <aside class="ordenresumen-side">
             <div class="ordenresumen-info-card">
                 <p class="ordenresumen-info-title">
-                    <span class="material-symbols-outlined text-indigo-600">
+                    <span class="material-symbols-outlined">
                         person
                     </span>
                     Cliente
@@ -190,7 +189,7 @@
             </div>
             <div class="ordenresumen-info-card">
                 <p class="ordenresumen-info-title">
-                    <span class="material-symbols-outlined text-indigo-600">
+                    <span class="material-symbols-outlined">
                         local_shipping
                     </span>
                     Direcci&oacute;n de entrega
@@ -201,7 +200,7 @@
             </div>
             <div class="ordenresumen-info-card">
                 <p class="ordenresumen-info-title">
-                    <span class="material-symbols-outlined text-indigo-600">
+                    <span class="material-symbols-outlined">
                         receipt_long
                     </span>
                     Direcci&oacute;n de facturaci&oacute;n
@@ -287,7 +286,7 @@
                     <div class="flex justify-between items-center">
                         <span class="text-slate-700 text-2xl font-semibold">Total:</span>
                         <span id="total"
-                            class="text-emerald-600 text-6xl font-bold"
+                            class="whitespace-nowrap text-6xl font-bold text-emerald-600"
                             style="font-family:'Tektur', serif;">
                             $ <?php echo number_format($factura->total ?? 0, 0, ',', '.');?>
                         </span>

@@ -102,8 +102,7 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
-    public function upsert(object $entity): array
-    {
+    public function upsert(object $entity): array{
         $data = get_object_vars($entity);
         if(method_exists($entity, 'toArray'))$data = $entity->toArray();
 

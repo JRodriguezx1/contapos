@@ -19,6 +19,7 @@ use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
 use App\Repositories\contable\movimientos_cajaRepository;
 use App\Repositories\creditos\creditosRepository;
+use App\Repositories\creditos\cuotasRepository;
 use App\Repositories\creditos\separadoMediopagoRepository;
 use stdClass;
 
@@ -180,6 +181,10 @@ class cajaService {
         $cierrecajafactura = cierrescajas::find('id', $factura->idcierrecaja);
         $tempcierrecaja = clone $cierrecajafactura;
 
+        //obtener las cuotas de la caja actual
+        $cuotasRepo = new cuotasRepository();
+        $cuotas = $cuotasRepo->where(['id_credito'=>$credito->id, 'cierrecaja_id'=>$cierrecajafactura->id]);
+
         ///// ACTUALIZAR CAJA ACTUAL
         /////////// calcular cantidad de facturas y discriminar por tipo
         $cierrecajafactura->totalfacturaseliminadas += 1;
@@ -240,6 +245,9 @@ class cajaService {
             $obj->cierrecajaid = $ultimocierre->id;
             if($obj->idmediopago == 1)$ultimocierre->abonosenefectivo += ($credito?$obj->valor:0);
         }
+        //////// establecer el id del nuevo cierre de caja para las cuotas
+        foreach($cuotas as $cuota)
+            $cuota->cierrecaja_id = $ultimocierre->id;
 
         $ultimocierre->creditocapital += $credito?->capital??0;
         $ultimocierre->creditos += ($credito?->capital??0)-($credito?->abonoinicial??0);  
@@ -263,10 +271,11 @@ class cajaService {
         if($r2){
             $ultimocierre->actualizar();
             if($factMP)factmediospago::updatemultiregobj($factMP, ['cierrecajaid']);
+            if($cuotas)$cuotasRepo->updatemultiregobj($cuotas, ['cierrecaja_id']);
             if($credito)$creditoRepo->update($credito);
             
             //actualizar movimiento de caja
-            $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>1, 'id_documento'=>$credito->id]);
+            $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>1, 'id_documento'=>$factura->id]);
             $movCaja->fk_caja = $idNewCaja;
             $repoMovimientocaja->update($movCaja);
         }else{

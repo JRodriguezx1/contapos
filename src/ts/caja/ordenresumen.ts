@@ -271,9 +271,8 @@
       ///////////////////// Logica botones devolver inventario ////////////////////////
       btnsdevolverinv.forEach(inv=>{ //evento a los radiobutton
         inv.addEventListener('change', (e:Event)=>{
-          const devolverInventario = (e.target as HTMLInputElement).value === "1";
-          document.querySelector('#productsInv')?.classList.toggle('hidden', !devolverInventario);
-          if(devolverInventario){
+          document.querySelector('#productsInv')?.classList.toggle('hidden');
+          if((e.target as HTMLInputElement).value === "1"){
             document.querySelectorAll('.inputInv').forEach(x=>x.setAttribute('required', ''));
           }else{
             document.querySelectorAll('.inputInv').forEach(x=>x.removeAttribute('required'));
@@ -284,7 +283,7 @@
       inputsInv.forEach(inputinv =>{
         inputinv.addEventListener('input', e=>{
           const qty = (e.target as HTMLInputElement);
-          if(qty.value != qty.parentElement?.dataset.qty){
+          if(obtenerNumero(qty) != Number(qty.parentElement?.dataset.qty)){
             qty.classList.add('border-2', 'border-rose-600');
             if(!document.querySelector('.alerta'))
               msjAlert('error', 'Cantidad diferente a devolver a inventario', (document.querySelector('#divmsjalerta1') as HTMLElement));
@@ -356,7 +355,7 @@
       ////////////////// evento al bton pagar del modal facturar //////////////////////
       document.querySelector('#formfacturarCotizacion')?.addEventListener('submit', e=>{
         e.preventDefault();
-        procesarpedido('Guardado');
+        procesarpedido('Paga');
       });
 
       async function procesarpedido(estado:string){ //////PROCESAR PAGO DE COTIZACION SiN CAMBIAR DATOS DE LOS PRODUCTOS//////
@@ -382,6 +381,7 @@
         datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
         datos.append('recibido', document.querySelector<HTMLInputElement>('#recibio')!.value);
         datos.append('transaccion', '');
+        datos.append('tipoventa', 'Contado');
         datos.append('estado', estado);
         datos.append('cambioaventa', '1');  //cambioaventa por defecto es 0
         //datos.append('subtotal', valorTotal.subtotal+'');
@@ -430,22 +430,18 @@
         (document.querySelector('#abrirOrden') as HTMLElement).style.display = "none";
         (document.querySelector('#estadoOrden') as HTMLElement).textContent = "Paga";
       }
-  
-      function cerrarDialogoSeguro(dialogo:HTMLDialogElement | null | undefined):void {
-        if(dialogo?.open)dialogo.close();
-      }
 
       function cerrarDialogoExterno(event:Event) {
         const f = event.target as HTMLElement;
         if (f === miDialogoFacturar || f === miDialogoEliminarOrden || f === miDialogoEnviarEmailCliente || f === miDialogoMasOpciones || f === miDialogoRemision || f === miDialogoSelectEmisor || f === miDialogoSelectUser || f === miDialogoProductoCompuesto || f.id == 'btnXCerrarMasOpciones' || f.id == 'btnXCerrarRemision' || (f as HTMLInputElement).value === 'cancelar' || (f as HTMLInputElement).value === 'Salir' || f.closest('.noeliminar') || f.id == 'btnXCerrarModalProductoCompuesto' || f.id == 'btnXCerrarModalSelectUser' || f.id == 'btnXCerrarModalSelectEmisor') {
-            cerrarDialogoSeguro(miDialogoFacturar);
-            cerrarDialogoSeguro(miDialogoEliminarOrden);
-            cerrarDialogoSeguro(miDialogoEnviarEmailCliente);
-            cerrarDialogoSeguro(miDialogoMasOpciones);
-            cerrarDialogoSeguro(miDialogoRemision);
-            cerrarDialogoSeguro(miDialogoProductoCompuesto);
-            cerrarDialogoSeguro(miDialogoSelectUser);
-            cerrarDialogoSeguro(miDialogoSelectEmisor);
+            miDialogoFacturar.close();
+            miDialogoEliminarOrden.close();
+            miDialogoEnviarEmailCliente.close();
+            miDialogoMasOpciones.close();
+            miDialogoRemision.close();
+            miDialogoProductoCompuesto.close();
+            miDialogoSelectUser.close();
+            miDialogoSelectEmisor.close();
         }
       }
 
@@ -458,19 +454,18 @@
 
       function eliminarorden():void{
         ///////*** crear arreglo de obj de los productos y sus cantidades ***///////
-        type producto = {id:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string , promediostock: string};
+        type producto = {id:string, idventa:string, idproducto:string, nombre:string, tipoproducto:string, tipoproduccion:string, rendimientoestandar:string, cantidad: string , promediostock: string};
         var products:producto[] = [];
 
         const v:number = validarPassword('clave_para_eliminar_factura', 'divmsjalerta1', inputEliminarClave);
         if(!v)return;
 
-        const devolverInventario = (document.querySelector('input[name="devolverinventario"]:checked') as HTMLInputElement)?.value ?? '0';
-        if(devolverInventario === '1'){
-          inputsInv.forEach(inputinv =>{
-            const v = inputinv as HTMLInputElement;
-            products = [...products, {id: v.id, idproducto: v.id, nombre: v.dataset.nombre??'', tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: v.value, promediostock: v.dataset.promediostock??'0'}];
-          });
-        }
+        inputsInv.forEach(inputinv =>{
+          const v = inputinv as HTMLInputElement;
+          const n:number|null = obtenerNumero(v);
+          if(n !== null)
+            products = [...products, {id: v.id, idventa: v.id, idproducto: v.dataset.idproducto??'', nombre: v.dataset.nombre??'', tipoproducto: v.dataset.tipoproducto!, tipoproduccion: v.dataset.tipoproduccion!, rendimientoestandar: v.dataset.rendimientoestandar!, cantidad: n+'', promediostock: v.dataset.promediostock??'0'}];
+        });
 
         (async ()=>{
           const btnConfirmar = document.querySelector<HTMLButtonElement>('.sieliminar');
@@ -482,7 +477,7 @@
           datos.append('id', idorden!); //id de la factura
           datos.append('observacioneliminacion', (document.querySelector('#observacionEliminacion') as HTMLTextAreaElement).value);
           datos.append('inv', JSON.stringify(products));
-          datos.append('devolverinv', devolverInventario);
+          datos.append('devolverinv', (document.querySelector('input[name="devolverinventario"]:checked') as HTMLInputElement).value);
           //datos.append('domicilio', 0);
           try {
               const url = "/admin/api/eliminarOrden";  //api llamada en ventascontrolador.php
@@ -492,7 +487,7 @@
                 msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                 miDialogoEliminarOrden.close();
                 btneliminarorden.style.display = "none";
-                if(enviarEmail)enviarEmail.style.display = "none";
+                enviarEmail.style.display = "none";
                 (document.querySelector('#estadoOrden') as HTMLElement).textContent = "Eliminada";
               }else{
                 msjalertToast('error', '¡Error!', resultado.error[0]);

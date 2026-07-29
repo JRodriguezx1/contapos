@@ -241,22 +241,26 @@ class ventasService {
         }
     }
 
-    /** Actualiza, inserta y elimina lineas de una cotizacion atomicamente. */
-    public static function actualizarLineasCotizacion(array $lineasActualizar, array $lineasInsertar, int $idFactura):bool{
+    /**
+     * Actualiza, inserta y elimina lineas de una cotizacion atomicamente.
+     * $manejarTransaccion=false permite participar en una transaccion superior,
+     * como la coordinada por facturacionService.
+     */
+    public static function actualizarLineasCotizacion(array $lineasActualizar, array $lineasInsertar, int $idFactura, bool $manejarTransaccion = true):bool{
         $db = ventas::getDB();
-        $idsExistentes = array_map('intval', ventas::multicampos('idfactura', $idFactura, 'id'));
-        $idsActualizar = [];
-        foreach($lineasActualizar as $linea){
-            $idVenta = (int)($linea->id ?? 0);
-            if(!in_array($idVenta, $idsExistentes, true)){
-                throw new \RuntimeException('Una linea no pertenece a la cotizacion indicada.');
-            }
-            $idsActualizar[] = $idVenta;
-        }
-        $idsEliminar = array_values(array_diff($idsExistentes, $idsActualizar));
-
-        $db->begin_transaction();
+        if($manejarTransaccion)$db->begin_transaction();
         try {
+            $idsExistentes = array_map('intval', ventas::multicampos('idfactura', $idFactura, 'id'));
+            $idsActualizar = [];
+            foreach($lineasActualizar as $linea){
+                $idVenta = (int)($linea->id ?? 0);
+                if(!in_array($idVenta, $idsExistentes, true)){
+                    throw new \RuntimeException('Una linea no pertenece a la cotizacion indicada.');
+                }
+                $idsActualizar[] = $idVenta;
+            }
+            $idsEliminar = array_values(array_diff($idsExistentes, $idsActualizar));
+
             if(!empty($lineasActualizar)){
                 $actualizado = ventas::updatemultiregobj($lineasActualizar, ['valorunidad', 'cantidad', 'subtotal', 'base', 'impuesto', 'valorimp', 'descuento', 'total']);
                 if(!$actualizado)throw new \RuntimeException('No fue posible actualizar la cotizacion.');
@@ -268,10 +272,10 @@ class ventasService {
             if(!empty($idsEliminar) && !ventas::eliminar_idregistros('id', $idsEliminar)){
                 throw new \RuntimeException('No fue posible eliminar lineas retiradas de la cotizacion.');
             }
-            $db->commit();
+            if($manejarTransaccion)$db->commit();
             return true;
         }catch(Throwable $e){
-            $db->rollback();
+            if($manejarTransaccion)$db->rollback();
             throw $e;
         }
     }
@@ -347,7 +351,18 @@ class ventasService {
      */
     public static function prepararInventarioPersistido(array $productos, int $sucursalId):array
     {
-        $productos = self::adjuntarInsumos($productos);
+        return self::construirInventarioPersistido(
+            self::adjuntarInsumos($productos),
+            $sucursalId
+        );
+    }
+
+    /**
+     * Construye el arreglo consumido por aplicarInventario() a partir de lineas
+     * que ya tienen adjuntado su detalle historico de insumos.
+     */
+    private static function construirInventarioPersistido(array $productos, int $sucursalId):array
+    {
         $inventario = [
             'productosSimples' => [],
             'soloIdproductos' => [],
@@ -421,6 +436,102 @@ class ventasService {
 
         $inventario['soloIdproductos'] = array_values(array_unique($inventario['soloIdproductos']));
         return $inventario;
+    }
+
+
+    /**
+     * Prepara una devolucion elegida por el usuario usando las lineas e insumos
+     * realmente persistidos en la factura. La cantidad solicitada puede superar
+     * la vendida por regla de negocio; en ese caso el factor de devolucion sera
+     * mayor que uno y los insumos se incrementaran en la misma proporcion.
+     */
+    public static function prepararDevolucionParcialPersistida(int $idFactura, array $seleccion, int $sucursalId):array{
+        if($idFactura <= 0)throw new \InvalidArgumentException('La factura indicada no es valida.');
+        if($sucursalId <= 0)throw new \InvalidArgumentException('La sucursal indicada no es valida.');
+
+        $lineasFactura = ventas::idregistros('idfactura', $idFactura);
+        $lineasPorId = [];
+        foreach($lineasFactura as $linea){
+            if(!is_object($linea))continue;
+            $idVenta = (int)($linea->id ?? 0);
+            if($idVenta > 0)$lineasPorId[$idVenta] = $linea;
+        }
+
+        $lineasSeleccionadas = [];
+        $factoresPorVenta = [];
+        $idsProcesados = [];
+
+        foreach($seleccion as $item){
+            if(!is_object($item))
+                throw new \InvalidArgumentException('La seleccion de productos no es valida.');
+
+            // idventa identifica una linea concreta; idproducto no es suficiente
+            // porque una factura puede contener varias lineas del mismo producto.
+            $idVenta = (int)($item->idventa ?? $item->id ?? 0);
+            if($idVenta <= 0)
+                throw new \InvalidArgumentException('Una linea seleccionada no tiene un identificador valido.');
+            if(isset($idsProcesados[$idVenta]))
+                throw new \InvalidArgumentException("La linea de venta #{$idVenta} esta repetida en la devolucion.");
+            $idsProcesados[$idVenta] = true;
+
+            if(!isset($lineasPorId[$idVenta]))
+                throw new \InvalidArgumentException("La linea de venta #{$idVenta} no pertenece a la factura indicada.");
+
+            $cantidadRecibida = $item->cantidad ?? null;
+            if(!is_numeric($cantidadRecibida))
+                throw new \InvalidArgumentException("La cantidad de la linea #{$idVenta} no es valida.");
+
+            $cantidadDevolver = (float)$cantidadRecibida;
+            if(!is_finite($cantidadDevolver) || $cantidadDevolver < 0)
+                throw new \InvalidArgumentException("La cantidad de la linea #{$idVenta} no es valida.");
+
+            // Cero significa que esta linea no participa en la devolucion.
+            if($cantidadDevolver === 0.0)continue;
+
+            $lineaPersistida = $lineasPorId[$idVenta];
+            $cantidadVendida = (float)($lineaPersistida->cantidad ?? 0);
+            if(!is_finite($cantidadVendida) || $cantidadVendida <= 0)
+                throw new \RuntimeException("La linea de venta #{$idVenta} no tiene una cantidad vendida valida.");
+
+            $lineaDevolver = clone $lineaPersistida;
+            $lineaDevolver->cantidad = $cantidadDevolver;
+            $lineaDevolver->stock = $cantidadDevolver;
+            $lineasSeleccionadas[] = $lineaDevolver;
+            $factoresPorVenta[$idVenta] = $cantidadDevolver / $cantidadVendida;
+        }
+
+        if(empty($lineasSeleccionadas))
+            return self::construirInventarioPersistido([], $sucursalId);
+
+        // Se parte del detalle historico, no de la receta actual. Para registros
+        // antiguos sin venta_insumos, construirInventarioPersistido conserva el
+        // comportamiento legacy y calcula la receta con la cantidad seleccionada.
+        $lineasSeleccionadas = self::adjuntarInsumos($lineasSeleccionadas);
+        foreach($lineasSeleccionadas as $linea){
+            if(!is_object($linea) || empty($linea->insumos))continue;
+
+            $factor = $factoresPorVenta[(int)($linea->id ?? 0)] ?? null;
+            if($factor === null)continue;
+
+            $insumosProrrateados = [];
+            foreach($linea->insumos as $detalle){
+                if(!is_object($detalle))continue;
+                $insumo = clone $detalle;
+                $insumo->cantidad_consumida = round(
+                    (float)($detalle->cantidad_consumida ?? 0) * $factor,
+                    4
+                );
+                $insumo->stockaux_consumido = round(
+                    (float)($detalle->stockaux_consumido ?? 0) * $factor,
+                    4
+                );
+                $insumosProrrateados[] = $insumo;
+            }
+            $linea->insumos = $insumosProrrateados;
+            $linea->insumos_resueltos = $insumosProrrateados;
+        }
+
+        return self::construirInventarioPersistido($lineasSeleccionadas, $sucursalId);
     }
 
     /** Construye y guarda en un solo INSERT los insumos de varias lineas. */
@@ -658,7 +769,10 @@ class ventasService {
     }*/
 
 
-    public static function datosDelCierreCajaXVenta(object $ultimocierre, object $factura, array $mediospago, $factimpuestos, array $r, $valoresCredito):bool{
+    public static function datosDelCierreCajaXVenta(object $ultimocierre, object $factura, array $mediospago, $factimpuestos, array $r, $valoresCredito, ?string $tipoVenta = null):bool{
+        // El parametro elimina la dependencia HTTP para los nuevos servicios.
+        // Se conserva el fallback para llamadas existentes como modo rapido.
+        $tipoVenta ??= (string)($_POST['tipoventa'] ?? 'Contado');
         /////////// calcular cantidad de facturas y discriminar por tipo
         $ultimocierre->totalfacturas = $ultimocierre->totalfacturas + 1;  //total de facturas
         if(consecutivos::uncampo('id', $factura->idconsecutivo, 'idtipofacturador')==1){
@@ -676,8 +790,8 @@ class ventasService {
           $obj->cierrecajaid = $ultimocierre->id;
           $obj->idcuota = 'NULL';
           if($obj->idmediopago == 1){
-            $ultimocierre->ventasenefectivo +=  ($_POST['tipoventa']=='Contado'?$obj->valor:0);
-            $ultimocierre->abonosenefectivo += ($_POST['tipoventa']=='Credito'?$obj->valor:0);
+            $ultimocierre->ventasenefectivo +=  ($tipoVenta=='Contado'?$obj->valor:0);
+            $ultimocierre->abonosenefectivo += ($tipoVenta=='Credito'?$obj->valor:0);
           }
         }
         //////// establecer el id de factura para factimpuestos ////////////
@@ -690,7 +804,7 @@ class ventasService {
         $ultimocierre->domicilios = $ultimocierre->domicilios + $factura->valortarifa;
         //tarifas::tableAJoin2TablesWhereId('direcciones', 'idtarifa', $factura->iddireccion)->valor;
         
-        $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($_POST['tipoventa']=='Credito'?0:$factura->total);
+        $ultimocierre->ingresoventas =  $ultimocierre->ingresoventas + ($tipoVenta=='Credito'?0:$factura->total);
         $ultimocierre->totaldescuentos = $ultimocierre->totaldescuentos + $factura->descuento;
         $ultimocierre->valorimpuestototal = $ultimocierre->valorimpuestototal + $factura->valorimpuestototal;
         $ultimocierre->basegravable += $factura->base;

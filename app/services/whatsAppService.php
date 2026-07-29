@@ -192,7 +192,7 @@ class whatsAppService{
         $this->msg .= "Sucursal: " . (($sucursal ?? null)->nombre ?? '') . "\n";
         $this->msg .= "Caja: {$caja->nombre}\n";
         $this->msg .= "Usuario: $usuario->nombre $usuario->apellido\n";
-        $this->msg .= "Fecha: ". ($factura->fechaEliminacion??$fechaAnulacion) ."\n\n";
+        $this->msg .= "Fecha: ". ($factura->fechaanulacion??$fechaAnulacion) ."\n\n";
         // 🔹 Cuadre de caja
         $this->msg .= "*ORDEN ANULADA*\n";
         $this->msg .= "ID de la orden: " . $factura->id . "\n";
@@ -202,7 +202,9 @@ class whatsAppService{
         $this->msg .= "DEVOLUCION A INVENTARIO: " . ($devolverInv==true?'Si':'No') . "\n\n";
 
         foreach ($productos as $value) {
-            $this->msg .= "id: {$value->id}, {$value->nombre}, Cant: " . number_format($value->cantidad??0, 0, ',', '.') . "\n";
+            $nombre = $value->nombre ?? $value->nombreproducto ?? '';
+            $cantidad = $value->stock ?? $value->cantidad ?? 0;
+            $this->msg .= "id: {$value->id}, {$nombre}, Cant: " . number_format((float)$cantidad, 2, ',', '.') . "\n";
         }
 
         $this->msg .= "\n*OBOSERVACION:*\n";

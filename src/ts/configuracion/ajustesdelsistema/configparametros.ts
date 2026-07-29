@@ -8,6 +8,8 @@
     const medidaFuenteDatosFactura = document.querySelector('#medidaFuenteDatosFactura') as HTMLSelectElement;
     const medidaFuenteSeccionClienteFactura = document.querySelector('#medidaFuenteSeccionClienteFactura') as HTMLSelectElement;
     const medidaFuenteProductosFactura = document.querySelector('#medidaFuenteProductosFactura') as HTMLSelectElement;
+    
+    
     const resaltarParametroGuardado = (elemento:HTMLElement|null)=>{
       if(!elemento)return;
       const contenedor = elemento.closest('.config-system-content .accordion_tab_content > .grid > div, .config-whatsapp-event') as HTMLElement|null;

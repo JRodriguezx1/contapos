@@ -88,14 +88,22 @@ class cuotasRepository extends operationRepository{
 
 
     public function obtenerPorCredito_cierracajaAbierto(int $id):array{
-        $sql = "SELECT c.id_sucursal_idfk, c.id_credito, c.cierrecaja_id, c.valorpagado as cuotapagada, c.fechapagado, cc.estado as estadoCierreCaja, 
-                cc.abonoscreditos as abonosCreditos_caja, cc.abonostotales as abonostotales_caja, cc.abonosenefectivo as abonosenefectivo_caja,
-                COALESCE(SUM(CASE WHEN fmp.idmediopago = 1 THEN fmp.valor ELSE 0 END), 0) AS valorcuota_efectivo
-                FROM cuotas c JOIN creditos cr ON c.id_credito = cr.id
+        // Resume por cierre los abonos que deben revertirse al anular una
+        // factura a credito. El subquery evita duplicar valorpagado cuando una
+        // cuota fue registrada con mas de un medio de pago.
+        $sql = "SELECT c.id_credito, c.cierrecaja_id,
+                SUM(c.valorpagado) AS cuotapagada,
+                SUM(COALESCE(mp.valor_efectivo, 0)) AS valorcuota_efectivo
+                FROM cuotas c
                 JOIN cierrescajas cc ON c.cierrecaja_id = cc.id
-                LEFT JOIN factmediospago fmp ON fmp.id_factura = cr.factura_id
-                WHERE c.id_credito = $id AND fmp.cierrecajaid = c.cierrecaja_id AND cc.estado = 0
-                GROUP BY c.id_sucursal_idfk, c.id_credito, c.cierrecaja_id, c.valorpagado, c.fechapagado, cc.estado, cc.ventasenefectivo, cc.abonosseparados, cc.ingresoventas;";
+                LEFT JOIN (
+                    SELECT idcuota,
+                    SUM(CASE WHEN idmediopago = 1 THEN valor ELSE 0 END) AS valor_efectivo
+                    FROM factmediospago
+                    GROUP BY idcuota
+                ) mp ON mp.idcuota = c.id
+                WHERE c.id_credito = {$id} AND cc.estado = 0
+                GROUP BY c.id_credito, c.cierrecaja_id;";
         $rows = $this->fetchAllStd($sql);
         return $rows;
     }

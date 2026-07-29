@@ -7,18 +7,13 @@
     const dirEntrega = POS.gestionClientes.dirEntrega;
     const productos = document.querySelectorAll<HTMLElement>('#producto')!;
     const selectVendedor = (document.querySelector('#vendedor') as HTMLSelectElement);
-    const valorDomicilio = document.querySelector('#valorDomicilio') as HTMLInputElement;
     const contentproducts = document.querySelector('#productos');
-    const btnEntrega = document.querySelector('#btnEntrega') as HTMLButtonElement;
-    const btnPresencial = document.querySelector('#btnPresencial') as HTMLButtonElement;
-    const modalidadEntrega = document.querySelector('#modalidadEntrega') as HTMLElement;
     const totalunidades = document.querySelector('#totalunidades') as HTMLElement;
     const tablaventa = document.querySelector('#tablaventa tbody');
     const carritoVacio = document.querySelector('#carritoVacio') as HTMLElement;
     const btnguardar = document.querySelector('#btnguardar');
     const btnfacturar = document.querySelector('#btnfacturar');
     const btnaplicarcredito = document.querySelector('#btnaplicarcredito');
-    const btnAddCliente = document.querySelector('#addcliente') as HTMLElement;
     const miDialogoAddCliente = POS.gestionClientes.miDialogoAddCliente;
     //const miDialogoAddDir = POS.gestionClientes.miDialogoAddDir;
     const miDialogoOtrosProductos = POS.gestionOtrosProductos.miDialogoOtrosProductos;
@@ -32,84 +27,18 @@
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
     const btnTipoFacturador = document.querySelector('#facturador') as HTMLSelectElement; //select del consecutivo o facturador en el modal de pago
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
-    const btnCarritoMovil = document.querySelector('#btnCarritoMovil') as HTMLButtonElement|null;
-    const carritoMovilBadge = document.querySelector('#carritoMovilBadge') as HTMLElement|null;
-    const ventaCarritoToast = document.querySelector('#ventaCarritoToast') as HTMLElement|null;
-    const ventaCarritoToastTitle = document.querySelector('#ventaCarritoToastTitle') as HTMLElement|null;
-    const ventaCarritoToastMeta = document.querySelector('#ventaCarritoToastMeta') as HTMLElement|null;
     
     let carrito:{id:string, idproducto:string, tipoproducto:string, tipoproduccion:string, idcategoria: string, foto:string, nombreproducto: string, rendimientoestandar:string, costo:string, valorunidad: string, stock: number, promediostock: number, prioridadcomision: string, percentcomision: number, valorcomision: number, subtotal: number, base:number, impuesto:string, valorimp:number, descuento:number, total: number, insumos:insumo[]}[]=[];
     const valorTotal = {porcentgananciauser: 0, valorgananciauser: 0, subtotal: 0, base: 0, valorimpuestototal: 0, dctox100: 0, descuento: 0, idtarifa: 0, valortarifa: 0, total: 0}; //datos global de la venta
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = []; 
     let indexcarrito:number, nombretarifa:string|undefined='', tipoventa:string="Contado";
-    const promesas: Promise<any>[] = [];
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     
-    function resaltarSelectorCliente():void{
-      if(!btnAddCliente)return;
-      btnAddCliente.classList.remove('cliente-required-pulse');
-      void btnAddCliente.offsetWidth;
-      btnAddCliente.classList.add('cliente-required-pulse');
-      btnAddCliente.scrollIntoView({behavior: 'smooth', block: 'center'});
-      setTimeout(()=>btnAddCliente.classList.remove('cliente-required-pulse'), 3600);
-    }    
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
     constImp['0'] = 0;  //exento de iva, tarifa 0%
     constImp['5'] = 0.0476190476190476; //iva, tarifa al 5%,  Bienes/servicios al 5
     constImp['8'] = 0.0740740740740741; //inc, tarifa al 8%,  impuesto nacional al consumo
-
-    function formatCantidadBadge(cantidad:number): string{
-      if(cantidad >= 1000000){
-        return (cantidad / 1000000).toLocaleString('es-CO', {maximumFractionDigits: 1}) + 'M';
-      }
-      if(cantidad >= 10000){
-        return (cantidad / 1000).toLocaleString('es-CO', {maximumFractionDigits: 1}) + 'K';
-      }
-      return cantidad.toLocaleString('es-CO');
-    }
-
-    function ajustarAnchoCantidad(input:HTMLInputElement, cantidad:number|string): void{
-      const largo = String(cantidad || 0).length;
-      input.style.width = `${Math.min(Math.max(largo + 2, 5), 10)}ch`;
-      input.title = String(cantidad || 0);
-    }
-
-    let ventaCarritoToastTimer:number|undefined;
-    function actualizarBadgeCarritoMovil(cantidad:number): void{
-      if(!carritoMovilBadge)return;
-      carritoMovilBadge.textContent = formatCantidadBadge(cantidad);
-      carritoMovilBadge.title = cantidad.toLocaleString('es-CO');
-      carritoMovilBadge.classList.toggle('is-visible', cantidad > 0);
-    }
-
-    function mostrarFeedbackCarrito(nombre:string, cantidadProducto:number): void{
-      if(window.innerWidth >= 992)return;
-
-      if(btnCarritoMovil){
-        btnCarritoMovil.classList.remove('carrito-feedback-pulse');
-        void btnCarritoMovil.offsetWidth;
-        btnCarritoMovil.classList.add('carrito-feedback-pulse');
-        setTimeout(()=>btnCarritoMovil.classList.remove('carrito-feedback-pulse'), 500);
-      }
-
-      if(ventaCarritoToast && ventaCarritoToastTitle && ventaCarritoToastMeta){
-        ventaCarritoToastTitle.textContent = `${nombre} agregado`;
-        ventaCarritoToastMeta.textContent = `Cantidad: ${cantidadProducto.toLocaleString('es-CO')}`;
-        ventaCarritoToast.classList.add('is-visible');
-        if(ventaCarritoToastTimer)window.clearTimeout(ventaCarritoToastTimer);
-        ventaCarritoToastTimer = window.setTimeout(()=>ventaCarritoToast.classList.remove('is-visible'), 1500);
-      }
-    }
-
-    function mostrarFeedbackProducto(productoEl:HTMLElement, nombre:string, cantidadProducto:number): void{
-      productoEl.classList.remove('producto-agregado-feedback');
-      void productoEl.offsetWidth;
-      productoEl.classList.add('producto-agregado-feedback');
-      setTimeout(()=>productoEl.classList.remove('producto-agregado-feedback'), 900);
-
-      mostrarFeedbackCarrito(nombre, cantidadProducto);
-    }
     constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
     constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
@@ -119,9 +48,8 @@
       basegravable: number,
       valorimpuesto: number
     }
-    let factimpuestos:Item[] = [];
-
-    let products:productsapi[]=[], unproducto:productsapi;
+    
+    let factimpuestos:Item[] = [], products:productsapi[]=[];
     const mapMediospago = new Map();
 
     const mediosPagoDBMAP = new Map<string, string>(  //se usa para imprimir los medios de pago en el servidor de impresion
@@ -152,114 +80,6 @@
 
     POS.gestionClientes.clientes();  //inicializa modulo de clientes
 
-    //////////// evento al boton modalidad de entrega //////////////
-    function tipoEntregaActual(): string {
-      return modalidadEntrega.textContent!.replace(': ', '').trim();
-    }
-
-    function actualizarEstadoCarrito(): void {
-      if(carritoVacio)carritoVacio.classList.toggle('hidden', carrito.length > 0);
-    }
-
-    function normalizarValorDomicilio(): number {
-      const valor = Number(valorDomicilio.value || 0);
-      return Number.isFinite(valor) ? valor : 0;
-    }
-
-    function actualizarBotonesEntrega(): void {
-      const tipo = tipoEntregaActual();
-      const clasesActivo = ['bg-white', 'text-indigo-700', 'shadow-sm'];
-      const clasesInactivo = ['text-slate-600', 'hover:bg-white/70', 'hover:text-indigo-700'];
-      btnPresencial?.classList.remove(...clasesActivo, ...clasesInactivo);
-      btnEntrega?.classList.remove(...clasesActivo, ...clasesInactivo);
-      if(tipo === 'Domicilio'){
-        btnEntrega?.classList.add(...clasesActivo);
-        btnPresencial?.classList.add(...clasesInactivo);
-        valorDomicilio?.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-100');
-      }else{
-        btnPresencial?.classList.add(...clasesActivo);
-        btnEntrega?.classList.add(...clasesInactivo);
-        valorDomicilio?.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-100');
-      }
-    }
-
-    function cambiarTipoEntrega(tipo: 'Presencial' | 'Domicilio'): void {
-      modalidadEntrega.textContent = tipo;
-      if(tipo === 'Domicilio' && selectCliente.value === ''){
-        msjalertToast('warning', 'Cliente requerido', 'Selecciona un cliente para activar el domicilio.');
-        resaltarSelectorCliente();
-      }
-      printTarifaEnvio();
-      valorCarritoTotal();
-      actualizarBotonesEntrega();
-    }
-
-    btnPresencial?.addEventListener('click', ()=> cambiarTipoEntrega('Presencial'));
-    btnEntrega?.addEventListener('click', ()=> cambiarTipoEntrega('Domicilio'));
-
-    valorDomicilio?.addEventListener('input', ()=>{
-      if(normalizarValorDomicilio() > 0 && tipoEntregaActual() !== 'Domicilio'){
-        cambiarTipoEntrega('Domicilio');
-        return;
-      }
-      printTarifaEnvio();
-      valorCarritoTotal();
-      actualizarBotonesEntrega();
-    });
-
-    valorDomicilio?.addEventListener('blur', ()=>{
-      if(tipoEntregaActual() === 'Domicilio' && normalizarValorDomicilio() <= 0){
-        valorDomicilio.classList.add('border-amber-400', 'ring-2', 'ring-amber-100');
-        setTimeout(()=> valorDomicilio.classList.remove('border-amber-400', 'ring-2', 'ring-amber-100'), 1400);
-      }
-    });
-
-    ///////// funcion que imprime el valor de la tarifa segun direccion ///////////
-    function printTarifaEnvio():void{
-      tarifas = POS.tarifas; //viene de ahelper.clientes.ts
-      const selectDir = dirEntrega.options[dirEntrega.selectedIndex];
-      document.querySelector('#confirmarDespacho')?.classList.remove('hidden');
-      if(tipoEntregaActual() == "Presencial"){
-        document.querySelector('#confirmarDespacho')?.classList.add('hidden');
-        valorTotal.valortarifa = 0;
-        valorTotal.idtarifa = 0;
-        nombretarifa = ''; 
-        actualizarBotonesEntrega();
-        return; 
-      }   
-
-      const valorManual = normalizarValorDomicilio();
-      if(valorManual > 0){
-        valorTotal.valortarifa = valorManual;
-        valorTotal.idtarifa = Number(selectDir?.dataset.idtarifa || 0);
-        const objtarifaManual = tarifas.find(tarifa => tarifa.idcliente == selectDir?.dataset.idcliente && tarifa.id == selectDir?.dataset.idtarifa);
-        nombretarifa = objtarifaManual?.nombre || 'Domicilio';
-        actualizarBotonesEntrega();
-        return;
-      }
-
-      if(dirEntrega.selectedIndex == -1){
-        document.querySelector('#confirmarDespacho')?.classList.add('hidden');
-        valorTotal.valortarifa = 0;
-        valorTotal.idtarifa = 0;
-        nombretarifa = '';
-        actualizarBotonesEntrega();
-        return;
-      }
-
-      if(selectDir?.dataset.idtarifa && tipoEntregaActual() == "Domicilio"){
-        const objtarifa = tarifas.find(tarifa =>{
-          if(tarifa.idcliente == selectDir.dataset.idcliente && tarifa.id == selectDir.dataset.idtarifa)return true;
-        });
-        valorTotal.valortarifa = Number(objtarifa?.valor || 0);
-        valorTotal.idtarifa = Number(objtarifa?.id || 0);
-        nombretarifa = objtarifa?.nombre || 'Domicilio';
-      }
-      actualizarBotonesEntrega();
-    }
-
-    actualizarBotonesEntrega();
-
     //////////// evento a toda el area de los productos a seleccionar //////////////
     contentproducts?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.producto');
@@ -270,161 +90,65 @@
         return;   
       }
 
-      if(false && window.innerWidth < 992){
-        // Crear popup
-        const popup = document.createElement('div');
-        popup.className = `popup absolute z-40 right-8 top-1/3 opacity-0 translate-x-0 translate-y-0 transition-all duration-500 w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white font-semibold text-lg`;
-        popup.innerHTML = '';
-        elementProduct!.appendChild(popup);
-        // Forzar reflow para activar transiciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n
-        requestAnimationFrame(() => {
-          popup.classList.remove("opacity-0", "translate-y-0", "translate-x-0");
-          popup.classList.add("opacity-100", "-translate-y-14", "translate-x-10");
-        });
-        const popupx = document.querySelectorAll('.popup');
-        setTimeout(() => {popupx.forEach(t=>{t.remove();});}, 2500);
-      }
-
-      const precio = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)?.precio_venta;
-      const productoConfigurado = structuredClone(products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id)!);
+      const productoItem = products.find(x=>x.id == (elementProduct as HTMLElement).dataset.id);
+      const productoConfigurado = structuredClone(productoItem!);
       filtrarInsumos(productoConfigurado);
-      actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true, precio, productoConfigurado);
-      const productoAgregado = carrito.find(x=>x.idproducto == (elementProduct as HTMLElement).dataset.id && x.valorunidad == precio && mismaConfiguracion(x, productoConfigurado));
-      const nombre = (elementProduct.querySelector('.card-producto')?.textContent || 'Producto').trim();
-      mostrarFeedbackProducto(elementProduct as HTMLElement, nombre, productoAgregado?.stock ?? 1);
+      actualizarCarrito((elementProduct as HTMLElement).dataset.id!, 1, true, true, productoItem?.precio_venta, productoConfigurado);
+      const productoAgregado = carrito.find(x=>x.idproducto == (elementProduct as HTMLElement).dataset.id && x.valorunidad == productoItem?.precio_venta && mismaConfiguracion(x, productoConfigurado));
+      //animacion de aviso cuando se selecciona un producto en dispositivo pequeño
+      elementProduct.classList.remove('producto-agregado-feedback');
+      elementProduct.classList.add('producto-agregado-feedback');
+      setTimeout(()=>elementProduct.classList.remove('producto-agregado-feedback'), 900);
+      POS.gestionAnimaciones.mostrarFeedbackCarrito(productoAgregado?.nombreproducto??'', productoAgregado?.stock ?? 1);
     });
     
 
     function printProduct(id:string, precio:string, index:number){ //recibe el id del producto
-      //const indice = carrito.findIndex(x => x.idproducto == id && x.valorunidad == precio);
-      //const uncarrito = carrito.find(x=>x.idproducto==id&&x.valorunidad==precio)!;
-    
       //if(indice === -1)return;
       const uncarrito = carrito[index];
 
       const tr = document.createElement('TR');
-      tr.classList.add(
-          'productselect',
-          'border-b',
-          'border-slate-100',
-          'hover:bg-slate-50',
-          'transition-colors'
-      );
+      tr.classList.add( 'productselect', 'hover:bg-slate-50', 'transition-colors' );
       tr.dataset.id = `${id}`;
       tr.dataset.precio = precio;
       tr.dataset.indexcarrito = index+'';
       tr.insertAdjacentHTML('afterbegin',    
-        `<td class="pl-4 pr-3 py-3 align-middle text-left">
-            <p class="
-                nombreproducto
-                text-xl
-                font-semibold
-                text-slate-800
-                leading-7
-                break-words
-                max-w-[260px]
-            ">
-                ${uncarrito?.nombreproducto}
-            </p>
+        `<td class="">
+            <p class="nombreproducto text-xl font-semibold text-slate-800 leading-7 break-words">${uncarrito?.nombreproducto}</p>
         </td>
-        <td class="px-2 py-3 align-middle w-36 min-w-[9rem]">
-          <div class="flex items-center justify-center gap-1.5 min-w-max">
-            <button type="button" class="w-7 h-7 shrink-0 bg-indigo-700 text-white rounded-full flex items-center justify-center">
+        <td class="">
+          <div class="">
+            <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full">
               <span class="menos material-symbols-outlined text-base">remove</span>
             </button>
             <input
               type="text"
-              class="
-                  inputcantidad
-                  min-w-[6ch]
-                  max-w-[12ch]
-                  h-9
-                  px-2
-                  rounded-lg 
-                  border
-                  border-slate-300
-                  text-center
-                  font-semibold
-                  text-xl
-                  outline-none 
-                  focus:border-indigo-500
-              "
+              class="inputcantidad w-16 max-w-[12ch] h-9 px-2 rounded-lg border border-slate-300 text-center font-medium text-xl outline-none focus:border-indigo-500"
               value="${uncarrito.stock}"
-              style="width: ${Math.min(Math.max(String(uncarrito.stock || 0).length + 2, 6), 12)}ch"
-              title="${uncarrito.stock}"
             >
-            <button type="button" class="w-7 h-7 shrink-0 bg-indigo-700 text-white rounded-full flex items-center justify-center">
-              <span class="mas material-symbols-outlined text-base">add</span>
-            </button>
+            <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="mas material-symbols-outlined text-base">add</span></button>
           </div>
         </td>
-        <td class="px-2 py-3 text-center align-middle w-24 text-xl font-medium text-slate-700">$${Number(uncarrito?.valorunidad).toLocaleString()}</td>
-        <td class="px-2 py-3 text-center align-middle w-28 text-xl font-bold text-slate-900">$${Number(uncarrito?.total).toLocaleString()}</td>
-        <td class="px-2 py-3 text-center align-middle w-12 accionestd">
-            <div class="flex justify-center">
-                <button
-                    class="
-                        eliminarProducto
-                        flex
-                        items-center
-                        justify-center
-                        w-9
-                        h-9
-                        rounded-lg
-                        border
-                        border-red-200
-                        bg-red-50
-                        text-red-500
-                        transition-all
-                        duration-300
-                        hover:bg-red-600
-                        hover:text-white
-                        hover:border-red-600
-                        hover:shadow-md
-                    "
-                >
+        <td class="text-xl font-semibold text-slate-900">$${Number(uncarrito?.valorunidad).toLocaleString()}</td>
+        <td class="text-xl font-bold text-slate-900">$${Number(uncarrito?.total).toLocaleString()}</td>
+        <td class="">
+            <div class="">
+                <button class="eliminarProducto w-9 h-9 rounded-lg border border-red-200 bg-red-50 text-red-500 transition-all duration-300 hover:bg-red-600 hover:text-white  hover:border-red-600 hover:shadow-md">
                     <i class="fa-solid fa-trash-can text-base"></i>
                 </button>
             </div>
-        </td>
-        `);
+        </td>`);
       tablaventa?.appendChild(tr);
-      actualizarEstadoCarrito();
     } //oninput="this.value = parseInt(this.value.replace(/[,.]/g, '')||1)"
 
 
     function actualizarCarrito(id:string, cantidad:number, control:boolean, stateinput:boolean, precio:string = '0', productoConfigurado:productsapi|null){
       ///limpiar el campo de buscar producto
-      POS.reiniciarCatalogoVentas?.();
+      //POS.reiniciarCatalogoVentas?.();
       const index = carrito.findIndex(x=>x.idproducto==id && x.valorunidad == precio && mismaConfiguracion(x, productoConfigurado!)); //devuelve el index si el producto existe
       
       if(index>-1){
-        if(cantidad < 0 && (carrito[index].stock + cantidad)<0){
-          cantidad = 0;
-          carrito[index].stock = 0;
-          carrito[index].total = 0;
-        }
-        if(control){ //cuando el producto se agrega desde la lista de productos
-          carrito[index].stock += cantidad;
-        }else{ //cuando el producto se agrega por el input cantidad
-          carrito[index].stock = cantidad;
-        }
-       
-        
-        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].stock;
-        carrito[index].total = carrito[index].subtotal;
-        carrito[index].valorcomision = (carrito[index].subtotal*carrito[index].percentcomision)/100;
-        //calculo del impuesto y base por producto en el carrito deventas
-        carrito[index].valorimp = parseFloat((carrito[index].total*constImp[carrito[index].impuesto??0]).toFixed(3));
-        carrito[index].base = parseFloat((carrito[index].total-carrito[index].valorimp).toFixed(3));
-
-        valorCarritoTotal();
-        const inputCantidad = tablaventa?.querySelector(`TR[data-indexcarrito="${index}"] .inputcantidad`) as HTMLInputElement;
-        if(inputCantidad){
-          if(stateinput)inputCantidad.value = carrito[index].stock+'';
-          ajustarAnchoCantidad(inputCantidad, carrito[index].stock);
-        }
-        (tablaventa?.querySelector(`TR[data-indexcarrito="${index}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
+        editarCantidad(index, 1, control, stateinput);
       }else{  //agregar a carrito si el producto no esta agregado en carrito, se agrega por primera vez
         const producto = products.find(x=>x.id==id)!; //products es el arreglo de todos los productos traido por api
         if(cantidad < 0)cantidad = 0;
@@ -519,26 +243,8 @@
 
     ////////////////////// valores finales subtotal y total ////////////////////////
     function valorCarritoTotal(){
-      actualizarEstadoCarrito();
-      if(!carrito.length){
-        valorTotal.subtotal = 0;
-        valorTotal.base = 0;
-        valorTotal.valorimpuestototal = 0;
-        valorTotal.dctox100 = 0;
-        valorTotal.descuento = 0;
-        valorTotal.valortarifa = 0;
-        valorTotal.total = 0;
-        document.querySelector('#subTotal')!.textContent = '$0';
-        (document.querySelector('#impuesto') as HTMLElement).textContent = '$0';
-        (document.querySelector('#descuento') as HTMLElement).textContent = '$0';
-        (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$0';
-        document.querySelector('#total')!.textContent = '$0';
-        totalunidades.textContent = '0';
-        totalunidades.title = '0';
-        actualizarBadgeCarritoMovil(0);
-        return;
-      }
-      if(tipoEntregaActual() == "Domicilio")printTarifaEnvio();
+      carritoVacio.classList.toggle('hidden', carrito.length > 0); //quitar imagen de carrito en el carrito de compras
+      /*if(!carrito.length)return;*/
       valorTotal.valorgananciauser = 0;
       //calcular el impuesto discriminado por tarifa
       const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
@@ -573,7 +279,6 @@
       for(let valorImp of mapImpuesto.values())valorTotalImp += valorImp;
       
       valorTotal.valorimpuestototal = parseFloat(valorTotalImp.toFixed(3));  //valor del impuesto total factura de todos los productos
-
       valorTotal.subtotal = carrito.reduce((total, x)=>x.total+total, 0);
       valorTotal.porcentgananciauser =  (100*valorTotal.valorgananciauser)/valorTotal.subtotal;
       valorTotal.base = valorTotal.subtotal - valorTotal.valorimpuestototal;  //valor de la base total factura de todos los productos
@@ -585,30 +290,15 @@
       // cantidad total de productos
       const cantidadTotalProductos = carrito.reduce((total, producto)=>producto.stock+total, 0);
       totalunidades.textContent = formatCantidadBadge(cantidadTotalProductos);
-      totalunidades.title = cantidadTotalProductos.toLocaleString('es-CO');
-      actualizarBadgeCarritoMovil(cantidadTotalProductos);
+      POS.gestionAnimaciones.actualizarBadgeCarritoMovil(cantidadTotalProductos);
     }
 
 
     /////////////////////// evento a la tabla de productos de venta (carrito) //////////////////////////
     tablaventa?.addEventListener('click', (e:Event)=>{
       const elementProduct = (e.target as HTMLElement)?.closest('.productselect');
-      if(!elementProduct)return;
-      const idProduct = (elementProduct as HTMLElement).dataset.id!;
-      const precio = (elementProduct as HTMLElement).dataset.precio!;
       indexcarrito = Number((elementProduct as HTMLElement).dataset.indexcarrito!);
-      //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
       let productoCarrito = carrito[indexcarrito];
-
-      /*for (let i = 0; i < carrito.length; i++) {
-        const item = carrito[i];
-        if (item.idproducto == idProduct && item.valorunidad == precio) {
-            indiceCarrito = i;
-            productoCarrito = item;
-            break;
-        }
-      }*/
-
 
       if((e.target as HTMLElement).classList.contains('nombreproducto')){
         const inputMerma = document.querySelector('#inputMerma') as HTMLInputElement;
@@ -620,21 +310,17 @@
         }
       }
       
-      if((e.target as HTMLElement).classList.contains('menos')){
+      if((e.target as HTMLElement).classList.contains('menos'))
         editarCantidad(indexcarrito, productoCarrito!.stock-1, false, true);
-        //actualizarCarrito(idProduct, productoCarrito!.stock-1, false, true, productoCarrito?.valorunidad, null);
-      }
-      if((e.target as HTMLElement).classList.contains('mas')){
+      
+      if((e.target as HTMLElement).classList.contains('mas'))
         editarCantidad(indexcarrito, productoCarrito!.stock+1, false, true);
-        //actualizarCarrito(idProduct, productoCarrito!.stock+1, false, true, productoCarrito?.valorunidad, null);
-      }
+      
       if((e.target as HTMLElement).classList.contains('eliminarProducto') || (e.target as HTMLElement).tagName == "I"){
-        //carrito = carrito.filter(x=>x.idproducto != idProduct || x.valorunidad != precio);
         carrito.splice(indexcarrito, 1);
         while(tablaventa.firstChild)tablaventa.removeChild(tablaventa.firstChild);
         carrito.forEach((item, i) =>printProduct(item.idproducto, item.valorunidad, i));
         valorCarritoTotal();
-        //tablaventa?.querySelector(`TR[data-indexcarrito="${indexcarrito}"]`)?.remove();
       }
     });
 
@@ -643,11 +329,8 @@
       const input = e.target as HTMLInputElement;
       if (!input.classList.contains('inputcantidad')) return;
       const fila = input?.closest('.productselect') as HTMLTableRowElement;
-      const idProduct = fila.dataset.id!;
-      const precio = fila.dataset.precio!;
       indexcarrito = Number(fila.dataset.indexcarrito!);
-      //const productoCarrito = carrito.find(x=>x.idproducto==idProduct && x.valorunidad==precio);
-
+    
       let val = input.value;
       val = val.replace(/[^0-9.]/g, '');
       const partes = val.split('.');
@@ -656,9 +339,7 @@
       if (val === '' || isNaN(parseFloat(val))) val = '';
 
       input.value = val;
-      ajustarAnchoCantidad(input, input.value || 0);
       editarCantidad(indexcarrito, Number(input.value), false, false);
-      //actualizarCarrito(idProduct, Number(input.value), false, false,  productoCarrito?.valorunidad, null);
     });
 
 
@@ -683,10 +364,8 @@
 
         valorCarritoTotal();
         const inputCantidad = tablaventa?.querySelector(`TR[data-indexcarrito="${index}"] .inputcantidad`) as HTMLInputElement;
-        if(inputCantidad){
-          if(stateinput)inputCantidad.value = carrito[index].stock+'';
-          ajustarAnchoCantidad(inputCantidad, carrito[index].stock);
-        }
+        if(stateinput)inputCantidad.value = carrito[index].stock+'';
+        ajustarAnchoCantidad(inputCantidad, carrito[index].stock);
         (tablaventa?.querySelector(`TR[data-indexcarrito="${index}"]`)?.children?.[3] as HTMLElement).textContent = "$"+carrito[index].total.toLocaleString();
     }
 
@@ -718,9 +397,9 @@
     });
 
     btnaplicarcredito?.addEventListener('click', ()=>{
-      if(tipoEntregaActual() === "Domicilio" && (selectCliente.value =='' || !dirEntrega.value) || selectCliente.value ==''){
+      if(POS.gestionarDomiciliosVenta.tipoEntrega && (selectCliente.value =='' || !dirEntrega.value) || selectCliente.value ==''){
         msjalertToast('warning', 'Cliente requerido', 'Selecciona un cliente y una direccion antes de registrar la venta a credito.');
-        resaltarSelectorCliente();
+        POS.gestionClientes.resaltarSelectorCliente();
         return;
       }
       if(carrito.length && valorTotal.total>0){
@@ -741,13 +420,14 @@
     });
 
     btnfacturar?.addEventListener('click', ()=>{
-      if(tipoEntregaActual() === "Domicilio" && (selectCliente.value =='' || !dirEntrega.value)){
+      console.log(POS.gestionarDomiciliosVenta.tipoEntrega);
+      if(POS.gestionarDomiciliosVenta.tipoEntrega && (selectCliente.value =='' || !dirEntrega.value)){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
-        resaltarSelectorCliente();
+        POS.gestionClientes.resaltarSelectorCliente();
         return;
       }
       
-      if(tipoEntregaActual() == "Domicilio")document.querySelector('#confirmarDespacho')?.classList.remove('hidden');
+      if(POS.gestionarDomiciliosVenta.tipoEntrega)document.querySelector('#confirmarDespacho')?.classList.remove('hidden');
 
       if(carrito.length && valorTotal.total>0){
         document.querySelector('.Efectivo')?.setAttribute('readonly', 'true');
@@ -788,8 +468,7 @@
       }
     }
 
-    function vaciarventa():void
-    {
+    function vaciarventa():void{
       if(datosfactura?.id)datosfactura.id = '';
       (document.querySelector('#formFacturarA') as HTMLFormElement)?.reset();
       (document.querySelector('#formfacturar') as HTMLFormElement)?.reset();
@@ -802,25 +481,20 @@
       $('.mediopago').val(0);
       carrito.length = 0;
       factimpuestos.length = 0;
-      for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
 
       history.replaceState({}, "", "/admin/ventas");
       while(tablaventa?.firstChild)tablaventa.removeChild(tablaventa?.firstChild);
-      actualizarEstadoCarrito();
+      carritoVacio.classList.toggle('hidden', carrito.length > 0);
       (document.querySelector('#npedido') as HTMLInputElement).value = '';
       document.querySelector('#subTotal')!.textContent = '$'+0;
       document.querySelector('#impuesto')!.textContent = '$'+0;
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+0;
       (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+0;
       document.querySelector('#total')!.textContent = '$'+0;
-      valorDomicilio.value = '';
-      modalidadEntrega.textContent = 'Presencial';
-      document.querySelector('#confirmarDespacho')?.classList.add('hidden');
-      $('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia la elemento del valor de la tarifa
-      (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+0;
-      document.querySelector('#total')!.textContent = '$'+0;
+      for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
+      $('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia el valor de la tarifa y al disparar este evento, se ejecuta POS.valorCarritoTotal(); linea 135 de ahelper.clientes.ts 
+      POS.gestionarDomiciliosVenta.reiniciarDomicilio();
       //volver a mapear los productos con los valores originales de inventario
-
       //actualizar DOM
       for(const prod of products){
           const item = POS.hackerList.get('id', prod.id)[0];
@@ -861,7 +535,7 @@
       const imprimir = document.querySelector('input[name="imprimir"]:checked') as HTMLInputElement;
       const despachar = document.querySelector('#despachar') as HTMLInputElement;
       const valoresCredito = POS.gestionSubirModalPagar.valoresCredito;
-      const tipoEntrega = tipoEntregaActual();
+      const tipoEntrega:number = POS.gestionarDomiciliosVenta.tipoEntrega;
       const datos = new FormData();
       datos.append('id', datosfactura?.id??'');
       datos.append('idemisor', btnCaja.selectedOptions[0].dataset.idemisor??'');
@@ -901,8 +575,8 @@
       datos.append('observacion', document.querySelector<HTMLTextAreaElement>('#observacion')!.value);
       datos.append('departamento', '');
       datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
-      datos.append('entrega', tipoEntrega);
-      datos.append('entregado', estado=='Paga'&&tipoEntrega=='Domicilio'?(despachar.checked?'1':'0'):estado=='Paga'&&tipoEntrega=='Presencial'?'1':'0'); //si es remision no se ha entregado, si es pago y entrega a domicilio se define segun el checkbox de despachar, si es pago y entrega presencial se marca como entregado
+      datos.append('entrega', tipoEntrega==0?'Presencia':'Domicilio');
+      datos.append('entregado', estado=='Paga'&&tipoEntrega==1?(despachar.checked?'1':'0'):estado=='Paga'&&tipoEntrega==0?'1':'0'); //si es remision no se ha entregado, si es pago y entrega a domicilio se define segun el checkbox de despachar, si es pago y entrega presencial se marca como entregado
       datos.append('valortarifa', valorTotal.valortarifa+'');
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
@@ -1047,10 +721,8 @@
 
     //exponer variables y funciones globalmente
     POS.limpiarformdialog = limpiarformdialog;
-    POS.printTarifaEnvio = printTarifaEnvio;
     POS.valorCarritoTotal = valorCarritoTotal;
     POS.actualizarCarrito = actualizarCarrito;
-    POS.mostrarFeedbackCarrito = mostrarFeedbackCarrito;
     //POS.calcularCambio = calcularCambio;
     POS.cerrarDialogoExterno = cerrarDialogoExterno;
     POS.tarifas = tarifas;
