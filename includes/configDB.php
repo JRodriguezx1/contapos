@@ -5,7 +5,7 @@ $cliente = explode('.', $host); // $cliente['cliente1', 'app_barber', 'test']
 
 $configDB = [
     //'app_barber'=>['namedb'=>'intermix_limpio'],
-    'cliente'=>['namedb'=>'j2softpos'],
+    'cliente'=>['namedb'=>'contapos'],
     'cliente1'=>['namedb'=>'j2a1'],
     'cliente2'=>['namedb'=>'j2a2']
 ];

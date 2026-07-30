@@ -33,11 +33,10 @@
         </div>
 
         <div class="separado-fields">
-          <div class="separado-field separado-field--full">
+          <div class="separado-field--full cliente-prices-field">
             <label for="cliente">Cliente</label>
-            <div class="separado-input separado-input--select2">
-              <span><i class="fa-solid fa-user"></i></span>
-              <select id="cliente" name="cliente_id" required>
+            <div class="cliente-prices-select">
+              <select id="cliente" name="cliente_id" multiple="multiple" required>
                 <option></option>
                 <?php foreach($clientes as $cliente): ?>
                   <?php if($cliente->id>1): ?>
