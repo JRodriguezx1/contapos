@@ -125,16 +125,16 @@
           </div>
         </div>
 
-        <div class="separado-field separado-field--full">
+        <div class="separado-field--full">
           <label for="articulo">Articulo</label>
-          <div class="separado-input separado-input--select2 separado-input--product">
-            <span><i class="fa-solid fa-magnifying-glass"></i></span>
-            <select id="articulo" name="articulo" autocomplete="articulo-name" required></select>
+          <div class="cliente-prices-select">
+            
+            <select id="articulo" name="articulo" autocomplete="articulo-name" multiple="multiple" required></select>
           </div>
         </div>
 
-        <div class="separado-products-table">
-          <table class="tabla separado-data-table" width="100%" id="tablaSeparado">
+        <div class="mt-3 rounded-lg border border-slate-200 bg-white overflow-x-auto md:overflow-x-visible">
+          <table id="tablaventa" class="w-full border-separate border-spacing-0" width="100%">
             <thead>
               <tr>
                 <th>Producto</th>
@@ -146,6 +146,10 @@
             </thead>
             <tbody></tbody>
           </table>
+          <div id="carritoVacio" class="flex flex-col items-center justify-center gap-2 px-4 py-8 text-center text-slate-500 text-xl">
+            <span class="material-symbols-outlined text-5xl text-slate-300">shopping_cart</span>
+            <span>Sin productos en el carrito.</span>
+          </div>
         </div>
 
         <div class="separado-summary">
