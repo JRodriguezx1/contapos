@@ -1,7 +1,7 @@
 (()=>{
   if(document.querySelector('.detallecredito')){
 
-     
+
     const btnajustarCredito = document.querySelector('#ajustarCredito') as HTMLButtonElement;
     const btnDetalleProductos = document.querySelector('#btnDetalleProductos') as HTMLButtonElement;
     const btnAbonar = document.querySelector('#btnAbonar') as HTMLButtonElement;
@@ -13,10 +13,6 @@
     const miDialogoPagoTotal = document.querySelector('#miDialogoPagoTotal') as any;
     const miDialogoDetalleProducto = document.querySelector('#miDialogoDetalleProducto') as any;
     const modalcambioMedioPago:any = document.querySelector("#cambioMedioPago");
-    const selectCajaAbono = document.querySelector('#caja') as HTMLSelectElement | null;
-    const selectMedioPagoAbono = document.querySelector('#mediopago') as HTMLSelectElement | null;
-    const selectCajaPagoTotal = document.querySelector('#PagoTotal_caja') as HTMLSelectElement | null;
-    const selectMedioPagoTotal = document.querySelector('#PagoTotal_mediopago') as HTMLSelectElement | null;
     //const pagarTodo = document.querySelector('#pagarTodo') as HTMLButtonElement;
     const totalPagado = document.querySelector('#totalPagado') as HTMLSpanElement;
     const numCuota = document.querySelector('#numCuota') as HTMLLabelElement;
@@ -49,20 +45,48 @@
 
     
     document.addEventListener("click", cerrarDialogoExterno);
-
-    //inicializarSelectsAbono();
      
     //////////////////  TABLA //////////////////////
     tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatablesToolbar);
     modernizarToolbarDataTable('#tablacuotas');
-    pintarPaginadorCuotas();
+    /*pintarPaginadorCuotas();
     [80, 250, 600, 1000].forEach((tiempo)=>window.setTimeout(pintarPaginadorCuotas, tiempo));
     ($('#tablacuotas') as any).on('draw.dt', pintarPaginadorCuotas);
 
+    function pintarPaginadorCuotas():void{
+      const wrapper = document.querySelector('#tablacuotas_wrapper');
+      if(!wrapper || !tablacuotas)return;
+
+      const info = (tablacuotas as any).page?.info?.();
+      const paginaActual = info ? String(info.page + 1) : '1';
+      const paginador = wrapper.querySelector('.dataTables_paginate, .dt-paging, .pagination');
+      if(!paginador)return;
+
+      paginador.querySelectorAll('.detalle-paginador-current').forEach((boton)=>boton.classList.remove('detalle-paginador-current'));
+
+      const botonesActuales = Array.from(paginador.querySelectorAll<HTMLElement>(
+        '.paginate_button.current, .paginate_button.active, .dt-paging-button.current, .dt-paging-button.active, [aria-current="page"], .page-item.active .page-link, .page-link.active, span.current, button.current, a.current'
+      ));
+
+      if(!botonesActuales.length){
+        Array.from(paginador.querySelectorAll<HTMLElement>('a, button, span')).forEach((elemento)=>{
+          const texto = elemento.textContent?.trim();
+          const esControl = elemento.classList.contains('previous') || elemento.classList.contains('next') || elemento.classList.contains('first') || elemento.classList.contains('last');
+          if(texto === paginaActual && !esControl)botonesActuales.push(elemento);
+        });
+      }
+
+      botonesActuales.forEach((elemento)=>{
+        elemento.classList.add('detalle-paginador-current');
+        elemento.setAttribute('aria-label', `Pagina ${paginaActual}`);
+        elemento.setAttribute('aria-current', 'page');
+        if(elemento.textContent?.trim() !== paginaActual)elemento.textContent = paginaActual;
+      });
+    }*/
+
     const autoPrintAbonoCredito = document.querySelector('#autoPrintAbonoCredito') as HTMLInputElement | null;
-    if(autoPrintAbonoCredito?.value){
+    if(autoPrintAbonoCredito?.value)
       window.setTimeout(()=>printPOSComprobanteAbono(autoPrintAbonoCredito.value), 450);
-    }
 
 
     btnajustarCredito?.addEventListener('click', ():void=>{
@@ -94,45 +118,6 @@
       (document.querySelector('#PagoTotal_caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdatePagoTotal') as HTMLFormElement).submit();
     });
-
-    function pintarPaginadorCuotas():void{
-      const wrapper = document.querySelector('#tablacuotas_wrapper');
-      if(!wrapper || !tablacuotas)return;
-
-      const info = (tablacuotas as any).page?.info?.();
-      const paginaActual = info ? String(info.page + 1) : '1';
-      const paginador = wrapper.querySelector('.dataTables_paginate, .dt-paging, .pagination');
-      if(!paginador)return;
-
-      paginador.querySelectorAll('.detalle-paginador-current').forEach((boton)=>{
-        boton.classList.remove('detalle-paginador-current');
-      });
-
-      const botonesActuales = Array.from(paginador.querySelectorAll<HTMLElement>(
-        '.paginate_button.current, .paginate_button.active, .dt-paging-button.current, .dt-paging-button.active, [aria-current="page"], .page-item.active .page-link, .page-link.active, span.current, button.current, a.current'
-      ));
-
-      if(!botonesActuales.length){
-        Array.from(paginador.querySelectorAll<HTMLElement>('a, button, span')).forEach((elemento)=>{
-          const texto = elemento.textContent?.trim();
-          const esControl = elemento.classList.contains('previous') || elemento.classList.contains('next') || elemento.classList.contains('first') || elemento.classList.contains('last');
-
-          if(texto === paginaActual && !esControl){
-            botonesActuales.push(elemento);
-          }
-        });
-      }
-
-      botonesActuales.forEach((elemento)=>{
-        elemento.classList.add('detalle-paginador-current');
-        elemento.setAttribute('aria-label', `Pagina ${paginaActual}`);
-        elemento.setAttribute('aria-current', 'page');
-
-        if(elemento.textContent?.trim() !== paginaActual){
-          elemento.textContent = paginaActual;
-        }
-      });
-    }
     
 
     let saldopendiente = Number((document.querySelector('#saldopendiente') as HTMLInputElement).value || '0');
@@ -250,44 +235,11 @@
       const capital:number = Number((document.querySelector('#capital') as HTMLInputElement).value);
       const abonoinicial:number = Number((document.querySelector('#abonoinicial') as HTMLInputElement).value);
       const montototal:number = Number((document.querySelector('#montototal') as HTMLInputElement).value);
-      const saldoPendienteInput = document.querySelector('#saldopendiente') as HTMLInputElement;
-      const nuevoSaldoPendiente = capital+Number(recargo)-abonoinicial-Number(abonototalantiguo);
+      const saldopendiente:number = Number((document.querySelector('#saldopendiente') as HTMLInputElement).value);
       document.querySelector('#abonoInicialText')!.textContent = '$ '+abonototalantiguo;
       document.querySelector('#interesText')!.textContent = '$ '+recargo;
       document.querySelector('#creditoTotalText')!.textContent = '$ '+(capital - abonoinicial + Number(recargo)).toLocaleString();
-      document.querySelector('#saldopendientetext')!.textContent = formatoMoneda(nuevoSaldoPendiente);
-      saldoPendienteInput.value = String(nuevoSaldoPendiente);
-      saldopendiente = nuevoSaldoPendiente;
-    }
-
-    function parseMoneda(valor:string):number{
-      const normalizado = valor.replace(/\$/g, '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
-      const numero = Number(normalizado);
-      return Number.isFinite(numero) ? numero : 0;
-    }
-
-    function formatoMoneda(valor:number):string{
-      return '$ '+valor.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    }
-
-    function valorPagadoFila(fila:HTMLTableRowElement | null):number{
-      const valorDataset = fila?.querySelector('.mediosdepago')?.getAttribute('data-totalpagado');
-      if(valorDataset !== null && valorDataset !== undefined)return Number(valorDataset) || 0;
-      return parseMoneda(fila?.children[3]?.textContent || '0');
-    }
-
-    function actualizarSaldoPendientePorAnulacion(valorAnulado:number):void{
-      const saldoPendienteInput = document.querySelector('#saldopendiente') as HTMLInputElement | null;
-      const saldoPendienteText = document.querySelector('#saldopendientetext') as HTMLElement | null;
-      const pagoTotalInput = document.querySelector('#PagoTotal_abono') as HTMLInputElement | null;
-      const pagoTotalText = document.querySelector('#PagoTotal_abono_text') as HTMLElement | null;
-      const saldoActual = saldoPendienteInput ? Number(saldoPendienteInput.value || '0') : parseMoneda(saldoPendienteText?.textContent || '0');
-      const nuevoSaldo = saldoActual + valorAnulado;
-      saldopendiente = nuevoSaldo;
-      if(saldoPendienteInput)saldoPendienteInput.value = String(nuevoSaldo);
-      if(pagoTotalInput)pagoTotalInput.value = String(nuevoSaldo);
-      if(saldoPendienteText)saldoPendienteText.textContent = formatoMoneda(nuevoSaldo);
-      if(pagoTotalText)pagoTotalText.textContent = formatoMoneda(nuevoSaldo);
+      document.querySelector('#saldopendientetext')!.textContent = '$ '+(capital+Number(recargo)-abonoinicial-Number(abonototalantiguo)).toLocaleString();
     }
 
     function cerrarDialogoExterno(event:Event) {
@@ -360,9 +312,7 @@
           allowOutsideClick: () => !Swal.isLoading()
       }).then((result:any) => {
           if (result.isConfirmed && result.value) {
-              const valorAnulado = valorPagadoFila(fila as HTMLTableRowElement | null);
               fila?.remove();
-              actualizarSaldoPendientePorAnulacion(valorAnulado);
               Swal.fire({
                 customClass: {
                   popup: 'j2-confirm j2-confirm--success',
