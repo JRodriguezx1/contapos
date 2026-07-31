@@ -5,9 +5,10 @@
      
     const btnCrearSeparado = document.querySelector('#btnCrearSeparado');
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
-    const tablaSeparado = document.querySelector('#tablaSeparado tbody') as HTMLBodyElement;
+    const tablaSeparado = document.querySelector('#tablaventa tbody') as HTMLBodyElement;
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
+    const carritoVacio = document.querySelector('#carritoVacio') as HTMLElement;
 
 
     type conversionunidadesapi = {
@@ -143,6 +144,7 @@
         sumarcantidad(carrito[index], carrito[index].cantidad+1, index);
       }
       printItemTable();
+      valorCarritoTotal();
     }
 
 
@@ -194,18 +196,38 @@
           const tr = document.createElement('TR') as HTMLTableRowElement;
           tr.classList.add('productselect');
           tr.dataset.indexcarrito = i+'';
-          tr.insertAdjacentHTML('afterbegin', `
-            <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${item.nombreproducto}</td> 
-            <td class="!p-2 !py-0 text-xl text-gray-500 leading-5"><select class="formulario__select selectunidad">${options}</select></td>
-            <td class="!p-2 !py-0"><div class="flex"><button type="button"><span class="menos material-symbols-outlined">remove</span></button><input type="text" class="inputcantidad w-20 px-2 text-center" name="inputcantidad" value="${item.stock}"><button type="button"><span class="mas material-symbols-outlined">add</span></button></div></td>
-            <td class="!p-2 !py-0 text-xl text-gray-500 leading-5">${item.total.toLocaleString()}</td>
-            <td class="accionestd"><div class="acciones-btns"><button class="btn-md btn-red eliminarProducto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
+          tr.insertAdjacentHTML('afterbegin',    
+            `<td class="">
+                <p class="nombreproducto text-xl font-semibold text-slate-800 leading-7 break-words">${item.nombreproducto}</p>
+            </td>
+            <td class="">
+              <div class="">
+                <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="menos material-symbols-outlined text-base">remove</span></button>
+                <input
+                  type="text"
+                  class="inputcantidad w-16 max-w-[12ch] h-9 px-2 rounded-lg border border-slate-300 text-center font-medium text-xl outline-none focus:border-indigo-500"
+                  value="${item.stock}"
+                >
+                <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="mas material-symbols-outlined text-base">add</span></button>
+              </div>
+            </td>
+            <td class="text-xl font-semibold text-slate-900">$${Number(item.valorunidad).toLocaleString()}</td>
+            <td class="text-xl font-bold text-slate-900">$${Number(item.total).toLocaleString()}</td>
+            <td class="">
+                <div class="">
+                    <button class="eliminarProducto w-9 h-9 rounded-lg border border-red-200 bg-red-50 text-red-500 transition-all duration-300 hover:bg-red-600 hover:text-white  hover:border-red-600 hover:shadow-md">
+                        <i class="fa-solid fa-trash-can text-base"></i>
+                    </button>
+                </div>
+            </td>`);
+
           tablaSeparado?.appendChild(tr);
         });
     }
 
     function valorCarritoTotal(){
-       //calcular el impuesto discriminado por tarifa
+      carritoVacio.classList.toggle('hidden', carrito.length > 0); //quitar imagen de carrito en el carrito de compras
+      //calcular el impuesto discriminado por tarifa
       const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
       const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
 
