@@ -81,7 +81,7 @@
                 <strong>Imprimir comprobante</strong>
                 <small>Genera el soporte del abono al confirmar.</small>
             </span>
-            <input type="hidden" name="imprimirComprobanteAbonoinicial" value="0">
+            
             <input 
                 id="imprimirComprobanteAbonoinicial" 
                 name="imprimirComprobanteAbonoinicial" 

@@ -1,8 +1,10 @@
 <div class="p-6 min-h-screen detallecredito">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
+
   <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
     <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
   <?php endif; ?>
+  
   <div class="max-w-auto mx-auto bg-white shadow-lg rounded-2xl p-8">
     <!-- Título principal -->
     <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">

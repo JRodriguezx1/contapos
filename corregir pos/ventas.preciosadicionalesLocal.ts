@@ -1,0 +1,681 @@
+(()=>{
+  if(!document.querySelector('.ventas'))return;
+
+  const POS = (window as any).POS;
+
+  const miDialogoPreciosAdicionales = document.querySelector('#miDialogoPreciosAdicionales') as HTMLDialogElement;
+  const aplicarOpcionesProducto = document.querySelector('#aplicarOpcionesProducto') as HTMLButtonElement;
+  const inputComisionProducto = document.querySelector('#comisionproducto') as HTMLInputElement;
+  const inputCantidadCalculada = document.querySelector('#inputCantidadCalculada') as HTMLInputElement;
+  const operationSum = document.querySelector('#operationSum') as HTMLInputElement;
+  const operationLess = document.querySelector('#operationLess') as HTMLInputElement;
+  const reset = document.querySelector('#reset') as HTMLInputElement;
+  const textCantidadCalculada = document.querySelector('#textCantidadCalculada') as HTMLParagraphElement;
+  const lastOperation = document.querySelector('#lastOperation') as HTMLParagraphElement;
+  let cantidadTotal:number = 0;
+  let historialCalculadora: string[] = [];
+
+  let producto:  Partial<productsapi>|undefined = {};
+  let productoConfigurado: Partial<productsapi> | undefined = {};
+
+  function cargarPreciosAdicionales() {
+    const listaPrecios = document.querySelector('#listaPrecios') as HTMLElement;
+    while(listaPrecios.firstChild)listaPrecios.removeChild(listaPrecios.firstChild);
+    producto?.preciosadicionales?.forEach(precio=>{
+        const preciohtml = `
+        <label
+            class="group flex justify-between items-center p-5
+          rounded-2xl bg-white border border-slate-200 cursor-pointer transition-all duration-300 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-md hover:-translate-y-1">
+
+            <div class="flex items-center gap-4">
+                <input
+                    type="radio"
+                    class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 inputprecioadicional accent-indigo-600 cursor-pointer"
+                    data-idproducto="${producto?.id}"
+                    name="precioSeleccionado"
+                    value="${precio.precio}">
+
+                <div>
+                    <p class="text-sm text-slate-500 uppercase tracking-wider">
+                        Precio adicional
+                    </p>
+
+                    <p class="text-xl font-bold text-slate-800">
+                        $${Number(precio.precio).toLocaleString()}
+                    </p>
+                </div>
+            </div>
+
+            <span class="material-symbols-outlined
+           text-slate-300 text-3xl transition-all duration-300
+           group-hover:scale-110 group-hover:text-indigo-500 group-hover:rotate-6">
+                sell
+            </span>
+        </label>
+        `;
+      listaPrecios.insertAdjacentHTML('beforeend', preciohtml);
+    });
+  }
+
+
+  aplicarOpcionesProducto.addEventListener('click', ()=>{
+    const comision = inputComisionProducto.value.trim();
+    const seleccionado = document.querySelector('.inputprecioadicional:checked') as HTMLInputElement;
+    const inputPrecioLibre = document.querySelector('#precioLibre') as HTMLInputElement;
+    if(producto != undefined && comision!=='' && !Number.isNaN(Number(comision))){  //ajustar porcentaje de comision a producto
+      producto.percentcomision = Number(comision);
+      //actualizar el carrito con el nuevo valor de comision
+      const unitem:CarritoItem|undefined = (POS.carrito as CarritoItem[])?.find(x=>x.idproducto == producto?.id);
+      if(unitem!=undefined)unitem.percentcomision = Number(comision);
+    }
+    miDialogoPreciosAdicionales.close();
+    document.removeEventListener("click", POS.cerrarDialogoExterno);
+    const precioLibre = obtenerNumero(inputPrecioLibre);
+    const prioridadValor = precioLibre!=null?precioLibre:seleccionado?.checked?seleccionado.value:producto?.precio_venta;
+    filtrarInsumos(productoConfigurado); //esta en app.ts
+    if(producto != undefined)POS.actualizarCarrito(producto.id, cantidadTotal==0?1:cantidadTotal, true, true, prioridadValor+'', productoConfigurado);
+  });
+
+
+  //****CALCULADORA
+  inputCantidadCalculada.addEventListener('keydown', (e: KeyboardEvent)=>{
+    if(e.key === '+') {
+      e.preventDefault();
+      calcular('sumar');
+    }
+    if(e.key === '-') {
+      e.preventDefault();
+      calcular('restar');
+    }
+  });
+
+  function calcular(operacion: 'sumar' | 'restar'):void{
+    const cantidad = Number(inputCantidadCalculada.value);
+    /*if(isNaN(cantidad) || inputCantidadCalculada.value === ''){
+      inputCantidadCalculada.focus();
+      return;
+    }*/
+    if(operacion === 'sumar'){
+      cantidadTotal += cantidad;
+      //lastOperation.textContent = `+${cantidad}`;
+      historialCalculadora.push(`+${cantidad}`);
+      lastOperation.textContent = historialCalculadora.join('   ');
+    }else{
+      cantidadTotal -= cantidad;
+      //lastOperation.textContent = `-${cantidad}`;
+      historialCalculadora.push(`-${cantidad}`);
+      lastOperation.textContent = historialCalculadora.join('   ');
+    }
+    textCantidadCalculada.textContent = cantidadTotal.toFixed(2);
+    inputCantidadCalculada.value = '';
+    inputCantidadCalculada.focus();
+  }
+
+  operationSum.addEventListener('click', ()=>calcular('sumar'));
+  operationLess.addEventListener('click', ()=>calcular('restar'));
+
+  reset.addEventListener('click', ()=>{
+    cantidadTotal = 0;
+    inputCantidadCalculada.value = '';
+    textCantidadCalculada.textContent = '0';
+    lastOperation.textContent = '0';
+    historialCalculadora.length = 0;
+  });
+  //****FIN CALCULADORA
+
+  
+
+  /////////// INSUMOS DINAMICAMENTE  /////////////
+  function cargarInsumos(){
+    const listaInsumos = document.querySelector('#listaInsumos') as HTMLElement;
+    //while(listaInsumos.firstChild)listaInsumos.removeChild(listaInsumos.firstChild);
+    listaInsumos.innerHTML = "";
+    const { obligatorios, insumosgrupo } = agruparInsumos();
+    renderObligatorios(obligatorios, listaInsumos);
+    insumosgrupo.forEach(insumogrupo =>renderGrupo(insumogrupo, listaInsumos));
+    eventosCheckbox();
+    eventosRadio();
+    eventosCantidadInsumo();
+  }
+
+  function agruparInsumos() {
+    const obligatorios = producto?.insumos?.filter(i => i.grupos_insumos === null) ?? [];
+    
+    const insumosgrupo = new Map<number, insumo[]>();
+    producto?.insumos
+        ?.filter(i => i.grupos_insumos !== null)
+        .forEach(insumo => {
+            const idGrupo = Number(insumo.grupos_insumos?.id);
+            if (!insumosgrupo.has(idGrupo))
+                insumosgrupo.set(idGrupo, []);
+
+            insumosgrupo.get(idGrupo)!.push(insumo);
+        });
+
+    return { obligatorios, insumosgrupo };
+  }
+
+  function renderObligatorios(insumos:any[], contenedor:HTMLElement){
+      if(insumos.length===0) return;
+
+      let html = `
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 mb-8">
+              <div class="flex items-center gap-3 mb-4">
+                  <span class="material-symbols-outlined text-emerald-600 text-3xl">
+                      check_circle
+                  </span>
+
+                  <div>
+                      <h5 class="text-xl font-bold text-slate-800">
+                          Incluidos
+                      </h5>
+
+                      <p class="text-slate-500 text-sm">
+                          Estos insumos vienen incluidos con el producto.
+                      </p>
+                  </div>
+              </div>
+      `;
+
+      insumos.forEach(insumo=>{
+          html += `
+              <div class="flex items-center gap-3 rounded-xl bg-white border border-slate-200 px-4 py-3 mb-2">
+
+                  <span class="material-symbols-outlined text-emerald-500">
+                      done
+                  </span>
+
+                  <span class="font-medium text-slate-700">
+                      ${insumo.nombre}
+                  </span>
+
+              </div>
+          `;
+      });
+
+      html += `</div>`;
+      contenedor.insertAdjacentHTML("beforeend", html);
+  }
+
+  //   insumos = [{idproducto:1, idsubproducto: 3, seleccionado: 1}]
+  function renderGrupo(insumos:any[], contenedor:HTMLElement){
+    const grupo = insumos[0].grupos_insumos;
+    contenedor.insertAdjacentHTML(
+        "beforeend",
+        `<div class="border-t border-slate-200 pt-8 mt-8">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="material-symbols-outlined text-indigo-500 text-2xl">
+                    ${Number(grupo.tipo) === 0 ? 'radio_button_checked' : 'check_box'}
+                </span>
+
+                <h3 class="text-2xl font-bold text-slate-800">
+                    ${grupo.nombre}
+                </h3>
+            </div>
+
+            <p class="text-slate-500 text-sm mb-5">
+                ${Number(grupo.tipo) === 0
+                    ? 'Seleccione solamente una opción.'
+                    : 'Puede seleccionar una o varias opciones.'}
+            </p>
+        </div>`
+    );
+    if(Number(grupo.tipo)===0){
+        renderRadios(insumos, contenedor);
+    }else{
+        renderCheckbox(insumos, contenedor);
+    }
+  }
+
+  function renderRadios(insumos:any[], contenedor:HTMLElement){
+      insumos.forEach(insumo=>{
+          contenedor.insertAdjacentHTML(
+              "beforeend",
+              `<label
+                  class="group flex justify-between items-center p-5
+                  rounded-2xl
+                  bg-white
+                  tarjeta-radio-insumo
+                  border
+                  border-slate-200
+                  cursor-pointer
+                  transition-all
+                  duration-300
+                  hover:border-indigo-300
+                  hover:bg-indigo-50
+                  hover:shadow-md
+                  hover:-translate-y-1">
+
+                  <div class="flex items-center gap-4">
+                      <input
+                          type="radio"
+                          class="inputInsumoRadio
+                          w-5
+                          h-5
+                          accent-indigo-600
+                          cursor-pointer"
+
+                          data-idproducto="${producto?.id}"
+                          data-idinsumo="${insumo.id_subproducto}"
+                          data-idgrupo="${insumo.grupos_insumos.id}"
+                          name="grupo_${insumo.grupos_insumos.id}"
+                          ${Number(insumo.seleccionado) ? "checked" : ""}
+                      >
+
+                      <div>
+                        <div>
+                            <p class="text-xl font-semibold text-slate-800">
+                                ${insumo.nombre}
+                            </p>
+                        </div>
+                      </div>
+                  </div>
+              </label>`
+          );
+      });
+  }
+
+  function renderCheckbox(insumos:any[], contenedor:HTMLElement){
+      insumos.forEach(insumo=>{
+        // Temporal hasta conectar con backend
+          insumo.precio_extra = 1600;
+
+          contenedor.insertAdjacentHTML(
+              "beforeend",
+              `<label
+                  class="
+                  tarjeta-checkbox-insumo
+                  block
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  bg-white
+                  p-5
+                  cursor-pointer
+                  transition-all
+                  duration-300
+                  hover:border-indigo-300
+                  hover:bg-indigo-50
+                  hover:shadow-md
+                  hover:-translate-y-1
+                  ">
+
+                  <div class="flex items-center justify-between gap-4">
+                      <div class="flex items-center gap-4 flex-1">
+                          <input
+                              type="checkbox"
+                              class="
+                              inputInsumoCheckbox
+                              w-5
+                              h-5
+                              accent-indigo-600
+                              cursor-pointer
+                              "
+                              data-idproducto="${producto?.id}"
+                              data-idinsumo="${insumo.id_subproducto}"
+                              data-idgrupo="${insumo.grupos_insumos.id}"
+                              ${Number(insumo.seleccionado) ? "checked":""}
+                          >
+
+                          <div>
+                              <p class="text-xl font-semibold text-slate-800">
+                                  ${insumo.nombre}
+                              </p>
+                          </div>
+                      </div>
+                      ${htmlPrecioExtra(insumo)}
+                  </div>
+
+                  ${htmlCantidad(insumo)}
+              </label>`
+          );
+      });
+  }
+
+
+  function htmlPrecioExtra(insumo: insumo): string {
+      const precioExtra = Number(insumo.precio_extra);
+
+      if (precioExtra <= 0) return "";
+
+      return `
+          <span
+              class="
+                  badge-precio-extra
+                  inline-flex
+                  items-center
+                  gap-1
+                  rounded-full
+                  bg-emerald-100
+                  border
+                  border-emerald-200
+                  px-3
+                  py-1.5
+                  text-base
+                  font-bold
+                  text-emerald-700
+                  shadow-sm
+                  transition-transform
+                  duration-200
+              ">
+
+              <span class="material-symbols-outlined text-lg">
+                  add
+              </span>
+
+              $${precioExtra.toLocaleString('es-CO')}
+          </span>
+      `;
+  }
+
+
+  function htmlCantidad(insumo: insumo): string {
+    if (Number(insumo.permite_aumentar) === 0) return "";
+
+    return `
+        <div
+            class="
+                contenedor-cantidad
+                overflow-hidden
+                transition-all
+                duration-300
+                ease-out
+                ${Number(insumo.seleccionado)
+                    ? 'max-h-40 opacity-100 mt-6 translate-y-0'
+                    : 'max-h-0 opacity-0 mt-0 translate-y-2'}
+            ">
+
+            <p class="mb-4 text-sm font-semibold text-slate-500 text-center">
+                Cantidad a agregar
+            </p>
+            <div class="flex justify-center mt-3 ml-9">
+                <div class="inline-flex items-center rounded-2xl border border-slate-300 overflow-hidden shadow-sm bg-white">
+
+                    <button
+                        type="button"
+                        class="
+                            btnCantidadMenos
+                            w-14
+                            h-14
+                            active:scale-95
+                            transition-all
+                            duration-150
+                          bg-indigo-50
+                          hover:bg-indigo-100
+                          text-indigo-600
+                            text-2xl
+                            font-bold                          
+                        ">
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        value="1"
+                        min="1"
+
+                        class="
+                            inputCantidadInsumo
+                            w-28
+                            h-14
+                            text-center
+                            text-lg
+                            font-bold
+                            border-x
+                            border-slate-300
+                            outline-none
+                            focus:ring-0
+                        "
+                    >
+
+                    <button
+                        type="button"
+                        class="
+                            btnCantidadMas
+                            w-14
+                            h-14
+                            active:scale-95
+                            transition-all
+                            duration-150
+                          bg-indigo-50
+                          hover:bg-indigo-100
+                          text-indigo-600
+                            text-2xl
+                            font-bold                          
+                        ">
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+
+  function eventosCheckbox() {
+      const checkboxes = document.querySelectorAll<HTMLInputElement>(".inputInsumoCheckbox");
+
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener("change", actualizarCheckbox);
+
+          // 🔥 Pinta la tarjeta si ya viene seleccionada
+          if (checkbox.checked) {
+
+              checkbox
+                  .closest(".tarjeta-checkbox-insumo")
+                  ?.classList.add(
+                      "border-indigo-400",
+                      "ring-2",
+                      "ring-indigo-100",
+                      "shadow-md"
+                  );
+          }
+      });
+  }
+
+  function eventosRadio() {
+    const radios = document.querySelectorAll<HTMLInputElement>(".inputInsumoRadio");
+    radios.forEach(radio => radio.addEventListener("change", actualizarRadio));
+  }
+
+  function eventosCantidadInsumo() {
+    const cantidades = document.querySelectorAll<HTMLInputElement>(".inputCantidadInsumo");
+    cantidades.forEach(input => input.addEventListener("change", actualizarCantidadInsumo));
+  }
+
+  function actualizarCantidadInsumo(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const idInsumo = Number(input.dataset.idinsumo);
+    const insumo = productoConfigurado?.insumos?.find(
+      item => Number(item.id_subproducto) === idInsumo
+    );
+    if(!insumo)return;
+
+    const cantidadBase = Number(
+      producto?.insumos?.find(item => Number(item.id_subproducto) === idInsumo)?.cantidadsubproducto ?? 0
+    );
+    const cantidad = Number(input.value);
+    const cantidadValida = Number.isFinite(cantidad) && cantidad >= cantidadBase
+      ? cantidad
+      : cantidadBase;
+
+    insumo.cantidadsubproducto = cantidadValida.toString();
+    input.value = cantidadValida.toString();
+  }
+
+
+  function actualizarCheckbox(e: Event) {
+    const checkbox = e.target as HTMLInputElement;
+    const idInsumo = Number(checkbox.dataset.idinsumo);
+    const insumo = productoConfigurado?.insumos?.find(
+        i => Number(i.id_subproducto) === idInsumo
+    );
+
+    if (!insumo) return;
+
+    insumo.seleccionado = checkbox.checked ? '1' : '0';
+
+    // 🔥 Obtener la tarjeta
+    const tarjeta = checkbox.closest(".tarjeta-checkbox-insumo");
+    const badge = tarjeta?.querySelector(".badge-precio-extra");
+    const contenedorCantidad =
+        tarjeta?.querySelector(".contenedor-cantidad");
+    if (!tarjeta) return;
+
+    if (checkbox.checked) {
+        tarjeta.classList.add(
+            "border-indigo-400",
+            "ring-2",
+            "ring-indigo-100",
+            "shadow-md",
+            "scale-[1.01]"
+        );
+
+        badge?.classList.add("scale-110");
+
+        setTimeout(() => {
+            badge?.classList.remove("scale-110");
+        }, 150);
+        
+        contenedorCantidad?.classList.remove(
+            "max-h-0",
+            "opacity-0",
+            "mt-0"
+        );
+
+        contenedorCantidad?.classList.add(
+            "max-h-40",
+            "opacity-100",
+            "mt-6"
+        );
+    } else {
+        tarjeta.classList.remove(
+            "border-indigo-400",
+            "ring-2",
+            "ring-indigo-100",
+            "shadow-md",
+            "scale-[1.01]"
+        );
+        contenedorCantidad?.classList.remove(
+            "max-h-40",
+            "opacity-100",
+            "mt-6"
+        );
+    
+        contenedorCantidad?.classList.add(
+            "max-h-0",
+            "opacity-0",
+            "mt-0"
+        );
+    }
+  }
+
+
+  function actualizarRadio(e: Event) {
+    const radio = e.target as HTMLInputElement;
+    if(!radio.checked)return;
+
+    const idGrupo = Number(radio.dataset.idgrupo);
+    const idInsumo = Number(radio.dataset.idinsumo);
+    productoConfigurado?.insumos?.forEach(insumo => {
+        if(Number(insumo.grupos_insumos?.id) === idGrupo)
+            insumo.seleccionado = '0';
+    });
+
+    const seleccionado = productoConfigurado?.insumos?.find(i=>Number(i.id_subproducto) === idInsumo);
+    if(seleccionado)seleccionado.seleccionado = '1';
+
+    document
+        .querySelectorAll(".tarjeta-radio-insumo")
+        .forEach(card => {
+            card.classList.remove(
+                "border-indigo-400",
+                "bg-indigo-50",
+                "shadow-lg"
+            );
+        });
+
+    const tarjeta = radio.closest(".tarjeta-radio-insumo");
+
+    tarjeta?.classList.add(
+        "border-indigo-400",
+        "bg-indigo-50",
+        "shadow-lg"
+    );  
+  }
+
+
+  /*function filtrarInsumos(){
+    const insumos = productoConfigurado?.insumos??[];
+    const ultimoSeleccionUnica  = insumos.filter(i=>i.grupos_insumos?.tipo === "0"&&i.seleccionado === "1").at(-1);
+
+    const nuevosElementos:insumo[] = [
+              ...(ultimoSeleccionUnica  ? [ultimoSeleccionUnica ] : []),
+              ...insumos.filter(i=>i.grupos_insumos?.tipo === "1" &&i.seleccionado === "1")
+    ];
+    insumos.splice(0, insumos.length, ...nuevosElementos);
+  }*/
+  /*
+  function actualizarCheckbox(e: Event) {
+    const checkbox = e.target as HTMLInputElement;
+    const idInsumo = Number(checkbox.dataset.idinsumo);
+    const insumo = productoConfigurado?.insumos?.find(i => Number(i.id_subproducto) === idInsumo);
+    if (!insumo || !productoConfigurado) return;
+    insumo.seleccionado = checkbox.checked ?'1':'0';
+
+    if(insumo.seleccionado == '1'){
+      const existe = producto?.insumos?.some(i => Number(i.id_subproducto) === idInsumo);
+      if (!existe)productoConfigurado?.insumos?.push(insumo);
+    }else{
+       productoConfigurado.insumos = productoConfigurado?.insumos?.filter(i => Number(i.id_subproducto) !== idInsumo);
+    }
+
+  }
+
+
+  function actualizarRadio(e: Event) {
+    const radio = e.target as HTMLInputElement;
+    if(!radio.checked)return;
+
+    const idGrupo = Number(radio.dataset.idgrupo);
+    const idInsumo = Number(radio.dataset.idinsumo);
+    productoConfigurado!.insumos = productoConfigurado?.insumos?.filter(insumo => Number(insumo.grupos_insumos?.id) !== idGrupo);
+
+    console.log(productoConfigurado);
+    const seleccionado = producto?.insumos?.find(
+        i => Number(i.id_subproducto) === idInsumo
+    );
+
+    if(seleccionado&&productoConfigurado){
+      seleccionado.seleccionado = '1';
+      productoConfigurado.insumos?.push(seleccionado);
+    }
+  }
+  */
+
+
+  ///////// FIN INSUMOS DINAMICOS  //////////
+
+
+  const gestionarPreciosAdicionales = {
+    miDialogoPreciosAdicionales,
+    abrirDialogo(elementProduct: HTMLElement) {
+      (document.querySelector('#textCardProduct') as HTMLParagraphElement).textContent = elementProduct.querySelector('.card-producto')?.textContent??'';
+      miDialogoPreciosAdicionales.showModal();
+      cantidadTotal = 0;
+      textCantidadCalculada.textContent = '0';
+      lastOperation.textContent = '0';
+      historialCalculadora.length = 0;
+      const products = POS.products as productsapi[];
+      console.log(products);
+      producto = products.find(x=>x.id==elementProduct.dataset.id!);
+      productoConfigurado = structuredClone(producto);
+      cargarPreciosAdicionales();
+      cargarInsumos();
+      document.addEventListener("click", POS.cerrarDialogoExterno);
+    },
+  };
+
+  POS.gestionarPreciosAdicionales = gestionarPreciosAdicionales;
+
+})();

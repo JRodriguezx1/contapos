@@ -50,7 +50,7 @@
     
     document.addEventListener("click", cerrarDialogoExterno);
 
-    inicializarSelectsAbono();
+    //inicializarSelectsAbono();
      
     //////////////////  TABLA //////////////////////
     tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatablesToolbar);
@@ -131,71 +131,6 @@
         if(elemento.textContent?.trim() !== paginaActual){
           elemento.textContent = paginaActual;
         }
-      });
-    }
-
-    function inicializarSelectsAbono():void{
-      if(typeof ($ as any)?.fn?.select2 === 'undefined')return;
-
-      const opcionesSelect2Abono = {
-        dropdownCssClass: 'detalle-abono-select2-dropdown',
-        dropdownParent: $('#miDialogoAbono'),
-        minimumResultsForSearch: Infinity,
-        width: '100%'
-      };
-      const opcionesSelect2PagoTotal = {
-        ...opcionesSelect2Abono,
-        dropdownParent: $('#miDialogoPagoTotal')
-      };
-
-      if(selectCajaAbono && selectCajaAbono.dataset.select2DetalleAbono !== 'true'){
-        ($(selectCajaAbono) as any).select2({
-          ...opcionesSelect2Abono,
-          placeholder: 'Seleccionar caja'
-        });
-        selectCajaAbono.dataset.select2DetalleAbono = 'true';
-      }
-
-      if(selectMedioPagoAbono && selectMedioPagoAbono.dataset.select2DetalleAbono !== 'true'){
-        ($(selectMedioPagoAbono) as any).select2({
-          ...opcionesSelect2Abono,
-          placeholder: 'Seleccionar medio de pago'
-        });
-        selectMedioPagoAbono.dataset.select2DetalleAbono = 'true';
-      }
-
-      if(selectCajaPagoTotal && selectCajaPagoTotal.dataset.select2DetalleAbono !== 'true'){
-        ($(selectCajaPagoTotal) as any).select2({
-          ...opcionesSelect2PagoTotal,
-          placeholder: 'Seleccionar caja'
-        });
-        selectCajaPagoTotal.dataset.select2DetalleAbono = 'true';
-      }
-
-      if(selectMedioPagoTotal && selectMedioPagoTotal.dataset.select2DetalleAbono !== 'true'){
-        ($(selectMedioPagoTotal) as any).select2({
-          ...opcionesSelect2PagoTotal,
-          placeholder: 'Seleccionar medio de pago'
-        });
-        selectMedioPagoTotal.dataset.select2DetalleAbono = 'true';
-      }
-
-      habilitarAperturaSelect2Abono(selectCajaAbono);
-      habilitarAperturaSelect2Abono(selectMedioPagoAbono);
-      habilitarAperturaSelect2Abono(selectCajaPagoTotal);
-      habilitarAperturaSelect2Abono(selectMedioPagoTotal);
-    }
-
-    function habilitarAperturaSelect2Abono(select:HTMLSelectElement | null):void{
-      if(!select)return;
-      const control = select.closest('.detalle-abono-dialog__control') as HTMLElement | null;
-      if(!control || control.dataset.openSelect2 === 'true')return;
-
-      control.dataset.openSelect2 = 'true';
-      control.addEventListener('click', (event:Event):void=>{
-        const target = event.target as HTMLElement;
-        if(select.disabled || target.closest('.select2-container--disabled'))return;
-        ($(select) as any).select2('open');
       });
     }
     

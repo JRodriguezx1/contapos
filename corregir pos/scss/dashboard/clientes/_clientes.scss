@@ -1,0 +1,83 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+
+//////////////////////////////----//////////////////////////////
+
+.clientes{
+    background-color: v.$blanco;
+    padding: 1rem;
+    &__contenedor{
+        @include m.contenedor100;
+    }
+    &__acciones{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        @include m.telefono{
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    }
+
+    &__crear{
+        // align-self: center;
+        border-bottom: 1px solid v.$gris20;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        @include m.telefono{
+            border-bottom: none;
+            padding: 0;
+            margin: 0;
+        }
+        text-align: center;
+     }
+
+    &__busqueda{
+        text-align: center;
+        padding-bottom: 1rem;
+        @include m.tablet{
+            border-bottom: none;
+            padding: 0; 
+        }
+        form{
+            width: 24rem;
+            margin: 0 auto;
+        }
+        .formulario__select{
+            width: 100%;
+        }
+        .btn_busqueda{
+            margin-top: .4rem;
+            display: flex;
+            justify-content: center;
+            .formulario__input{
+                border-right: none;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                outline: none;
+                width: 100%;
+                @include m.tablet{
+                    width: 100%;
+                }
+            }
+            label{
+                padding: 0 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid darken(v.$gris20, 20);
+                border-top-right-radius: .5rem;
+                border-bottom-right-radius: .5rem;
+                border-left: none;
+            }
+            #busqueda{
+                display: none;
+            }
+        }
+    }
+
+    &__tabla{
+        overflow-x: scroll;
+    }
+}
