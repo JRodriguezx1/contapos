@@ -125,11 +125,11 @@
           </div>
         </div>
 
-        <div class="separado-field separado-field--full">
+        <div class="separado-field--full">
           <label for="articulo">Articulo</label>
-          <div class="separado-input separado-input--select2 separado-input--product">
+          <div class="cliente-prices-select">
             <span><i class="fa-solid fa-magnifying-glass"></i></span>
-            <select id="articulo" name="articulo" autocomplete="articulo-name" required></select>
+            <select id="articulo" name="articulo" autocomplete="articulo-name" multiple="multiple" required></select>
           </div>
         </div>
 
