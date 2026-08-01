@@ -17,7 +17,7 @@
 
         const parametrosURL = new URLSearchParams(window.location.search);
         const id = parametrosURL.get('id');
-        inicializarSelectsDetalleCliente();
+        //inicializarSelectsDetalleCliente();
 
         function clientesGraficas($url:string, $dato:string){
             if(id!=null&&!Number.isNaN(id))
