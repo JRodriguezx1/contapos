@@ -1,4 +1,4 @@
-<div class="box crearseparado">
+<div class="crearseparado pb-12 [@media(max-width:760px)]:p-[.8rem] [@media(max-width:760px)]:pb-[14rem]">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
   <div class="separado-shell">
@@ -22,8 +22,8 @@
 
     <div id="divmsjalerta"></div>
 
-    <form id="formCrearUpdateCredito" class="separado-form" action="" method="POST">
-      <section class="separado-card separado-card--form">
+    <form id="formCrearUpdateCredito" class="flex flex-col tlg:flex-row gap-4" action="" method="POST">
+      <section class="separado-card basis-1/2">
         <div class="separado-card__header">
           <span class="material-symbols-outlined">person_add</span>
           <div>
@@ -32,8 +32,8 @@
           </div>
         </div>
 
-        <div class="separado-fields">
-          <div class="separado-field--full cliente-prices-field">
+        <div class="grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2">
+          <div class="col-span-full cliente-prices-field">
             <label for="cliente">Cliente</label>
             <div class="cliente-prices-select">
               <select id="cliente" name="cliente_id" multiple="multiple" required>
@@ -100,7 +100,7 @@
             </div>
           </div>
 
-          <div class="separado-field separado-field--full">
+          <div class="separado-field col-span-full">
             <label for="nota">Nota</label>
             <div class="separado-input">
               <span><i class="fa-regular fa-note-sticky"></i></span>
@@ -116,7 +116,7 @@
         </div>
       </section>
 
-      <section class="separado-card separado-card--products">
+      <section class="separado-card basis-1/2">
         <div class="separado-card__header">
           <span class="material-symbols-outlined">shopping_bag</span>
           <div>
@@ -125,7 +125,7 @@
           </div>
         </div>
 
-        <div class="separado-field--full">
+        <div class="col-span-full mb-4">
           <label for="articulo">Articulo</label>
           <div class="cliente-prices-select">
             
@@ -152,7 +152,7 @@
           </div>
         </div>
 
-        <div class="separado-summary">
+        <div class="mt-[1.2rem] grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-[minmax(16rem,.55fr)_minmax(28rem,1fr)]">
           <button id="btndescuento" class="separado-discount" type="button">
             <i class="fa-solid fa-tag"></i>
             Descuento
@@ -178,7 +178,7 @@
           </div>
         </div>
 
-        <div class="separado-actions">
+        <div class="mt-[1.2rem] grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2 [@media(max-width:760px)]:mb-[5.5rem]">
           <button class="separado-button separado-button--secondary" type="button" value="salir">
             Salir
           </button>
@@ -227,7 +227,7 @@
         <div id="divmsjalertaClaveDcto"></div>
       </div>
 
-      <div class="separado-dialog__actions">
+      <div class="grid grid-cols-1 gap-4 pt-[.4rem] [@media(min-width:761px)]:grid-cols-2">
         <button type="button" class="separado-button separado-button--secondary salir">Salir</button>
         <button id="btnCrearAddDir" type="submit" class="separado-button separado-button--primary crearAddDir">Aplicar</button>
       </div>

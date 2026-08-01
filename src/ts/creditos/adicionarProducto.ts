@@ -268,16 +268,16 @@
             tr.classList.add('itemselect');
             tr.dataset.index = `${indice}`;
             tr.insertAdjacentHTML('afterbegin', 
-                `<td class="p-4">${nombre}</td>
-                <td class="p-4">${cantidad}</td>
-                <td class="p-4">${unidadmedida}</td>
-                <td class="p-4">$ ${valorunidad.toLocaleString()}</td>
-                <td class="p-4">$ ${total.toLocaleString()}</td>
-                <td class="p-4 flex items-center justify-center gap-2">
-                    <button class="flex items-center gap-1 px-3 py-1 text-base text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50">
+                `<td class="font-semibold text-slate-900">${nombre}</td>
+                <td>${cantidad}</td>
+                <td class="font-extrabold text-cyan-700">${unidadmedida}</td>
+                <td class="font-extrabold">$ ${valorunidad.toLocaleString()}</td>
+                <td class="font-extrabold text-emerald-700">$ ${total.toLocaleString()}</td>
+                <td class="flex min-w-[12rem] items-center justify-center gap-[.7rem] whitespace-nowrap">
+                    <button class="inline-flex h-[3.6rem] min-w-16 items-center justify-center rounded-lg border border-indigo-200 bg-indigo-50 px-[.9rem] text-[1.18rem] font-extrabold text-indigo-600 transition hover:-translate-y-px">
                         👁 Ver
                     </button>
-                    <button class="eliminarItem w-11 h-11 flex items-center justify-center text-rose-600 border border-rose-200 rounded-full hover:bg-rose-50 text-xl">❌</button>
+                    <button class="eliminarItem inline-flex h-[3.6rem] w-16 items-center justify-center rounded-lg border border-red-500 bg-red-500 p-0 text-white transition hover:-translate-y-px hover:bg-red-600 hover:shadow-md"><i class="fa-solid fa-trash-can"></i></button>
                 </td>`);
             tablaItems?.appendChild(tr);
         }

@@ -1,4 +1,4 @@
-<div class="adicionarProducto">
+<div class="adicionarProducto pb-12 [@media(max-width:760px)]:p-[.8rem] [@media(max-width:760px)]:pb-[6.5rem]">
   <div class="adicionar-producto-shell">
     <section class="adicionar-producto-hero">
       <a href="/admin/creditos/detallecredito?id=<?php echo $credito->id;?>" class="adicionar-producto-back" aria-label="Volver al detalle">
@@ -20,7 +20,7 @@
       </div>
     </section>
 
-    <section class="adicionar-producto-layout">
+    <section class="grid items-start gap-[1.4rem] [@media(min-width:1101px)]:grid-cols-[minmax(32rem,.75fr)_minmax(0,1.25fr)]">
       <article class="adicionar-producto-card adicionar-producto-card--form">
         <header class="adicionar-producto-card__header">
           <span><i class="fa-solid fa-cart-plus"></i></span>
@@ -30,8 +30,8 @@
           </div>
         </header>
 
-        <div class="adicionar-producto-fields">
-          <div class="adicionar-producto-field adicionar-producto-field--full">
+        <div class="grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2">
+          <div class="adicionar-producto-field col-span-full">
             <label for="articulo">Articulo</label>
             <div class="adicionar-producto-input adicionar-producto-input--select2" data-placeholder="Buscar articulo">
               <span><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -119,7 +119,7 @@
           </table>
         </div>
 
-        <footer class="adicionar-producto-actions">
+        <footer class="mt-[1.2rem] grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2">
           <a href="/admin/creditos/detallecredito?id=<?php echo $credito->id;?>" class="adicionar-producto-button adicionar-producto-button--light">
             <i class="fa-solid fa-arrow-left"></i>
             Salir

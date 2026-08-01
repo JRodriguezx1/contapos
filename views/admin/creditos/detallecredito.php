@@ -1,122 +1,122 @@
-<div class="p-6 min-h-screen detallecredito">
+<div class="detallecredito">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
   <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
     <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
   <?php endif; ?>
   
-  <div class="max-w-auto mx-auto bg-white shadow-lg rounded-2xl p-8">
+  <div class="detalle-credito-shell">
     <!-- Título principal -->
-    <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">
-      <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+    <a href="/admin/creditos" class="detalle-credito-back">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
       </svg>
       <span class="sr-only">Atrás</span>
     </a>
-    <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+    <h2 class="detalle-credito-title">
       Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
     </h2> 
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->
-    <div class="grid md:grid-cols-4 gap-6 mb-6">
-      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🧾 Factura</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
+    <div class="detalle-credito-metrics">
+      <div>
+        <h3>🧾 Factura</h3>
+        <p><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
       </div>
 
-      <div class="bg-green-50 border border-green-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-green-700 mb-1 uppercase">💰 Credito</h3>
-        <p id="creditoText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
+      <div>
+        <h3>💰 Credito</h3>
+        <p id="creditoText">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
       </div>
 
-      <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💸 Abono Inicial</h3>
-        <p id="abonoInicialText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
+      <div>
+        <h3>💸 Abono Inicial</h3>
+        <p id="abonoInicialText">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
       </div>
 
-      <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-yellow-700 mb-1 uppercase">💷 Interes Total</h3>
-        <p id="interesText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
+      <div>
+        <h3>💷 Interes Total</h3>
+        <p id="interesText">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
       </div>
     </div>
 
     <!-- Detalles financieros -->
-    <div class="grid md:grid-cols-4 gap-6 mb-6">
-      <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💲 Credito Total</h3>
-        <p id="creditoTotalText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
+    <div class="detalle-credito-metrics">
+      <div>
+        <h3>💲 Credito Total</h3>
+        <p id="creditoTotalText">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
       </div>
 
-      <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-orange-700 mb-1 uppercase">📅 Fecha Emisión</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo $credito->fechainicio;?></p>
+      <div>
+        <h3>📅 Fecha Emisión</h3>
+        <p><?php echo $credito->fechainicio;?></p>
       </div>
 
-      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🔢 Plazo</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
+      <div>
+        <h3>🔢 Plazo</h3>
+        <p><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
       </div>
 
-      <div class="bg-red-50 border border-red-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-red-700 mb-1 uppercase">📆 Fecha Vencimiento</h3>
-        <p class="text-gray-800 text-lg mb-0"> - </p>
+      <div>
+        <h3>📆 Fecha Vencimiento</h3>
+        <p> - </p>
       </div>
     </div>
 
     <!-- Estado actual -->
-    <div class="bg-gray-100 border border-gray-300 rounded-xl p-5 mb-8">
-      <h3 class="text-xl font-semibold text-gray-700 mb-3 uppercase">📊 Estado del Crédito</h3>
-      <div class="flex flex-col sm:flex-row gap-10">
-        <div class="flex items-center gap-4">
-          <span class="px-4 py-2 rounded-full text-base font-semibold <?php echo $credito->idestadocreditos==1?' bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':' bg-red-100 text-red-700'); ?>">
+    <div class="detalle-credito-status">
+      <h3>📊 Estado del Crédito</h3>
+      <div class="detalle-credito-status__content">
+        <div class="detalle-credito-status__group">
+          <span class="detalle-credito-state <?php echo $credito->idestadocreditos==1?'bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':'bg-red-100 text-red-700'); ?>">
             <?php echo $credito->idestadocreditos==1?'Finalizado':($credito->idestadocreditos==2?'En curso':'Anulado'); ?>
           </span>
-          <span class="text-gray-600">Saldo pendiente: <strong id="saldopendientetext">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
+          <span>Saldo pendiente: <strong id="saldopendientetext">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>
-        <div class="flex items-center">
-          <span class="text-gray-600">Cliente: <strong><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
+        <div class="detalle-credito-status__group">
+          <span>Cliente: <strong><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
         </div>
-        <div class="flex items-center">
-          <span class="text-gray-600">Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
+        <div class="detalle-credito-status__group">
+          <span>Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
         </div>
         <?php if($credito->idestadocreditos == 2 && $credito->idtipofinanciacion == 2):
                 if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
         ?>
-          <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="btn-md btn-blue">+</a></div>
+          <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="detalle-credito-add-product">+</a></div>
         <?php } endif;?>
       </div>
     </div>
 
     <!-- Historial de abonos -->
-    <div class="mb-10 detalle-credito-table-card config-table-card">
-      <h3 class="text-lg font-semibold text-gray-700 mb-4">📚 Historial de Abonos</h3>
-      <table id="tablacuotas" class="w-full border border-gray-200 rounded-xl overflow-hidden">
-        <thead class="bg-gray-100">
+    <div class="detalle-credito-table-card config-table-card">
+      <h3>📚 Historial de Abonos</h3>
+      <table id="tablacuotas">
+        <thead>
           <tr>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">N° de Cuota</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Fecha</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor cuota</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor pagado</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Medio pago</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Acciones</th>
+            <th>N° de Cuota</th>
+            <th>Fecha</th>
+            <th>Valor cuota</th>
+            <th>Valor pagado</th>
+            <th>Medio pago</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <?php foreach($cuotas as $value): ?>
-            <tr class="border-t">
-              <td class="px-4 py-2 text-gray-800"><?php echo $value->numerocuota;?></td>
-              <td class="px-4 py-2 text-gray-800"><?php echo $value->fechapagado;?></td>
-              <td class="px-4 py-2 text-gray-800">$<?php echo number_format($value->montocuota, '2', ',', '.');?></td>
-              <td class="px-4 py-2 text-gray-800">$<?php echo number_format($value->valorpagado, '2', ',', '.');?></td>
-              <td class="px-4 py-2 text-gray-800">
+            <tr>
+              <td><?php echo $value->numerocuota;?></td>
+              <td><?php echo $value->fechapagado;?></td>
+              <td>$<?php echo number_format($value->montocuota, '2', ',', '.');?></td>
+              <td>$<?php echo number_format($value->valorpagado, '2', ',', '.');?></td>
+              <td>
                 <?php foreach($value->mediosdepago as $idx => $element): ?>
-                <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago"><?php echo $element->mediopago;?></button>
                 <?php endforeach; ?>
               </td>
-              <td class="px-4 py-2 text-gray-800 text-center">
+              <td>
                 <div id="<?php echo $value->id;?>" class="flex justify-center gap-4">
-                  <button class="btn-xs btn-red anularAbono" title="Eliminar abono">X</button>
+                  <button class="anularAbono" title="Eliminar abono">X</button>
                   <button class="printPOSAbono material-symbols-outlined">print</button>
                 </div>
               </td>
@@ -128,16 +128,16 @@
     </div>
 
     <!-- Botones de acción -->
-    <div class="flex justify-end gap-4">
+    <div class="detalle-credito-actions">
       <?php if($credito->idestadocreditos == 2):
                 if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
       ?>
-        <button id="ajustarCredito" class="btn-md btn-light mb-4 !py-4 px-6">🔄 Ajustar Credito</button>
+        <button id="ajustarCredito">🔄 Ajustar Credito</button>
       <?php } endif; ?>
-      <button id="btnDetalleProductos" class="btn-md btn-blue mb-4 !py-4 px-6">📄 Productos</button>
-      <button id="btnAbonar" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">➕ Abonar</button>
-      <button id="btnPagarTodo" class="hover:bg-green-700 btn-turquoise text-white font-semibold  rounded-lg shadow flex items-center gap-2 mb-4 py-4 px-6">✅ Pagar Todo</button>
-      <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold  rounded-lg shadow flex items-center gap-2 mb-4 py-4 px-6">⬅️ Volver</button>
+      <button id="btnDetalleProductos">📄 Productos</button>
+      <button id="btnAbonar">➕ Abonar</button>
+      <button id="btnPagarTodo">✅ Pagar Todo</button>
+      <button>⬅️ Volver</button>
     </div>
   </div>
 

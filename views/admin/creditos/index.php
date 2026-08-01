@@ -11,7 +11,7 @@
   }
 ?>
 
-<div class="box creditos">
+<div class="creditos pb-12 [@media(max-width:640px)]:p-[.8rem]">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
   <div class="creditos-shell">
@@ -116,7 +116,7 @@
                                 <?php if(tienePermiso('Anular separados')&&userPerfil()>3 || userPerfil()<4){ ?>
                                     <button class="creditos-action creditos-action--danger anularCredito" title="Anular credito"><i class="fa-solid fa-trash-can"></i></button>
                             <?php } endif; ?>
-                            <span id="<?php echo $value->ID;?>" class="creditos-action creditos-action--print printPOSSeparado material-symbols-outlined cursor-pointer" title="Imprimir separado">print</span>
+                            <span id="<?php echo $value->ID;?>" class="creditos-action creditos-action--print printPOSSeparado material-symbols-outlined" title="Imprimir separado">print</span>
                         </div>
                     </td>
                 </tr>
