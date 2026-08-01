@@ -58,13 +58,12 @@
                     <span class="cliente-price-item__icon"><i class="fa-solid fa-box"></i></span>
                     <div class="cliente-price-item__content">
                         <strong>$${Number(precioPersonalizado.value).toLocaleString('es-CO')}</strong>
-                        <p>${escapePrecioClienteHtml(producto)}</p>
+                        <p>${producto}</p>
                     </div>
                     <button type="button" class="cliente-price-item__remove" title="Eliminar precio personalizado">
                         <span id="${idproducto}" class="material-symbols-outlined">cancel</span>
                     </button>
-                </div>`
-                );
+                </div>`);
             }
         }
 
@@ -93,20 +92,6 @@
                 }
             })();
         }
-
-        function escapePrecioClienteHtml(value:string):string{
-            return value.replace(/[&<>"']/g, (char) => {
-                const entities:{[key:string]:string} = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;'
-                };
-                return entities[char];
-            });
-        }
-
 
     }
 

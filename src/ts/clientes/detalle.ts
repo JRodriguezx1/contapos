@@ -17,7 +17,6 @@
 
         const parametrosURL = new URLSearchParams(window.location.search);
         const id = parametrosURL.get('id');
-        //inicializarSelectsDetalleCliente();
 
         function clientesGraficas($url:string, $dato:string){
             if(id!=null&&!Number.isNaN(id))
@@ -32,30 +31,6 @@
                         console.log(error);
                     }
                 })();
-        }
-
-        function inicializarSelectsDetalleCliente():void{
-            const selectConfig = {
-                width: '100%',
-                minimumResultsForSearch: Infinity,
-                dropdownCssClass: 'cliente-detail-select2-dropdown'
-            };
-            ($('#PagoTotal_caja') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoPagoTotal')
-            });
-            ($('#PagoTotal_mediopago') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoPagoTotal')
-            });
-            ($('#abono_caja') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoAbono')
-            });
-            ($('#abono_mediopago') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoAbono')
-            });
         }
 
         clientesGraficas('/admin/api/clientes/comprasXMesXCliente?id=', 'comprasXMes');
@@ -79,18 +54,7 @@
                     fill: true,
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: "#14233b",
-                                font: { weight: "bold" }
-                            }
-                        }
-                    }
-                }
+                options: { responsive: true }
                 });
             }
         }
@@ -115,17 +79,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: "bottom",
-                            labels: {
-                                color: "#14233b",
-                                font: { weight: "bold" },
-                                padding: 16
-                            }
-                        }
-                    }
+                    plugins: { legend: { position: "bottom" } }
                 }
                 });
             }
