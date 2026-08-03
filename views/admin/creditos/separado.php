@@ -1,21 +1,21 @@
-<div class="crearseparado pb-12 [@media(max-width:760px)]:p-[.8rem] [@media(max-width:760px)]:pb-[14rem]">
+<div class="crearseparado w-full p-3 pb-56 text-slate-900 md:p-0 md:pb-12">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
-  <div class="separado-shell">
-    <section class="separado-hero">
-      <a href="/admin/creditos" class="separado-back" aria-label="Volver a creditos">
+  <div class="mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-gradient-to-b from-indigo-50/60 via-white to-white p-4 shadow-sm md:p-6">
+    <section class="grid grid-cols-1 items-center gap-5 rounded-lg border border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 p-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:p-6">
+      <a href="/admin/creditos" class="inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-2xl text-white shadow-lg transition hover:-translate-y-0.5 hover:text-white" aria-label="Volver a creditos">
         <i class="fa-solid fa-arrow-left"></i>
       </a>
-      <div class="separado-hero__content">
-        <p class="separado-eyebrow">Cartera</p>
-        <h1>Crear separado</h1>
-        <p>Selecciona cliente, productos, abono inicial y plazo para generar el separado.</p>
+      <div class="min-w-0">
+        <p class="mb-1 text-base font-extrabold uppercase text-indigo-600">Cartera</p>
+        <h1 class="m-0 text-3xl font-extrabold leading-tight text-slate-900 md:text-4xl">Crear separado</h1>
+        <p class="mt-1 max-w-3xl text-lg leading-snug text-slate-500">Selecciona cliente, productos, abono inicial y plazo para generar el separado.</p>
       </div>
-      <div class="separado-hero__badge">
-        <span class="material-symbols-outlined">inventory_2</span>
+      <div class="inline-flex w-full min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-white/90 p-4 md:w-auto md:min-w-80">
+        <span class="material-symbols-outlined inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 text-3xl text-white">inventory_2</span>
         <div>
-          <strong>Nuevo</strong>
-          <small>registro de separado</small>
+          <strong class="block text-2xl font-black leading-none text-slate-900">Nuevo</strong>
+          <small class="mt-1 block text-base font-bold text-slate-500">registro de separado</small>
         </div>
       </div>
     </section>
@@ -23,19 +23,19 @@
     <div id="divmsjalerta"></div>
 
     <form id="formCrearUpdateCredito" class="flex flex-col tlg:flex-row gap-4" action="" method="POST">
-      <section class="separado-card basis-1/2">
-        <div class="separado-card__header">
-          <span class="material-symbols-outlined">person_add</span>
+      <section class="basis-1/2 overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:p-6">
+        <div class="mb-5 flex items-start gap-4 border-b border-slate-200 pb-4 md:items-center">
+          <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-3xl text-indigo-600">person_add</span>
           <div>
-            <h2>Datos del separado</h2>
-            <p>Informacion del cliente, abono inicial y condiciones de pago.</p>
+            <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Datos del separado</h2>
+            <p class="mt-1 text-base text-slate-500">Informacion del cliente, abono inicial y condiciones de pago.</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2">
-          <div class="col-span-full cliente-prices-field">
+          <div class="col-span-full cliente-prices-field grid min-w-0 gap-2">
             <label for="cliente">Cliente</label>
-            <div class="cliente-prices-select">
+            <div class="cliente-prices-select creditos-select2 creditos-select2--standalone">
               <select id="cliente" name="cliente_id" multiple="multiple" required>
                 <option></option>
                 <?php foreach($clientes as $cliente): ?>
@@ -47,7 +47,7 @@
             </div>
           </div>
 
-          <div class="separado-field">
+          <div class="separado-field grid gap-2">
             <label for="abonoinicial">Abono inicial</label>
             <div class="separado-input">
               <span><i class="fa-solid fa-dollar-sign"></i></span>
@@ -63,7 +63,7 @@
             </div>
           </div>
 
-          <div class="separado-field">
+          <div class="separado-field grid gap-2">
             <label for="cantidadcuotas">Cantidad de cuotas</label>
             <div class="separado-input">
               <span><i class="fa-solid fa-calendar-check"></i></span>
@@ -79,17 +79,17 @@
             </div>
           </div>
 
-          <div class="separado-field">
+          <div class="separado-field grid gap-2">
             <label for="montocuota">Valor de la cuota</label>
-            <div class="separado-input separado-input--readonly">
+            <div class="separado-input">
               <span><i class="fa-solid fa-receipt"></i></span>
               <input id="montocuota" type="text" placeholder="Valor de la cuota" name="montocuota" value="<?php echo $credito->montocuota??'';?>" readonly required>
             </div>
           </div>
 
-          <div class="separado-field">
+          <div class="separado-field grid gap-2">
             <label for="frecuenciapago">Dia de pago</label>
-            <div class="separado-input separado-input--select2">
+            <div class="separado-input separado-input--select2 creditos-select2">
               <span><i class="fa-solid fa-calendar-day"></i></span>
               <select id="frecuenciapago" name="frecuenciapago" required>
                 <option></option>
@@ -100,7 +100,7 @@
             </div>
           </div>
 
-          <div class="separado-field col-span-full">
+          <div class="separado-field col-span-full grid gap-2">
             <label for="nota">Nota</label>
             <div class="separado-input">
               <span><i class="fa-regular fa-note-sticky"></i></span>
@@ -116,18 +116,18 @@
         </div>
       </section>
 
-      <section class="separado-card basis-1/2">
-        <div class="separado-card__header">
-          <span class="material-symbols-outlined">shopping_bag</span>
+      <section class="basis-1/2 overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:p-6">
+        <div class="mb-5 flex items-start gap-4 border-b border-slate-200 pb-4 md:items-center">
+          <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-3xl text-indigo-600">shopping_bag</span>
           <div>
-            <h2>Productos</h2>
-            <p>Agrega los articulos que quedaran reservados en el separado.</p>
+            <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Productos</h2>
+            <p class="mt-1 text-base text-slate-500">Agrega los articulos que quedaran reservados en el separado.</p>
           </div>
         </div>
 
         <div class="col-span-full mb-4">
           <label for="articulo">Articulo</label>
-          <div class="cliente-prices-select">
+          <div class="cliente-prices-select creditos-select2 creditos-select2--standalone">
             
             <select id="articulo" name="articulo" autocomplete="articulo-name" multiple="multiple" required></select>
           </div>
@@ -153,52 +153,52 @@
         </div>
 
         <div class="mt-[1.2rem] grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-[minmax(16rem,.55fr)_minmax(28rem,1fr)]">
-          <button id="btndescuento" class="separado-discount" type="button">
+          <button id="btndescuento" class="inline-flex min-h-16 w-full items-center justify-center gap-3 rounded-lg border border-cyan-300 bg-cyan-50 px-5 text-lg font-extrabold text-cyan-700" type="button">
             <i class="fa-solid fa-tag"></i>
             Descuento
           </button>
 
-          <div class="separado-totals">
-            <div>
-              <span>Sub total</span>
-              <strong id="subTotal">$ 0</strong>
+          <div class="grid gap-2 rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
+            <div class="flex items-center justify-between">
+              <span class="text-base font-bold text-slate-500">Sub total</span>
+              <strong id="subTotal" class="text-lg font-extrabold text-slate-900">$ 0</strong>
             </div>
-            <div>
-              <span>Impuesto</span>
-              <strong id="impuesto">% 0</strong>
+            <div class="flex items-center justify-between">
+              <span class="text-base font-bold text-slate-500">Impuesto</span>
+              <strong id="impuesto" class="text-lg font-extrabold text-slate-900">% 0</strong>
             </div>
-            <div>
-              <span>Descuento</span>
-              <strong id="descuento">$ 0</strong>
+            <div class="flex items-center justify-between">
+              <span class="text-base font-bold text-slate-500">Descuento</span>
+              <strong id="descuento" class="text-lg font-extrabold text-slate-900">$ 0</strong>
             </div>
-            <div class="separado-total">
-              <span>Total</span>
-              <strong id="total">$ 0</strong>
+            <div class="flex items-center justify-between border-t border-slate-200 pt-2">
+              <span class="text-base font-black text-indigo-600">Total</span>
+              <strong id="total" class="text-xl font-black text-emerald-700">$ 0</strong>
             </div>
           </div>
         </div>
 
         <div class="mt-[1.2rem] grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2 [@media(max-width:760px)]:mb-[5.5rem]">
-          <button class="separado-button separado-button--secondary" type="button" value="salir">
+          <button class="btnDialog btnDialog_secondary" type="button" value="salir">
             Salir
           </button>
-          <input id="btnCrearSeparado" class="separado-button separado-button--primary" type="submit" value="Crear">
+          <input id="btnCrearSeparado" class="btnDialog btnDialog_primary" type="submit" value="Crear">
         </div>
       </section>
     </form>
   </div>
 
-  <dialog id="miDialogoDescuento" class="separado-dialog">
-    <div class="separado-dialog__header">
-      <span class="material-symbols-outlined">sell</span>
+  <dialog id="miDialogoDescuento" class="detalledialog_sm">
+    <div class="flex items-center gap-4 border-b border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 p-6">
+      <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-3xl text-indigo-600">sell</span>
       <div>
-        <p>Descuento</p>
-        <h3>Aplicar descuento</h3>
-        <small>Define un valor o porcentaje para descontar del separado.</small>
+        <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Descuento</p>
+        <h3 class="m-0 text-2xl font-extrabold text-slate-900">Aplicar descuento</h3>
+        <small class="mt-1 block text-base text-slate-500">Define un valor o porcentaje para descontar del separado.</small>
       </div>
     </div>
 
-    <form id="formDescuento" class="separado-dialog__body">
+    <form id="formDescuento" class="grid gap-4 p-6">
       <div class="separado-segmented">
         <label>
           <input type="radio" name="tipodescuento" value="valor" checked>
@@ -210,7 +210,7 @@
         </label>
       </div>
 
-      <div class="separado-field">
+      <div class="separado-field grid gap-2">
         <label for="inputDescuento">Descuento</label>
         <div class="separado-input">
           <span><i class="fa-solid fa-percent"></i></span>
@@ -218,7 +218,7 @@
         </div>
       </div>
 
-      <div class="separado-field">
+      <div class="separado-field grid gap-2">
         <label for="inputDescuentoClave">Ingresar clave</label>
         <div class="separado-input">
           <span><i class="fa-solid fa-key"></i></span>
@@ -228,8 +228,8 @@
       </div>
 
       <div class="grid grid-cols-1 gap-4 pt-[.4rem] [@media(min-width:761px)]:grid-cols-2">
-        <button type="button" class="separado-button separado-button--secondary salir">Salir</button>
-        <button id="btnCrearAddDir" type="submit" class="separado-button separado-button--primary crearAddDir">Aplicar</button>
+        <button type="button" class="btnDialog btnDialog_secondary salir">Salir</button>
+        <button id="btnCrearAddDir" type="submit" class="btnDialog btnDialog_primary">Aplicar</button>
       </div>
     </form>
   </dialog>

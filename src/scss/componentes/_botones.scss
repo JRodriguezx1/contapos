@@ -212,3 +212,99 @@
 .rotated {
     transform: rotate(180deg);
 }
+
+// botones para modal dialog
+.btnDialog{
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: .7rem;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    gap: .65rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    min-height: 4.2rem;
+    padding: 0 1rem;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    &:focus{
+        transform: translateY(-1px);
+    }
+}
+
+.btnDialog_secondary{
+  background: #ecfeff;
+  border-color: #67e8f9;
+  color: #0e7490;
+}
+
+.btnDialog_primary{
+  background: linear-gradient(135deg, #5b52f0, var(--detalle-primary-dark, #4338ca));
+  box-shadow: 0 .75rem 1.6rem rgba(79,70,229,.2);
+  color: #fff;
+}
+
+.btnDialog_light{
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  color: #263852;
+
+  &:hover{
+    background: #f8fafc;
+    border-color: rgba(79,70,229,.35);
+    color: var(--creditos-primary);
+  }
+}
+
+// nuevos botones
+
+.nuevobtn{
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: .65rem;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.2rem;
+    font-weight: 700;
+    gap: .55rem;
+    justify-content: center;
+    margin: 0;
+    min-height: 4.2rem;
+    min-width: 12rem;
+    padding: 0 1.1rem;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    &:hover{
+        transform: translateY(-1px);
+    }
+}
+
+.nuevobtn_blueintense{
+    background: #0f3ee8;
+    color: #fff;
+}
+
+.nuevobtn_indigo{
+    background: linear-gradient(135deg, #5b52f0, var(--detalle-primary-dark));
+    box-shadow: 0 .75rem 1.6rem rgba(79,70,229,.2);
+    color: #fff;
+}
+
+.nuevobtn_turquoise{
+    background: linear-gradient(135deg, #14b8a6, #08c6bd);
+    box-shadow: 0 .75rem 1.6rem rgba(20,184,166,.18);
+    color: #fff;
+}
+
+.nuevobtn_gray{
+    background: #eef2f7;
+    border-color: #dbe3ef;
+    color: #334155;
+}
+
+.nuevobtn_light{
+    background: #fff;
+    border-color: #cbd5e1;
+    color: #263852;
+}

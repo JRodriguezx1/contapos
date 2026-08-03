@@ -49,40 +49,6 @@
     //////////////////  TABLA //////////////////////
     tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatablesToolbar);
     modernizarToolbarDataTable('#tablacuotas');
-    /*pintarPaginadorCuotas();
-    [80, 250, 600, 1000].forEach((tiempo)=>window.setTimeout(pintarPaginadorCuotas, tiempo));
-    ($('#tablacuotas') as any).on('draw.dt', pintarPaginadorCuotas);
-
-    function pintarPaginadorCuotas():void{
-      const wrapper = document.querySelector('#tablacuotas_wrapper');
-      if(!wrapper || !tablacuotas)return;
-
-      const info = (tablacuotas as any).page?.info?.();
-      const paginaActual = info ? String(info.page + 1) : '1';
-      const paginador = wrapper.querySelector('.dataTables_paginate, .dt-paging, .pagination');
-      if(!paginador)return;
-
-      paginador.querySelectorAll('.detalle-paginador-current').forEach((boton)=>boton.classList.remove('detalle-paginador-current'));
-
-      const botonesActuales = Array.from(paginador.querySelectorAll<HTMLElement>(
-        '.paginate_button.current, .paginate_button.active, .dt-paging-button.current, .dt-paging-button.active, [aria-current="page"], .page-item.active .page-link, .page-link.active, span.current, button.current, a.current'
-      ));
-
-      if(!botonesActuales.length){
-        Array.from(paginador.querySelectorAll<HTMLElement>('a, button, span')).forEach((elemento)=>{
-          const texto = elemento.textContent?.trim();
-          const esControl = elemento.classList.contains('previous') || elemento.classList.contains('next') || elemento.classList.contains('first') || elemento.classList.contains('last');
-          if(texto === paginaActual && !esControl)botonesActuales.push(elemento);
-        });
-      }
-
-      botonesActuales.forEach((elemento)=>{
-        elemento.classList.add('detalle-paginador-current');
-        elemento.setAttribute('aria-label', `Pagina ${paginaActual}`);
-        elemento.setAttribute('aria-current', 'page');
-        if(elemento.textContent?.trim() !== paginaActual)elemento.textContent = paginaActual;
-      });
-    }*/
 
     const autoPrintAbonoCredito = document.querySelector('#autoPrintAbonoCredito') as HTMLInputElement | null;
     if(autoPrintAbonoCredito?.value)

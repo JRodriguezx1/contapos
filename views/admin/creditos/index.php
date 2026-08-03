@@ -11,62 +11,62 @@
   }
 ?>
 
-<div class="creditos pb-12 [@media(max-width:640px)]:p-[.8rem]">
+<div class="creditos w-full p-3 pb-12 text-slate-900 sm:p-0">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
-  <div class="creditos-shell">
-    <section class="creditos-hero">
-      <div class="creditos-hero__content">
-        <p class="creditos-eyebrow">Cartera</p>
-        <h1>Gestion de creditos</h1>
-        <p>Administra separados, creditos activos, saldos pendientes y reportes desde una vista mas clara.</p>
+  <div class="mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-gradient-to-b from-indigo-50/60 via-white to-white p-4 shadow-sm sm:p-6">
+    <section class="flex flex-col items-stretch gap-5 rounded-lg border border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="min-w-0">
+        <p class="mb-1 text-base font-extrabold uppercase text-indigo-600">Cartera</p>
+        <h1 class="m-0 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">Gestion de creditos</h1>
+        <p class="mt-1 text-lg leading-snug text-slate-500">Administra separados, creditos activos, saldos pendientes y reportes desde una vista mas clara.</p>
       </div>
-      <div class="creditos-hero__metrics">
-        <article class="creditos-stat">
-          <span class="material-symbols-outlined">credit_score</span>
+      <div class="flex justify-start gap-4 lg:justify-end">
+        <article class="flex flex-1 items-center gap-4 rounded-lg border border-slate-200 bg-white/90 p-4">
+          <span class="material-symbols-outlined inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-3xl text-white">credit_score</span>
           <div>
-            <strong><?php echo $totalCreditos; ?></strong>
-            <small>registros</small>
+            <strong class="block whitespace-nowrap text-2xl font-black leading-none text-slate-900"><?php echo $totalCreditos; ?></strong>
+            <small class="mt-1 block text-base font-bold text-slate-500">registros</small>
           </div>
         </article>
-        <article class="creditos-stat creditos-stat--accent">
-          <span class="material-symbols-outlined">account_balance_wallet</span>
+        <article class="flex flex-1 items-center gap-4 rounded-lg border border-slate-200 bg-white/90 p-4">
+          <span class="material-symbols-outlined inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 text-3xl text-white">account_balance_wallet</span>
           <div>
-            <strong>$<?php echo number_format($saldoPendienteTotal, '0', ',', '.'); ?></strong>
-            <small>saldo pendiente</small>
+            <strong class="block whitespace-nowrap text-2xl font-black leading-none text-slate-900">$<?php echo number_format($saldoPendienteTotal, '0', ',', '.'); ?></strong>
+            <small class="mt-1 block text-base font-bold text-slate-500">saldo pendiente</small>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="creditos-actions">
-      <a class="creditos-button creditos-button--primary" href="/admin/creditos/separado">
-        <span class="material-symbols-outlined">add_2</span>
+    <section class="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white p-4">
+      <a class="btnDialog btnDialog_primary" href="/admin/creditos/separado">
+        <span class="material-symbols-outlined text-2xl">add_2</span>
         Crear separado
       </a>
-      <a class="creditos-button creditos-button--secondary" href="/admin/reportes/creditos/cuotas-creditos">
-        <span class="material-symbols-outlined">list_alt</span>
+      <a class="btnDialog btnDialog_secondary" href="/admin/reportes/creditos/cuotas-creditos">
+        <span class="material-symbols-outlined text-2xl">list_alt</span>
         Reporte cuotas
       </a>
-      <a class="creditos-button creditos-button--light" href="/admin/reportes/creditos/creditos-finalizados">
-        <span class="material-symbols-outlined">task_alt</span>
+      <a class="btnDialog btnDialog_light" href="/admin/reportes/creditos/creditos-finalizados">
+        <span class="material-symbols-outlined text-2xl">task_alt</span>
         Creditos finalizados
       </a>
-      <a class="creditos-button creditos-button--light" href="/admin/reportes/creditos/creditos-anulados">
-        <span class="material-symbols-outlined">folder_off</span>
+      <a class="btnDialog btnDialog_light" href="/admin/reportes/creditos/creditos-anulados">
+        <span class="material-symbols-outlined text-2xl">folder_off</span>
         Creditos anulados
       </a>
     </section>
 
     <div id="divmsjalerta"></div>
 
-    <section class="creditos-table-card config-table-card">
-      <div class="creditos-table-card__header">
+    <section class="creditos-table-card config-table-card grid min-w-0 gap-4 overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+      <div class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center">
         <div>
-          <h2>Historial de creditos</h2>
-          <p>Consulta cliente, valores, estado y acciones disponibles por credito.</p>
+          <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Historial de creditos</h2>
+          <p class="mt-1 text-base text-slate-500">Consulta cliente, valores, estado y acciones disponibles por credito.</p>
         </div>
-        <span class="creditos-table-card__counter"><?php echo $creditosAbiertos; ?> abiertos</span>
+        <span class="shrink-0 rounded-full bg-indigo-50 px-3 py-2 text-base font-extrabold text-indigo-600"><?php echo $creditosAbiertos; ?> abiertos</span>
       </div>
 
       <table class="display responsive nowrap tabla creditos-data-table" width="100%" id="tablaCreditos">

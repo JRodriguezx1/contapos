@@ -163,7 +163,7 @@
                 data: filteredData,
                 placeholder: "",
                 maximumSelectionLength: 1,
-                dropdownCssClass: 'adicionar-producto-select2-dropdown',
+                dropdownCssClass: 'creditos-select2-dropdown',
             });  
         }
 

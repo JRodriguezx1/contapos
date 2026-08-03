@@ -21,7 +21,6 @@ const configdatatables = {
       paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
   }
 }
-
 ///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA 25 REGISTROS /////////////////////
 const configdatatables25reg = {
   pageLength: 25,
@@ -218,7 +217,12 @@ const configdatatablesstockbajo = {
 
 const configdatatablesToolbar = {
   ...configdatatables,
-  dom: 'rtip'
+  layout: {
+    topStart: null,
+    topEnd: null,
+    bottomStart: 'info',
+    bottomEnd: 'paging'
+  }
 }
 
 function modernizarToolbarDataTable(selectorTabla:string):void{
@@ -228,7 +232,7 @@ function modernizarToolbarDataTable(selectorTabla:string):void{
     const tabla = document.querySelector(selectorTabla) as HTMLTableElement|null;
     const card = wrapper?.closest('.config-table-card') as HTMLElement|null;
     const ocultarControlesNativos = ():void => {
-      card?.querySelectorAll('.dataTables_length, .dataTables_filter').forEach((control)=>{
+      card?.querySelectorAll('.dt-length, .dt-search').forEach((control)=>{
         (control as HTMLElement).remove();
       });
     };
@@ -377,12 +381,5 @@ function modernizarBotonesExportacionCreditos(dataTable:any):void{
       menu?.classList.remove('is-open');
       trigger?.setAttribute('aria-expanded', 'false');
     });
-  });
-}
-
-function ocultarToolbarNativoCreditos():void{
-  const wrapper = document.querySelector('#tablaCreditos_wrapper');
-  wrapper?.querySelectorAll('.dataTables_length, .dataTables_filter').forEach((control)=>{
-    (control as HTMLElement).remove();
   });
 }

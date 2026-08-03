@@ -45,8 +45,16 @@
     constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
     constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
-    ($('#cliente') as any).select2({ placeholder: "Seleccionar el cliente", maximumSelectionLength: 1});
-    ($('#frecuenciapago') as any).select2({ placeholder: "Seleccionar el cliente", maximumSelectionLength: 1});
+    ($('#cliente') as any).select2({
+      placeholder: "Seleccionar el cliente",
+      maximumSelectionLength: 1,
+      dropdownCssClass: 'creditos-select2-dropdown'
+    });
+    ($('#frecuenciapago') as any).select2({
+      placeholder: "Seleccionar el dia de pago",
+      maximumSelectionLength: 1,
+      dropdownCssClass: 'creditos-select2-dropdown'
+    });
 
      document.addEventListener("click", cerrarDialogoExterno);
 
@@ -82,6 +90,7 @@
           data: filteredData,
           placeholder: "Selecciona un item",
           maximumSelectionLength: 1,
+          dropdownCssClass: 'creditos-select2-dropdown',
           /*
           templateResult: function (data:{id:string, text:string, tipo:string}) {
               // Personalizar cómo se muestra cada opción en el dropdown

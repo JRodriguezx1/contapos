@@ -43,3 +43,52 @@
     border: none;
     border-radius: .4rem;
 }
+
+// nuevo dialogo
+.detalledialog_sm{
+  background: #fff;
+  border: 0;
+  border-radius: .95rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .22);
+  color: var(--detalle-text, #14233b);
+  max-width: 56rem;
+  overflow: hidden;
+  padding: 0;
+  width: min(92vw, 42rem);
+  &::backdrop{
+    background: rgba(15, 23, 42, .48);
+    backdrop-filter: blur(2px);
+  }
+}
+
+.detalledialog_xs{
+  background: #fff;
+  border: 0;
+  border-radius: .95rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .22);
+  color: var(--detalle-text, #14233b);
+  max-width: 56rem;
+  overflow: hidden;
+  padding: 0;
+  width: min(92vw, 56rem);
+  &::backdrop{
+    background: rgba(15, 23, 42, .48);
+    backdrop-filter: blur(2px);
+  }
+}
+
+.detalledialog_md{
+  background: #fff;
+  border: 0;
+  border-radius: .95rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .22);
+  color: var(--detalle-text, #14233b);
+  max-width: 62rem;
+  overflow: hidden;
+  padding: 0;
+  width: min(92vw, 62rem);
+  &::backdrop{
+    background: rgba(15, 23, 42, .48);
+    backdrop-filter: blur(2px);
+  }
+}

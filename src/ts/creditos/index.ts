@@ -57,7 +57,12 @@
     //////////////////  TABLA //////////////////////
     let tablaCreditos = ($('#tablaCreditos') as any).DataTable({
       ...configdatatablesgenerico,
-      dom: 'Brtip',
+      layout: {
+        topStart: 'buttons',
+        topEnd: null,
+        bottomStart: 'info',
+        bottomEnd: 'paging'
+      },
       buttons: [
         {extend: 'copyHtml5', className: 'creditos-export-button creditos-export-button--copy', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-copy"></i></span><span>Copiar</span>', title: 'creditos-y-separados'},
         {extend: 'excelHtml5', className: 'creditos-export-button creditos-export-button--excel', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-file-excel"></i></span><span>Excel</span>', title: 'creditos-y-separados'},
@@ -70,8 +75,6 @@
     });
     modernizarToolbarDataTable('#tablaCreditos');
     modernizarBotonesExportacionCreditos(tablaCreditos);
-    ocultarToolbarNativoCreditos();
-    ($('#tablaCreditos') as any).on('draw.dt', ocultarToolbarNativoCreditos);
 
 
     //evento a la tabla

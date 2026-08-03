@@ -1,96 +1,97 @@
-<div class="detallecredito">
+<div class="detallecredito min-h-[calc(100vh-7rem)] w-full bg-gradient-to-b from-indigo-50/60 via-slate-50 to-slate-100 p-3 text-slate-900 sm:p-6">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
   <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
     <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
   <?php endif; ?>
   
-  <div class="detalle-credito-shell">
+  <div class="relative mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:p-6">
     <!-- Título principal -->
-    <a href="/admin/creditos" class="detalle-credito-back">
+    <a href="/admin/creditos" class="absolute left-8 top-8 z-[2] inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 p-0 text-white shadow-lg transition hover:-translate-y-0.5 hover:text-white sm:left-14 sm:top-14">
       <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
       </svg>
       <span class="sr-only">Atrás</span>
     </a>
-    <h2 class="detalle-credito-title">
+    <h2 class="flex min-h-36 items-center gap-3 rounded-lg border border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 py-6 pl-24 pr-6 text-3xl font-extrabold leading-tight text-slate-900 sm:min-h-40 sm:pl-28 sm:text-4xl">
       Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
+      <span class="ml-auto hidden shrink-0 rounded-lg border border-slate-200 bg-white/90 px-4 py-3 text-base font-extrabold uppercase text-slate-500 md:inline-flex">Vista de cartera</span>
     </h2> 
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->
-    <div class="detalle-credito-metrics">
-      <div>
-        <h3>🧾 Factura</h3>
-        <p><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">🧾 Factura</h3>
+        <p class="m-0 text-xl font-extrabold leading-tight text-slate-900"><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
       </div>
 
-      <div>
-        <h3>💰 Credito</h3>
-        <p id="creditoText">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💰 Credito</h3>
+        <p id="creditoText" class="m-0 text-xl font-extrabold leading-tight text-slate-900">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
       </div>
 
-      <div>
-        <h3>💸 Abono Inicial</h3>
-        <p id="abonoInicialText">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💸 Abono Inicial</h3>
+        <p id="abonoInicialText" class="m-0 text-xl font-extrabold leading-tight text-slate-900">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
       </div>
 
-      <div>
-        <h3>💷 Interes Total</h3>
-        <p id="interesText">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💷 Interes Total</h3>
+        <p id="interesText" class="m-0 text-xl font-extrabold leading-tight text-slate-900">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
       </div>
     </div>
 
     <!-- Detalles financieros -->
-    <div class="detalle-credito-metrics">
-      <div>
-        <h3>💲 Credito Total</h3>
-        <p id="creditoTotalText">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💲 Credito Total</h3>
+        <p id="creditoTotalText" class="m-0 text-xl font-extrabold leading-tight text-slate-900">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
       </div>
 
-      <div>
-        <h3>📅 Fecha Emisión</h3>
-        <p><?php echo $credito->fechainicio;?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">📅 Fecha Emisión</h3>
+        <p class="m-0 text-xl font-extrabold leading-tight text-slate-900"><?php echo $credito->fechainicio;?></p>
       </div>
 
-      <div>
-        <h3>🔢 Plazo</h3>
-        <p><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">🔢 Plazo</h3>
+        <p class="m-0 text-xl font-extrabold leading-tight text-slate-900"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
       </div>
 
-      <div>
-        <h3>📆 Fecha Vencimiento</h3>
-        <p> - </p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">📆 Fecha Vencimiento</h3>
+        <p class="m-0 text-xl font-extrabold leading-tight text-slate-900"> - </p>
       </div>
     </div>
 
     <!-- Estado actual -->
-    <div class="detalle-credito-status">
-      <h3>📊 Estado del Crédito</h3>
-      <div class="detalle-credito-status__content">
-        <div class="detalle-credito-status__group">
-          <span class="detalle-credito-state <?php echo $credito->idestadocreditos==1?'bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':'bg-red-100 text-red-700'); ?>">
+    <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 class="mb-4 flex items-center gap-3 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900">📊 Estado del Crédito</h3>
+      <div class="flex flex-wrap items-center gap-4">
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="inline-flex min-h-11 items-center rounded-full px-3 py-1 text-base font-extrabold <?php echo $credito->idestadocreditos==1?'bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':'bg-red-100 text-red-700'); ?>">
             <?php echo $credito->idestadocreditos==1?'Finalizado':($credito->idestadocreditos==2?'En curso':'Anulado'); ?>
           </span>
-          <span>Saldo pendiente: <strong id="saldopendientetext">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
+          <span class="text-lg font-semibold text-slate-500">Saldo pendiente: <strong id="saldopendientetext" class="font-extrabold text-slate-900">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>
-        <div class="detalle-credito-status__group">
-          <span>Cliente: <strong><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="text-lg font-semibold text-slate-500">Cliente: <strong class="font-extrabold text-slate-900"><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
         </div>
-        <div class="detalle-credito-status__group">
-          <span>Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="flex items-center gap-2 text-lg font-semibold text-slate-500">Productos: <span class="btn-xs inline-flex min-h-11 items-center rounded-full px-3 py-1 text-base font-extrabold <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></span></span>
         </div>
         <?php if($credito->idestadocreditos == 2 && $credito->idtipofinanciacion == 2):
                 if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
         ?>
-          <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="detalle-credito-add-product">+</a></div>
+          <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="inline-flex size-14 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-700 text-xl font-black text-white hover:text-white">+</a></div>
         <?php } endif;?>
       </div>
     </div>
 
     <!-- Historial de abonos -->
-    <div class="detalle-credito-table-card config-table-card">
-      <h3>📚 Historial de Abonos</h3>
+    <div class="detalle-credito-table-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 class="mb-5 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900">📚 Historial de Abonos</h3>
       <table id="tablacuotas">
         <thead>
           <tr>
@@ -128,43 +129,43 @@
     </div>
 
     <!-- Botones de acción -->
-    <div class="detalle-credito-actions">
+    <div class="flex flex-col items-stretch gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
       <?php if($credito->idestadocreditos == 2):
                 if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
       ?>
-        <button id="ajustarCredito">🔄 Ajustar Credito</button>
+        <button id="ajustarCredito" class="nuevobtn nuevobtn_light w-full sm:w-auto">🔄 Ajustar Credito</button>
       <?php } endif; ?>
-      <button id="btnDetalleProductos">📄 Productos</button>
-      <button id="btnAbonar">➕ Abonar</button>
-      <button id="btnPagarTodo">✅ Pagar Todo</button>
-      <button>⬅️ Volver</button>
+      <button id="btnDetalleProductos" class="nuevobtn nuevobtn_blueintense w-full sm:w-auto">📄 Productos</button>
+      <button id="btnAbonar" class="nuevobtn nuevobtn_indigo w-full sm:w-auto">➕ Abonar</button>
+      <button id="btnPagarTodo" class="nuevobtn nuevobtn_turquoise w-full sm:w-auto">✅ Pagar Todo</button>
+      <button class="nuevobtn nuevobtn_gray w-full sm:w-auto">⬅️ Volver</button>
     </div>
   </div>
 
 
   <!-- MODAL DETALLE PRODUCTO-->
-  <dialog id="miDialogoDetalleProducto" class="detalle-producto-dialog">
-    <div class="detalle-producto-dialog__header">
-      <div class="detalle-producto-dialog__title">
-        <span class="detalle-producto-dialog__icon">
+  <dialog id="miDialogoDetalleProducto" class="detalledialog_md">
+    <div class="flex items-start justify-between gap-4 border-b border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 p-4 sm:items-center sm:p-5">
+      <div class="flex min-w-0 items-start gap-4 sm:items-center">
+        <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-2xl text-white sm:size-16">
           <i class="fa-solid fa-boxes-stacked"></i>
         </span>
         <div>
-          <p>Productos</p>
-          <h4 id="modalDetalleProducto">Detalle producto</h4>
-          <span><?php echo count($productos); ?> articulos asociados al <?php echo $credito->idtipofinanciacion==1?'credito':'separado'; ?>.</span>
+          <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Productos</p>
+          <h4 id="modalDetalleProducto" class="m-0 text-xl font-extrabold text-slate-900 sm:text-2xl">Detalle producto</h4>
+          <span class="text-sm font-semibold text-slate-500 sm:text-base"><?php echo count($productos); ?> articulos asociados al <?php echo $credito->idtipofinanciacion==1?'credito':'separado'; ?>.</span>
         </div>
       </div>
-      <button type="button" class="detalle-producto-dialog__close" aria-label="Cerrar detalle de producto">
+      <button type="button" class="inline-flex size-12 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-xl text-slate-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 sm:size-14" aria-label="Cerrar detalle de producto">
           <i id="btnXCerrarModalDetalleProducto" class="fa-solid fa-xmark"></i>
       </button>
     </div>
     <div id="divmsjalerta1"></div>
     <!-- TABLA DE PRODUCTOS -->
-    <div class="detalle-producto-dialog__body">
-    <div class="detalle-producto-dialog__table-wrap">
+    <div class="p-4 sm:p-5">
+    <div class="overflow-visible rounded-lg border border-slate-200 bg-white p-3 sm:overflow-x-auto sm:bg-slate-50">
         <table id="tabladetalleProducto"
-            class="detalle-producto-dialog__table">
+            class="detalle-producto-dialog__table w-full min-w-0 border-separate border-spacing-0 sm:min-w-[58rem]">
             <thead>
                 <tr>
                     <th>Producto</th>
