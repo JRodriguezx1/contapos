@@ -253,7 +253,7 @@
   &:hover{
     background: #f8fafc;
     border-color: rgba(79,70,229,.35);
-    color: var(--creditos-primary);
+    color: v.$color-primary;
   }
 }
 
@@ -286,7 +286,7 @@
 }
 
 .nuevobtn_indigo{
-    background: linear-gradient(135deg, #5b52f0, var(--detalle-primary-dark));
+    background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
     box-shadow: 0 .75rem 1.6rem rgba(79,70,229,.2);
     color: #fff;
 }

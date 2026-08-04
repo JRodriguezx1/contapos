@@ -83,48 +83,10 @@
     
     let companiesAll:companiesDian[];
 
-    function escapeHtmlDian(valor:unknown):string{
-      return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      }[caracter] as string));
-    }
-
-    function filaCompañiaDian(id:string, businessName:unknown, identificationNumber:unknown, idsoftware:unknown):string{
-      const idSeguro = escapeHtmlDian(id);
-      const nombreSeguro = escapeHtmlDian(businessName);
-      const documentoSeguro = escapeHtmlDian(identificationNumber);
-      const softwareSeguro = escapeHtmlDian(idsoftware);
-
-      return `
-        <tr id="company${documentoSeguro}">
-          <td>${idSeguro}</td>
-          <td>
-            <span class="config-dian-company-name">
-              <span class="config-dian-company-name__icon"><i class="fa-solid fa-building-user"></i></span>
-              <span>${nombreSeguro}</span>
-            </span>
-          </td>
-          <td><span class="config-table-pill config-table-pill--document">${documentoSeguro}</span></td>
-          <td><span class="config-table-pill config-table-pill--software">${softwareSeguro}</span></td>
-          <td class="accionestd">
-            <div class="acciones-btns">
-              <button id="${idSeguro}" class="config-dian-delete" type="button" title="Eliminar compañia">
-                <span class="material-symbols-outlined eliminarcompañia">delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>`;
-    }
-
     (async()=>{
       companiesAll = await getCompañiasLocal<{id:string, identification_number:string, business_name:string, idsoftware:string, token:string}>();
       POS.companiesAll = companiesAll; //exponer globalmente
     })();
-
 
 
     ///////////////////-------    crear compañia     --------///////////////////
@@ -392,6 +354,42 @@
           } catch (error) {
               console.log(error);
           }
+    }
+
+    function filaCompañiaDian(id:string, businessName:unknown, identificationNumber:unknown, idsoftware:unknown):string{
+      const idSeguro = escapeHtmlDian(id);
+      const nombreSeguro = escapeHtmlDian(businessName);
+      const documentoSeguro = escapeHtmlDian(identificationNumber);
+      const softwareSeguro = escapeHtmlDian(idsoftware);
+      return `
+        <tr id="company${documentoSeguro}">
+          <td>${idSeguro}</td>
+          <td>
+            <span class="config-dian-company-name">
+              <span class="config-dian-company-name__icon"><i class="fa-solid fa-building-user"></i></span>
+              <span>${nombreSeguro}</span>
+            </span>
+          </td>
+          <td><span class="config-table-pill config-table-pill--document">${documentoSeguro}</span></td>
+          <td><span class="config-table-pill config-table-pill--software">${softwareSeguro}</span></td>
+          <td class="accionestd">
+            <div class="acciones-btns">
+              <button id="${idSeguro}" class="config-dian-delete" type="button" title="Eliminar compañia">
+                <span class="material-symbols-outlined eliminarcompañia">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>`;
+    }
+
+    function escapeHtmlDian(valor:unknown):string{
+      return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[caracter] as string));
     }
     
     //Tabla lista de compañias
