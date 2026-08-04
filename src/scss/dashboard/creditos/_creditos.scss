@@ -162,7 +162,7 @@
 }
 
 .detalle-abono-dialog__switch input:checked + .detalle-abono-dialog__toggle{
-  background: linear-gradient(135deg, #5b52f0, var(v.$color-primary-dark, #4338ca));
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
   box-shadow: 0 .45rem 1rem rgba(79,70,229,.2);
 }
 
@@ -205,7 +205,7 @@
   tbody td{
     border-bottom: 1px solid #edf2f7 !important;
     border-top: 1px solid #edf2f7 !important;
-    color: var(v.$color-text);
+    color: v.$color-text;
     font-size: 1.08rem;
     padding: 1rem !important;
     vertical-align: middle;
@@ -214,7 +214,7 @@
   tbody td:first-child{
     border-left: 1px solid #edf2f7 !important;
     border-radius: .7rem 0 0 .7rem;
-    color: var(v.$color-muted);
+    color: v.$color-muted;
     font-weight: 800;
   }
 
@@ -251,7 +251,7 @@
   align-items: center;
   background: rgba(79,70,229,.10);
   border-radius: .55rem;
-  color: var(v.$color-primary);
+  color: v.$color-primary;
   display: inline-flex;
   flex: 0 0 3.4rem;
   height: 3.4rem;
@@ -274,7 +274,7 @@
 
 .creditos-pill--credit{
   background: #eef2ff;
-  color: var(v.$color-primary);
+  color: v.$color-primary;
 }
 
 .creditos-pill--separado,
@@ -395,7 +395,7 @@
 
   &:focus-within{
     background: #fff;
-    border-color: var(v.$color-primary);
+    border-color: v.$color-primary;
     box-shadow: 0 0 0 .25rem rgba(79, 70, 229, .12);
   }
 
@@ -403,7 +403,7 @@
     align-items: center;
     background: #eef2ff;
     border-right: 1px solid #cbd5e1;
-    color: var(v.$color-primary);
+    color: v.$color-primary;
     display: inline-flex;
     flex: 0 0 4.6rem;
     font-size: 1.55rem;
@@ -415,7 +415,7 @@
   textarea{
     background: transparent;
     border: 0;
-    color: var(v.$color-text);
+    color: v.$color-text;
     flex: 1;
     font-size: 1.12rem;
     font-weight: 600;
@@ -610,7 +610,7 @@
 // estilos del selector segmentado del modal de descuento
 .separado-segmented{
   background: #f8fafc;
-  border: 1px solid var(v.$color-border);
+  border: 1px solid v.$color-border;
   border-radius: .75rem;
   display: grid;
   gap: .55rem;
@@ -636,7 +636,7 @@
     &:hover{
       background: #fff;
       border-color: rgba(79,70,229,.18);
-      color: var(v.$color-primary);
+      color: v.$color-primary;
     }
   }
 
@@ -656,7 +656,7 @@
       align-items: center;
       background: #eef2ff;
       border-radius: .5rem;
-      color: var(v.$color-primary);
+      color: v.$color-primary;
       content: "\f02b";
       display: inline-flex;
       font-family: "Font Awesome 6 Free";
@@ -673,18 +673,18 @@
   }
 
   input:checked + span{
-    color: var(v.$color-primary);
+    color: v.$color-primary;
   }
 
   label:has(input:checked){
     background: #fff;
     border-color: rgba(79,70,229,.32);
     box-shadow: 0 .65rem 1.4rem rgba(79,70,229,.10);
-    color: var(v.$color-primary);
+    color: v.$color-primary;
     transform: translateY(-1px);
 
     span::before{
-      background: linear-gradient(135deg, #5b52f0, var(v.$color-primary-dark));
+      background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
       color: #fff;
     }
   }
@@ -692,12 +692,6 @@
 // fin estilos del selector segmentado del modal de descuento
 
 // estilos de campos, Select2 y tabla de adicionar productos
-.adicionarProducto{
-  --adicionar-primary: #4f46e5;
-  --adicionar-border: #dbe3ef;
-  --adicionar-text: #14233b;
-}
-
 .adicionar-producto-field{
   label{
     color: #334155;
@@ -719,7 +713,7 @@
 
   &:focus-within{
     background: #fff;
-    border-color: var(--adicionar-primary);
+    border-color: v.$color-primary;
     box-shadow: 0 0 0 .25rem rgba(79, 70, 229, .12);
   }
 
@@ -727,7 +721,7 @@
     align-items: center;
     background: #eef2ff;
     border-right: 1px solid #cbd5e1;
-    color: var(--adicionar-primary);
+    color: v.$color-primary;
     display: inline-flex;
     flex: 0 0 4.6rem;
     font-size: 1.5rem;
@@ -738,7 +732,7 @@
   select{
     background: transparent;
     border: 0;
-    color: var(--adicionar-text);
+    color: v.$color-text;
     flex: 1;
     font-size: 1.12rem;
     font-weight: 650;
@@ -814,7 +808,7 @@
   }
 
   &.is-select2-open .select2-search__field{
-    color: var(--adicionar-text) !important;
+    color: v.$color-text !important;
     cursor: text;
 
     &::placeholder{
@@ -824,7 +818,7 @@
 }
 
 .adicionar-producto-table-wrap{
-  border: 1px solid var(--adicionar-border);
+  border: 1px solid v.$color-border;
   border-radius: .8rem;
   overflow-x: auto;
   scrollbar-color: rgba(79,70,229,.55) #eef2ff;
@@ -859,7 +853,7 @@
 
   tbody td{
     border-top: 1px solid #edf2f7;
-    color: var(--adicionar-text);
+    color: v.$color-text;
     font-size: 1.18rem;
     line-height: 1.35;
     padding: .85rem 1rem;

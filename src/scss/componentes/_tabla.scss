@@ -93,7 +93,7 @@
 .detallecredito #tablacuotas tbody td{
   border-bottom: 1px solid #edf2f7 !important;
   border-top: 1px solid #edf2f7 !important;
-  color: var(v.$color-text);
+  color: v.$color-text;
   font-size: 1.06rem;
   padding: 1rem !important;
   text-align: center;
@@ -103,7 +103,7 @@
 .detallecredito #tablacuotas tbody td:first-child{
   border-left: 1px solid #edf2f7 !important;
   border-radius: .7rem 0 0 .7rem;
-  color: var(v.$color-muted);
+  color: v.$color-muted;
   font-weight: 850;
 }
 

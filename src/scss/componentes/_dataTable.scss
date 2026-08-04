@@ -184,7 +184,7 @@
 
   .creditos-export-trigger{
     align-items: center;
-    background: linear-gradient(135deg, #5b52f0, var(v.$color-primary-dark));
+    background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
     border: 0;
     border-radius: .65rem;
     box-shadow: 0 .7rem 1.5rem rgba(79,70,229,.18);
@@ -266,7 +266,7 @@
     &:hover,
     &:focus{
       background: #eef2ff;
-      color: var(v.$color-primary);
+      color: v.$color-primary;
     }
   }
 
@@ -274,7 +274,7 @@
     align-items: center;
     background: #eef2ff;
     border-radius: .55rem;
-    color: var(v.$color-primary);
+    color: v.$color-primary;
     display: inline-flex;
     height: 2.7rem;
     justify-content: center;
