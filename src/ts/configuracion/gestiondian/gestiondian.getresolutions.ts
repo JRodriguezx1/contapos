@@ -6,13 +6,7 @@
     const miDialogoGetResolucion = document.querySelector('#miDialogoGetResolucion') as any;
 
     function escapeHtmlDianResolution(valor:unknown):string{
-      return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      }[caracter] as string));
+      return String(valor??'').replace(/[&<>"']/g, caracter => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[caracter] as string));
     }
 
     ///////    CONSULTAR RESOLUCIONES   ///////

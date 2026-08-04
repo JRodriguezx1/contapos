@@ -18,47 +18,6 @@
 
     let impresoras:printersApi[]=[], unPrinter:printersApi|undefined;
 
-    function escapeHtmlImpresora(valor:any):string{
-      return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      }[caracter] as string));
-    }
-
-    function renderNombreImpresora(nombre:any):string{
-      return `<span class="config-printer-name">
-        <span class="config-printer-name__icon"><i class="fa-solid fa-print"></i></span>
-        <span>${escapeHtmlImpresora(nombre)}</span>
-      </span>`;
-    }
-
-    function renderPillImpresora(valor:any, modificador:string):string{
-      return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlImpresora(valor)}</span>`;
-    }
-
-    function renderEstadoImpresora(estado:any):string{
-      const activa = String(estado) === '1' || String(estado).toLowerCase() === 'activa' || String(estado).toLowerCase() === 'activo';
-      return `<span class="config-table-status ${activa ? 'config-table-status--active' : 'config-table-status--inactive'}">${activa ? 'Activa' : 'Inactiva'}</span>`;
-    }
-
-    function filaImpresora(numero:number, impresora:any):any[]{
-      return [
-        numero,
-        renderNombreImpresora(impresora?.nombre),
-        renderPillImpresora(impresora?.nombrecompartido, 'shared'),
-        renderPillImpresora(impresora?.estacion, 'station'),
-        renderPillImpresora(`${impresora?.mm ?? ''} mm`, 'paper'),
-        renderEstadoImpresora(impresora?.estado),
-        `<div class="acciones-btns" id="${escapeHtmlImpresora(impresora?.id)}" data-impresora="${escapeHtmlImpresora(impresora?.nombre)}">
-            <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button class="btn-md btn-red eliminarImpresora"><i class="fa-solid fa-trash-can"></i></button>
-        </div>`
-      ];
-    }
-
     (async ()=>{
       try {
           const url = "/admin/api/allPrinters"; //llamado a la API REST y se trae todos las impresoras
@@ -152,6 +111,46 @@
         })();//cierre de async()
     });
 
+    function filaImpresora(numero:number, impresora:any):any[]{
+      return [
+        numero,
+        renderNombreImpresora(impresora?.nombre),
+        renderPillImpresora(impresora?.nombrecompartido, 'shared'),
+        renderPillImpresora(impresora?.estacion, 'station'),
+        renderPillImpresora(`${impresora?.mm ?? ''} mm`, 'paper'),
+        renderEstadoImpresora(impresora?.estado),
+        `<div class="acciones-btns" id="${escapeHtmlImpresora(impresora?.id)}" data-impresora="${escapeHtmlImpresora(impresora?.nombre)}">
+            <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn-md btn-red eliminarImpresora"><i class="fa-solid fa-trash-can"></i></button>
+        </div>`
+      ];
+    }
+
+    function renderNombreImpresora(nombre:any):string{
+      return `<span class="config-printer-name">
+        <span class="config-printer-name__icon"><i class="fa-solid fa-print"></i></span>
+        <span>${escapeHtmlImpresora(nombre)}</span>
+      </span>`;
+    }
+
+    function renderPillImpresora(valor:any, modificador:string):string{
+      return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlImpresora(valor)}</span>`;
+    }
+
+    function renderEstadoImpresora(estado:any):string{
+      const activa = String(estado) === '1' || String(estado).toLowerCase() === 'activa' || String(estado).toLowerCase() === 'activo';
+      return `<span class="config-table-status ${activa ? 'config-table-status--active' : 'config-table-status--inactive'}">${activa ? 'Activa' : 'Inactiva'}</span>`;
+    }
+
+    function escapeHtmlImpresora(valor:any):string{
+      return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[caracter] as string));
+    }
 
     ////////////////////  Eliminar impresora  //////////////////////
     function eliminarImpresora(e:Event){

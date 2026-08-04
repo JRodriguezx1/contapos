@@ -14,43 +14,6 @@
   
       let tarifas:tarifasapi[]=[], unatarifa:tarifasapi|undefined;
 
-      function escapeHtmlTarifa(valor:any):string{
-        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        }[caracter] as string));
-      }
-
-      function formatoMonedaTarifa(valor:any):string{
-        return '$' + Number(valor ?? 0).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      }
-
-      function renderNombreTarifa(nombre:any):string{
-        return `<span class="config-tarifa-name">
-          <span class="config-tarifa-name__icon"><i class="fa-solid fa-percent"></i></span>
-          <span>${escapeHtmlTarifa(nombre)}</span>
-        </span>`;
-      }
-
-      function renderPillTarifa(valor:any, modificador:string):string{
-        return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlTarifa(valor)}</span>`;
-      }
-
-      function filaTarifa(numero:number, tarifa:any):any[]{
-        return [
-          numero,
-          renderNombreTarifa(tarifa?.nombre),
-          renderPillTarifa(formatoMonedaTarifa(tarifa?.valor), 'money'),
-          `<div class="acciones-btns" id="${escapeHtmlTarifa(tarifa?.id)}" data-tarifa="${escapeHtmlTarifa(tarifa?.nombre)}">
-              <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button class="btn-md btn-red eliminarTarifa"><i class="fa-solid fa-trash-can"></i></button>
-          </div>`
-        ];
-      }
-
       (async ()=>{
         try {
             const url = "/admin/api/alltarifas"; //llamado a la API REST y se trae todos las tarifas
@@ -139,6 +102,24 @@
           }
         })();//cierre de async()
     });
+
+    function filaTarifa(numero:number, tarifa:any):any[]{
+      return [
+        numero,
+        `<span class="config-tarifa-name">
+          <span class="config-tarifa-name__icon"><i class="fa-solid fa-percent"></i></span><span>${tarifa?.nombre}</span>
+        </span>`,
+        renderPillTarifa(tarifa?.valor),
+        `<div class="acciones-btns" id="${tarifa?.id}" data-tarifa="${tarifa?.nombre}">
+            <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn-md btn-red eliminarTarifa"><i class="fa-solid fa-trash-can"></i></button>
+        </div>`
+      ];
+    }
+
+    function renderPillTarifa(valor:any):string{
+        return `<span class="config-table-pill config-table-pill--money">$${ Number(valor ?? 0).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
+    }
 
 
     ////////////////////  Eliminar tarifa  //////////////////////

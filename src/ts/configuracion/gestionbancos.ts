@@ -17,40 +17,6 @@
   
       let bancos:bancosapi[]=[], unbanco:bancosapi|undefined;
 
-      function escapeHtmlBanco(valor:any):string{
-        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        }[caracter] as string));
-      }
-
-      function renderNombreBanco(nombre:any):string{
-        return `<span class="config-bank-name">
-          <span class="config-bank-name__icon"><i class="fa-solid fa-building-columns"></i></span>
-          <span>${escapeHtmlBanco(nombre)}</span>
-        </span>`;
-      }
-
-      function renderPillBanco(valor:any, modificador:string):string{
-        return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlBanco(valor)}</span>`;
-      }
-
-      function filaBanco(numero:number, banco:any):any[]{
-        return [
-          numero,
-          renderNombreBanco(banco?.nombre),
-          renderPillBanco(banco?.numerocuenta, 'account'),
-          renderPillBanco(banco?.created_at, 'date'),
-          `<div class="acciones-btns" id="${escapeHtmlBanco(banco?.id)}" data-banco="${escapeHtmlBanco(banco?.nombre)}">
-              <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button class="btn-md btn-red eliminarBanco"><i class="fa-solid fa-trash-can"></i></button>
-          </div>`
-        ];
-      }
-
       (async ()=>{
         try {
             const url = "/admin/api/allbancos"; //llamado a la API REST y se trae todos los bancos
@@ -140,6 +106,30 @@
           }
         })();//cierre de async()
     });
+
+    function filaBanco(numero:number, banco:any):any[]{
+      return [
+        numero,
+        renderNombreBanco(banco?.nombre),
+        renderPillBanco(banco?.numerocuenta, 'account'),
+        renderPillBanco(banco?.created_at, 'date'),
+        `<div class="acciones-btns" id="${banco?.id}" data-banco="${banco?.nombre}">
+            <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn-md btn-red eliminarBanco"><i class="fa-solid fa-trash-can"></i></button>
+        </div>`
+      ];
+    }
+
+    function renderNombreBanco(nombre:any):string{
+        return `<span class="config-bank-name">
+                  <span class="config-bank-name__icon"><i class="fa-solid fa-building-columns"></i></span>
+                  <span>${nombre}</span>
+                </span>`;
+    }
+
+    function renderPillBanco(valor:any, modificador:string):string{
+      return `<span class="config-table-pill config-table-pill--${modificador}">${valor}</span>`;
+    }
 
 
     ////////////////////  Eliminar banco  //////////////////////
