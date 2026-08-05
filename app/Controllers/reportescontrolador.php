@@ -537,10 +537,13 @@ class reportescontrolador{
       $sql = "SELECT COALESCE(e.nombre, 'Negocio') as emisor, COUNT(t.id) AS numventas, SUM(t.subtotal) as subtotal, SUM(t.base) as base,
               SUM(t.valorimpuestototal) as impuesto, SUM(t.descuento) as descuento, SUM(t.total) AS totalventas, SUM(t.totalMediosPago) AS ingresos
               FROM (
-                  SELECT f.id, f.idemisor, f.subtotal, f.base, f.valorimpuestototal, f.descuento, f.total, SUM(fmp.valor) AS totalMediosPago
-                  FROM facturas f LEFT JOIN factmediospago fmp ON f.id = fmp.id_factura
-                  WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
-                  GROUP BY f.id
+                  SELECT f.id, c.idemisor, f.subtotal, f.base, f.valorimpuestototal, f.descuento, f.total, SUM(fmp.valor) AS totalMediosPago
+                  FROM facturas f
+                  LEFT JOIN factmediospago fmp ON f.id = fmp.id_factura
+                  LEFT JOIN cierrescajas cc ON fmp.cierrecajaid = cc.id
+                  LEFT JOIN caja c ON cc.idcaja = c.id
+                  WHERE fmp.created_at BETWEEN '$fechainicio' AND '$fechafin' AND f.estado = 'Paga' AND f.id_sucursal = $idsucursal
+                  GROUP BY f.id, c.idemisor
               ) t
               LEFT JOIN emisores e ON e.id = t.idemisor
               GROUP BY e.id;";
@@ -734,7 +737,17 @@ class reportescontrolador{
               FROM movimientos_caja mc
               /* Medios de pago */
               LEFT JOIN factmediospago fmp
-                    ON(mc.fk_tipo_documento = 1 AND mc.id_documento = fmp.id_factura)
+                    ON(
+                      mc.fk_tipo_documento = 1
+                      AND mc.id_documento = fmp.id_factura
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM movimientos_caja mc_cuota
+                          WHERE mc_cuota.fk_tipo_documento = 2
+                            AND mc_cuota.id_documento = fmp.idcuota
+                            AND mc_cuota.id_sucursal = mc.id_sucursal
+                      )
+                    )
                     OR(mc.fk_tipo_documento = 2 AND mc.id_documento = fmp.idcuota)
 
               LEFT JOIN mediospago mp ON mp.id = fmp.idmediopago
