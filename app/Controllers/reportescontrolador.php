@@ -547,6 +547,72 @@ class reportescontrolador{
               ) t
               LEFT JOIN emisores e ON e.id = t.idemisor
               GROUP BY e.id;";
+
+              /*$sql = "SELECT
+    COALESCE(e.nombre, 'Negocio') AS emisor,
+    SUM(r.numventas) AS numventas,
+    SUM(r.subtotal) AS subtotal,
+    SUM(r.base) AS base,
+    SUM(r.impuesto) AS impuesto,
+    SUM(r.descuento) AS descuento,
+    SUM(r.totalventas) AS totalventas,
+    SUM(r.ingresos) AS ingresos
+FROM (
+    /*
+     * VENTAS REALIZADAS EN EL PERÍODO
+     *
+     * Incluye ventas de contado y ventas a crédito,
+     * aunque no tengan registros en factmediospago.
+     */
+    /*SELECT
+        f.idemisor,
+        COUNT(f.id) AS numventas,
+        SUM(f.subtotal) AS subtotal,
+        SUM(f.base) AS base,
+        SUM(f.valorimpuestototal) AS impuesto,
+        SUM(f.descuento) AS descuento,
+        SUM(f.total) AS totalventas,
+        0 AS ingresos
+    FROM facturas f
+    WHERE f.fechapago BETWEEN '$fechainicio' AND '$fechafin'
+      AND f.estado = 'Paga'
+      AND f.id_sucursal = $idsucursal
+    GROUP BY f.idemisor
+
+    UNION ALL
+
+    /*
+     * DINERO RECIBIDO EN EL PERÍODO
+     *
+     * Incluye pagos de contado y abonos de facturas
+     * creadas en fechas anteriores.
+     */
+    /*SELECT
+        c.idemisor,
+        0 AS numventas,
+        0 AS subtotal,
+        0 AS base,
+        0 AS impuesto,
+        0 AS descuento,
+        0 AS totalventas,
+        SUM(fmp.valor) AS ingresos
+    FROM factmediospago fmp
+    INNER JOIN facturas f
+        ON f.id = fmp.id_factura
+    LEFT JOIN cierrescajas cc
+        ON cc.id = fmp.cierrecajaid
+    LEFT JOIN caja c
+        ON c.id = cc.idcaja
+    WHERE fmp.created_at BETWEEN '$fechainicio' AND '$fechafin'
+      AND f.id_sucursal = $idsucursal
+    GROUP BY c.idemisor
+) r
+LEFT JOIN emisores e
+    ON e.id = r.idemisor
+GROUP BY
+    r.idemisor,
+    e.nombre;";*/
+
       $ingresos = productos::camposJoinObj($sql);
 
 
