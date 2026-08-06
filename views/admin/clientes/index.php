@@ -1,35 +1,35 @@
 <div class="box clientes">
-  <div class="clientes-shell">
+  
     <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
-    <header class="clientes-hero">
+    <header class="flex flex-col items-stretch gap-5 rounded-lg border border-slate-200 bg-gradient-to-br from-violet-100 to-cyan-50 mb-6 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
       <div>
-        <p class="clientes-eyebrow">CRM</p>
-        <h1>Gesti&oacute;n de clientes</h1>
-        <p>Administra clientes, direcciones, estad&iacute;sticas y precios personalizados desde una vista m&aacute;s clara.</p>
+        <p class="mb-1 text-base font-extrabold uppercase text-indigo-600">CRM</p>
+        <h1 class="m-0 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">Gesti&oacute;n de clientes</h1>
+        <p class="mt-1 text-lg leading-snug text-slate-500">Administra clientes, direcciones, estad&iacute;sticas y precios personalizados desde una vista m&aacute;s clara.</p>
       </div>
 
-      <div class="clientes-hero__badge">
-        <span><i class="fa-solid fa-users"></i></span>
+      <div class="flex justify-start gap-4 lg:justify-end rounded-lg border border-slate-200 bg-white/90 p-4">
+        <span class="material-symbols-outlined inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-3xl text-white"><i class="fa-solid fa-users"></i></span>
         <div>
-          <strong><?php echo count($clientes); ?></strong>
-          <small>clientes registrados</small>
+          <strong class="block whitespace-nowrap text-2xl font-black leading-none text-slate-900"><?php echo count($clientes); ?></strong>
+          <small class="mt-1 block text-base font-bold text-slate-500">clientes registrados</small>
         </div>
       </div>
     </header>
 
-    <section class="clientes-toolbar">
-      <button id="crearCliente" class="clientes-button clientes-button--primary" type="button">
+    <section class="flex flex-wrap items-center gap-3 mb-6 rounded-lg border border-slate-200 bg-white p-4">
+      <button id="crearCliente" class="btnDialog btnDialog_primary" type="button">
         <i class="fa-solid fa-user-plus"></i>
         Crear cliente
       </button>
 
-      <button id="crearDireccion" class="clientes-button clientes-button--secondary" type="button">
+      <button id="crearDireccion" class="btnDialog btnDialog_secondary" type="button">
         <i class="fa-solid fa-location-dot"></i>
         Crear direcci&oacute;n
       </button>
 
-      <a id="marketing" href="/admin/clientes/marketing" class="clientes-button clientes-button--light">
+      <a id="marketing" href="/admin/clientes/marketing" class="btnDialog btnDialog_light">
         <i class="fa-solid fa-bullhorn"></i>
         Marketing
       </a>
@@ -319,5 +319,5 @@
         </div>
       </form>
     </dialog>
-  </div>
+
 </div>
