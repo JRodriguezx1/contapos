@@ -35,15 +35,15 @@
       </a>
     </section>
 
-    <section class="clientes-table-card config-table-card">
-      <div class="clientes-table-card__header">
+    <section class="creditos-table-card config-table-card">
+      <div class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center">
         <div>
-          <h2>Directorio de clientes</h2>
-          <p>Consulta datos de contacto y gestiona acciones r&aacute;pidas por cliente.</p>
+          <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Directorio de clientes</h2>
+          <p class="mt-1 text-base text-slate-500" >Consulta datos de contacto y gestiona acciones r&aacute;pidas por cliente.</p>
         </div>
       </div>
 
-      <table class="display responsive nowrap tabla clientes-data-table" width="100%" id="tablaClientes">
+      <table class="display responsive nowrap tabla creditos-data-table" width="100%" id="tablaClientes">
         <thead>
           <tr>
             <th>id</th>
@@ -61,11 +61,11 @@
               <tr>
                 <td><?php echo $cliente->id; ?></td>
                 <td>
-                  <span class="clientes-table-pill clientes-table-pill--document"><?php echo $cliente->identificacion; ?></span>
+                  <span class="creditos-pill creditos-pill--document"><?php echo $cliente->identificacion; ?></span>
                 </td>
                 <td>
-                  <span class="clientes-name">
-                    <span class="clientes-name__icon"><i class="fa-solid fa-user"></i></span>
+                  <span class="creditos-client">
+                    <span class="creditos-client__icon"><i class="fa-solid fa-user"></i></span>
                     <span><?php echo $cliente->nombre; ?></span>
                   </span>
                 </td>
