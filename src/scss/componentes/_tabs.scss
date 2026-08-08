@@ -1,7 +1,7 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.tabs{
+.tabs{  //se usa en la tabulacion en vista configuracion
   text-align: center;
   .tabs-content{
       display: inline-flex;
