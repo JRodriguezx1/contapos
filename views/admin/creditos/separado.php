@@ -33,11 +33,11 @@
         </div>
 
         <div class="grid grid-cols-1 gap-4 [@media(min-width:761px)]:grid-cols-2">
-          <div class="col-span-full cliente-prices-field grid min-w-0 gap-2">
+          <div class="form-field col-span-full">
             <label for="cliente">Cliente</label>
-            <div class="cliente-prices-select creditos-select2 creditos-select2--standalone">
+            <div class="form-input select2-field select2-field--with-icon select2-field--custom-placeholder" data-placeholder="Buscar cliente">
+              <span><i class="fa-solid fa-magnifying-glass"></i></span>
               <select id="cliente" name="cliente_id" multiple="multiple" required>
-                <option></option>
                 <?php foreach($clientes as $cliente): ?>
                   <?php if($cliente->id>1): ?>
                     <option value="<?php echo $cliente->id;?>"><?php echo $cliente->nombre.' '.$cliente->apellido;?></option>
@@ -47,9 +47,9 @@
             </div>
           </div>
 
-          <div class="separado-field grid gap-2">
+          <div class="form-field">
             <label for="abonoinicial">Abono inicial</label>
-            <div class="separado-input">
+            <div class="form-input">
               <span><i class="fa-solid fa-dollar-sign"></i></span>
               <input
                 id="abonoinicial"
@@ -63,9 +63,9 @@
             </div>
           </div>
 
-          <div class="separado-field grid gap-2">
+          <div class="form-field">
             <label for="cantidadcuotas">Cantidad de cuotas</label>
-            <div class="separado-input">
+            <div class="form-input">
               <span><i class="fa-solid fa-calendar-check"></i></span>
               <input
                 id="cantidadcuotas"
@@ -79,19 +79,19 @@
             </div>
           </div>
 
-          <div class="separado-field grid gap-2">
+          <div class="form-field">
             <label for="montocuota">Valor de la cuota</label>
-            <div class="separado-input">
+            <div class="form-input">
               <span><i class="fa-solid fa-receipt"></i></span>
               <input id="montocuota" type="text" placeholder="Valor de la cuota" name="montocuota" value="<?php echo $credito->montocuota??'';?>" readonly required>
             </div>
           </div>
 
-          <div class="separado-field grid gap-2">
+          <div class="form-field">
             <label for="frecuenciapago">Dia de pago</label>
-            <div class="separado-input separado-input--select2 creditos-select2">
+            <div class="form-input select2-field select2-field--with-icon select2-field--custom-placeholder" data-placeholder="Seleccionar dia de pago">
               <span><i class="fa-solid fa-calendar-day"></i></span>
-              <select id="frecuenciapago" name="frecuenciapago" required>
+              <select id="frecuenciapago" name="frecuenciapago" multiple="multiple" required>
                 <option></option>
                 <?php for($dia = 1; $dia <= 30; $dia++): ?>
                   <option value="<?php echo $dia; ?>"><?php echo $dia; ?></option>
@@ -100,9 +100,9 @@
             </div>
           </div>
 
-          <div class="separado-field col-span-full grid gap-2">
+          <div class="form-field col-span-full">
             <label for="nota">Nota</label>
-            <div class="separado-input">
+            <div class="form-input">
               <span><i class="fa-regular fa-note-sticky"></i></span>
               <input
                 id="nota"
@@ -125,10 +125,10 @@
           </div>
         </div>
 
-        <div class="col-span-full mb-4">
+        <div class="form-field col-span-full">
           <label for="articulo">Articulo</label>
-          <div class="cliente-prices-select creditos-select2 creditos-select2--standalone">
-            
+          <div class="form-input select2-field select2-field--with-icon select2-field--custom-placeholder" data-placeholder="Buscar articulo">
+            <span><i class="fa-solid fa-magnifying-glass"></i></span>
             <select id="articulo" name="articulo" autocomplete="articulo-name" multiple="multiple" required></select>
           </div>
         </div>

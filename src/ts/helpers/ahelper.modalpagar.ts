@@ -86,7 +86,7 @@
         }
         if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1');
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
-        ocultarMensajeMetodosPagoSiCorresponde();
+        ocultarMensajeMetodosPago();
         if(POS.tipoventa == "Credito")calculoTasaInteres();
         if(POS.tipoventa == "Contado")initvaloresCredito();
       },
@@ -120,55 +120,45 @@
     }
 
     
-    function ocultarMensajeMetodosPagoSiCorresponde(){
+    function ocultarMensajeMetodosPago(forzar = false){
       const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
       if(!mensaje)return;
-
       let totalMediosPago = 0;
       for(const value of POS.mapMediospago.values())totalMediosPago += Number(value);
-
-      if(totalMediosPago > 0){
-        mensaje.classList.add('hidden');
-        mensaje.classList.remove('payment-methods-required-message--visible');
-        document.querySelector('.payment-methods-panel')?.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
-      }
+      const abonoCompleto = totalMediosPago >= valoresCredito.abonoinicial;
+      if(!forzar && !abonoCompleto)return;
+      mensaje.classList.remove('show');
+      document.querySelector('.payment-methods-panel')?.classList.remove('payment-methods-panel--attention');
     }
 
-    function ocultarMensajeMetodosPago(){
-      const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
-      if(!mensaje)return;
-
-      mensaje.classList.add('hidden');
-      mensaje.classList.remove('payment-methods-required-message--visible');
-      document.querySelector('.payment-methods-panel')?.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
-    }
     function mostrarMensajeMetodosPago(){
       const alertaSuperior = document.querySelector('#divmsjalertaprocesarpago') as HTMLElement;
       const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
       const panel = document.querySelector('.payment-methods-panel') as HTMLElement;
-
       if(alertaSuperior)alertaSuperior.innerHTML = '';
       if(acordeonMediosPago)acordeonMediosPago.checked = true;
 
       if(mensaje){
-        mensaje.classList.remove('hidden', 'payment-methods-required-message--visible');
+        mensaje.classList.add('show');
         void mensaje.offsetWidth;
-        mensaje.classList.add('payment-methods-required-message--visible');
       }
 
       if(panel){
-        panel.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
+        panel.classList.remove('payment-methods-panel--attention');
         void panel.offsetWidth;
-        panel.classList.add('payment-methods-panel--attention', 'separado-input--attention');
+        panel.classList.add('payment-methods-panel--attention');
         panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(()=>{
-          panel.classList.remove('payment-methods-panel--attention', 'separado-input--attention');
+          panel.classList.remove('payment-methods-panel--attention');
+          mensaje.classList.remove('show');
         }, 2200);
       }
 
       const primerMedioEditable = Array.from(mediospago).find(input=>!input.readOnly && !input.disabled);
       setTimeout(()=>primerMedioEditable?.focus(), 180);
     }
+
+
     function calcularmediospago(e:Event){
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
@@ -193,7 +183,7 @@
           mediospago[0].value = (POS.mapMediospago.get('1')??0).toLocaleString();  //medio de pago en efectivo
         }
         calcularCambio(document.querySelector<HTMLInputElement>('#recibio')!.value);
-        ocultarMensajeMetodosPagoSiCorresponde();
+        ocultarMensajeMetodosPago();
     }
 
     function calcularCambio(recibido:string):void{
@@ -272,7 +262,7 @@
     function initMediosPagos(){
       mediospago.forEach(z=>z.value = '0');
       POS.mapMediospago.clear();
-      ocultarMensajeMetodosPago();
+      ocultarMensajeMetodosPago(true);
     }
 
     POS.gestionSubirModalPagar = gestionSubirModalPagar;

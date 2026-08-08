@@ -31,9 +31,9 @@
         </header>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 mb-4">
-          <div class="adicionar-producto-field col-span-full grid gap-2">
+          <div class="form-field col-span-full">
             <label for="articulo">Articulo</label>
-            <div class="adicionar-producto-input adicionar-producto-input--select2 creditos-select2" data-placeholder="Buscar articulo">
+            <div class="form-input select2-field select2-field--with-icon select2-field--custom-placeholder" data-placeholder="Buscar articulo">
               <span><i class="fa-solid fa-magnifying-glass"></i></span>
               <select id="articulo" multiple="multiple">
                 <?php foreach($totalitems as $value): ?>
@@ -43,18 +43,18 @@
             </div>
           </div>
 
-          <div class="adicionar-producto-field grid gap-2">
+          <div class="form-field">
             <label for="cantidad">Cantidad</label>
-            <div class="adicionar-producto-input">
+            <div class="form-input">
               <span><i class="fa-solid fa-hashtag"></i></span>
               <input id="cantidad" type="text" placeholder="Cantidad" value="1"
                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';">
             </div>
           </div>
 
-          <div class="adicionar-producto-field grid gap-2">
+          <div class="form-field">
             <label for="unidadmedida">Unidad</label>
-            <div class="adicionar-producto-input">
+            <div class="form-input">
               <span><i class="fa-solid fa-ruler-combined"></i></span>
               <input id="unidadmedida" type="text" placeholder="Unidad de medida" readonly>
             </div>

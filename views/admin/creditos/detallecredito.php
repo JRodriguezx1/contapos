@@ -90,7 +90,7 @@
     </div>
 
     <!-- Historial de abonos -->
-    <div class="detalle-credito-table-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <h3 class="mb-5 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900">📚 Historial de Abonos</h3>
       <table id="tablacuotas">
         <thead>

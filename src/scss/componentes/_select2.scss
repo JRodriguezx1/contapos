@@ -1,8 +1,5 @@
-@use 'base/variables' as v;
-@use 'base/mixins' as m;
-
-// estilos compartidos de Select2 para el modulo de creditos
-.creditos-select2{
+// tema compartido de Select2 para cualquier modulo
+.select2-field{
   min-width: 0;
 
   select.select2-hidden-accessible{
@@ -101,7 +98,7 @@
   }
 }
 
-.creditos-select2--standalone{
+.select2-field--standalone{
   min-height: 4.6rem;
 
   .select2-container--default .select2-selection--single,
@@ -119,7 +116,66 @@
   }
 }
 
-.creditos-select2-dropdown{
+.select2-field--with-icon{
+  .select2-container,
+  .select2-selection,
+  .select2-selection__rendered,
+  .select2-selection__arrow{
+    cursor: pointer;
+  }
+}
+
+.select2-field--custom-placeholder{
+  position: relative;
+
+  .select2-selection--multiple .select2-selection__rendered{
+    justify-content: flex-start !important;
+    padding-left: 0 !important;
+  }
+
+  &::after{
+    color: #94a3b8;
+    content: attr(data-placeholder);
+    font-size: 1.12rem;
+    font-weight: 750;
+    left: 5.8rem;
+    line-height: 1;
+    max-width: calc(100% - 8.2rem);
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    text-overflow: ellipsis;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  .select2-search__field{
+    color: transparent !important;
+    cursor: pointer;
+
+    &::placeholder{
+      color: transparent !important;
+    }
+  }
+
+  &:has(.select2-selection__choice)::after,
+  &:has(.select2-container--open)::after{
+    display: none;
+  }
+
+  &:has(.select2-container--open) .select2-search__field{
+    color: var(--select2-rendered-color, #14233b) !important;
+    cursor: text;
+
+    &::placeholder{
+      color: #94a3b8 !important;
+    }
+  }
+}
+
+.select2-theme-dropdown{
   border: 1px solid #dbe3ef !important;
   border-radius: .75rem !important;
   box-shadow: 0 1.4rem 3rem rgba(15,23,42,.14);
@@ -166,4 +222,4 @@
     font-weight: 800;
   }
 }
-// fin estilos compartidos de Select2 para el modulo de creditos
+// fin tema compartido de Select2

@@ -163,7 +163,7 @@
                 data: filteredData,
                 placeholder: "",
                 maximumSelectionLength: 1,
-                dropdownCssClass: 'creditos-select2-dropdown',
+                dropdownCssClass: 'select2-theme-dropdown',
             });  
         }
 
@@ -176,7 +176,6 @@
             ($('#articulo') as any).val(null).trigger('change');
             (document.querySelector('#unidadmedida') as HTMLInputElement).value = '';
             (document.querySelector('#cantidad') as HTMLInputElement).value = '1';
-            (document.querySelector('.adicionar-producto-input--select2') as HTMLElement|null)?.classList.remove('is-select2-open');
         }
 
         btnAddItem.addEventListener('click', (e)=>{

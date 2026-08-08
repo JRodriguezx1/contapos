@@ -133,8 +133,8 @@
                             const tr = td.parentElement;
                             if(tr){
                                 tr.children[5].textContent = '$0';
-                                tr?.children[5].classList.remove('cliente-detail-debt-cell');
-                                tr.children[6].innerHTML = '<span class="cliente-detail-status cliente-detail-status--1">Finalizado</span>';
+                                tr?.children[5].classList.remove('!text-red-600');
+                                tr.children[6].innerHTML = '<span class="table-status table-status--success">Finalizado</span>';
                                 tr.children[6].classList.remove('is-open', 'pendiente');
                                 tr.children[6].classList.add('is-done');
                             }
@@ -248,12 +248,12 @@
                     document.querySelector('#totalDeudaText')!.textContent = '$'+deudatotalCiente;
                     indiceFila.children[5].textContent = '$'+saldopendienteCredito;
                     if((Number(saldopendienteCredito))== 0){
-                        indiceFila.children[5].classList.remove('cliente-detail-debt-cell');
-                        indiceFila.children[6].innerHTML = '<span class="cliente-detail-status cliente-detail-status--1">Finalizado</span>';
+                        indiceFila.children[5].classList.remove('!text-red-600');
+                        indiceFila.children[6].innerHTML = '<span class="table-status table-status--success">Finalizado</span>';
                         indiceFila.children[6].classList.remove('is-open', 'pendiente');
                         indiceFila.children[6].classList.add('is-done');
                     }else{
-                        indiceFila.children[6].innerHTML = '<span class="cliente-detail-status cliente-detail-status--2">Abierto</span>';
+                        indiceFila.children[6].innerHTML = '<span class="table-status table-status--warning">Abierto</span>';
                     }
                     (indiceFila.children[7].children[0] as HTMLDivElement).dataset.saldopendiente = saldopendienteCredito;
                     miDialogoAbono.close();

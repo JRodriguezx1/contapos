@@ -118,8 +118,8 @@
                       const resultado = await respuesta.json();
                       if(resultado.exito !== undefined){
                         const datosActuales = (tablaCreditos as any).row(indiceFila).data();
-                        datosActuales[9] = '<span class="creditos-status creditos-status--danger">Anulado</span>';
-                        datosActuales[10] = `<div class="acciones-btns" id="${idcredito}"><a class="creditos-action creditos-action--detail" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a></div>`;
+                        datosActuales[9] = '<span class="table-status table-status--danger">Anulado</span>';
+                        datosActuales[10] = `<div class="acciones-btns" id="${idcredito}"><a class="table-action table-action--view" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a></div>`;
                         (tablaCreditos as any).row(indiceFila).data(datosActuales).draw();
                         (tablaCreditos as any).page(info.page).draw('page'); 
                         Swal.fire({

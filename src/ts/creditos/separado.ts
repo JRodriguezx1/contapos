@@ -48,12 +48,12 @@
     ($('#cliente') as any).select2({
       placeholder: "Seleccionar el cliente",
       maximumSelectionLength: 1,
-      dropdownCssClass: 'creditos-select2-dropdown'
+      dropdownCssClass: 'select2-theme-dropdown'
     });
     ($('#frecuenciapago') as any).select2({
       placeholder: "Seleccionar el dia de pago",
       maximumSelectionLength: 1,
-      dropdownCssClass: 'creditos-select2-dropdown'
+      dropdownCssClass: 'select2-theme-dropdown'
     });
 
      document.addEventListener("click", cerrarDialogoExterno);
@@ -90,7 +90,7 @@
           data: filteredData,
           placeholder: "Selecciona un item",
           maximumSelectionLength: 1,
-          dropdownCssClass: 'creditos-select2-dropdown',
+          dropdownCssClass: 'select2-theme-dropdown',
           /*
           templateResult: function (data:{id:string, text:string, tipo:string}) {
               // Personalizar cómo se muestra cada opción en el dropdown
@@ -363,7 +363,8 @@
       let totalMediosPago:number = 0;
       for(let value of mapMediospago.values())totalMediosPago+=value;
       if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
-        msjAlert('error', 'Valor a pagar no corresponde', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        //msjAlert('error', 'Valor a pagar no corresponde', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        POS.gestionSubirModalPagar.mostrarMensajeMetodosPago?.();
         return;
       }
 

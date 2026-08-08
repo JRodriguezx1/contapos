@@ -35,7 +35,7 @@
       </a>
     </section>
 
-    <section class="creditos-table-card config-table-card">
+    <section class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center">
         <div>
           <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Directorio de clientes</h2>
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <table class="display responsive nowrap tabla creditos-data-table" width="100%" id="tablaClientes">
+      <table class="display responsive nowrap tabla datatable-table" width="100%" id="tablaClientes">
         <thead>
           <tr>
             <th>id</th>
@@ -60,29 +60,27 @@
             <?php if($cliente->id != 1): ?>
               <tr>
                 <td><?php echo $cliente->id; ?></td>
+                <td><span class="table-badge table-badge--neutral"><?php echo $cliente->identificacion; ?></span></td>
                 <td>
-                  <span class="creditos-pill creditos-pill--document"><?php echo $cliente->identificacion; ?></span>
-                </td>
-                <td>
-                  <span class="creditos-client">
-                    <span class="creditos-client__icon"><i class="fa-solid fa-user"></i></span>
+                  <span class="table-entity">
+                    <span class="table-entity__icon"><i class="fa-solid fa-user"></i></span>
                     <span><?php echo $cliente->nombre; ?></span>
                   </span>
                 </td>
                 <td><?php echo $cliente->apellido; ?></td>
                 <td>
-                  <span class="clientes-table-pill clientes-table-pill--phone"><?php echo $cliente->telefono; ?></span>
+                  <span class="table-badge table-badge--info"><?php echo $cliente->telefono; ?></span>
                 </td>
                 <td>
-                  <span class="clientes-table-pill clientes-table-pill--email"><?php echo $cliente->email; ?></span>
+                  <span class="table-badge table-badge--neutral"><?php echo $cliente->email; ?></span>
                 </td>
                 <td class="accionestd">
                   <div class="acciones-btns" id="<?php echo $cliente->id;?>">
-                    <button class="btn-md btn-turquoise editarClientes" type="button" title="Actualizar datos del cliente"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="btn-md btn-light editarEliminarDireccion" type="button" title="Actualizar direcci&oacute;n del cliente"><i class="fa-solid fa-location-dot"></i></button>
-                    <a class="btn-md btn-bluedark" href="/admin/clientes/detalle?id=<?php echo $cliente->id;?>" title="Ver estad&iacute;sticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>
-                    <a class="btn-md btn-blue" href="/admin/clientes/preciosXCliente?id=<?php echo $cliente->id;?>" title="Precios personalizados"><i class="fa-solid fa-dollar-sign"></i></a>
-                    <button class="btn-md btn-red eliminarClientes" type="button" title="Eliminar cliente"><i class="fa-solid fa-trash-can"></i></button>
+                    <button class="table-action bg-cyan-500 text-white hover:text-white editarClientes" type="button" title="Actualizar datos del cliente"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="table-action table-action--print editarEliminarDireccion" type="button" title="Actualizar direcci&oacute;n del cliente"><i class="fa-solid fa-location-dot"></i></button>
+                    <a class="table-action table-action--view" href="/admin/clientes/detalle?id=<?php echo $cliente->id;?>" title="Ver estad&iacute;sticas del cliente"><i class="fa-solid fa-chart-simple"></i></a>
+                    <a class="table-action bg-indigo-600 text-white hover:text-white" href="/admin/clientes/preciosXCliente?id=<?php echo $cliente->id;?>" title="Precios personalizados"><i class="fa-solid fa-dollar-sign"></i></a>
+                    <button class="table-action table-action--danger eliminarClientes" type="button" title="Eliminar cliente"><i class="fa-solid fa-trash-can"></i></button>
                   </div>
                 </td>
               </tr>
@@ -92,38 +90,38 @@
       </table>
     </section>
 
-    <dialog class="midialog-sm clientes-dialog clientes-dialog--client" id="miDialogoCliente">
-      <div class="clientes-dialog__header">
-        <span><i class="fa-solid fa-user-plus"></i></span>
-        <div>
-          <p>Cliente</p>
-          <h4 id="modalCliente">Crear cliente</h4>
-          <small>Registra los datos principales y de contacto del cliente.</small>
+    <dialog class="max-h-[92vh] w-[min(94vw,72rem)] max-w-[72rem] overflow-x-hidden overflow-y-auto rounded-xl border-0 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-900/50 backdrop:backdrop-blur-[1px]" id="miDialogoCliente">
+      <div class="flex items-center gap-4 border-b border-slate-200 bg-gradient-to-br from-violet-100 to-cyan-50 p-5 sm:p-6">
+        <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg border border-indigo-200 bg-white text-2xl text-indigo-600"><i class="fa-solid fa-user-plus"></i></span>
+        <div class="min-w-0 flex-1">
+          <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Cliente</p>
+          <h4 class="m-0 text-2xl font-extrabold leading-tight text-slate-900" id="modalCliente">Crear cliente</h4>
+          <small class="mt-1 block text-base leading-snug text-slate-500">Registra los datos principales y de contacto del cliente.</small>
         </div>
       </div>
 
       <div id="divmsjalerta1"></div>
 
-      <form id="formCrearUpdateCliente" class="formulario clientes-dialog__form" action="/admin/clientes/crear" method="POST">
-        <div class="clientes-field">
+      <form id="formCrearUpdateCliente" class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 sm:p-6" action="/admin/clientes/crear" method="POST">
+        <div class="form-field">
           <label for="nombre">Nombre</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-user"></i></span>
             <input type="text" placeholder="Nombre del cliente" id="nombre" name="nombre" value="<?php echo $crearcliente->nombre ?? ''; ?>" required>
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="apellido">Apellido</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-user-tag"></i></span>
             <input type="text" placeholder="Apellido del cliente" id="apellido" name="apellido" value="<?php echo $crearcliente->apellido ?? ''; ?>">
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="tipodocumento">Tipo de documento</label>
-          <div class="clientes-control clientes-control--select">
+          <div class="form-input">
             <span><i class="fa-solid fa-id-card"></i></span>
             <select id="tipodocumento" name="tipodocumento" required>
               <option value="1">Registro civil</option>
@@ -140,63 +138,61 @@
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="identificacion">Identificaci&oacute;n</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-fingerprint"></i></span>
             <input type="text" min="0" placeholder="Identificaci&oacute;n del cliente" id="identificacion" name="identificacion" value="<?php echo $crearcliente->identificacion ?? ''; ?>">
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="telefono">Tel&eacute;fono</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-mobile-screen-button"></i></span>
             <input type="text" minlength="7" placeholder="Tel&eacute;fono del cliente" id="telefono" name="telefono" value="<?php echo $crearcliente->telefono ?? ''; ?>" required>
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="email">Correo electr&oacute;nico</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-at"></i></span>
             <input type="email" placeholder="Ingresa correo electr&oacute;nico" id="email" name="email" value="<?php echo $crearcliente->email ?? ''; ?>">
           </div>
         </div>
 
-        <div class="clientes-field clientes-field--wide">
+        <div class="form-field sm:col-span-2">
           <label for="fecha_nacimiento">Fecha de nacimiento</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-cake-candles"></i></span>
             <input type="date" placeholder="Fecha de nacimiento del cliente" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo $crearcliente->fecha_nacimiento ?? ''; ?>">
           </div>
         </div>
 
-        <div class="masopciones"></div>
-
-        <div class="clientes-dialog__actions">
-          <button class="clientes-button clientes-button--ghost" type="button" value="salir">Salir</button>
-          <input id="btnEditarCrearCliente" class="clientes-button clientes-button--primary" type="submit" value="Crear">
+        <div class="grid grid-cols-1 gap-4 border-t border-slate-200 pt-5 sm:col-span-2 sm:grid-cols-2">
+          <button class="btnDialog btnDialog_light w-full" type="button" value="salir">Salir</button>
+          <input id="btnEditarCrearCliente" class="btnDialog btnDialog_primary w-full" type="submit" value="Crear">
         </div>
       </form>
     </dialog>
 
-    <dialog class="midialog-sm clientes-dialog clientes-dialog--address" id="miDialogoCrearDireccion">
-      <div class="clientes-dialog__header">
-        <span><i class="fa-solid fa-map-location-dot"></i></span>
-        <div>
-          <p>Direcci&oacute;n</p>
-          <h4 id="modalDireccion">Crear direcci&oacute;n</h4>
-          <small>Asocia una direcci&oacute;n, ciudad y tarifa a un cliente.</small>
+    <dialog class="max-h-[92vh] w-[min(94vw,72rem)] max-w-[72rem] overflow-x-hidden overflow-y-auto rounded-xl border-0 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-900/50 backdrop:backdrop-blur-[1px]" id="miDialogoCrearDireccion">
+      <div class="flex items-center gap-4 border-b border-slate-200 bg-gradient-to-br from-violet-100 to-cyan-50 p-5 sm:p-6">
+        <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg border border-indigo-200 bg-white text-2xl text-indigo-600"><i class="fa-solid fa-map-location-dot"></i></span>
+        <div class="min-w-0 flex-1">
+          <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Direcci&oacute;n</p>
+          <h4 class="m-0 text-2xl font-extrabold leading-tight text-slate-900" id="modalDireccion">Crear direcci&oacute;n</h4>
+          <small class="mt-1 block text-base leading-snug text-slate-500">Asocia una direcci&oacute;n, ciudad y tarifa a un cliente.</small>
         </div>
       </div>
 
       <div id="divmsjalerta2"></div>
 
-      <form id="formCrearUpdateDireccion" class="formulario clientes-dialog__form" action="/admin/direcciones/crear" method="POST">
-        <div class="clientes-field clientes-field--wide">
+      <form id="formCrearUpdateDireccion" class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 sm:p-6" action="/admin/direcciones/crear" method="POST">
+        <div class="form-field sm:col-span-2">
           <label for="selectcliente">Seleccionar cliente</label>
-          <div class="clientes-control clientes-control--select clientes-control--bare">
+          <div class="select2-field select2-field--standalone">
             <select id="selectcliente" name="idcliente" required>
               <?php foreach($clientes as $cliente): ?>
                 <?php if($cliente->id > 1): ?>
@@ -207,9 +203,9 @@
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="tarifa">Tarifa</label>
-          <div class="clientes-control clientes-control--select">
+          <div class="form-input">
             <span><i class="fa-solid fa-tags"></i></span>
             <select id="tarifa" name="idtarifa" required>
               <?php foreach($tarifas as $tarifa): ?>
@@ -219,56 +215,56 @@
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="departamento">Departamento</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-map"></i></span>
             <input type="text" placeholder="Departamento o regi&oacute;n" id="departamento" name="departamento" value="">
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="ciudad">Ciudad</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-city"></i></span>
             <input type="text" placeholder="Ciudad de residencia" id="ciudad" name="ciudad" value="">
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="direccion">Direcci&oacute;n</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-location-dot"></i></span>
             <input type="text" placeholder="Direcci&oacute;n de vivienda" id="direccion" name="direccion" value="">
           </div>
         </div>
 
-        <div class="clientes-dialog__actions">
-          <button class="clientes-button clientes-button--ghost" type="button" value="salir">Salir</button>
-          <input id="btnEditarCrearDireccion" class="clientes-button clientes-button--primary" type="submit" value="Crear">
+        <div class="grid grid-cols-1 gap-4 border-t border-slate-200 pt-5 sm:col-span-2 sm:grid-cols-2">
+          <button class="btnDialog btnDialog_light w-full" type="button" value="salir">Salir</button>
+          <input id="btnEditarCrearDireccion" class="btnDialog btnDialog_primary w-full" type="submit" value="Crear">
         </div>
       </form>
     </dialog>
 
-    <dialog class="midialog-sm clientes-dialog clientes-dialog--address" id="miDialogoUpDireccion">
-      <div class="clientes-dialog__header clientes-dialog__header--with-close">
-        <span><i class="fa-solid fa-location-crosshairs"></i></span>
-        <div>
-          <p>Direcci&oacute;n</p>
-          <h4 id="modalUpDireccion">Actualizar direcci&oacute;n</h4>
-          <small>Edita o elimina una direcci&oacute;n asociada al cliente seleccionado.</small>
+    <dialog class="max-h-[92vh] w-[min(94vw,72rem)] max-w-[72rem] overflow-x-hidden overflow-y-auto rounded-xl border-0 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-900/50 backdrop:backdrop-blur-[1px]" id="miDialogoUpDireccion">
+      <div class="flex items-start gap-4 border-b border-slate-200 bg-gradient-to-br from-violet-100 to-cyan-50 p-5 sm:p-6">
+        <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg border border-indigo-200 bg-white text-2xl text-indigo-600"><i class="fa-solid fa-location-crosshairs"></i></span>
+        <div class="min-w-0 flex-1">
+          <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Direcci&oacute;n</p>
+          <h4 class="m-0 text-2xl font-extrabold leading-tight text-slate-900" id="modalUpDireccion">Actualizar direcci&oacute;n</h4>
+          <small class="mt-1 block text-base leading-snug text-slate-500">Edita o elimina una direcci&oacute;n asociada al cliente seleccionado.</small>
         </div>
-        <button id="btnCerrarUpDireccion" class="clientes-dialog__close" type="button" title="Cerrar">
+        <button id="btnCerrarUpDireccion" class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button" title="Cerrar">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <div id="divmsjalerta3"></div>
 
-      <form id="formUpDireccion" class="formulario clientes-dialog__form" action="/admin/direccions/actualizar" method="POST">
-        <div class="clientes-field clientes-field--wide">
+      <form id="formUpDireccion" class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 sm:p-6" action="/admin/direccions/actualizar" method="POST">
+        <div class="form-field sm:col-span-2">
           <label for="selectdirecciones">Seleccionar direcciones</label>
-          <div class="clientes-control clientes-control--select">
+          <div class="form-input">
             <span><i class="fa-solid fa-route"></i></span>
             <select id="selectdirecciones" name="direcciones" required>
               <option value="" disabled selected>-Seleccionar-</option>
@@ -276,9 +272,9 @@
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="uptarifa">Tarifa</label>
-          <div class="clientes-control clientes-control--select">
+          <div class="form-input">
             <span><i class="fa-solid fa-tags"></i></span>
             <select id="uptarifa" name="tarifa" required>
               <option value="" disabled selected>-Seleccionar-</option>
@@ -289,33 +285,33 @@
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="updepartamento">Departamento</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-map"></i></span>
             <input type="text" placeholder="Departamento o regi&oacute;n" id="updepartamento" name="departamento" value="">
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="upciudad">Ciudad</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-city"></i></span>
             <input type="text" placeholder="Ciudad de residencia" id="upciudad" name="ciudad" value="">
           </div>
         </div>
 
-        <div class="clientes-field">
+        <div class="form-field">
           <label for="updireccion">Direcci&oacute;n</label>
-          <div class="clientes-control">
+          <div class="form-input">
             <span><i class="fa-solid fa-location-dot"></i></span>
             <input type="text" placeholder="Direcci&oacute;n de vivienda" id="updireccion" name="direccion" value="">
           </div>
         </div>
 
-        <div class="clientes-dialog__actions">
-          <button id="btnRemoveDireccion" class="clientes-button clientes-button--danger" type="submit" value="Eliminar">Eliminar</button>
-          <input id="btnUpDireccion" class="clientes-button clientes-button--primary" type="submit" value="Actualizar">
+        <div class="grid grid-cols-1 gap-4 border-t border-slate-200 pt-5 sm:col-span-2 sm:grid-cols-2">
+          <button id="btnRemoveDireccion" class="btnDialog w-full border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100" type="submit" value="Eliminar">Eliminar</button>
+          <input id="btnUpDireccion" class="btnDialog btnDialog_primary w-full" type="submit" value="Actualizar">
         </div>
       </form>
     </dialog>

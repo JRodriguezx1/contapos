@@ -60,7 +60,7 @@
 
     <div id="divmsjalerta"></div>
 
-    <section class="creditos-table-card config-table-card grid min-w-0 gap-4 overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+    <section class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center">
         <div>
           <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Historial de creditos</h2>
@@ -69,7 +69,7 @@
         <span class="shrink-0 rounded-full bg-indigo-50 px-3 py-2 text-base font-extrabold text-indigo-600"><?php echo $creditosAbiertos; ?> abiertos</span>
       </div>
 
-      <table class="display responsive nowrap tabla creditos-data-table" width="100%" id="tablaCreditos">
+      <table class="display responsive nowrap tabla datatable-table" width="100%" id="tablaCreditos">
         <thead>
             <tr>
                 <th>id</th>
@@ -91,32 +91,32 @@
                   $estadoCredito = $value->idestadocreditos==1?'Finalizado':($value->idestadocreditos==2?'Abierto':'Anulado');
                   $estadoClase = $value->idestadocreditos==1?'success':($value->idestadocreditos==2?'warning':'danger');
                   $tipoCredito = $value->idtipofinanciacion==1?'Credito':'Separado';
-                  $tipoClase = $value->idtipofinanciacion==1?'credit':'separado';
+                  $tipoClase = $value->idtipofinanciacion==1?'primary':'info';
                 ?>
                 <tr>
                     <td><?php echo $value->ID; ?></td>
                     <td><?php echo $value->fechainicio; ?></td>
-                    <td><span class="creditos-pill creditos-pill--<?php echo $tipoClase; ?>"><?php echo $tipoCredito; ?></span></td>
-                    <td><span class="creditos-pill creditos-pill--document"><?php echo $value->identificacion; ?></span></td>
+                    <td><span class="table-badge table-badge--<?php echo $tipoClase; ?>"><?php echo $tipoCredito; ?></span></td>
+                    <td><span class="table-badge table-badge--neutral"><?php echo $value->identificacion; ?></span></td>
                     <td>
-                      <span class="creditos-client">
-                        <span class="creditos-client__icon"><i class="fa-solid fa-user"></i></span>
+                      <span class="table-entity">
+                        <span class="table-entity__icon"><i class="fa-solid fa-user"></i></span>
                         <span><?php echo $value->nombre.' '.$value->apellido; ?></span>
                       </span>
                     </td> 
-                    <td><strong class="creditos-money">$<?php echo number_format($value->capital,'2', ',', '.'); ?></strong></td>
+                    <td><strong class="table-amount">$<?php echo number_format($value->capital,'2', ',', '.'); ?></strong></td>
                     <td>$<?php echo number_format($value->valorinterestotal,'2', ',', '.'); ?></td>
                     <td>$<?php echo number_format($value->montototal,'2', ',', '.'); ?></td>
-                    <td><span class="creditos-pill creditos-pill--paid">$<?php echo number_format($value->montototal+$value->abonoinicial-$value->saldopendiente,'2', ',', '.'); ?></span></td>
-                    <td><span class="creditos-status creditos-status--<?php echo $estadoClase; ?>"><?php echo $estadoCredito; ?></span></td>
+                    <td><span class="table-badge table-badge--info">$<?php echo number_format($value->montototal+$value->abonoinicial-$value->saldopendiente,'2', ',', '.'); ?></span></td>
+                    <td><span class="table-status table-status--<?php echo $estadoClase; ?>"><?php echo $estadoCredito; ?></span></td>
                     <td class="accionestd">
                         <div class="acciones-btns" id="<?php echo $value->ID;?>">
-                            <a class="creditos-action creditos-action--detail" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
+                            <a class="table-action table-action--view" href="/admin/creditos/detallecredito?id=<?php echo $value->ID;?>" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a>
                             <?php if($value->idtipofinanciacion==2&&$value->idestadocreditos==2): ?>
                                 <?php if(tienePermiso('Anular separados')&&userPerfil()>3 || userPerfil()<4){ ?>
-                                    <button class="creditos-action creditos-action--danger anularCredito" title="Anular credito"><i class="fa-solid fa-trash-can"></i></button>
+                                    <button class="table-action table-action--danger anularCredito" title="Anular credito"><i class="fa-solid fa-trash-can"></i></button>
                             <?php } endif; ?>
-                            <span id="<?php echo $value->ID;?>" class="creditos-action creditos-action--print printPOSSeparado material-symbols-outlined" title="Imprimir separado">print</span>
+                            <span id="<?php echo $value->ID;?>" class="table-action table-action--print printPOSSeparado material-symbols-outlined" title="Imprimir separado">print</span>
                         </div>
                     </td>
                 </tr>

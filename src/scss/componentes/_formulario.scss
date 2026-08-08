@@ -156,3 +156,64 @@
         }
     }
 }
+
+
+
+//nuevos estilos de campos como en adicionarProducto modulo de creditos
+.form-field{
+  display: grid;
+  gap: .55rem;
+  min-width: 0;
+  label{
+    color: #263852;
+    font-size: 1.16rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+.form-input{
+  align-items: stretch;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: .7rem;
+  display: flex;
+  height: 4.6rem;
+  min-height: 4.6rem;
+  overflow: hidden;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+
+  &:focus-within{
+    background: #fff;
+    border-color: v.$color-primary;
+    box-shadow: 0 0 0 .3rem rgba(79, 70, 229, .12);
+  }
+
+  > span{
+    align-items: center;
+    background: #eef2ff;
+    border-right: 1px solid #cbd5e1;
+    color: v.$color-primary;
+    display: inline-flex;
+    flex: 0 0 4.6rem;
+    justify-content: center;
+  }
+
+  input,
+  select{
+    background: transparent;
+    border: 0;
+    color: v.$color-text;
+    flex: 1;
+    font-size: 1.18rem;
+    font-weight: 500;
+    min-width: 0;
+    outline: 0;
+    padding: 0 1.1rem;
+    width: 100%;
+    &::placeholder{
+      color: #94a3b8;
+    }
+  }
+
+}

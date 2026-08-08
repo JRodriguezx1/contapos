@@ -78,7 +78,8 @@
           dropdownParent: $('#miDialogoCrearDireccion'),
           placeholder: "Seleccionar el cliente",
           minimumResultsForSearch: Infinity,
-          width: '100%'
+          width: '100%',
+          dropdownCssClass: 'select2-theme-dropdown'
         });
         select2Init = true;
       }
@@ -329,26 +330,6 @@
           return entities[char];
         });
       }
-
-      /*function renderClienteNombre(nombre:string):string{
-        return `<span class="clientes-name"><span class="clientes-name__icon"><i class="fa-solid fa-user"></i></span><span>${escapeClienteHtml(nombre)}</span></span>`;
-      }
-
-      function renderClientePill(value:string, type:string):string{
-        return `<span class="clientes-table-pill clientes-table-pill--${type}">${escapeClienteHtml(value)}</span>`;
-      }
-
-      function renderClienteRowData(cliente:{id:string, identificacion:string, nombre:string, apellido:string, telefono:string, email:string, acciones:string}):string[]{
-        return [
-          escapeClienteHtml(cliente.id),
-          renderClientePill(cliente.identificacion, 'document'),
-          renderClienteNombre(cliente.nombre),
-          escapeClienteHtml(cliente.apellido),
-          renderClientePill(cliente.telefono, 'phone'),
-          renderClientePill(cliente.email, 'email'),
-          cliente.acciones
-        ];
-      }*/
 
       function cerrarDialogoExterno(event:Event) {
         if (event.target === miDialogoCliente || event.target === miDialogoCrearDireccion || event.target === miDialogoUpDireccion || (event.target as HTMLInputElement).value === 'salir') {
