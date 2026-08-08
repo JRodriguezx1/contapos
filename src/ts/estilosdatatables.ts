@@ -272,7 +272,9 @@ function modernizarToolbarDataTable(selectorTabla:string):void{
       </div>
     `;
 
-    card.insertBefore(toolbar, wrapper);
+    const tableContainer = wrapper.parentElement;
+    const toolbarReference = tableContainer && tableContainer !== card ? tableContainer : wrapper;
+    card.insertBefore(toolbar, toolbarReference);
     card.classList.add('has-custom-datatable-toolbar');
 
     ocultarControlesNativos();

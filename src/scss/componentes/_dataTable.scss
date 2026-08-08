@@ -330,10 +330,14 @@
 }
 
 .dt-button-collection{
+  background: #fff !important;
   border: 1px solid #dbe3ef !important;
   border-radius: .8rem !important;
   box-shadow: 0 1.4rem 3rem rgba(15,23,42,.16) !important;
+  min-width: 20rem;
   overflow: hidden;
+  padding: .45rem !important;
+  z-index: 9999 !important;
 
   .dt-button{
     background: #fff !important;
@@ -352,6 +356,12 @@
       background: #eef2ff !important;
       color: #4f46e5 !important;
     }
+
+    &.active,
+    &.dt-button-active{
+      background: #ecfeff !important;
+      color: #0e7490 !important;
+    }
   }
 }
 
@@ -362,6 +372,70 @@
   .dt-layout-table{
     min-width: 0;
     width: 100%;
+  }
+
+  .dt-layout-row{
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .9rem;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .dt-layout-cell{
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+  }
+
+  .dt-layout-cell.dt-layout-start{
+    justify-content: flex-start;
+    margin-right: auto;
+  }
+
+  .dt-layout-cell.dt-layout-end{
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .dt-buttons,
+  .dt-buttons.btn-group{
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+  }
+
+  .dt-button{
+    align-items: center;
+    background: #fff !important;
+    background-image: none !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: .65rem !important;
+    box-shadow: none !important;
+    color: #263852 !important;
+    cursor: pointer;
+    display: inline-flex !important;
+    font-family: inherit !important;
+    font-size: 1.05rem !important;
+    font-weight: 800 !important;
+    justify-content: center;
+    line-height: 1 !important;
+    margin: 0 !important;
+    min-height: 3.55rem;
+    padding: 0 1rem !important;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+
+    &:hover,
+    &:focus{
+      background: #eef2ff !important;
+      border-color: rgba(79,70,229,.42) !important;
+      box-shadow: 0 .7rem 1.4rem rgba(79,70,229,.12) !important;
+      color: v.$color-primary !important;
+      transform: translateY(-1px);
+    }
   }
 
   .dt-info{
@@ -467,6 +541,26 @@
   .datatable-card .dt-container .dt-info,
   .datatable-card .dt-container .dt-paging{
     justify-content: center;
+    width: 100%;
+  }
+
+  .datatable-card .dt-container .dt-layout-row,
+  .datatable-card .dt-container .dt-layout-cell{
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .datatable-card .dt-container .dt-layout-cell.dt-layout-start,
+  .datatable-card .dt-container .dt-layout-cell.dt-layout-end{
+    justify-content: center;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .datatable-card .dt-container .dt-buttons,
+  .datatable-card .dt-container .dt-buttons.btn-group{
+    justify-content: flex-start;
     width: 100%;
   }
 }

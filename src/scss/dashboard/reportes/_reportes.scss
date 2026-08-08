@@ -1,1270 +1,46 @@
-﻿@use 'base/variables' as v;
+@use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.reportes-dashboard{
-  --reports-primary: #4f46e5;
-  --reports-primary-dark: #4338ca;
-  --reports-accent: #06b6d4;
-  --reports-border: #dbe3ef;
-  --reports-muted: #64748b;
-  --reports-text: #14233b;
-
-  @include m.contenedor100;
-  color: var(--reports-text);
-  padding-bottom: 3rem;
-}
-
-.reportes-dashboard__shell{
-  background:
-    linear-gradient(180deg, rgba(79,70,229,.06), rgba(255,255,255,0) 18rem),
-    #fff;
-  border: 1px solid var(--reports-border);
-  border-radius: .8rem;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, .06);
-  display: grid;
-  gap: 1.4rem;
-  margin: 0 auto;
-  max-width: 150rem;
-  padding: 1.6rem;
-}
-
-.reportes-dashboard__hero{
-  align-items: center;
-  background: linear-gradient(135deg, rgba(79,70,229,.09), rgba(6,182,212,.08));
-  border: 1px solid var(--reports-border);
-  border-radius: .8rem;
-  display: flex;
-  gap: 1.4rem;
-  justify-content: space-between;
-  padding: 1.7rem 2rem;
-}
-
-.reportes-dashboard__hero-text{
-  min-width: 0;
-
-  span{
-    color: var(--reports-primary);
-    display: block;
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin-bottom: .25rem;
-    text-transform: uppercase;
-  }
-
-  h1{
-    color: var(--reports-text);
-    font-size: 2.7rem;
-    font-weight: 800;
-    line-height: 1.08;
-    margin: 0;
-  }
-
-  p{
-    color: var(--reports-muted);
-    font-size: 1.18rem;
-    line-height: 1.35;
-    margin: .35rem 0 0;
-  }
-}
-
-.reportes-dashboard__hero-card{
-  align-items: center;
-  background: rgba(255,255,255,.92);
-  border: 1px solid rgba(219,227,239,.95);
-  border-radius: .8rem;
-  display: inline-grid;
-  gap: .15rem .9rem;
-  grid-template-columns: auto 1fr;
-  min-width: 20rem;
-  padding: .95rem;
-
-  > span{
-    align-items: center;
-    background: linear-gradient(135deg, #5b52f0, var(--reports-primary-dark));
-    border-radius: .75rem;
-    color: #fff;
-    display: inline-flex;
-    font-size: 1.9rem;
-    grid-row: span 2;
-    height: 4.8rem;
-    justify-content: center;
-    width: 4.8rem;
-  }
-
-  strong{
-    color: var(--reports-text);
-    font-size: 1.65rem;
-    font-weight: 900;
-    line-height: 1;
-  }
-
-  small{
-    color: var(--reports-muted);
-    font-size: 1.02rem;
-    font-weight: 700;
-  }
-}
-
-.reportes-dashboard__charts{
-  display: grid;
-  gap: 1.4rem;
-  grid-template-columns: minmax(0, 2fr) minmax(30rem, 1fr);
-}
-
-.reportes-dashboard__chart,
-.reportes-dashboard__section{
-  background: #fff;
-  border: 1px solid var(--reports-border);
-  border-radius: .8rem;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, .045);
-  padding: 1.4rem;
-}
-
-.reportes-dashboard__chart-header,
-.reportes-dashboard__section-header{
-  align-items: center;
-  border-bottom: 1px solid var(--reports-border);
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding-bottom: 1rem;
-
-  h2{
-    color: var(--reports-text);
-    font-size: 1.65rem;
-    font-weight: 800;
-    line-height: 1.15;
-    margin: 0;
-  }
-
-  p{
-    color: var(--reports-muted);
-    font-size: 1.08rem;
-    line-height: 1.35;
-    margin: .2rem 0 0;
-  }
-}
-
-.reportes-dashboard__chart-header div > span{
-  color: var(--reports-primary);
-  display: block;
-  font-size: 1rem;
-  font-weight: 800;
-  margin-bottom: .2rem;
-  text-transform: uppercase;
-}
-
-.reportes-dashboard__section-header{
-  justify-content: flex-start;
-
-  > span{
-    align-items: center;
-    background: #eef2ff;
-    border-radius: .7rem;
-    color: var(--reports-primary);
-    display: inline-flex;
-    flex: 0 0 4.2rem;
-    font-size: 1.8rem;
-    height: 4.2rem;
-    justify-content: center;
-    width: 4.2rem;
-  }
-}
-
-.reportes-dashboard__switch{
-  background: #f1f5f9;
-  border: 1px solid var(--reports-border);
-  border-radius: .75rem;
-  display: inline-flex;
-  gap: .35rem;
-  padding: .35rem;
-
-  button{
-    background: transparent;
-    border: 0;
-    border-radius: .58rem;
-    color: var(--reports-muted);
-    cursor: pointer;
-    font-size: 1.08rem;
-    font-weight: 800;
-    min-height: 3.6rem;
-    padding: 0 1.25rem;
-    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
-
-    &:hover,
-    &.active,
-    &:focus{
-      background: #fff;
-      box-shadow: 0 8px 18px rgba(79,70,229,.13);
-      color: var(--reports-primary);
-      outline: none;
-    }
-  }
-}
-
-.reportes-dashboard__canvas{
-  height: 34rem;
-  padding-top: 1rem;
-  position: relative;
-
-  canvas{
-    height: 100% !important;
-    width: 100% !important;
-  }
-}
-
-.reportes-dashboard__grid{
-  display: grid;
-  gap: .9rem;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  padding-top: 1.2rem;
-}
-
-.reportes-dashboard__grid--compact{
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-}
-
-.reportes-dashboard__columns{
-  display: grid;
-  gap: 1.4rem;
-  grid-template-columns: minmax(0, 1.35fr) minmax(28rem, .65fr);
-}
-
-.reportes-dashboard__link{
-  align-items: flex-start;
-  background: #fff;
-  border: 1px solid var(--reports-border);
-  border-radius: .78rem;
-  color: var(--reports-text);
-  cursor: pointer;
-  display: grid;
-  gap: .25rem .85rem;
-  grid-template-columns: auto 1fr;
-  min-height: 8.4rem;
-  padding: 1rem;
-  text-align: left;
-  text-decoration: none;
-  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
-  width: 100%;
-
-  > span,
-  > i{
-    align-items: center;
-    background: #eef2ff;
-    border-radius: .68rem;
-    color: var(--reports-primary);
-    display: inline-flex;
-    font-size: 1.8rem;
-    grid-row: span 2;
-    height: 4rem;
-    justify-content: center;
-    width: 4rem;
-  }
-
-  > i{
-    font-size: 1.45rem;
-  }
-
-  strong{
-    color: var(--reports-text);
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.15;
-    margin-top: .25rem;
-  }
-
-  small{
-    color: var(--reports-muted);
-    font-size: .98rem;
-    font-weight: 600;
-    line-height: 1.25;
-  }
-
-  &:hover,
-  &:focus{
-    border-color: rgba(79,70,229,.38);
-    box-shadow: 0 16px 28px rgba(79,70,229,.11);
-    color: var(--reports-text);
-    outline: none;
-    transform: translateY(-2px);
-  }
-}
-
-.reportes-dashboard__link--primary{
-  background: linear-gradient(135deg, rgba(79,70,229,.08), rgba(6,182,212,.06));
-
-  > span,
-  > i{
-    background: linear-gradient(135deg, #5b52f0, var(--reports-primary-dark));
-    color: #fff;
-  }
-}
-
-
-.reportes-dashboard__chart{
-  background:
-    linear-gradient(180deg, rgba(248,251,255,.98), rgba(255,255,255,1));
-}
-
-.reportes-dashboard__chart .reportes-dashboard__canvas{
-  background: linear-gradient(180deg, #f8fbff, #fff);
-  border: 1px solid rgba(219, 227, 239, .8);
-  border-radius: .8rem;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
-  margin-top: 1rem;
-  padding: 1.25rem;
-}
-
-.reportes-dashboard__chart:not(.reportes-dashboard__chart--wide) .reportes-dashboard__canvas{
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 44rem;
-  width: 100%;
-}
-
-.reportes-dashboard__switch button.active{
-  background: linear-gradient(135deg, #5b52f0, var(--reports-primary-dark));
+// estados dinamicos del panel principal de reportes
+.reportes-dashboard__switch button.active,
+.reportes-dashboard__switch button.active:hover,
+.reportes-dashboard__switch button.active:focus{
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
   box-shadow: 0 10px 20px rgba(79,70,229,.22);
   color: #fff;
 }
 
-.reportes-dashboard__switch button.active:hover,
-.reportes-dashboard__switch button.active:focus{
-  background: linear-gradient(135deg, #5b52f0, var(--reports-primary-dark));
-  color: #fff;
+.reportes-dashboard__canvas canvas{
+  height: 100% !important;
+  width: 100% !important;
 }
+// fin estados dinamicos del panel principal de reportes
 
-.reportes-dashboard__section-header h2{
-  font-size: 1.85rem;
-}
-
-.reportes-dashboard__section-header p{
-  font-size: 1.14rem;
-}
-
-.reportes-dashboard__link{
-  min-height: 9rem;
-  padding: 1.15rem;
-}
-
-.reportes-dashboard__link > span,
-.reportes-dashboard__link > i{
-  height: 4.25rem;
-  width: 4.25rem;
-}
-
-.reportes-dashboard__link strong{
-  font-size: 1.3rem;
-  font-weight: 850;
-}
-
-.reportes-dashboard__link small{
-  font-size: 1.08rem;
-  font-weight: 650;
-}
-@media (max-width: 1024px){
-  .reportes-dashboard__charts,
-  .reportes-dashboard__columns{
-    grid-template-columns: 1fr;
-  }
-
-  .reportes-dashboard__canvas{
-    height: 30rem;
-  }
-}
-
-
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current:hover,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current:focus,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"],
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:hover,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:focus{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
-  box-shadow: 0 .55rem 1.2rem rgba(79,70,229,.22) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
-
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current *,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"] *{
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
-@media (max-width: 640px){
-  .reportes-dashboard{
-    padding-bottom: calc(13rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .reportes-dashboard__shell{
-    border-radius: .8rem;
-    gap: 1.1rem;
-    padding: 1rem 1rem calc(7rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .reportes-dashboard__section:last-child{
-    margin-bottom: 1.5rem;
-  }
-
-  .reportes-dashboard__hero,
-  .reportes-dashboard__chart-header{
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .reportes-dashboard__hero{
-    padding: 1.3rem;
-  }
-
-  .reportes-dashboard__hero-text h1{
-    font-size: 2.25rem;
-  }
-
-  .reportes-dashboard__hero-text p{
-    font-size: 1.08rem;
-  }
-
-  .reportes-dashboard__hero-card{
-    min-width: 0;
-    width: 100%;
-  }
-
-  .reportes-dashboard__chart,
-  .reportes-dashboard__section{
-    padding: 1.1rem;
-  }
-
-  .reportes-dashboard__switch{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-  }
-
-  .reportes-dashboard__canvas{
-    height: 26rem;
-  }
-
-  .reportes-dashboard__grid,
-  .reportes-dashboard__grid--compact{
-    grid-template-columns: 1fr;
-  }
-
-  .reportes-dashboard__link{
-    min-height: 7.4rem;
-  }
-}
-
-.report-cuotas{
-  --report-primary: #4f46e5;
-  --report-primary-dark: #4338ca;
-  --report-accent: #06b6d4;
-  --report-border: #dbe3ef;
-  --report-muted: #64748b;
-  --report-text: #14233b;
-
-  @include m.contenedor100;
-  color: var(--report-text);
-  padding-bottom: 3rem;
-}
-
-.report-cuotas__shell{
-  background:
-    linear-gradient(180deg, rgba(79,70,229,.06), rgba(255,255,255,0) 18rem),
-    #fff;
-  border: 1px solid var(--report-border);
-  border-radius: .8rem;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, .06);
-  display: grid;
-  gap: 1.4rem;
-  margin: 0 auto;
-  max-width: 150rem;
-  padding: 1.6rem;
-}
-
-.report-cuotas__hero{
-  align-items: center;
-  background: linear-gradient(135deg, rgba(79,70,229,.09), rgba(6,182,212,.08));
-  border: 1px solid var(--report-border);
-  border-radius: .8rem;
-  display: grid;
-  gap: 1.2rem;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  padding: 1.7rem;
-}
-
-.report-cuotas__back{
-  align-items: center;
-  background: linear-gradient(135deg, #5b52f0, var(--report-primary-dark));
-  border-radius: .7rem;
-  box-shadow: 0 12px 24px rgba(79,70,229,.22);
-  color: #fff;
-  display: inline-flex;
-  font-size: 1.7rem;
-  height: 4.4rem;
-  justify-content: center;
-  text-decoration: none;
-  transition: transform .2s ease, box-shadow .2s ease;
-  width: 4.4rem;
-
-  &:hover{
-    box-shadow: 0 14px 28px rgba(79,70,229,.28);
-    color: #fff;
-    transform: translateY(-1px);
-  }
-}
-
-.report-cuotas__title{
-  min-width: 0;
-
-  p{
-    color: var(--report-primary);
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin: 0 0 .25rem;
-    text-transform: uppercase;
-  }
-
-  h1{
-    color: var(--report-text);
-    font-size: 2.65rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  span{
-    color: var(--report-muted);
-    display: block;
-    font-size: 1.18rem;
-    line-height: 1.35;
-    margin-top: .35rem;
-  }
-}
-
-.report-cuotas__stats{
-  display: flex;
-  flex-wrap: wrap;
-  gap: .9rem;
-  justify-content: flex-end;
-}
-
-.report-cuotas__stat{
-  align-items: center;
-  background: rgba(255,255,255,.9);
-  border: 1px solid rgba(219,227,239,.95);
-  border-radius: .8rem;
-  display: inline-flex;
-  gap: .9rem;
-  min-width: 18rem;
-  padding: .95rem;
-
-  > span{
-    align-items: center;
-    background: linear-gradient(135deg, #5b52f0, var(--report-primary-dark));
-    border-radius: .75rem;
-    color: #fff;
-    display: inline-flex;
-    flex: 0 0 4.6rem;
-    font-size: 1.8rem;
-    height: 4.6rem;
-    justify-content: center;
-    width: 4.6rem;
-  }
-
-  strong,
-  small{
-    display: block;
-  }
-
-  strong{
-    color: var(--report-text);
-    font-size: 1.55rem;
-    font-weight: 900;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  small{
-    color: var(--report-muted);
-    font-size: 1.02rem;
-    font-weight: 700;
-    margin-top: .22rem;
-  }
-}
-
-.report-cuotas__stat--accent > span{
-  background: linear-gradient(135deg, #08c6bd, #0891b2);
-}
-
-.report-cuotas__filters,
-.report-cuotas__table-card{
-  background: #fff;
-  border: 1px solid var(--report-border);
-  border-radius: .8rem;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, .045);
-  padding: 1.4rem;
-}
-
-.report-cuotas__filters{
-  display: grid;
-  gap: 1.2rem;
-}
-
-.report-cuotas__filters-header,
-.report-cuotas__table-header{
-  align-items: center;
-  border-bottom: 1px solid var(--report-border);
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding-bottom: 1rem;
-}
-
-.report-cuotas__filters-header{
-  justify-content: flex-start;
-
-  > span{
-    align-items: center;
-    background: #eef2ff;
-    border-radius: .7rem;
-    color: var(--report-primary);
-    display: inline-flex;
-    flex: 0 0 4.2rem;
-    font-size: 1.6rem;
-    height: 4.2rem;
-    justify-content: center;
-    width: 4.2rem;
-  }
-}
-
-.report-cuotas__filters-header h2,
-.report-cuotas__table-header h2{
-  color: var(--report-text);
-  font-size: 1.65rem;
-  font-weight: 800;
-  line-height: 1.15;
-  margin: 0;
-}
-
-.report-cuotas__filters-header p,
-.report-cuotas__table-header p{
-  color: var(--report-muted);
-  font-size: 1.08rem;
-  margin: .2rem 0 0;
-}
-
-.report-cuotas__table-header > span{
-  background: #eef2ff;
-  border-radius: 999px;
-  color: var(--report-primary);
-  flex: 0 0 auto;
-  font-size: 1.02rem;
-  font-weight: 850;
-  padding: .5rem .85rem;
-}
-
-.report-cuotas__quick-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: .8rem;
-}
-
-.report-cuotas__filter-button{
-  align-items: center;
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: .65rem;
-  color: #263852;
-  cursor: pointer;
-  display: inline-flex;
-  font-size: 1.12rem;
-  font-weight: 800;
-  gap: .6rem;
-  justify-content: center;
-  min-height: 4.3rem;
-  padding: 0 1.25rem;
-  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-
-  i{
-    color: var(--report-primary);
-  }
-
-  &:hover{
-    background: #eef2ff;
-    border-color: rgba(79,70,229,.4);
-    box-shadow: 0 .7rem 1.4rem rgba(79,70,229,.12);
-    color: var(--report-primary);
-    transform: translateY(-1px);
-  }
-}
-
-.report-cuotas__filter-button--primary{
-  background: linear-gradient(135deg, #5b52f0, var(--report-primary-dark));
-  border: 0;
-  box-shadow: 0 12px 24px rgba(79,70,229,.22);
-  color: #fff;
-
-  i{
-    color: #fff;
-  }
-
-  &:hover{
-    background: linear-gradient(135deg, #5b52f0, var(--report-primary-dark));
-    border-color: transparent;
-    color: #fff;
-  }
-}
-
-.report-cuotas__filter-button--accent{
-  background: #ecfeff;
-  border-color: #67e8f9;
-  color: #0e7490;
-
-  i{
-    color: #0e7490;
-  }
-}
-
+// animacion del boton consultar del reporte de cuotas
 .report-cuotas__filter-button--attention{
   animation: report-cuotas-consultar-attention .75s ease-in-out 3;
 }
 
-.report-cuotas__custom-range{
-  align-items: end;
-  display: grid;
-  gap: .8rem;
-  grid-template-columns: minmax(38rem, 48rem) minmax(20rem, 1fr);
+@keyframes report-cuotas-consultar-attention{
+  0%,
+  100%{
+    box-shadow: 0 0 0 0 rgba(91, 82, 240, 0);
+    transform: translateY(0);
+  }
 
-  label{
-    color: #334155;
-    font-size: 1.08rem;
-    font-weight: 800;
-    grid-column: 1 / -1;
+  35%{
+    box-shadow: 0 0 0 .38rem rgba(91, 82, 240, .18), 0 1rem 2.2rem rgba(91, 82, 240, .2);
+    transform: translateY(-.08rem);
+  }
+
+  70%{
+    box-shadow: 0 0 0 .22rem rgba(14, 165, 181,.18), 0 .8rem 1.8rem rgba(14, 165, 181, .16);
+    transform: translateY(.04rem);
   }
 }
+// fin animacion del boton consultar
 
-.report-cuotas__date-field{
-  align-items: stretch;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: .7rem;
-  display: flex;
-  height: 4.4rem;
-  overflow: hidden;
-  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
-
-  &:focus-within{
-    background: #fff;
-    border-color: var(--report-primary);
-    box-shadow: 0 0 0 .25rem rgba(79, 70, 229, .12);
-  }
-
-  span{
-    align-items: center;
-    background: #eef2ff;
-    border-right: 1px solid #cbd5e1;
-    color: var(--report-primary);
-    display: inline-flex;
-    flex: 0 0 4.4rem;
-    justify-content: center;
-  }
-
-  input{
-    background: transparent;
-    border: 0;
-    color: var(--report-text);
-    flex: 1;
-    font-size: 1.08rem;
-    font-weight: 650;
-    min-width: 0;
-    outline: 0;
-    padding: 0 1rem;
-  }
-}
-
-.report-cuotas__table-wrap{
-  margin-top: 1rem;
-  overflow-x: auto;
-}
-
-.report-cuotas__table-card .dataTables_wrapper,
-.report-cuotas__table-card .dt-container{
-  display: grid;
-  gap: 1rem;
-  min-width: 0;
-
-  .dt-layout-row{
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: .9rem;
-    justify-content: space-between;
-    margin: 0;
-  }
-
-  .dt-layout-cell{
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: .75rem;
-  }
-
-  .dt-buttons,
-  .dt-buttons.btn-group{
-    align-items: center;
-    background: linear-gradient(135deg, #f8fafc, #fff);
-    border: 1px solid #dbe3ef;
-    border-radius: .8rem;
-    box-shadow: 0 .65rem 1.4rem rgba(15, 23, 42, .045);
-    display: flex;
-    flex-wrap: wrap;
-    gap: .55rem;
-    justify-self: start;
-    padding: .6rem;
-  }
-
-  button.dt-button,
-  a.dt-button,
-  div.dt-button,
-  .dt-button{
-    align-items: center;
-    background: #fff !important;
-    background-image: none !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: .65rem !important;
-    box-shadow: none !important;
-    color: #263852 !important;
-    cursor: pointer;
-    display: inline-flex !important;
-    font-family: inherit !important;
-    font-size: 1.05rem !important;
-    font-weight: 800 !important;
-    justify-content: center;
-    line-height: 1 !important;
-    margin: 0 !important;
-    min-height: 3.55rem;
-    padding: 0 1rem !important;
-    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-
-    &:hover,
-    &:focus{
-      background: #eef2ff !important;
-      border-color: rgba(79,70,229,.42) !important;
-      box-shadow: 0 .7rem 1.4rem rgba(79,70,229,.12) !important;
-      color: var(--report-primary) !important;
-      transform: translateY(-1px);
-    }
-  }
-
-  .dataTables_length,
-  .dt-length{
-    align-items: center;
-    background: linear-gradient(135deg, #f8fafc, #fff);
-    border: 1px solid #dbe3ef;
-    border-radius: .8rem;
-    box-shadow: 0 .65rem 1.4rem rgba(15, 23, 42, .045);
-    color: #14233b;
-    display: inline-flex;
-    flex-wrap: nowrap;
-    font-size: 1.08rem;
-    font-weight: 800;
-    gap: .7rem;
-    min-height: 4.6rem;
-    padding: .55rem .8rem .55rem .6rem;
-
-    &::before{
-      align-items: center;
-      background: #eef2ff;
-      border-radius: .6rem;
-      color: var(--report-primary);
-      content: '\f0ca';
-      display: inline-flex;
-      flex: 0 0 3.4rem;
-      font-family: 'Font Awesome 6 Free';
-      font-size: 1.2rem;
-      font-weight: 900;
-      height: 3.4rem;
-      justify-content: center;
-      width: 3.4rem;
-    }
-
-    label{
-      align-items: center;
-      display: inline-flex;
-      flex-wrap: nowrap;
-      gap: .6rem;
-      margin: 0;
-      white-space: nowrap;
-    }
-  }
-
-  .dataTables_filter,
-  .dt-search{
-    align-items: center;
-    background: linear-gradient(135deg, #f8fafc, #eef2ff);
-    border: 1px solid #dbe3ef;
-    border-radius: .8rem;
-    box-shadow: 0 .65rem 1.4rem rgba(15, 23, 42, .045);
-    display: inline-flex;
-    gap: .7rem;
-    min-height: 4.6rem;
-    padding: .55rem .65rem;
-
-    label{
-      align-items: center;
-      color: #14233b;
-      display: inline-flex;
-      font-size: 1.08rem;
-      font-weight: 850;
-      gap: .7rem;
-      margin: 0;
-      white-space: nowrap;
-
-      &::before{
-        align-items: center;
-        background: #eef2ff;
-        border-radius: .6rem;
-        color: var(--report-primary);
-        content: '\f002';
-        display: inline-flex;
-        font-family: 'Font Awesome 6 Free';
-        font-size: 1.2rem;
-        font-weight: 900;
-        height: 3.4rem;
-        justify-content: center;
-        width: 3.4rem;
-      }
-    }
-  }
-
-  .dataTables_filter input,
-  .dt-search input,
-  .dataTables_length select,
-  .dt-length select{
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    border-radius: .6rem;
-    color: var(--report-text);
-    font-size: 1.05rem;
-    font-weight: 700;
-    min-height: 3.4rem;
-    outline: 0;
-    padding: 0 .85rem;
-
-    &:focus{
-      background: #fff;
-      border-color: var(--report-primary);
-      box-shadow: 0 0 0 .22rem rgba(79,70,229,.12);
-    }
-  }
-
-  .dataTables_length select,
-  .dt-length select{
-    appearance: none;
-    background:
-      linear-gradient(45deg, transparent 50%, #64748b 50%) calc(100% - 1.05rem) 50% / .45rem .45rem no-repeat,
-      linear-gradient(135deg, #fff, #f8fafc);
-    min-width: 6.2rem;
-    padding-right: 2.2rem;
-    text-align: center;
-  }
-
-  .dataTables_filter input,
-  .dt-search input{
-    min-width: 21rem;
-  }
-
-  .dataTables_info,
-  .dt-info{
-    align-items: center;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 999px;
-    color: #475569;
-    display: inline-flex;
-    font-size: 1.08rem;
-    font-weight: 800;
-    min-height: 3.6rem;
-    padding: 0 1rem;
-  }
-
-  .dataTables_paginate,
-  .dt-paging{
-    align-items: center;
-    background: linear-gradient(135deg, #f8fafc, #fff);
-    border: 1px solid #dbe3ef;
-    border-radius: 999px;
-    box-shadow: 0 .65rem 1.4rem rgba(15, 23, 42, .045);
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: .35rem;
-    justify-content: flex-end;
-    padding: .4rem;
-
-    .paginate_button,
-    .dt-paging-button{
-      align-items: center;
-      background: transparent !important;
-      border: 0 !important;
-      border-radius: 999px !important;
-      box-shadow: none !important;
-      color: #475569 !important;
-      cursor: pointer;
-      display: inline-flex !important;
-      font-size: 1.08rem !important;
-      font-weight: 850 !important;
-      height: 3.4rem;
-      justify-content: center;
-      margin: 0 !important;
-      min-width: 3.4rem;
-      padding: 0 .95rem !important;
-      transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
-
-      &:hover,
-      &:focus{
-        background: #eef2ff !important;
-        color: var(--report-primary) !important;
-        transform: translateY(-1px);
-      }
-
-      &.current,
-      &.current:hover,
-      &.current:focus{
-        background: linear-gradient(135deg, #5b52f0, #4338ca) !important;
-        box-shadow: 0 .55rem 1.2rem rgba(79,70,229,.22) !important;
-        color: #fff !important;
-      }
-
-      &.disabled,
-      &.disabled:hover,
-      &:disabled{
-        background: transparent !important;
-        color: #cbd5e1 !important;
-        cursor: not-allowed;
-        opacity: 1;
-        transform: none;
-      }
-    }
-  }
-}
-
-.report-cuotas__table{
-  border-collapse: separate !important;
-  border-spacing: 0 .65rem !important;
-  margin: 0 !important;
-  width: 100% !important;
-
-  thead th{
-    background: #f1f5f9;
-    border: 0 !important;
-    color: #334155;
-    font-size: 1.02rem;
-    font-weight: 900;
-    padding: 1rem !important;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  tbody tr{
-    background: #fff;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, .05);
-  }
-
-  tbody td{
-    border-bottom: 1px solid #edf2f7 !important;
-    border-top: 1px solid #edf2f7 !important;
-    color: var(--report-text);
-    font-size: 1.08rem;
-    padding: 1rem !important;
-    vertical-align: middle;
-  }
-
-  tbody td:first-child{
-    border-left: 1px solid #edf2f7 !important;
-    border-radius: .7rem 0 0 .7rem;
-  }
-
-  tbody td:last-child{
-    border-radius: 0 .7rem .7rem 0;
-    border-right: 1px solid #edf2f7 !important;
-  }
-}
-
-.report-cuotas__pill,
-.report-cuotas__status,
-.report-cuotas__document,
-.report-cuotas__method{
-  align-items: center;
-  border-radius: 999px;
-  display: inline-flex;
-  font-size: 1.02rem;
-  font-weight: 800;
-  line-height: 1.2;
-  min-height: 2.8rem;
-  padding: .35rem .8rem;
-  white-space: nowrap;
-}
-
-.report-cuotas__pill--credit{
-  background: #eef2ff;
-  color: var(--report-primary);
-}
-
-.report-cuotas__pill--separado,
-.report-cuotas__method{
-  background: #ecfeff;
-  color: #0e7490;
-}
-
-.report-cuotas__document{
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #334155;
-}
-
-.report-cuotas__client{
-  align-items: center;
-  display: inline-flex;
-  font-weight: 850;
-  gap: .65rem;
-
-  i{
-    align-items: center;
-    background: rgba(79,70,229,.10);
-    border-radius: .5rem;
-    color: var(--report-primary);
-    display: inline-flex;
-    height: 3rem;
-    justify-content: center;
-    width: 3rem;
-  }
-}
-
-.report-cuotas__money{
-  color: #0f172a;
-  font-weight: 900;
-}
-
-.report-cuotas__status--success{
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.report-cuotas__status--warning{
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.report-cuotas__status--danger{
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.report-finalizados{
-  .report-cuotas__table-header > span{
-    background: #ecfeff;
-    color: #0e7490;
-  }
-}
-
-.report-anulados{
-  .report-cuotas__table-header > span{
-    background: #fee2e2;
-    color: #b91c1c;
-  }
-}
-
-.report-anulados__stat > span{
-  background: linear-gradient(135deg, #fb7185, #dc2626);
-}
-
-.report-finalizados__table{
-  tbody td{
-    white-space: nowrap;
-  }
-}
-
-.report-finalizados__actions{
-  align-items: center;
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: .55rem;
-}
-
-.report-finalizados__open{
-  align-items: center;
-  background: #fff;
-  border: 1px solid #67e8f9;
-  border-radius: .65rem;
-  color: #0e7490;
-  display: inline-flex;
-  font-size: 1.02rem;
-  font-weight: 850;
-  gap: .45rem;
-  min-height: 2.8rem;
-  padding: .35rem .75rem;
-  text-decoration: none;
-  transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
-
-  &:hover,
-  &:focus{
-    background: #ecfeff;
-    box-shadow: 0 .55rem 1.1rem rgba(6,182,212,.14);
-    color: #0e7490;
-    transform: translateY(-1px);
-  }
-}
-
-.dt-button-collection{
-  background: #fff !important;
-  border: 1px solid #dbe3ef !important;
-  border-radius: .85rem !important;
-  box-shadow: 0 1.2rem 2.8rem rgba(15, 23, 42, .18) !important;
-  color: #14233b !important;
-  min-width: 20rem;
-  overflow: hidden;
-  padding: .45rem !important;
-  z-index: 9999 !important;
-
-  .dt-button,
-  button.dt-button,
-  a.dt-button{
-    align-items: center;
-    background: #fff !important;
-    border: 0 !important;
-    border-radius: .6rem !important;
-    box-shadow: none !important;
-    color: #263852 !important;
-    display: flex !important;
-    font-family: inherit !important;
-    font-size: 1.05rem !important;
-    font-weight: 800 !important;
-    justify-content: flex-start;
-    margin: 0 !important;
-    min-height: 3.6rem;
-    padding: 0 .9rem !important;
-    text-align: left;
-    width: 100%;
-
-    &::before{
-      color: var(--report-primary, #4f46e5);
-      margin-right: .65rem;
-    }
-
-    &:hover,
-    &:focus{
-      background: #eef2ff !important;
-      color: var(--report-primary, #4f46e5) !important;
-    }
-
-    &.active,
-    &.dt-button-active{
-      background: #ecfeff !important;
-      color: #0e7490 !important;
-    }
-  }
-}
-
+// tema compartido del selector de rango para cuotas y ventas generales
 .daterangepicker.report-cuotas__calendar,
 .daterangepicker.ventas-generales__calendar{
   border: 1px solid #dbe3ef;
@@ -1440,119 +216,7 @@
   }
 }
 
-@media (max-width: 900px){
-  .report-cuotas__hero{
-    align-items: stretch;
-    grid-template-columns: auto 1fr;
-  }
-
-  .report-cuotas__stats{
-    grid-column: 1 / -1;
-    justify-content: stretch;
-  }
-
-  .report-cuotas__stat{
-    flex: 1 1 20rem;
-  }
-
-  .report-cuotas__custom-range{
-    grid-template-columns: 1fr;
-  }
-}
-
-
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current:hover,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current:focus,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"],
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:hover,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:focus{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
-  box-shadow: 0 .55rem 1.2rem rgba(79,70,229,.22) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
-
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button.current *,
-.ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"] *{
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
 @media (max-width: 640px){
-  .report-cuotas{
-    max-width: 100%;
-    overflow-x: hidden;
-    padding: .8rem .8rem 15rem;
-    width: 100%;
-  }
-
-  .report-cuotas__shell,
-  .report-cuotas__hero,
-  .report-cuotas__filters,
-  .report-cuotas__table-card{
-    max-width: 100%;
-    min-width: 0;
-    overflow: hidden;
-    padding: 1rem;
-    width: 100%;
-  }
-
-  .report-cuotas__hero{
-    gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-
-  .report-cuotas__title,
-  .report-cuotas__stats,
-  .report-cuotas__stat,
-  .report-cuotas__filters-header,
-  .report-cuotas__table-header,
-  .report-cuotas__custom-range{
-    min-width: 0;
-    width: 100%;
-  }
-
-  .report-cuotas__title h1{
-    font-size: 2.25rem;
-  }
-
-  .report-cuotas__quick-actions,
-  .report-cuotas__filter-button,
-  .report-cuotas__filters-header,
-  .report-cuotas__table-header{
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .report-cuotas__quick-actions{
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .report-cuotas__filter-button{
-    justify-content: center;
-    width: 100%;
-  }
-
-  .report-cuotas__stat{
-    flex: 1 1 100%;
-  }
-
-  .report-cuotas__date-field,
-  .report-cuotas__date-field input{
-    min-width: 0;
-    width: 100%;
-  }
-
-  .report-cuotas__table-wrap{
-    margin-left: -1rem;
-    margin-right: -1rem;
-    max-width: calc(100% + 2rem);
-    overflow-x: auto;
-    padding: 0 1rem .3rem;
-    width: calc(100% + 2rem);
-  }
-
   .daterangepicker.report-cuotas__calendar,
   .daterangepicker.ventas-generales__calendar{
     left: 1rem !important;
@@ -1567,8 +231,8 @@
     }
 
     .drp-calendar.left{
-      border-right: 0;
       border-bottom: 1px solid #e8eef7;
+      border-right: 0;
     }
 
     .calendar-table{
@@ -1589,87 +253,10 @@
       }
     }
   }
-
-  .report-cuotas__table-card .dataTables_wrapper,
-  .report-cuotas__table-card .dt-container{
-    padding-bottom: 7rem;
-
-    &::after{
-      content: "";
-      display: block;
-      height: 6rem;
-      width: 100%;
-    }
-
-    .dt-layout-row,
-    .dt-layout-cell{
-      align-items: stretch;
-      flex-direction: column;
-      width: 100%;
-    }
-
-    .dt-buttons,
-    .dt-buttons.btn-group,
-    .dataTables_length,
-    .dt-length,
-    .dataTables_filter,
-    .dt-search,
-    .dataTables_paginate,
-    .dt-paging{
-      justify-content: flex-start;
-      width: 100%;
-    }
-
-    .dataTables_info,
-    .dt-info{
-      border-radius: .8rem;
-      justify-content: center;
-      width: 100%;
-    }
-
-    .dataTables_paginate,
-    .dt-paging{
-      border-radius: .8rem;
-      justify-content: center;
-      margin-bottom: 1rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .dataTables_filter input,
-    .dt-search input{
-      min-width: 0;
-      width: 100%;
-    }
-  }
 }
-
-@keyframes report-cuotas-consultar-attention{
-  0%,
-  100%{
-    box-shadow: 0 0 0 0 rgba(91, 82, 240, 0);
-    transform: translateY(0);
-  }
-
-  35%{
-    box-shadow: 0 0 0 .38rem rgba(91, 82, 240, .18), 0 1rem 2.2rem rgba(91, 82, 240, .2);
-    transform: translateY(-.08rem);
-  }
-
-  70%{
-    box-shadow: 0 0 0 .22rem rgba(14, 165, 181, .18), 0 .8rem 1.8rem rgba(14, 165, 181, .16);
-    transform: translateY(.04rem);
-  }
-}
-
+// fin tema compartido del selector de rango
 
 .ventas-generales{
-  --ventas-primary: #4f46e5;
-  --ventas-primary-dark: #4338ca;
-  --ventas-accent: #06b6d4;
-  --ventas-border: #dbe3ef;
-  --ventas-muted: #64748b;
-  --ventas-text: #071b3a;
 
   @include m.contenedor100;
   padding-bottom: 3rem;
@@ -1677,7 +264,7 @@
 
 .ventas-generales__shell{
   background: linear-gradient(180deg, rgba(79,70,229,.07), rgba(6,182,212,.04) 10rem, #fff 18rem);
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: .9rem;
   box-shadow: 0 1.8rem 4rem rgba(15, 23, 42, .08);
   display: grid;
@@ -1689,7 +276,7 @@
 .ventas-generales__filters,
 .ventas-generales__content-card{
   background: #fff;
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: .8rem;
 }
 
@@ -1704,7 +291,7 @@
 
 .ventas-generales__back{
   align-items: center;
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark));
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
   border-radius: .65rem;
   box-shadow: 0 .9rem 1.8rem rgba(79, 70, 229, .24);
   color: #fff;
@@ -1726,11 +313,11 @@
 .ventas-generales__title span,
 .ventas-generales__section-heading h2 + p,
 .ventas-generales__period-card small{
-  color: var(--ventas-muted);
+  color: v.$color-muted;
 }
 
 .ventas-generales__title span{
-  color: var(--ventas-primary);
+  color: v.$color-primary;
   font-size: .82rem;
   font-weight: 800;
   letter-spacing: .02em;
@@ -1738,7 +325,7 @@
 }
 
 .ventas-generales__title h1{
-  color: var(--ventas-text);
+  color: v.$color-text;
   font-size: clamp(2.3rem, 3vw, 3.25rem);
   font-weight: 800;
   line-height: 1.05;
@@ -1755,7 +342,7 @@
 .ventas-generales__period-card{
   align-items: center;
   background: rgba(255, 255, 255, .9);
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: .65rem;
   box-shadow: 0 .9rem 2rem rgba(15, 23, 42, .06);
   display: flex;
@@ -1769,7 +356,7 @@
   align-items: center;
   background: #eef2ff;
   border-radius: .65rem;
-  color: var(--ventas-primary);
+  color: v.$color-primary;
   display: inline-flex;
   flex: 0 0 auto;
   font-size: 1.25rem;
@@ -1779,7 +366,7 @@
 }
 
 .ventas-generales__period-card strong{
-  color: var(--ventas-text);
+  color: v.$color-text;
   display: block;
   font-size: 1.35rem;
   font-weight: 800;
@@ -1803,21 +390,21 @@
 
 .ventas-generales__section-heading{
   align-items: center;
-  border-bottom: 1px solid var(--ventas-border);
+  border-bottom: 1px solid v.$color-border;
   display: flex;
   gap: .9rem;
   padding-bottom: .9rem;
 }
 
 .ventas-generales__section-heading h2{
-  color: var(--ventas-text);
+  color: v.$color-text;
   font-size: 1.55rem;
   font-weight: 800;
   margin: 0;
 }
 
 .ventas-generales__section-heading p{
-  color: var(--ventas-muted);
+  color: v.$color-muted;
   font-size: 1rem;
   margin: .1rem 0 0;
 }
@@ -1845,7 +432,7 @@
 
 .ventas-generales__filter-btn{
   background: #fff;
-  color: var(--ventas-text);
+  color: v.$color-text;
 }
 
 .ventas-generales__filter-btn:hover,
@@ -1854,13 +441,13 @@
 .ventas-generales__tab:focus{
   border-color: rgba(79, 70, 229, .5);
   box-shadow: 0 .85rem 1.8rem rgba(79, 70, 229, .12);
-  color: var(--ventas-primary);
+  color: v.$color-primary;
   transform: translateY(-1px);
 }
 
 .ventas-generales__filter-btn--primary,
 .ventas-generales__tab.is-active{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark) !important;
   border-color: transparent !important;
   box-shadow: 0 .9rem 2rem rgba(79, 70, 229, .22);
   color: #fff !important;
@@ -1886,7 +473,7 @@
 }
 
 .ventas-generales__range label{
-  color: var(--ventas-text);
+  color: v.$color-text;
   font-size: .95rem;
   font-weight: 800;
   grid-column: 1 / -1;
@@ -1904,7 +491,7 @@
 .ventas-generales__date-field > span{
   align-items: center;
   background: #eef2ff;
-  color: var(--ventas-primary);
+  color: v.$color-primary;
   display: flex;
   flex: 0 0 3.7rem;
   font-size: 1.15rem;
@@ -1914,7 +501,7 @@
 .ventas-generales__date-field input{
   background: #f8fafc;
   border: 0;
-  color: var(--ventas-text);
+  color: v.$color-text;
   flex: 1 1 auto;
   font-size: 1rem;
   font-weight: 800;
@@ -1924,13 +511,13 @@
 }
 
 .ventas-generales__date-field:focus-within{
-  border-color: var(--ventas-primary);
+  border-color: v.$color-primary;
   box-shadow: 0 0 0 .2rem rgba(79, 70, 229, .14);
 }
 
 .ventas-generales__tabs{
   background: #f3f6fb;
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: .75rem;
   display: flex;
   gap: .55rem;
@@ -1940,7 +527,7 @@
 
 .ventas-generales__tab{
   background: #fff !important;
-  color: var(--ventas-primary) !important;
+  color: v.$color-primary !important;
   flex: 0 0 auto;
   min-height: 3.45rem;
   padding-inline: 1rem;
@@ -1957,7 +544,7 @@
 
 .ventas-generales .tab-pane{
   background: #fff;
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: .8rem;
   min-width: 0;
   overflow-x: auto;
@@ -1967,8 +554,8 @@
 
 .ventas-generales__pane-title{
   align-items: center;
-  border-bottom: 1px solid var(--ventas-border);
-  color: var(--ventas-text);
+  border-bottom: 1px solid v.$color-border;
+  color: v.$color-text;
   display: flex;
   font-size: 1.35rem;
   font-weight: 800;
@@ -1978,7 +565,7 @@
 }
 
 .ventas-generales__pane-title i{
-  color: var(--ventas-primary);
+  color: v.$color-primary;
 }
 
 .ventas-generales__pane-title--spaced{
@@ -1998,7 +585,7 @@
 .ventas-generales .dt-search{
   align-items: center;
   background: #f3f6fb;
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: .65rem;
   display: inline-flex;
   gap: .55rem;
@@ -2018,7 +605,7 @@
   background: #fff;
   border: 1px solid #cbd5e1;
   border-radius: .45rem;
-  color: var(--ventas-text);
+  color: v.$color-text;
   font-weight: 800;
   min-height: 2.7rem;
   outline: 0;
@@ -2057,7 +644,7 @@
   background: #fff;
   border-bottom: 1px solid #edf2f7 !important;
   border-top: 1px solid #edf2f7 !important;
-  color: var(--ventas-text);
+  color: v.$color-text;
   font-weight: 600;
   padding: 1rem !important;
   vertical-align: middle;
@@ -2088,7 +675,7 @@
 .ventas-generales .dt-info{
   align-items: center;
   background: #f8fafc;
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: 999px;
   color: #475569;
   display: inline-flex;
@@ -2101,7 +688,7 @@
 .ventas-generales .dt-paging{
   align-items: center;
   background: #fff;
-  border: 1px solid var(--ventas-border);
+  border: 1px solid v.$color-border;
   border-radius: 999px;
   box-shadow: 0 .8rem 2rem rgba(15, 23, 42, .08);
   display: inline-flex;
@@ -2128,7 +715,7 @@
 .ventas-generales .paginate_button.current,
 .ventas-generales .dt-paging-button.current,
 .ventas-generales .dt-paging-button[aria-current="page"]{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark) !important;
   box-shadow: 0 .8rem 1.6rem rgba(79, 70, 229, .25);
   color: #fff !important;
 }
@@ -2147,7 +734,7 @@
   background: #fff !important;
   border: 1px solid #cbd5e1 !important;
   border-radius: .5rem !important;
-  color: var(--ventas-text) !important;
+  color: v.$color-text !important;
   font-weight: 800 !important;
   min-height: 3rem;
   padding: .55rem .8rem !important;
@@ -2160,7 +747,7 @@
 }
 
 .ventas-generales #contentBalanceGeneral{
-  border-bottom-color: var(--ventas-border) !important;
+  border-bottom-color: v.$color-border !important;
   margin-top: 0 !important;
 }
 .ventas-generales #contentBalanceGeneral > .grid:first-of-type{
@@ -2171,7 +758,7 @@
   align-content: space-between;
   background: linear-gradient(145deg, #ffffff 0%, #f8fbff 58%, #eef9ff 100%) !important;
   border: 1px solid #dbe6f3 !important;
-  border-left: 4px solid var(--ventas-primary) !important;
+  border-left: 4px solid v.$color-primary !important;
   border-radius: .85rem !important;
   box-shadow: 0 .9rem 2rem rgba(15, 23, 42, .07) !important;
   display: grid;
@@ -2281,7 +868,7 @@
 .ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"],
 .ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:hover,
 .ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:focus{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark) !important;
   box-shadow: 0 .55rem 1.2rem rgba(79,70,229,.22) !important;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
@@ -2461,7 +1048,7 @@
 .ventas-generales .dt-paging .dt-paging-button:hover,
 .ventas-generales .dt-paging .dt-paging-button:focus{
   background: #eef2ff !important;
-  color: var(--ventas-primary) !important;
+  color: v.$color-primary !important;
   transform: translateY(-1px);
 }
 
@@ -2475,7 +1062,7 @@
 .ventas-generales .dataTables_paginate .paginate_button.current *,
 .ventas-generales .dt-paging .dt-paging-button.current *,
 .ventas-generales .dt-paging .dt-paging-button[aria-current="page"] *{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark) !important;
   box-shadow: 0 .55rem 1.2rem rgba(79,70,229,.22) !important;
   color: #fff !important;
 }
@@ -2499,7 +1086,7 @@
 .ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"],
 .ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:hover,
 .ventas-generales div.dt-container .dt-paging button.dt-paging-button[aria-current="page"]:focus{
-  background: linear-gradient(135deg, #5b52f0, var(--ventas-primary-dark)) !important;
+  background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark) !important;
   box-shadow: 0 .55rem 1.2rem rgba(79,70,229,.22) !important;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
@@ -2526,5 +1113,3 @@
     width: 100% !important;
   }
 }
-
-
