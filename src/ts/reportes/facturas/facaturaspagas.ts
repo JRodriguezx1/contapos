@@ -37,16 +37,7 @@
     let datosFacturasPagas:facturaspagas[] = [];
 
     // SELECTOR DE FECHAS DEL CALENDARIO
-    ($('input[name="datetimes"]')as any).daterangepicker({
-      timePicker: true,
-      //startDate: moment().startOf('hour'),
-      //endDate: moment().startOf('hour').add(32, 'hour'),
-      startDate: moment().set({ hour: 0, minute: 0, second: 1 }),
-      endDate: moment().set({ hour: 23, minute: 59, second: 59 }),
-      locale: {
-        format: 'M/DD hh:mm A'
-      }
-    });
+    inicializarDateRangePicker($('input[name="datetimes"]') as any);
 
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
         var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');

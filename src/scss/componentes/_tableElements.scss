@@ -1,5 +1,4 @@
 @use 'base/variables' as v;
-@use 'base/mixins' as m;
 
 // elementos reutilizables para el contenido de las celdas de tablas
 .table-entity{
@@ -52,6 +51,18 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   color: #334155;
+}
+
+.table-badge--success{
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+.table-badge--warning{
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
 }
 
 .table-amount{

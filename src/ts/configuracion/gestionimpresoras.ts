@@ -115,9 +115,9 @@
       return [
         numero,
         renderNombreImpresora(impresora?.nombre),
-        renderPillImpresora(impresora?.nombrecompartido, 'shared'),
-        renderPillImpresora(impresora?.estacion, 'station'),
-        renderPillImpresora(`${impresora?.mm ?? ''} mm`, 'paper'),
+        renderBadgeImpresora(impresora?.nombrecompartido, 'shared'),
+        renderBadgeImpresora(impresora?.estacion, 'station'),
+        renderBadgeImpresora(`${impresora?.mm ?? ''} mm`, 'paper'),
         renderEstadoImpresora(impresora?.estado),
         `<div class="acciones-btns" id="${escapeHtmlImpresora(impresora?.id)}" data-impresora="${escapeHtmlImpresora(impresora?.nombre)}">
             <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -127,19 +127,24 @@
     }
 
     function renderNombreImpresora(nombre:any):string{
-      return `<span class="config-printer-name">
-        <span class="config-printer-name__icon"><i class="fa-solid fa-print"></i></span>
+      return `<span class="table-entity">
+        <span class="table-entity__icon"><i class="fa-solid fa-print"></i></span>
         <span>${escapeHtmlImpresora(nombre)}</span>
       </span>`;
     }
 
-    function renderPillImpresora(valor:any, modificador:string):string{
-      return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlImpresora(valor)}</span>`;
+    function renderBadgeImpresora(valor:any, modificador:string):string{
+      const clases:Record<string,string> = {
+        shared: 'table-badge--primary !whitespace-normal break-words',
+        station: 'table-badge--neutral',
+        paper: 'table-badge--warning'
+      };
+      return `<span class="table-badge ${clases[modificador] ?? 'table-badge--neutral'}">${escapeHtmlImpresora(valor)}</span>`;
     }
 
     function renderEstadoImpresora(estado:any):string{
       const activa = String(estado) === '1' || String(estado).toLowerCase() === 'activa' || String(estado).toLowerCase() === 'activo';
-      return `<span class="config-table-status ${activa ? 'config-table-status--active' : 'config-table-status--inactive'}">${activa ? 'Activa' : 'Inactiva'}</span>`;
+      return `<span class="table-status ${activa ? 'table-status--success' : 'table-status--danger'}">${activa ? 'Activa' : 'Inactiva'}</span>`;
     }
 
     function escapeHtmlImpresora(valor:any):string{

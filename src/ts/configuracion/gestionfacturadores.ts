@@ -150,15 +150,15 @@
     function filaFacturador(numero:number, facturador:any):any[]{
       return [
         numero,
-        `<span class="config-facturador-name">
-          <span class="config-facturador-name__icon"><i class="fa-solid fa-receipt"></i></span>
+        `<span class="table-entity">
+          <span class="table-entity__icon"><i class="fa-solid fa-receipt"></i></span>
           <span>${facturador?.nombre}</span>
         </span>`,
-        renderPillFacturador(nombreTipoFacturador(facturador), 'type'),
-        renderPillFacturador(`${facturador?.rangoinicial ?? ''} - ${facturador?.rangofinal ?? ''}`, 'range'),
-        renderPillFacturador(facturador?.siguientevalor, 'next'),
-        renderPillFacturador(facturador?.fechafin, 'date'),
-        `<span class="config-table-status ${facturador?.estado == 1 ? 'config-table-status--active' : 'config-table-status--expired'}">${facturador?.estado == 1 ? 'Activo' : 'Expirada'}</span>`,
+        renderBadgeFacturador(nombreTipoFacturador(facturador), 'type'),
+        renderBadgeFacturador(`${facturador?.rangoinicial ?? ''} - ${facturador?.rangofinal ?? ''}`, 'range'),
+        renderBadgeFacturador(facturador?.siguientevalor, 'next'),
+        renderBadgeFacturador(facturador?.fechafin, 'date'),
+        `<span class="table-status ${facturador?.estado == 1 ? 'table-status--success' : 'table-status--danger'}">${facturador?.estado == 1 ? 'Activo' : 'Expirada'}</span>`,
         `<div class="acciones-btns" id="${facturador?.id}" data-facturador="${facturador?.nombre}">
             <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
             ${Number(facturador?.id) > 1 ? '<button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>' : ''}
@@ -172,8 +172,14 @@
         return typeof tipo === 'object' ? tipo?.nombre : tipo;
     }
 
-    function renderPillFacturador(valor:any, modificador:string):string{
-      return `<span class="config-table-pill config-table-pill--${modificador}">${valor}</span>`;
+    function renderBadgeFacturador(valor:any, modificador:string):string{
+      const clases:Record<string,string> = {
+        type: 'table-badge--neutral',
+        range: 'table-badge--primary',
+        next: 'table-badge--success',
+        date: 'table-badge--warning'
+      };
+      return `<span class="table-badge ${clases[modificador] ?? 'table-badge--neutral'}">${valor}</span>`;
     }
 
     ////////////////////  Eliminar facturador  //////////////////////

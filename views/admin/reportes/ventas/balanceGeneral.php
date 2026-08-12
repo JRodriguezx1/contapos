@@ -1,91 +1,4 @@
 <!-- tabla balance general -->
-    <!--
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur rounded-2xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition">
-            <p class="text-sm text-gray-500">Ventas</p>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">$10.000.000</h2>
-        </div>
-
-        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur rounded-2xl p-5 shadow-sm border hover:shadow-md transition">
-            <p class="text-sm text-gray-500">Utilidad</p>
-            <h2 class="text-2xl font-bold text-green-600 mt-1">$2.500.000</h2>
-        </div>
-
-        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur rounded-2xl p-5 shadow-sm border hover:shadow-md transition">
-            <p class="text-sm text-gray-500">Caja</p>
-            <h2 class="text-2xl font-bold text-blue-600 mt-1">$6.500.000</h2>
-        </div>
-
-        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur rounded-2xl p-5 shadow-sm border hover:shadow-md transition">
-            <p class="text-sm text-gray-500">Cartera</p>
-            <h2 class="text-2xl font-bold text-yellow-500 mt-1">$2.000.000</h2>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow border">
-            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-200">
-                Resumen Financiero
-            </h3>
-
-            <div class="space-y-3 text-sm">
-                <div class="flex justify-between">
-                    <span>Ventas</span>
-                    <span>$10.000.000</span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span>Costos</span>
-                    <span>$6.000.000</span>
-                </div>
-
-                <div class="flex justify-between font-semibold border-t pt-2">
-                    <span>Utilidad Bruta</span>
-                    <span>$4.000.000</span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span>Gastos</span>
-                    <span>$1.500.000</span>
-                </div>
-
-                <div class="flex justify-between font-bold text-green-600 text-base border-t pt-2">
-                    <span>Utilidad Operativa</span>
-                    <span>$2.500.000</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-2xl p-6 shadow-lg">
-            <h3 class="text-lg font-semibold mb-4">Créditos</h3>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                    <p class="opacity-80">Capital colocado</p>
-                    <h4 class="text-xl font-bold">$3.000.000</h4>
-                </div>
-
-                <div>
-                    <p class="opacity-80">Pendiente</p>
-                    <h4 class="text-xl font-bold">$2.000.000</h4>
-                </div>
-
-                <div>
-                    <p class="opacity-80">Abonos</p>
-                    <h4 class="text-xl font-bold">$1.000.000</h4>
-                </div>
-
-                <div>
-                    <p class="opacity-80">Intereses</p>
-                    <h4 class="text-xl font-bold">$800.000</h4>
-                </div>
-            </div>
-        </div>
-
-    </div>-->
-      
-<!-- segundo diseño -->
-
 <div id="contentBalanceGeneral" class="mt-4 pb-12 border-b">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:border-indigo-500/50 transition-all duration-300">
@@ -142,7 +55,7 @@
         <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-gray-800">Resumen Financiero</h3>
-                <button id="printBalance" class="btn-xs btn-light"><span class="material-symbols-outlined">print</span></button>
+                <button id="printBalance" class="inline-flex size-12 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button" aria-label="Imprimir balance"><span class="material-symbols-outlined">print</span></button>
             </div>
 
             <div class="space-y-2">
@@ -180,45 +93,6 @@
                 </div>
             </div>
         </div>
-
-        <!--<div class="relative overflow-hidden bg-slate-900 rounded-3xl p-8 shadow-xl">
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
-    
-            <div class="relative z-10">
-                <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-2">
-                    <span class="w-2 h-6 bg-indigo-500 rounded-full"></span>
-                    Estado de Créditos
-                </h3>
-
-                <div class="grid grid-cols-2 gap-8">
-                    <div class="space-y-1 border-l-2 border-indigo-500/30 pl-4">
-                        <p class="text-xs uppercase tracking-wider text-indigo-300 font-semibold">Capital Colocado</p>
-                        <h4 class="text-3xl font-black text-white italic">$3.000.000</h4>
-                    </div>
-
-                    <div class="space-y-1 border-l-2 border-rose-500/30 pl-4">
-                        <p class="text-xs uppercase tracking-wider text-rose-300 font-semibold">Saldo Pendiente</p>
-                        <h4 class="text-3xl font-black text-white italic">$2.000.000</h4>
-                    </div>
-
-                    <div class="space-y-1 border-l-2 border-emerald-500/30 pl-4">
-                        <p class="text-xs uppercase tracking-wider text-emerald-300 font-semibold">Abonos Recibidos</p>
-                        <h4 class="text-3xl font-black text-white italic">$1.000.000</h4>
-                    </div>
-
-                    <div class="space-y-1 border-l-2 border-sky-500/30 pl-4">
-                        <p class="text-xs uppercase tracking-wider text-sky-300 font-semibold">Intereses Generados</p>
-                        <h4 class="text-3xl font-black text-white italic">$800.000</h4>
-                    </div>
-                </div>
-    
-                <div class="mt-10">
-                    <button class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition shadow-lg shadow-indigo-500/20">
-                    Gestionar Cartera
-                    </button>
-                </div>
-            </div>
-        </div>-->
 
     </div>
 </div>

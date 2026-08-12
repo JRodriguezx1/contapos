@@ -7,7 +7,6 @@
         const limpiar = document.querySelector('#limpiarBusquedaParametroSistema') as HTMLButtonElement|null;
         const resultado = document.querySelector('#resultadoBusquedaParametroSistema') as HTMLElement|null;
         const contenedor = document.querySelector('.config-system-content') as HTMLElement|null;
-        const barra = document.querySelector('.config-param-search') as HTMLElement|null;
 
         if(!buscador || !contenedor)return;
 
@@ -77,7 +76,7 @@
         }));
 
         const limpiarFiltro = ():void => {
-            barra?.classList.remove('has-query');
+            limpiar?.classList.add('hidden');
             sistema?.classList.remove('param-search-active');
             paneles.forEach((panel)=>panel.classList.remove('config-param-panel-match'));
             campos.forEach((campo)=>{
@@ -93,7 +92,7 @@
             return;
             }
 
-            barra?.classList.add('has-query');
+            limpiar?.classList.remove('hidden');
             sistema?.classList.add('param-search-active');
             const coincidencias = campos.filter((campo)=>campo.textoBusqueda.includes(termino));
             const panelesConCoincidencias = new Set(coincidencias.map((campo)=>campo.panel));
@@ -131,7 +130,7 @@
         };
 
         buscador.addEventListener('input', aplicarFiltro);
-        sistema?.querySelectorAll('.config-system-nav .config-system-tab').forEach((tab)=>{
+        sistema?.querySelectorAll('.btnsetup .config-tab').forEach((tab)=>{
             tab.addEventListener('click', ()=>{
             if(!buscador.value)return;
             buscador.value = '';

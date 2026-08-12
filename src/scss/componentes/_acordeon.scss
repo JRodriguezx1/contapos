@@ -132,6 +132,36 @@
 
 ///////////////// con input tipe radio sin usar js, en vista index.php de configuracion//////////////////
 .accordion_inv{
+  .config-tab{
+    display: flex;
+    align-items: center;
+    background: v.$blanco;
+    border: 1px solid v.$color-border;
+    border-radius: .75rem;
+    color: v.$gris80;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+    gap: .8rem;
+    padding: 1rem;
+    text-align: left;
+    transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease, transform .2s ease;
+    width: auto;
+    @media ( min-width: 992px) {
+      width: 100%;
+    }
+    i{
+      color: v.$color-primary;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+    &:hover{
+      border-color: rgba(79,70,229,.35);
+      box-shadow: 0 8px 18px rgba(15,23,42,.07);
+      transform: translateY(-1px);
+    }
+  }
+
   #btn1:checked ~ .btnsetup .btn1{
     background-color: darken(v.$gris20, 0);
     color: v.$gris80;
@@ -202,6 +232,29 @@
     color: v.$gris80;
     border-color: lighten(v.$gris80, 10);
   }
+  
+  #btn1:checked ~ .btnsetup .btn1,
+  #btn2:checked ~ .btnsetup .btn2,
+  #btn3:checked ~ .btnsetup .btn3,
+  #btn4:checked ~ .btnsetup .btn4,
+  #btn5:checked ~ .btnsetup .btn5,
+  #btn6:checked ~ .btnsetup .btn6,
+  #btn7:checked ~ .btnsetup .btn7,
+  #btn8:checked ~ .btnsetup .btn8,
+  #btn9:checked ~ .btnsetup .btn9,
+  #btn10:checked ~ .btnsetup .btn10{
+    background: linear-gradient(135deg, #5b52f0, v.$color-primary-dark);
+    border-color: v.$color-primary-dark;
+    box-shadow: 0 10px 20px rgba(79,70,229,.20);
+    color: #fff;
+    transform: translateY(-1px);
+
+    i{
+      color: #fff;
+    }
+  }
+
+
   #btn1:checked ~ .flex .btnsetup-precios .btn1{
     background: linear-gradient(
         135deg,
@@ -258,6 +311,7 @@
     border-radius: .65rem;
     transform: translateY(-1px);
   }
+
   .btnsetup-precios label{
     transition:
         background .25s ease,
@@ -266,12 +320,8 @@
         box-shadow .25s ease,
         transform .25s ease;
   }
-  .accordion_tab_content{
-    display: none;
-  }
-  input[type="radio"]{
-    display: none;
-  } 
+
+
   #btn1:checked ~ .contenedorsetup .contenido1{
     display: block;
   }

@@ -22,7 +22,7 @@
       </div>
     </header>
 
-    <section class="ventas-generales__filters">
+    <section class="rounded-xl border border-slate-200 p-4 grid gap-4">
       <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
         <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-calendar-days"></i></span>
         <div>
@@ -31,34 +31,36 @@
         </div>
       </div>
 
-      <div class="ventas-generales__quick-actions">
-        <button id="btnmesactual" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-indigo-600 bg-indigo-600 px-5 text-lg font-extrabold text-white shadow-md shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700" type="button">
-          <i class="fa-regular fa-calendar-check"></i> Mes actual
-        </button>
-        <button id="btnmesanterior" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-lg font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button">
-          <i class="fa-solid fa-calendar-minus text-indigo-600"></i> Mes anterior
-        </button>
-        <button id="btnhoy" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-lg font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button">
-          <i class="fa-regular fa-sun text-indigo-600"></i> Hoy
-        </button>
-        <button id="btnayer" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-lg font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button">
-          <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Ayer
-        </button>
+      <div class="flex items-center flex-wrap gap-4">
+        <div class="flex flex-wrap gap-2">
+          <button id="btnmesactual" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-indigo-600 bg-indigo-600 px-5 text-lg font-extrabold text-white shadow-md shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700" type="button">
+            <i class="fa-regular fa-calendar-check"></i> Mes actual
+          </button>
+          <button id="btnmesanterior" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-lg font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button">
+            <i class="fa-solid fa-calendar-minus text-indigo-600"></i> Mes anterior
+          </button>
+          <button id="btnhoy" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-lg font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button">
+            <i class="fa-regular fa-sun text-indigo-600"></i> Hoy
+          </button>
+          <button id="btnayer" class="inline-flex min-h-16 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-lg font-extrabold text-slate-700 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600" type="button">
+            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Ayer
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="form-input">
+            <span><i class="fa-solid fa-calendar"></i></span>
+            <input id="ventasGeneralesRango" type="text" name="datetimes" placeholder="Seleccionar fecha" autocomplete="off" readonly />
+          </div>
+          <button id="consultarFechaPersonalizada" class="btnDialog btnDialog_secondary" type="button">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> Consultar
+          </button>
+        </div>
       </div>
 
-      <div class="ventas-generales__range">
-        <label for="ventasGeneralesRango">Rango personalizado</label>
-        <div class="ventas-generales__date-field">
-          <span><i class="fa-solid fa-calendar"></i></span>
-          <input id="ventasGeneralesRango" type="text" name="datetimes" placeholder="Seleccionar fecha" autocomplete="off" readonly />
-        </div>
-        <button id="consultarFechaPersonalizada" class="ventas-generales__filter-btn ventas-generales__filter-btn--accent" type="button">
-          <i class="fa-solid fa-magnifying-glass-chart"></i> Consultar
-        </button>
-      </div>
     </section>
 
-    <section class="ventas-generales__content-card">
+    <section class="rounded-xl border border-slate-200 p-4 grid gap-4">
       <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
         <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-chart-simple"></i></span>
         <div>
@@ -67,60 +69,64 @@
         </div>
       </div>
 
-      <!-- <div class="w-full overflow-x-auto lg:overflow-visible mb-6">
-          <div class="flex w-max lg:w-auto lg:inline-flex rounded-2xl shadow-md border border-gray-300">
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-indigo-600 text-white transition" data-tab="productos">
+      <div class="w-full overflow-x-auto lg:overflow-visible">
+          <div class="flex gap-2 w-max lg:w-auto lg:inline-flex rounded-xl shadow-md border border-slate-200 p-2">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-indigo-600 text-white transition"
+                data-tab="productos">
+                <i class="fa-solid fa-boxes-stacked mr-1"></i>
                 Productos
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="medios">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="medios">
+                <i class="fa-solid fa-credit-card mr-1"></i>
                 Medios de Pago
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="creditosSeparados">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="creditosSeparados">
+                <i class="fa-solid fa-handshake mr-1"></i>
                 Creditos/Separados
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="ingresoCanalventa">
-                Ingreso canal de venta
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="ingresoCanalventa">
+                <i class="fa-solid fa-route mr-1"></i>
+                Canal de venta
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="categorias">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="categorias">
+                <i class="fa-solid fa-folder-tree mr-1"></i>
                 Categorías
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="empleados">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="empleados">
+                <i class="fa-solid fa-user-tie mr-1"></i>
                 Empleados
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="gastos">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="gastos">
+                <i class="fa-solid fa-arrow-trend-down mr-1"></i>
                 Gastos
               </button>
-
-              <button class="tab-btn shrink-0 px-5 py-3 text-sm md:text-base font-medium bg-white text-gray-600 border-l border-gray-300 hover:bg-indigo-50 hover:text-indigo-600 transition" data-tab="resumen">
+              <button
+                class="tab-btn border border-slate-200 rounded-lg shrink-0 px-5 py-3 text-xl font-semibold bg-white text-indigo-600 transition"
+                data-tab="resumen">
+                <i class="fa-solid fa-scale-balanced mr-1"></i>
                 Resumen
               </button>
           </div>
-        </div>
-      -->
-
-      <div class="ventas-generales__tabs" role="tablist" aria-label="Reportes generales de ventas">
-        <button class="tab-btn ventas-generales__tab is-active bg-indigo-600 text-white" data-tab="productos" type="button"><i class="fa-solid fa-boxes-stacked"></i> Productos</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="medios" type="button"><i class="fa-solid fa-credit-card"></i> Medios de pago</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="creditosSeparados" type="button"><i class="fa-solid fa-handshake"></i> Creditos/Separados</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="ingresoCanalventa" type="button"><i class="fa-solid fa-route"></i> Canal de venta</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="categorias" type="button"><i class="fa-solid fa-folder-tree"></i> Categorias</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="empleados" type="button"><i class="fa-solid fa-user-tie"></i> Empleados</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="gastos" type="button"><i class="fa-solid fa-arrow-trend-down"></i> Gastos</button>
-        <button class="tab-btn ventas-generales__tab bg-white text-gray-600" data-tab="resumen" type="button"><i class="fa-solid fa-scale-balanced"></i> Resumen</button>
       </div>
       <!-- Tab content -->
-      <div id="tab-content" class="ventas-generales__tab-content">
+      <div id="tab-content" class=" min-w-0">
 
         <!-- Productos -->
         <div id="productos" class="tab-pane">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-boxes-stacked text-indigo-600"></i> Ventas por productos</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-boxes-stacked text-indigo-600"></i> Ventas por productos</h3>
           <table id="tablaProductosVendidos" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -134,7 +140,7 @@
 
         <!-- Medios de Pago -->
         <div id="medios" class="tab-pane hidden">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-credit-card"></i> Ventas por medio de pago</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-credit-card"></i> Ventas por medio de pago</h3>
           <table id="tablaMediosPagos" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -155,7 +161,7 @@
 
         <!-- Creditos/Separados -->
         <div id="creditosSeparados" class="tab-pane hidden">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-handshake"></i> Creditos/Separados</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-handshake"></i> Creditos/Separados</h3>
           <table id="tablacreditosSeparados" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -171,7 +177,7 @@
 
         <!-- Ingreso de canal de venta -->
         <div id="ingresoCanalventa" class="tab-pane hidden">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-route"></i> Ingresos por canal de venta</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-route"></i> Ingresos por canal de venta</h3>
           <table id="tablaIngresoCanalventa" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -185,7 +191,7 @@
 
         <!-- CategorÃ­as -->
         <div id="categorias" class="tab-pane hidden">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-folder-tree"></i> Ventas por categoria</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-folder-tree"></i> Ventas por categoria</h3>
           <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -199,7 +205,7 @@
 
         <!-- Empleados -->
         <div id="empleados" class="tab-pane hidden">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-user-tie"></i> Ventas por empleados</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-user-tie"></i> Ventas por empleados</h3>
           <table id="tablaVentasXUsuario" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -216,7 +222,7 @@
 
         <!-- Gastos -->
         <div id="gastos" class="tab-pane hidden">
-          <h3 class="text-slate-900 border border-b-slate-200 font-semibold text-2xl"><i class="fa-solid fa-arrow-trend-down"></i> Gastos</h3>
+          <h3 class="text-slate-900 border-b border-slate-200 pb-4 font-semibold text-2xl"><i class="fa-solid fa-arrow-trend-down"></i> Gastos</h3>
           <table id="tablaGastos" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -235,7 +241,7 @@
           <!-- tabla balance general -->
           <?php include __DIR__. "/balanceGeneral.php"; ?>
 
-          <h3 class="ventas-generales__pane-title ventas-generales__pane-title--spaced"><i class="fa-solid fa-chart-line"></i> Resumen financiero de ventas</h3>
+          <h3 class="mb-4 mt-7 flex items-center gap-2 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900 [&>i]:text-indigo-600"><i class="fa-solid fa-chart-line"></i> Resumen financiero de ventas</h3>
           <table id="tablaResumenVentas" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -250,7 +256,7 @@
             </tbody>
           </table>
 
-          <h3 class="ventas-generales__pane-title ventas-generales__pane-title--spaced"><i class="fa-solid fa-wallet"></i> Resumen financiero de creditos</h3>
+          <h3 class="mb-4 mt-7 flex items-center gap-2 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900 [&>i]:text-indigo-600"><i class="fa-solid fa-wallet"></i> Resumen financiero de creditos</h3>
           <div class="w-full overflow-x-auto">
             <table id="tablaResumenCreditos" class="tabla">
               <thead class="bg-gray-100 text-gray-700">
@@ -270,7 +276,7 @@
 
           
           
-          <h3 class="ventas-generales__pane-title ventas-generales__pane-title--spaced"><i class="fa-solid fa-arrow-trend-up"></i> Rentabilidad</h3>
+          <h3 class="mb-4 mt-7 flex items-center gap-2 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900 [&>i]:text-indigo-600"><i class="fa-solid fa-arrow-trend-up"></i> Rentabilidad</h3>
           <table id="tablaRentabilidad" class="display responsive nowrap tabla" width="100%">
             <thead class="bg-gray-100 text-gray-700">
               <tr>
@@ -283,11 +289,11 @@
             </thead>
             <tbody>
               <tr>
-                <td id="ingresoTotal" class=""></td>
-                <td id="egreso" class=""></td>
-                <td id="utilidadTotal" class=""></td>
-                <td id="margenUtilidadTotal" class=""></td>
-                <td id="rentabilidadTotal" class=""></td>
+                <td id="ingresoTotal"></td>
+                <td id="egreso"></td>
+                <td id="utilidadTotal"></td>
+                <td id="margenUtilidadTotal"></td>
+                <td id="rentabilidadTotal"></td>
               </tr>
             </tbody>
           </table>

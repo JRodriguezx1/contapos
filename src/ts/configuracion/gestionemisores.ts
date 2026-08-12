@@ -38,7 +38,6 @@
         document.querySelector('#modalEmisor')!.textContent = "Crear nuevo emisor";
         (document.querySelector('#btnEditarCrearEmisor') as HTMLInputElement).value = "Crear";
         miDialogoEmisor.showModal();
-        activarSelectSucursalEmisor();
         document.addEventListener("click", cerrarDialogoExterno);
     });
 
@@ -92,7 +91,6 @@
       
       indiceFila = (tablaEmisores as any).row((e.target as HTMLElement).closest('tr')).index();
       miDialogoEmisor.showModal();
-      activarSelectSucursalEmisor();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
@@ -227,18 +225,6 @@
     function limpiarformdialog(){
       (document.querySelector('#formCrearUpdateEmisor') as HTMLFormElement)?.reset();
       if(selectSucursalEmisorActivo)($('#sucursalEmisor') as any).val('').trigger('change');
-    }
-
-    function activarSelectSucursalEmisor(){
-      if(selectSucursalEmisorActivo)return;
-      ($('#sucursalEmisor') as any).select2({
-        dropdownParent: $('#miDialogoEmisor'),
-        dropdownCssClass: 'config-emisor-select2-dropdown',
-        placeholder: "-Seleccionar-",
-        width: '100%',
-        minimumResultsForSearch: Infinity
-      });
-      selectSucursalEmisorActivo = true;
     }
 
   }

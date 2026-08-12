@@ -96,7 +96,6 @@
       document.querySelector('#modalEmpleado')!.textContent = "Crear empleado";
       (document.querySelector('#btnEditarCrearEmpleado') as HTMLInputElement).value = "Crear";
       dialogoEmpleado.showModal();
-      activarSelectPerfilEmpleado();
       document.addEventListener("click", cerrarDialogoExterno);
     });
 
@@ -152,7 +151,6 @@
       printpermisos(unempleado?.permisos??[]);
       indiceFila = (tablaempleados as any).row((e.target as HTMLElement).closest('tr')).index();
       dialogoEmpleado.showModal();
-      activarSelectPerfilEmpleado();
       document.addEventListener("click", cerrarDialogoExterno);
     }
 
@@ -360,32 +358,6 @@
       (document.querySelector('#formCrearUpdateEmpleado') as HTMLFormElement)?.reset();
       if(selectPerfilEmpleadoActivo)$('#perfilempleado').val('').trigger('change');
       else actualizarPermisosPerfil('');
-    }
-
-    function activarSelectPerfilEmpleado(){
-      if(selectPerfilEmpleadoActivo)return;
-      ($('#perfilempleado') as any).select2({
-        dropdownParent: $('#miDialogoEmpleado'),
-        dropdownCssClass: 'config-empleado-select2-dropdown',
-        placeholder: "-Seleccionar-",
-        width: '100%',
-        minimumResultsForSearch: Infinity
-      });
-      $('#perfilempleado').on('select2:selecting', ()=>{
-        cambiandoPerfilDesdeSelect2 = true;
-      });
-      $('#perfilempleado').on('select2:close', ()=>{
-        if(!cambiandoPerfilDesdeSelect2)return;
-        window.setTimeout(()=>{
-          actualizarPermisosPerfil(($('#perfilempleado').val() as string) || '');
-          cambiandoPerfilDesdeSelect2 = false;
-        }, 60);
-      });
-      $('#perfilempleado').on('change', ()=>{
-        if(cambiandoPerfilDesdeSelect2)return;
-        actualizarPermisosPerfil(($('#perfilempleado').val() as string) || '');
-      });
-      selectPerfilEmpleadoActivo = true;
     }
 
   }

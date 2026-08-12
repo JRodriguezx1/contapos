@@ -24,6 +24,13 @@
     const tablaResumenVentas = ($('#tablaResumenVentas') as any);
     const tablaResumenCreditos = document.querySelector('#tablaResumenCreditos tbody');
     const printBalance = document.querySelector('#printBalance') as HTMLButtonElement;
+
+    function limpiarToolbarDataTable(selectorTabla:string):void{
+        const tabla = document.querySelector(selectorTabla) as HTMLTableElement|null;
+        const card = tabla?.closest('.config-table-card');
+        card?.querySelector('.config-datatable-custom-toolbar')?.remove();
+        card?.classList.remove('has-custom-datatable-toolbar');
+    }
     
     interface i_productosVendidos {
         idproducto:string,
@@ -91,8 +98,6 @@
 
     let productosVendidos:i_productosVendidos[] = [], mediosPagos:i_mediosPagos[] = [], creditosSeparados:i_creditosSeparados[] = [], ventasEmpleados:i_ventasEmpleados[]=[], gastos:i_gastos[]=[], canalVenta:i_canaldeVenta[]=[], resumenVentas:i_resumenVentas[]=[], resumenCreditos:i_resumenCreditos[]=[];
     let totalabonos:number = 0, dateStart = '', dateEnd = '';
-    //tablaProductosVendidos.DataTable(configdatatables25reg);
-
 
     async function callApiReporte(dateinicio:string, datefin:string){
         dateStart = dateinicio;
@@ -134,6 +139,7 @@
 
     printProductosVendidos();
     function printProductosVendidos(){
+        limpiarToolbarDataTable('#tablaProductosVendidos');
         tablaProductosVendidos.DataTable({
             destroy: true, // importante si recargas la tabla
             data: productosVendidos,
@@ -149,10 +155,12 @@
                         {title: 'Utilidad', data: 'utilidad', render: (data:number) => `$${Number(data).toLocaleString()}`}
                     ],
         });
+        modernizarToolbarDataTable('#tablaProductosVendidos');
     }
 
     printMediosPagos();
     function printMediosPagos(){
+        limpiarToolbarDataTable('#tablaMediosPagos');
         tablaMediosPagos.DataTable({
             destroy: true, // importante si recargas la tabla
             data: mediosPagos,
@@ -165,10 +173,12 @@
                         {title: 'Total Ventas', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
+        modernizarToolbarDataTable('#tablaMediosPagos');
     }
 
     printCreditosSeparados();
     function printCreditosSeparados(){
+        limpiarToolbarDataTable('#tablacreditosSeparados');
         tablacreditosSeparados.DataTable({
             destroy: true, // importante si recargas la tabla
             data: creditosSeparados,
@@ -179,7 +189,10 @@
                         {
                             title: 'Estado', 
                             data: 'estado', 
-                            render: (data: any, type: any, row: any) => {return `<button class="btn-xs ${row.estado=='Abierto'?'btn-blue':row.estado=='Finalizado'?'btn-lima':'btn-light'}">${row.estado}</button>`}
+                            render: (data: any, type: any, row: any) => {
+                                const clase = row.estado == 'Abierto' ? 'table-status--warning' : row.estado == 'Finalizado' ? 'table-status--success' : 'table-status--danger';
+                                return `<span class="table-status ${clase}">${row.estado}</span>`;
+                            }
                         },
                         {title: 'Cartera Total', data: 'carteraTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
                         {title: 'Cartera Por Cobrar', data: 'carteraXCobrar', render: (data:number) => `$${Number(data).toLocaleString()}`},
@@ -187,11 +200,13 @@
                         {title: 'Total', data: 'total'}
                     ],
         });
+        modernizarToolbarDataTable('#tablacreditosSeparados');
     }
 
 
     printCanalVenta();
     function printCanalVenta(){
+        limpiarToolbarDataTable('#tablaIngresoCanalventa');
         tablaIngresoCanalventa.DataTable({
             destroy: true, // importante si recargas la tabla
             data: canalVenta,
@@ -204,11 +219,13 @@
                         {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
+        modernizarToolbarDataTable('#tablaIngresoCanalventa');
     }
 
 
     printVentasUsuarios();
     function printVentasUsuarios(){
+        limpiarToolbarDataTable('#tablaVentasXUsuario');
         tablaVentasXUsuario.DataTable({
             destroy: true, // importante si recargas la tabla
             data: ventasEmpleados,
@@ -223,11 +240,13 @@
                         {title: 'Valor comision', data: 'valorComision', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
+        modernizarToolbarDataTable('#tablaVentasXUsuario');
     }
 
 
     printGastos();
     function printGastos(){
+        limpiarToolbarDataTable('#tablaGastos');
         tablaGastos.DataTable({
             destroy: true, // importante si recargas la tabla
             data: gastos,
@@ -240,6 +259,7 @@
                         {title: 'Valor', data: 'valor', render: (data:number) => `$${Number(data).toLocaleString()}`},
                     ],
         });
+        modernizarToolbarDataTable('#tablaGastos');
     }
 
 
@@ -292,6 +312,7 @@
 
 
         //resumen financiero total de ventas
+        limpiarToolbarDataTable('#tablaResumenVentas');
         tablaResumenVentas.DataTable({
             destroy: true, // importante si recargas la tabla
             data: resumenVentas,
@@ -306,37 +327,19 @@
                         {title: 'Margen Utilidad', data: 'margenutilidad', render: (data:number) => `${Number(data).toLocaleString()}%`},
                     ],
         });
-
-        //resumen financiero total creditos
-        /*tablaResumenCreditos.DataTable({
-            destroy: true, // importante si recargas la tabla
-            data: resumenCreditos,
-            pageLength: 25,
-            language: dataTablesLanguage,
-            order: [[ 1, 'desc' ]],
-            columns: [
-                        {title: 'Creditos', data: 'creditos'},
-                        {title: 'Credito Total', data: 'capitalTotal', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Costo Total', data: 'costo_total', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Utilidad Comercial', data: 'utilidad_comercial', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Utilidad Proyectada', data: 'utilidad_proyectada', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Pago total', data: 'valor_pagado', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                        {title: 'Utilidad Realizada', data: 'utilidad_realizada', render: (data:number) => `$${Number(data).toLocaleString()}`},
-                    ],
-        });*/
-
+        modernizarToolbarDataTable('#tablaResumenVentas');
 
         //tabla resumen financiero de creditos
         const tr = document.createElement('tr') as HTMLTableRowElement;
         while(tablaResumenCreditos?.firstChild)tablaResumenCreditos.removeChild(tablaResumenCreditos.firstChild);
         tr.insertAdjacentHTML('afterbegin', `
-          <td class="">${resumenCreditos[0]?.creditos??0}</td> 
-          <td class="">$${Number(resumenCreditos[0]?.capitalTotal??0).toLocaleString()}</td>
-          <td class="">$${Number(resumenCreditos[0]?.costo_total??0).toLocaleString()}</td>
-          <td class="">$${Number(resumenCreditos[0]?.utilidad_comercial??0).toLocaleString()}</td>
-          <td class="">$${Number(resumenCreditos[0]?.utilidad_proyectada??0).toLocaleString()}</td>
-          <td class="">$${Number(resumenCreditos[0]?.valor_pagado??0).toLocaleString()}</td>
-          <td class="">$${Number(resumenCreditos[0]?.utilidad_realizada??0).toLocaleString()}</td>`);
+          <td>${resumenCreditos[0]?.creditos??0}</td>
+          <td>$${Number(resumenCreditos[0]?.capitalTotal??0).toLocaleString()}</td>
+          <td>$${Number(resumenCreditos[0]?.costo_total??0).toLocaleString()}</td>
+          <td>$${Number(resumenCreditos[0]?.utilidad_comercial??0).toLocaleString()}</td>
+          <td>$${Number(resumenCreditos[0]?.utilidad_proyectada??0).toLocaleString()}</td>
+          <td>$${Number(resumenCreditos[0]?.valor_pagado??0).toLocaleString()}</td>
+          <td>$${Number(resumenCreditos[0]?.utilidad_realizada??0).toLocaleString()}</td>`);
         tablaResumenCreditos?.appendChild(tr);
 
         //tabla rentabilidad

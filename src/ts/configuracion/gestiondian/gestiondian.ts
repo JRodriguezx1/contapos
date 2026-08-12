@@ -365,16 +365,16 @@
         <tr id="company${documentoSeguro}">
           <td>${idSeguro}</td>
           <td>
-            <span class="config-dian-company-name">
-              <span class="config-dian-company-name__icon"><i class="fa-solid fa-building-user"></i></span>
+            <span class="table-entity">
+              <span class="table-entity__icon"><i class="fa-solid fa-building-user"></i></span>
               <span>${nombreSeguro}</span>
             </span>
           </td>
-          <td><span class="config-table-pill config-table-pill--document">${documentoSeguro}</span></td>
-          <td><span class="config-table-pill config-table-pill--software">${softwareSeguro}</span></td>
+          <td><span class="table-badge table-badge--primary">${documentoSeguro}</span></td>
+          <td><span class="table-badge table-badge--neutral max-w-md !whitespace-normal break-all font-mono">${softwareSeguro}</span></td>
           <td class="accionestd">
             <div class="acciones-btns">
-              <button id="${idSeguro}" class="config-dian-delete" type="button" title="Eliminar compañia">
+              <button id="${idSeguro}" class="table-action table-action--danger" type="button" title="Eliminar compañia">
                 <span class="material-symbols-outlined eliminarcompañia">delete</span>
               </button>
             </div>

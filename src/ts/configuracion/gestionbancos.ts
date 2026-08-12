@@ -111,8 +111,8 @@
       return [
         numero,
         renderNombreBanco(banco?.nombre),
-        renderPillBanco(banco?.numerocuenta, 'account'),
-        renderPillBanco(banco?.created_at, 'date'),
+        renderBadgeBanco(banco?.numerocuenta, 'table-badge--info !whitespace-normal break-all'),
+        renderBadgeBanco(banco?.created_at, 'table-badge--warning'),
         `<div class="acciones-btns" id="${banco?.id}" data-banco="${banco?.nombre}">
             <button class="btn-md btn-turquoise editarBanco"><i class="fa-solid fa-pen-to-square"></i></button>
             <button class="btn-md btn-red eliminarBanco"><i class="fa-solid fa-trash-can"></i></button>
@@ -121,14 +121,14 @@
     }
 
     function renderNombreBanco(nombre:any):string{
-        return `<span class="config-bank-name">
-                  <span class="config-bank-name__icon"><i class="fa-solid fa-building-columns"></i></span>
+        return `<span class="table-entity">
+                  <span class="table-entity__icon"><i class="fa-solid fa-building-columns"></i></span>
                   <span>${nombre}</span>
                 </span>`;
     }
 
-    function renderPillBanco(valor:any, modificador:string):string{
-      return `<span class="config-table-pill config-table-pill--${modificador}">${valor}</span>`;
+    function renderBadgeBanco(valor:any, clases:string):string{
+      return `<span class="table-badge ${clases}">${valor}</span>`;
     }
 
 

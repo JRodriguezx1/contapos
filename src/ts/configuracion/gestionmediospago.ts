@@ -60,7 +60,7 @@
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();  
             if(resultado.exito !== undefined){
-              const s1 = `<button id="${button?.id}" data-state="${button.dataset.state == '1' ? '1' : '0'}" class="statemediopago config-table-status ${button.dataset.state == '1' ? 'config-table-status--active' : 'config-table-status--inactive'}">${button.dataset.state == '1' ? 'Activo' : 'Inactivo'}</button>`;
+              const s1 = `<button id="${button?.id}" data-state="${button.dataset.state == '1' ? '1' : '0'}" class="statemediopago table-status cursor-pointer justify-center border-0 transition hover:-translate-y-px hover:shadow-md ${button.dataset.state == '1' ? 'table-status--success' : 'table-status--danger'}">${button.dataset.state == '1' ? 'Activo' : 'Inactivo'}</button>`;
               (tablamediosPagos as any).cell((tablamediosPagos as any).row(indiceFila+=info.start), 2).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
               (tablamediosPagos as any).page(info.page).draw('page'); //me mantiene la pagina actual
             }else{
@@ -133,11 +133,11 @@
     function filaMedioPago(numero:number, medioPago:any):any[]{
       return [
         numero,
-        `<span class="config-payment-name">
-          <span class="config-payment-name__icon"><i class="fa-solid fa-credit-card"></i></span>
+        `<span class="table-entity">
+          <span class="table-entity__icon"><i class="fa-solid fa-credit-card"></i></span>
           <span>${medioPago?.mediopago}</span>
         </span>`,
-        `<button id="${medioPago?.id}" data-state="${medioPago?.estado == 1 ? '1' : '0'}" class="statemediopago config-table-status ${medioPago?.estado == 1 ? 'config-table-status--active' : 'config-table-status--inactive'}">${medioPago?.estado == 1 ? 'Activo' : 'Inactivo'}</button>`,
+        `<button id="${medioPago?.id}" data-state="${medioPago?.estado == 1 ? '1' : '0'}" class="statemediopago table-status cursor-pointer justify-center border-0 transition hover:-translate-y-px hover:shadow-md ${medioPago?.estado == 1 ? 'table-status--success' : 'table-status--danger'}">${medioPago?.estado == 1 ? 'Activo' : 'Inactivo'}</button>`,
         renderAccionesMedioPago(medioPago)
       ];
     }

@@ -111,12 +111,12 @@
                 const tr = document.createElement('tr');
                 tr.id = resultado.data[1];
                 tr.insertAdjacentHTML('afterbegin', `
-                  <td><span class="config-whatsapp-contact"><i class="fa-brands fa-whatsapp"></i>${nombreWS.value}</span></td>
-                  <td><span class="config-whatsapp-pill config-whatsapp-pill--phone">${movilWS.value}</span></td>
-                  <td><span class="config-whatsapp-pill">${ tipoWS.value}</span></td>
-                  <td><button class="test config-whatsapp-action config-whatsapp-action--test" type="button">Test</button></td>
-                  <td><span class="config-whatsapp-status">Activo</span></td>
-                  <td><button class="config-whatsapp-icon-button eliminarContacto" type="button" title="Eliminar contacto"><i class="fa-solid fa-trash-can"></i></button></td>`);
+                  <td><span class="table-entity"><span class="table-entity__icon !bg-green-100 !text-green-600"><i class="fa-brands fa-whatsapp"></i></span><span>${nombreWS.value}</span></span></td>
+                  <td><span class="table-badge table-badge--info">${movilWS.value}</span></td>
+                  <td><span class="table-badge table-badge--primary">${tipoWS.value}</span></td>
+                  <td><button class="test inline-flex h-12 items-center justify-center rounded-md bg-indigo-50 px-4 text-base font-extrabold text-indigo-700 transition hover:bg-indigo-100" type="button">Test</button></td>
+                  <td><span class="table-status table-status--success">Activo</span></td>
+                  <td><button class="table-action table-action--danger eliminarContacto" type="button" title="Eliminar contacto"><i class="fa-solid fa-trash-can"></i></button></td>`);
                 tablaNumbersWS?.appendChild(tr);
                 (document.querySelector('#formCreateContactNotifcationWs') as HTMLFormElement)?.reset();
               }else{

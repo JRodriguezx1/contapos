@@ -106,10 +106,10 @@
     function filaTarifa(numero:number, tarifa:any):any[]{
       return [
         numero,
-        `<span class="config-tarifa-name">
-          <span class="config-tarifa-name__icon"><i class="fa-solid fa-percent"></i></span><span>${tarifa?.nombre}</span>
+        `<span class="table-entity">
+          <span class="table-entity__icon"><i class="fa-solid fa-percent"></i></span><span>${tarifa?.nombre}</span>
         </span>`,
-        renderPillTarifa(tarifa?.valor),
+        renderBadgeTarifa(tarifa?.valor),
         `<div class="acciones-btns" id="${tarifa?.id}" data-tarifa="${tarifa?.nombre}">
             <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square"></i></button>
             <button class="btn-md btn-red eliminarTarifa"><i class="fa-solid fa-trash-can"></i></button>
@@ -117,8 +117,8 @@
       ];
     }
 
-    function renderPillTarifa(valor:any):string{
-        return `<span class="config-table-pill config-table-pill--money">$${ Number(valor ?? 0).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
+    function renderBadgeTarifa(valor:any):string{
+        return `<span class="table-badge table-badge--success">$${ Number(valor ?? 0).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
     }
 
 

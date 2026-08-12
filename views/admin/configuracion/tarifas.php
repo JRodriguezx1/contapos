@@ -1,20 +1,22 @@
 <div class="tarifas">
 
-  <div class="config-section-heading">
-    <div class="config-section-heading__icon">
+  <div class="mb-5 flex flex-col justify-between gap-3 border-b border-slate-200 pb-5 md:flex-row md:items-center">
+    <div class="flex items-center gap-4">
+      <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-4xl font-medium text-indigo-600">
       <i class="fa-solid fa-percent"></i>
+      </span>
+      <div>
+        <h2 class="text-3xl font-bold text-slate-900">Gesti&oacute;n de tarifas</h2>
+        <p class="my-0 text-lg leading-snug text-slate-500">Administra valores de tarifas disponibles para ventas y operaciones.</p>
+      </div>
     </div>
-    <div>
-      <h4>Gestion de tarifas</h4>
-      <p>Administra valores de tarifas disponibles para ventas y operaciones.</p>
-    </div>
-    <button id="crearTarifa" class="btn-md btn-indigo config-section-heading__action" type="button">
+    <button id="crearTarifa" class="btnDialog btnDialog_primary" type="button">
       <i class="fa-solid fa-plus"></i>
       Crear tarifa
     </button>
   </div>
-  <div class="config-table-card">
-  <table id="tablaTarifas" class="display responsive nowrap tabla config-data-table" width="100%">
+  <div class="datatable-card config-table-card">
+  <table id="tablaTarifas" class="display responsive nowrap tabla datatable-table" width="100%">
       <thead>
           <tr>
               <th>N.</th>
@@ -28,12 +30,12 @@
           <tr> 
               <td class=""><?php echo $index+1;?></td>        
               <td>
-                <span class="config-tarifa-name">
-                  <span class="config-tarifa-name__icon"><i class="fa-solid fa-percent"></i></span>
+                <span class="table-entity">
+                  <span class="table-entity__icon"><i class="fa-solid fa-percent"></i></span>
                   <span><?php echo $value->nombre; ?></span>
                 </span>
               </td> 
-              <td><span class="config-table-pill config-table-pill--money">$<?php echo number_format($value->valor??0, '2', ',', '.');?></span></td>
+              <td><span class="table-badge table-badge--success">$<?php echo number_format($value->valor??0, '2', ',', '.');?></span></td>
               <td class="accionestd">
                 <div class="acciones-btns" id="<?php echo $value->id;?>" data-tarifa="<?php echo $value->nombre;?>">
                     <button class="btn-md btn-turquoise editarTarifa"><i class="fa-solid fa-pen-to-square" title="Actualizar datos del tarifa"></i></button>
@@ -46,41 +48,41 @@
   </table>
   </div>
 
-  <dialog id="miDialogoTarifa" class="midialog-sm config-caja-dialog config-param-dialog">
-    <div class="config-caja-dialog__header">
-      <span class="config-caja-dialog__icon">
+  <dialog id="miDialogoTarifa" class="detalledialog_xs">
+    <div class="flex items-center gap-4 bg-gradient-to-br from-indigo-600/15 to-cyan-300/10 p-6">
+      <span class="inline-flex size-20 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-white text-4xl font-medium text-indigo-600">
         <i class="fa-solid fa-percent"></i>
       </span>
       <div>
-        <span class="config-caja-dialog__eyebrow">Tarifa</span>
-        <h4 id="modalTarifa">Crear tarifa</h4>
-        <p>Define el nombre y valor que se usara en ventas y operaciones.</p>
+        <p class="my-0 text-base font-extrabold uppercase leading-5 text-indigo-600">Tarifa</p>
+        <h4 id="modalTarifa" class="text-3xl font-bold leading-6 text-slate-900">Crear tarifa</h4>
+        <small class="mt-1 block text-lg leading-snug text-slate-500">Define el nombre y valor que se usar&aacute; en ventas y operaciones.</small>
       </div>
     </div>
 
-    <form id="formCrearUpdateTarifa" class="config-caja-dialog__form" action="/admin/config/crear_Tarifa" method="POST">
+    <form id="formCrearUpdateTarifa" class="pb-8" action="/admin/config/crear_Tarifa" method="POST">
         <div id="divmsjalertaTarifa"></div>
 
-        <div class="config-caja-dialog__grid">
-            <div class="config-caja-dialog__field">
+        <div class="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
+            <div class="form-field">
                 <label for="nombreTarifa">Nombre</label>
-                <div class="config-caja-dialog__control">
+                <div class="form-input">
                   <span><i class="fa-solid fa-tag"></i></span>
                   <input id="nombreTarifa" type="text" placeholder="Nombre de la tarifa" name="nombre" value="" required>
                 </div>
             </div>
-            <div class="config-caja-dialog__field">
+            <div class="form-field">
                 <label for="valorTarifa">Valor tarifa</label>
-                <div class="config-caja-dialog__control">
+                <div class="form-input">
                   <span><i class="fa-solid fa-dollar-sign"></i></span>
                   <input id="valorTarifa" type="text" placeholder="Valor de la tarifa" name="valor" value="" required>
                 </div>
             </div>
         </div>  
         
-        <div class="config-caja-dialog__actions">
-            <button class="config-caja-dialog__button config-caja-dialog__button--ghost" type="button" value="Salir">Salir</button>
-            <input id="btnEditarCrearTarifa" class="config-caja-dialog__button config-caja-dialog__button--primary" type="submit" value="Crear">
+        <div class="formulario__contenedorBtns--gridfull px-6">
+            <button class="btnDialog btnDialog_light" type="button" value="Salir">Salir</button>
+            <input id="btnEditarCrearTarifa" class="btnDialog btnDialog_primary" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar Tarifa-->

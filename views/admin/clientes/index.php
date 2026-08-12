@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <table class="display responsive nowrap tabla datatable-table" width="100%" id="tablaClientes">
+      <table id="tablaClientes" class="display responsive nowrap tabla datatable-table" width="100%">
         <thead>
           <tr>
             <th>id</th>

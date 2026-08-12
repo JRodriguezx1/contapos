@@ -213,6 +213,7 @@
     transform: rotate(180deg);
 }
 
+
 // botones para modal dialog
 .btnDialog{
     align-items: center;
@@ -231,6 +232,9 @@
     &:focus{
         transform: translateY(-1px);
     }
+    &:hover{
+        transform: translateY(-1px);
+    }
 }
 
 .btnDialog_secondary{
@@ -242,6 +246,12 @@
 .btnDialog_primary{
   background: linear-gradient(135deg, #5b52f0, var(--detalle-primary-dark, #4338ca));
   box-shadow: 0 .75rem 1.6rem rgba(79,70,229,.2);
+  color: #fff;
+}
+
+.btnDialog_esmeralda{
+  background: #10bfb8;
+  border: 1px solid #10bfb8;
   color: #fff;
 }
 
@@ -257,7 +267,21 @@
   }
 }
 
-// nuevos botones
+
+.btndialog__close{
+    align-items: center;
+    background: #fff1f2;
+    border: 0;
+    border-radius: 999px;
+    color: #ef4444;
+    cursor: pointer;
+    display: inline-flex;
+    height: 3.4rem;
+    justify-content: center;
+    width: 3.4rem;
+}
+
+// nuevos botones usados en reporte de cuotas
 
 .nuevobtn{
     align-items: center;
