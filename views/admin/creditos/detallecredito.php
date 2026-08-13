@@ -7,16 +7,13 @@
   
   <div class="relative mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:p-6">
     <!-- Título principal -->
-    <a href="/admin/creditos" class="absolute left-8 top-8 z-[2] inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 p-0 text-white shadow-lg transition hover:-translate-y-0.5 hover:text-white sm:left-14 sm:top-14">
-      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-      </svg>
-      <span class="sr-only">Atrás</span>
+    <a href="/admin/creditos" class="absolute left-8 top-8 z-[2] inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 p-0 text-white shadow-lg transition hover:-translate-y-0.5 hover:text-white sm:left-14 sm:top-16">
+      <i class="fa-solid fa-arrow-left"></i>
     </a>
     <h2 class="flex min-h-36 items-center gap-3 rounded-lg border border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 py-6 pl-24 pr-6 text-3xl font-extrabold leading-tight text-slate-900 sm:min-h-40 sm:pl-28 sm:text-4xl">
       Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
       <span class="ml-auto hidden shrink-0 rounded-lg border border-slate-200 bg-white/90 px-4 py-3 text-base font-extrabold uppercase text-slate-500 md:inline-flex">Vista de cartera</span>
-    </h2> 
+    </h2>
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->

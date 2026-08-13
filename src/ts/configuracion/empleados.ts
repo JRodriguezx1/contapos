@@ -186,6 +186,10 @@
         document.querySelectorAll<HTMLInputElement>('#contentpermisos input[type="checkbox"]').forEach(x=>{
           if(x.checked)arraypermisos = [...arraypermisos, {id:x.value, nombre: x.nextElementSibling?.textContent??'permiso'}];
         });
+
+        document.querySelectorAll<HTMLInputElement>('#contentpermisosadmin input[type="checkbox"]').forEach(x=>{
+          if(x.checked)arraypermisos = [...arraypermisos, {id:x.value, nombre: x.nextElementSibling?.textContent??'permiso'}];
+        });
         
         (async ()=>{ 
           const datos = new FormData();

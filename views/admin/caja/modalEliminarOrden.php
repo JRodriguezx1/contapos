@@ -126,7 +126,7 @@
                 </h3>
             </div>
 
-            <table id="" class="w-full text-left text-xl text-gray-500 rtl:text-right">
+            <table class="w-full text-left text-xl text-gray-500 rtl:text-right">
                 <thead class="bg-slate-50 uppercase text-slate-700">
                     <tr>
                         <th scope="col" class="px-6 py-4">

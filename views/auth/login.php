@@ -10,7 +10,7 @@
 
         <div class="relative z-10 mt-5 max-w-xl md:mt-8">
           <p class="mb-2 text-xs font-black uppercase tracking-[.2em] text-white/70 md:mb-3 md:text-sm lg:text-base">Sistema POS multisucursal</p>
-          <h1 class="m-0 text-3xl font-black leading-tight md:text-5xl lg:text-6xl">Ingresa a tu punto de venta</h1>
+          <h1 class="m-0 text-3xl font-bold leading-tight md:text-5xl lg:text-6xl">Ingresa a tu punto de venta</h1>
           <p class="mb-0 mt-3 text-base font-medium leading-snug text-white/85 md:mt-4 md:text-lg md:leading-relaxed lg:text-xl">
             Administra ventas, caja, reportes y operaciones desde una experiencia clara y segura.
           </p>
@@ -34,14 +34,14 @@
           <?php include __DIR__. "/../templates/alertas.php"; ?>
 
           <div class="mb-6 md:mb-7">
-            <p class="mb-2 text-sm font-black uppercase tracking-[.22em] text-indigo-600 lg:text-base">Acceso seguro</p>
-            <h2 class="m-0 text-4xl font-black text-slate-900 lg:text-5xl">Iniciar sesi&oacute;n</h2>
+            <p class="mb-2 text-base font-bold uppercase tracking-[.22em] text-indigo-600 lg:text-base">Acceso seguro</p>
+            <h2 class="m-0 text-4xl font-bold text-slate-900 lg:text-5xl">Iniciar sesi&oacute;n</h2>
             <p class="mb-0 mt-2 text-lg font-medium text-slate-500 lg:text-xl">Selecciona tu sede e ingresa tus credenciales.</p>
           </div>
 
           <form action="/login" method="post" class="space-y-4 md:space-y-5">
             <div>
-              <label for="nickname" class="mb-2 block text-base font-black text-slate-700 lg:text-lg">Usuario</label>
+              <label for="nickname" class="mb-2 block text-lg font-bold text-slate-700 lg:text-lg">Usuario</label>
               <div class="flex h-[4.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100 md:h-20 lg:h-24 lg:px-5">
                 <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-indigo-600 md:h-12 md:w-12 lg:h-14 lg:w-14">
                   <i class="fa-solid fa-user"></i>
@@ -58,7 +58,7 @@
             </div>
 
             <div>
-              <label for="sucursal" class="mb-2 block text-base font-black text-slate-700 lg:text-lg">Sede</label>
+              <label for="sucursal" class="mb-2 block text-lg font-bold text-slate-700 lg:text-lg">Sede</label>
               <div class="flex h-[4.5rem] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 transition focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-100 md:h-20 lg:h-24 lg:px-5">
                 <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-indigo-600 md:h-12 md:w-12 lg:h-14 lg:w-14">
                   <i class="fa-solid fa-building"></i>
@@ -77,7 +77,7 @@
 
             <div>
               <div class="mb-2 flex items-center justify-between gap-3">
-                <label for="password" class="block text-base font-black text-slate-700 lg:text-lg">Contrase&ntilde;a</label>
+                <label for="password" class="block text-lg font-bold text-slate-700 lg:text-lg">Contrase&ntilde;a</label>
                 <a href="/olvide" class="text-base font-bold text-indigo-600 transition hover:text-indigo-500 lg:text-lg">
                   &iquest;Olvidaste tu contrase&ntilde;a?
                 </a>
