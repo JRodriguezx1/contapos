@@ -731,7 +731,7 @@
     POS.tipoventa = tipoventa;
     //POS.carrito = carrito;
     //POS.products = products;
-  }
+  } 
 
 
 })();
