@@ -4,17 +4,25 @@
     type creditsapi = {
       id:string,
       id_fksucursal: string,
+      idemisor: string,
+      usuariofk: string,
+      idtipofinanciacion:string,
       factura_id: string,
       cliente_id: string,
+      idestadocreditos: string,
+      num_orden: string,
       nombrecliente: string,
       capital: string,
       abonoinicial: string,
+      abonodecuotas: string,
       saldopendiente: string,
       numcuota: string,
       cantidadcuotas: string,
       montocuota: string,
       frecuenciapago: string,
       fechainicio: string,
+      fechafin: string,
+      diasenmora: string,
       interes: string,
       interesxcuota: string,
       interestotal: string,
@@ -23,8 +31,41 @@
       montototal: string,
       fechavencimiento: string,
       productoentregado: string,
+      base: string,
+      valorimpuestototal: string,
+      dctox100: string,
+      descuento: string,
+      abonototalantiguo: string,
+      cantidadcuotasantiguas: string,
+      fechaultimoabonoantiguo: string,
+      nota: string,
+      cliente?: string,
+      telefono?: string,
+      identificacion?: string,
+      sucursal?: string,
       estado: string,
       created_at: string,
+    };
+
+    type CreditoInterSucursal = {
+      id: string,
+      num_orden: string,
+      idtipofinanciacion: string,
+      id_fksucursal: string,
+      fechainicio: string,
+      fechavencimiento: string,
+      montototal: string,
+      saldopendiente: string,
+      cliente: string,
+      telefono: string,
+      identificacion: string,
+      sucursal: string,
+    };
+
+    type RespuestaBusquedaIntersucursal = {
+      ok: boolean,
+      data?: CreditoInterSucursal[],
+      error?: string,
     };
     
     /*interface Item {
@@ -34,11 +75,16 @@
       valorimpuesto: number
     }
     let factimpuestos:Item[] = [];*/
+    const creditoInterSucursal = document.querySelector("#creditoInterSucursal") as HTMLInputElement;
+    const miDialogoBuscarIntersucursal = document.querySelector('#miDialogoBuscarIntersucursal') as HTMLDialogElement;
+    const listaCreditosIntersucursales = document.querySelector('#listaCreditosIntersucursales') as HTMLDivElement;
 
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     let credits:creditsapi[]=[], uncredito:creditsapi;
-    let indiceFila=0, control=0;
+    let indiceFila=0, debounceTimer: ReturnType<typeof setTimeout>, controller: AbortController | null = null;
 
+
+    document.addEventListener("click", cerrarDialogoExterno);
 
     /*(async ()=>{
       try {
@@ -52,6 +98,110 @@
     })();*/
 
 
+    document.querySelector('#btnInterSucursal')?.addEventListener('click', ()=>{
+      miDialogoBuscarIntersucursal.showModal();
+      requestAnimationFrame(()=>creditoInterSucursal.focus());
+    });
+
+    creditoInterSucursal.addEventListener('input', (e:Event)=>{
+      const contact = (e.target as HTMLInputElement).value.trim();
+      clearTimeout(debounceTimer);
+      controller?.abort();// Cancela un fetch anterior si todavía está en ejecución
+
+      if(contact === ''){
+        renderEstadoBusqueda('Escribe el ID del crédito, el nombre del cliente o su identificación.');
+        return;
+      }
+
+      const esIdNumerico = /^\d+$/.test(contact);
+      if(!esIdNumerico && contact.length < 4){
+        renderEstadoBusqueda('Ingresa mínimo 4 caracteres para buscar por cliente o identificación.');
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        const requestController = new AbortController();
+        controller = requestController;
+        renderEstadoBusqueda('Buscando créditos abiertos en otras sucursales...', 'cargando');
+        try {
+              const url = "/admin/api/creditos/buscarIntersucursal?q="+encodeURIComponent(contact); //llamado a la API REST
+              const respuesta = await fetch(url, {
+                method: 'GET',
+                headers:{"Accept": "application/json"},
+                signal: requestController.signal
+              });
+              const resultado = await respuesta.json() as RespuestaBusquedaIntersucursal;
+              if(requestController.signal.aborted)return;
+              if(!respuesta.ok || !resultado.ok){
+                throw new Error(resultado.error || 'No fue posible realizar la búsqueda.');
+              }
+              printCreditosInterSucursal(resultado.data ?? []);
+        }catch(error){
+          if(error instanceof DOMException && error.name === 'AbortError') {
+              return;
+          }
+          renderEstadoBusqueda(error instanceof Error ? error.message : 'No fue posible realizar la búsqueda.', 'error');
+        }finally{
+          if(controller === requestController)controller = null;
+        }
+      }, 400);
+    });
+
+
+    function renderEstadoBusqueda(mensaje:string, tipo:'normal'|'cargando'|'error' = 'normal'):void{
+      while(listaCreditosIntersucursales.firstChild)listaCreditosIntersucursales.removeChild(listaCreditosIntersucursales.firstChild);
+      const estado = document.createElement('p');
+      estado.className = 'rounded-lg border p-4 text-center text-base font-semibold';
+      estado.classList.add(
+        tipo === 'error' ? 'border-rose-200' : tipo === 'cargando' ? 'border-indigo-200' : 'border-slate-200',
+        tipo === 'error' ? 'bg-rose-50' : tipo === 'cargando' ? 'bg-indigo-50' : 'bg-slate-50',
+        tipo === 'error' ? 'text-rose-700' : tipo === 'cargando' ? 'text-indigo-700' : 'text-slate-500'
+      );
+      estado.textContent = mensaje;
+      listaCreditosIntersucursales.appendChild(estado);
+    }
+
+
+    function printCreditosInterSucursal(creditos:CreditoInterSucursal[]):void{
+      while(listaCreditosIntersucursales.firstChild)listaCreditosIntersucursales.removeChild(listaCreditosIntersucursales.firstChild);
+      if(creditos.length === 0){
+        renderEstadoBusqueda('No se encontraron créditos abiertos en otras sucursales.');
+        return;
+      }
+      const html = creditos.map(credito => `
+        <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="table-badge table-badge--info">${credito.idtipofinanciacion === '2'? 'Separado': 'Crédito'}</span>
+                <span class="rounded-full bg-indigo-50 px-4 py-2 text-base font-semibold text-indigo-600">${credito.sucursal || 'Sin información'}</span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <div class="">
+                <h5 class="mb-0 mt-3 text-xl font-semibold text-slate-900">${credito.cliente || 'Cliente sin nombre'}</h5>
+                <p class="mt-1 mb-0 text-lg text-slate-500">
+                    Identificación: ${credito.identificacion || 'No registrada'} * Teléfono: ${credito.telefono || 'No registrado'}
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="">
+                  <p class="m-0 text-base font-semibold text-slate-500">Crédito</p>
+                  <p class="m-0 text-lg font-bold text-slate-900">#${credito.id}</p>
+                </div>
+                <div class="">
+                  <p class="m-0 text-base font-semibold text-slate-500">Saldo pendiente</p>
+                  <p class="m-0 text-lg font-bold text-slate-900">$${Number(credito.saldopendiente).toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2 flex justify-end">
+              <a class="btnDialog btnDialog_primary" href="/admin/creditos/detallecredito?id=${credito.id}">
+                Seleccionar
+              </a>
+            </div>
+        </article>`).join('');
+        listaCreditosIntersucursales.innerHTML = html;
+    }
 
     
     //////////////////  TABLA //////////////////////
@@ -226,6 +376,18 @@
       }*/
     }
 
-  }
 
+    function cerrarDialogoExterno(event:Event) {
+      const f = event.target;
+      if(!(f instanceof Element))return;
+      if(f === miDialogoBuscarIntersucursal || f.closest('.btnXCerrarInterSucursal')){
+        miDialogoBuscarIntersucursal.close();
+        clearTimeout(debounceTimer);
+        controller?.abort();
+        controller = null;
+        creditoInterSucursal.value = '';
+        renderEstadoBusqueda('Escribe el ID del crédito, el nombre del cliente o su identificación.');
+      }
+    }
+  }
 })();

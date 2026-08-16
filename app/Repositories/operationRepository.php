@@ -188,6 +188,34 @@ abstract class operationRepository extends BaseRepository{
     }
 
 
+    /** Obtiene y bloquea un registro por su llave primaria. */
+    public function findForUpdate(int $id): ?object
+    {
+        if($id <= 0)return null;
+        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE id = {$id} LIMIT 1 FOR UPDATE");
+        return $rows ? new $this->entityClass($rows[0]) : null;
+    }
+
+
+    /** Obtiene y bloquea los registros que cumplen todas las condiciones. */
+    public function whereForUpdate(array $condiciones = []):array
+    {
+        if(empty($condiciones))throw new \InvalidArgumentException('Debe especificar condiciones para bloquear registros.');
+
+        $where = [];
+        foreach($condiciones as $columna => $valor){
+            if(!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', (string)$columna))
+                throw new \InvalidArgumentException('Columna no válida para bloquear registros.');
+            $where[] = $columna." = '".$this->escape((string)$valor)."'";
+        }
+
+        $rows = $this->fetchAll(
+            "SELECT * FROM {$this->table} WHERE ".implode(' AND ', $where)." FOR UPDATE"
+        );
+        return array_map(fn($row)=>new $this->entityClass($row), $rows);
+    }
+
+
     public function findAll(string $col, int $id, string $orden = "ASC"): ?array  //similar a idregistros
     {
         $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE $col = {$id} ORDER BY id $orden;");

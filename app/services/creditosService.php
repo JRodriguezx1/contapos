@@ -165,6 +165,7 @@ class creditosService {
         $detalle = [
             'titulo' => 'Creditos',
             'sucursal' => $sucursal,
+            'sucursaldelcredito' => sucursales::find('id', $credito->id_fksucursal),
             'emisor' => $emisor,
             'lineasencabezado' => $lineasencabezado,
             'credito' => $credito,
@@ -187,89 +188,141 @@ class creditosService {
     public static function registrarAbono(array $datos){
         $alertas = [];
         $idsucursal = id_sucursal();
-        $contableService = new contableService();
-        $creditoRepo = new creditosRepository();
-        $credito = $creditoRepo->find($datos['id_credito']);
-        if($credito->idestadocreditos == 2){
+        $idusuario = (int)($_SESSION['id'] ?? 0);
+        $idcredito = filter_var($datos['id_credito'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
+        $idcaja = filter_var($datos['cajaid'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
+        $idmediopago = filter_var($datos['mediopagoid'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
+        $valorpagado = $datos['valorpagado'] ?? null;
 
-            //si es abono en efectivo, registrar al efectivo del cierre de caja y en el abono del cierre de caja
-            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$datos['cajaid'], 'idsucursal_id'=>$idsucursal]);
-            if(!isset($ultimocierre)){ // si la caja esta cerrada y se hace apertura con el registro del abono
-                $ultimocierre = new cierrescajas(['idcaja'=>$datos['cajaid'], 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'estado'=>0, 'idsucursal_id'=>$idsucursal]);
+        if($idcredito === false || $idcaja === false || $idmediopago === false || $idusuario <= 0 || !is_numeric($valorpagado))
+            return ['error'=>['Los datos del abono no son válidos.']];
+
+        $valorpagado = (float)$valorpagado;
+        $detalle = trim((string)($datos['detalle'] ?? ''));
+        $creditoRepo = new creditosRepository();
+        $cuotaRepo = new cuotasRepository();
+        $contableService = new contableService();
+        $getDB = $cuotaRepo::getDB();
+        $getDB->begin_transaction();
+
+        try {
+            // El bloqueo evita que dos pagos simultáneos utilicen el mismo saldo.
+            $credito = $creditoRepo->buscarPorIdParaActualizar((int)$idcredito);
+            if(!$credito)throw new \DomainException('Crédito no encontrado.');
+            if((int)$credito->idestadocreditos !== 2)throw new \DomainException('Crédito debe estar abierto para abonar.');
+            //validar que el separado no se este abriendo desde otra sucursal
+            if($credito->idtipofinanciacion == 2 && $credito->id_fksucursal != id_sucursal())
+                throw new \DomainException('Crédito de tipo separado no puede procesar en una sucursal distinta al origen.');
+
+            // La caja se vuelve a leer con bloqueo y nunca se confía en su sucursal desde el POST.
+            $caja = caja::findForUpdate('id', (int)$idcaja);
+            if(!$caja || (int)$caja->idsucursalid !== $idsucursal || (int)$caja->estado !== 1)
+                throw new \DomainException('La caja no pertenece a la sucursal de recaudo.');
+
+            // Lista blanca: los IDs seleccionables se validaron y los campos de auditoría se fijan en el servidor.
+            $cuota = new cuotas([
+                'id_sucursal_idfk'=>$idsucursal,
+                'id_credito'=>(int)$credito->id,
+                'cajaid'=>(int)$caja->id,
+                'mediopagoid'=>(int)$idmediopago,
+                'idusuario'=>$idusuario,
+                'valorpagado'=>$valorpagado,
+                'detalle'=>$detalle
+            ]);
+            $credito->numerodecuota = (int)$cuotaRepo->querySQL("SELECT COALESCE(MAX(numerocuota), 0)+1 AS siguiente FROM cuotas WHERE id_credito = ".(int)$credito->id)[0]['siguiente'];
+            $cuota->preparar($credito);
+            $cuota->concepto = abs($valorpagado-(float)$credito->saldopendiente) < 0.00001
+                ? 'PAGO DEUDA TOTAL A FACTURA'
+                : 'ABONO A FACTURA';
+
+            $alertas = $cuota->validar();
+            if(!empty($alertas)){
+                $getDB->rollback();
+                return $alertas;
+            }
+            if($cuota->valorpagado > (float)$credito->saldopendiente)
+                throw new \DomainException('Valor de la cuota supera al saldo pendiente.');
+
+            // La apertura queda dentro de la transacción y ocurre después de validar el pago.
+            $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>(int)$caja->id, 'idsucursal_id'=>$idsucursal]);
+            if($ultimocierre){
+                $ultimocierre = cierrescajas::findForUpdate('id', (int)$ultimocierre->id);
+            }else{
+                $ultimocierre = new cierrescajas([ 'idcaja'=>(int)$caja->id, 'nombrecaja'=>$caja->nombre, 'id_usuario'=>$idusuario, 'estado'=>0, 'idsucursal_id'=>$idsucursal ]);
                 $ruc = $ultimocierre->crear_guardar();
                 $ultimocierre->id = $ruc[1];
             }
 
-            $cuota = new cuotas($datos+['cierrecaja_id' => $ultimocierre->id, 'idusuario'=>$_SESSION['id']]);
-            $cuota->preparar($credito);
-            $alertas = $cuota->validar();
-            //validar que la cuota no supera al saldo pendiente
-            if($cuota->valorpagado>$credito->saldopendiente)return ['error'=>['Valor de la cuota supera al saldo pendiente']];
-            
-            if(empty($alertas)){
-                $cuotaRepo = new cuotasRepository();
-                $getDB = $cuotaRepo::getDB();
-                $getDB->begin_transaction();
-                try {
-                    $cuota->num_orden = $cuotaRepo->calcularNumOrden($idsucursal);
-                    $r = $cuotaRepo->insert($cuota);
-                    $objMedioPago = new separadomediopago(['idcuota'=>$r[1], 'mediopago_id'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
+            $cuota->cierrecaja_id = (int)$ultimocierre->id;
+            $cuota->num_orden = $cuotaRepo->calcularNumOrden($idsucursal);
+            $r = $cuotaRepo->insert($cuota);
+            $objMedioPago = new separadomediopago([
+                'idcuota'=>$r[1],
+                'mediopago_id'=>$cuota->mediopagoid,
+                'valor'=>$cuota->valorpagado
+            ]);
 
-                    if(isset($credito->factura_id)){ //si es credito abonado
-                        $factmediospago = new factmediospago(['cierrecajaid'=>$ultimocierre->id, 'id_factura'=>$credito->factura_id, 'idcuota'=>$r[1], 'idmediopago'=>$datos['mediopagoid'], 'valor'=>$datos['valorpagado']]);
-                        $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
-                        
-                        $contableService->createMovimiento([
-                            'fk_tipo_movimientocaja'=>2,
-                            'fk_tipo_documento'=>2,
-                            'id_documento'=>$r[1],
-                            'fk_tipo_tercero'=>1,
-                            'id_tercero'=>$credito->cliente_id,
-                            'fk_caja'=>$datos['cajaid'],
-                            'fk_usuario'=>$cuota->idusuario,
-                            'naturaleza'=>'I',
-                            'numero_documento'=>'C'.$cuota->num_orden,
-                            'num_orden'=>null,
-                            'valor'=>$cuota->valorpagado,
-                            'concepto'=>'ABONO A FACTURA',
-                            'observacion'=>"PAGO N $cuota->numerocuota - ".$cuota->detalle
-                        ]);
+            if(isset($credito->factura_id)){ //si es credito abonado
+                $factmediospago = new factmediospago([
+                    'cierrecajaid'=>$ultimocierre->id,
+                    'id_factura'=>$credito->factura_id,
+                    'idcuota'=>$r[1],
+                    'idmediopago'=>$cuota->mediopagoid,
+                    'valor'=>$cuota->valorpagado
+                ]);
+                $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
 
-                    }else{
-                        $payment = new paymentService(new separadoMediopagoRepository());
-                        $payment->registrarPagos([$objMedioPago], $r[1]);
-                    }
-                    
-
-                    if($objMedioPago->mediopago_id == 1)
-                        $ultimocierre->abonosenefectivo += $objMedioPago->valor;
-
-                    isset($credito->factura_id)?($ultimocierre->abonoscreditos += $objMedioPago->valor):($ultimocierre->abonosseparados += $objMedioPago->valor);
-
-                    $ultimocierre->abonostotales =  $ultimocierre->abonostotales + $objMedioPago->valor; 
-                    $ultimocierre->actualizar();
-
-                    //**generar factura e impuestos cuando se termine de pagar el separado
-                    if(($credito->saldopendiente-$cuota->valorpagado) <= 0 && $credito->factura_id == null)
-                        $idf = creditosService::registrarFactura($credito, $ultimocierre, $cuota->valorpagado);
-
-                    $credito->actualizarCredito($cuota->valorpagado, isset($idf)?$idf:$credito->factura_id);
-                    $creditoRepo->update($credito);
-
-                    $getDB->commit();
-                    $alertas['exito'][] = "Cuota procesada";
-                    $alertas['idcuota'] = $r[1];
-                    //acatualizar deuda de cliente
-                    $cliente = clientes::find('id', $credito->cliente_id);
-                    $cliente->totaldebe -= $cuota->valorpagado;
-                    $cliente->actualizar();
-                } catch (\Throwable $th) {
-                    $getDB->rollback();
-                    $alertas['error'][] = "Error al procesar el abono {$th->getMessage()}";
-                }
+                $contableService->createMovimiento([
+                    'fk_tipo_movimientocaja'=>2,
+                    'fk_tipo_documento'=>2,
+                    'id_documento'=>$r[1],
+                    'fk_tipo_tercero'=>1,
+                    'id_tercero'=>$credito->cliente_id,
+                    'fk_caja'=>$cuota->cajaid,
+                    'fk_usuario'=>$cuota->idusuario,
+                    'naturaleza'=>'I',
+                    'numero_documento'=>'C'.$cuota->num_orden,
+                    'num_orden'=>null,
+                    'valor'=>$cuota->valorpagado,
+                    'concepto'=>$cuota->concepto,
+                    'observacion'=>"PAGO N $cuota->numerocuota - ".$cuota->detalle
+                ]);
+            }else{
+                $payment = new paymentService(new separadoMediopagoRepository());
+                $payment->registrarPagos([$objMedioPago], $r[1]);
             }
-        }else{
-            $alertas['error'][] = "Credito debe estar abierto para abonar.";
+
+            if((int)$objMedioPago->mediopago_id === 1)
+                $ultimocierre->abonosenefectivo += $objMedioPago->valor;
+
+            isset($credito->factura_id) ? ($ultimocierre->abonoscreditos += $objMedioPago->valor) : ($ultimocierre->abonosseparados += $objMedioPago->valor);
+            $ultimocierre->abonostotales += $objMedioPago->valor;
+            $ultimocierre->actualizar();
+
+            //**generar factura e impuestos cuando se termine de pagar el separado
+            $idf = null;
+            if(($credito->saldopendiente-$cuota->valorpagado) <= 0 && $credito->factura_id == null)
+                $idf = creditosService::registrarFactura($credito, $ultimocierre, $cuota->valorpagado);
+
+            $credito->actualizarCredito($cuota->valorpagado, $idf ?? $credito->factura_id);
+            if(!$creditoRepo->update($credito))throw new \RuntimeException('No fue posible actualizar el crédito.');
+
+            // La deuda del cliente forma parte de la misma unidad atómica del abono.
+            $cliente = clientes::findForUpdate('id', $credito->cliente_id);
+            if(!$cliente)throw new \RuntimeException('Cliente no encontrado.');
+            $cliente->totaldebe -= $cuota->valorpagado;
+            $cliente->actualizar();
+
+            if(!$getDB->commit())throw new \RuntimeException('No fue posible confirmar el abono.');
+            $alertas['exito'][] = 'Cuota procesada';
+            $alertas['idcuota'] = $r[1];
+        } catch (\DomainException $th) {
+            $getDB->rollback();
+            $alertas['error'][] = $th->getMessage();
+        } catch (\Throwable $th) {
+            $getDB->rollback();
+            error_log('Error al procesar el abono: '.$th->getMessage());
+            $alertas['error'][] = 'Error al procesar el abono.';
         }
         return $alertas;
 
@@ -367,6 +420,7 @@ class creditosService {
         $alertas = [];
         $idnuevomediopago = $datos['idnuevomediopago'];
         $idcredito = $datos['id_credito'];
+        $idmediopago = $datos['idmediopago'];
         $creditoRepo = new creditosRepository();
         $credito = $creditoRepo->find($idcredito);
         if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para cambiar el medio de pago.']];
@@ -374,6 +428,7 @@ class creditosService {
 
         $cuotaRepo = new cuotasRepository();
         $cuota = $cuotaRepo->find($datos['id']);
+        $cuota->mediopagoid = $idnuevomediopago;
         
         $ultimocierre = cierrescajas::uniquewhereArray(['id'=>$cuota->cierrecaja_id, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
         if(!isset($ultimocierre))
@@ -392,10 +447,12 @@ class creditosService {
         }
 
         if($r){
+            //actualizar cuota
+            $cuotaRepo->update($cuota);
             //actualizar efectivo en caja si corresponde
-            if($datos['idmediopago'] == 1 && $idnuevomediopago!=1)
+            if($idmediopago == 1 && $idnuevomediopago!=1)
                 $ultimocierre->abonosenefectivo -= $mediospago->valor;
-            if($datos['idmediopago'] != 1 && $idnuevomediopago==1)
+            if($idmediopago != 1 && $idnuevomediopago==1)
                 $ultimocierre->abonosenefectivo += $mediospago->valor;
             $ultimocierre->actualizar();
             $alertas['exito'][] = "Medio de pago actualizado";
@@ -416,7 +473,10 @@ class creditosService {
         
         $credito = $creditoRepo->find($idcredito);
         if(!$credito)return ['error'=>['El separado no existe.']];
+        if((int)$credito->idtipofinanciacion !== 2)return ['error' => ['El registro no corresponde a un separado.']];
         if($credito->idestadocreditos != 2 )return ['error'=>['El separado debe estar abierto para anular.']];
+        if($credito->id_fksucursal != id_sucursal())
+            return ['error' => ['El separado no puede procesarse desde una sucursal distinta a la de origen.']];
 
         $getDB = $creditoRepo->getConexion();
         $getDB->begin_transaction();
@@ -595,54 +655,101 @@ class creditosService {
 
 
     public static function anularAbono(int $idabono):array{
-        $alertas = [];
-        $cs = true;
-        $cc = true;
         $repoMovimientocaja = new movimientos_cajaRepository();
         $creditoRepo = new creditosRepository();
         $separdoMediopago = new separadoMediopagoRepository();
         $cuotaRepo = new cuotasRepository();
-        $cuota = $cuotaRepo->find($idabono);
-        $credito = $creditoRepo->find($cuota->id_credito);
+        $getDB = $cuotaRepo::getDB();
+        $transaccionIniciada = false;
 
-        if($credito->idestadocreditos != 2 )return ['error'=>['El credito debe estar abierto para anular.']];
+        try {
+            if($idabono <= 0)throw new \DomainException('La cuota no es válida.');
+            if(!$getDB->begin_transaction())throw new \RuntimeException('No fue posible iniciar la anulación.');
+            $transaccionIniciada = true;
 
-        $cierrecaja = cierrescajas::uniquewhereArray(['id'=>$cuota->cierrecaja_id, 'idsucursal_id'=>id_sucursal()]);
-        if($cierrecaja->estado == 1)return ['error'=>['Caja se encuentra cerrada para esta cuota']];
+            // La cuota define la sucursal, caja y crédito que deben revertirse.
+            $cuota = $cuotaRepo->findForUpdate($idabono);
+            if(!$cuota)throw new \DomainException('La cuota no existe.');
 
-        if($credito->idtipofinanciacion == 1){  //credito
-            $cuotaMP = factmediospago::uniquewhereArray(['id_factura'=>$credito->factura_id, 'idcuota'=>$cuota->id]);
-            if($cuotaMP)$cc = $cuotaMP->eliminar_registro();
-            //buscar movimiento de caja y actualizar
-            $movCaja = $repoMovimientocaja->uniqueWhere(['fk_tipo_documento'=>2, 'id_documento'=>$cuota->id]);
-            $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
-            $movCaja->observacion .= ' - Cuota anulada manualmente';
-            $movCaja->estado = 0;
-            $repoMovimientocaja->update($movCaja);
-            $cierrecaja->abonoscreditos -= $cuota->valorpagado;
-        }else{  //separado
-            $cs = $separdoMediopago->delete_regs('idcuota', [$cuota->id]);
-            $cierrecaja->abonosseparados -= $cuota->valorpagado;
-        }
+            $credito = $creditoRepo->buscarPorIdParaActualizar((int)$cuota->id_credito);
+            if(!$credito)throw new \DomainException('El crédito de la cuota no existe.');
+            if((int)$credito->idestadocreditos !== 2)
+                throw new \DomainException('El crédito debe estar abierto para anular la cuota.');
+            if((int)$cuota->id_sucursal_idfk !== (int)id_sucursal())
+                throw new \DomainException('La cuota solamente puede anularse desde la sucursal donde fue recaudada.');
 
-        if($cc && $cs){
-            $cuotaRepo->delete($cuota->id);
-            $credito->abonodecuotas -= $cuota->valorpagado;
-            $credito->saldopendiente += $cuota->valorpagado;
-            $creditoRepo->update($credito);
+            $cierrecaja = cierrescajas::findForUpdate('id', (int)$cuota->cierrecaja_id);
+            if(!$cierrecaja || (int)$cierrecaja->idsucursal_id !== (int)id_sucursal() || (int)$cierrecaja->idcaja !== (int)$cuota->cajaid)
+                throw new \DomainException('El cierre de caja no corresponde a la sucursal de recaudo.');
+            if((int)$cierrecaja->estado === 1)
+                throw new \DomainException('La caja se encuentra cerrada para esta cuota.');
 
-            //acatualizar deuda de cliente
-            $cliente = clientes::find('id', $credito->cliente_id);
-            $cliente->totaldebe += $cuota->valorpagado;
+            $valorEfectivo = 0.0;
+            if((int)$credito->idtipofinanciacion === 1){ //credito
+                $pagosCredito = factmediospago::obtenerPorCuotaParaActualizar((int)$cuota->id);
+                if(empty($pagosCredito))throw new \RuntimeException('No se encontró el medio de pago de la cuota.');
+
+                $idsPagos = [];
+                foreach($pagosCredito as $pago){
+                    if((int)$pago->id_factura !== (int)$credito->factura_id || (int)$pago->cierrecajaid !== (int)$cierrecaja->id)
+                        throw new \RuntimeException('El medio de pago no corresponde a la cuota que se está anulando.');
+                    $idsPagos[] = (int)$pago->id;
+                    if((int)$pago->idmediopago === 1)$valorEfectivo += (float)$pago->valor;
+                }
+
+                $movimientos = $repoMovimientocaja->whereForUpdate(['fk_tipo_documento'=>2, 'id_documento'=>(int)$cuota->id]);
+                if(count($movimientos) !== 1)throw new \RuntimeException('No se encontró un movimiento único para la cuota.');
+                $movCaja = $movimientos[0];
+                if((int)$movCaja->id_sucursal !== (int)id_sucursal() || (int)$movCaja->fk_caja !== (int)$cuota->cajaid)
+                    throw new \RuntimeException('El movimiento no corresponde a la caja de recaudo.');
+
+                $movCaja->fecha_anulacion = date('Y-m-d H:i:s');
+                $movCaja->observacion .= ' - Cuota anulada manualmente';
+                $movCaja->estado = 0;
+                if(!$repoMovimientocaja->update($movCaja))throw new \RuntimeException('No fue posible anular el movimiento de caja.');
+                if(!factmediospago::eliminar_idregistros('id', $idsPagos))
+                    throw new \RuntimeException('No fue posible eliminar el medio de pago de la cuota.');
+
+                $cierrecaja->abonoscreditos -= (float)$cuota->valorpagado;
+
+            }else{  //separado
+                $pagosSeparado = $separdoMediopago->whereForUpdate(['idcuota'=>(int)$cuota->id]);
+                if(empty($pagosSeparado))throw new \RuntimeException('No se encontró el medio de pago de la cuota.');
+                foreach($pagosSeparado as $pago)
+                    if((int)$pago->mediopago_id === 1)$valorEfectivo += (float)$pago->valor;
+
+                if(!$separdoMediopago->delete_regs('idcuota', [(int)$cuota->id]))
+                    throw new \RuntimeException('No fue posible eliminar el medio de pago de la cuota.');
+                $cierrecaja->abonosseparados -= (float)$cuota->valorpagado;
+            }
+
+            if(!$cuotaRepo->delete((int)$cuota->id))throw new \RuntimeException('No fue posible eliminar la cuota.');
+
+            $credito->abonodecuotas -= (float)$cuota->valorpagado;
+            $credito->saldopendiente += (float)$cuota->valorpagado;
+            $credito->numcuota = max(0, (int)$credito->numcuota - 1);
+            if(!$creditoRepo->update($credito))throw new \RuntimeException('No fue posible restaurar el crédito.');
+
+            $cliente = clientes::findForUpdate('id', (int)$credito->cliente_id);
+            if(!$cliente)throw new \RuntimeException('No se encontró el cliente del crédito.');
+            $cliente->totaldebe += (float)$cuota->valorpagado;
             $cliente->actualizar();
 
-            $cierrecaja->abonostotales -= $cuota->valorpagado;
-            $cuota->mediopagoid == 1 ? ($cierrecaja->abonosenefectivo -= $cuota->valorpagado) : $cierrecaja->abonosenefectivo -= 0;
+            $cierrecaja->abonostotales -= (float)$cuota->valorpagado;
+            $cierrecaja->abonosenefectivo -= $valorEfectivo;
             $cierrecaja->actualizar();
-            $alertas['exito'][] = "Cuota eliminada";
-        }
 
-        return $alertas;
+            if(!$getDB->commit())throw new \RuntimeException('No fue posible confirmar la anulación.');
+            $transaccionIniciada = false;
+            return ['exito'=>['Cuota eliminada']];
+        } catch (\DomainException $th) {
+            if($transaccionIniciada)$getDB->rollback();
+            return ['error'=>[$th->getMessage()]];
+        } catch (\Throwable $th) {
+            if($transaccionIniciada)$getDB->rollback();
+            error_log('Error al anular el abono: '.$th->getMessage());
+            return ['error'=>['Error al anular la cuota.']];
+        }
     }
 
 
@@ -711,6 +818,9 @@ class creditosService {
                 throw new \RuntimeException('El registro no corresponde a un separado.');
             if((int)$credito->idestadocreditos !== 2)
                 throw new \RuntimeException('El separado debe estar abierto para editarse.');
+            //validar que el separado no se este abriendo desde otra sucursal
+            if($credito->idtipofinanciacion == 2 && $credito->id_fksucursal != id_sucursal())
+                throw new \RuntimeException('El separado no puede procesarse desde una sucursal distinta a la de origen.');
         
             $totalPagado = (float)$credito->montototal - (float)$credito->saldopendiente;
             $nuevoMontoTotal = (float)$dataCredit['montototal'];

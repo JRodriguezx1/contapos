@@ -24,6 +24,16 @@ class factmediospago extends \App\Models\ActiveRecord{
         if(strlen($this->id_factura)>31)self::$alertas['error'][] = "Error intenta nuevamnete";
         return self::$alertas;
     }
+
+
+    /** Obtiene y bloquea los medios de pago asociados a una cuota. */
+    public static function obtenerPorCuotaParaActualizar(int $idcuota):array
+    {
+        if($idcuota <= 0)return [];
+        return self::consultar_sql(
+            "SELECT * FROM ".static::$tabla." WHERE idcuota = {$idcuota} FOR UPDATE"
+        );
+    }
     
     public function pagoDestino(int $id):void{
         $this->id_factura = $id;

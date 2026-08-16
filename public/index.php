@@ -292,6 +292,7 @@ $router->get('/admin/api/creditos/getAbono', [creditoscontrolador::class, 'getAb
 $router->get('/admin/api/creditos/anularAbono', [creditoscontrolador::class, 'anularAbono']);  //llamada desde creditos/detallecredito.ts para anular el abono.
 $router->post('/admin/api/creditos/pagarDeudaTotal', [creditoscontrolador::class, 'pagarDeudaTotal']);  //llamada desde clientes/detalle.ts
 $router->post('/admin/api/creditos/registrarAbonoFromCli', [creditoscontrolador::class, 'registrarAbonoFromCli']); //llamada desde clientes/detalle.ts
+$router->get('/admin/api/creditos/buscarIntersucursal', [creditoscontrolador::class, 'buscarIntersucursal']);
 
 $router->post('/admin/api/comisiones/comisionesXUser', [comisionescontrolador::class, 'comisionesXUser']);
 $router->post('/admin/api/comisiones/liquidarComision', [comisionescontrolador::class, 'liquidarComision']);

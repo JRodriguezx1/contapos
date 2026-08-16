@@ -66,7 +66,10 @@
           <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Historial de creditos</h2>
           <p class="mt-1 text-base text-slate-500">Consulta cliente, valores, estado y acciones disponibles por credito.</p>
         </div>
-        <span class="shrink-0 rounded-full bg-indigo-50 px-3 py-2 text-base font-extrabold text-indigo-600"><?php echo $creditosAbiertos; ?> abiertos</span>
+        <div class="flex items-center gap-4">
+          <button id="btnInterSucursal" class="btnDialog btnDialog_primary" type="button" value="salir">Inter Sucursal</button>
+          <span class="shrink-0 rounded-full bg-indigo-50 px-3 py-2 text-base font-extrabold text-indigo-600"><?php echo $creditosAbiertos; ?> abiertos</span>
+        </div>
       </div>
 
       <table class="display responsive nowrap tabla datatable-table" width="100%" id="tablaCreditos">
@@ -124,6 +127,38 @@
         </tbody>
       </table>
     </section>
+
+
+    <dialog id="miDialogoBuscarIntersucursal" class="detalledialog_xs" aria-labelledby="modalCreditoInterSucursal" aria-describedby="ayudaCreditoInterSucursal">
+      <div class="p-6 flex justify-between items-center gap-4 bg-gradient-to-br from-indigo-600/15 to-cyan-300/10">
+        <div class="flex items-center gap-4">
+          <span class="inline-flex size-20 shrink-0 items-center justify-center rounded-xl bg-white text-4xl text-indigo-600 font-medium border border-indigo-100"><i class="fa-solid fa-envelope-open-text"></i></span>
+          <div>
+            <p class="my-0 text-base leading-5 font-extrabold uppercase text-indigo-600">Crédito</p>
+            <h4 id="modalCreditoInterSucursal" class="text-slate-900 text-3xl leading-6 font-bold">Créditos inter sucursales</h4>
+            <small class="mt-1 text-lg leading-snug text-slate-500">Consulta créditos abiertos de otras sucursales.</small>
+          </div>
+        </div>
+        <button class="btndialog__close btnXCerrarInterSucursal" type="button" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-8">
+        <div class="form-field">
+          <label for="creditoInterSucursal">Buscar crédito</label>
+          <div class="form-input">
+            <span><i class="fa-solid fa-hand-holding-dollar"></i></span>
+            <input id="creditoInterSucursal" type="search" placeholder="ID, nombre o identificación" name="creditoInterSucursal" autocomplete="off" maxlength="80" aria-describedby="ayudaCreditoInterSucursal">
+          </div>
+          <small id="ayudaCreditoInterSucursal" class="mt-2 block text-base leading-5 text-slate-500">El ID puede tener cualquier longitud. Para nombre o identificación, ingresa mínimo 4 caracteres.</small>
+        </div>
+
+        <div id="listaCreditosIntersucursales" class="mt-5 grid max-h-[55vh] gap-3 overflow-y-auto pr-1" role="status" aria-live="polite" aria-atomic="false">
+          <p class="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center text-base font-semibold text-slate-500">Escribe el ID del crédito, el nombre del cliente o su identificación.</p>
+        </div>
+      </div>
+    </dialog>
+
   </div>
 
 
