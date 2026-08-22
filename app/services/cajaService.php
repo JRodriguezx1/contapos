@@ -4,21 +4,16 @@ namespace App\services;
 
 use App\Models\caja\cierrescajas;
 use App\Models\caja\factmediospago;
-use App\Models\clientes\clientes;
-use App\Models\clientes\direcciones;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\emisores;
-use App\Models\configuraciones\tarifas;
-use App\Models\configuraciones\usuarios;
 use App\Models\factimpuestos;
-use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
 use App\Models\ventas\facturas;
-use App\Models\ventas\ventas;
 use App\Repositories\contable\movimientos_cajaRepository;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
-use App\services\caja\CajaConsultasService;
+use App\services\caja\CajaDocumentosService;
+use App\services\caja\CajaOrdenesService;
 
 class cajaService {
 
@@ -26,94 +21,27 @@ class cajaService {
      * Adaptador temporal para la impresión del cierre.
      *
      * El controlador y la ruta conservan su contrato actual; la consulta fue
-     * centralizada en CajaConsultasService para evitar cuatro implementaciones
-     * distintas del mismo resumen.
+     * centralizada en CajaDocumentosService y CajaConsultasService para evitar
+     * implementaciones distintas del mismo resumen.
      */
     public static function printdetallecierre(int $id):?array{
-        return (new CajaConsultasService())->obtenerCierreParaImpresion($id, id_sucursal());
+        return (new CajaDocumentosService())->prepararDetalleCierre($id, id_sucursal());
     }
-
-
-
+    /**
+     * Adaptador temporal del detalle compartido por factura y cotización.
+     * Los consumidores nuevos deben usar CajaDocumentosService directamente.
+     */
     public static function detalleVenta(int $id):?array{
-        $factura = facturas::find('id', $id);
-        $productos = ventas::idregistros('idfactura', $id);
-        $cliente = clientes::find('id', $factura->idcliente);
-        $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
-        if(!$direccion)$direccion = direcciones::find('id', 1);
-        $tarifa = tarifas::find('id', $direccion->idtarifa);
-        $vendedor = usuarios::find('id', $factura->idvendedor);
-        $sucursal = sucursales::find('id', id_sucursal());
-
-        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
-        $emisor = null;
-        if($factura->idemisor){
-            $emisor = emisores::find('id', $factura->idemisor);
-            $lineasencabezado = $emisor->datosencabezados?explode("\n", $emisor->datosencabezados??''):[];
-        }
-        
-        return compact('factura', 'productos', 'cliente', 'direccion', 'tarifa', 'vendedor', 'lineasencabezado', 'sucursal', 'emisor');
+        return (new CajaDocumentosService())->obtenerDetalleVenta($id, id_sucursal());
     }
 
 
+    /**
+     * Adaptador temporal para consumidores internos todavía no migrados.
+     * El caso de uso y su transacción pertenecen a CajaOrdenesService.
+     */
     public static function despacharOrden(int $id):array{
-        date_default_timezone_set('America/Bogota');
-        $alertas = [];
-        $factura = facturas::find('id', $id);
-        $productos = ventas::idregistros('idfactura', $factura->id);
-
-        /*
-        $conflocal = config_local::getParamCaja();
-        //////// CALCULAR PRODUCTOS AGOTADOS /////////
-        if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){ //no permitir vender sin stock
-            $productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
-            foreach($productosDB as $item){
-                if(($item->stock - $mapCarrito[$item->productoid])<0){
-                $alertas['error'][] = "Productos agotados, no es posible vender";
-                echo json_encode($alertas);
-                return;
-                }
-            }
-        }*/
-
-        $getDB = facturas::getDB();
-        if($factura->entregado == 0 && ($factura->estado == 'Paga' || $factura->estado == 'Remision')){
-            $factura->entregado = 1;
-            $factura->fechaentrega = date('Y-m-d H:i:s');
-            $getDB->begin_transaction();
-            try {
-                $inventarioVenta = ventasService::prepararInventarioPersistido($productos, id_sucursal());
-                $conflocal = config_local::getParamCaja();
-                if($conflocal['permitir_venta_de_productos_sin_stock']->valor_final == 0){
-                    $erroresStock = ventasService::validarDisponibilidadInventario($inventarioVenta, id_sucursal());
-                    if(!empty($erroresStock)){
-                        throw new \RuntimeException(implode(' | ', $erroresStock));
-                    }
-                }
-                $inventarioActualizado = ventasService::descontarInventarioXVenta(
-                    $inventarioVenta,
-                    id_sucursal(),
-                    'venta',
-                    'descuento de unidades por despacho de venta',
-                    false
-                );
-                if(!$inventarioActualizado){
-                    throw new \RuntimeException('No fue posible actualizar el inventario de la orden.');
-                }
-                $factura->actualizar();
-                $getDB->commit();
-                $alertas['exito'][] = "Orden despachada.";
-                return $alertas;
-            } catch (\Throwable $th) {
-                $getDB->rollback();
-                $alertas['error'][] = "Error al procesar solicitud >>".$th->getMessage();
-                return $alertas;
-            }
-        }else{
-            $alertas['error'][] = "Error, verificar si ya se despacho como domicilio";
-            return $alertas;
-        }
-        
+        return (new CajaOrdenesService())->despacharOrden($id, id_sucursal());
     }
 
 

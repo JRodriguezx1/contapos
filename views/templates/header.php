@@ -159,26 +159,15 @@
                     </div>
                 </div>
 
-                <label for="selectSucursal" class="mt-3 text-left text-sm font-bold uppercase tracking-wide text-slate-500">
-                    Sucursal
-                </label>
-
-                <div class="relative mt-1 rounded-lg border border-slate-200 bg-white shadow-sm">
-                    <button id="toggleSucursalMenu" type="button"
-                        class="flex w-full items-center justify-between rounded-lg bg-slate-50 px-3 py-2.5 text-left text-lg font-bold text-slate-700 transition hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-100">
-                        <span id="sucursalSeleccionada">Cambiar de Sede</span>
-                        <i id="iconSucursalMenu" class="fa-solid fa-chevron-down text-sm text-indigo-500 transition-transform"></i>
-                    </button>
-                    <div id="sucursalMenuLista" class="absolute left-0 right-0 top-[calc(100%+.35rem)] z-50 hidden max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white py-1 shadow-xl">
-                        <?php foreach($sucursales as $val): ?>
-                            <div role="button" tabindex="0"
-                                class="js-sucursal-option flex w-full items-center gap-3 px-3 py-2.5 text-left text-base font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-700"
-                                data-sucursalvalue="<?php echo $val->id;?>"
-                                data-sucursallabel="<?php echo htmlspecialchars($val->nombre, ENT_QUOTES, 'UTF-8');?>">
-                                <i class="fa-solid fa-store w-6 text-center text-indigo-500"></i>
-                                <span><?php echo $val->nombre;?></span>
-                            </div>
-                        <?php endforeach; ?>
+                <div class="form-field">
+                    <label for="selectSucursal" class=""> Sucursal</label>
+                    <div class="form-input">
+                        <span><i class="fa-solid fa-code-branch"></i></span>
+                        <select id="selectSucursal" class="">
+                            <?php foreach($sucursales as $val): ?>
+                                <option value="<?php echo $val->id;?>" <?php if($val->id == $user['idsucursal']) echo 'selected'; ?>><?php echo htmlspecialchars($val->nombre, ENT_QUOTES, 'UTF-8');?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
 

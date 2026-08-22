@@ -6,8 +6,8 @@
                 <i class="fa-solid fa-hand-holding-dollar"></i>
             </span>
             <div>
-                <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Credito</p>
-                <h4 id="modalAbono" class="m-0 text-xl font-extrabold text-slate-900 sm:text-2xl">Registrar abono</h4>
+                <p class="m-0 text-base font-bold uppercase text-indigo-600">Credito</p>
+                <h4 id="modalAbono" class="m-0 text-xl font-bold text-slate-900 sm:text-2xl">Registrar abono</h4>
                 <span class="mt-1 block text-sm text-slate-500 sm:text-base">Aplica un pago parcial al saldo pendiente.</span>
             </div>
         </div>
@@ -18,12 +18,11 @@
     <div id="divmsjalerta2"></div>
     <form id="formCrearUpdateAbono" class="grid gap-4 p-4 sm:p-6" action="/admin/creditos/registrarAbono" method="POST">
         <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
-        <input class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">
         <div class="flex items-center gap-4 rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-cyan-50 p-4">
             <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600"><i class="fa-solid fa-receipt"></i></span>
             <div class="min-w-0">
-                <label for="montocuota" class="block text-sm font-extrabold uppercase text-slate-500">Valor de la cuota</label>
-                <input id="montocuota" class="h-auto w-full border-0 bg-transparent p-0 text-2xl font-black text-slate-900 outline-none" type="text" placeholder="Valor de la cuota" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>
+                <label for="montocuota" class="block text-sm font-bold uppercase text-slate-500">Valor de la cuota</label>
+                <input id="montocuota" class="h-auto w-full border-0 bg-transparent p-0 text-2xl font-semibold text-slate-900 outline-none" type="text" placeholder="Valor de la cuota" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>
             </div>
         </div>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -64,7 +63,7 @@
                     placeholder="Abono de la deuda"
                     name="valorpagado"
                     value="<?php echo $cuota->valorpagado??'';?>"
-                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1').replace(/^(\.)/, ''); if(this.value === '')this.value = '0';"
+                    oninput="formatearMoneda(this)"
                     required
                 >
             </div>

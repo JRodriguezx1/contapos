@@ -3,7 +3,7 @@ const sidebar = document.querySelector('.sidebar') as HTMLElement|null;  //selec
 const btnmenux = document.querySelector('#mobile-menux');
 const barra = document.querySelector('.barra-mobile') as HTMLElement|null;
 const nametop:HTMLElement|null = document.querySelector('.nametop');
-//const selectSucursal = document.querySelector('#selectSucursal') as HTMLSelectElement;
+const selectSucursal = document.querySelector('#selectSucursal') as HTMLSelectElement;
 const sucursalSeleccionada = document.querySelector('#sucursalSeleccionada') as HTMLElement|null;
 const opcionesSucursal = document.querySelectorAll('.js-sucursal-option') as NodeListOf<HTMLElement>;
 const toggleSucursalMenu = document.querySelector('#toggleSucursalMenu') as HTMLElement|null;
@@ -286,20 +286,29 @@ opcionesSucursal.forEach((opcion)=>{
 document.addEventListener('click', (event:MouseEvent)=>cerrarMenuSucursal());
 
 //evento para el cambio de sucursal
-/*selectSucursal.addEventListener('click', async()=>{
-
+selectSucursal.addEventListener('change', async(e: Event)=>{
+console.log((e.target as HTMLInputElement).value);
   const datos = {
-      idsucursal: "Juan",
-      edad: 30,
-      ciudad: "Bogota"
+      idsucursal: (e.target as HTMLInputElement).value,
+      //idusuario: ''
   };
 
   const url = "/admin/api/changeSucursal/select";
-                const respuesta = await fetch(url, {
-                                            method: 'POST', 
-                                            headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                                            body: JSON.stringify(datos) 
-                                        });
+  const respuesta = await fetch(url, {
+      method: 'POST', 
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify(datos) 
+  });
+  const resultado = await respuesta.json();
+  if(resultado.error){
+    msjalertToast('error', 'Error', resultado.error);
+    return;
+  }else{
+    msjalertToast('success', 'Exito', resultado.success);
 
+    setTimeout(()=>{ window.location.href = "/admin/dashboard"; }, 850);
+    
+  }
+  console.log(resultado);
   
-});*/
+});

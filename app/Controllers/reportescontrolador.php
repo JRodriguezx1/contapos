@@ -24,6 +24,7 @@ use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
+use App\services\caja\CajaReportesService;
 use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
  
@@ -314,21 +315,26 @@ class reportescontrolador{
 
   ////////////////////////////----    API      ----////////////////////////////////
 
-  ///////////  API REST llamada desde reportes o fechazetadiario.ts  ////////////
-  public static function consultafechazetadiario(){
-    //session_start();
+  /**
+   * POST /admin/api/consultafechazetadiario.
+   *
+   * Es llamado por src/ts/caja/fechazetadiario.ts. El controlador conserva la
+   * autorización, decodificación del formulario y serialización JSON; fechas,
+   * pertenencia y consultas se delegan a CajaReportesService.
+   */
+  public static function consultafechazetadiario(): void{
     isadmin();
-    $fechainicio = $_POST['fechainicio'];
-    $fechafin = $_POST['fechafin'];
-    $idcajas = json_decode($_POST['cajas']);
-    $idconsecutivos = json_decode($_POST['facturadores']);
-    $cajas = join(", ", array_values($idcajas));
-    $consecutivos = join(", ", array_values($idconsecutivos));
-    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, id_sucursal(), $fechainicio, $fechafin);
-    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, id_sucursal(), $fechainicio, $fechafin);
-    $datos['datosventa'] = $datosventa;
-    $datos['datosmediospago'] = $datosmediospago;
-    echo json_encode($datos);
+    $cajas = json_decode((string)($_POST['cajas'] ?? '[]'), true);
+    $facturadores = json_decode((string)($_POST['facturadores'] ?? '[]'), true);
+
+    $resultado = (new CajaReportesService())->consultarZPorRango(
+      (string)($_POST['fechainicio'] ?? ''),
+      (string)($_POST['fechafin'] ?? ''),
+      is_array($cajas) ? $cajas : [],
+      is_array($facturadores) ? $facturadores : [],
+      id_sucursal()
+    );
+    echo json_encode($resultado);
   }
 
   public static function reporteventamensual(){

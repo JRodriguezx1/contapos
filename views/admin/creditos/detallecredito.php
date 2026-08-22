@@ -4,6 +4,8 @@
   <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
     <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
   <?php endif; ?>
+
+  <input id="idcredito" class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">
   
   <div class="relative mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:p-6">
     <!-- Título principal -->
@@ -17,7 +19,7 @@
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
         <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">🧾 Factura</h3>
         <p class="m-0 text-xl font-bold leading-tight text-slate-900"><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
@@ -40,7 +42,7 @@
     </div>
 
     <!-- Detalles financieros -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
         <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💲 Credito Total</h3>
         <p id="creditoTotalText" class="m-0 text-xl font-bold leading-tight text-slate-900">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
@@ -70,10 +72,10 @@
           <span class="inline-flex min-h-11 items-center rounded-full px-3 py-1 text-base font-extrabold <?php echo $credito->idestadocreditos==1?'bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':'bg-red-100 text-red-700'); ?>">
             <?php echo $credito->idestadocreditos==1?'Finalizado':($credito->idestadocreditos==2?'En curso':'Anulado'); ?>
           </span>
-          <span class="text-xl font-semibold text-slate-500">Saldo pendiente: <strong id="saldopendientetext" class="font-extrabold text-slate-900">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
+          <span class="text-xl font-semibold text-slate-500">Saldo pendiente: <strong id="saldopendientetext" class="font-bold text-slate-900">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>
         <div class="flex flex-wrap items-center gap-4">
-          <span class="text-xl font-semibold text-slate-500">Cliente: <strong class="font-extrabold text-slate-900"><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
+          <span class="text-xl font-semibold text-slate-500">Cliente: <strong class="font-bold text-slate-900"><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong><p class="m-0 text-base font-normal">Documento: <?php echo $cliente->identificacion;?></p></span>
         </div>
         <div class="flex flex-wrap items-center gap-4">
           <span class="flex items-center gap-2 text-lg font-semibold text-slate-500">Productos: <span class="btn-xs inline-flex min-h-11 items-center rounded-full px-3 py-1 text-base font-extrabold <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></span></span>
@@ -84,6 +86,21 @@
           <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="inline-flex size-14 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-700 text-xl font-black text-white hover:text-white">+</a></div>
         <?php } endif;?>
       </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex flex-col items-stretch gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+      <?php if($credito->idestadocreditos == 2):
+                if($credito->id_fksucursal == id_sucursal() && (tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4)){
+      ?>
+
+        <button id="ajustarCredito" class="nuevobtn nuevobtn_light w-full sm:w-auto">🔄 Ajustar Credito</button>
+      
+      <?php } endif; ?>
+      <button id="btnDetalleProductos" class="nuevobtn nuevobtn_blueintense w-full sm:w-auto">📄 Productos</button>
+      <button id="btnAbonar" class="nuevobtn nuevobtn_indigo w-full sm:w-auto">➕ Abonar</button>
+      <button id="btnPagarTodo" class="nuevobtn nuevobtn_turquoise w-full sm:w-auto">✅ Pagar Todo</button>
+      <button class="nuevobtn nuevobtn_gray w-full sm:w-auto">⬅️ Volver</button>
     </div>
 
     <!-- Historial de abonos -->
@@ -125,21 +142,6 @@
           
         </tbody>
       </table>
-    </div>
-
-    <!-- Botones de acción -->
-    <div class="flex flex-col items-stretch gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-      <?php if($credito->idestadocreditos == 2):
-                if($credito->id_fksucursal == id_sucursal() && (tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4)){
-      ?>
-
-        <button id="ajustarCredito" class="nuevobtn nuevobtn_light w-full sm:w-auto">🔄 Ajustar Credito</button>
-      
-      <?php } endif; ?>
-      <button id="btnDetalleProductos" class="nuevobtn nuevobtn_blueintense w-full sm:w-auto">📄 Productos</button>
-      <button id="btnAbonar" class="nuevobtn nuevobtn_indigo w-full sm:w-auto">➕ Abonar</button>
-      <button id="btnPagarTodo" class="nuevobtn nuevobtn_turquoise w-full sm:w-auto">✅ Pagar Todo</button>
-      <button class="nuevobtn nuevobtn_gray w-full sm:w-auto">⬅️ Volver</button>
     </div>
   </div>
 

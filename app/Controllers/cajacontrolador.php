@@ -4,63 +4,38 @@ namespace App\Controllers;
 
 use App\classes\Email;
 use App\Models\ActiveRecord;
-use App\Models\configuraciones\usuarios; //namespace\clase hija
-//use App\Models\configuraciones\negocio;
+use App\Models\configuraciones\usuarios;
 use App\Models\ventas\facturas;
-use App\Models\caja\cierrescajas;
-use App\Models\caja\ingresoscajas;
-use App\Models\gastos;
-use App\Models\configuraciones\caja;
-use App\Models\caja\declaracionesdineros;
-use App\Models\configuraciones\mediospago;
-use App\Models\caja\factmediospago;
-use App\Models\caja\arqueoscajas;
-use App\Models\caja\categoriagastos;
-use App\Models\configuraciones\bancos;
 use App\Models\clientes\clientes;
 use App\Models\clientes\direcciones;
 use App\Models\configuraciones\tarifas;
 use App\Models\ventas\ventas;
-use App\Models\configuraciones\consecutivos;
 use App\Models\parametrizacion\config_local;
-use App\Models\configuraciones\negocio;
 use App\Models\sucursales;
 use App\services\cajaService;
+use App\services\caja\CajaCierreService;
 use App\services\caja\CajaConsultasService;
-use App\services\whatsAppService;
-use App\classes\Traits\DocumentTrait;
-use App\Models\configuraciones\emisores;
-use App\Repositories\creditos\creditosRepository;
-use MVC\Router;  //namespace\clase
-use stdClass;
+use App\services\caja\CajaDocumentosService;
+use App\services\caja\CajaMovimientosService;
+use App\services\caja\CajaOrdenesService;
+use App\services\caja\CajaReportesService;
+use App\services\caja\CategoriasGastoService;
+use MVC\Router;
 
 class cajacontrolador{
-
-  use DocumentTrait;
 
   /**
    * GET /admin/caja.
    *
    * Renderiza el panel general. La preparación de cierres abiertos, facturas,
    * medios de pago y catálogos se delega a CajaConsultasService.
-   */
+  */
   public static function index(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $datos = (new CajaConsultasService())->obtenerPanelCaja(
-      id_sucursal(),
-      (int)$_SESSION['perfil'],
-      (int)$_SESSION['id']
-    );
+    $datos = (new CajaConsultasService())->obtenerPanelCaja( id_sucursal(), (int)$_SESSION['perfil'], (int)$_SESSION['id'] );
 
-    $router->render('admin/caja/index', $datos + [
-      'titulo'=>'Caja',
-      'sucursal'=>nombreSucursal(),
-      'alertas'=>[],
-      'sucursales'=>sucursales::all(),
-      'user'=>$_SESSION
-    ]);
+    $router->render('admin/caja/index', $datos + ['titulo'=>'Caja', 'sucursal'=>nombreSucursal(), 'alertas'=>[], 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -69,280 +44,169 @@ class cajacontrolador{
    *
    * Renderiza el cierre abierto de la caja principal. El resumen financiero se
    * obtiene desde CajaConsultasService y se comparte con las demás consultas.
-   */
+  */
   public static function cerrarcaja(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $datos = (new CajaConsultasService())->obtenerCierrePrincipal(id_sucursal());
 
-    $router->render('admin/caja/cerrarcaja', $datos + [
-      'titulo'=>'Caja',
-      'alertas'=>[],
-      'sucursales'=>sucursales::all(),
-      'user'=>$_SESSION
-    ]);
+    $router->render('admin/caja/cerrarcaja', $datos + ['titulo'=>'Caja', 'alertas'=>[], 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
   
-//////// ingreso de base o gasto de caja tambien como apertura /////////
+  /**
+   * POST /admin/caja/ingresoGastoCaja.
+   *
+   * Recibe el formulario de gastos e ingresos de views/admin/caja/index.php.
+   * El controlador conserva la autorización, el archivo subido y el render;
+   * CajaMovimientosService ejecuta la apertura y el movimiento transaccional.
+   */
   public static function ingresoGastoCaja(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $mediospago = mediospago::all();
     date_default_timezone_set('America/Bogota');
-    
-    $valor = str_replace('.', '', $_POST['valor']); // quita los puntos
-     $_POST['valor'] = (int)$valor;
+
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$_POST['id_caja'], 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
-      if(!isset($ultimocierre)){ // si la caja esta cerrada y luego aqui se hace apertura
-        $ultimocierre = new cierrescajas(['idcaja'=>$_POST['id_caja'], 'nombrecaja'=>caja::find('id', $_POST['id_caja'])->nombre, 'estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-        $r = $ultimocierre->crear_guardar();
-        if(!$r[0])$ultimocierre->estado = 1;
-        $ultimocierre->id = $r[1];
-      }
+      $comprobante = ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>[]];
+      if(($_POST['operacion'] ?? '') === 'gasto')
+        $comprobante = self::guardarComprobanteGasto($_FILES['imgcomprobante'] ?? null);
 
-      if($ultimocierre->estado == 0){  // si es igual a cero esta abierto el cierre de caja
-        if($_POST['operacion']=="ingreso"){
-          $ingresocaja = new ingresoscajas($_POST);
-          $ingresocaja->idusuario = $_SESSION['id'];
-          $ingresocaja->id_cierrecaja = $ultimocierre->id;
-          $ultimocierre->basecaja = $ultimocierre->basecaja + $ingresocaja->valor;
-          $alertas = $ingresocaja->validar();
-          if(empty($alertas)){
-            $r = $ingresocaja->crear_guardar();
-            if($r[0]){
-              $r1 = $ultimocierre->actualizar();
-              if($r1){
-                $alertas['exito'][] = "Ingreso de dinero a caja es correcto";
-              }else{
-                $alertas['error'][] = "error al actualizar los ingresos en el cierre actual";
-                /// borrar ultimo registro guardado de $ingresocaja
-                $ingresocaja->eliminar_idregistros('id', [$r[1]]);
-              }
-            }else{
-              $alertas['error'][] = "Error al guardar el ingreso de dinero a caja";
-            }
-          }
-        }else{ // si la operacion es un gasto
-          //validar si viene comprobante de gasto
-          $subdominio = explode('.', $_SERVER['HTTP_HOST'])[0];
-          $dirComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/comprobantes";
-          if (!is_dir($dirComprobante))mkdir($dirComprobante, 0755, true);
-
-          $ingresoGasto = new gastos($_POST);
-          $ingresoGasto->idg_usuario = $_SESSION['id'];
-          $ingresoGasto->idg_cierrecaja = $ultimocierre->id;
-          if($_POST['origengasto'] == 'gastocaja'){
-            $ingresoGasto->idg_caja = $_POST['id_caja'];
-            $ultimocierre->gastoscaja = $ultimocierre->gastoscaja + $ingresoGasto->valor;
-          }else{ //si el gasto sale de un banco
-            $ingresoGasto->idg_caja = $_POST['id_caja'];
-            $ingresoGasto->id_banco = $_POST['id_banco'];
-            $ultimocierre->gastosbanco = $ultimocierre->gastosbanco + $ingresoGasto->valor;
-            $ingresoGasto->tipo_origen = 1; //1 = banco. origen del gasto es banco
-          }
-          ///// validar gastos en el modelo
-          $alertas = $ingresoGasto->validar();
-          $alertas = $ingresoGasto->validarimgcomprobante($_FILES);
-          if(empty($alertas)){
-
-            if($_FILES['imgcomprobante']['name']){
-              $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$subdominio."/comprobantes/".$_FILES['imgcomprobante']['name'];
-              $existe_archivo = file_exists($rutaComprobante);
-              if($existe_archivo)unlink($rutaComprobante);
-              $url_temp = $_FILES["imgcomprobante"]["tmp_name"];
-              $nombreComprobante = $subdominio.'/comprobantes/'.uniqid().$_FILES['imgcomprobante']['name'];
-              $rutaComprobante = $_SERVER['DOCUMENT_ROOT']."/build/img/".$nombreComprobante;
-              move_uploaded_file($url_temp, $rutaComprobante);
-              $ingresoGasto->imgcomprobante = $nombreComprobante;
-            }
-
-            $r = $ingresoGasto->crear_guardar();
-            if($r[0]){
-              $r1 = $ultimocierre->actualizar();
-              if($r1){
-                $alertas['exito'][] = "El gasto fue registrado correctamente";
-              }else{
-                $alertas['error'][] = "error al actualizar los gastos en el cierre de caja actual";
-                /// borrar ultimo registro guardado de $ingresocaja
-                $ingresoGasto->eliminar_idregistros('id', [$r[1]]);
-              }
-            }else{
-              $alertas['error'][] = "Error al guardar el gasto de dinero";
-            }
-          }
-        }
+      if($comprobante['alertas']){
+        $alertas = ['error'=>$comprobante['alertas']];
       }else{
-        $alertas['error'][] = "Error al obtener el id del cierre de caja";
+        $alertas = (new CajaMovimientosService())->registrarMovimiento($_POST, id_sucursal(), (int)$_SESSION['id'], $comprobante['ruta']);
+
+        // El archivo acaba de crearse para esta solicitud. Si el comando no
+        // se confirmó, se elimina para no dejar comprobantes huérfanos.
+        if(isset($alertas['error']) && $comprobante['rutaAbsoluta'] && file_exists($comprobante['rutaAbsoluta']))
+          unlink($comprobante['rutaAbsoluta']);
       }
     }
-    //todas las facturas que pertenecen a la sede con los cierres de caja abierto
-    
-    $ultimoscierres = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0]);
-    $datacierrescajas['ingresoventas'][] = 0;
-    foreach($ultimoscierres as $value){
-      if($value->ingresoventas>0 || $value->totalcotizaciones>0){
-        $datacierrescajas['ids'][] = $value->id;
-        $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
-      }
-    }
-    $facturas = [];
-    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
-debuguear($facturas);
-    foreach($facturas as $value)
-      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
-    $categoriasgastos = categoriagastos::all();
-    $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
-    $bancos = bancos::all();
-    $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+
+    $datosPanel = (new CajaConsultasService())->obtenerPanelCaja(id_sucursal(), (int)$_SESSION['perfil'], (int)$_SESSION['id']);
+    $router->render('admin/caja/index', $datosPanel + ['titulo'=>'Caja', 'sucursal'=>nombreSucursal(), 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
+  /**
+   * Valida y almacena el comprobante opcional recibido con un gasto.
+   *
+   * Sólo lo llama ingresoGastoCaja(). Devuelve la ruta relativa que se guarda
+   * en la base de datos y la ruta absoluta para poder limpiar el archivo si el
+   * caso de uso falla. Los ingresos no pasan por esta función.
+   */
+  private static function guardarComprobanteGasto(?array $archivo): array{
+    if(!$archivo || (int)($archivo['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE)
+      return ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>[]];
+    if((int)($archivo['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK)
+      return ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>['No fue posible cargar el comprobante.']];
+    if((int)($archivo['size'] ?? 0) > 31000000)
+      return ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>['El comprobante no puede superar los 31 MB.']];
+
+    $mime = (new \finfo(FILEINFO_MIME_TYPE))->file((string)$archivo['tmp_name']);
+    $extensiones = ['image/jpeg'=>'jpg', 'image/png'=>'png'];
+    if(!isset($extensiones[$mime]))
+      return ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>['Seleccione una imagen en formato jpeg o png.']];
+
+    $subdominio = preg_replace('/[^a-zA-Z0-9_-]/', '', explode('.', (string)($_SERVER['HTTP_HOST'] ?? 'cliente'))[0]) ?: 'cliente';
+    $documentRoot = rtrim((string)($_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__, 2).'/public'), '/\\');
+    $directorio = $documentRoot.'/build/img/'.$subdominio.'/comprobantes';
+    if(!is_dir($directorio) && !mkdir($directorio, 0755, true) && !is_dir($directorio))
+      return ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>['No fue posible preparar la carpeta de comprobantes.']];
+
+    $rutaRelativa = $subdominio.'/comprobantes/'.bin2hex(random_bytes(12)).'.'.$extensiones[$mime];
+    $rutaAbsoluta = $documentRoot.'/build/img/'.$rutaRelativa;
+    if(!move_uploaded_file((string)$archivo['tmp_name'], $rutaAbsoluta))
+      return ['ruta'=>null, 'rutaAbsoluta'=>null, 'alertas'=>['No fue posible guardar el comprobante.']];
+
+    return ['ruta'=>$rutaRelativa, 'rutaAbsoluta'=>$rutaAbsoluta, 'alertas'=>[]];
   }
 
 
+  /**
+   * GET|POST /admin/caja/categoriaGasto.
+   *
+   * GET muestra el catálogo; POST recibe el formulario de eliminación de
+   * views/admin/caja/categoriagasto.php. Las reglas se delegan al servicio.
+   */
   public static function categoriaGasto(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $categoriagasto = categoriagastos::find('id', $_POST['id']);
-      try {
-        $r = $categoriagasto->eliminar_registro();
-      } catch (\Throwable $th) {
-        $r = false;
-      }
-      
-      if($r){
-        $alertas['exito'][] = "Categoria de gastos eliminada correctamente";
-      }else{
-        $alertas['error'][] = "Error en la eliminacion de la categoria de gastos";
-      }
-    }
-    $categoriasgastos = categoriagastos::all();
-    $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'categoriasgastos'=>$categoriasgastos, 'sucursal'=>nombreSucursal(), 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    if($_SERVER['REQUEST_METHOD'] === 'POST' )
+      $alertas = (new CategoriasGastoService())->eliminarCategoria($_POST);
+    self::renderCategoriasGasto($router, $alertas);
   }
 
-
+  /**
+   * POST /admin/caja/crear_categoriaGasto.
+   *
+   * Es llamado por src/ts/caja/categoriasgastos.ts al confirmar el formulario
+   * de creación. El controlador conserva HTTP y renderizado.
+   */
   public static function crear_categoriaGasto(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $categoriagasto = new categoriagastos($_POST);
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $alertas = $categoriagasto->validar();
-      if(empty($alertas)){
-        $r = $categoriagasto->crear_guardar();
-        if($r[0]){
-          $alertas['exito'][] = "Categoria de gasto creado correctamente";
-        }else{
-          $alertas['error'][] = "Error en la creacion la categoria de gasto";
-        }
-      }
-    }
-    $categoriasgastos = categoriagastos::all();
-    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $alertas = (new CategoriasGastoService())->crearCategoria($_POST);
+    self::renderCategoriasGasto($router, $alertas);
   }
 
-
+  /**
+   * POST /admin/caja/editarcategoriagasto.
+   *
+   * Es llamado por src/ts/caja/categoriasgastos.ts al confirmar una edición.
+   * El servicio valida existencia, protección del catálogo base y duplicados.
+   */
   public static function editarcategoriagasto(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $categoriagasto = categoriagastos::find('id', $_POST['id']);
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $categoriagasto->compara_objetobd_post($_POST);
-      $alertas = $categoriagasto->validar();
-      if(empty($alertas)){
-        $r = $categoriagasto->actualizar();
-        if($r){
-          $alertas['exito'][] = "Categoria de gasto actualizada correctamente";
-        }else{
-          $alertas['error'][] = "Error de actualizacion en la categoria de gasto";
-        }
-      }
-    }
-    $categoriasgastos = categoriagastos::all();
-    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'categoriasgastos'=>$categoriasgastos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $alertas = (new CategoriasGastoService())->editarCategoria($_POST);
+    self::renderCategoriasGasto($router, $alertas);
+  }
+
+  /**
+   * Render compartido por listado, creación, edición y eliminación.
+   * Centraliza las variables requeridas por views/admin/caja/categoriagasto.php.
+   */
+  private static function renderCategoriasGasto(Router $router, array $alertas): void{
+    $categoriasgastos = (new CategoriasGastoService())->listarCategorias();
+    $router->render('admin/caja/categoriagasto', ['titulo'=>'Caja', 'conflocal'=>config_local::getParamGlobal(), 'categoriasgastos'=>$categoriasgastos, 'sucursal'=>nombreSucursal(), 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
+  /**
+   * GET /admin/caja/zetadiario.
+   *
+   * Muestra los cierres históricos disponibles y el acceso al consolidado de
+   * hoy. El listado se prepara en CajaReportesService.
+   */
   public static function zetadiario(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()]);
-    //$idultimocierreabierto = cierrescajas::uniquewhereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-    //if($idultimocierreabierto){
-      //$idultimocierreabierto = $idultimocierreabierto->id;
-    //}else{
-      $idultimocierreabierto = -1;
-    //}
-    //Hay que sumar los ultimos cierres de caja abierto por sucursal = $idultimocierreabierto
-    $router->render('admin/caja/zetadiario', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'idultimocierreabierto'=>$idultimocierreabierto, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $datos = (new CajaReportesService())->obtenerIndiceZ(id_sucursal());
+    $router->render('admin/caja/zetadiario', $datos + ['titulo'=>'Caja', 'alertas'=>[], 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
-
-  //cuando se da clic en el btn "zeta diario de hoy" o en el btn "zeta diario por fecha"
+  /**
+   * GET /admin/caja/fechazetadiario?id={selector}.
+   *
+   * Recibe -1 para cajas abiertas, 0 para consulta por rango o el id positivo
+   * de un cierre histórico. El servicio construye el contrato de la vista.
+   */
   public static function fechazetadiario(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $id = $_GET['id'];
-    if(!is_numeric($id))return;
+    $selector = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
+    if($selector === false || (int)$selector < -1)return;
 
+    $datos = (new CajaReportesService())->obtenerDetalleZ((int)$selector, id_sucursal());
     $alertas = [];
-    $discriminarimpuestos = [];
-    $discriminarmediospagos = [];
-    $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
-    $consecutivos = consecutivos::whereArray(['id_sucursalid'=>id_sucursal(), 'estado'=>1]);
-    $cajaselected = '';
-    $cierreselected = new stdClass();
-    $cierreselected->ingresoventas = 0;
-    $cierreselected->valorimpuestototal = 0;
-    $cierreselected->facturaselectronicas = 0;
-    $cierreselected->facturaspos = 0;
-
-    if($id == -1){ //-1 es para zeta diario de hoy
-      // sumar todos los valores de las cajas abiertas
-      $cierreselected = cierrescajas::whereArray(['estado'=>0, 'idsucursal_id'=>id_sucursal()]);
-      $cierreselected = array_reduce($cierreselected, function($acumulador, $obj){
-        $acumulador['ingresoventas'] += $obj->ingresoventas;
-        $acumulador['valorimpuestototal'] += $obj->valorimpuestototal;
-        $acumulador['totaldescuentos'] += $obj->totaldescuentos;
-        $acumulador['realventas'] += $obj->realventas;
-        $acumulador['facturaselectronicas'] += $obj->facturaselectronicas;
-        $acumulador['facturaspos'] += $obj->facturaspos;
-        $acumulador['valorfe'] += $obj->valorfe;
-        $acumulador['valorpos'] += $obj->valorpos;
-        $acumulador['id'][] = $obj->id;
-        $acumulador['nombrecaja'] .= $obj->nombrecaja.' ';
-        return $acumulador;
-      }, ['id'=>[], 'nombrecaja'=>'', 'ingresoventas'=>0, 'valorimpuestototal'=>0, 'totaldescuentos'=>0, 'realventas'=>0, 'facturaselectronicas'=>0, 'facturaspos'=>0, 'valorfe'=>0, 'valorpos'=>0]);
-      
-      $cierreselected = (object)$cierreselected;
-      if(!empty($cierreselected->id)){
-        $discriminarmediospagos = cierrescajas::discriminarmediospagoscajas($cierreselected->id);
-        $discriminarimpuestos = cierrescajas::discriminarimpuestocaja($cierreselected->id);
-        $cajaselected = $cierreselected->nombrecaja;
-      }else{
-        foreach($cajas as $index => $value){
-          if(array_key_last($cajas) == $index){
-            $cajaselected .= $value->nombre;
-          }else{
-            $cajaselected .= $value->nombre.' - ';
-          }
-        }
-      }
+    if(isset($datos['error'])){
+      $alertas['error'][] = $datos['error'];
+      unset($datos['error']);
     }
-    $router->render('admin/caja/fechazetadiario', ['titulo'=>'Caja', 'cajas'=>$cajas, 'discriminarimpuestos'=>$discriminarimpuestos, 'consecutivos'=>$consecutivos, 'cierreselected'=>$cierreselected, 'cajaselected'=>$cajaselected, 'discriminarmediospagos'=>$discriminarmediospagos, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+
+    $router->render('admin/caja/fechazetadiario', $datos + ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -351,21 +215,12 @@ debuguear($facturas);
    *
    * Lista cierres finalizados. La consulta por sucursal y orden descendente se
    * delega a CajaConsultasService.
-   */
+  */
   public static function ultimoscierres(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $ultimoscierres = (new CajaConsultasService())
-      ->listarCierresFinalizados(id_sucursal());
-
-    $router->render('admin/caja/ultimoscierres', [
-      'titulo'=>'Caja',
-      'ultimoscierres'=>$ultimoscierres,
-      'alertas'=>[],
-      'sucursales'=>sucursales::all(),
-      'user'=>$_SESSION
-    ]);
+    $ultimoscierres = (new CajaConsultasService())->listarCierresFinalizados(id_sucursal());
+    $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>[], 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -374,34 +229,32 @@ debuguear($facturas);
    *
    * Renderiza un cierre finalizado. El resumen financiero reutilizable se
    * obtiene desde CajaConsultasService.
-   */
+  */
   public static function detallecierrecaja(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $id = $_GET['id'];
     if(!is_numeric($id))return;
 
-    $datos = (new CajaConsultasService())
-      ->obtenerDetalleCierreFinalizado((int)$id, id_sucursal());
+    $datos = (new CajaConsultasService())->obtenerDetalleCierreFinalizado((int)$id, id_sucursal());
 
     if($datos === null)return;
 
-    $router->render('admin/caja/detallecierrecaja', $datos + [
-      'titulo'=>'Caja',
-      'alertas'=>[],
-      'sucursales'=>sucursales::all(),
-      'user'=>$_SESSION
-    ]);
+    $router->render('admin/caja/detallecierrecaja', $datos + ['titulo'=>'Caja', 'alertas'=>[], 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
+  /**
+   * GET /admin/caja/pedidosguardados.
+   *
+   * Renderiza las cotizaciones pendientes de la sucursal. La consulta se
+   * delega a CajaOrdenesService y el controlador conserva permisos y vista.
+   */
   public static function pedidosguardados(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $pedidosguardados = facturas::whereArray(['cotizacion'=>1, 'estado'=>'guardado', 'id_sucursal'=>id_sucursal()]);
-    $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $pedidosguardados = (new CajaOrdenesService())->listarPedidosGuardados(id_sucursal());
+    $router->render('admin/caja/pedidosguardados', ['titulo'=>'Caja', 'pedidosguardados'=>$pedidosguardados, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -413,235 +266,161 @@ debuguear($facturas);
   }
 
 
+  /**
+   * GET /admin/caja/despachosPendientes.
+   *
+   * Renderiza las órdenes pendientes de entrega. La consulta limitada a la
+   * sucursal se delega a CajaOrdenesService.
+   */
   public static function despachosPendientes(Router $router){
     isadmin();
     //if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
-    $despachosPendientes = facturas::despachosPendientes(id_sucursal());
+    $despachosPendientes = (new CajaOrdenesService())->listarDespachosPendientes(id_sucursal());
     $router->render('admin/caja/despachosPendientes', ['titulo'=>'Caja', 'despachosPendientes'=>$despachosPendientes, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
+  /**
+   * GET /admin/caja/ordenresumen?id={factura}.
+   *
+   * Renderiza el detalle operativo de una orden. La preparación de factura,
+   * relaciones y catálogos se delega a CajaOrdenesService.
+   */
   public static function ordenresumen(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $id = $_GET['id']; //id de la cotizacion
-    if(!is_numeric($id))return;
-    $idsucursal = id_sucursal();
-    $sucursal = sucursales::find('id', $idsucursal);
-    $repoCredito = new creditosRepository();
+    $id = self::obtenerIdDocumento();
+    if(!$id)return;
 
-    $factura = facturas::uniquewhereArray(['id'=>$id, 'id_sucursal'=>$idsucursal]);
-    if($factura->tipoventa == 'Credito')$factura->ref_creditoid = $repoCredito->uniqueWhere(['factura_id'=>$factura->id])->id;
-  
-    if($factura){
-      $productos = ventas::idregistros('idfactura', $id);
-      $cliente = clientes::find('id', $factura->idcliente);
-      if($factura->iddireccion){
-        $direccion = direcciones::uniquewhereArray(['id'=>$factura->iddireccion, 'idcliente'=>$factura->idcliente]);
-        if(!$direccion)$direccion = direcciones::find('id', 1);
-      }else{
-        $direccion = direcciones::find('id', 1);
-      }
-      $tarifa = tarifas::find('id', $direccion->idtarifa);
-      $vendedor = usuarios::find('id', $factura->idvendedor);
+    $datos = (new CajaOrdenesService())->prepararResumenOrden($id, id_sucursal());
+    if(!$datos){
+      self::responderDocumentoNoEncontrado();
+      return;
     }
 
-    $mediospago = mediospago::all();
-    $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
-    $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
-    $usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
-    $emisores = emisores::whereArray(['idsucursal'=>$idsucursal, 'estado'=>1]);
-    $nombreEmisores = array_column($emisores, 'nombre', 'id');
-    $nitEmisores = array_column($emisores, 'nit', 'id');
-    $factura->nombreemisor = $nombreEmisores[$factura->idemisor] ?? NULL;
-    $factura->nitemisor = $nitEmisores[$factura->idemisor] ?? NULL;
-    $conflocal = config_local::getParamCaja();
-    $router->render('admin/caja/ordenresumen', ['titulo'=>'Caja', 'factura'=>$factura, 'productos'=>$productos, 'cliente'=>$cliente, 'tarifa'=>$tarifa, 'direccion'=>$direccion, 'vendedor'=>$vendedor, 'mediospago'=>$mediospago, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'usuarios'=>$usuarios, 'emisores'=>$emisores, 'conflocal'=>$conflocal, 'alertas'=>$alertas, 'sucursal'=>$sucursal, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/ordenresumen', $datos + ['titulo'=>'Caja', 'alertas'=>[], 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
   public static function detalleorden(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
     $alertas = [];
     $id = $_GET['id'];
     if(!is_numeric($id))return;
-    //$alertas = usuarios::getAlertas();
-    
-    $router->render('admin/caja/detallepedidox', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallepedidox', ['titulo'=>'Caja', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
+  /**
+   * GET /printfacturacarta?id={factura}.
+   *
+   * Es abierto desde caja.ts y ordenresumen.ts. La preparación y validación de
+   * sucursal se delegan a CajaDocumentosService; aquí sólo se renderiza.
+   */
   public static function printfacturacarta(Router $router){
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $id = $_GET['id'];
-    if(!is_numeric($id))return;
-    $datos = cajaService::detalleVenta($id);
-    $sql="SELECT mediospago.* FROM facturas JOIN factmediospago ON factmediospago.id_factura = facturas.id 
-          JOIN mediospago ON mediospago.id = factmediospago.idmediopago WHERE facturas.id = {$datos['factura']->id};";
-    $mediospago = ActiveRecord::camposJoinObj($sql);
-    $router->render('admin/caja/printFacturaCarta', $datos+['titulo'=>'Impresion factura', 'mediospago'=>$mediospago, 'sucursal'=>$datos['sucursal'], 'user'=>$_SESSION]);
+    $id = self::obtenerIdDocumento();
+    if(!$id)return;
+    $datos = (new CajaDocumentosService())->prepararFacturaCarta($id, id_sucursal());
+    if(!$datos){
+      self::responderDocumentoNoEncontrado();
+      return;
+    }
+    $router->render('admin/caja/printfacturacarta', $datos + ['titulo'=>'Impresion factura', 'user'=>$_SESSION]);
   }
 
+  /**
+   * GET /printcotizacion?id={factura}.
+   *
+   * Es abierto desde ordenresumen.ts. CajaDocumentosService comparte el mismo
+   * detalle validado de la factura y sus relaciones.
+   */
   public static function printcotizacion(Router $router){
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $id = $_GET['id'];
-    if(!is_numeric($id))return;
-    $datos = cajaService::detalleVenta($id);
-    $router->render('admin/caja/printcotizacion', $datos+['titulo'=>'Impresion cotizacion', 'sucursal'=>$datos['sucursal'], 'user'=>$_SESSION]);
+    $id = self::obtenerIdDocumento();
+    if(!$id)return;
+    $datos = (new CajaDocumentosService())->prepararCotizacion($id, id_sucursal());
+    if(!$datos){
+      self::responderDocumentoNoEncontrado();
+      return;
+    }
+    $router->render('admin/caja/printcotizacion', $datos + ['titulo'=>'Impresion cotizacion', 'user'=>$_SESSION]);
   }
 
+  /**
+   * GET /printdetallecierre?id={cierre}.
+   *
+   * Es abierto desde cerrarcaja.ts y detallecierrecaja.ts. El servicio combina
+   * el resumen financiero compartido con el encabezado de la sucursal.
+   */
   public static function printdetallecierre(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $id = $_GET['id'];
-    if(!is_numeric($id))return;
-    $datos = cajaService::printdetallecierre($id);
-    $sucursal = sucursales::find('id', id_sucursal());
-    $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
-    //$router->render('admin/caja/printdetallecierre', ['titulo'=>'detalle cierre Caja', 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'discriminarimpuesto'=>$discriminarimpuesto, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
-    $router->render('admin/caja/printdetallecierre', $datos+['titulo'=>'detalle cierre Caja', 'sucursal'=>$sucursal, 'lineasencabezado'=>$lineasencabezado, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $id = self::obtenerIdDocumento();
+    if(!$id)return;
+    $datos = (new CajaDocumentosService())->prepararDetalleCierre($id, id_sucursal());
+    if(!$datos){
+      self::responderDocumentoNoEncontrado();
+      return;
+    }
+    $router->render('admin/caja/printdetallecierre', $datos + ['titulo'=>'detalle cierre Caja', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+  }
+
+  /** Normaliza el parámetro id compartido por las tres rutas documentales. */
+  private static function obtenerIdDocumento(): ?int{
+    $id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
+    return $id === false ? null : (int)$id;
+  }
+
+  /** Devuelve una respuesta controlada cuando el documento no está en alcance. */
+  private static function responderDocumentoNoEncontrado(): void{
+    http_response_code(404);
+    echo 'Documento no encontrado.';
   }
 
 
   //////////////////////////----    API      ----////////////////////////////////
 
-  ///////////  API REST llamada desde cerrarcaja.ts cuando se declara dinero  ////////////
+  /**
+   * POST /admin/api/declaracionDinero.
+   *
+   * Es llamado desde src/ts/caja/cerrarcaja.ts al editar la declaración de un
+   * medio de pago. La regla de crear, actualizar o eliminar se delega al
+   * servicio; esta acción conserva autorización, entrada HTTP y salida JSON.
+   */
   public static function declaracionDinero(){
-    //session_start();
     isadmin();
-    $alertas = [];
-    $ax = false;
-    $bx = false;
-    $declaraciondinero = new declaracionesdineros($_POST);
-    $ultimocierre = cierrescajas::uniquewhereArray(['id'=>$_POST['idcierrecaja'], 'idsucursal_id'=>id_sucursal()]); ////// ultimo registro de cierrescajas validar si esta abierto
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $declaraciondinero->idcierrecajaid = $ultimocierre->id;
-      $alertas = $declaraciondinero->validar();
-      if($ultimocierre->estado == 1)$alertas['error'][] = "Error!, ingresa nuevamente al modulo de caja para validar que la caja este ya cerrada.";
-      if(empty($alertas)){
-        $existevalor = $declaraciondinero::uniquewhereArray(['id_mediopago'=>$declaraciondinero->id_mediopago, 'idcierrecajaid'=>$ultimocierre->id]);
-        if($existevalor){  //se actualiza el registro
-          if($declaraciondinero->valordeclarado != 0){
-            $existevalor->valordeclarado = $declaraciondinero->valordeclarado;
-            $ax = $existevalor->actualizar();
-          }else{ //si al declarar es cero
-            $ax = $existevalor->eliminar_registro();
-          }
-        }else{   //crear registro
-          $bx = $declaraciondinero->crear_guardar();
-        }
-        if($ax || $bx[0]){
-          $alertas['exito'][] = "1";
-        }
-      }
-    }
-    echo json_encode($alertas);
+    $resultado = (new CajaCierreService())->registrarDeclaracion($_POST, id_sucursal());
+    echo json_encode($resultado);
   }
 
-
+  /**
+   * POST /admin/api/arqueocaja.
+   *
+   * Es llamado desde src/ts/caja/cerrarcaja.ts al confirmar las denominaciones
+   * contadas. El servicio crea el arqueo o reemplaza sus valores si ya existe.
+   */
   public static function arqueocaja(){   
-    //session_start();
     isadmin();
-    $alertas = [];
-    $arqueocaja = new arqueoscajas($_POST);
-    $ultimocierre = cierrescajas::uniquewhereArray(['id'=>$_POST['idcierrecaja'], 'idsucursal_id'=>id_sucursal()]); ////// ultimo registro de cierrescajas validar si esta abierto
-    $arqueocaja->id_cierrecajaid = $ultimocierre->id;
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      if($ultimocierre->estado == 1){
-        $alertas['error'][] = "Error!, ingresa nuevamente al modulo de caja para validar que la caja este ya cerrada.";
-      }else{
-        $existe = arqueoscajas::uniquewhereArray(['id_cierrecajaid'=>$ultimocierre->id]);
-        if(!$existe){ //si no existe arqueo
-          $r = $arqueocaja->crear_guardar();
-          if($r[0]){
-            $alertas['exito'][] = "Arqueo de caja aplicado";
-          }else{
-            $alertas['error'][] = "Error intenta nuevamente";
-          }
-        }else{  //si ya existe arqueo actualizar
-          $r1 = $existe->actualizar();
-          if($r1){
-            $alertas['exito'][] = "Arqueo de caja aplicado";
-          }else{
-            $alertas['error'][] = "Error intenta nuevamente";
-          }
-        }
-      }
-    }
-    echo json_encode($alertas);
+    $resultado = (new CajaCierreService())->registrarArqueo($_POST, id_sucursal());
+    echo json_encode($resultado);
   }
 
-
-  public static function cierrecajaconfirmado(){  //// Api llamada desde cerrarcaja.ts
-    //session_start();
+  /**
+   * POST /admin/api/cierrecajaconfirmado.
+   *
+   * Es llamado desde src/ts/caja/cerrarcaja.ts al aceptar el cierre. El
+   * servicio ejecuta de forma transaccional el cierre actual, la apertura del
+   * siguiente período y el eventual ingreso de base automática.
+   */
+  public static function cierrecajaconfirmado(){
     isauth();
     date_default_timezone_set('America/Bogota');
-
-    $conflocal = config_local::getParamCaja();
-    $idcierrecaja = $_POST['idcierrecaja'];
-    $ultimocierre = cierrescajas::find('id', $idcierrecaja);
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      if($ultimocierre->estado == 0){
-
-        //////// PERMISO DE CIERRE DE CAJA CON VENTAS PENDIENTES /////////
-        if($conflocal['permitir_cierre_de_caja_con_ordenes_sin_pagar']->valor_final == 0){
-          $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-          foreach($facturas as $value){
-            if($value->cotizacion == 1 && $value->cambioaventa == 0){
-              $alertas['error'][] = "No se puede hacer cierre de caja con ventas pendientes.";
-              echo json_encode($alertas);
-              return;
-            }
-          }
-        }
-
-        $ultimocierre->id_usuario = $_SESSION['id'];
-        $ultimocierre->nombreusuario = $_SESSION['nombre'];
-        $ultimocierre->fechacierre = date('Y-m-d H:i:s');
-        $ultimocierre->dineroencaja = $ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja;
-        $ultimocierre->realcaja = $ultimocierre->basecaja+$ultimocierre->ventasenefectivo-$ultimocierre->gastoscaja-$ultimocierre->domicilios;
-        $ultimocierre->realventas = $ultimocierre->ingresoventas-$ultimocierre->totaldescuentos;
-        $ultimocierre->totalbruto = $ultimocierre->ingresoventas;
-        $ultimocierre->estado = 1; //cerrar caja
-        
-        //**obtener base automatica establecida en los parametros del sistema, solo para la caja principal
-        $baseAuto = $conflocal['base_de_caja_automatico_constante']->valor_final??0;
-        // crear el siguiente cierre de caja
-        $crearcierrecaja = new cierrescajas(['idsucursal_id'=>id_sucursal(), 'idcaja'=>$ultimocierre->idcaja, 'nombrecaja'=>caja::uncampo('id', $ultimocierre->idcaja, 'nombre'), 'fechacierre'=>$ultimocierre->fechacierre, 'basecaja'=>$ultimocierre->idcaja==1?$baseAuto:0]);
-        $r = $crearcierrecaja->crear_guardar();
-        if($r[0]){
-          $ra = $ultimocierre->actualizar();
-          if($ra){
-            $alertas['exito'][] = "Cierre de caja realizado correctamente $ultimocierre->fechacierre";
-            $alertas['ultimocierre'][] = $ultimocierre->id;
-            //si es base automatica, crear registro en ingresocajas asociada al siguiente cierre de caja
-            if($ultimocierre->idcaja == 1 && $baseAuto > 0){
-              $ingresocaja = new ingresoscajas(['idsucursal_idfk'=>id_sucursal(), 'idusuario'=>$_SESSION['id'], 'id_caja'=>1, 'id_cierrecaja'=>$r[1], 'operacion'=>'ingreso', 'valor'=>$baseAuto]);
-              $ingresocaja->crear_guardar();
-            }
-            //enviar cierre de caja por ws
-            $ws = new whatsAppService($conflocal);
-            if($conflocal['notificacion_por_whatsApp_cierre_caja']->valor_final == 1)
-              $rws = $ws->sendtextDetalleCierreCaja($ultimocierre->id);
-            
-          }else{
-            $ultimocierrecaja = cierrescajas::find('id', $r[1]);
-            $ultimocierrecaja->eliminar_registro();
-            $alertas['error'][] = "Error ingresa nuevamente al cierre de caja.";
-          }
-        }
-      }else{
-        $alertas['error'][] = "Error ingresa nuevamente al cierre de caja.";
-      }
-    }
-    echo json_encode($alertas);
+    $resultado = (new CajaCierreService())->confirmarCierre($_POST, id_sucursal(), (int)$_SESSION['id'], (string)$_SESSION['nombre'], config_local::getParamCaja());
+    echo json_encode($resultado);
   }
 
 
@@ -653,17 +432,14 @@ debuguear($facturas);
    */
   public static function datoscajaseleccionada(){
     isadmin();
-    $cajaId = filter_var($_POST['idcaja'] ?? null, FILTER_VALIDATE_INT, [
-      'options'=>['min_range'=>1]
-    ]);
+    $cajaId = filter_var($_POST['idcaja'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
 
     if($cajaId === false){
       echo json_encode(['error'=>['La caja seleccionada no es válida.']]);
       return;
     }
 
-    $datos = (new CajaConsultasService())
-      ->obtenerCajaSeleccionada((int)$cajaId, id_sucursal());
+    $datos = (new CajaConsultasService())->obtenerCajaSeleccionada((int)$cajaId, id_sucursal());
 
     if($datos === null){
       echo json_encode(['error'=>['No existe un cierre abierto para la caja seleccionada.']]);
@@ -674,130 +450,75 @@ debuguear($facturas);
   }
 
 
-  public static function mediospagoXfactura(){  //api llamado desde caja.js me trae los medios de pago segun factura
-    $id = $_GET['id'];
-    $factmediospago = factmediospago::idregistros('id_factura', $id);
+  /**
+   * GET /admin/api/mediospagoXfactura?id={factura}.
+   *
+   * Devuelve a caja.ts los pagos registrados para una factura. La consulta y
+   * la validación de sucursal se delegan a CajaOrdenesService.
+   */
+  public static function mediospagoXfactura(){
+    isadmin();
+    header('Content-Type: application/json; charset=utf-8');
+    $id = self::obtenerIdDocumento();
+    if($id === null){
+      http_response_code(400);
+      echo json_encode(['error'=>'El identificador de la factura no es válido.']);
+      return;
+    }
+
+    $factmediospago = (new CajaOrdenesService())->obtenerMediosPagoFactura($id, id_sucursal());
+    if($factmediospago === null){
+      http_response_code(404);
+      echo json_encode(['error'=>'Factura no encontrada.']);
+      return;
+    }
     echo json_encode($factmediospago);
   }
 
 
-  public static function cambioMedioPago(){  //api llamado desde caja.js me actualiza los medios de pago
-    $alertas = [];
-    $idfactura = $_POST['id_factura'];
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      $ultimocierre = cierrescajas::find('id', facturas::find('id', $idfactura)->idcierrecaja); ////// ultimo registro de cierrescajas validar si esta abierto
-      if($ultimocierre->estado == 0){  //validar que el ultimo cierre de caja este abierto
+  /**
+   * POST /admin/api/cambioMedioPago.
+   *
+   * Recibe desde caja.ts la nueva distribución del pago. Toda validación de
+   * negocio y escritura transaccional se delega a CajaOrdenesService.
+   */
+  public static function cambioMedioPago(){
+    isadmin();
+    header('Content-Type: application/json; charset=utf-8');
 
-        $nuevosmediospago = json_decode($_POST['nuevosMediosPago']);
-        //// obtener los medios de pago de la base de datos segun factura
-        ////cruzar con los nuevos medios de pago
-        //// si los medios de pagos son iguales actualizar
+    $idfactura = filter_var($_POST['id_factura'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
+    $nuevosmediospago = json_decode($_POST['nuevosMediosPago'] ?? '', true);
+    if($idfactura === false || !is_array($nuevosmediospago) || json_last_error() !== JSON_ERROR_NONE){
+      echo json_encode(['error'=>['Los datos para cambiar los medios de pago no son válidos.']]);
+      return;
+    }
 
-        //// si los nuevos medios de pago no estan en la base de datos, crearlos
-        //// si los medios de pago de la DB no estan en los nuevos medios de pago, elminarlos
-        //// Obtener los muevos medios de pago de la factura y enviarla como respuesta
-
-        $mediospagoDB = factmediospago::idregistros('id_factura', $idfactura);
-
-        if(count($nuevosmediospago) >= count($mediospagoDB)){
-          foreach($mediospagoDB as $index => $value){
-            $value->idmediopago = $nuevosmediospago[$index]->idmediopago;
-            $value->valor = $nuevosmediospago[$index]->valor;
-          }
-          //actualizar $mediospagoDB
-          $ac = factmediospago::updatemultiregobj($mediospagoDB, ['idmediopago', 'valor']);
-          if($ac){
-            $alertas['exito'][] = "Cambio de medios de pago aplicados.";
-          }else{
-            $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
-          }
-        }
-      
-        if(count($nuevosmediospago)>count($mediospagoDB)){
-          $crearMP=[];
-          $j=0;
-          for($i = count($mediospagoDB); $i<count($nuevosmediospago); $i++){
-            $crearMP[$j]['cierrecajaid'] = $mediospagoDB[0]->cierrecajaid;
-            $crearMP[$j]['id_factura'] = $mediospagoDB[0]->id_factura;
-            $crearMP[$j]['idcuota'] = $mediospagoDB[0]->idcuota??'NULL';
-            $crearMP[$j]['idmediopago'] = $nuevosmediospago[$i]->idmediopago;
-            $crearMP[$j]['valor'] = $nuevosmediospago[$i]->valor;
-            $j++;
-          }
-          //// crear $crearMP
-          if($ac){
-            $crearMediosPago = new factmediospago();
-            $cmp = $crearMediosPago->crear_varios_reg($crearMP);
-            if(!$cmp){
-              /// revertir la actualizacion
-              $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
-            }
-          }
-        }
-
-        if(count($nuevosmediospago)<count($mediospagoDB)){
-          foreach($mediospagoDB as $index => $value){
-            if($index < count($nuevosmediospago)){
-              $value->idmediopago = $nuevosmediospago[$index]->idmediopago;
-              $value->valor = $nuevosmediospago[$index]->valor;
-            }
-            if($index>=count($nuevosmediospago))$arrayeliminar[] = $value->id;
-          }
-          //actualizar $mediospagoDB
-          //eliminar los medios de pago sobrantes de la DB $arrayeliminar
-          $ac = factmediospago::updatemultiregobj($mediospagoDB, ['idmediopago', 'valor']);
-          if($ac){
-            $elminarMP = factmediospago::eliminar_idregistros('id', $arrayeliminar);
-            if($elminarMP){
-              $alertas['exito'][] = "Cambio de medios de pago aplicados.";
-            }else{
-              /// revertir la actualizacion
-              $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
-            }
-          }else{
-            $alertas['error'][] = "Error al cambiar los medios de pago, intenta nuevamente.";
-          }
-        }
-
-        /////////// Recalcular el efectivo del cierre de caja /////////////
-        if((int)$_POST['efectivoDB']!=(int)$_POST['nuevoEfectivo']){ //
-          $efectivo = (int)$_POST['nuevoEfectivo'] - (int)$_POST['efectivoDB'];
-          $ultimocierre->ventasenefectivo = $ultimocierre->ventasenefectivo + $efectivo;
-          $ru = $ultimocierre->actualizar();
-        }
-
-        $alertas['mediosPagoUpdate'] = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $idfactura;");
-      } //fin cierradecaja abierto
-    } //fin SERVER == $_POS
-
-    echo json_encode($alertas);
+    $resultado = (new CajaOrdenesService())->cambiarMediosPagoFactura((int)$idfactura, $nuevosmediospago, id_sucursal());
+    echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
   }
 
-  //Eliminar cotizacion por completo del sistema
-  public static function eliminarPedidoGuardado(){ //llamada desde caja/pedidosguardados.ts
-    //session_start();
-      $pedidoguardado = facturas::find('id', $_POST['id']);
-      if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          if(!empty($pedidoguardado)){
-            $pedidoguardado->estado = "Eliminada";
-              $r = $pedidoguardado->actualizar();
-              if($r){
-                  ActiveRecord::setAlerta('exito', 'Cotizacion eliminada correctamente');
-              }else{
-                  ActiveRecord::setAlerta('error', 'error en el proceso de eliminacion');
-              }
-          }else{
-              ActiveRecord::setAlerta('error', 'Cotizacion no encontrado');
-          }
-      }
-      $alertas = ActiveRecord::getAlertas();
-      echo json_encode($alertas); 
+  /**
+   * POST /admin/api/eliminarPedidoGuardado.
+   *
+   * Solicita la baja lógica de una cotización desde pedidosguardados.ts. La
+   * transición de estado y el contador del cierre pertenecen al servicio.
+   */
+  public static function eliminarPedidoGuardado(){
+    isadmin();
+    header('Content-Type: application/json; charset=utf-8');
+    $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1]]);
+    if($id === false){
+      echo json_encode(['error'=>['El identificador de la cotizacion no es válido.']]);
+      return;
+    }
+
+    $resultado = (new CajaOrdenesService())->eliminarPedidoGuardado((int)$id, id_sucursal());
+    echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
   }
 
 
   //Enviar orden por email a cliente
   public static function sendOrdenEmailToCustemer(){
-    //session_start();
     isadmin();
     $alertas = [];
 
@@ -805,8 +526,6 @@ debuguear($facturas);
     $sendEmail = $_POST['email'];
     $path = __DIR__ . "/../../views/templates/plantillafacturaemail.php";
 
-    //debuguear($path);
-    
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       $factura = facturas::find('id', $id);
       $productos = ventas::idregistros('idfactura', $id);
@@ -825,8 +544,6 @@ debuguear($facturas);
       include $path;
       $html = ob_get_clean();
 
-      //debuguear($html);
-
       $email = new Email($sendEmail, 'Julian Rodriguez', '', '', $html);
       $r = $email->enviarConfirmacion();
     }
@@ -834,24 +551,51 @@ debuguear($facturas);
   }
 
 
+  /**
+   * GET /admin/api/getInvoice?id={factura}.
+   *
+   * Devuelve el DTO utilizado por las impresoras POS de caja.ts y
+   * detallecierrecaja.ts. La consulta y transformación pertenecen a
+   * CajaDocumentosService; aquí solo se adapta la solicitud HTTP.
+   */
   public static function getInvoice(){
     isadmin();
-    $id = $_GET['id'];
-    if(!is_numeric($id))return;
-    $datos = cajaService::detalleVenta($id);
-    $datos['factura']->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = ".$datos['factura']->id.";");
-    $result = self::transformarDataInvoice($datos);  //llama al trait
-    echo json_encode($result);
+    header('Content-Type: application/json; charset=utf-8');
+    $id = self::obtenerIdDocumento();
+    if($id === null){
+      http_response_code(400);
+      echo json_encode(['error'=>'El identificador de la factura no es válido.']);
+      return;
+    }
+
+    $result = (new CajaDocumentosService())->prepararInvoiceParaImpresion($id, id_sucursal());
+    if(!$result){
+      http_response_code(404);
+      echo json_encode(['error'=>'Factura no encontrada.']);
+      return;
+    }
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
   }
 
 
+  /**
+   * GET /admin/api/caja/despacharOrden?id={factura}.
+   *
+   * Atiende la confirmación de entrega enviada desde ordenresumen.ts. El
+   * controlador valida HTTP y CajaOrdenesService bloquea la orden, descuenta
+   * inventario y registra la entrega dentro de una única transacción.
+   */
   public static function despacharOrden(){
     isadmin();
-    $id = $_GET['id'];
-    if(!is_numeric($id))return;
-    $datos = cajaService::despacharOrden($id);
-    echo json_encode($datos);
-    return;
+    header('Content-Type: application/json; charset=utf-8');
+    $id = self::obtenerIdDocumento();
+    if($id === null){
+      echo json_encode(['error'=>['El identificador de la orden no es válido.']], JSON_UNESCAPED_UNICODE);
+      return;
+    }
+
+    $resultado = (new CajaOrdenesService())->despacharOrden($id, id_sucursal());
+    echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
   }
 
 

@@ -22,7 +22,7 @@
               <td class=""><?php echo $index+1;?></td>
               <td class=""><?php echo $value->nombre;?></td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>" data-categoriagasto="<?php echo $value->nombre;?>">
-                <?php if($value->id>10){ ?>
+                <?php if($value->id>11){ ?>
                 <button class="btn-md btn-turquoise editarCategoriaGasto" title="Actualizar categoria de los gastos"><i class="fa-solid fa-pen-to-square"></i></button>
                 <!--<button class="btn-md btn-red eliminarCategoriaGasto"><i class="fa-solid fa-trash-can"></i></button></div>-->
                 <form method="POST" class="formEliminarCategoriaGasto" action="/admin/caja/categoriaGasto">

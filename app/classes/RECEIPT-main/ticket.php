@@ -117,9 +117,9 @@ use App\Models\parametrizacion\config_local;
             foreach($productos as $value){
                 $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false); //nombre producto
                 $this->pdf->Cell(10,4,iconv("UTF-8", "ISO-8859-1", $value->cantidad),0,0,'C');  //cantidad
-                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->valorunidad, '0', ',', '.')),0,0,'C');  //precio unidad
+                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->valorunidad, 2, ',', '.')),0,0,'C');  //precio unidad
                 $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",$value->descuento),0,0,'C'); //descuento
-                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->total, '0', ',', '.')),0,0,'C'); //precio total
+                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->total, 2, ',', '.')),0,0,'C'); //precio total
                 $this->pdf->Ln(4);
             }
             //$this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Garantía de fábrica: 2 Meses"),0,'C',false);
@@ -135,25 +135,25 @@ use App\Models\parametrizacion\config_local;
             # Impuestos, descuentos & totales #
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","SUBTOTAL"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->subtotal, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->subtotal, 2, ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Impuesto"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->valorimpuestototal, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->valorimpuestototal, 2, ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Descuento"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($factura->descuento, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($factura->descuento, 2, ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Tarifa envio"),0,0,'C');
-            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->valortarifa??0, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1","+ $".number_format($factura->valortarifa??0, 2, ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(5);
 
@@ -164,14 +164,14 @@ use App\Models\parametrizacion\config_local;
             $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL ".($factura->estado == 'Paga'?'A PAGAR':'COTIZACION:')),0,0,'C');
-            $this->pdf->Cell(48,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(48,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, 2, ',', '.')." COP"),0,0,'C');
             $this->pdf->SetFont('Arial','',10);
 
             if($factura->estado == 'Paga'){
                 $this->pdf->Ln(5);
                 $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
                 $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL PAGADO"),0,0,'C');
-                $this->pdf->Cell(48,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, '0', ',', '.')." COP"),0,0,'C');
+                $this->pdf->Cell(48,5,iconv("UTF-8", "ISO-8859-1","$".number_format($factura->total, 2, ',', '.')." COP"),0,0,'C');
                 $this->pdf->Ln(5);
                 $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
                 $this->pdf->Cell(20,5,iconv("UTF-8", "ISO-8859-1","CAMBIO"),0,0,'C');
@@ -188,7 +188,7 @@ use App\Models\parametrizacion\config_local;
                     $this->pdf->Ln(5);
                     $this->pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
                     $this->pdf->Cell(24,5,iconv("UTF-8", "ISO-8859-1", $value->mediopago),0,0,'C');
-                    $this->pdf->Cell(24,5,iconv("UTF-8", "ISO-8859-1","$".number_format($value->valor, '0', ',', '.')." COP"),0,0,'C');
+                    $this->pdf->Cell(24,5,iconv("UTF-8", "ISO-8859-1","$".number_format($value->valor, 2, ',', '.')." COP"),0,0,'C');
                 }
             }
 
@@ -296,9 +296,9 @@ use App\Models\parametrizacion\config_local;
             foreach($productos as $value){
                 $this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1", $value->nombreproducto),0,'C',false); //nombre producto
                 $this->pdf->Cell(10,4,iconv("UTF-8", "ISO-8859-1", $value->cantidad),0,0,'C');  //cantidad
-                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->valorunidad, '0', ',', '.')),0,0,'C');  //precio unidad
+                $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->valorunidad, 2, ',', '.')),0,0,'C');  //precio unidad
                 $this->pdf->Cell(19,4,iconv("UTF-8", "ISO-8859-1",$value->descuento),0,0,'C'); //descuento
-                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->total, '0', ',', '.')),0,0,'C'); //precio total
+                $this->pdf->Cell(28,4,iconv("UTF-8", "ISO-8859-1",'$'.number_format($value->total, 2, ',', '.')),0,0,'C'); //precio total
                 $this->pdf->Ln(4);
             }
             //$this->pdf->MultiCell(0,4,iconv("UTF-8", "ISO-8859-1","Garantía de fábrica: 2 Meses"),0,'C',false);
@@ -312,22 +312,22 @@ use App\Models\parametrizacion\config_local;
             # Impuestos, descuentos & totales #
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","CREDITO TOTAL:"),0,0,'C');
-            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->capital, 2, ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","Interes:"),0,0,'C');
-            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->valorinterestotal, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->valorinterestotal, 2, ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","TOTAL ABONOS:"),0,0,'C');
-            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->abonodecuotas, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1"," $".number_format($credito->abonodecuotas, 2, ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1","Descuento:"),0,0,'C');
-            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($credito->descuento, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(38,5,iconv("UTF-8", "ISO-8859-1","- $".number_format($credito->descuento, 2, ',', '.')." COP"),0,0,'C');
             $this->pdf->Ln(5);
 
             $this->pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------------"),0,0,'C');
@@ -336,14 +336,14 @@ use App\Models\parametrizacion\config_local;
             $this->pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->Cell(16,5,iconv("UTF-8", "ISO-8859-1","SALDO PENDIENTE: "),0,0,'C');
-            $this->pdf->Cell(46,5,iconv("UTF-8", "ISO-8859-1","$".number_format($credito->saldopendiente, '0', ',', '.')." COP"),0,0,'C');
+            $this->pdf->Cell(46,5,iconv("UTF-8", "ISO-8859-1","$".number_format($credito->saldopendiente, 2, ',', '.')." COP"),0,0,'C');
 
             $this->pdf->Ln(7);
             $this->pdf->SetFont('Arial','',9);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","PAGOS"),0,'C',false);
             foreach($cuotas as $value)
                 foreach($value->mediosdepago as $mp)
-                    $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value->fechapagado.' '.$mp->mediopago.' $'.number_format($mp->valor??$value->valorpagado, '0', ',', '.')),0,'C',false);
+                    $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value->fechapagado.' '.$mp->mediopago.' $'.number_format($mp->valor??$value->valorpagado, 2, ',', '.')),0,'C',false);
             
             $this->pdf->Ln(12);
 

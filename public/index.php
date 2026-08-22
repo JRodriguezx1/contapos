@@ -152,8 +152,8 @@ $router->get('/admin/creditos', [creditoscontrolador::class, 'index']);
 $router->get('/admin/creditos/separado', [creditoscontrolador::class, 'separado']);
 $router->get('/admin/creditos/detallecredito', [creditoscontrolador::class, 'detallecredito']); //detalle del credito
 $router->get('/admin/creditos/adicionarProducto', [creditoscontrolador::class, 'adicionarProducto']); //detalle del credito
-$router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
-$router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
+//$router->post('/admin/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
+//$router->post('/admin/creditos/pagoTotal', [creditoscontrolador::class, 'pagoTotal']);
 ///// area de comisiones /////
 $router->get('/admin/comisiones', [comisionescontrolador::class, 'index']);
 
@@ -215,6 +215,8 @@ $router->get('/admin/descarga/logo', [archivocontroller::class, 'descargarLogo']
 
 
 /////////////////////////////////////--   API'S   --////////////////////////////////////////
+$router->post('/admin/api/changeSucursal/select', [logincontrolador::class, 'changeSucursal']);
+
 $router->get('/admin/api/ventasVsGastos', [dashboardcontrolador::class, 'ventasVsGastos']);
 $router->get('/admin/api/ultimos7dias', [dashboardcontrolador::class, 'ultimos7dias']);
 
@@ -280,6 +282,7 @@ $router->get('/admin/api/ventas/detalleProductoCompuesto', [ventascontrolador::c
 $router->post('/admin/api/facturarModorapido', [modorapidocontrolador::class, 'facturarModorapido']);  //aip llamada desde modorapido.ts cuando se factura en modo rapido
 
 $router->get('/admin/api/allcredits', [creditoscontrolador::class, 'allcredits']);
+$router->post('/admin/api/creditos/registrarAbono', [creditoscontrolador::class, 'registrarAbono']);
 $router->post('/admin/api/crearSeparado', [creditoscontrolador::class, 'crearSeparado']);
 $router->get('/admin/api/detalleProductosCredito', [creditoscontrolador::class, 'detalleProductosCredito']);
 $router->post('/admin/api/cuota/cambioMedioPagoSeparado', [creditoscontrolador::class, 'cambioMedioPagoSeparado']);

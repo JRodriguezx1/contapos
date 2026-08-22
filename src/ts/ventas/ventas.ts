@@ -118,9 +118,7 @@
         </td>
         <td class="">
           <div class="">
-            <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full">
-              <span class="menos material-symbols-outlined text-base">remove</span>
-            </button>
+            <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="menos material-symbols-outlined text-base">remove</span></button>
             <input
               type="text"
               class="inputcantidad w-16 max-w-[12ch] h-9 px-2 rounded-lg border border-slate-300 text-center font-medium text-xl outline-none focus:border-indigo-500"
@@ -355,7 +353,7 @@
           carrito[index].stock = cantidad;
         }
         
-        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].stock;
+        carrito[index].subtotal = (parseFloat(carrito[index].valorunidad)*carrito[index].stock);
         carrito[index].total = carrito[index].subtotal;
         carrito[index].valorcomision = (carrito[index].subtotal*carrito[index].percentcomision)/100;
         //calculo del impuesto y base por producto en el carrito de ventas

@@ -42,7 +42,7 @@
               <td class="" ><?php echo $value->nombrecategoria;?></td>
               <td class=""><?php echo $value->marca;?></td>
               <td class=""><?php echo $value->sku;?></td>
-              <td class="">$<?php echo number_format($value->precio_venta, "0", ",", ".");?></td>
+              <td class="">$<?php echo number_format($value->precio_venta, "2", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns my-[0.7rem]" id="<?php echo $value->id;?>">
                     <?php if($value->tipoproducto == '1'): //0=simple,   1=compuesto ?> 
                         <a class="btn-xs btn-blue" title="Agregar Materia Prima" href="/admin/almacen/componer?id=<?php echo $value->id;?>"><i class="fa-solid fa-subscript text-[17px] leading-none"></i></a>

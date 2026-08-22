@@ -133,7 +133,7 @@
                 <div class="flex flex-col justify-center gap-1.5 min-w-0 overflow-hidden">
                     <p class="card-producto m-0 text-lg leading-6 text-slate-700 font-semibold line-clamp-2"><?php echo $producto->nombre;?></p>
                     
-                    <p class="precioVenta m-0 text-blue-600 text-xl font-bold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
+                    <p class="precioVenta m-0 text-blue-600 text-xl font-bold">$<?php echo number_format($producto->precio_venta, '2', ',', '.'); ?></p>
                 </div>
                 <button id="precioadicional" title="Precio personalizado" class="grid h-11 w-11 place-items-center justify-self-end self-start rounded-lg text-indigo-600 bg-white border border-indigo-200 shadow-sm hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition-colors"><i class="fa-solid fa-pen-to-square text-2xl"></i></button>
                 <!--<div class="popup absolute right-8 top-1/3 -translate-y-14 translate-x-10 opacity-100 transition-all duration-800 ease-out w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white">2</div>-->
@@ -289,8 +289,8 @@
             </div>
 
         <!-- Apilamiento de productos -->
-        <div class="mt-3 rounded-lg border border-slate-200 bg-white overflow-x-auto md:overflow-x-visible">
-          <table id="tablaventa" class="w-full border-separate border-spacing-0" width="100%">
+        <div class="mt-3 rounded-lg border border-slate-200 bg-white min-w-0 overflow-x-auto">
+          <table id="tablaventa" class="w-full min-w-max border-separate border-spacing-0" width="100%">
               <thead class="bg-slate-50">
                   <tr class="rounded-t-xl overflow-hidden">
                        <th class="py-3 text-left pl-4 text-slate-700 font-semibold text-xl">Producto</th>

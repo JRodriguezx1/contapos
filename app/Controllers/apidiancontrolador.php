@@ -505,7 +505,7 @@ class apidiancontrolador{
       // Crear nueva FE
       // -------------------------------
       facturaElectronicaService::actualizarFacturaConsecutivo($factura, $consecutivo, $numConsecutivo);
-      $rfe = self::createInvoiceElectronic($productos, $datosAdquiriente, $consecutivo->id, $idfactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa);
+      $rfe = self::createInvoiceElectronic($productos, $datosAdquiriente, $consecutivo->id, $idfactura, $factura->num_consecutivo, $mediospago, $factura->descuento, $factura->valortarifa, '');
       if($rfe[0]){
         $alertas['exito'][] = "Factura electronica creada exitosamente.";
         $fe = new stdClass();

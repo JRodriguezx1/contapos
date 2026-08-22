@@ -34,6 +34,20 @@ class factmediospago extends \App\Models\ActiveRecord{
             "SELECT * FROM ".static::$tabla." WHERE idcuota = {$idcuota} FOR UPDATE"
         );
     }
+
+    /**
+     * Obtiene y bloquea los pagos de una factura durante un cambio de medios.
+     * El orden estable por ID reduce inconsistencias entre solicitudes
+     * concurrentes que intenten modificar la misma factura.
+     */
+    public static function obtenerPorFacturaParaActualizar(int $facturaId):array
+    {
+        if($facturaId <= 0)return [];
+        return self::consultar_sql(
+            "SELECT * FROM ".static::$tabla
+            ." WHERE id_factura = {$facturaId} ORDER BY id ASC FOR UPDATE"
+        );
+    }
     
     public function pagoDestino(int $id):void{
         $this->id_factura = $id;

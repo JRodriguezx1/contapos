@@ -141,15 +141,9 @@
                                     <?php endif; ?>
                                 </div>
                             </td>
-                            <td>
-                                <?php echo $value->cantidad??'';?>
-                            </td>
-                            <td>
-                                $<?php echo number_format($value->valorunidad??0, "0", ",", ".");?>
-                            </td>
-                            <td>
-                                $<?php echo number_format($value->total??0, "0", ",", ".");?>
-                            </td>
+                            <td><?php echo $value->cantidad??'';?></td>
+                            <td>$<?php echo number_format($value->valorunidad??0, "2", ",", ".");?></td>
+                            <td>$<?php echo number_format($value->total??0, "2", ",", ".");?></td>
                         </tr>
                     <?php endforeach; ?>
                     
@@ -159,7 +153,7 @@
                         <th scope="row">Total</th>
                         <td><?php echo $factura->totalunidades;?></td>
                         <td> - </td>
-                        <td>$<?php echo number_format($factura->subtotal??0, "0", ",", ".");?></td>
+                        <td>$<?php echo number_format($factura->subtotal??0, "2", ",", ".");?></td>
                     </tr>
                 </tfoot>
             </table>
@@ -174,6 +168,7 @@
                     Cliente
                 </p>
                 <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">person</span><?php echo $cliente->identificacion??'';?></p>
                 <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
                 <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
             </div>
@@ -189,9 +184,11 @@
             <div class="border border-slate-200 rounded-xl p-4">
                 <p class="flex items-center text-slate-900 font-semibold gap-4 text-2xl mt-0">
                     <span class="material-symbols-outlined text-indigo-600">receipt_long</span>
-                    Direcci&oacute;n de facturaci&oacute;n
+                    Medios de pago
                 </p>
-                <p class="text-slate-500 mb-0 text-xl mt-2"> - </p>
+                <?php foreach($mediosPago as $medio): ?>
+                    <p class="text-slate-500 mb-0 text-xl mt-2"> - <?php echo $medio['mediopago']??'';?>: $<?php echo number_format($medio['valor']??'0', 2, ',', '.');?></p>
+                <?php endforeach; ?>
             </div>
         </aside>     
     </div>
@@ -232,20 +229,20 @@
 
                     <div class="text-end">
                         <p id="subTotal" class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            $<?php echo number_format($factura->subtotal ?? 0, 0, ',', '.');?>
+                            $<?php echo number_format($factura->subtotal ?? 0, 2, ',', '.');?>
                         </p>
                         <p class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            $<?php echo number_format($factura->abono ?? 0, 0, ',', '.');?>
+                            $<?php echo number_format($factura->abono ?? 0, 2, ',', '.');?>
                         </p>
                         <p id="impuesto" class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            $<?php echo number_format($factura->valorimpuestototal ?? 0, 0, ',', '.');?>
+                            $<?php echo number_format($factura->valorimpuestototal ?? 0, 2, ',', '.');?>
                         </p>
                         <p id="descuento" class="m-0 mb-2 text-slate-600 text-xl font-normal">
                             <?php echo $factura->dctox100;?>%
-                            $<?php echo number_format($factura->descuento ?? 0, 0, ',', '.');?>
+                            $<?php echo number_format($factura->descuento ?? 0, 2, ',', '.');?>
                         </p>
                         <p id="valorTarifa" class="m-0 mb-2 text-slate-600 text-xl font-normal">
-                            $<?php echo number_format($factura->valortarifa ?? 0, 0, ',', '.');?>
+                            $<?php echo number_format($factura->valortarifa ?? 0, 2, ',', '.');?>
                         </p>
                     </div>
                 </div>
@@ -257,7 +254,7 @@
                         <span id="total"
                             class="whitespace-nowrap text-6xl font-bold text-emerald-600"
                             style="font-family:'Tektur', serif;">
-                            $ <?php echo number_format($factura->total ?? 0, 0, ',', '.');?>
+                            $ <?php echo number_format($factura->total ?? 0, 2, ',', '.');?>
                         </span>
                     </div>
                 </div>
@@ -357,7 +354,7 @@
                     <p class="m-0 text-base font-black uppercase tracking-[.22em] text-indigo-600 max-sm:text-sm">
                         Orden
                     </p>
-                    <h4 id="modalMasOpciones" class="m-0 mt-1 text-4xl font-black leading-tight text-slate-900 max-sm:text-3xl">
+                    <h4 id="modalMasOpciones" class="m-0 mt-1 text-4xl font-bold leading-tight text-slate-900 max-sm:text-3xl">
                         M&aacute;s opciones
                     </h4>
                     <p class="m-0 mt-2 text-lg font-medium leading-7 text-slate-500 max-sm:text-sm max-sm:leading-5">
@@ -378,7 +375,7 @@
                         <span class="material-symbols-outlined text-5xl max-sm:text-4xl">receipt_long</span>
                     </span>
                     <span class="min-w-0">
-                        <span class="block text-2xl font-black leading-tight text-slate-900 max-sm:text-xl">
+                        <span class="block text-2xl font-semibold leading-tight text-slate-900 max-sm:text-xl">
                             Imprimir factura tirilla
                         </span>
                         <span class="mt-1 block text-base font-medium leading-6 text-slate-500 max-sm:text-sm max-sm:leading-5">
@@ -398,7 +395,7 @@
                         <span class="material-symbols-outlined text-5xl max-sm:text-4xl">local_shipping</span>
                     </span>
                     <span class="min-w-0">
-                        <span class="block text-2xl font-black leading-tight text-slate-900 max-sm:text-xl">
+                        <span class="block text-2xl font-semibold leading-tight text-slate-900 max-sm:text-xl">
                             Imprimir orden de entrega
                         </span>
                         <span class="mt-1 block text-base font-medium leading-6 text-slate-500 max-sm:text-sm max-sm:leading-5">

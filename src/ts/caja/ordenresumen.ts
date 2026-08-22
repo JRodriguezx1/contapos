@@ -176,6 +176,7 @@
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                   (document.querySelector('#textEstado') as HTMLParagraphElement).textContent = "Domicilio entregado";
+                  btnDespachar.classList.add('!hidden');
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
