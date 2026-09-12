@@ -79,7 +79,7 @@
             try {
                 const url = "/admin/api/getItemsBajoStock";
                 const respuesta = await fetch(url); 
-                const resultado:{productoid:string, nombre:string, idunidadmedida:string, sku:string, stock:string, stockminimo:string, tipoproducto:string, tipoproduccion:string, unidadmedida:string, visible:string}[] = await respuesta.json();
+                const resultado:{productoid:string, nombre:string, idunidadmedida:string, sku:string, stock:string, stockminimo:string, tipoproducto:string, tipoproduccion:string, tipoitem:string, unidadmedida:string, visible:string}[] = await respuesta.json();
                 Object.assign(configdatatablesstockbajo, {
                     data: resultado,
                     columns: [
@@ -90,7 +90,7 @@
                             data: null,
                             orderable: false,
                             searchable: false,
-                            render: (data: any, type: any, row: any) => {return row.tipoproducto== 1?'Compuesto':'Simple'}
+                            render: (data: any, type: any, row: any) => row.tipoitem
                         },
                         {title: 'STOCK ACTUAL', data: 'stock'},
                         {title: 'STOCK MIN', data: 'stockminimo'},
@@ -117,7 +117,7 @@
                     (async ()=>{
                         try {
                             const url = "/admin/api/reiniciarinv"; //llamado a la API REST y se trae las direcciones segun cliente elegido
-                            const respuesta = await fetch(url); 
+                            const respuesta = await fetch(url, {method: 'POST'});
                             const resultado = await respuesta.json();
                             (document.querySelector('.content-spinner1') as HTMLElement).style.display = "none";
                             if(resultado.exito !== undefined){ 
@@ -161,7 +161,7 @@
                  tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatables);
             }
         })*/
-        tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatablesstockrapido);
+        tablaStockRapido = ($('#tablaStockRapido') as any).DataTable(configdatatablesstockrapidoinv);
 
         document.querySelector('#tablaStockRapido')?.addEventListener("click", (e:Event)=>{ //evento click sobre toda la tabla
             let options:string = '';

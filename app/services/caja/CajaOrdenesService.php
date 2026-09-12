@@ -15,6 +15,7 @@ use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
 use App\Repositories\creditos\creditosRepository;
 use App\services\ventasService;
+use App\services\whatsAppService;
 use Throwable;
 
 /**
@@ -304,7 +305,8 @@ final class CajaOrdenesService
                 }
             }
 
-            if(!ventasService::descontarInventarioXVenta($inventario, $sucursalId, 'venta', 'descuento de unidades por despacho de venta', false))
+            $itemsStockMinimo = [];
+            if(!ventasService::descontarInventarioXVenta($inventario, $sucursalId, 'venta', 'descuento de unidades por despacho de venta', false, $itemsStockMinimo))
                 throw new \RuntimeException('No fue posible actualizar el inventario de la orden.');
 
             $factura->entregado = 1;
@@ -313,7 +315,14 @@ final class CajaOrdenesService
 
             if(!$db->commit())throw new \RuntimeException('No fue posible confirmar el despacho.');
             $transaccionIniciada = false;
-
+            //enviar notificacion de despacho a whatsapp
+            if(!empty($itemsStockMinimo) && ($configuracion['notificacion_por_whatsApp_stock_bajo']->valor_final ?? 0) == 1){
+                try {
+                    (new whatsAppService())->productoBajoStock($itemsStockMinimo);
+                } catch (\Throwable $th) {
+                     error_log("No fue posible notificar el stock minimo del despacho ".$facturaId.": ".$th->getMessage());
+                }
+            }
             return ['exito'=>['Orden despachada.']];
         }catch(Throwable $error){
             if($transaccionIniciada)$db->rollback();

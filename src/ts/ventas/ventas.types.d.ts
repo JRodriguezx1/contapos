@@ -168,3 +168,10 @@ interface DataInvoice {
     cufe?: string;
     link?: string;
 }
+
+interface divisa {
+    id: number,
+    nombre: string,
+    codigo: string,
+    simbolo: string
+}

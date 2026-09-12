@@ -7,7 +7,7 @@
 
 .ordenresumen-page {
   box-shadow: 0 12px 30px rgba(15, 23, 42, .06);
-  padding: 1.6rem;
+  padding: 1.5rem;
 }
 
 .ordenresumen-page .ordenresumen-back {
@@ -18,11 +18,11 @@
   color: #fff;
   cursor: pointer;
   display: inline-flex;
-  height: 4.4rem;
+  height: 3.8rem;
   justify-content: center;
   margin-bottom: 1.2rem;
   transition: background .2s ease, transform .2s ease;
-  width: 4.4rem;
+  width: 3.8rem;
 }
 
 .ordenresumen-page .ordenresumen-back:hover {
@@ -37,7 +37,7 @@
   flex-wrap: wrap;
   gap: .9rem;
   margin: 0 0 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
 }
 
 .ordenresumen-actions .btn-command {
@@ -45,14 +45,12 @@
   border: 1px solid #cbd7e7;
   border-radius: .7rem;
   color: #1f2f46;
-  font-size: 1.35rem;
+  font-size: 1.28rem;
   font-weight: 600;
   gap: .45rem;
-  height: 8rem;
   line-height: 1.15;
-  max-width: 14.2rem;
+  max-width: 14.4rem;
   min-width: 11.6rem;
-  padding: 1rem 1.1rem;
   text-align: center;
   transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
@@ -102,7 +100,7 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .ordenresumen-main-grid {
@@ -113,7 +111,6 @@
 
 .ordenresumen-products-card {
   box-shadow: 0 8px 18px rgba(15, 23, 42, .04);
-  min-height: 42rem;
   overflow-x: auto;
   padding: 1.3rem;
 }
@@ -132,7 +129,7 @@
   border-top: 1px solid #d5deea;
   color: #26364d;
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 700;
   padding: 1rem;
   text-align: left;
 }
@@ -151,8 +148,8 @@
 .ordenresumen-table tfoot td,
 .ordenresumen-table tfoot th {
   border-bottom: 1px solid #e2e8f0;
-  font-size: 1.35rem;
-  padding: 1.05rem;
+  font-size: 1.3rem;
+  padding: 0.7rem;
   vertical-align: middle;
 }
 
@@ -160,12 +157,12 @@
 .ordenresumen-table tfoot td {
   background: #f8fafc;
   color: #111827;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .ordenresumen-product-cell {
   color: #14233a;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ordenresumen-product-info {
@@ -179,10 +176,10 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: .55rem;
-  height: 5.8rem;
+  height: 5rem;
   object-fit: contain;
   padding: .25rem;
-  width: 5.8rem;
+  width: 5rem;
 }
 
 .ordenresumen-side {

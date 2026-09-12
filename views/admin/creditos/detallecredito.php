@@ -1,10 +1,6 @@
 <div class="detallecredito min-h-[calc(100vh-7rem)] w-full bg-gradient-to-b from-indigo-50/60 via-slate-50 to-slate-100 p-3 text-slate-900 sm:p-6">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
-  <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
-    <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
-  <?php endif; ?>
-
   <input id="idcredito" class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">
   
   <div class="relative mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:p-6">

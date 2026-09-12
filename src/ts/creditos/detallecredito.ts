@@ -50,11 +50,6 @@
     tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatablesToolbar);
     modernizarToolbarDataTable('#tablacuotas');
 
-    const autoPrintAbonoCredito = document.querySelector('#autoPrintAbonoCredito') as HTMLInputElement | null;
-    if(autoPrintAbonoCredito?.value)
-      window.setTimeout(()=>printPOSComprobanteAbono(autoPrintAbonoCredito.value), 450);
-
-
     btnajustarCredito?.addEventListener('click', ():void=>{
       miDialogoAjustarCredito.showModal();
     });
@@ -150,6 +145,8 @@
                     <button class="printPOSAbono material-symbols-outlined">print</button>
                 </div>`
             ]).draw(false); // draw(false) evita recargar toda la tabla
+            if((document.querySelector('#imprimirComprobanteAbonoinicial') as HTMLInputElement).checked)
+              window.setTimeout(()=>printPOSComprobanteAbono(resultado.idcuota), 450);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
@@ -157,6 +154,7 @@
           console.log(error);
       }
       miDialogoAbono.close();
+      miDialogoPagoTotal.close();
     }
     
 

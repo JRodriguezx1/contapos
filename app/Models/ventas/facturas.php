@@ -3,7 +3,7 @@ namespace App\Models\ventas;
 
 class facturas extends \App\Models\ActiveRecord {
     protected static $tabla = 'facturas';
-    protected static $columnasDB = ['id', 'idemisor', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'fechaentrega', 'fechacreacion', 'fechapago', 'fechaanulacion', 'habilitada', 'opc1', 'opc2'];
+    protected static $columnasDB = ['id', 'idemisor', 'id_sucursal', 'idcliente', 'idvendedor', 'idrepartidorcobrador', 'idcaja', 'idconsecutivo', 'iddireccion', 'idtarifazona', 'idcierrecaja', 'idcanaldeventa', 'num_orden', 'prefijo', 'num_consecutivo', 'nombrecompania', 'nit', 'datosrut', 'cliente', 'vendedor', 'caja', 'tipofacturador', 'propina', 'direccion', 'tarifazona', 'totalunidades', 'recibido', 'cambio', 'transaccion', 'tipoventa', 'cotizacion', 'remision', 'estado', 'cambioaventa', 'ref_creditoid', 'referencia', 'abono', 'abonofinal', 'porcentgananciauser', 'valorgananciauser', 'subtotal', 'base', 'valorimpuestototal', 'dctox100', 'descuento', 'total', 'observacion', 'observacioneliminacion', 'departamento', 'ciudad', 'entrega', 'entregado', 'valortarifa', 'puntos_generados', 'puntos_descontados', 'fechaentrega', 'fechacreacion', 'fechapago', 'fechaanulacion', 'habilitada', 'opc1', 'opc2'];
     private static $arrayMetodosPago = ['Efectivo', 'Daviplata', 'Nequi', 'TD', 'TC', 'QR', 'TB'];
 
     public function __construct($args = [])
@@ -23,6 +23,9 @@ class facturas extends \App\Models\ActiveRecord {
         $this->num_orden = $args['num_orden'] ?? '';
         $this->prefijo = $args['prefijo'] ?? '';
         $this->num_consecutivo = $args['num_consecutivo'] ?? '';
+        $this->nombrecompania = $args['nombrecompania'] ?? '';
+        $this->nit = $args['nit'] ?? '';
+        $this->datosrut = $args['datosrut'] ?? '';
         $this->cliente = $args['cliente'] ?? '';  //nombre del cliente
         $this->vendedor = $args['vendedor'] ?? '';  //nombre del vendedor
         $this->caja = $args['caja'] ?? '';   //nombre de la caja
@@ -58,6 +61,8 @@ class facturas extends \App\Models\ActiveRecord {
         $this->entrega = $args['entrega'] ?? 'Presencial';
         $this->entregado = $args['entregado'] ?? 1;
         $this->valortarifa = $args['valortarifa'] ?? 0;
+        $this->puntos_generados = $args['puntos_generados'] ?? 0;
+        $this->puntos_descontados = $args['puntos_descontados'] ?? 0;
         $this->fechaentrega = $this->entregado == 1?date('Y-m-d H:i:s'):'';
         $this->fechacreacion = $args['fechacreacion'] ?? date('Y-m-d H:i:s');
         $this->fechapago = $this->estado=='Paga'?date('Y-m-d H:i:s'):'';

@@ -2,95 +2,86 @@
 
 namespace App\Controllers;
 
-use App\classes\Email;
-use App\Models\ActiveRecord;
-use App\Models\configuraciones\usuarios; //namespace\clase hija
-use App\Models\inventario\productos;
-use App\Models\inventario\subproductos;
-use App\Models\inventario\productos_sub;
-use App\Models\inventario\categorias;
 Use App\Models\inventario\unidadesmedida;
-use App\Models\inventario\conversionunidades;
-use App\Models\inventario\detalletrasladoinv;
-use App\Models\inventario\proveedores;
-use App\Models\inventario\stockinsumossucursal;
-use App\Models\inventario\stockproductossucursal;
 use App\Models\inventario\traslado_inv;
 use App\Models\parametrizacion\config_local;
 use App\Models\sucursales;
-use App\services\stockService;
+use App\services\trasladosinventario\TrasladosConsultaService;
+use App\services\trasladosinventario\TrasladosInventarioService;
+use App\services\trasladosinventario\TrasladosOrdenService;
 use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
-use stdClass;
+
+/*
+ * ÓRDENES EN LAS QUE LA SUCURSAL ACTUAL FIGURA COMO DESTINO
+ *
+ * Se filtra:
+ * id_sucursaldestino = id_sucursal()
+ *
+ * - tipo = 'Solicitud':
+ *   Otra sucursal, registrada como origen, solicita mercancía a la sucursal
+ *   actual. La sucursal actual debe despacharla cuando la orden esté pendiente.
+ *
+ * - tipo = 'Salida':
+ *   Otra sucursal está enviando mercancía a la sucursal actual.
+ *   La sucursal actual debe recibirla cuando la orden esté en tránsito.
+ */
+
+/*
+ * ÓRDENES EN LAS QUE LA SUCURSAL ACTUAL FIGURA COMO ORIGEN
+ *
+ * Se filtra:
+ * id_sucursalorigen = id_sucursal()
+ *
+ * - tipo = 'Solicitud':
+ *   La sucursal actual solicitó mercancía a la sucursal destino.
+ *   Debe esperar a que la sucursal destino la despache y, cuando la orden
+ *   esté en tránsito, confirmar su recepción.
+ *
+ * - tipo = 'Salida':
+ *   La sucursal actual está enviando mercancía a otra sucursal.
+ *   Debe realizar el despacho cuando la orden esté pendiente.
+ */
 
 class trasladosinvcontrolador{
 
 
 //VER DETALLE DE SOLICITUDES RECIBIDAS DE QUE VIENE MERCANCIA O DE QUE DEBO DESPACHAR
   public static function solicitudesrecibidas(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    $pendientes = 0;
-    $aprobadas = 0;
-    $rechazadas = 0;
-    $entregadas = 0;
-    $entransito = 0;
-
     $sucursales = sucursales::idregistros('estado', 1);
-    $solicitudesrecividas = traslado_inv::idregistros('id_sucursaldestino', id_sucursal());
-    foreach($solicitudesrecividas as $value){
-      //$value->sucursalorigen = sucursales::uncampo('id', $value->id_sucursalorigen, 'nombre');
-      foreach($sucursales as $s){
-        if($value->id_sucursalorigen == $s->id){
-          $value->sucursalorigen = $s->nombre;
-          break;
-        }
-      }
-      $nombreusuario = usuarios::find('id', $value->fkusuario);
-      $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
-      $pendientes += $value->estado == 'pendiente'?1:0;
-      $aprobadas += $value->estado == 'aprobada'?1:0;
-      $rechazadas += $value->estado == 'rechazada'?1:0;
-      $entregadas += $value->estado == 'entregada'?1:0;
-      $entransito += $value->estado == 'entransito'?1:0;
-    }
-    
+    $result = (new TrasladosConsultaService())->listarComoDestino((int)id_sucursal());
+    $solicitudesrecividas = $result['ordenes'];
+    $pendientes = $result['count']['pendiente'];
+    $aprobadas = $result['count']['aprobada'];
+    $rechazadas = $result['count']['rechazada'];
+    $entregadas = $result['count']['entregada'];
+    $entransito = $result['count']['entransito'];
     $unidadesmedida = unidadesmedida::all();
-    $router->render('admin/almacen/trasladosinventarios/solicitudesrecibidas', ['titulo'=>'Almacen', 'solicitudesrecividas'=>$solicitudesrecividas, 'unidadesmedida'=>$unidadesmedida, 'pendientes'=>$pendientes, 'aprobadas'=>$aprobadas, 'rechazadas'=>$rechazadas, 'entregadas'=>$entregadas, 'entransito'=>$entransito, 'sucursales'=>$sucursales, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/almacen/trasladosinventarios/solicitudesrecibidas', ['titulo'=>'Almacen', 'solicitudesrecividas'=>$solicitudesrecividas, 'unidadesmedida'=>$unidadesmedida, 'pendientes'=>$pendientes, 'aprobadas'=>$aprobadas, 'rechazadas'=>$rechazadas, 'entregadas'=>$entregadas, 'entransito'=>$entransito, 'sucursales'=>$sucursales, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 //TABLA DONDE VEO LOS TRASLADOS O SALIDAS QUE HAGO O SOLICITUDES QUE HAGO A OTRAS SUCURSALES
   public static function trasladarinventario(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    $pendientes = 0;
-    $aprobadas = 0;
-    $rechazadas = 0;
-    $entregadas = 0;
-    $entransito = 0;
+    $id = $_GET['id'] ?? null;
+    $error = $_GET['error'] ?? null;
+    if($id && is_numeric($id) || $error){
+      $alertas['error'][] = $error ?? 'Error al procesar orden.';
+    }
 
     $sucursales = sucursales::idregistros('estado', 1);
-    $transferirinventario = traslado_inv::idregistros('id_sucursalorigen', id_sucursal());
-    foreach($transferirinventario as $value){
-      //$value->sucursaldestino = sucursales::uncampo('id', $value->id_sucursaldestino, 'nombre');
-      foreach($sucursales as $s){
-        if($value->id_sucursaldestino == $s->id){
-          $value->sucursaldestino = $s->nombre;
-          break;
-        }
-      }
-      $nombreusuario = usuarios::find('id', $value->fkusuario);
-      $value->usuario = $nombreusuario->nombre.' '.$nombreusuario->apellido;
-      $pendientes += $value->estado == 'pendiente'?1:0;
-      $aprobadas += $value->estado == 'aprobada'?1:0;
-      $rechazadas += $value->estado == 'rechazada'?1:0;
-      $entregadas += $value->estado == 'entregada'?1:0;
-      $entransito += $value->estado == 'entransito'?1:0;
-    }
+    $result = (new TrasladosConsultaService())->listarComoOrigen((int)id_sucursal());
+    $transferirinventario = $result['ordenes'];
+    $pendientes = $result['count']['pendiente'];
+    $aprobadas = $result['count']['aprobada'];
+    $rechazadas = $result['count']['rechazada'];
+    $entregadas = $result['count']['entregada'];
+    $entransito = $result['count']['entransito'];
     $unidadesmedida = unidadesmedida::all();
     $router->render('admin/almacen/trasladosinventarios/trasladarinventario', ['titulo'=>'Almacen', 'transferirinventario'=>$transferirinventario, 'unidadesmedida'=>$unidadesmedida, 'pendientes'=>$pendientes, 'aprobadas'=>$aprobadas, 'rechazadas'=>$rechazadas, 'entregadas'=>$entregadas, 'entransito'=>$entransito, 'sucursales'=>$sucursales, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
   }
@@ -98,93 +89,60 @@ class trasladosinvcontrolador{
 
   //REALIZAR ORDEN TRASLADO DE MERCANCIA
   public static function nuevotrasladoinv(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     $sucursalorigen = sucursales::find('id', id_sucursal());
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
-    $conflocal = config_local::getParamGlobal();
     $router->render('admin/almacen/trasladosinventarios/nuevotrasladoinv', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
   //REALIZAR ORDEN DE SOLICITUD A OTRA SEDE DE MERCANCIA PARA QUE ME DESPACHEN
   public static function solicitarinventario(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
     $sucursalorigen = sucursales::find('id', id_sucursal());
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
-    $conflocal = config_local::getParamGlobal();
     $router->render('admin/almacen/trasladosinventarios/solicitarinventario', ['titulo'=>'Almacen', 'sucursalorigen'=>$sucursalorigen, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
   //EDITAR LOS PRODUCTOS A TRASLADAR A OTRA SEDE
   public static function editartrasladoinv(Router $router){
-    //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
-    $id=$_GET['id'];
+    $id=$_GET['id'] ?? null;
     if(!is_numeric($id))return;
     $alertas = [];
+    $ordentraslado = (new TrasladosConsultaService())->obtenerParaEditar((int)$id, (int)id_sucursal());
+    if(!$ordentraslado){
+      header('Location: /admin/almacen/trasladarinventario?id='.$id.'&error=No se puede editar la orden. Debe estar en estado pendiente.');
+      exit;
+    }
     $sucursales = sucursales::all();
     $unidadesmedida = unidadesmedida::all();
-    $sql = "SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, td.observacion, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
-                FROM traslado_inv td 
-                INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
-                INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
-                INNER JOIN usuarios u ON td.fkusuario = u.id WHERE td.id = $id;";
-    $ordentraslado = traslado_inv::camposJoinObj($sql);
-    $conflocal = config_local::getParamGlobal();
-    $router->render('admin/almacen/trasladosinventarios/editartrasladoinv', ['titulo'=>'Almacen', 'ordentraslado'=>array_shift($ordentraslado), 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
+    $router->render('admin/almacen/trasladosinventarios/editartrasladoinv', ['titulo'=>'Almacen', 'ordentraslado'=>$ordentraslado, 'sucursales'=>$sucursales, 'unidadesmedida'=>$unidadesmedida, 'alertas'=>$alertas, 'user'=>$_SESSION]);
   }
 
 
   //---------------------  API  -----------------------//
-    /*public static function allordenestrasladoinv(){
-        //session_start();
-        isadmin();
-        $alertas = [];
-        $ordenes = traslado_inv::
-
-        echo json_encode();
-    }*/
-
     //metodo llamado desde trasladarinv.ts para el detalle de la orden trasnaldo/solicitud
     public static function idOrdenTrasladoSolicitudInv(){
-        //session_start();
         isadmin();
         $alertas = [];
-        $id=$_GET['id'];
+        $id=$_GET['id'] ?? null;
         if(!is_numeric($id)){
             $alertas['error'][] = "Error al procesar orden.";
             echo json_encode($alertas);
             return;
         }
-        //$orden = traslado_inv::find('id', $id);
-        $sql = "SELECT CONCAT(u.nombre,' ',u.apellido) as nombreusuario, td.id, td.tipo, td.fkusuario, td.estado, s_origen.nombre AS sucursal_origen, s_destino.nombre AS sucursal_destino
-                FROM traslado_inv td 
-                INNER JOIN sucursales s_origen ON td.id_sucursalorigen = s_origen.id
-                INNER JOIN sucursales s_destino ON td.id_sucursaldestino = s_destino.id
-                INNER JOIN usuarios u ON td.fkusuario = u.id WHERE td.id = $id;";
-        $orden = traslado_inv::camposJoinObj($sql);
+        $orden = (new TrasladosConsultaService())->obtenerDetalle((int)$id, (int)id_sucursal());
         if($orden){
-            $sql = "SELECT td.id, td.id_trasladoinv, td.fkproducto, td.idsubproducto_id,
-                    COALESCE(pund.nombre, spund.nombre) as unidadmedida,
-                    COALESCE(p.nombre, sp.nombre) AS nombre, td.cantidad
-                    FROM detalletrasladoinv td
-                    LEFT JOIN productos p ON td.fkproducto = p.id
-                    LEFT JOIN subproductos sp ON td.idsubproducto_id = sp.id
-                    LEFT JOIN unidadesmedida pund ON p.idunidadmedida = pund.id
-                    LEFT JOIN unidadesmedida spund ON sp.id_unidadmedida = spund.id
-                    WHERE td.id_trasladoinv = $id;";
-            $orden[0]->detalletrasladoinv = detalletrasladoinv::camposJoinObj($sql); 
             $alertas['exito'][] = "Consulta procesada";
-            $alertas['orden'] = $orden;
+            $alertas['orden'] = [$orden];
         }else{
             $alertas['error'][] = "Orden no existe";
         }
@@ -193,318 +151,106 @@ class trasladosinvcontrolador{
 
   ///////  generar orden de solicitar inventario  //////////
     public static function apisolicitarinventario(){
-        //session_start();
         isadmin();
-        $alertas = [];
-        $idsucursalorigen = $_POST['idsucursalorigen'];
-        $idsucursaldestino = $_POST['idsucursaldestino'];
-        $carrito = json_decode($_POST['productos']);
-
-        $trasladoinv = new traslado_inv([
-          'id_sucursalorigen'=>$idsucursalorigen,
-          'id_sucursaldestino'=>$idsucursaldestino,
-          'fkusuario'=>$_SESSION['id'],
-          'tipo'=>'Solicitud',
-          'estado'=>'pendiente'
-        ]);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $rt = $trasladoinv->crear_guardar();
-            if($rt[0]){
-              //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
-              $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
-                $objeto->id_trasladoinv = $rt[1];
-                $objeto->cantidadrecibida = 0;
-                $objeto->cantidadrechazada = 0;
-                if($objeto->tipo == 0){
-                  $objeto->fkproducto = $objeto->iditem;
-                  $objeto->idsubproducto_id = 'NULL';
-                  $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-                }
-                else{
-                  $objeto->fkproducto = 'NULL';
-                  $objeto->idsubproducto_id = $objeto->iditem;
-                  $acumulador['subproductos'][] = $objeto;
-                }
-                return $acumulador;
-              }, ['productos'=>[], 'subproductos'=>[]]);
-
-              $detalletrasladoinv = new detalletrasladoinv;
-              if(!empty($resultArray['productos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['productos']);
-              if(!empty($resultArray['subproductos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['subproductos']);
-              $alertas['exito'][] = "Solicitud de mercancia enviada correctamente";
-            }
+        if(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'){
+            echo json_encode(['error'=>['Metodo de solicitud no valido.']]);
+            return;
         }
-        //$alertas = ActiveRecord::getAlertas();
-        echo json_encode($alertas); 
+
+        $datos = [
+          'sucursal_destino_id'=>$_POST['idsucursaldestino'] ?? null,
+          'observacion'=>$_POST['observacion'] ?? '',
+          'items'=>json_decode($_POST['productos'] ?? '[]', true),
+        ];
+        $resultado = (new TrasladosOrdenService())->crearSolicitud($datos, (int)id_sucursal(), (int)($_SESSION['id'] ?? 0));
+        echo json_encode($resultado);
     }
 
 
   //////  generar orden de traslado de inventario /////////
     public static function apinuevotrasladoinv(){
-        //session_start();
         isadmin();
-        $alertas = [];
-        $idsucursalorigen = $_POST['idsucursalorigen'];
-        $idsucursaldestino = $_POST['idsucursaldestino'];
-        $carrito = json_decode($_POST['productos']);
-
-        $trasladoinv = new traslado_inv([
-          'id_sucursalorigen'=>$idsucursalorigen,
-          'id_sucursaldestino'=>$idsucursaldestino,
-          'fkusuario'=>$_SESSION['id'],
-          'tipo'=>'Salida',
-          'estado'=>'pendiente'
-        ]);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $rt = $trasladoinv->crear_guardar();
-            if($rt[0]){
-              //////////  SEPARAR LOS ITEMS EN PRODUCTOS Y SUBPRODUCTOS  ////////////
-              $resultArray = array_reduce($carrito, function($acumulador, $objeto) use ($rt){
-                $objeto->id_trasladoinv = $rt[1];
-                $objeto->cantidadrecibida = 0;
-                $objeto->cantidadrechazada = 0;
-                if($objeto->tipo == 0){
-                  $objeto->fkproducto = $objeto->iditem;
-                  $objeto->idsubproducto_id = 'NULL';
-                  $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-                }
-                else{
-                  $objeto->fkproducto = 'NULL';
-                  $objeto->idsubproducto_id = $objeto->iditem;
-                  $acumulador['subproductos'][] = $objeto;
-                }
-                return $acumulador;
-              }, ['productos'=>[], 'subproductos'=>[]]);
-
-              $detalletrasladoinv = new detalletrasladoinv;
-              if(!empty($resultArray['productos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['productos']);
-              if(!empty($resultArray['subproductos']))$detalletrasladoinv->crear_varios_reg_arrayobj($resultArray['subproductos']);
-              $alertas['exito'][] = "Solicitud de transferencia enviada correctamente";
-            }
+        if(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'){
+            echo json_encode(['error'=>['Metodo de solicitud no valido.']]);
+            return;
         }
-        //$alertas = ActiveRecord::getAlertas();
-        echo json_encode($alertas);
+
+        $datos = [
+          'sucursal_destino_id'=>$_POST['idsucursaldestino'] ?? null,
+          'observacion'=>$_POST['observacion'] ?? '',
+          'items'=>json_decode($_POST['productos'] ?? '[]', true),
+        ];
+        $resultado = (new TrasladosOrdenService())->crearSalida($datos, (int)id_sucursal(), (int)($_SESSION['id'] ?? 0));
+        echo json_encode($resultado);
     }
 
 
     public static function editarOrdenTransferencia(){
-        //session_start();
         isadmin();
-        $alertas = [];
-        $addproductos = new detalletrasladoinv;
-        $trasladoinv = traslado_inv::find('id', $_POST['id_trasladoinv']);
-        $detalletrasladoDB = detalletrasladoinv::idregistros('id_trasladoinv', $_POST['id_trasladoinv']);
-        $idsdetalleproductos = json_decode($_POST['ids']);
-        $nuevosproductosFront = json_decode($_POST['nuevosproductos']);
+        if(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'){
+          echo json_encode(['error'=>['Metodo de solicitud no valido.']]);
+          return;
+        }
 
-        $r1 = true; $r2 = true; $r3 = true;
-        $arrayIdeliminar = []; $nuevosproductos = []; $arrayactualizar = [];
-        
-        //Sincronizar id de la DB y del front si coinciden en el id de detalle_traslado i id de fkprpoducto o idsubproducto
-        foreach($nuevosproductosFront as $itemfront){
-          foreach($detalletrasladoDB as $itemDB){
-            if($itemfront->id_trasladoinv == $itemDB->id_trasladoinv){
-              if($itemfront->fkproducto == $itemDB->fkproducto || $itemfront->idsubproducto_id == $itemDB->idsubproducto_id){
-                $itemfront->id = $itemDB->id;
-                $idsdetalleproductos[] = $itemDB->id;
-                break;
-              }
-            }
-          }
-        }
-        
-        if($trasladoinv->estado == 'pendiente'){
-          ///IDs a eliminar de la DB
-          foreach($detalletrasladoDB as $key => $value)
-            if(!in_array($value->id, $idsdetalleproductos))$arrayIdeliminar[] = $value->id;
-          //registros a insertar
-          foreach ($nuevosproductosFront as $value){
-            $value->cantidadrecibida = 0;
-            $value->cantidadrechazada = 0;
-            if(is_numeric($value->id))$arrayactualizar[] = $value;
-            if($value->id=='') $nuevosproductos[] = $value;
-          }
-          
-          if($arrayIdeliminar)$r1 = detalletrasladoinv::eliminar_idregistros('id', $arrayIdeliminar);
-          if($nuevosproductos)$r2 = $addproductos->crear_varios_reg_arrayobj($nuevosproductos);
-          if($nuevosproductosFront) $r3 = detalletrasladoinv::updatemultiregobj($arrayactualizar, ['cantidad']);
-          if($r1&&$r2&&$r3){
-            $alertas['exito'][] = "$trasladoinv->tipo de transferencia actualizada correctamente";
-          }else{
-            $alertas['error'][] = "Error, intenta actualizar la orden nuevamnete";
-          }
-        }else{
-          $alertas['exito'][] = "La orden dbe estar en estado 'pendiente'";
-        }
-        echo json_encode($alertas);
+        $datos = ['items'=>json_decode($_POST['nuevosproductos'] ?? '[]', true),];
+        if(array_key_exists('idsucursaldestino', $_POST))
+          $datos['sucursal_destino_id'] = $_POST['idsucursaldestino'];
+        if(array_key_exists('observacion', $_POST))
+          $datos['observacion'] = $_POST['observacion'];
+
+        $resultado = (new TrasladosOrdenService())->editar((int)($_POST['id_trasladoinv'] ?? 0), $datos, (int)id_sucursal(), (int)($_SESSION['id'] ?? 0));
+        echo json_encode($resultado);
     }
 
 
     //cuando presiona btn ver checkout para confirmar el envio de mercancia
     public static function confirmarnuevotrasladoinv(){
-        //session_start();
         isadmin();
-        $alertas = [];
-        $rsps = true;
-        $rsis = true;
+        if(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'){
+          echo json_encode(['error'=>['Metodo de solicitud no valido.']]);
+          return;
+        }
 
-        $id = $_POST['id'];
-        $conflocal = config_local::getParamGlobal();
-        $trasladoinv = traslado_inv::find('id', $id);
-        $listaproductos = detalletrasladoinv::idregistros('id_trasladoinv', $trasladoinv->id);
-                
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          if(($trasladoinv->tipo == 'Salida' || $trasladoinv->tipo == 'Solicitud') && $trasladoinv->estado == 'pendiente'){
-            $trasladoinv->estado = 'entransito';
-            $ra = $trasladoinv->actualizar();
-
-            if($ra){
-              //////////  SEPARAR LOS PRODUCTOS COMPUESTOS DE PRODUCTOS SIMPLES  ////////////
-              $resultArray = array_reduce($listaproductos, function($acumulador, $objeto){
-                  if(isset($objeto->fkproducto)){
-                    $objeto->id = $objeto->fkproducto;
-                    $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-                    $acumulador['soloIdproductos'][] = $objeto->id;
-                  }
-                  else{
-                    $objeto->id = $objeto->idsubproducto_id;
-                    $acumulador['subproductos'][] = $objeto;
-                    $acumulador['soloIdinsumos'][] = $objeto->id;
-                  }
-                  return $acumulador;
-              }, ['productos'=>[], 'subproductos'=>[]]);
-
-              //descontar de inventario de la sucursal de origen de donde se despacha
-              if(!empty($resultArray['productos'])){
-                $rsps = stockproductossucursal::reduceinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
-                //registrar descuento de movimiento de invnetario
-                $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
-                $returnProductos = stockproductossucursal::camposJoinObj($query);
-                stockService::downStock_movimientoProductos($resultArray['productos'], $returnProductos, 'salida por traslado', 'descuento de unidades por traslado');
-              }
-              if(!empty($resultArray['subproductos'])){
-                $rsis = stockinsumossucursal::reduceinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid = '.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursalorigen:$trasladoinv->id_sucursaldestino));
-                //registrar descuento de movimiento de invnetario
-                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $resultArray['soloIdinsumos']).") AND sucursalid = ".id_sucursal().";";
-                $returnInsumos = stockinsumossucursal::camposJoinObj($query);
-                stockService::downStock_movimientoInsumos($resultArray['subproductos'], $returnInsumos, 'salida por traslado', 'descuento de unidades por traslado');
-              }
-              if($rsps&&$rsis){
-                $alertas['exito'][] = "Orden procesada en transito e inventario descontado";
-                //enviar notificacion por ws
-                $ws = new whatsAppService();
-                if($conflocal['notificacion_por_whatsApp_envio_mercancia']->valor_final == 1)$ws->sendMsgTrasladoInvDespachado($trasladoinv, $listaproductos);
-              }else{
-                $trasladoinv->estado = 'pendiente';
-                $ra = $trasladoinv->actualizar();
-                $alertas['error'][] = "Error al descontar del inventario, ajustar inventario";
-              }
-
-            }else{
-               $alertas['error'][] = "No se puedo actualizar el estado en transito, intentalo nuevamente";
-            }
-          }else{
-            $alertas['error'][] = "La orden debe estar como pendiente y ser de tipo salida";
+        $id = (int)($_POST['id'] ?? 0);
+        $resultado = (new TrasladosInventarioService())->despachar($id, (int)id_sucursal(), (int)($_SESSION['id'] ?? 0), (string)($_SESSION['nombre'] ?? ''));
+        // WhatsApp se ejecuta fuera de la transaccion y solo despues de un
+        // despacho confirmado. Su fallo no revierte ni invalida el resultado.
+        if(!empty($resultado['data']['notificar_despacho']) && $resultado['data']['orden'] ?? null){
+          try{
+            $conflocal = config_local::getParamGlobal();
+            $configWhatsApp = $conflocal['notificacion_por_whatsApp_envio_mercancia'] ?? null;
+            if((int)($configWhatsApp->valor_final ?? 0) === 1)
+              (new whatsAppService())->sendMsgTrasladoInvDespachado($resultado['data']['orden'], []);
+          }catch(\Throwable $error){
+            error_log('Error al notificar despacho del traslado '.$id.': '.$error->getMessage());
           }
         }
-        echo json_encode($alertas);
+        unset($resultado['data']['orden']);
+        echo json_encode($resultado);
     }
 
 
     public static function confirmaringresoinv(){
-        //session_start();
         isadmin();
-        $alertas = [];
-        $rsps = true;
-        $rsis = true;
-
-        $id = $_POST['id'];
-        $trasladoinv = traslado_inv::find('id', $id);
-        $listaproductos = detalletrasladoinv::idregistros('id_trasladoinv', $trasladoinv->id);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          if(($trasladoinv->tipo == 'Salida' || $trasladoinv->tipo == 'Solicitud') && $trasladoinv->estado == 'entransito'){ //solicitud de ingreso
-            $trasladoinv->estado = 'entregada';
-            $ra = $trasladoinv->actualizar();
-
-            if($ra){
-              //////////  SEPARAR LOS PRODUCTOS DE SUBPRODUCTOS  ////////////
-              $resultArray = array_reduce($listaproductos, function($acumulador, $objeto){
-                  if(isset($objeto->fkproducto)){
-                    $objeto->id = $objeto->fkproducto;
-                    $acumulador['productos'][] = $objeto; // puede ser producto compuesto o simple
-                    $acumulador['soloIdproductos'][] = $objeto->id;
-                  }
-                  else{
-                    $objeto->id = $objeto->idsubproducto_id;
-                    $acumulador['subproductos'][] = $objeto;
-                    $acumulador['soloIdinsumos'][] = $objeto->id;
-                  }
-                  return $acumulador;
-              }, ['productos'=>[], 'subproductos'=>[]]);
-
-              //sumar a inventario de la sucursal de destino
-              if(!empty($resultArray['productos'])){
-                $rsps = stockproductossucursal::addinv1condicion($resultArray['productos'], 'stock', 'productoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
-                // registrar ingreso de unidades de inventario
-                $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".join(', ', $resultArray['soloIdproductos']).") AND sucursalid = ".id_sucursal().";";
-                $returnProductos = stockproductossucursal::camposJoinObj($query);
-                stockService::upStock_movimientoProductos($resultArray['productos'], $returnProductos, 'ingreso por traslado', 'ingreso de unidades por traslado');
-              }
-              if(!empty($resultArray['subproductos'])){
-                $rsis = stockinsumossucursal::addinv1condicion($resultArray['subproductos'], 'stock', 'subproductoid', 'sucursalid ='.($trasladoinv->tipo == 'Salida'?$trasladoinv->id_sucursaldestino:$trasladoinv->id_sucursalorigen));
-                // registrar ingreso de unidades de inventario
-                $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".join(', ', $resultArray['soloIdinsumos']).") AND sucursalid = ".id_sucursal().";";
-                $returnInsumos = stockinsumossucursal::camposJoinObj($query);
-                stockService::upStock_movimientoInsumos($resultArray['subproductos'], $returnInsumos, 'ingreso por traslado', 'ingreso de unidades por traslado');
-              }
-              if($rsps&&$rsis){
-                $alertas['exito'][] = "Orden procesada, mercancia recibida e ingresada a inventario";
-              }else{
-                $trasladoinv->estado = 'entransito';
-                $ra = $trasladoinv->actualizar();
-                $alertas['error'][] = "Error al ingresar al inventario, ajustar inventario";
-              }
-
-            }else{
-               $alertas['error'][] = "No se puedo actualizar el estado 'entregado', intentalo nuevamente";
-            }
-          }else{
-            if($trasladoinv->tipo == 'Solicitud'){
-              $alertas['error'][] = "La orden debe estar como 'entransito' y ser de tipo Solicitud";
-            }else{
-              $alertas['error'][] = "La orden debe estar como 'entransito' y ser de tipo Ingreso";
-            }
-          }
+        if(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'){
+          echo json_encode(['error'=>['Metodo de solicitud no valido.']]);
+          return;
         }
-        echo json_encode($alertas);
-    }
 
+        $resultado = (new TrasladosInventarioService())->recibir((int)($_POST['id'] ?? 0), (int)id_sucursal(), (int)($_SESSION['id'] ?? 0), (string)($_SESSION['nombre'] ?? ''));
+        echo json_encode($resultado);
+    }
 
 
     //llamada desde trasladarinv.ts / trasladarinventario para anular envio o solicitud de que me despachen
     public static function anularnuevotrasladoinv(){
-        //session_start();
         isadmin();
-        $alertas = [];
-        
-        //validar que la orden esta en estado pendiente para eliminar
-        $id = $_POST['id'];
-        $trasladoinv = traslado_inv::find('id', $id);
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-          if($trasladoinv->estado = 'pendiente'){
-            $r = $trasladoinv->eliminar_registro();
-            if($r){
-              $alertas['exito'][] = "$trasladoinv->tipo eliminada";
-            }else{
-              $alertas['error'][] = "No se pudo eliminar el registro, verifica nuevamente";
-            }
-          }
+        if(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'){
+          echo json_encode(['error'=>['Metodo de solicitud no valido.']]);
+          return;
         }
-        echo json_encode($alertas);
+        $resultado = (new TrasladosOrdenService())->cancelarORechazar((int)($_POST['id'] ?? 0), (int)id_sucursal(), (int)($_SESSION['id'] ?? 0));
+        echo json_encode($resultado);
     }
 
 }

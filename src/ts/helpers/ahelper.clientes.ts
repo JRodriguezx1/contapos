@@ -97,7 +97,7 @@
                     try {
                         const url = "/admin/api/clientes/direccionesXcliente?id="+idcli; //llamado a la API REST y se trae el cliente y sus direcciones direccionescontrolador, tambien traer sus precios personalizados
                         const respuesta = await fetch(url); 
-                        const resultado = await respuesta.json();
+                        const resultado = await respuesta.json(); 
                         (document.querySelector('#nombreclientenuevo') as HTMLInputElement).value = resultado.nombre;
                         (document.querySelector('#clientenuevoapellido') as HTMLInputElement).value = resultado.apellido;
                         (document.querySelector('#telefono') as HTMLInputElement).value =  resultado.telefono;
@@ -111,6 +111,8 @@
                         (document.querySelector('#badgeEstado') as HTMLParagraphElement).classList.add('bg-green-100', 'text-green-600');
                         //mapear los precios personalizados del cliente con arreglo de los productos
                         actualizarPreciosCliente(resultado.preciospersonalizados);
+                        console.log(resultado);
+                        POS.gestionRedmir.actualizarPuntosDOM(`${resultado.nombre} ${resultado.apellido}`, resultado.puntos);
                     } catch (error) {
                         console.log(error);
                     }

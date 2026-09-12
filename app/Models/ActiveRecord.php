@@ -487,6 +487,16 @@ class ActiveRecord {
     }
 
 
+    public static function idregistrosForUpdate(string $colum, int $id, bool $cargaRelacional = true){ ////metodo que busca todos los registro que pertenecen a un id
+        $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' FOR UPDATE;";
+        $resultado = self::consultar_Sql($sql);
+        if($cargaRelacional)
+            foreach($resultado as $instancia)
+                self::cargarRelaciones($instancia);
+        return $resultado;
+    }
+
+
     //busca un solo registro por su id, se puede usar para validar registros de login con email
     public static function find($colum, $id){
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' LIMIT 1;";
@@ -774,6 +784,21 @@ class ActiveRecord {
                 $sql.= " ${key} = '${value}' AND ";
             }
         }
+        $resultado = self::consultar_Sql($sql);
+        return array_shift($resultado);
+    }
+
+
+    public static function uniquewhereArrayForUpdate($array = []){ //$array = ['confirmado'=>1, 'admin'=>0]
+        $sql = "SELECT *FROM ".static::$tabla." WHERE ";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= " ${key} = '${value}'";
+            }else{
+                $sql.= " ${key} = '${value}' AND ";
+            }
+        }
+        $sql = $sql." FOR UPDATE";
         $resultado = self::consultar_Sql($sql);
         return array_shift($resultado);
     }

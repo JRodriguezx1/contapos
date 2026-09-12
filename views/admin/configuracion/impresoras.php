@@ -35,15 +35,15 @@
               <td>
                 <span class="table-entity">
                   <span class="table-entity__icon"><i class="fa-solid fa-print"></i></span>
-                  <span><?php echo $value->nombre; ?></span>
+                  <span><?php echo htmlspecialchars((string)($value->nombre ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
                 </span>
               </td> 
-              <td><span class="table-badge table-badge--primary !whitespace-normal break-words"><?php echo $value->nombrecompartido;?></span></td>
-              <td><span class="table-badge table-badge--neutral"><?php echo $value->estacion;?></span></td>
-              <td><span class="table-badge table-badge--warning"><?php echo $value->mm;?> mm</span></td>
+              <td><span class="table-badge table-badge--primary !whitespace-normal break-words"><?php echo htmlspecialchars((string)($value->nombrecompartido ?? ''), ENT_QUOTES, 'UTF-8'); ?></span></td>
+              <td><span class="table-badge table-badge--neutral"><?php echo htmlspecialchars((string)($value->estacion ?? ''), ENT_QUOTES, 'UTF-8'); ?></span></td>
+              <td><span class="table-badge table-badge--warning"><?php echo htmlspecialchars((string)($value->mm ?? ''), ENT_QUOTES, 'UTF-8'); ?> mm</span></td>
               <td><span class="table-status <?php echo $value->estado==1?'table-status--success':'table-status--danger';?>"><?php echo $value->estado==1?'Activa':'Inactiva';?></span></td>
               <td class="accionestd">
-                <div class="acciones-btns" id="<?php echo $value->id;?>" data-impresora="<?php echo $value->nombre;?>">
+                <div class="acciones-btns" id="<?php echo htmlspecialchars((string)($value->id ?? ''), ENT_QUOTES, 'UTF-8'); ?>" data-impresora="<?php echo htmlspecialchars((string)($value->nombre ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                     <button class="btn-md btn-turquoise editarImpresora"><i class="fa-solid fa-pen-to-square" title="Actualizar punto de impresion"></i></button>
                     <button class="btn-md btn-red eliminarImpresora" title="Eliminar Impresora"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <form id="formCrearUpdateIMpresora" class="pb-8" action="/admin/config/crear_IMpresora" method="POST">
+    <form id="formCrearUpdateIMpresora" class="pb-8">
         <div id="divmsjalertaIMpresora"></div>
 
         <div class="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">

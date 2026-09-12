@@ -217,25 +217,69 @@ class whatsAppService{
     }
 
 
-    public function productoBajoStock(object $factura, int $idcaja, $devolverInv, array $productos = []){
-        $sucursal = sucursales::find('id', id_sucursal());
-        $caja = caja::find('id', $idcaja);
-        $usuario = usuarios::find('id', $_SESSION['id']);
-        $fechaAnulacion = date('Y-m-d H:i:s');
-        $this->msg = '';
-        $this->msg .= "🔹*PRODUCTOS CON BAJO STOCK*\n";
-        $this->msg .= "Sucursal: " . (($sucursal ?? null)->nombre ?? '') . "\n\n";
-        $this->msg .= "*PRODUCTOS*\n";
-        $this->msg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
-        foreach ($productos as $value) {
-            $this->msg .= "id: {$value->id}, {$value->nombre}, Cant: " . number_format($value->cantidad??0, 0, ',', '.') . "\n";
+    /**
+     * Envia una sola alerta con los productos e insumos que acaban de cruzar
+     * su stock minimo. Recibe la estructura creada por StockMinimoService.
+     */
+    public function productoBajoStock(array $items):stdClass|null{
+        if(empty($items))return null;
+        $productos = [];
+        $insumos = [];
+        foreach($items as $item){
+            if(!is_object($item) || (int)($item->id ?? 0) <= 0)continue;
+            if(($item->tipo ?? '') === 'Insumo'){
+                $insumos[] = $item;
+            }else{
+                $productos[] = $item;
+            }
         }
-        
-        // 🔹 Pie de pagina
+
+        // Si todos los elementos recibidos eran invalidos no se envia mensaje.
+        if(empty($productos) && empty($insumos))return null;
+
+        $sucursal = sucursales::find('id', id_sucursal());
+        $this->msg = "🔹*ALERTA DE STOCK MINIMO*\n";
+        $this->msg .= "Sucursal: " . (($sucursal ?? null)->nombre ?? '') . "\n";
+        $this->msg .= "Fecha: " . date('Y-m-d H:i:s') . "\n";
+
+        if(!empty($productos)){
+            $this->msg .= "\n*PRODUCTOS*\n";
+            $this->msg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+            foreach($productos as $producto)$this->agregarItemStockMinimo($producto);
+        }
+
+        if(!empty($insumos)){
+            $this->msg .= "\n*INSUMOS*\n";
+            $this->msg .= "━━━━━━━━━━━━━━━━━━━━━━\n";
+            foreach($insumos as $insumo)$this->agregarItemStockMinimo($insumo);
+        }
+
         $this->msg .= "\n*J2 SOFTWARE POS*\n";
         $this->msg .= "www.j2softwarepos.com\n";
-        $this->sendMessage($this->msg);
+        return $this->sendMessage($this->msg);
     }
+    
+
+    /** Agrega al mensaje el detalle uniforme de un producto o insumo. */
+    private function agregarItemStockMinimo(object $item):void{
+        $nombre = trim((string)($item->nombre ?? ''));
+        $sku = trim((string)($item->sku ?? ''));
+        $unidad = trim((string)($item->unidadmedida ?? ''));
+        //$stockAnterior = number_format((float)($item->stock_anterior ?? 0), 2, ',', '.');
+        $stockActual = number_format((float)($item->stock_actual ?? 0), 2, ',', '.');
+        $stockMinimo = number_format((float)($item->stock_minimo ?? 0), 2, ',', '.');
+
+        $this->msg .= "ID: " . (int)$item->id . " - " . ($nombre !== '' ? $nombre : 'Sin nombre') . "\n";
+        if($sku !== '')$this->msg .= "SKU: {$sku}\n";
+        //$this->msg .= "Stock: {$stockAnterior} → {$stockActual}" . ($unidad !== '' ? " {$unidad}" : '') . "\n";
+        $this->msg .= "🚨 Stock actual: {$stockActual}" . ($unidad !== '' ? " {$unidad}" : '') . "\n";
+        $this->msg .= "Minimo: {$stockMinimo}" . ($unidad !== '' ? " {$unidad}" : '') . "\n\n";
+    }
+
+    /** Conserva hasta cuatro decimales sin agregar ceros innecesarios. */
+    /*private function formatearCantidadStock(float $cantidad):string{
+        return rtrim(rtrim(number_format($cantidad, 4, ',', '.'), '0'), ',');
+    }*/
 
     public function sendMsgTrasladoInvDespachado(object $trasladoinv, array $listaproductos){
         

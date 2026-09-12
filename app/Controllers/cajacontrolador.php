@@ -328,7 +328,7 @@ class cajacontrolador{
       self::responderDocumentoNoEncontrado();
       return;
     }
-    $router->render('admin/caja/printfacturacarta', $datos + ['titulo'=>'Impresion factura', 'user'=>$_SESSION]);
+    $router->render('admin/caja/printFacturaCarta', $datos + ['titulo'=>'Impresion factura', 'user'=>$_SESSION]);
   }
 
   /**

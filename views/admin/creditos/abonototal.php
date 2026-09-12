@@ -27,7 +27,7 @@
         </div>
         
         <input id="PagoTotal_montocuota" class="hidden" type="text" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>    
-       <input id="PagoTotal_abono" class="hidden" type="text" name="valorpagado" value="<?php echo $credito->saldopendiente??'';?>">
+       <input id="PagoTotal_abono" class="hidden" type="text" name="valorpagado" value="<?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?>">
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div class="detalle-abono-dialog__field grid gap-2">

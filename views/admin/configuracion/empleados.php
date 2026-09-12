@@ -254,9 +254,14 @@
                     
                     <select id="perfilempleado" class="formulario__select" name="perfil"required>
                         <option value="" disabled selected>-Seleccionar-</option>
-                        <option value="2" <?php echo $empleado->perfil==1?'selected':'';?>>Supervisor</option>
-                        <option value="3" <?php echo $empleado->perfil==2?'selected':'';?>>Administrador</option>
-                        <option value="4" <?php echo $empleado->perfil==3?'selected':'';?>>Asesor</option>
+                        <?php if($user['perfil']<3): ?>
+                            <option value="2" <?php echo $empleado->perfil==2?'selected':'';?>>Supervisor</option>
+                        <?php endif ?>
+                        <?php if($user['perfil']<4): ?>
+                            <option value="3" <?php echo $empleado->perfil==3?'selected':'';?>>Administrador</option>
+                        <?php endif ?>
+                        <option value="4" <?php echo $empleado->perfil==4?'selected':'';?>>Asesor</option>
+                        
                     </select>
                 </div>
             </div>

@@ -59,7 +59,7 @@
         <!-- Bajo stock -->
         <div class="flex flex-col p-6 text-center border-t border-gray-100 sm:border-0 sm:border-l">
           <dt class="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
-            Productos con bajo stock
+            Items con bajo stock
           </dt>
           <dd id="sponsorsCount" class="order-1 text-5xl font-extrabold leading-none text-indigo-600">
               <button id="btnviewProductsBajoStock" class="rounded-xl border-2 border-blue-100 shadow-md px-6 py-2"><?php echo number_format($bajoStock??0, "0", ",", ".");?></button>
@@ -83,7 +83,7 @@
 
 <dialog id="miDialogoBajoStock" class="midialog-lg p-12">
     <div class="flex justify-between items-center mb-4">
-        <h4 id="modalTotalBajoStock" class="font-semibold text-gray-700 mb-4">Productos con bajo stock</h4>
+        <h4 id="modalTotalBajoStock" class="font-semibold text-gray-700 mb-4">Items con bajo stock</h4>
         <button class="rounded-lg bg-indigo-500 hover:bg-indigo-700 transition"><i id="btnCerrarTotalBajoStock" class="fa-solid fa-xmark px-4 py-2 text-3xl text-white"></i></button>
     </div>
     <div id="divmsjalerta"></div>

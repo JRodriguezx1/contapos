@@ -191,7 +191,7 @@
     <!-- fondo oscuro para version movil cuando abre el drawe lateral del carrito -->
     <div id="overlayCarrito" class="hidden fixed inset-0 bg-black/50 z-30 tlg:hidden"></div>
 
-    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:sticky tlg:top-2 tlg:self-start tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3 tlg:min-w-0">
+    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:sticky tlg:top-2 tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3 tlg:min-w-0">
       <div class="flex justify-between items-center tlg:hidden">
         <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
         <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
@@ -345,6 +345,14 @@
                             Total
                         </p>
                     </div>
+                    <?php if($conflocal['mostrar_tasa_de_cambio_de_divisa']->valor_final == 1):  ?>
+                      <div class="pt-3 mt-3 border-t border-slate-300">
+                          <p class="uppercase tracking-[0.2em] text-lg font-bold text-slate-500">
+                              Equivalente:
+                          </p>
+                      </div>
+                    <?php endif;  ?>
+
                 </div>
 
                 <div class="space-y-2 text-right">
@@ -355,11 +363,18 @@
                     <hr class="my-2 border-slate-300">
                     <p
                         id="total"
-                        class="mt-3 text-right text-5xl font-extrabold text-emerald-600 leading-none"
+                        class="mt-3 !mb-3 text-right text-5xl font-extrabold text-emerald-600 leading-none"
                         style="font-family:'Tektur', serif;"
                     >
                         $0
                     </p>
+                    <?php if($conflocal['mostrar_tasa_de_cambio_de_divisa']->valor_final == 1):  ?>
+                      <div class="pt-3 mt-3 border-t border-slate-300 flex items-center gap-2">
+                          <p id="equivalente" class="text-2xl font-semibold text-slate-800">$0</p>
+                          <p id="monedaCodigo" class="text-slate-600 text-lg font-semibold"></p>
+                      </div>
+                    <?php endif;  ?>
+                    
                 </div>
             </div>
         </div>
@@ -375,10 +390,17 @@
             <span class="text-2xl font-medium uppercase !leading-none">Facturar</span>
           </button>
           
-          <button id="btnaplicarcredito" class="col-span-2 mx-auto !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 rounded-md border border-gray-300 !px-6 !py-0 text-gray-800 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
+          <button id="btnaplicarcredito" class="<?php echo $conflocal['valor_por_punto']->valor_final ? '':'col-span-2';  ?> mx-auto !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 rounded-md border border-gray-300 !px-6 !py-0 text-gray-800 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
             <span class="material-symbols-outlined text-2xl !leading-none">payments</span>
             <span class="text-2xl font-medium !leading-none">Cr&eacute;dito</span>
           </button>
+
+          <?php if($conflocal['valor_por_punto']->valor_final):  ?>
+            <button id="btnredimir" class=" mx-auto !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 rounded-md border border-gray-300 !px-6 !py-0 text-gray-800 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
+              <span class="material-symbols-outlined text-2xl text-indigo-600">featured_seasonal_and_gifts</span>
+              <span class="text-2xl font-medium !leading-none">Redimir</span>
+            </button>
+          <?php endif;  ?>
         </div>
       </div>
     </div> <!-- fin segunda columna o contenedor carrito desktop -->
@@ -392,14 +414,14 @@
           <i class="fa-solid fa-percent text-3xl"></i>
         </div>
 
-        <h4 class="text-4xl font-extrabold leading-tight text-slate-900">Aplicar descuento</h4>
+        <h4 class="text-4xl font-bold leading-tight text-slate-900">Aplicar descuento</h4>
         <p class="mx-auto mt-2 max-w-md text-lg leading-relaxed text-slate-500">Aplica un descuento al subtotal del pedido.</p>
       </div>
 
       <form id="formDescuento" class="text-center">
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
           <div class="mb-6">
-            <h5 class="mb-3 block text-lg font-bold text-slate-700">Tipo de descuento</h5>
+            <h5 class="mb-3 block text-lg font-semibold text-slate-700">Tipo de descuento</h5>
 
             <div class="inline-flex max-w-full rounded-xl border-[3px] border-indigo-600 bg-white p-1 select-none">
               <label class="flex cursor-pointer">
@@ -420,7 +442,7 @@
 
           <div class="space-y-6">
             <div>
-              <label for="inputDescuento" class="mb-2 block text-lg font-bold text-slate-700">Descuento</label>
+              <label for="inputDescuento" class="mb-2 block text-lg font-semibold text-slate-700">Descuento</label>
               <input
                 id="inputDescuento"
                 type="number"
@@ -432,7 +454,7 @@
             </div>
 
             <div>
-              <label for="inputDescuentoClave" class="mb-2 block text-lg font-bold leading-snug text-slate-700">Clave de autorizaci&oacute;n</label>
+              <label for="inputDescuentoClave" class="mb-2 block text-lg font-semibold leading-snug text-slate-700">Clave de autorizaci&oacute;n</label>
               <input
                 id="inputDescuentoClave"
                 type="password"
@@ -518,6 +540,8 @@
   <?php include __DIR__. "/modalprocesarpago.php"; ?>
   <!--///////////////////// Modal procesar credito boton facturar /////////////////////////-->
   <?php //include __DIR__. "/modalprocesarcredito.php"; ?>
+  <!--///////////////////// Modal procesar puntos a redimir /////////////////////////-->
+  <?php include __DIR__. "/modalRedimir.php"; ?>
   <!-- MODAL DATOS DEL ADQUIRIENTE -->
   <?php include __DIR__. "/modaladquiriente.php"; ?>
   <!-- MODAL OTROS PRODUCTOS -->
@@ -530,6 +554,7 @@
     const clientesDB = <?= json_encode($clientes) ?>;
     const getParam = <?= json_encode($conflocal) ?>;
     const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?> //porcentaje de comision del usuario logueado
+    const sucursal = <?= json_encode(negocionSucursal()) ?>;
   </script>
 
 </div>

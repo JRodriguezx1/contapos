@@ -5,9 +5,11 @@
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
         </svg>
         <span class="sr-only">Atrás</span>
-      </a>
+    </a>
 
-      <div class="flex flex-wrap gap-5 mt-0">
+     <?php include __DIR__."/../../../templates/alertas.php"; ?>
+
+    <div class="flex flex-wrap gap-5 mt-0">
         <!-- Traslado de inventario -->
         <a href="/admin/almacen/solicitarinventario"
             class="grid place-items-center w-[106px] h-46 bg-gray-50 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-100 transition p-4">

@@ -179,6 +179,11 @@
           <strong>Compras</strong>
           <small>Ordenes y compras</small>
         </a>
+        <a href="/admin/reportes/productosComprados" class="btn_card">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <strong>Productos Comprados</strong>
+          <small>Lista de productos comprados</small>
+        </a>
         <button class="btn_card btn_card--primary" type="button">
           <span class="material-symbols-outlined">move_up</span>
           <strong>Rotacion de inventario</strong>

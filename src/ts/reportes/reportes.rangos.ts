@@ -6,7 +6,7 @@
         !document.querySelector('.remisiones') &&
         !document.querySelector('.cuotasCreditos') &&
         !document.querySelector('.movimientosinventarios') &&
-        !document.querySelector('.estadosfinancierosCreditos') &&
+        !document.querySelector('.listaProductosComprados') &&
         !document.querySelector('.estadosfinancierosCreditos') &&
         !document.querySelector('.recibosCaja'))return;
 

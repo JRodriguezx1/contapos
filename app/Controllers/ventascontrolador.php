@@ -194,7 +194,7 @@ class ventascontrolador{
               INNER JOIN subproductos sp ON x.id_subproducto = sp.id
               INNER JOIN unidadesmedida u ON sp.id_unidadmedida = u.id
               INNER JOIN stockinsumossucursal si ON sp.id = si.subproductoid
-              WHERE x.id_producto = 2 AND si.sucursalid = $idsucursal;";
+              WHERE x.id_producto = $idproducto AND si.sucursalid = $idsucursal;";
       $detalleProducto = productos_sub::camposJoinObj($sql);
       echo json_encode($detalleProducto);
       return;

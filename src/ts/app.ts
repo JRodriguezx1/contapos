@@ -9,6 +9,8 @@ const opcionesSucursal = document.querySelectorAll('.js-sucursal-option') as Nod
 const toggleSucursalMenu = document.querySelector('#toggleSucursalMenu') as HTMLElement|null;
 const sucursalMenuLista = document.querySelector('#sucursalMenuLista') as HTMLElement|null;
 const iconSucursalMenu = document.querySelector('#iconSucursalMenu') as HTMLElement|null;
+const btnMoneda = document.querySelector('#btnMoneda') as HTMLButtonElement;
+const miDialogoMonedaEquivalente = document.querySelector('#miDialogoMonedaEquivalente') as HTMLDialogElement;
 declare let Chart:any; //declare le indica a typescript que la variable chart viene de manera externa
 declare const Swal: any;
 declare var moment: any;
@@ -22,6 +24,40 @@ declare let comisionTotalPagadaBusinessDB: number;
 declare const getParam:any;  //getParam inyectada por medio de json desde la vista ventas/index.php interfaz en ventas.type.ts
 declare const percentComisionUser:string;
 declare let deudatotalCiente:string;
+declare const sucursal:any;
+
+let monedas: divisa[] = [
+    {
+        id: 2,
+        nombre: 'Peso colombiano',
+        codigo: 'COP',
+        simbolo: '$'
+    },
+    {
+        id: 3,
+        nombre: 'Bolívar venezolano',
+        codigo: 'VES',
+        simbolo: 'Bs.'
+    },
+    {
+        id: 4,
+        nombre: 'Dólar estadounidense',
+        codigo: 'USD',
+        simbolo: 'US$'
+    },
+    {
+        id: 5,
+        nombre: 'Euro',
+        codigo: 'EUR',
+        simbolo: '€'
+    },
+    {
+        id: 6,
+        nombre: 'Real brasileño',
+        codigo: 'BRL',
+        simbolo: 'R$'
+    }
+];
 
 (window as any).POS = (window as any).POS || {};
 
@@ -287,7 +323,6 @@ document.addEventListener('click', (event:MouseEvent)=>cerrarMenuSucursal());
 
 //evento para el cambio de sucursal
 selectSucursal.addEventListener('change', async(e: Event)=>{
-console.log((e.target as HTMLInputElement).value);
   const datos = {
       idsucursal: (e.target as HTMLInputElement).value,
       //idusuario: ''
@@ -309,6 +344,68 @@ console.log((e.target as HTMLInputElement).value);
     setTimeout(()=>{ window.location.href = "/admin/dashboard"; }, 850);
     
   }
-  console.log(resultado);
   
 });
+
+
+//abrir ventana del modal de cambio de divisa
+document.addEventListener("click", cerrarDialogo);
+btnMoneda.addEventListener('click', ()=>{
+  miDialogoMonedaEquivalente.showModal();
+});
+
+
+document.querySelector('#formTasaCambio')?.addEventListener('submit', async(e)=>{
+  e.preventDefault();
+  const divisa = document.querySelector('#divisa') as HTMLSelectElement|null;
+  const tasaCambio = document.querySelector('#tasaCambio') as HTMLInputElement|null;
+  const btnConfirmar = document.querySelector('#btnConfirmarTasaCambio') as HTMLButtonElement|null;
+  const idmoneda = Number(divisa?.value);
+  const tasacambio = tasaCambio ? obtenerNumero(tasaCambio) : null;
+
+  if(!Number.isInteger(idmoneda) || idmoneda <= 0 || tasacambio === null || tasacambio <= 0){
+    msjalertToast('error', 'Error', 'Selecciona una moneda e ingresa una tasa de cambio válida.');
+    return;
+  }
+
+  const datos = { idmoneda, tasacambio };
+
+  try{
+        if(btnConfirmar)btnConfirmar.disabled = true;
+        const url = "/admin/api/param/changeTasaCambio"; //llamado a la API REST Dian-laravel para consultar las resoluciones
+        const respuesta = await fetch(url, {
+          method: 'POST',
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify(datos)
+        });
+
+        const resultado = await respuesta.json();
+        if(!respuesta.ok || resultado.error){
+          msjalertToast('error', 'Error', resultado.error || 'No fue posible actualizar la tasa de cambio.');
+          return;
+        }
+        msjalertToast('success', 'Éxito', resultado.success);
+        miDialogoMonedaEquivalente.close();
+        //inyectar en la vista de ventas.
+        if(getParam.mostrar_tasa_de_cambio_de_divisa.valor_final === '1'){
+          const divisa = monedas.find(x=>x.id === resultado.data.idmoneda);
+          (document.querySelector('#equivalente') as HTMLParagraphElement).textContent = '$'+((window as any).POS.valorTotal.total * resultado.data.tasacambio).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          (document.querySelector('#monedaCodigo') as HTMLParagraphElement).textContent = divisa?.codigo??'';
+        }
+        sucursal.tasacambio = resultado.data.tasacambio;
+        sucursal.idmoneda = resultado.data.idmoneda;
+      }catch(error){
+        console.error(error);
+        msjalertToast('error', 'Error', 'No fue posible conectar con el servidor.');
+      }finally{
+        if(btnConfirmar)btnConfirmar.disabled = false;
+      }
+});
+
+
+function cerrarDialogo(event:Event) {
+  const f = event.target;
+  if (f=== miDialogoMonedaEquivalente || (f as HTMLInputElement).value === 'Salir') {
+    miDialogoMonedaEquivalente.close();
+  }
+}

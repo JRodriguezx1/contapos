@@ -52,15 +52,16 @@
       const button=(e.target as HTMLButtonElement), info = (tablamediosPagos as any).page.info();
       indiceFila =  (tablamediosPagos as any).row(button.closest('tr')).index();
       (async ()=>{ 
+        let estado = button.dataset.state=='0'?'1':'0';
         const datos = new FormData();
         datos.append('id', button.id);
-        datos.append('estado', button.dataset.state=='0'?'1':'0');
+        datos.append('estado', estado);
         try {
             const url = "/admin/api/updateStateMedioPago";
             const respuesta = await fetch(url, {method: 'POST', body: datos}); 
             const resultado = await respuesta.json();  
             if(resultado.exito !== undefined){
-              const s1 = `<button id="${button?.id}" data-state="${button.dataset.state == '1' ? '1' : '0'}" class="statemediopago table-status cursor-pointer justify-center border-0 transition hover:-translate-y-px hover:shadow-md ${button.dataset.state == '1' ? 'table-status--success' : 'table-status--danger'}">${button.dataset.state == '1' ? 'Activo' : 'Inactivo'}</button>`;
+              const s1 = `<button id="${button?.id}" data-state="${button.dataset.state == estado}" class="statemediopago table-status cursor-pointer justify-center border-0 transition hover:-translate-y-px hover:shadow-md ${estado == '1' ? 'table-status--success' : 'table-status--danger'}">${estado == '1' ? 'Activo' : 'Inactivo'}</button>`;
               (tablamediosPagos as any).cell((tablamediosPagos as any).row(indiceFila+=info.start), 2).data(s1).draw(); //se modifica solo la columna con la fila correspondiente, y destruye la que habai antes
               (tablamediosPagos as any).page(info.page).draw('page'); //me mantiene la pagina actual
             }else{

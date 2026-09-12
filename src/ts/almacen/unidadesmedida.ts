@@ -44,7 +44,7 @@
                 customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
                 icon: 'question',
                 title: 'Desea eliminar la unidad de medida?',
-                text: "La unidad de medida sera eliminado definitivamente.",
+                text: "La unidad solo puede eliminarse si no esta siendo utilizada.",
                 showCancelButton: true,
                 confirmButtonText: 'Si',
                 cancelButtonText: 'No',

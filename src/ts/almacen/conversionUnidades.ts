@@ -110,7 +110,7 @@
 
 
       function imprimirConversionesUnidades(allConversionUnidades:conversionunidadesapi[]){
-        const subAllUnidades = allConversionUnidades.filter(z=>z.idsubproducto===unsubproducto.id);
+        const subAllUnidades = allConversionUnidades.filter(z=>z.idsubproducto==unsubproducto.id);
         contenedor.innerHTML = '';
         subAllUnidades.forEach(conversion => {
             contenedor.innerHTML += `

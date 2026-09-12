@@ -169,14 +169,14 @@
         </div>
 
         <div class="config-whatsapp-options">
-          <label for="notificacion_por_whatsApp_sotck_bajo_si">
-            <input id="notificacion_por_whatsApp_sotck_bajo_si" type="radio" name="notificacion_por_whatsApp_sotck_bajo" class="hidden peer" value="1" <?php echo $conflocal['notificacion_por_whatsApp_sotck_bajo']->valor_final == 1?'checked':'';?>>
+          <label for="notificacion_por_whatsApp_stock_bajo_si">
+            <input id="notificacion_por_whatsApp_stock_bajo_si" type="radio" name="notificacion_por_whatsApp_stock_bajo" class="hidden peer" value="1" <?php echo $conflocal['notificacion_por_whatsApp_stock_bajo']->valor_final == 1?'checked':'';?>>
             <div></div>
             <span>S&iacute;</span>
           </label>
 
-          <label for="notificacion_por_whatsApp_sotck_bajo_no">
-            <input id="notificacion_por_whatsApp_sotck_bajo_no" type="radio" name="notificacion_por_whatsApp_sotck_bajo" class="hidden peer" value="0" <?php echo $conflocal['notificacion_por_whatsApp_sotck_bajo']->valor_final == 0?'checked':'';?>>
+          <label for="notificacion_por_whatsApp_stock_bajo_no">
+            <input id="notificacion_por_whatsApp_stock_bajo_no" type="radio" name="notificacion_por_whatsApp_stock_bajo" class="hidden peer" value="0" <?php echo $conflocal['notificacion_por_whatsApp_stock_bajo']->valor_final == 0?'checked':'';?>>
             <div></div>
             <span>No</span>
           </label>

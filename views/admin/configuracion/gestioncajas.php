@@ -39,7 +39,7 @@
               </span>
             </td>
             <td>
-              <span class="table-badge table-badge--neutral"><?php echo $value->nombreconsecutivo->nombre;?></span>
+              <span class="table-badge table-badge--neutral"><?php echo $value->nombreconsecutivo;?></span>
             </td>
             <td>
               <span class="table-badge table-badge--info !whitespace-normal break-words"><?php echo $value->negocio;?></span>

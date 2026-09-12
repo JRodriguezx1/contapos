@@ -85,12 +85,50 @@ const configdatatablesgenerico = {
 }
 
 ///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK RAPIDO /////////////////////
+const configdatatablesstockrapidoinv = {
+  layout: {
+        topStart: {
+            buttons: [
+              {extend: 'copyHtml5', text: 'Copia'}, 
+              {extend: 'excelHtml5', exportOptions: {columns: [1, 2, 3, 4, 5, 6]}, title: 'Stock-inventario'}, 
+              {extend: 'csvHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
+              {extend: 'pdfHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
+              {extend: 'print', exportOptions: {columns: [1, 3, 4]}, title: 'Stock-inventario', text: 'Imprimir'},
+              'colvis'
+            ],
+            pageLength: 'pageLength'
+        }
+  },
+  pageLength: 25,
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+  "deferRender": true,
+  "retrieve": true,
+  "processing": true,
+  language: {
+      search: 'Busqueda',
+      emptyTable: 'No Hay datos disponibles',
+      zeroRecords:    "No se encontraron registros coincidentes",
+      lengthMenu: '_MENU_ Entradas por pagina',
+      info: 'Mostrando pagina _PAGE_ de _PAGES_',
+      infoEmpty: 'No hay entradas a mostrar',
+      infoFiltered: ' (filtrado desde _MAX_ registros)',
+      paginate: {"first": "<<", "last": ">>", "next": ">", "previous": "<"}
+  }
+}
+
+///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES PARA STOCK POR PRODUCTO MODULO DE REPORTES /////////////////////
 const configdatatablesstockrapido = {
   layout: {
         topStart: {
             buttons: [
               {extend: 'copyHtml5', text: 'Copia'}, 
-              {extend: 'excelHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
+              {extend: 'excelHtml5', exportOptions: {columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]}, title: 'Stock-inventario'}, 
               {extend: 'csvHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
               {extend: 'pdfHtml5', exportOptions: {columns: [1, 2, 3, 4, 5]}, title: 'Stock-inventario'}, 
               {extend: 'print', exportOptions: {columns: [1, 3, 4]}, title: 'Stock-inventario', text: 'Imprimir'},

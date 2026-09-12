@@ -38,13 +38,13 @@
     
     
     <div class="mb-4 flex flex-wrap gap-[.8rem]">
-        <span id="numOrden" class="inline-flex rounded-full bg-slate-100 px-[1.2rem] py-[.85rem] text-[1.35rem] font-bold leading-none text-slate-700">
+        <span id="numOrden" class="inline-flex rounded-full bg-slate-100 px-[1.2rem] py-[.85rem] text-lg font-semibold leading-none text-slate-700">
             Orden #<?php echo $factura->num_orden??'';?>
         </span>
-        <span id="referenciaFactura" class="inline-flex rounded-full bg-indigo-50 px-[1.2rem] py-[.85rem] text-[1.35rem] font-bold leading-none text-indigo-700">
+        <span id="referenciaFactura" class="inline-flex rounded-full bg-indigo-50 px-[1.2rem] py-[.85rem] text-lg font-semibold leading-none text-indigo-700">
             Referencia: Orden-<?php echo $factura->referencia??'';?>
         </span>
-        <span id="textEstado" class="inline-flex rounded-full bg-orange-50 px-[1.2rem] py-[.85rem] text-[1.35rem] font-bold leading-none text-orange-700">
+        <span id="textEstado" class="inline-flex rounded-full bg-orange-50 px-[1.2rem] py-[.85rem] text-lg font-semibold leading-none text-orange-700">
             <?php echo (($factura->entrega=='Domicilio'||$factura->entrega=='Presencial') && $factura->entregado==0)
                 ? 'Pendiente de despacho'
                 : ($factura->entrega=='Presencial' && $factura->entregado==1? 'Presencial entregado':'Domicilio/Presencial entregado'); 
@@ -52,15 +52,15 @@
         </span>
     </div>
 
-    <div class="mb-[1.6rem] flex flex-wrap items-center gap-[.8rem] border-b border-slate-200 pb-[1.2rem] text-[1.45rem] text-slate-600">
-        <button id="btnEmisor" class="btn-xs btn-light !min-h-[3.2rem] !px-4 !py-[.55rem]">Emisor</button>
+    <div class="mb-6 flex flex-wrap items-center gap-[.8rem] border-b border-slate-200 pb-4 text-[1.45rem] text-slate-600">
+        <button id="btnEmisor" class="btn-xs btn-light">Emisor</button>
         <span id="nitEmisor">NIT: <?php echo $factura->nitemisor ?? $sucursal->nit; ?></span>, 
         <span id="nombreEmisor"><?= $factura->nombreemisor ?? $sucursal->negocio; ?></span>
     </div>
 
     <div class="ordenresumen-metrics">
-        <div class="border border-slate-200 rounded-xl p-4">
-            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+        <div class="border border-slate-200 rounded-xl px-4 py-3">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 mb-3 uppercase">
                 <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     calendar_month
                 </span>
@@ -68,8 +68,8 @@
             </p>
             <p class="text-slate-900 text-xl font-semibold"><?php echo $factura->fechacreacion??'';?></p>
         </div>
-        <div class="border border-slate-200 rounded-xl p-4">
-            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+        <div class="border border-slate-200 rounded-xl px-4 py-3">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 mb-3 uppercase">
                 <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     payments
                 </span>
@@ -77,8 +77,8 @@
             </p>
             <p class="text-slate-900 text-xl font-semibold"><?php echo $factura->fechapago??'';?></p>
         </div>
-        <div class="border border-slate-200 rounded-xl p-4">
-            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+        <div class="border border-slate-200 rounded-xl px-4 py-3">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 mb-3 uppercase">
                 <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     badge
                 </span>
@@ -86,15 +86,13 @@
             </p>
             <button id="btnSelectVendedor" class="btn-xs btn-light"><?php echo $factura->vendedor??'';?></button>
         </div>
-        <div class="border border-slate-200 rounded-xl p-4">
-            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
-                <span class="material-symbols-outlined text-indigo-600 text-3xl">
-                    inventory_2
-                </span>
+        <div class="border border-slate-200 rounded-xl px-4 py-3">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 mb-3 uppercase">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl">inventory_2</span>
                 Estado Orden
             </p>
             <p id="estadoOrden" class="m-0 text-2xl font-bold text-teal-700"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
-            <p class="m-0 text-gray-600 text-xl font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
+            <p class="m-0 text-gray-600 text-lg font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
         </div>
     </div>
 
@@ -104,9 +102,7 @@
         <div class="ordenresumen-products-card">
             <div class="flex items-center justify-between gap-4 mb-4">
                 <h3 class="text-slate-900 text-3xl font-bold flex items-center gap-4">
-                    <span class="material-symbols-outlined text-indigo-600 text-4xl">
-                        inventory_2
-                    </span>
+                    <span class="material-symbols-outlined text-indigo-600 text-4xl">inventory_2</span>
                     Productos de la orden
                 </h3>
 
@@ -167,19 +163,19 @@
                     <span class="material-symbols-outlined text-indigo-600">person</span>
                     Cliente
                 </p>
-                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
-                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">person</span><?php echo $cliente->identificacion??'';?></p>
-                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
-                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-1 text-lg"><span class="material-symbols-outlined text-3xl">person</span><?php echo $factura->cliente??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-1 text-lg"><span class="material-symbols-outlined text-3xl">person</span><?php echo $cliente->identificacion??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-1 text-lg"><span class="material-symbols-outlined text-3xl">mail</span><?php echo $cliente->email??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-1 text-lg"><span class="material-symbols-outlined text-3xl">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
             </div>
             <div class="border border-slate-200 rounded-xl p-4">
                 <p class="flex items-center text-slate-900 font-semibold gap-4 text-2xl mt-0">
                     <span class="material-symbols-outlined text-indigo-600">local_shipping</span>
                     Direcci&oacute;n de entrega
                 </p>
-                <p class="text-slate-500 mb-0 text-xl mt-2">Tipo entrega: <?php echo $factura->entrega??'';?></p>
-                <p class="text-slate-500 mb-0 text-xl mt-2"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
-                <p class="text-slate-500 mb-0 text-xl mt-2">Tarifa env&iacute;o: $<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
+                <p class="text-slate-500 mb-0 text-lg mt-1">Tipo entrega: <?php echo $factura->entrega??'';?></p>
+                <p class="text-slate-500 mb-0 text-lg mt-1"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
+                <p class="text-slate-500 mb-0 text-lg mt-1">Tarifa env&iacute;o: $<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
             </div>
             <div class="border border-slate-200 rounded-xl p-4">
                 <p class="flex items-center text-slate-900 font-semibold gap-4 text-2xl mt-0">
@@ -197,7 +193,7 @@
         <div class="grid lg:grid-cols-3 gap-4">
             <!-- OBSERVACIONES -->
             <section class="border border-slate-200 bg-slate-50 p-4 rounded-xl lg:col-span-2">
-                <p class="font-semibold text-slate-800 text-xl mb-4">Observaciones</p>
+                <p class="font-semibold text-slate-800 text-xl mb-4 mt-0">Observaciones</p>
                 <?php if(empty(trim($factura->observacion ?? ''))): ?>
                     <div class="flex items-center gap-2 mt-6 text-slate-500 italic">
                         <span class="material-symbols-outlined text-xl">info</span>
@@ -217,7 +213,7 @@
 
             <!-- RESUMEN DE PAGO -->
             <section class="border border-slate-200 bg-slate-50 p-4 rounded-xl lg:col-span-1">
-                <p class="font-semibold text-slate-800 text-xl mb-5">Resumen de pago</p>
+                <p class="font-semibold text-slate-800 text-xl mb-5 mt-0">Resumen de pago</p>
                 <div class="flex justify-between">
                     <div class="text-start">
                         <p class="m-0 mb-2 text-slate-600 text-xl font-normal">Sub Total:</p>
@@ -296,7 +292,14 @@
                   <?php foreach($mediospago as $index => $value):?>
                     <div class="mb-4 text-center">
                       <label class="text-gray-700 text-xl text-center leading-relaxed"><?php echo $value->mediopago??'';?>: </label>
-                      <input id="<?php echo $value->id??'';?>" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" type="text" value="0" <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0).toLocaleString()">
+                      <input 
+                        id="<?php echo $value->id??'';?>" 
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block p-2.5 h-14 text-xl focus:outline-none focus:ring-1 text-center mediopago <?php echo $value->mediopago??'';?>" 
+                        type="text" 
+                        value="0" 
+                        <?php echo $value->mediopago=='Efectivo'?'readonly':'';?> 
+                        oninput="formatearMoneda(this)"
+                    >
                     </div>
                   <?php endforeach; ?>
                 </div>
@@ -343,7 +346,7 @@
 
 
      <!-- MODAL DE MAS OPCIONES -->
-    <dialog id="miDialogoMasOpciones" class="w-[95%] max-w-[72rem] overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-black/40">
+    <dialog id="miDialogoMasOpciones" class="w-[95%] max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-black/40">
         <div class="flex items-start justify-between gap-6 border-b border-slate-200 px-10 pb-7 pt-8 max-sm:gap-4 max-sm:px-7 max-sm:pb-6 max-sm:pt-6">
             <div class="flex items-start gap-5 max-sm:gap-4">
                 <span class="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-sm ring-1 ring-indigo-100 max-sm:h-14 max-sm:w-14">
@@ -351,7 +354,7 @@
                 </span>
 
                 <div>
-                    <p class="m-0 text-base font-black uppercase tracking-[.22em] text-indigo-600 max-sm:text-sm">
+                    <p class="m-0 text-base font-semibold uppercase tracking-[.22em] text-indigo-600 max-sm:text-sm">
                         Orden
                     </p>
                     <h4 id="modalMasOpciones" class="m-0 mt-1 text-4xl font-bold leading-tight text-slate-900 max-sm:text-3xl">
@@ -369,7 +372,7 @@
         </div>
 
         <div class="flex flex-col gap-5 px-10 py-8 max-sm:gap-4 max-sm:px-7 max-sm:py-6">
-            <button id="btnImprimirTirilla" class="group flex min-h-[9.8rem] items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-6 py-5 text-left transition hover:border-indigo-200 hover:bg-indigo-50 hover:shadow-lg hover:shadow-indigo-600/10 max-sm:min-h-[8rem] max-sm:gap-4 max-sm:px-5 max-sm:py-4">
+            <button id="btnImprimirTirilla" class="group flex items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-6 py-5 text-left transition hover:border-indigo-200 hover:bg-indigo-50 hover:shadow-lg hover:shadow-indigo-600/10  max-sm:gap-4 max-sm:px-5 max-sm:py-4">
                 <span class="flex min-w-0 items-center gap-5 max-sm:gap-4">
                     <span class="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-white text-indigo-600 shadow-sm ring-1 ring-indigo-100 max-sm:h-14 max-sm:w-14">
                         <span class="material-symbols-outlined text-5xl max-sm:text-4xl">receipt_long</span>
@@ -389,7 +392,7 @@
             </button>
 
             <?php if($factura->estado=='Paga' || $factura->remision == 1):?>
-            <button id="btnOrdenEnvio" class="group flex min-h-[9.8rem] items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-6 py-5 text-left transition hover:border-teal-200 hover:bg-teal-50 hover:shadow-lg hover:shadow-teal-600/10 max-sm:min-h-[8rem] max-sm:gap-4 max-sm:px-5 max-sm:py-4">
+            <button id="btnOrdenEnvio" class="group flex items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-6 py-5 text-left transition hover:border-teal-200 hover:bg-teal-50 hover:shadow-lg hover:shadow-teal-600/10  max-sm:gap-4 max-sm:px-5 max-sm:py-4">
                 <span class="flex min-w-0 items-center gap-5 max-sm:gap-4">
                     <span class="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-white text-teal-600 shadow-sm ring-1 ring-teal-100 max-sm:h-14 max-sm:w-14">
                         <span class="material-symbols-outlined text-5xl max-sm:text-4xl">local_shipping</span>

@@ -413,7 +413,7 @@
       miDialogoPreciosAdicionales.showModal();
         const inputPrecioLibre = document.querySelector('#precioLibre') as HTMLInputElement;
 
-        inputPrecioLibre.value = "";
+    if(inputPrecioLibre)inputPrecioLibre.value = "";
       cantidadTotal = 0;
       textCantidadCalculada.textContent = '0';
       lastOperation.textContent = '0';

@@ -1,15 +1,11 @@
-<dialog id="miDialogoEnviarEmailCliente"
-    class="w-[95%] max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-black/40 transition-all duration-300 ease-out open:scale-100 open:opacity-100">
+<dialog id="miDialogoEnviarEmailCliente" class="w-[95%] max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-black/40 transition-all duration-300 ease-out open:scale-100 open:opacity-100">
 
     <div class="px-8 pb-8 pt-7 text-center">
         <div class="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-lg shadow-indigo-600/10 ring-1 ring-indigo-100">
             <i class="fa-solid fa-envelope text-4xl"></i>
         </div>
 
-        <h4 id="modalEnviarEmail"
-            class="m-0 text-3xl font-black leading-tight text-slate-900">
-            Enviar por correo
-        </h4>
+        <h4 id="modalEnviarEmail" class="m-0 text-3xl font-bold leading-tight text-slate-900">Enviar por correo</h4>
 
         <p class="mx-auto mt-2 max-w-sm text-lg font-medium leading-7 text-slate-500">
             Envie el detalle de la orden al correo electronico del cliente.
@@ -19,9 +15,7 @@
     <div class="border-t border-slate-200 px-8 pb-8 pt-6">
         <div id="divmsjalertaEnviarEmail"></div>
 
-        <form id="formEnviarEmailCliente"
-            class="formulario"
-            method="POST">
+        <form id="formEnviarEmailCliente" class="formulario" method="POST">
 
             <div class="rounded-2xl border border-slate-200 bg-slate-50/90 p-5">
                 <div class="mb-3 flex items-center gap-3 text-left">
@@ -31,7 +25,7 @@
 
                     <label
                         for="inputEmail"
-                        class="m-0 block text-lg font-black text-slate-800">
+                        class="m-0 block text-lg font-semibold text-slate-800">
                         Correo del cliente
                     </label>
                 </div>
@@ -56,7 +50,7 @@
 
             <div class="mt-6 grid grid-cols-2 gap-3 border-t border-slate-200 pt-6">
                 <button
-                    class="inline-flex h-16 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-xl font-black text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
+                    class="inline-flex h-16 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-xl font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
                     type="button"
                     value="Salir">
                     Cancelar
@@ -64,7 +58,7 @@
 
                 <button
                     id="btnEnviarEmailCliente"
-                    class="inline-flex h-16 items-center justify-center rounded-xl bg-indigo-600 px-5 text-xl font-black text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
+                    class="inline-flex h-16 items-center justify-center rounded-xl bg-indigo-600 px-5 text-xl font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
                     type="submit">
                     <i class="fa-solid fa-paper-plane mr-2"></i>
                     Enviar
