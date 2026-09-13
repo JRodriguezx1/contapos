@@ -17,12 +17,30 @@ class deviceprinter extends \App\Models\ActiveRecord{
     }
 
 
-    public function validar():array
-    {
-        if(!$this->nombre)self::$alertas['error'][] = "Nombre de la impresora no especificado";
-        if(strlen($this->nombre)>20)self::$alertas['error'][] = "Has excecido el limite de caracteres del nombre compartido";
-        if(strlen($this->nombrecompartido)>20)self::$alertas['error'][] = "Has excecido el limite para el nombre compartido de la impresora";
-        if($this->estacion>200)self::$alertas['error'][] = "Numero de estacion no permitido";
+    public function validar():array{
+        parent::validar(); //lama a validar de activerecord
+        $this->nombre = trim((string)$this->nombre);
+        $this->nombrecompartido = trim((string)$this->nombrecompartido);
+
+        if($this->nombre === '')self::$alertas['error'][] = "Nombre de la impresora no especificado";
+        if(strlen($this->nombre)>20)self::$alertas['error'][] = "El nombre de la impresora no puede superar los 20 caracteres";
+        if($this->nombrecompartido === '')self::$alertas['error'][] = "Nombre compartido de la impresora no especificado";
+        if(strlen($this->nombrecompartido)>20)self::$alertas['error'][] = "El nombre compartido no puede superar los 20 caracteres";
+
+        $estacion = filter_var($this->estacion, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1, 'max_range'=>200]]);
+        if($estacion === false){
+            self::$alertas['error'][] = "La estacion debe ser un numero entre 1 y 200";
+        }else{
+            $this->estacion = $estacion;
+        }
+
+        $mm = filter_var($this->mm, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1, 'max_range'=>150]]);
+        if($mm === false){
+            self::$alertas['error'][] = "El ancho del papel debe ser un numero entre 1 y 200 mm";
+        }else{
+            $this->mm = $mm;
+        }
+
         return self::$alertas;
     }
 

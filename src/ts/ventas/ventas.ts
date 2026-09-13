@@ -20,6 +20,7 @@
     const miDialogoPreciosAdicionales = POS.gestionarPreciosAdicionales.miDialogoPreciosAdicionales;
     const miDialogoFacturarA = POS.gestionarAdquiriente.miDialogoFacturarA;
     const miDialogoDescuento = POS.gestionarDescuentos.miDialogoDescuento;
+    const miDialogoRedimir = POS.gestionRedmir.miDialogoRedimir;
     const miDialogoCredito = document.querySelector('#miDialogoCredito') as any;
     const miDialogoGuardar = document.querySelector('#miDialogoGuardar') as any;
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
@@ -33,7 +34,8 @@
     let tarifas:{id:string, idcliente:string, nombre:string, valor:string}[] = []; 
     let indexcarrito:number, nombretarifa:string|undefined='', tipoventa:string="Contado";
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
-    
+    let viewTasaCambio:string = getParam.mostrar_tasa_de_cambio_de_divisa.valor_final;
+
     const constImp: {[key:string]: number} = {};
     constImp['excluido'] = 0;
     constImp['0'] = 0;  //exento de iva, tarifa 0%
@@ -118,9 +120,7 @@
         </td>
         <td class="">
           <div class="">
-            <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full">
-              <span class="menos material-symbols-outlined text-base">remove</span>
-            </button>
+            <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="menos material-symbols-outlined text-base">remove</span></button>
             <input
               type="text"
               class="inputcantidad w-16 max-w-[12ch] h-9 px-2 rounded-lg border border-slate-300 text-center font-medium text-xl outline-none focus:border-indigo-500"
@@ -291,6 +291,12 @@
       const cantidadTotalProductos = carrito.reduce((total, producto)=>producto.stock+total, 0);
       totalunidades.textContent = formatCantidadBadge(cantidadTotalProductos);
       POS.gestionAnimaciones.actualizarBadgeCarritoMovil(cantidadTotalProductos);
+      //equivalencia divisa
+      /*if(viewTasaCambio === '1'){
+        const divisa = monedas.find(x=>x.id == sucursal.idmoneda);
+        (document.querySelector('#equivalente') as HTMLParagraphElement).textContent = '$'+(valorTotal.total * sucursal.tasacambio).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        (document.querySelector('#monedaCodigo') as HTMLParagraphElement).textContent = divisa?.codigo??'';
+      }*/
     }
 
 
@@ -355,7 +361,7 @@
           carrito[index].stock = cantidad;
         }
         
-        carrito[index].subtotal = parseInt(carrito[index].valorunidad)*carrito[index].stock;
+        carrito[index].subtotal = (parseFloat(carrito[index].valorunidad)*carrito[index].stock);
         carrito[index].total = carrito[index].subtotal;
         carrito[index].valorcomision = (carrito[index].subtotal*carrito[index].percentcomision)/100;
         //calculo del impuesto y base por producto en el carrito de ventas
@@ -420,7 +426,6 @@
     });
 
     btnfacturar?.addEventListener('click', ()=>{
-      console.log(POS.gestionarDomiciliosVenta.tipoEntrega);
       if(POS.gestionarDomiciliosVenta.tipoEntrega && (selectCliente.value =='' || !dirEntrega.value)){
         msjAlert('error', 'Cliente o direccion no seleccionado', (document.querySelector('#divmsjalerta1') as HTMLElement));
         POS.gestionClientes.resaltarSelectorCliente();
@@ -444,11 +449,13 @@
 
     function cerrarDialogoExterno(event:Event) {
       const f = event.target;
-      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || f === miDialogoCalculadora || (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.cotizacion') || (f as HTMLInputElement).closest('.remision') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || /*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
+      if (f === miDialogoDescuento || f === miDialogoCredito || f === miDialogoGuardar || f === miDialogoFacturar || f === miDialogoRedimir || f === miDialogoAddCliente || f === miDialogoOtrosProductos || f === miDialogoFacturarA || /*f === miDialogoAddDir ||*/ f=== miDialogoPreciosAdicionales || f === miDialogoCalculadora || 
+        (f as HTMLInputElement).closest('.salir') || (f as HTMLInputElement).closest('.novaciar') || (f as HTMLInputElement).closest('.cotizacion') || (f as HTMLInputElement).closest('.remision') || (f as HTMLInputElement).closest('.siguardar') || (f as HTMLButtonElement).value == "Cancelar" || (f as HTMLButtonElement).value == "Redimir" ||/*(f as HTMLButtonElement).value == "Seleccionar" ||*/ (f as HTMLButtonElement).classList.contains('btnCerrarPreciosAdicionales') ) {
         miDialogoDescuento.close();
         //miDialogoCredito.close();
         miDialogoGuardar.close();
         miDialogoFacturar.close();
+        miDialogoRedimir.close();
         miDialogoAddCliente.close();
         //miDialogoAddDir.close();
         miDialogoFacturarA.close();
@@ -463,6 +470,18 @@
         if((f as HTMLInputElement).closest('.remision')){
           tipoventa = "";
           procesarpedido('Remision', '0');
+        }
+        if((f as HTMLInputElement).closest('.redimir')){
+          tipoventa = "";
+          if(POS.gestionRedmir.valorPts < 1){
+            msjalertToast('error', 'Error!', 'Debe indicar una cantidad minima de puntos.');
+            return;
+          }
+          if(POS.gestionRedmir.valorPts > POS.gestionRedmir.equivalencia){
+            msjalertToast('error', 'Error!', 'Los puntos superan el limite permitido.');
+            return;
+          }
+          procesarpedido('Redimido', '0');
         }
         //if((f as HTMLInputElement).closest('.sivaciar'))vaciarventa();
       }
@@ -491,6 +510,7 @@
       (document.querySelector('#descuento') as HTMLElement).textContent = '$'+0;
       (document.querySelector('#valorTarifa') as HTMLElement).textContent = '$'+0;
       document.querySelector('#total')!.textContent = '$'+0;
+      (document.querySelector('#inputCantidadPuntos') as HTMLInputElement).value = '0';
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
       $('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia el valor de la tarifa y al disparar este evento, se ejecuta POS.valorCarritoTotal(); linea 135 de ahelper.clientes.ts 
       POS.gestionarDomiciliosVenta.reiniciarDomicilio();
@@ -575,9 +595,10 @@
       datos.append('observacion', document.querySelector<HTMLTextAreaElement>('#observacion')!.value);
       datos.append('departamento', '');
       datos.append('ciudad', (document.querySelector('#ciudad') as HTMLInputElement).value);
-      datos.append('entrega', tipoEntrega==0?'Presencia':'Domicilio');
-      datos.append('entregado', estado=='Paga'&&tipoEntrega==1?(despachar.checked?'1':'0'):estado=='Paga'&&tipoEntrega==0?'1':'0'); //si es remision no se ha entregado, si es pago y entrega a domicilio se define segun el checkbox de despachar, si es pago y entrega presencial se marca como entregado
+      datos.append('entrega', tipoEntrega==0?'Presencial':'Domicilio');
+      datos.append('entregado', estado=='Paga'&&tipoEntrega==1?(despachar.checked?'1':'0'):(estado=='Paga'&&tipoEntrega==0 || estado=='Redimido'&&tipoEntrega==0)?'1':'0'); //si es remision no se ha entregado, si es pago y entrega a domicilio se define segun el checkbox de despachar, si es pago y entrega presencial se marca como entregado
       datos.append('valortarifa', valorTotal.valortarifa+'');
+      datos.append('puntos_descontados', (estado==='Remision' || estado === 'Guardado' ) ? 0 : POS.gestionRedmir.pts);
       datos.append('datosAdquiriente', JSON.stringify(POS.gestionarAdquiriente.datosAdquiriente));
       datos.append('opc1', '');
       datos.append('opc2', '');
@@ -729,7 +750,7 @@
     POS.valorTotal = valorTotal;
     POS.mapMediospago = mapMediospago;
     POS.tipoventa = tipoventa;
-    //POS.carrito = carrito;
+    POS.carrito = carrito;
     //POS.products = products;
   } 
 

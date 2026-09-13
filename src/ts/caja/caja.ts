@@ -208,12 +208,7 @@
                     }
                 }
 
-                input.classList.add(
-                    'border-indigo-500',
-                    'ring-2',
-                    'ring-indigo-200',
-                    'bg-indigo-50'
-                );
+                input.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-200', 'bg-indigo-50');
             }
         });
     }

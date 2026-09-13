@@ -9,6 +9,7 @@ use App\Models\inventario\stockinsumossucursal;
 use App\Models\inventario\stockproductossucursal;
 use App\Models\ventas\venta_insumos;
 use App\Models\ventas\ventas;
+use App\services\inventario\StockMinimoService;
 use stdClass;
 use Throwable;
 
@@ -22,8 +23,7 @@ class ventasService {
      * del carrito. Los productos compuestos inmediatos NO se agrupan antes de
      * leer sus variaciones: cada configuracion aporta solo sus insumos activos.
      */
-    public static function prepararInventarioXVenta(array $carrito, int $sucursalId):array
-    {
+    public static function prepararInventarioXVenta(array $carrito, int $sucursalId):array{
         $productosSimples = [];
         $idsProductos = [];
         $lineasCompuestas = [];
@@ -52,9 +52,7 @@ class ventasService {
 
                 $promedio = (float)($linea->promediostock ?? 0);
                 $productosSimples[$idProducto]->stock += $cantidad;
-                $productosSimples[$idProducto]->stockaux += $promedio > 0
-                    ? $cantidad / $promedio
-                    : 0;
+                $productosSimples[$idProducto]->stockaux += $promedio > 0 ? $cantidad / $promedio : 0;
                 continue;
             }
 
@@ -66,9 +64,8 @@ class ventasService {
 
         $recetas = productos_sub::recetasParaVenta($idsCompuestos, $sucursalId);
         $recetasPorProducto = [];
-        foreach($recetas as $receta){
+        foreach($recetas as $receta)
             $recetasPorProducto[(int)$receta->id_producto][] = $receta;
-        }
 
         $insumos = [];
         $idsInsumos = [];
@@ -92,16 +89,11 @@ class ventasService {
 
             foreach($recetasPorProducto[$idProducto] ?? [] as $receta){
                 $idInsumo = (int)$receta->id_subproducto;
-                $esFijo = $receta->grupos_insumos === null
-                    || $receta->grupos_insumos === ''
-                    || (int)$receta->grupos_insumos === 0;
+                $esFijo = $receta->grupos_insumos === null || $receta->grupos_insumos === '' || (int)$receta->grupos_insumos === 0;
 
                 // Para registros anteriores a venta_insumos se conserva la
                 // seleccion por defecto. En carritos nuevos manda la configuracion.
-                $estaSeleccionado = $esFijo
-                    || ($configuracionPresente
-                        ? isset($configuracionPorId[$idInsumo])
-                        : (int)$receta->seleccionado === 1);
+                $estaSeleccionado = $esFijo || ($configuracionPresente ? isset($configuracionPorId[$idInsumo]) : (int)$receta->seleccionado === 1);
 
                 if(!$estaSeleccionado)continue;
 
@@ -112,9 +104,8 @@ class ventasService {
                 // lo permite; nunca reducirla por debajo del valor configurado.
                 if((int)$receta->permite_aumentar === 1 && $configurado){
                     $cantidadSolicitada = (float)($configurado->cantidadsubproducto ?? 0);
-                    if($cantidadSolicitada > $cantidadReceta){
+                    if($cantidadSolicitada > $cantidadReceta)
                         $cantidadReceta = $cantidadSolicitada;
-                    }
                 }
 
                 $rendimiento = (float)($receta->rendimiento_producto ?? 1);
@@ -123,9 +114,7 @@ class ventasService {
                 if($cantidadDescontar <= 0)continue;
 
                 $promedio = (float)($receta->promediostock ?? 0);
-                $stockauxDescontar = $promedio > 0
-                    ? $cantidadDescontar / $promedio
-                    : 0;
+                $stockauxDescontar = $promedio > 0 ? $cantidadDescontar / $promedio : 0;
 
                 // Se conservan tanto los nombres del detalle relacional como
                 // los alias que consume el carrito TypeScript.
@@ -172,31 +161,28 @@ class ventasService {
         ];
     }
 
-    public static function validarDisponibilidadInventario(array $inventario, int $sucursalId):array
-    {
+    public static function validarDisponibilidadInventario(array $inventario, int $sucursalId):array{
         $errores = [];
         $productos = $inventario['productosSimples'] ?? [];
         $insumos = $inventario['insumos'] ?? [];
 
         $stockProductos = stockproductossucursal::IN_Where('productoid', $inventario['soloIdproductos']??[], ['sucursalid', $sucursalId] );
         $stockProductos = array_column($stockProductos, null, 'productoid');
-        foreach($productos as $id => $producto){
+        foreach($productos as $id => $producto)
             if(!isset($stockProductos[$id]) || (float)$stockProductos[$id]->stock < (float)$producto->stock)
                 $errores[] = "Stock insuficiente para el producto #$id";
-        }
 
         $stockInsumos = stockinsumossucursal::IN_Where('subproductoid', $inventario['soloIdInsumos'] ?? [], ['sucursalid', $sucursalId]);
         $stockInsumos = array_column($stockInsumos, null, 'subproductoid');
-        foreach($insumos as $id => $insumo){
+        foreach($insumos as $id => $insumo)
             if(!isset($stockInsumos[$id]) || (float)$stockInsumos[$id]->stock < (float)$insumo->stock)
                 $errores[] = "Stock insuficiente para el insumo #$id";
-        }
 
         return $errores;
     }
 
-    public static function descontarInventarioXVenta(array $inventario, int $sucursalId, string $tipo = 'venta', string $referencia = 'descuento de unidades por venta', bool $manejarTransaccion = true):bool {
-        return self::aplicarInventario($inventario, $sucursalId, false, $tipo, $referencia, $manejarTransaccion);
+    public static function descontarInventarioXVenta(array $inventario, int $sucursalId, string $tipo = 'venta', string $referencia = 'descuento de unidades por venta', bool $manejarTransaccion = true, ?array &$itemsStockMinimo = null):bool {
+        return self::aplicarInventario($inventario, $sucursalId, false, $tipo, $referencia, $manejarTransaccion, $itemsStockMinimo);
     }
 
     public static function devolverInventarioXVenta(array $inventario, int $sucursalId, string $tipo = 'devolucion', string $referencia = 'retorno de unidades por anulacion de venta', bool $manejarTransaccion = true):bool {
@@ -209,8 +195,7 @@ class ventasService {
      * calculan respetando auto_increment_increment. Luego se hace un segundo
      * INSERT masivo con todos los insumos relacionados por posicion.
      */
-    public static function guardarLineasVenta(array $lineas, bool $manejarTransaccion = true):array
-    {
+    public static function guardarLineasVenta(array $lineas, bool $manejarTransaccion = true):array{
         if ($lineas === [])return [true, []];
         $db = ventas::getDB();
         if($manejarTransaccion)$db->begin_transaction();
@@ -223,14 +208,12 @@ class ventasService {
             $modeloVenta = new ventas();
             [$creado, $primerId] = $modeloVenta->crear_varios_reg_arrayobj($lineas);
             $filasInsertadas = (int)$db->affected_rows;
-            if(!$creado || !$primerId || $filasInsertadas !== count($lineas)){
+            if(!$creado || !$primerId || $filasInsertadas !== count($lineas))
                 throw new \RuntimeException('No fue posible guardar todas las lineas de venta.');
-            }
 
             $idsVenta = [];
-            for($i = 0; $i < count($lineas); $i++){
+            for($i = 0; $i < count($lineas); $i++)
                 $idsVenta[] = (int)$primerId + ($i * $incremento);
-            }
 
             self::guardarInsumosLineas($lineas, $idsVenta);
             if($manejarTransaccion)$db->commit();
@@ -254,9 +237,9 @@ class ventasService {
             $idsActualizar = [];
             foreach($lineasActualizar as $linea){
                 $idVenta = (int)($linea->id ?? 0);
-                if(!in_array($idVenta, $idsExistentes, true)){
+                if(!in_array($idVenta, $idsExistentes, true))
                     throw new \RuntimeException('Una linea no pertenece a la cotizacion indicada.');
-                }
+                
                 $idsActualizar[] = $idVenta;
             }
             $idsEliminar = array_values(array_diff($idsExistentes, $idsActualizar));
@@ -269,9 +252,9 @@ class ventasService {
             
             if(!empty($lineasInsertar))self::guardarLineasVenta($lineasInsertar, false);
             
-            if(!empty($idsEliminar) && !ventas::eliminar_idregistros('id', $idsEliminar)){
+            if(!empty($idsEliminar) && !ventas::eliminar_idregistros('id', $idsEliminar))
                 throw new \RuntimeException('No fue posible eliminar lineas retiradas de la cotizacion.');
-            }
+            
             if($manejarTransaccion)$db->commit();
             return true;
         }catch(Throwable $e){
@@ -299,11 +282,9 @@ class ventasService {
     /** Adjunta a cada linea el detalle relacional en el formato del carrito. */
     public static function adjuntarInsumos(array $productos):array{
         $idsVenta = [];
-        foreach($productos as $producto){
-            if(is_object($producto) && (int)($producto->id ?? 0) > 0){
+        foreach($productos as $producto)
+            if(is_object($producto) && (int)($producto->id ?? 0) > 0)
                 $idsVenta[] = (int)$producto->id;
-            }
-        }
 
         $detallesPorVenta = [];
         foreach(venta_insumos::detallesPorVentas($idsVenta) as $detalle){
@@ -349,12 +330,8 @@ class ventasService {
      * Reconstruye inventario desde el consumo historico. Sirve para despacho y
      * anulacion aun cuando la receta del producto haya cambiado despues.
      */
-    public static function prepararInventarioPersistido(array $productos, int $sucursalId):array
-    {
-        return self::construirInventarioPersistido(
-            self::adjuntarInsumos($productos),
-            $sucursalId
-        );
+    public static function prepararInventarioPersistido(array $productos, int $sucursalId):array{
+        return self::construirInventarioPersistido(self::adjuntarInsumos($productos), $sucursalId);
     }
 
     /**
@@ -462,8 +439,7 @@ class ventasService {
         $idsProcesados = [];
 
         foreach($seleccion as $item){
-            if(!is_object($item))
-                throw new \InvalidArgumentException('La seleccion de productos no es valida.');
+            if(!is_object($item))throw new \InvalidArgumentException('La seleccion de productos no es valida.');
 
             // idventa identifica una linea concreta; idproducto no es suficiente
             // porque una factura puede contener varias lineas del mismo producto.
@@ -500,8 +476,7 @@ class ventasService {
             $factoresPorVenta[$idVenta] = $cantidadDevolver / $cantidadVendida;
         }
 
-        if(empty($lineasSeleccionadas))
-            return self::construirInventarioPersistido([], $sucursalId);
+        if(empty($lineasSeleccionadas))return self::construirInventarioPersistido([], $sucursalId);
 
         // Se parte del detalle historico, no de la receta actual. Para registros
         // antiguos sin venta_insumos, construirInventarioPersistido conserva el
@@ -517,14 +492,8 @@ class ventasService {
             foreach($linea->insumos as $detalle){
                 if(!is_object($detalle))continue;
                 $insumo = clone $detalle;
-                $insumo->cantidad_consumida = round(
-                    (float)($detalle->cantidad_consumida ?? 0) * $factor,
-                    4
-                );
-                $insumo->stockaux_consumido = round(
-                    (float)($detalle->stockaux_consumido ?? 0) * $factor,
-                    4
-                );
+                $insumo->cantidad_consumida = round((float)($detalle->cantidad_consumida ?? 0) * $factor, 4);
+                $insumo->stockaux_consumido = round((float)($detalle->stockaux_consumido ?? 0) * $factor, 4);
                 $insumosProrrateados[] = $insumo;
             }
             $linea->insumos = $insumosProrrateados;
@@ -535,8 +504,7 @@ class ventasService {
     }
 
     /** Construye y guarda en un solo INSERT los insumos de varias lineas. */
-    private static function guardarInsumosLineas(array $lineas, array $idsVenta):void
-    {
+    private static function guardarInsumosLineas(array $lineas, array $idsVenta):void{
         if(count($lineas) !== count($idsVenta))
             throw new \RuntimeException('No coinciden las lineas de venta con sus identificadores.');
 
@@ -575,14 +543,9 @@ class ventasService {
 
 
 
-    private static function aplicarInventario(
-        array $inventario,
-        int $sucursalId,
-        bool $sumar,
-        string $tipo,
-        string $referencia,
-        bool $manejarTransaccion
-    ):bool {
+    private static function aplicarInventario(array $inventario, int $sucursalId, bool $sumar, string $tipo, string $referencia, bool $manejarTransaccion, ?array &$itemsStockMinimo = null):bool {
+        $stockProductosActual = [];
+        $stockInsumosActual = [];
         $db = stockproductossucursal::getDB();
         if($manejarTransaccion)$db->begin_transaction();
 
@@ -596,10 +559,10 @@ class ventasService {
                 if(!$resultado)throw new \RuntimeException('No fue posible actualizar el stock de productos.');
 
                 $query = "SELECT * FROM stockproductossucursal WHERE productoid IN(".implode(', ', $idsProductos).") AND sucursalid = $sucursalId;";
-                $stockActual = stockproductossucursal::camposJoinObj($query);
+                $stockProductosActual = stockproductossucursal::camposJoinObj($query);
                 $movimiento = $sumar
-                    ? stockService::upStock_movimientoProductos($productos, $stockActual, $tipo, $referencia)
-                    : stockService::downStock_movimientoProductos($productos, $stockActual, $tipo, $referencia);
+                    ? stockService::upStock_movimientoProductos($productos, $stockProductosActual, $tipo, $referencia)
+                    : stockService::downStock_movimientoProductos($productos, $stockProductosActual, $tipo, $referencia);
                 if(!$movimiento)throw new \RuntimeException('No fue posible registrar el movimiento de productos.');
             }
 
@@ -612,13 +575,15 @@ class ventasService {
                 if(!$resultado)throw new \RuntimeException('No fue posible actualizar el stock de insumos.');
 
                 $query = "SELECT * FROM stockinsumossucursal WHERE subproductoid IN(".implode(', ', $idsInsumos).") AND sucursalid = $sucursalId;";
-                $stockActual = stockinsumossucursal::camposJoinObj($query);
+                $stockInsumosActual = stockinsumossucursal::camposJoinObj($query);
                 $movimiento = $sumar
-                    ? stockService::upStock_movimientoInsumos($insumos, $stockActual, $tipo, $referencia)
-                    : stockService::downStock_movimientoInsumos($insumos, $stockActual, $tipo, $referencia);
+                    ? stockService::upStock_movimientoInsumos($insumos, $stockInsumosActual, $tipo, $referencia)
+                    : stockService::downStock_movimientoInsumos($insumos, $stockInsumosActual, $tipo, $referencia);
                 if(!$movimiento)throw new \RuntimeException('No fue posible registrar el movimiento de insumos.');
             }
 
+            if(!$sumar && $itemsStockMinimo !== null)
+                $itemsStockMinimo = (new StockMinimoService())->detectarCrucesDespuesDeDescuento($inventario, $stockProductosActual, $stockInsumosActual, $sucursalId);
             if($manejarTransaccion)$db->commit();
             return true;
         } catch(Throwable $e) {
@@ -853,4 +818,5 @@ class ventasService {
             'resolucion' => $consecutivo,
         ];
     }
+
 }

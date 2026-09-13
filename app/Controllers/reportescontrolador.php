@@ -24,6 +24,7 @@ use App\Models\sucursales;
 use App\Models\ventas\facturas;
 use App\Repositories\creditos\creditosRepository;
 use App\Repositories\creditos\cuotasRepository;
+use App\services\caja\CajaReportesService;
 use App\services\whatsAppService;
 use MVC\Router;  //namespace\clase
  
@@ -176,12 +177,12 @@ class reportescontrolador{
         isadmin();
         if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
         $alertas = [];
-        $sql = "SELECT sps.stock, p.nombre, p.unidadmedida, p.categoria, p.marca, p.tipoproducto, p.sku, p.stockminimo, p.fecha_ingreso
+        $sql = "SELECT sps.stock, p.nombre, p.unidadmedida, p.categoria, p.marca, p.tipoproducto, p.sku, p.stockminimo, p.precio_compra, p.precio_venta, p.fecha_ingreso
                 FROM stockproductossucursal sps JOIN productos p ON sps.productoid = p.id
                 WHERE p.estado = 1 AND p.visible = 1 AND sps.sucursalid = ".id_sucursal().";";
         $productos = productos::camposJoinObj($sql);
 
-        $sql = "SELECT sis.stock, sp.nombre, sp.unidadmedida, sp.sku, sp.stockminimo, sp.fecha_ingreso
+        $sql = "SELECT sis.stock, sp.nombre, sp.unidadmedida, sp.sku, sp.stockminimo, sp.precio_compra, 0 as precio_venta, sp.fecha_ingreso
                 FROM stockinsumossucursal sis JOIN subproductos sp ON sis.subproductoid = sp.id
                 WHERE sis.sucursalid = ".id_sucursal().";";  
         $subproductos = subproductos::camposJoinObj($sql);
@@ -206,6 +207,15 @@ class reportescontrolador{
 
         $router->render('admin/reportes/inventario/compras', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
+
+
+    public static function productosComprados(Router $router){
+        isadmin();
+        if(!tienePermiso('Habilitar modulo de reportes')&&userPerfil()>=3)return;
+        $alertas = [];
+        $router->render('admin/reportes/inventario/productosComprados', ['titulo'=>'Reportes', 'sucursales'=>sucursales::all(), 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
 
     public static function detallecompra(Router $router){
         //session_start();
@@ -314,21 +324,26 @@ class reportescontrolador{
 
   ////////////////////////////----    API      ----////////////////////////////////
 
-  ///////////  API REST llamada desde reportes o fechazetadiario.ts  ////////////
-  public static function consultafechazetadiario(){
-    //session_start();
+  /**
+   * POST /admin/api/consultafechazetadiario.
+   *
+   * Es llamado por src/ts/caja/fechazetadiario.ts. El controlador conserva la
+   * autorización, decodificación del formulario y serialización JSON; fechas,
+   * pertenencia y consultas se delegan a CajaReportesService.
+   */
+  public static function consultafechazetadiario(): void{
     isadmin();
-    $fechainicio = $_POST['fechainicio'];
-    $fechafin = $_POST['fechafin'];
-    $idcajas = json_decode($_POST['cajas']);
-    $idconsecutivos = json_decode($_POST['facturadores']);
-    $cajas = join(", ", array_values($idcajas));
-    $consecutivos = join(", ", array_values($idconsecutivos));
-    $datosventa = facturas::zDiarioTotalVentas($cajas, $consecutivos, id_sucursal(), $fechainicio, $fechafin);
-    $datosmediospago = facturas::zDiarioMediosPago($cajas, $consecutivos, id_sucursal(), $fechainicio, $fechafin);
-    $datos['datosventa'] = $datosventa;
-    $datos['datosmediospago'] = $datosmediospago;
-    echo json_encode($datos);
+    $cajas = json_decode((string)($_POST['cajas'] ?? '[]'), true);
+    $facturadores = json_decode((string)($_POST['facturadores'] ?? '[]'), true);
+
+    $resultado = (new CajaReportesService())->consultarZPorRango(
+      (string)($_POST['fechainicio'] ?? ''),
+      (string)($_POST['fechafin'] ?? ''),
+      is_array($cajas) ? $cajas : [],
+      is_array($facturadores) ? $facturadores : [],
+      id_sucursal()
+    );
+    echo json_encode($resultado);
   }
 
   public static function reporteventamensual(){
@@ -947,6 +962,92 @@ GROUP BY
       }
     }
     echo json_encode($alertas);
+  }
+
+
+  //Reporte de productos comprados
+  public static function listaProductosComprados(){
+    isadmin();
+    $idsucursal = id_sucursal();
+    $fechainicio = $_POST['fechainicio'];
+    $fechafin = $_POST['fechafin'];
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
+      $sql = "SELECT
+                c.id AS idcompra,
+                c.nfactura,
+                c.fechacompra,
+                c.estado,
+                c.formapago,
+                c.subtotal,
+                c.valortotal,
+
+                -- Usuario
+                CONCAT_WS(' ', u.nombre, u.apellido) as usuario,
+
+                -- Proveedor
+                pr.nit AS nitproveedor,
+                pr.nombre AS proveedor,
+
+                -- Detalle
+                dc.id AS iddetalle,
+                dc.idpx,
+                dc.idsx,
+                dc.tipo,
+                dc.unidad,
+                dc.cantidad,
+                dc.factor,
+                dc.impuesto,
+                /*dc.valorunidad AS costounitario,*/ dc.valorcompra / NULLIF(dc.cantidad, 0) AS costounitario,
+                dc.subtotal AS subtotal,
+                dc.valorcompra AS costototal,
+
+                -- Tipo de item
+                CASE
+                    WHEN dc.idpx IS NOT NULL THEN 'PRODUCTO'
+                    WHEN dc.idsx IS NOT NULL THEN 'INSUMO'
+                    ELSE 'SIN TIPO'
+                END AS tipo_item,
+
+                -- Nombre del producto o insumo
+                COALESCE(p.nombre, sp.nombre, dc.nombreitem) AS nombre_item,
+                
+                -- Stock actual de la sucursal
+                COALESCE(sps.stock, sis.stock, 0) AS stock_actual
+
+            FROM compras c
+
+            INNER JOIN detallecompra dc
+                ON dc.idcompra = c.id
+
+            LEFT JOIN usuarios u
+                ON u.id = c.idusuario
+
+            LEFT JOIN proveedores pr
+                ON pr.id = c.idproveedor
+
+            LEFT JOIN productos p
+                ON p.id = dc.idpx
+
+            LEFT JOIN subproductos sp
+                ON sp.id = dc.idsx
+
+            -- Stock de productos
+            LEFT JOIN stockproductossucursal sps
+                ON sps.productoid = dc.idpx
+                AND sps.sucursalid = c.id_sucursal_id
+
+            -- Stock de insumos
+            LEFT JOIN stockinsumossucursal sis
+                ON sis.subproductoid = dc.idsx
+                AND sis.sucursalid = c.id_sucursal_id
+
+            WHERE c.id_sucursal_id = $idsucursal AND c.fechacompra >= '$fechainicio' AND c.fechacompra <= '$fechafin'
+            ORDER BY c.fechacompra DESC, c.id DESC, dc.id ASC;";
+      $datos = productos::camposJoinObj($sql);
+    }
+    echo json_encode($datos);
+    return;
   }
 
   

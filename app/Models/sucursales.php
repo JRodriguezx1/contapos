@@ -4,7 +4,7 @@ namespace App\Models;
 
 class sucursales extends \App\Models\ActiveRecord{
     protected static $tabla = 'sucursales';
-    protected static $columnasDB = ['id', 'idplan', 'valorplan', 'fecha_corte', 'descuento', 'detalledescuento', 'cargo', 'detallecargo', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'host', 'timezone', 'version'];
+    protected static $columnasDB = ['id', 'idplan', 'valorplan', 'fecha_corte', 'descuento', 'detalledescuento', 'cargo', 'detallecargo', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'host', 'idmoneda', 'tasacambio', 'timezone', 'version'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -34,6 +34,8 @@ class sucursales extends \App\Models\ActiveRecord{
         $this->logo = $args['logo'] ?? '';
         $this->estado = $args['estado']??1;
         $this->host = $args['host']??'';
+        $this->idmoneda = $args['idmoneda']??1;
+        $this->tasacambio = $args['tasacambio']??1;
         $this->timezone = $args['timezone']??'America/Bogota';
         $this->version = $args['version']??'';
         $this->created_at = $args['created_at']??'';

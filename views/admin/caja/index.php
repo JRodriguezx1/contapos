@@ -74,8 +74,8 @@
                   <?php echo ($value->tipoventa =='Contado'||$value->tipoventa =='')?$value->estado:(($value->tipoventa =='Credito' && $value->estado == 'Paga')?'Credito':'Credito elim..');?>
                 </div>
               </td>
-              <td class="text-right font-normal text-slate-700"><span>$ </span><?php echo number_format($value->subtotal??0, "0", ",", ".");?></td>
-              <td class="text-right font-semibold text-slate-900"><strong>$ </strong><?php echo number_format($value->total??0, "0", ",", ".");?></td>
+              <td class="text-right font-normal text-slate-700"><span>$ </span><?php echo number_format($value->subtotal??0, "2", ",", ".");?></td>
+              <td class="text-right font-semibold text-slate-900"><strong>$ </strong><?php echo number_format($value->total??0, "2", ",", ".");?></td>
               <td class="accionestd"><div class="acciones-btns !gap-2 !py-0" id="<?php echo $value->id;?>" data-cotizacion="<?php echo $value->cotizacion;?>" >
                     <a class="inline-flex h-11 min-w-[5.2rem] items-center justify-center rounded-lg bg-teal-500 px-4 text-base font-semibold text-white shadow-sm hover:bg-teal-600" title="Ver detalles del pedido" href="/admin/caja/ordenresumen?id=<?php echo $value->id;?>">Ver</a>
                     <?php if($value->estado=='Paga'): ?>
@@ -90,7 +90,7 @@
       <tfoot>
         <tr class="font-semibold text-gray-900">
             <td colspan="7" class="px-6 py-3 text-right">Total Dia:</td>
-            <td colspan="4" class="px-6 py-3 text-left">$<?php echo number_format($datacierrescajas??0, "0", ",", ".");?></td>
+            <td colspan="4" class="px-6 py-3 text-left">$<?php echo number_format($datacierrescajas??0, "2", ",", ".");?></td>
         </tr>
       </tfoot>
   </table>

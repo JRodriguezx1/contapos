@@ -18,16 +18,12 @@
       };
   
       let proveedores:proveedoresapi[]=[], unproveedor:proveedoresapi|undefined;
-      (async ()=>{
-        try {
-            const url = "/admin/api/allproveedores"; //llamado a la API REST y se trae todos los proveedores
-            const respuesta = await fetch(url); 
-            proveedores = await respuesta.json(); 
-            console.log(proveedores);
-        } catch (error) {
-            console.log(error);
-        }
-      })();
+      const proveedoresIniciales = document.querySelector('#proveedoresIniciales');
+      try {
+        proveedores = JSON.parse(proveedoresIniciales?.textContent || '[]');
+      } catch (error) {
+        console.log(error);
+      }
 
      //////////////////  TABLA //////////////////////
     tablaProveedores = ($('#tablaProveedores') as any).DataTable(configdatatables);
@@ -127,7 +123,7 @@
           customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
           icon: 'question',
           title: 'Desea eliminar el proveedor?',
-          text: "el proveedor sera eliminado definitivamente.",
+          text: "El proveedor solo puede eliminarse si no tiene compras asociadas.",
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',

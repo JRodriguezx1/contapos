@@ -481,6 +481,18 @@ class ActiveRecord {
     public static function idregistros($colum, $id){ ////metodo que busca todos los registro que pertenecen a un id
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}';";
         $resultado = self::consultar_Sql($sql);
+        foreach($resultado as $instancia)
+            self::cargarRelaciones($instancia);
+        return $resultado;
+    }
+
+
+    public static function idregistrosForUpdate(string $colum, int $id, bool $cargaRelacional = true){ ////metodo que busca todos los registro que pertenecen a un id
+        $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' FOR UPDATE;";
+        $resultado = self::consultar_Sql($sql);
+        if($cargaRelacional)
+            foreach($resultado as $instancia)
+                self::cargarRelaciones($instancia);
         return $resultado;
     }
 
@@ -489,7 +501,8 @@ class ActiveRecord {
     public static function find($colum, $id){
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' LIMIT 1;";
         $resultado = self::consultar_Sql($sql);
-        return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
+        $instancia = array_shift($resultado); //array_shift retorna el primer elemento del arreglo
+        return self::cargarRelaciones($instancia);
     }
 
     //busca un solo registro por su id, con bloque FOR UPDATE
@@ -499,6 +512,15 @@ class ActiveRecord {
         return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
     }
 
+    protected static function cargarRelaciones(object|null $instancia){
+        if(!$instancia)return $instancia;
+        if(!property_exists($instancia, 'with'))return $instancia;
+        foreach($instancia->with as $metodo)
+            if (method_exists($instancia, $metodo))
+                $instancia->$metodo = $instancia->$metodo();
+
+        return $instancia;
+    }
 
     /**
      * Bloquea varias filas por su llave primaria dentro de una transaccion.
@@ -762,6 +784,21 @@ class ActiveRecord {
                 $sql.= " ${key} = '${value}' AND ";
             }
         }
+        $resultado = self::consultar_Sql($sql);
+        return array_shift($resultado);
+    }
+
+
+    public static function uniquewhereArrayForUpdate($array = []){ //$array = ['confirmado'=>1, 'admin'=>0]
+        $sql = "SELECT *FROM ".static::$tabla." WHERE ";
+        foreach($array as $key => $value){
+            if(array_key_last($array) == $key){
+                $sql.= " ${key} = '${value}'";
+            }else{
+                $sql.= " ${key} = '${value}' AND ";
+            }
+        }
+        $sql = $sql." FOR UPDATE";
         $resultado = self::consultar_Sql($sql);
         return array_shift($resultado);
     }

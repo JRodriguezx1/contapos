@@ -22,7 +22,7 @@ class stockinsumossucursal extends \App\Models\ActiveRecord{
       SUM(sis.stock*sp.precio_compra) OVER () AS valorinv, 
       COUNT(sp.id) OVER () AS cantidadreferencias, 
       SUM(sis.stock) OVER () AS cantidadproductos,
-      SUM(CASE WHEN sis.stock < 10 THEN 1 ELSE 0 END) OVER () AS bajostock,
+      SUM(CASE WHEN sis.stock <= sis.stockminimo THEN 1 ELSE 0 END) OVER () AS bajostock,
       SUM(CASE WHEN sis.stock = 0 THEN 1 ELSE 0 END) OVER () AS productosagotados
       FROM ".self::$tabla." sis JOIN subproductos sp ON sis.subproductoid = sp.id WHERE sis.sucursalid = $idsucursal;";
       $array = self::camposJoinObj($query);
@@ -37,6 +37,14 @@ class stockinsumossucursal extends \App\Models\ActiveRecord{
               ORDER BY sp.id, s.id;";
       $array = self::camposJoinObj($sql);
       return $array;
+    }
+
+    public static function getInsumosBajoStock(int $idsucursal = 1):array|NULL{
+      $query="SELECT sp.id AS subproductoid, sp.nombre, sp.sku, sis.stock, sis.stockminimo,
+              sp.id_unidadmedida AS idunidadmedida, sp.unidadmedida, 1 AS visible
+              FROM ".self::$tabla." sis JOIN subproductos sp ON sis.subproductoid = sp.id
+              WHERE sis.sucursalid = $idsucursal AND sis.stock <= sis.stockminimo;";
+      return self::camposJoinObj($query);
     }
 
 }

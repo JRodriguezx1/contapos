@@ -60,9 +60,7 @@
 
   
       valorTotal.subtotal = Number(document.querySelector('#subTotal')?.textContent);
-      valorTotal.total = Number(document.querySelector('#total')?.textContent?.replace(/[^\d]/g, ''));
-      
-      selectFacturadorSegunCaja(btnCaja);
+      valorTotal.total = Number(document.querySelector('#total')?.textContent?.replace('$', '').trim().replace(/\./g, '').replace(',', '.'));
     
       btnCaja.addEventListener('change', (e:Event)=>selectFacturadorSegunCaja(e.target as HTMLSelectElement));
     
@@ -176,6 +174,7 @@
                 if(resultado.exito !== undefined){
                   msjalertToast('success', '¡Éxito!', resultado.exito[0]);
                   (document.querySelector('#textEstado') as HTMLParagraphElement).textContent = "Domicilio entregado";
+                  btnDespachar.classList.add('!hidden');
                 }else{
                   msjalertToast('error', '¡Error!', resultado.error[0]);
                 }
@@ -300,7 +299,7 @@
         //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{
-          if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
+          if(index>0)totalotrosmedios += parseFloat((item as HTMLInputElement).value.trim().replace(/\./g, '').replace(',', '.'));
         });
 
         if(valorTotal.total<totalotrosmedios){
@@ -320,12 +319,12 @@
       function calcularmediospago(e:Event){
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
-          if(index>0)totalotrosmedios += parseInt((item as HTMLInputElement).value.replace(/[,.]/g, ''));
+          if(index>0)totalotrosmedios += parseFloat((item as HTMLInputElement).value.trim().replace(/\./g, '').replace(',', '.'));
         });
         if(totalotrosmedios<=valorTotal.total){
           mapMediospago.set('1', valorTotal.total-totalotrosmedios);
           if(valorTotal.total-totalotrosmedios == 0 && mapMediospago.has('1'))mapMediospago.delete('1');
-          mapMediospago.set((e.target as HTMLInputElement).id, parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, '')));
+          mapMediospago.set((e.target as HTMLInputElement).id, parseFloat((e.target as HTMLInputElement).value.trim().replace(/\./g, '').replace(',', '.')));
           if((e.target as HTMLInputElement).value == '0' && mapMediospago.has((e.target as HTMLInputElement).id))mapMediospago.delete((e.target as HTMLInputElement).id);
         }else{ //si la suma de los medios de pago superan el valor total, toma el ultimo input digitado y lo reestablece a su ultimo valor
           if(mapMediospago.has((e.target as HTMLInputElement).id)){
@@ -343,7 +342,7 @@
         calcularCambio((e.target as HTMLInputElement).value);
       });
       function calcularCambio(recibido:string):void{
-        recibido = recibido.replace(/[,.]/g, '');
+        recibido = recibido.trim().replace(/\./g, '').replace(',', '.');
         if(Number(recibido)>mapMediospago.get('1')){
           (document.querySelector('#cambio') as HTMLElement).textContent = (Number(recibido)-mapMediospago.get('1')).toLocaleString()+'';
           return;

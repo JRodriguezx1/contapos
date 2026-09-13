@@ -95,7 +95,7 @@ class creditoscontrolador{
     }
 
 
-    public static function registrarAbono(Router $router){
+    /*public static function registrarAbono(Router $router){
         date_default_timezone_set('America/Bogota');
         //session_start();
         isadmin();
@@ -134,23 +134,38 @@ class creditoscontrolador{
         $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
-    }
+    }*/
 
 
 
     /////////      API      ///////////
 
     public static function allcredits(){
-        //session_start();
         isadmin();
         $creditos = new creditosRepository();
         $creditos = $creditos->unJoinWhereArrayObj('clientes', 'cliente_id', 'id', ['id_fksucursal'=>id_sucursal()]);
         echo json_encode($creditos);
     }
 
+
+    public static function registrarAbono():void{
+        date_default_timezone_set('America/Bogota');
+        isadmin();
+        $alertas = [];
+        if($_SERVER['REQUEST_METHOD'] === 'POST' )
+            $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
+        
+        $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
+        //validar que el separado no se este abriendo desde otra sucursal
+        if($datos['credito']->idtipofinanciacion == 2 && $datos['credito']->id_fksucursal != id_sucursal())
+            return;
+        //$viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
+        echo json_encode($alertas);
+        return;
+    }
+
     
     public static function crearSeparado(){  //llamada desde separado.ts
-        //session_start();
         isadmin();
         $alertas = [];
         $valoresCredito = (array)json_decode($_POST['valoresCredito']);

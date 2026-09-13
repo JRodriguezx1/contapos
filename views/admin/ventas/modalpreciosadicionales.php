@@ -95,119 +95,102 @@
                     <!-- Lista de precios -->
                     <div id="listaPrecios" class="space-y-3 blockInputRadio"> </div>
 
-                    <!-- BotÃƒÂ³n agregar precio -->
-                    <div class="flex justify-center my-5">
-                        <button
-                            type="button"
-                            id="btnMostrarNuevoPrecio"
-                            class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-4 py-2.5 text-lg text-indigo-700 font-semibold shadow-sm transition hover:bg-indigo-50 hover:border-indigo-300">
+                    <!-- Boton agregar precio -->
+                    <?php if($conflocal['activar_precio_libre_al_facturar']->valor_final == 1): ?>
+                        <div class="flex justify-center my-5">
+                            <button
+                                type="button"
+                                id="btnMostrarNuevoPrecio"
+                                class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-4 py-2.5 text-lg text-indigo-700 font-semibold shadow-sm transition hover:bg-indigo-50 hover:border-indigo-300">
+                                <i id="iconPrecioLibre" class="fa-solid fa-plus"></i>
+                                <span id="textoPrecioLibre">Definir precio manual</span>
+                            </button>
+                        </div>
 
-                            <i
-                                id="iconPrecioLibre"
-                                class="fa-solid fa-plus">
-                            </i>
+                        <!-- Nuevo precio -->
+                        <div id="nuevoPrecioContainer" class="overflow-hidden max-h-0 opacity-0 -translate-y-2 transition-all duration-500 ease-in-out">
+                            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+                                <!-- Encabezado -->
+                                <div class="flex items-center gap-3 mb-4">
+                                    <span class="material-symbols-outlined text-emerald-600 text-3xl">
+                                        attach_money
+                                    </span>
 
-                            <span id="textoPrecioLibre">
-                                Definir precio manual
-                            </span>
-                        </button>
-                    </div>
+                                    <div>
+                                        <h5 class="text-2xl font-bold text-slate-800">Precio personalizado</h5>
+                                        <p class="text-slate-500 text-lg leading-7">Registre un precio diferente para este producto.</p>
+                                    </div>
+                                </div>
 
-                    <!-- Nuevo precio -->
-                    <div
-                        id="nuevoPrecioContainer"
-                        class="overflow-hidden max-h-0 opacity-0 -translate-y-2 transition-all duration-500 ease-in-out">
-                        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-                            <!-- Encabezado -->
-                            <div class="flex items-center gap-3 mb-4">
-                                <span class="material-symbols-outlined text-emerald-600 text-3xl">
-                                    attach_money
-                                </span>
+                                <!-- Campo -->
+                                <div class="max-w-sm mx-auto">
+                                    <label for="precioLibre" class="block text-lg font-semibold text-slate-700 mb-3 text-center">Precio libre</label>
+                                    <input
+                                        id="precioLibre"
+                                        type="text"
+                                        name="precioLibre"
+                                        placeholder="Ingrese el valor"
+                                        class="bg-white
+                                            border
+                                            border-slate-300
+                                            rounded-2xl
+                                            block
+                                            w-full
+                                            h-14
+                                            px-4
+                                            text-center
+                                            text-3xl
+                                            font-bold
+                                            text-emerald-700
+                                            placeholder:text-slate-400
+                                            placeholder:text-3xl
+                                            focus:border-emerald-500
+                                            focus:outline-none
+                                            focus:ring-2
+                                            focus:ring-emerald-200
+                                            transition"
+                                        oninput="formatearMoneda(this)">
 
-                                <div>
-                                    <h5 class="text-2xl font-bold text-slate-800">
-                                        Precio personalizado
-                                    </h5>
-
-                                    <p class="text-slate-500 text-lg leading-7">
-                                        Registre un precio diferente para este producto.
+                                    <p class="mt-3 text-center text-base text-slate-500 leading-6">
+                                        Este valor reemplazar&aacute; el precio seleccionado.
                                     </p>
                                 </div>
                             </div>
 
-                            <!-- Campo -->
-                            <div class="max-w-sm mx-auto">
-                                <label
-                                    for="precioLibre"
-                                    class="block text-lg font-semibold text-slate-700 mb-3 text-center">
-                                    Precio libre
-                                </label>
+                            <!--
+                            <div id="autorizacionSupervisor" class="mt-6 bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
+                                <h6 class="text-base font-semibold text-gray-800 flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-lock text-indigo-600"></i> AutorizaciÃƒÂ³n requerida
+                                </h6>
+
+                                <p class="text-gray-600 text-sm mb-3">
+                                    Ingresa la clave del supervisor para aplicar el precio personalizado.
+                                </p>
 
                                 <input
-                                    id="precioLibre"
-                                    type="text"
-                                    name="precioLibre"
-                                    placeholder="Ingrese el valor"
-                                    class="bg-white
-                                        border
-                                        border-slate-300
-                                        rounded-2xl
-                                        block
-                                        w-full
-                                        h-14
-                                        px-4
-                                        text-center
-                                        text-3xl
-                                        font-bold
-                                        text-emerald-700
-                                        placeholder:text-slate-400
-                                        placeholder:text-3xl
-                                        focus:border-emerald-500
-                                        focus:outline-none
-                                        focus:ring-2
-                                        focus:ring-emerald-200
-                                        transition"
-                                    oninput="formatearMoneda(this)">
-
-                                <p class="mt-3 text-center text-base text-slate-500 leading-6">
-                                    Este valor reemplazar&aacute; el precio seleccionado.
-                                </p>
+                                    type="password"
+                                    id="claveSupervisor"
+                                    placeholder="Clave de supervisor"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 text-base focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             </div>
+                            -->
+
+                            <!--
+                            <div class="mt-6">
+                                <button
+                                    type="button"
+                                    id="btnUsarPrecioPersonalizado"
+                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-lg transition-all shadow-md hover:shadow-lg focus:ring-2 focus:ring-indigo-500 flex items-center justify-center gap-2">
+
+                                    <i class="fa-solid fa-check text-white text-lg"></i>
+
+                                    Usar este precio
+
+                                </button>
+                            </div>
+                            -->
                         </div>
-
-                        <!--
-                        <div id="autorizacionSupervisor" class="mt-6 bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
-                            <h6 class="text-base font-semibold text-gray-800 flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-lock text-indigo-600"></i> AutorizaciÃƒÂ³n requerida
-                            </h6>
-
-                            <p class="text-gray-600 text-sm mb-3">
-                                Ingresa la clave del supervisor para aplicar el precio personalizado.
-                            </p>
-
-                            <input
-                                type="password"
-                                id="claveSupervisor"
-                                placeholder="Clave de supervisor"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-3 text-base focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        </div>
-                        -->
-
-                        <!--
-                        <div class="mt-6">
-                            <button
-                                type="button"
-                                id="btnUsarPrecioPersonalizado"
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-lg transition-all shadow-md hover:shadow-lg focus:ring-2 focus:ring-indigo-500 flex items-center justify-center gap-2">
-
-                                <i class="fa-solid fa-check text-white text-lg"></i>
-
-                                Usar este precio
-
-                            </button>
-                        </div>
-                        -->
-                    </div>
+                    <?php endif; ?>
 
                     <!-- Calculadora -->
                     <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-6">
@@ -538,7 +521,7 @@
         const textoPrecioLibre = document.getElementById('textoPrecioLibre');
         const iconPrecioLibre = document.getElementById('iconPrecioLibre');
 
-        btnPrecioLibre.addEventListener('click', () => {
+        btnPrecioLibre?.addEventListener('click', () => {
             const abierto = contenedorPrecioLibre.classList.contains('max-h-[600px]');
 
             if (abierto) {

@@ -28,8 +28,8 @@ class stockproductossucursal extends \App\Models\ActiveRecord{
     	          SUM(CASE WHEN ((p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1)) THEN sps.stock ELSE 0 END) AS cantidadproductos,
     	          SUM(CASE WHEN ((p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1)) AND sps.stock <= sps.stockminimo THEN 1 ELSE 0 END) AS bajostock,
     	          SUM(CASE WHEN ((p.tipoproducto = 0) OR (p.tipoproducto = 1 AND p.tipoproduccion = 1)) AND sps.stock = 0 THEN 1 ELSE 0 END) AS productosagotados
-    	          FROM ".self::$tabla." sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = $idsucursal
-              ) AS t WHERE sps.sucursalid = $idsucursal;";
+    	          FROM ".self::$tabla." sps JOIN productos p ON sps.productoid = p.id WHERE sps.sucursalid = $idsucursal AND p.visible = 1
+              ) AS t WHERE sps.sucursalid = $idsucursal AND p.visible = 1;";
       $array = self::camposJoinObj($query);
       return $array;
     }
@@ -57,7 +57,4 @@ class stockproductossucursal extends \App\Models\ActiveRecord{
       return $array;
     }
 
-    public static function getInsumosBajoStock(){
-      
-    }
 }

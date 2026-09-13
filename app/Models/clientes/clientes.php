@@ -3,7 +3,7 @@ namespace App\Models\clientes;
 
 class clientes extends \App\Models\ActiveRecord {
     protected static $tabla = 'clientes';
-    protected static $columnasDB = ['id', 'nombre', 'apellido', 'tipodocumento', 'identificacion', 'telefono', 'email', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'totaldebe', 'limitecredito', 'data1'];
+    protected static $columnasDB = ['id', 'nombre', 'apellido', 'tipodocumento', 'identificacion', 'telefono', 'email', 'fecha_nacimiento', 'total_compras', 'ultima_compra', 'totaldebe', 'limitecredito', 'puntos', 'data1'];
     
     public function __construct($args = [])
     {
@@ -15,12 +15,11 @@ class clientes extends \App\Models\ActiveRecord {
         $this->telefono = $args['telefono'] ?? '';
         $this->email = $args['email'] ?? '';
         $this->fecha_nacimiento = $args['fecha_nacimiento'] ?? '';
-        // Las claves deben coincidir exactamente con las columnas recibidas
-        // desde Repository; anteriormente tenian un espacio final.
         $this->total_compras = $args['total_compras'] ?? 0;
         $this->ultima_compra = $args['ultima_compra'] ?? '';
         $this->totaldebe = $args['totaldebe'] ?? 0;
         $this->limitecredito = $args['limitecredito'] ?? 100000;
+        $this->puntos = $args['puntos'] ?? 0;
         $this->data1 = $args['data1'] ?? '';
         $this->created_at = $args['created_at']??'';
     }

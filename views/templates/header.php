@@ -159,26 +159,15 @@
                     </div>
                 </div>
 
-                <label for="selectSucursal" class="mt-3 text-left text-sm font-bold uppercase tracking-wide text-slate-500">
-                    Sucursal
-                </label>
-
-                <div class="relative mt-1 rounded-lg border border-slate-200 bg-white shadow-sm">
-                    <button id="toggleSucursalMenu" type="button"
-                        class="flex w-full items-center justify-between rounded-lg bg-slate-50 px-3 py-2.5 text-left text-lg font-bold text-slate-700 transition hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-100">
-                        <span id="sucursalSeleccionada">Cambiar de Sede</span>
-                        <i id="iconSucursalMenu" class="fa-solid fa-chevron-down text-sm text-indigo-500 transition-transform"></i>
-                    </button>
-                    <div id="sucursalMenuLista" class="absolute left-0 right-0 top-[calc(100%+.35rem)] z-50 hidden max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white py-1 shadow-xl">
-                        <?php foreach($sucursales as $val): ?>
-                            <div role="button" tabindex="0"
-                                class="js-sucursal-option flex w-full items-center gap-3 px-3 py-2.5 text-left text-base font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-700"
-                                data-sucursalvalue="<?php echo $val->id;?>"
-                                data-sucursallabel="<?php echo htmlspecialchars($val->nombre, ENT_QUOTES, 'UTF-8');?>">
-                                <i class="fa-solid fa-store w-6 text-center text-indigo-500"></i>
-                                <span><?php echo $val->nombre;?></span>
-                            </div>
-                        <?php endforeach; ?>
+                <div class="form-field">
+                    <label for="selectSucursal" class=""> Sucursal</label>
+                    <div class="form-input">
+                        <span><i class="fa-solid fa-code-branch"></i></span>
+                        <select id="selectSucursal" class="">
+                            <?php foreach($sucursales as $val): ?>
+                                <option value="<?php echo $val->id;?>" <?php if($val->id == $user['idsucursal']) echo 'selected'; ?>><?php echo htmlspecialchars($val->nombre, ENT_QUOTES, 'UTF-8');?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
 
@@ -203,6 +192,11 @@
                         <span>Comisiones</span>
                     </a>
                 <?php endif; ?>
+
+                <button id="btnMoneda" class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-lg font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-700">
+                    <i class="fa-solid fa-dollar-sign w-6 text-center text-indigo-500"></i>
+                    <span>Moneda Equivalente</span>
+                </button>
 
                 <a class="mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-lg font-semibold text-rose-600 transition hover:bg-rose-50"
                     href="/logout">
@@ -284,5 +278,91 @@
       <p class="mt-3 text-base font-semibold text-slate-500">JDOS <?php echo $_SESSION['sucursal']->version; ?></p>
     </div>
   </div>
+</dialog>
+
+
+<dialog id="miDialogoMonedaEquivalente" class="w-[95%] max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-black/40 transition-all duration-300 ease-out open:scale-100 open:opacity-100">
+
+    <div class="px-8 pb-2 pt-7 text-center">
+        <div class="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-lg shadow-indigo-600/10 ring-1 ring-indigo-100">
+            <i class="fa-solid fa-landmark text-4xl"></i>
+        </div>
+
+        <h4 class="m-0 text-3xl font-bold leading-tight text-slate-900">
+            Moneda equivalente
+        </h4>
+
+        <p class="mx-auto mt-2 max-w-sm text-lg font-medium leading-5 text-slate-500">
+            Establecer la tasa de cambio para la siguiente divisa.
+        </p>
+    </div>
+
+    <div class="border-t border-slate-200 px-8 pb-8 pt-6">
+        <div id="divmsjalertaTasaCambio"></div>
+
+        <form id="formTasaCambio" class="formulario" method="POST">
+
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/90 p-5">
+                
+                <div class="mb-2 flex items-center gap-3 text-left">
+                    <span class="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-white text-indigo-600 shadow-sm">
+                        <i class="fa-solid fa-coins text-base"></i>
+                    </span>
+                    <label for="divisa" class="m-0 block text-lg font-semibold text-slate-800">Divisa destino</label>
+                </div>
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-xl bg-indigo-50 text-indigo-500">
+                        <i class="fa-solid fa-coins text-lg"></i>
+                    </span>
+                    <select id="divisa" class="h-16 w-full rounded-2xl border border-slate-300 bg-white py-3 pl-16 pr-4 text-lg font-semibold text-slate-900 placeholder:font-medium placeholder:text-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-100">
+                        <option disabled selected>-Seleccionar-</option>
+                        <option value="2">Peso colombiano - COP</option>
+                        <option value="3">Bolívar - VES</option>
+                        <option value="4">Dólar estadounidense - USD</option>
+                        <option value="5">Euro - EUR</option>
+                        <option value="6">Real brasileño - BRL</option>
+                    </select>
+                </div>
+
+                <div class="mt-5 mb-2 flex items-center gap-3 text-left">
+                    <span class="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-white text-indigo-600 shadow-sm">
+                        <i class="fa-solid fa-dollar-sign text-lg"></i>
+                    </span>
+                    <label for="tasaCambio" class="m-0 block text-lg font-semibold text-slate-800">Tasa de cambio</label>
+                </div>
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-xl bg-indigo-50 text-indigo-500">
+                        <i class="fa-solid fa-dollar-sign text-base"></i>
+                    </span>
+                    <input
+                        id="tasaCambio"
+                        class="h-16 w-full rounded-2xl border border-slate-300 bg-white py-3 pl-16 pr-4 text-lg font-semibold text-slate-900 placeholder:font-medium placeholder:text-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-100"
+                        type="text"
+                        placeholder="ej: 100.000"
+                        oninput="formatearMoneda(this)"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <div class="mt-2 grid grid-cols-2 gap-3 border-t border-slate-200 pt-4">
+                <button
+                    class="inline-flex h-16 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-xl font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
+                    type="button"
+                    value="Salir">
+                    Cancelar
+                </button>
+
+                <button
+                    id="btnConfirmarTasaCambio"
+                    class="inline-flex h-16 items-center justify-center rounded-xl bg-indigo-600 px-5 text-xl font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
+                    type="submit">
+                    <i class="fa-solid fa-paper-plane mr-2"></i>
+                    confirmar
+                </button>
+            </div>
+        </form>
+    </div>
 </dialog>
 

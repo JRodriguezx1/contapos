@@ -17,8 +17,6 @@
     </div>
     <div id="divmsjalerta3"></div>
     <form id="formAjustarCredito" class="grid gap-4 p-4 sm:p-6" >
-        
-        <input id="idcredito" class="hidden" type="text" name="idcredito_ajustarcredito" value="<?php echo $credito->id;?>">
         <input id="capital" class="hidden" type="text" name="capital" value="<?php echo $credito->capital??'';?>">
         <input id="abonoinicial" class="hidden" type="text" name="abonoinicial" value="<?php echo $credito->abonoinicial??'';?>">
         <input id="saldopendiente" class="hidden" type="text" name="saldopendiente" value="<?php echo $credito->saldopendiente??'';?>">

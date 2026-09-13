@@ -1,5 +1,7 @@
 <div class="gestionproveedores">
 
+  <script id="proveedoresIniciales" type="application/json"><?php echo json_encode($proveedores, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?></script>
+
   <h4 class="text-gray-600 mb-8 mt-12">Gestion de proveedores</h4>
   <button id="crearProveedor" class="btn-md btn-indigo !mb-4 !py-4 px-6 ">Crear proveedor</button>
   <table class="display responsive nowrap tabla" width="100%" id="tablaProveedores">

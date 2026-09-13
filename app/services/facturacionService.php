@@ -5,6 +5,7 @@ namespace App\services;
 use App\classes\Traits\DocumentTrait;
 use App\Models\caja\cierrescajas;
 use App\Models\caja\factmediospago;
+use App\Models\clientes\clientes;
 use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
 use App\Models\factimpuestos;
@@ -41,11 +42,13 @@ class facturacionService
     private stdClass $datosAdquiriente;
     private facturas $facturaSolicitud;
     private array $parametros;
+    private array $itemsStockMinimo = [];
     private array $inventarioVenta = [];
     private array $lineasActualizar = [];
     private array $lineasInsertar = [];
     private ?facturas $ordenOrigen = null;
     private int $devolverinv = 0;
+    private float $puntos = 0; 
     /** Indica que las lineas deben obtenerse de la orden guardada, no del POST. */
     private bool $usarDetalleOrdenPersistido = false;
 
@@ -82,7 +85,7 @@ class facturacionService
             if($this->ordenOrigen && $this->estado !== 'Paga')
                 return $this->editarOrdenExistente();
 
-            //procesar factura o crear nueva cotizacion/remision
+            //procesar factura o crear nueva cotizacion/remision o redimido
             return $this->procesarEnTransaccion();
         }catch(InvalidArgumentException $th){
             return ['error'=>[$th->getMessage()]];
@@ -158,6 +161,7 @@ class facturacionService
         $this->carrito = [];
         $this->mediosPago = [];
         $this->impuestos = [];
+        $this->itemsStockMinimo = [];
         $this->inventarioVenta = [];
         $this->lineasActualizar = [];
         $this->lineasInsertar = [];
@@ -195,6 +199,7 @@ class facturacionService
 
 
     private function getProductosEImpuestosCotizacion(array $datos, int $sucursalId):bool{
+        $this->itemsStockMinimo = [];
         $this->datos = $datos;
         $this->sucursalId = $sucursalId;
         $this->estado = (string)($datos['estado'] ?? '');
@@ -246,7 +251,7 @@ class facturacionService
 
     /** Valida los discriminadores que determinan el flujo de facturacion. */
     private function validarCamposBasicos():void{
-        if(!in_array($this->estado, ['Paga', 'Guardado', 'Remision'], true))
+        if(!in_array($this->estado, ['Paga', 'Guardado', 'Remision', 'Redimido'], true))
             throw new InvalidArgumentException('Estado de la solicitud no valido.');
 
         if($this->estado === 'Paga' && !in_array($this->tipoVenta, ['Contado', 'Credito'], true))
@@ -254,6 +259,17 @@ class facturacionService
 
         if(isset($this->datos['id']) && $this->datos['id'] !== '' && !is_numeric($this->datos['id']))
             throw new InvalidArgumentException('El identificador de la orden no es valido.');
+    
+        if(isset($this->datos['puntos_descontados']) && !is_numeric($this->datos['puntos_descontados']))
+            throw new InvalidArgumentException('Los puntos a descontar debe ser un numero valido');
+
+        if(isset($this->datos['puntos_descontados']) && (float)$this->datos['puntos_descontados']<0)
+            throw new InvalidArgumentException('Los puntos no pueden ser negativos.'); 
+
+        if(in_array($this->estado, ['Guardado', 'Remision']) && ((float)$this->datos['puntos_descontados']!=0))
+            throw new InvalidArgumentException('Para cotizacion o remision no se puede ajustar puntos.');
+
+        //validamos contra los puntos del cliente.
     }
 
     /** Decodifica un campo JSON que debe contener una lista de objetos. */
@@ -412,8 +428,16 @@ class facturacionService
 
             $cierre = $this->obtenerOAbrirCierreCaja();
             $factura = $this->construirFactura($cierre);
-            $respuesta = $this->estado === 'Paga' ? $this->guardarFacturaPagada($factura, $cierre) : $this->guardarNuevaOrden($factura, $cierre);
+            $respuesta = $this->estado === 'Paga' ? $this->guardarFacturaPagada($factura, $cierre) :  ($this->estado === 'Redimido' ? $this->guardarRedimido($factura, $cierre): $this->guardarNuevaOrden($factura, $cierre));
             $db->commit();
+            //enviar stock minimo a whatsapp
+            if(!empty($this->itemsStockMinimo) && ($this->parametros['notificacion_por_whatsApp_stock_bajo']->valor_final ?? 0) == 1){
+                try {
+                    (new whatsAppService())->productoBajoStock($this->itemsStockMinimo);
+                } catch (\Throwable $th) {
+                   error_log("No fue posible notificar el stock minimo de la orden. ".$th->getMessage());
+                }
+            }
             return $respuesta;
         }catch(Throwable $th){
             $db->rollback();
@@ -458,7 +482,7 @@ class facturacionService
         $inventarioVenta = null;
 
         if($this->devolverinv === 1){
-            if((int)$factura->entregado !== 1 || $factura->entrega != 'Presencial')
+            if((int)$factura->entregado !== 1)
                 throw new InvalidArgumentException('No es posible devolver inventario porque la orden aun no habia descontado existencias.');
             $inventarioVenta = $this->prepararInventarioDevolucion($factura);
         }
@@ -622,14 +646,14 @@ class facturacionService
      * nueva y conserva el numero de la orden original como referencia.
      */
     private function construirFactura(cierrescajas $cierre):facturas{
-        if($this->ordenOrigen){
+        if($this->ordenOrigen){ //cuando ya existe una orden
             $numeroOrdenOrigen = $this->ordenOrigen->num_orden;
             $factura = clone $this->ordenOrigen;
             $factura->compara_objetobd_post($this->datos);
             $factura->id = null;
             $factura->referencia = $numeroOrdenOrigen;
             $factura->cambioaventa = 1;
-        }else{
+        }else{ //cuando es nueva factura
             $factura = $this->facturaSolicitud;
         }
 
@@ -637,7 +661,33 @@ class facturacionService
         $factura->idcaja = (int)$this->datos['idcaja'];
         $factura->idcierrecaja = $cierre->id;
         $factura->num_orden = facturas::calcularNumOrden($this->sucursalId);
+
+        $factura->entrega == 'Presencial' ? $factura->entregado=1 : $factura->entregado=0;
+        
+        if($this->parametros['valor_por_punto']->valor_final && ((int)$factura->idcliente ?? 0)>0){
+            if($this->estado == "Paga"){
+                $this->puntos = (float)$factura->total/(float)$this->parametros['valor_por_punto']->valor_final;
+                $factura->puntos_generados = $this->puntos;
+            }
+        }
+
         return $factura;
+    }
+
+    /** Guarda una cotizacion o remision nueva y sus lineas, sin inventario. */
+    private function guardarRedimido(facturas $factura, cierrescajas $cierre){
+        $this->normalizarTipoOrden($factura);
+        [$creada, $idFactura] = $factura->crear_guardar();
+        if(!$creada)throw new RuntimeException('No fue posible guardar la orden.');
+
+        $this->actualizarPuntosCliente($factura, (int)$idFactura, false);
+        $this->prepararLineasParaGuardar($this->carrito, (int)$idFactura);
+        ventasService::guardarLineasVenta($this->carrito, false);
+
+        $itemsStockMinimo = [];
+        ventasService::descontarInventarioXVenta( $this->inventarioVenta, $this->sucursalId, 'venta', 'descuento de unidades por venta', false, $itemsStockMinimo);
+        $this->itemsStockMinimo = $itemsStockMinimo;
+        return ['exito'=>['Puntos redimidos exitosamente. producto dado de baja de inventario']];
     }
 
     /** Guarda una cotizacion o remision nueva y sus lineas, sin inventario. */
@@ -685,6 +735,7 @@ class facturacionService
         $this->relacionarOrdenOrigen($factura, $cierre);
         self::createInvoiceElectronic( $this->carrito, $this->datosAdquiriente, $factura->idconsecutivo, $idFactura, $factura->num_consecutivo, $this->mediosPago,  $factura->descuento, $factura->valortarifa, $factura->observacion );
         $idCuota = $this->registrarCredito($factura, (int)$idFactura);
+        $this->actualizarPuntosCliente($factura, (int)$idFactura);
         $this->actualizarCierreYRelaciones( $factura, $cierre, (int)$idFactura, $idCuota );
         $this->prepararLineasParaGuardar($this->carrito, (int)$idFactura);
         ventasService::guardarLineasVenta($this->carrito, false);
@@ -694,9 +745,11 @@ class facturacionService
         if(!empty($this->impuestos))
             (new factimpuestos())->crear_varios_reg_arrayobj($this->impuestos);
 
-        if(!$inventarioYaDescontado&&((int)$factura->entregado === 1 || $factura->entrega === 'Presencial'))
-            ventasService::descontarInventarioXVenta( $this->inventarioVenta, $this->sucursalId, 'venta', 'descuento de unidades por venta', false );
-
+        $itemsStockMinimo = [];
+        if(!$inventarioYaDescontado&&((int)$factura->entregado === 1)){
+            ventasService::descontarInventarioXVenta( $this->inventarioVenta, $this->sucursalId, 'venta', 'descuento de unidades por venta', false, $itemsStockMinimo);
+            $this->itemsStockMinimo = $itemsStockMinimo;
+        }
         $this->registrarMovimientoCaja($factura, (int)$idFactura);
         $this->registrarComision($factura, (int)$idFactura);
 
@@ -746,9 +799,19 @@ class facturacionService
     /** Crea el credito y devuelve el id de la cuota para los medios de pago. */
     private function registrarCredito(facturas $factura, int $idFactura):int|string{
         if($this->tipoVenta !== 'Credito')return 'NULL';
-        $resultado = creditosService::crearCredito( $this->valoresCredito, $idFactura, (int)$factura->idcliente, $factura->totalunidades, $factura->base, $factura->valorimpuestototal, (int)$factura->dctox100, $factura->descuento, (int)$factura->idcierrecaja, (int)$factura->idcaja, (int)$factura->idvendedor, $factura->idemisor );
+        $resultado = creditosService::crearCredito( $this->valoresCredito, $idFactura, (int)is_numeric((int)$factura->idcliente), $factura->totalunidades, $factura->base, $factura->valorimpuestototal, (int)$factura->dctox100, $factura->descuento, (int)$factura->idcierrecaja, (int)$factura->idcaja, (int)$factura->idvendedor, $factura->idemisor );
         if(!empty($resultado['error']))throw new RuntimeException(implode(' ', $resultado['error']));
         return $resultado['idcuota'] ?? 'NULL';
+    }
+
+
+    private function actualizarPuntosCliente(facturas $factura, int $idFactura, bool $dir = true):void{
+        if($this->parametros['valor_por_punto']->valor_final && ((int)$factura->idcliente ?? 0)>0){
+           $cliente = clientes::findForUpdate('id', $factura->idcliente);
+           $dir? ($cliente->puntos += $this->puntos): ($cliente->puntos -= $factura->puntos_descontados);
+           $cliente->actualizar();
+        }
+        
     }
 
     /**
@@ -790,7 +853,7 @@ class facturacionService
             'fk_tipo_documento'=>1,
             'id_documento'=>$idFactura,
             'fk_tipo_tercero'=>1,
-            'id_tercero'=>$factura->idcliente,
+            'id_tercero'=>is_numeric((int)$factura->idcliente),
             'fk_caja'=>$factura->idcaja,
             'fk_usuario'=>$factura->idvendedor,
             'naturaleza'=>'I',

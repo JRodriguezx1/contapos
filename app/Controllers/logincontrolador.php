@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\classes\Email;
-use App\Models\configuraciones\permisos;
 use App\Models\sucursales;
 use App\Models\configuraciones\usuarios; //namespace\clase hija
 use App\Models\configuraciones\usuarios_permisos;
@@ -77,9 +76,7 @@ class logincontrolador{
                         if($pass&&$usuario->confirmado){         //$auth->password = es lo que se escribe en el form
                             
                             $permisos = usuarios_permisos::idregistros('usuarioid', $usuario->id);
-                            $listapermisos = [];
-                            foreach($permisos as $value)
-                                $listapermisos[] = permisos::find('id', $value->permisoid)->nombre;
+                            $listapermisos = array_column($permisos, 'permisos');
                             
                             //autenticar usuario         
                             //session_start();
@@ -270,28 +267,49 @@ class logincontrolador{
 
     ////////////////   API   ////////////////
 
-    public static function changeSucursal(){
+    public static function changeSucursal():void{
         isadmin();
-        $alertas = [];
-        $sucursal = sucursales::find('id', id_sucursal());
+        
         if($_SERVER['REQUEST_METHOD'] !== 'POST'){
             http_response_code(405); // Método no permitido
             echo json_encode(['error' => 'Método no permitido']);
             exit;
         }
-        $detalleSuscrip = json_decode(file_get_contents('php://input'), true);
+        $sucursalFront = json_decode(file_get_contents('php://input'), true);
+        $idsucursal = $sucursalFront['idsucursal'] ?? null;
+        if($idsucursal == id_sucursal())return;
+        if(!$idsucursal || is_null($idsucursal) || !is_numeric($idsucursal)){
+            http_response_code(400); // Bad Request
+            echo json_encode(['error' => 'Falta el ID de la sucursal o no es válido']);
+            exit;
+        }
+        
+        $sucursal = sucursales::find('id', $idsucursal);
+        $usuario = usuarios::find('id', $_SESSION['id']);
+        
+        if(!$usuario){
+            http_response_code(404); // Not Found
+            echo json_encode(['error' => 'Usuario no encontrado']);
+            exit;
+        }
+        if($usuario->perfil>3)return;
+
+        $permisos = usuarios_permisos::idregistros('usuarioid', $usuario->id);
+        $listapermisos = array_column($permisos, 'permisos');
         
         $_SESSION['id'] = $usuario->id;
-        $_SESSION['idsucursal'] = $usuario->nickname =="soportej2"?$_POST['idsucursal']:$usuario->idsucursal;
-        $_SESSION['sucursal'] = sucursales::find('id', $usuario->nickname =="soportej2"?$_POST['idsucursal']:$usuario->idsucursal);
+        $_SESSION['idsucursal'] = $sucursal->id;
+        $_SESSION['sucursal'] = $sucursal;
         $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
         $_SESSION['email'] = $usuario->email;
         $_SESSION['login'] = true;
-        $_SESSION['perfil'] = $usuario->perfil ?? null;  //si no es admin la llave $_SESSION['admin'] = null
+        $_SESSION['perfil'] = $usuario->perfil ?? null;
         $_SESSION['porcentajeganancia'] = $usuario->porcentajeganancia;
         $_SESSION['permisos'] = $listapermisos;
         $_SESSION['configLocal'] = config_local::getParamGlobal();
-    } 
+        echo json_encode(['exito'=>['Cambio de sucursal']]);
+        return;
+    }
 
      
 } //cierre de la clase

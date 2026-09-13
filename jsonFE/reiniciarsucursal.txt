@@ -26,6 +26,7 @@ DELETE FROM comisiones WHERE fk_idsucursal = 1;
 DELETE FROM pagos_comisiones WHERE fkidsucursal = 1;
 DELETE FROM movimientos_insumos WHERE fksucursal_id = 1;
 DELETE FROM movimientos_productos WHERE idfksucursal = 1;
+DELETE FROM movimientos_caja WHERE id_sucursal = 1;
 
 TRUNCATE TABLE ingresoscajas;
 TRUNCATE TABLE gastos;
@@ -33,6 +34,8 @@ TRUNCATE TABLE declaracionesdineros;
 TRUNCATE TABLE comisiones;
 TRUNCATE TABLE movimientos_insumos;
 TRUNCATE TABLE movimientos_productos;
+TRUNCATE TABLE movimientos_caja;
+TRUNCATE TABLE venta_insumos;
 
 ALTER TABLE ingresoscajas AUTO_INCREMENT = 1;
 ALTER TABLE facturas AUTO_INCREMENT = 1;
@@ -49,5 +52,7 @@ ALTER TABLE comisiones AUTO_INCREMENT = 1;
 ALTER TABLE pagos_comisiones AUTO_INCREMENT = 1;
 ALTER TABLE movimientos_insumos AUTO_INCREMENT = 1;
 ALTER TABLE movimientos_productos AUTO_INCREMENT = 1;
+ALTER TABLE movimientos_caja AUTO_INCREMENT = 1;
+ALTER TABLE venta_insumos AUTO_INCREMENT = 1;
 
 UPDATE clientes set totaldebe = 0, total_compras = 0, ultima_compra = null;

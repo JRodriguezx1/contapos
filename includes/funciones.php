@@ -17,31 +17,28 @@ function validar_string_url($path):bool{ //retorna bolean
     return strpos($_SERVER['REQUEST_URI']??'/', $path)?true:false;
 }
 
-function isauth():void  //valida si el usuario esta registrao
-{
+/** Exige una sesión autenticada y detiene la solicitud si no existe. */
+function isauth():void{
   if(!isset($_SESSION['login'])){
-      header('Location: /');       //lo redirecciona a la pagina web
+      header('Location: /');
+      exit;
   }
 }
 
-function isadmin():void
-{/*
-    if($_SESSION['perfil']!=1){
-        header('Location: /');
-    }*/
+/** Exige una sesión con perfil administrativo válido. */
+function isadmin():void{
     isauth();
-    if($_SESSION['perfil']==NULL){
+    if(($_SESSION['perfil'] ?? null) === null){
         header('Location: /');
+        exit;
     }
 }
 
-function nombreSucursal():string
-{
+function nombreSucursal():string{
     return $_SESSION['sucursal']->nombre;
 }
 
-function id_sucursal():int
-{
+function id_sucursal():int{
     if(isset($_SESSION['idsucursal'])){
         return $_SESSION['idsucursal'];
     }else{

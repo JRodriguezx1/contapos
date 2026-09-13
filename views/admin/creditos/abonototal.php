@@ -6,8 +6,8 @@
                 <i class="fa-solid fa-circle-check"></i>
             </span>
             <div>
-                <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Credito</p>
-                <h4 id="modalPagoTotal" class="m-0 text-xl font-extrabold text-slate-900 sm:text-2xl">Pago total</h4>
+                <p class="m-0 text-base font-bold uppercase text-indigo-600">Credito</p>
+                <h4 id="modalPagoTotal" class="m-0 text-xl font-bold text-slate-900 sm:text-2xl">Pago total</h4>
                 <span class="mt-1 block text-sm text-slate-500 sm:text-base">Cierra la deuda pendiente del cliente en una sola operacion.</span>
             </div>
         </div>
@@ -18,17 +18,16 @@
     <div id="divmsjalerta3"></div>
     <form id="formCrearUpdatePagoTotal" class="grid gap-4 p-4 sm:p-6" action="/admin/creditos/pagoTotal" method="POST">
         <!-- El monto de la cuota se calcula atomaticamente segun la cantidad de cuotas-->
-        <input class="hidden" type="text" name="id_credito" value="<?php echo $credito->id;?>">
         <div class="flex items-center gap-4 rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-cyan-50 p-4">
             <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-xl text-teal-700"><i class="fa-solid fa-wallet"></i></span>
             <div class="min-w-0">
-                <label class="block text-sm font-extrabold uppercase text-slate-500">Total a pagar</label>
-                <strong id="PagoTotal_abono_text" class="block text-2xl font-black leading-tight text-slate-900">$ <?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?></strong>
+                <label class="block text-sm font-bold uppercase text-slate-500">Total a pagar</label>
+                <strong id="PagoTotal_abono_text" class="block text-2xl font-semibold leading-tight text-slate-900">$ <?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?></strong>
             </div>
         </div>
         
         <input id="PagoTotal_montocuota" class="hidden" type="text" name="montocuota" value="$<?php echo number_format($credito->montocuota??'0', '2', ',', '.');?>" readonly required>    
-       <input id="PagoTotal_abono" class="hidden" type="text" name="valorpagado" value="<?php echo $credito->saldopendiente??'';?>">
+       <input id="PagoTotal_abono" class="hidden" type="text" name="valorpagado" value="<?php echo number_format($credito->saldopendiente??'0', '2', ',', '.');?>">
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div class="detalle-abono-dialog__field grid gap-2">

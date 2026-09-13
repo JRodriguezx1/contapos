@@ -6,6 +6,7 @@
     $montoComprado = $indicadores->total_ventas_cliente ?? 0;
     $ticketPromedio = $indicadores->ticket_promedio ?? 0;
     $deudaCliente = $cliente->totaldebe ?? 0;
+    $puntos = $cliente->puntos ?? 0;
 ?>
 
 <div class="detallecliente !pb-12 text-slate-900">
@@ -17,8 +18,8 @@
                     <span class="sr-only">Atras</span>
                 </a>
                 <div class="min-w-0 flex-1">
-                    <p class="mb-1 mt-0 text-base font-extrabold uppercase text-indigo-600">CRM</p>
-                    <h1 class="m-0 break-words text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl"><?php echo htmlspecialchars($nombreCliente ?: 'Cliente', ENT_QUOTES, 'UTF-8'); ?></h1>
+                    <p class="mb-1 mt-0 text-base font-bold uppercase text-indigo-600">CRM</p>
+                    <h1 class="m-0 break-words text-3xl font-bold leading-tight text-slate-900 sm:text-4xl"><?php echo htmlspecialchars($nombreCliente ?: 'Cliente', ENT_QUOTES, 'UTF-8'); ?></h1>
                     <p class="mt-1 text-lg leading-snug text-slate-500">Consulta perfil, compras, creditos y deuda del cliente desde una vista mas clara.</p>
                 </div>
             </div>
@@ -26,7 +27,7 @@
             <div class="flex min-w-0 shrink-0 items-center gap-4 rounded-lg border border-slate-200 bg-white/90 p-4 lg:min-w-80">
                 <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-2xl text-white"><i class="fa-solid fa-user-check"></i></span>
                 <div>
-                    <strong class="block text-2xl font-black leading-none text-slate-900">Activo</strong>
+                    <strong class="block text-2xl font-bold leading-none text-slate-900">Activo</strong>
                     <small class="mt-1 block text-base font-bold text-slate-500">estado del cliente</small>
                 </div>
             </div>
@@ -36,7 +37,7 @@
             <div class="mb-5 flex items-start gap-4 border-b border-slate-200 pb-4 sm:items-center">
                 <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600"><i class="fa-solid fa-address-card"></i></span>
                 <div>
-                    <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Perfil del cliente</h2>
+                    <h2 class="m-0 text-2xl font-bold leading-tight text-slate-900">Perfil del cliente</h2>
                     <p class="mt-1 text-base leading-snug text-slate-500">Datos principales de contacto y relacion comercial.</p>
                 </div>
             </div>
@@ -46,28 +47,28 @@
                     <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600"><i class="fa-solid fa-envelope"></i></span>
                     <div>
                         <small class="block text-base font-bold text-slate-500">Correo</small>
-                        <strong class="mt-1 block break-words text-lg font-extrabold text-slate-900"><?php echo htmlspecialchars($emailCliente, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <strong class="mt-1 block break-words text-lg font-semibold text-slate-900"><?php echo htmlspecialchars($emailCliente, ENT_QUOTES, 'UTF-8'); ?></strong>
                     </div>
                 </article>
                 <article class="flex min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
                     <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600"><i class="fa-solid fa-phone"></i></span>
                     <div>
                         <small class="block text-base font-bold text-slate-500">Telefono</small>
-                        <strong class="mt-1 block break-words text-lg font-extrabold text-slate-900"><?php echo htmlspecialchars($telefonoCliente, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <strong class="mt-1 block break-words text-lg font-semibold text-slate-900"><?php echo htmlspecialchars($telefonoCliente, ENT_QUOTES, 'UTF-8'); ?></strong>
                     </div>
                 </article>
                 <article class="flex min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
                     <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600"><i class="fa-solid fa-bag-shopping"></i></span>
                     <div>
                         <small class="block text-base font-bold text-slate-500">Ultima compra</small>
-                        <strong class="mt-1 block text-lg font-extrabold text-slate-900">-</strong>
+                        <strong class="mt-1 block text-lg font-semibold text-slate-900">-</strong>
                     </div>
                 </article>
                 <article class="flex min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
                     <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600"><i class="fa-solid fa-calendar-check"></i></span>
                     <div>
                         <small class="block text-base font-bold text-slate-500">Cliente desde</small>
-                        <strong class="mt-1 block text-lg font-extrabold text-slate-900">-</strong>
+                        <strong class="mt-1 block text-lg font-semibold text-slate-900">-</strong>
                     </div>
                 </article>
             </div>
@@ -78,28 +79,28 @@
                 <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-2xl text-emerald-600"><i class="fa-solid fa-receipt"></i></span>
                 <div>
                     <small class="block text-base font-bold text-slate-500">Total de compras</small>
-                    <strong class="mt-1 block break-words text-2xl font-black leading-tight text-slate-900"><?php echo number_format($totalCompras, 0, ',', '.'); ?></strong>
+                    <strong class="mt-1 block break-words text-2xl font-bold leading-tight text-slate-900"><?php echo number_format($totalCompras, 0, ',', '.'); ?></strong>
                 </div>
             </article>
             <article class="flex min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
                 <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600"><i class="fa-solid fa-coins"></i></span>
                 <div>
                     <small class="block text-base font-bold text-slate-500">Monto total comprado</small>
-                    <strong class="mt-1 block break-words text-2xl font-black leading-tight text-slate-900">$ <?php echo number_format($montoComprado, 2, ',', '.'); ?></strong>
+                    <strong class="mt-1 block break-words text-2xl font-bold leading-tight text-slate-900">$ <?php echo number_format($montoComprado, 2, ',', '.'); ?></strong>
                 </div>
             </article>
             <article class="flex min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
                 <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-2xl text-cyan-700"><i class="fa-solid fa-chart-line"></i></span>
                 <div>
                     <small class="block text-base font-bold text-slate-500">Ticket promedio</small>
-                    <strong class="mt-1 block break-words text-2xl font-black leading-tight text-slate-900">$ <?php echo number_format($ticketPromedio, 2, ',', '.'); ?></strong>
+                    <strong class="mt-1 block break-words text-2xl font-bold leading-tight text-slate-900">$ <?php echo number_format($ticketPromedio, 2, ',', '.'); ?></strong>
                 </div>
             </article>
             <article class="flex min-w-0 items-center gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
                 <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-2xl text-rose-600"><i class="fa-solid fa-gift"></i></span>
                 <div>
                     <small class="block text-base font-bold text-slate-500">Puntos acumulados</small>
-                    <strong class="mt-1 block break-words text-2xl font-black leading-tight text-slate-900">900 Pts</strong>
+                    <strong class="mt-1 block break-words text-2xl font-bold leading-tight text-slate-900"><?php echo number_format($puntos, 2, ',', '.'); ?> Pts</strong>
                 </div>
             </article>
         </section>
@@ -109,7 +110,7 @@
                 <div class="mb-5 flex items-start gap-4 border-b border-slate-200 pb-4 sm:items-center">
                     <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600"><i class="fa-solid fa-chart-area"></i></span>
                     <div>
-                        <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Compras por mes</h2>
+                        <h2 class="m-0 text-2xl font-bold leading-tight text-slate-900">Compras por mes</h2>
                         <p class="mt-1 text-base leading-snug text-slate-500">Evolucion de ventas asociadas al cliente.</p>
                     </div>
                 </div>
@@ -122,7 +123,7 @@
                 <div class="mb-5 flex items-start gap-4 border-b border-slate-200 pb-4 sm:items-center">
                     <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600"><i class="fa-solid fa-chart-pie"></i></span>
                     <div>
-                        <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Categorias mas compradas</h2>
+                        <h2 class="m-0 text-2xl font-bold leading-tight text-slate-900">Categorias mas compradas</h2>
                         <p class="mt-1 text-base leading-snug text-slate-500">Participacion por categoria en unidades vendidas.</p>
                     </div>
                 </div>

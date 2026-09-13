@@ -50,11 +50,6 @@
     tablacuotas = ($('#tablacuotas') as any).DataTable(configdatatablesToolbar);
     modernizarToolbarDataTable('#tablacuotas');
 
-    const autoPrintAbonoCredito = document.querySelector('#autoPrintAbonoCredito') as HTMLInputElement | null;
-    if(autoPrintAbonoCredito?.value)
-      window.setTimeout(()=>printPOSComprobanteAbono(autoPrintAbonoCredito.value), 450);
-
-
     btnajustarCredito?.addEventListener('click', ():void=>{
       miDialogoAjustarCredito.showModal();
     });
@@ -74,7 +69,7 @@
     });
 
 
-    btnEditarCrearAbono.addEventListener('click', ()=>{
+    /*btnEditarCrearAbono.addEventListener('click', ()=>{
       btnEditarCrearAbono.disabled = true;
       (document.querySelector('#caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdateAbono') as HTMLFormElement).submit();
@@ -83,7 +78,84 @@
       btnEditarCrearPagoTotal.disabled = true;
       (document.querySelector('#PagoTotal_caja') as HTMLSelectElement).disabled = false;
       (document.querySelector('#formCrearUpdatePagoTotal') as HTMLFormElement).submit();
+    });*/
+
+    document.querySelector('#formCrearUpdateAbono')?.addEventListener('submit', e=>{
+      e.preventDefault();
+      const caja = document.querySelector('#caja') as HTMLSelectElement;
+      const abono = document.querySelector('#abono') as HTMLInputElement;
+      const mediopago = document.querySelector('#mediopago') as HTMLSelectElement;
+      const detalle = document.querySelector('#detalle') as HTMLTextAreaElement;
+      btnEditarCrearAbono.disabled = true;
+      btnEditarCrearAbono.value = 'Procesando...';
+      crearAbono(caja, abono, mediopago, detalle);
     });
+
+    document.querySelector('#formCrearUpdatePagoTotal')?.addEventListener('submit', e=>{
+      e.preventDefault();
+      const PagoTotal_caja = document.querySelector('#PagoTotal_caja') as HTMLSelectElement;
+      const PagoTotal_abono = document.querySelector('#PagoTotal_abono') as HTMLInputElement;
+      const PagoTotal_mediopago = document.querySelector('#PagoTotal_mediopago') as HTMLSelectElement;
+      const pagoTotal_detalle = document.querySelector('#pagoTotal_detalle') as HTMLTextAreaElement;
+      btnEditarCrearPagoTotal.disabled = true;
+      btnEditarCrearPagoTotal.value = 'Procesando...';
+      crearAbono(PagoTotal_caja, PagoTotal_abono, PagoTotal_mediopago, pagoTotal_detalle);
+    });
+
+    async function crearAbono(caja: HTMLSelectElement, abono: HTMLInputElement, mediopagado: HTMLSelectElement, detalle: HTMLTextAreaElement):Promise<void>{
+      const id:string = (document.querySelector('#idcredito') as HTMLInputElement).value;
+      const inputAbono = obtenerNumero(abono)?.toString();
+      const datos = new FormData();
+      datos.append('id_credito', id);
+      datos.append('cajaid', caja.value);
+      datos.append('mediopagoid', mediopagado.value);
+      datos.append('valorpagado', inputAbono??'');
+      datos.append('detalle', detalle.value);
+      try {
+          const url = "/admin/api/creditos/registrarAbono";  //va al controlador creditoscontrolador
+          const respuesta = await fetch(url, {method: 'POST', body: datos}); 
+          const resultado = await respuesta.json();
+          if(resultado.exito !== undefined){
+            msjalertToast('success', '¡Éxito!', resultado.exito[0]);
+            document.querySelector('#saldopendientetext')!.textContent = '$ '+resultado.saldopendiente.toLocaleString();
+            btnEditarCrearAbono.disabled = false;
+            btnEditarCrearPagoTotal.disabled = false;
+            btnEditarCrearAbono.value = 'Confirmar';
+            btnEditarCrearPagoTotal.value = 'Confirmar';
+            //registrar en tabla.
+            (tablacuotas as any).row.add([
+                resultado.cuota.numerocuota,
+                resultado.cuota.fechapagado,
+                '$'+resultado.cuota.montocuota.toLocaleString(),
+                '$'+resultado.cuota.valorpagado.toLocaleString(),
+                `<button
+                  id="${resultado.idcuota}" 
+                  data-totalpagado="${resultado.cuota.valorpagado}"
+                  data-idcredito="${resultado.cuota.id_credito}"
+                  data-idmediopago="${resultado.cuota.mediopagoid}"
+                  data-mediopagado="${resultado.cuota.valorpagado}"
+                  class="mediosdepago">
+                  ${resultado.mediopago}
+                </button>`,
+                `<div class="text-indigo-600 text-xl bg-indigo-50 rounded-lg pt-2 font-semibold">
+                    ${resultado.sucursalregistrado}
+                </div>`,
+                `<div id="${resultado.idcuota}" class="flex justify-center gap-4">
+                    <button class="anularAbono" title="Eliminar abono">X</button>
+                    <button class="printPOSAbono material-symbols-outlined">print</button>
+                </div>`
+            ]).draw(false); // draw(false) evita recargar toda la tabla
+            if((document.querySelector('#imprimirComprobanteAbonoinicial') as HTMLInputElement).checked)
+              window.setTimeout(()=>printPOSComprobanteAbono(resultado.idcuota), 450);
+          }else{
+            msjalertToast('error', '¡Error!', resultado.error[0]);
+          }
+      } catch (error) {
+          console.log(error);
+      }
+      miDialogoAbono.close();
+      miDialogoPagoTotal.close();
+    }
     
 
     let saldopendiente = Number((document.querySelector('#saldopendiente') as HTMLInputElement).value || '0');
@@ -268,6 +340,7 @@
                     const mensajeError = resultado.error ? resultado.error[0] : 'No se pudo procesar la solicitud.';
                     throw new Error(mensajeError);
                 }
+                document.querySelector('#saldopendientetext')!.textContent = '$ '+resultado.saldopendiente.toLocaleString();
                 return resultado;
             } catch (error:any) {
                   console.log(error);

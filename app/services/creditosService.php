@@ -256,20 +256,10 @@ class creditosService {
             $cuota->cierrecaja_id = (int)$ultimocierre->id;
             $cuota->num_orden = $cuotaRepo->calcularNumOrden($idsucursal);
             $r = $cuotaRepo->insert($cuota);
-            $objMedioPago = new separadomediopago([
-                'idcuota'=>$r[1],
-                'mediopago_id'=>$cuota->mediopagoid,
-                'valor'=>$cuota->valorpagado
-            ]);
+            $objMedioPago = new separadomediopago(['idcuota'=>$r[1], 'mediopago_id'=>$cuota->mediopagoid, 'valor'=>$cuota->valorpagado]);
 
             if(isset($credito->factura_id)){ //si es credito abonado
-                $factmediospago = new factmediospago([
-                    'cierrecajaid'=>$ultimocierre->id,
-                    'id_factura'=>$credito->factura_id,
-                    'idcuota'=>$r[1],
-                    'idmediopago'=>$cuota->mediopagoid,
-                    'valor'=>$cuota->valorpagado
-                ]);
+                $factmediospago = new factmediospago(['cierrecajaid'=>$ultimocierre->id, 'id_factura'=>$credito->factura_id, 'idcuota'=>$r[1], 'idmediopago'=>$cuota->mediopagoid, 'valor'=>$cuota->valorpagado]);
                 $factmediospago->crear_varios_reg_arrayobj([$factmediospago]);
 
                 $contableService->createMovimiento([
@@ -316,6 +306,10 @@ class creditosService {
             if(!$getDB->commit())throw new \RuntimeException('No fue posible confirmar el abono.');
             $alertas['exito'][] = 'Cuota procesada';
             $alertas['idcuota'] = $r[1];
+            $alertas['cuota'] = $cuota;
+            $alertas['saldopendiente'] = $credito->saldopendiente;
+            $alertas['mediopago'] = mediospago::uncampo('id', $cuota->mediopagoid, 'mediopago');
+            $alertas['sucursalregistrado'] = sucursales::uncampo('id', $cuota->id_sucursal_idfk, 'nombre');;
         } catch (\DomainException $th) {
             $getDB->rollback();
             $alertas['error'][] = $th->getMessage();
@@ -741,7 +735,7 @@ class creditosService {
 
             if(!$getDB->commit())throw new \RuntimeException('No fue posible confirmar la anulación.');
             $transaccionIniciada = false;
-            return ['exito'=>['Cuota eliminada']];
+            return ['exito'=>['Cuota eliminada'], 'saldopendiente'=>$credito->saldopendiente];
         } catch (\DomainException $th) {
             if($transaccionIniciada)$getDB->rollback();
             return ['error'=>[$th->getMessage()]];

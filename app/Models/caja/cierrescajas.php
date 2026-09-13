@@ -31,8 +31,8 @@ class cierrescajas extends \App\Models\ActiveRecord {
         $this->descuentopos = $args['descuentopos'] ?? 0;
         $this->basecaja = $args['basecaja'] ?? 0;
         $this->ventasenefectivo = $args['ventasenefectivo'] ?? 0;
-        $this->creditocapital = $args['creditocapital'] ?? 0;
-        $this->creditos = $args['creditos'] ?? 0;
+        $this->creditocapital = $args['creditocapital'] ?? 0;  //credito original ej: 180.000, si se aplica un descuento este campo se reduce por el dcto
+        $this->creditos = $args['creditos'] ?? 0;  //credito capital menos el abono incial ej: credito = 180.000 - 20.000 abono inicial, credito: 160.000
         $this->abonostotales = $args['abonostotales'] ?? 0;
         $this->abonosenefectivo = $args['abonosenefectivo'] ?? 0;
         $this->abonoscreditos = $args['abonoscreditos'] ?? 0;

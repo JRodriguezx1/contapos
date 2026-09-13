@@ -28,7 +28,7 @@
     mediospago.forEach(m=>{
       m.addEventListener('input', (e)=>{ calcularmediospago(e);});
       m.addEventListener('focus', ()=>{
-        const valorActual = parseInt(m.value.replace(/[^\d]/g, ''))||0;
+        const valorActual = parseFloat(m.value.trim().replace(/\./g, '').replace(',', '.'))||0;
         if(valorActual === 0)m.value = '';
       });
       m.addEventListener('blur', (e)=>{
@@ -72,7 +72,7 @@
         //como se puede cerrar el modal y aumentar los productos, hay calcular los inputs
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{
-            if(index>0)totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''))||0;
+            if(index>0)totalotrosmedios += parseFloat(item.value.trim().replace(/\./g, '').replace(',', '.'))||0;
         });
 
         if(POS.valorTotal.total<totalotrosmedios){
@@ -162,14 +162,14 @@
     function calcularmediospago(e:Event){
         let totalotrosmedios = 0;
         mediospago.forEach((item, index)=>{ //sumar todos los medios de pago menos el efectivo
-          if(index>0&&POS.tipoventa=="Contado" || POS.tipoventa=="Credito")totalotrosmedios += parseInt(item.value.replace(/[,.]/g, ''))||0;
+          if(index>0&&POS.tipoventa=="Contado" || POS.tipoventa=="Credito")totalotrosmedios += parseFloat(item.value.trim().replace(/\./g, '').replace(',', '.'))||0;
         });
         if(totalotrosmedios<=POS.valorTotal.total&&POS.tipoventa == "Contado" || totalotrosmedios<=valoresCredito.abonoinicial&&POS.tipoventa == "Credito"){
           if(POS.tipoventa == "Contado"){
             POS.mapMediospago.set('1', POS.valorTotal.total-totalotrosmedios);
             if(POS.valorTotal.total-totalotrosmedios == 0 && POS.mapMediospago.has('1'))POS.mapMediospago.delete('1'); //se elimina medio de pago efectivo
           }
-          const valorMedioPago = parseInt((e.target as HTMLInputElement).value.replace(/[,.]/g, ''))||0;
+          const valorMedioPago = parseFloat((e.target as HTMLInputElement).value.trim().replace(/\./g, '').replace(',', '.'))||0;
           POS.mapMediospago.set((e.target as HTMLInputElement).id, valorMedioPago);
           if(valorMedioPago == 0 && POS.mapMediospago.has((e.target as HTMLInputElement).id))POS.mapMediospago.delete((e.target as HTMLInputElement).id);
         }else{ //si la suma de los medios de pago superan el valor total, toma el ultimo input digitado y lo reestablece a su ultimo valor
@@ -187,7 +187,7 @@
     }
 
     function calcularCambio(recibido:string):void{
-      recibido = recibido.replace(/[,.]/g, '');
+      recibido = recibido.trim().replace(/\./g, '').replace(',', '.');
       if(Number(recibido)>POS.mapMediospago.get('1')){
         (document.querySelector('#cambio') as HTMLElement).textContent = (Number(recibido)-POS.mapMediospago.get('1')).toLocaleString()+'';
         return;

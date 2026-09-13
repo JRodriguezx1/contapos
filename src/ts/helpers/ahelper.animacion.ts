@@ -28,8 +28,6 @@
   const gestionAnimaciones = {  //objeto a exportar
     mostrarFeedbackCarrito,
     actualizarBadgeCarritoMovil,
-    datosAdquiriente: {} //inicializar 
-
   };
 
   POS.gestionAnimaciones = gestionAnimaciones;
