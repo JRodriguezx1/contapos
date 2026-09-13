@@ -65,6 +65,10 @@ class creditoscontrolador{
 
         $conflocal = config_local::getParamGlobal();
         $datos = creditosService::detallecredito($id);
+
+        //validar que el separado no se este abriendo desde otra sucursal
+        if($datos['credito']->idtipofinanciacion == 2 && $datos['credito']->id_fksucursal != id_sucursal())
+            return;
         
         $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         $router->render('admin/creditos/detallecredito', $viewData);
@@ -81,6 +85,10 @@ class creditoscontrolador{
 
         $conflocal = config_local::getParamGlobal();
         $datos = creditosService::detallecredito($id);
+
+        //validar que el separado no se este abriendo desde otra sucursal
+        if($datos['credito']->idtipofinanciacion == 2 && $datos['credito']->id_fksucursal != id_sucursal())
+            return;
         
         $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         $router->render('admin/creditos/adicionarProducto', $viewData);
@@ -100,6 +108,11 @@ class creditoscontrolador{
             $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
         }
         $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
+        
+        //validar que el separado no se este abriendo desde otra sucursal
+        if($datos['credito']->idtipofinanciacion == 2 && $datos['credito']->id_fksucursal != id_sucursal())
+            return;
+
         $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
@@ -115,6 +128,9 @@ class creditoscontrolador{
             $alertas = creditosService::registrarAbono($_POST);   // crear factory de repositorios
         }
         $datos = creditosService::detallecredito($_POST['id_credito']);  //// crear factory de repositorios
+        //validar que el separado no se este abriendo desde otra sucursal
+        if($datos['credito']->idtipofinanciacion == 2 && $datos['credito']->id_fksucursal != id_sucursal())
+            return;
         $viewData = array_merge($datos, ['conflocal'=>$conflocal, 'alertas' => $alertas, 'sucursales' => sucursales::all(), 'user' => $_SESSION ]);
         
         $router->render('admin/creditos/detallecredito', $viewData);
@@ -338,6 +354,53 @@ class creditoscontrolador{
             'usuario' => $usuario
         ];
         return $data;
-     }
+    }
+
+
+    public static function buscarIntersucursal(): void{
+        header('Content-Type: application/json; charset=utf-8');
+        isadmin();
+        /*if (!tienePermiso('Consultar créditos de otras sucursales')&& userPerfil() > 3){
+            http_response_code(403);
+            echo json_encode(['error' => ['No tiene autorización.']]);
+            return;
+        }*/
+        $termino = trim($_GET['q'] ?? '');
+        $longitud = mb_strlen($termino);
+        $esIdNumerico = $termino !== '' && ctype_digit($termino);
+
+        if($termino === '' || (!$esIdNumerico && $longitud < 4)){
+            http_response_code(422);
+            echo json_encode([
+                'ok' => false,
+                'error' => 'Ingrese el ID del crédito o al menos 4 caracteres del cliente o de su identificación.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        if($longitud > 80){
+            http_response_code(422);
+            echo json_encode([
+                'ok' => false,
+                'error' => 'El término de búsqueda no puede superar los 80 caracteres.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        try{
+            $repo = new creditosRepository();
+            echo json_encode([
+                'ok' => true,
+                'data' => $repo->buscarAbiertosIntersucursal($termino, id_sucursal())
+            ], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+        }catch(\Throwable $th){
+            error_log('Error al buscar créditos intersucursal: '.$th->getMessage());
+            http_response_code(500);
+            echo json_encode([
+                'ok' => false,
+                'error' => 'No fue posible realizar la búsqueda. Intente nuevamente.'
+            ], JSON_UNESCAPED_UNICODE);
+        }
+    }
 
 }

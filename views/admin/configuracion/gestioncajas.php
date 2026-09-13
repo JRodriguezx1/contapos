@@ -1,21 +1,23 @@
 <div class="gestioncajas">
 
-  <div class="config-section-heading">
-    <div class="config-section-heading__icon">
+  <div class="mb-5 flex flex-col justify-between gap-3 border-b border-slate-200 pb-5 md:flex-row md:items-center">
+    <div class="flex items-center gap-4">
+      <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-4xl font-medium text-indigo-600">
       <i class="fa-solid fa-cash-register"></i>
+      </span>
+      <div>
+        <h2 class="text-3xl font-bold text-slate-900">Gesti&oacute;n de cajas facturadoras</h2>
+        <p class="my-0 text-lg leading-snug text-slate-500">Administra las cajas, facturadores y emisores asociados a la operaci&oacute;n.</p>
+      </div>
     </div>
-    <div>
-      <h4>Gestion de cajas facturadoras</h4>
-      <p>Administra las cajas, facturadores y emisores asociados a la operacion.</p>
-    </div>
-    <button id="crearCaja" class="btn-md btn-indigo config-section-heading__action" type="button">
+    <button id="crearCaja" class="btnDialog btnDialog_primary" type="button">
       <i class="fa-solid fa-plus"></i>
       Crear caja
     </button>
   </div>
 
-  <div class="config-table-card">
-    <table id="tablaCajas" class="display responsive nowrap tabla config-data-table" width="100%">
+  <div class="datatable-card config-table-card">
+    <table id="tablaCajas" class="display responsive nowrap tabla datatable-table" width="100%">
       <thead>
         <tr>
           <th>N.</th>
@@ -31,19 +33,19 @@
           <tr>
             <td><?php echo $index+1;?></td>
             <td>
-              <span class="config-caja-name">
-                <span class="config-caja-name__icon"><i class="fa-solid fa-cash-register"></i></span>
+              <span class="table-entity">
+                <span class="table-entity__icon"><i class="fa-solid fa-cash-register"></i></span>
                 <span><?php echo $value->nombre; ?></span>
               </span>
             </td>
             <td>
-              <span class="config-table-pill config-table-pill--invoice"><?php echo $value->nombreconsecutivo->nombre;?></span>
+              <span class="table-badge table-badge--neutral"><?php echo $value->nombreconsecutivo->nombre;?></span>
             </td>
             <td>
-              <span class="config-table-pill config-table-pill--branch"><?php echo $value->negocio;?></span>
+              <span class="table-badge table-badge--info !whitespace-normal break-words"><?php echo $value->negocio;?></span>
             </td>
             <td>
-              <span class="config-table-pill config-table-pill--issuer"><?php echo isset($nombreEmisores[$value->idemisor])? $nombreEmisores[$value->idemisor]: $negocio->negocio;?></span>
+              <span class="table-badge table-badge--primary !whitespace-normal break-words"><?php echo isset($nombreEmisores[$value->idemisor])? $nombreEmisores[$value->idemisor]: $negocio->negocio;?></span>
             </td>
             <td class="accionestd">
               <div class="acciones-btns" id="<?php echo $value->id;?>" data-caja="<?php echo $value->nombre;?>">
@@ -59,31 +61,31 @@
     </table>
   </div>
 
-  <dialog id="miDialogoCaja" class="midialog-sm config-caja-dialog">
-    <div class="config-caja-dialog__header">
-      <span class="config-caja-dialog__icon"><i class="fa-solid fa-cash-register"></i></span>
+  <dialog id="miDialogoCaja" class="detalledialog_xs">
+    <div class="flex items-center gap-4 bg-gradient-to-br from-indigo-600/15 to-cyan-300/10 p-6">
+      <span class="inline-flex size-20 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-white text-4xl font-medium text-indigo-600"><i class="fa-solid fa-cash-register"></i></span>
       <div>
-        <span class="config-caja-dialog__eyebrow">Caja</span>
-        <h4 id="modalCaja">Crear caja</h4>
-        <p>Configura la caja, su facturador automatico, sede y emisor asociado.</p>
+        <p class="my-0 text-base font-extrabold uppercase leading-5 text-indigo-600">Caja</p>
+        <h4 id="modalCaja" class="text-3xl font-bold leading-6 text-slate-900">Crear caja</h4>
+        <small class="mt-1 block text-lg leading-snug text-slate-500">Configura la caja, su facturador autom&aacute;tico, sede y emisor asociado.</small>
       </div>
     </div>
 
-    <form id="formCrearUpdateCaja" class="config-caja-dialog__form" action="/admin/config/crear_caja" method="POST">
+    <form id="formCrearUpdateCaja" class="pb-8" action="/admin/config/crear_caja" method="POST">
       <div id="divmsjalertacaja"></div>
 
-      <div class="config-caja-dialog__grid">
-        <div class="config-caja-dialog__field config-caja-dialog__field--wide">
+      <div class="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
+        <div class="form-field sm:col-span-2">
           <label for="nombrecaja">Nombre</label>
-          <div class="config-caja-dialog__control">
+          <div class="form-input">
             <span><i class="fa-solid fa-cash-register"></i></span>
             <input id="nombrecaja" type="text" placeholder="Nombre de la caja" name="nombre" value="" required>
           </div>
         </div>
 
-        <div class="config-caja-dialog__field">
+        <div class="form-field">
           <label for="idtipoconsecutivo">Facturador automatico</label>
-          <div class="config-caja-dialog__select">
+          <div class="form-input">
             <span><i class="fa-solid fa-receipt"></i></span>
             <select id="idtipoconsecutivo" name="idtipoconsecutivo" required>
               <option value="" disabled selected>-Seleccionar-</option>
@@ -94,9 +96,9 @@
           </div>
         </div>
 
-        <div class="config-caja-dialog__field">
+        <div class="form-field">
           <label for="negociogestioncaja">Sede</label>
-          <div class="config-caja-dialog__select">
+          <div class="form-input">
             <span><i class="fa-solid fa-store"></i></span>
             <select id="negociogestioncaja" name="negocio" required>
               <option value="" disabled selected>-Seleccionar-</option>
@@ -105,9 +107,9 @@
           </div>
         </div>
 
-        <div class="config-caja-dialog__field config-caja-dialog__field--wide">
+        <div class="form-field sm:col-span-2">
           <label for="idEmisorCaja">Emisor</label>
-          <div class="config-caja-dialog__select">
+          <div class="form-input">
             <span><i class="fa-solid fa-id-card-clip"></i></span>
             <select id="idEmisorCaja" name="idEmisorCaja">
               <option value="" selected> <?php echo $negocio->negocio;?> </option>
@@ -119,9 +121,9 @@
         </div>
       </div>
 
-      <div class="config-caja-dialog__actions">
-        <button class="config-caja-dialog__button config-caja-dialog__button--ghost" type="button" value="Salir">Salir</button>
-        <input id="btnEditarCrearCaja" class="config-caja-dialog__button config-caja-dialog__button--primary" type="submit" value="Crear">
+      <div class="formulario__contenedorBtns--gridfull px-6">
+        <button class="btnDialog btnDialog_light" type="button" value="Salir">Salir</button>
+        <input id="btnEditarCrearCaja" class="btnDialog btnDialog_primary" type="submit" value="Crear">
       </div>
     </form>
   </dialog><!--fin crear/editar caja-->

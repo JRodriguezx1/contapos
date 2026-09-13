@@ -1,10 +1,11 @@
-<div class="contenido3 accordion_tab_content bg-white p-6 rounded-lg shadow-md w-full space-y-6 mt-6">
-    <div class="flex flex-wrap gap-10">
-        <p class="text-indigo-600 font-bold">Claves</p>
+<div class="contenido3 accordion_tab_content mt-6 min-w-0 w-full space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+    <div class="flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2">
+        <span class="flex items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600"><i class="fa-solid fa-gear" aria-hidden="true"></i></span>
+        <p class="text-slate-900 font-bold m-0 text-lg">Claves</p>
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 gap-y-10">
+    <div class="grid grid-cols-1 gap-4 gap-y-10 lg:grid-cols-2 [&>div]:min-w-0 [&>div]:rounded-lg [&>div]:border [&>div]:border-gray-200 [&>div]:bg-gray-50 [&>div]:p-4 [&>div]:transition [&>div:hover]:border-indigo-200 [&>div:hover]:shadow-md">
         <div>
-            <label for="clave_para_eliminar_factura" class="block mb-2 text-xl font-medium text-gray-900 ">
+            <label for="clave_para_eliminar_factura" class="block mb-2 text-xl font-semibold text-gray-900 ">
                 Clave para eliminar factura
             </label>
             <input 
@@ -17,7 +18,7 @@
             >
         </div>
         <div>
-            <label for="clave_para_eliminar_un_gasto/base" class="block mb-2 text-xl font-medium text-gray-900 ">
+            <label for="clave_para_eliminar_un_gasto/base" class="block mb-2 text-xl font-semibold text-gray-900 ">
                 Clave para eliminar un gasto/base
             </label>
             <input 
@@ -30,7 +31,7 @@
             >
         </div>
         <div>
-            <label for="clave_para_agregar_descuento" class="block mb-2 text-xl font-medium text-gray-900 ">
+            <label for="clave_para_agregar_descuento" class="block mb-2 text-xl font-semibold text-gray-900 ">
                 Clave para agregar descuento
             </label>
             <input 
@@ -43,7 +44,7 @@
             >
         </div>
         <div>
-            <label for="clave_para_abrir_cajón_monedero" class="block mb-2 text-xl font-medium text-gray-900 ">
+            <label for="clave_para_abrir_cajón_monedero" class="block mb-2 text-xl font-semibold text-gray-900 ">
                 Clave para abrir cajón monedero
             </label>
             <input 
@@ -56,7 +57,7 @@
             >
         </div>
         <div>
-            <label for="clave_para_ajustar_credito" class="block mb-2 text-xl font-medium text-gray-900 ">
+            <label for="clave_para_ajustar_credito" class="block mb-2 text-xl font-semibold text-gray-900 ">
                 Clave para ajustar credito
             </label>
             <input 
@@ -69,7 +70,7 @@
             >
         </div>
         <div>
-            <label for="clave_para_cambiar_emisor_de_una_factura" class="block mb-2 text-xl font-medium text-gray-900 ">
+            <label for="clave_para_cambiar_emisor_de_una_factura" class="block mb-2 text-xl font-semibold text-gray-900 ">
                 Clave para cambiar emisor de una factura
             </label>
             <input 

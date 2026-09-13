@@ -100,13 +100,11 @@
             if (detalleSuscrip.estado === '1') {
                 estadoText.classList.replace('bg-red-100', 'bg-green-100');
                 estadoText.classList.replace('text-red-700', 'text-green-700');
-                estadoText.classList.remove('config-subscription-status--paused');
-                estadoText.classList.add('config-subscription-status--active');
+                estadoText.classList.replace('border-red-300', 'border-green-300');
             } else {
                 estadoText.classList.replace('bg-green-100', 'bg-red-100');
                 estadoText.classList.replace('text-green-700', 'text-red-700');
-                estadoText.classList.remove('config-subscription-status--active');
-                estadoText.classList.add('config-subscription-status--paused');
+                estadoText.classList.replace('border-green-300', 'border-red-300');
             }
         }
 

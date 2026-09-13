@@ -33,7 +33,7 @@ class cuotasRepository extends operationRepository{
     }
 
     public function obtenerPorSeparado_Mediopago(int $id):array{
-        $sql = "SELECT c.*, JSON_ARRAYAGG(
+        $sql = "SELECT c.*, s.nombre AS nombresucursal, JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', mp.id,
                         'idcuota', sm.idcuota,
@@ -43,6 +43,7 @@ class cuotasRepository extends operationRepository{
                         'estado', mp.estado
                     )
                 ) AS mediosdepago FROM cuotas c
+                LEFT JOIN sucursales s ON s.id = c.id_sucursal_idfk
                 LEFT JOIN separadomediopago sm ON sm.idcuota = c.id
                 LEFT JOIN mediospago mp ON mp.id = sm.mediopago_id
                 WHERE c.id_credito = {$id} GROUP BY c.id;";
@@ -54,7 +55,7 @@ class cuotasRepository extends operationRepository{
 
 
     public function obtenerPorCredito_Mediopago(int $id):array{
-        $sql = "SELECT c.*, JSON_ARRAYAGG(
+        $sql = "SELECT c.*, s.nombre AS nombresucursal, JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', mp.id,
                         'idcuota', fm.idcuota,
@@ -64,6 +65,7 @@ class cuotasRepository extends operationRepository{
                         'estado', mp.estado
                     )
                 ) AS mediosdepago FROM cuotas c
+                LEFT JOIN sucursales s ON s.id = c.id_sucursal_idfk
                 LEFT JOIN factmediospago fm ON fm.idcuota = c.id
                 LEFT JOIN mediospago mp ON mp.id = fm.idmediopago
                 WHERE c.id_credito = {$id} GROUP BY c.id;";

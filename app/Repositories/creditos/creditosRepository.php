@@ -38,6 +38,14 @@ class creditosRepository extends operationRepository{
     }
 
 
+    /** Obtiene y bloquea un crédito mientras se registra un abono. */
+    public function buscarPorIdParaActualizar(int $idCredito):?creditos{
+        if($idCredito <= 0)return null;
+        $rows = $this->fetchAll("SELECT * FROM {$this->table} WHERE id = {$idCredito} LIMIT 1 FOR UPDATE");
+        return $rows ? new $this->entityClass($rows[0]) : null;
+    }
+
+
     public function generarSeparado(object $entity):array{
         if(!isset($entity->frecuenciapago))$entity->frecuenciapago = date('j');
         $entity->abonodecuotas = $entity->abonoinicial;
@@ -218,5 +226,60 @@ class creditosRepository extends operationRepository{
         return $rows ?? [];
     }
 
+
+    public function buscarAbiertosIntersucursal(string $termino, int $idsucursal):array{
+        $columnas = "SELECT
+                        cr.id,
+                        cr.num_orden,
+                        cr.idtipofinanciacion,
+                        cr.id_fksucursal,
+                        cr.fechainicio,
+                        cr.fechavencimiento,
+                        cr.montototal,
+                        cr.saldopendiente,
+                        CONCAT_WS(' ', cli.nombre, cli.apellido) AS cliente,
+                        cli.telefono,
+                        cli.identificacion,
+                        s.nombre AS sucursal
+                    FROM {$this->table} cr
+                    INNER JOIN clientes cli ON cr.cliente_id = cli.id
+                    INNER JOIN sucursales s ON cr.id_fksucursal = s.id
+                    WHERE cr.idestadocreditos = 2 AND cr.idtipofinanciacion = 1 AND cr.id_fksucursal <> ?";
+
+        $buscarSoloPorId = ctype_digit($termino) && mb_strlen($termino) < 4;
+
+        if($buscarSoloPorId){
+            $sql = $columnas." AND cr.id = ? ORDER BY cr.id DESC LIMIT 10";
+            $idcredito = (int)$termino;
+            $stmt = self::$db->prepare($sql);
+            if(!$stmt)throw new \RuntimeException('No fue posible preparar la búsqueda intersucursal.');
+            $stmt->bind_param('ii', $idsucursal, $idcredito);
+        }else{
+            $sql = $columnas." AND (
+                                CONCAT_WS(' ', cli.nombre, cli.apellido) LIKE ? ESCAPE '!'
+                                OR cli.identificacion LIKE ? ESCAPE '!'
+                                OR cr.id = ?
+                            )
+                            ORDER BY cr.id DESC LIMIT 10";
+            $terminoLike = str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $termino);
+            $patron = '%'.$terminoLike.'%';
+            $idcredito = ctype_digit($termino) ? (int)$termino : 0;
+            $stmt = self::$db->prepare($sql);
+            if(!$stmt)throw new \RuntimeException('No fue posible preparar la búsqueda intersucursal.');
+            $stmt->bind_param('issi', $idsucursal, $patron, $patron, $idcredito);
+        }
+
+        if(!$stmt->execute()){
+            $stmt->close();
+            throw new \RuntimeException('No fue posible consultar los créditos intersucursal.');
+        }
+
+        $resultado = $stmt->get_result();
+        $rows = [];
+        while($row = $resultado->fetch_object())$rows[] = $row;
+        $resultado->free();
+        $stmt->close();
+        return $rows;
+    }
     
 }

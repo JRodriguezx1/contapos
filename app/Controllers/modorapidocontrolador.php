@@ -116,14 +116,6 @@ class modorapidocontrolador{
         echo json_encode($alertas);
         return;
       }
-      /*$productosDB = stockproductossucursal::IN_Where('productoid', $idsProductos, ['sucursalid', id_sucursal()]);
-      foreach($productosDB as $item){
-        if(($item->stock - $mapCarrito[$item->productoid])<=0){
-          $alertas['error'][] = "Productos agotados, no es posible vender";
-          echo json_encode($alertas);
-          return;
-        }
-      }*/
     }
 
     if($_SERVER['REQUEST_METHOD'] !== 'POST' ){
@@ -185,8 +177,7 @@ class modorapidocontrolador{
         $mensajeExito = "Pago procesado con exito";
         $dataInvoice = ventasService::dataInvoiceForPrinterServer($datosAdquiriente, $factura, $consecutivo);
 
-      //Si es cotizacion o remision
-      }else{
+      }else{ //Si es cotizacion o remision
         $r = $factura->crear_guardar();
         //////////// Guardar los productos de la venta en tabla ventas //////////////
         foreach($carrito as $obj){

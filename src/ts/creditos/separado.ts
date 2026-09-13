@@ -5,9 +5,10 @@
      
     const btnCrearSeparado = document.querySelector('#btnCrearSeparado');
     const miDialogoFacturar = document.querySelector('#miDialogoFacturar') as any;
-    const tablaSeparado = document.querySelector('#tablaSeparado tbody') as HTMLBodyElement;
+    const tablaSeparado = document.querySelector('#tablaventa tbody') as HTMLBodyElement;
     const btnPagar = document.getElementById('btnPagar') as HTMLInputElement;
     const btnCaja = document.querySelector('#caja') as HTMLSelectElement; //select de la caja en el modal pagar
+    const carritoVacio = document.querySelector('#carritoVacio') as HTMLElement;
 
 
     type conversionunidadesapi = {
@@ -44,17 +45,16 @@
     constImp['16'] = 0.1379310344827586; //iva, tarifa al 16%,  contratos firmados con el estado antes de ley 1819
     constImp['19'] = 0.1596638655462185; //iva, tarifa al 19%,  tarifa general
 
-    const select2Separado = {
-      allowClear: true,
-      width: '100%',
-      dropdownCssClass: 'separado-select2-dropdown'
-    };
-
-    ($('#cliente') as any).select2({ ...select2Separado, placeholder: "Seleccionar cliente"});
-    ($('#frecuenciapago') as any).select2({ ...select2Separado, placeholder: "Dia de pago"});
-    habilitarAperturaSelect2Completa('#cliente');
-    habilitarAperturaSelect2Completa('#frecuenciapago');
-    limpiarCeroAlEnfocar('#abonoinicial');
+    ($('#cliente') as any).select2({
+      placeholder: "Seleccionar el cliente",
+      maximumSelectionLength: 1,
+      dropdownCssClass: 'select2-theme-dropdown'
+    });
+    ($('#frecuenciapago') as any).select2({
+      placeholder: "Seleccionar el dia de pago",
+      maximumSelectionLength: 1,
+      dropdownCssClass: 'select2-theme-dropdown'
+    });
 
      document.addEventListener("click", cerrarDialogoExterno);
 
@@ -87,12 +87,13 @@
 
     function activarselect2(){
       ($('#articulo') as any).select2({ 
-          ...select2Separado,
-          data: [{ id: '', text: '' }, ...filteredData],
-          placeholder: "Buscar articulo",
+          data: filteredData,
+          placeholder: "Selecciona un item",
+          maximumSelectionLength: 1,
+          dropdownCssClass: 'select2-theme-dropdown',
           /*
           templateResult: function (data:{id:string, text:string, tipo:string}) {
-              // Personalizar cÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³mo se muestra cada opciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n en el dropdown
+              // Personalizar cómo se muestra cada opción en el dropdown
               if (!data.id) { return data.text; }  // Si no hay id, solo mostrar el texto
               const html = `
                   <div class="custom-option">
@@ -102,46 +103,17 @@
               return $(html);  // Devolver el HTML personalizado
           }*/
       });
-      $("#articulo").val('').trigger('change.select2');
-      habilitarAperturaSelect2Completa('#articulo');
     }
 
-    ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¹Ã…â€œADIR AL CARRITO ////// 
-    function habilitarAperturaSelect2Completa(selector:string){
-      const select = document.querySelector(selector) as HTMLSelectElement;
-      const contenedor = select?.closest('.separado-input') as HTMLElement;
-      if(!select || !contenedor || contenedor.dataset.openSelect2 === 'true')return;
-
-      contenedor.dataset.openSelect2 = 'true';
-      contenedor.addEventListener('click', (e:Event)=>{
-        const target = e.target as HTMLElement;
-        if(target.closest('.select2-selection__clear'))return;
-        if(target.closest('.select2-dropdown'))return;
-        ($(select) as any).select2('open');
-      });
-    }
-
-    function limpiarCeroAlEnfocar(selector:string){
-      const input = document.querySelector(selector) as HTMLInputElement;
-      if(!input)return;
-
-      input.addEventListener('focus', ()=>{
-        if(input.value.trim() === '0')input.value = '';
-      });
-
-      input.addEventListener('blur', ()=>{
-        if(input.value.trim() === '')input.value = '0';
-      });
-    }
-
+    ////// EVENTO AL SELECT ARTICULOS O ITEMS PARA SELECCIONAR EL ITEM Y AÑADIR AL CARRITO ////// 
     $("#articulo").on('change', (e)=>{
         let datos = ($('#articulo') as any).select2('data')[0];
-        if(datos?.id){
+        if(datos){
           const itemselected = allproducts.find(x=>x.id == datos.id)!
           const productoConfigurado = structuredClone(itemselected);
           filtrarInsumos(productoConfigurado);
           actualizarCarrito(datos.id, datos.precio, productoConfigurado);
-          $("#articulo").val('').trigger('change');
+          $("#articulo").val('null').trigger('change');
         }
     });
 
@@ -197,7 +169,7 @@
             //const insumo2 = producto2.insumos.find((x:any) => x.id_subproducto == insumo1.id_subproducto);
             const insumo2:any = mapaProduct2.get(insumo1.id_subproducto);
             if (!insumo2)return false;
-            // Comparar selecciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n
+            // Comparar selección
             if (Number(insumo1.seleccionado) !== Number(insumo2.seleccionado))
                 return false;
             // Comparar cantidad
@@ -233,24 +205,38 @@
           const tr = document.createElement('TR') as HTMLTableRowElement;
           tr.classList.add('productselect');
           tr.dataset.indexcarrito = i+'';
-          tr.insertAdjacentHTML('afterbegin', `
-            <td><span class="separado-product-name">${item.nombreproducto}</span></td>
-            <td><select class="separado-unit-select selectunidad">${options}</select></td>
-            <td>
-              <div class="separado-qty-control">
-                <button type="button" class="separado-qty-btn" aria-label="Restar unidad"><span class="menos material-symbols-outlined">remove</span></button>
-                <input type="text" class="inputcantidad" name="inputcantidad" value="${item.stock}">
-                <button type="button" class="separado-qty-btn" aria-label="Sumar unidad"><span class="mas material-symbols-outlined">add</span></button>
+          tr.insertAdjacentHTML('afterbegin',    
+            `<td class="">
+                <p class="nombreproducto text-xl font-semibold text-slate-800 leading-7 break-words">${item.nombreproducto}</p>
+            </td>
+            <td class="">
+              <div class="">
+                <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="menos material-symbols-outlined text-base">remove</span></button>
+                <input
+                  type="text"
+                  class="inputcantidad w-16 max-w-[12ch] h-9 px-2 rounded-lg border border-slate-300 text-center font-medium text-xl outline-none focus:border-indigo-500"
+                  value="${item.stock}"
+                >
+                <button type="button" class="shrink-0 bg-indigo-700 text-white rounded-full"><span class="mas material-symbols-outlined text-base">add</span></button>
               </div>
             </td>
-            <td><strong class="separado-row-total">$${item.total.toLocaleString()}</strong></td>
-            <td class="accionestd"><div class="acciones-btns"><button class="separado-row-action separado-row-action--danger eliminarProducto" type="button" aria-label="Eliminar producto"><i class="fa-solid fa-trash-can"></i></button></div></td>`);
+            <td class="text-xl font-semibold text-slate-900">$${Number(item.valorunidad).toLocaleString()}</td>
+            <td class="text-xl font-bold text-slate-900">$${Number(item.total).toLocaleString()}</td>
+            <td class="">
+                <div class="">
+                    <button class="eliminarProducto w-9 h-9 rounded-lg border border-red-200 bg-red-50 text-red-500 transition-all duration-300 hover:bg-red-600 hover:text-white  hover:border-red-600 hover:shadow-md">
+                        <i class="fa-solid fa-trash-can text-base"></i>
+                    </button>
+                </div>
+            </td>`);
+
           tablaSeparado?.appendChild(tr);
         });
     }
 
     function valorCarritoTotal(){
-       //calcular el impuesto discriminado por tarifa
+      carritoVacio.classList.toggle('hidden', carrito.length > 0); //quitar imagen de carrito en el carrito de compras
+      //calcular el impuesto discriminado por tarifa
       const idimpuesto: Record<string, number> = {'0': 1, '5': 2, '16': 3, '19': 4, 'excluido': 5, '8': 6 };
       const objbase:{'0':number, '5':number, '16':number, '19':number, 'excluido':number, '8':number} = {'0': 0, '5': 0, '16': 0, '19': 0, 'excluido':0, '8': 0};
 
@@ -322,7 +308,7 @@
             (e.target as HTMLInputElement).value = val;
             sumarcantidad(productoCarrito, Number(val), indexcarrito);
           });
-          (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento aÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â±adido
+          (e.target as HTMLElement).dataset.event = "eventInput"; //se marca al input que ya tiene evento añadido
         }
       }
 
@@ -342,7 +328,6 @@
       e.preventDefault();
       if((document.querySelector('#cliente') as HTMLSelectElement).value === ''){
         msjAlert('error', 'Debe seleccionar el cliente.', (document.querySelector('#divmsjalerta') as HTMLElement));
-        resaltarCampoRequerido('#cliente');
         return;
       }
       if((document.querySelector('#cantidadcuotas') as HTMLSelectElement).value === ''){
@@ -356,7 +341,7 @@
         document.querySelector('#campocantidadcuotas')?.remove();
         document.querySelector('#campomontocuota')?.remove();
         document.querySelector('#abonoTotal')?.classList.remove('hidden');
-        document.querySelector('#textPrint')!.textContent = '\u00bfDesea imprimir comprobante?';
+        document.querySelector('#textPrint')!.textContent = '¿Desea imprimir comprobante?';
         tipoventa = "Credito";
         //mapMediospago.clear();
         POS.tipoventa = tipoventa;
@@ -367,74 +352,22 @@
       }
     });
 
-    function resaltarCampoRequerido(selector:string){
-      const campo = document.querySelector(selector) as HTMLElement;
-      const contenedor = campo?.closest('.separado-input') as HTMLElement;
-      if(!contenedor)return;
-
-      contenedor.classList.remove('separado-input--attention');
-      void contenedor.offsetWidth;
-      contenedor.classList.add('separado-input--attention');
-      contenedor.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      setTimeout(()=>{
-        contenedor.classList.remove('separado-input--attention');
-      }, 2200);
-    }
-
-    function mostrarMensajeMetodosPago(){
-      const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
-      if(!mensaje)return;
-
-      mensaje.classList.remove('hidden', 'payment-methods-required-message--visible');
-      void mensaje.offsetWidth;
-      mensaje.classList.add('payment-methods-required-message--visible');
-    }
-
-    function ocultarMensajeMetodosPago(){
-      const mensaje = document.querySelector('#paymentMethodsRequiredMessage') as HTMLElement;
-      if(!mensaje)return;
-
-      mensaje.classList.add('hidden');
-      mensaje.classList.remove('payment-methods-required-message--visible');
-    }
-
-    function resaltarMetodosPago(){
-      const panel = document.querySelector('.payment-methods-panel') as HTMLElement;
-      const acordeon = document.querySelector('#first') as HTMLInputElement;
-      if(!panel)return;
-
-      const alertaSuperior = document.querySelector('#divmsjalertaprocesarpago') as HTMLElement;
-      if(alertaSuperior)alertaSuperior.innerHTML = '';
-
-      if(acordeon)acordeon.checked = true;
-      mostrarMensajeMetodosPago();
-      panel.classList.remove('separado-input--attention', 'payment-methods-panel--attention');
-      void panel.offsetWidth;
-      panel.classList.add('separado-input--attention', 'payment-methods-panel--attention');
-      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      setTimeout(()=>{
-        panel.classList.remove('separado-input--attention', 'payment-methods-panel--attention');
-      }, 2200);
-    }
-
 
     document.querySelector('#formfacturar')?.addEventListener('submit', e=>{
       e.preventDefault();
       if(valorTotal.total <= 0 || valorTotal.subtotal <= 0){
-        resaltarMetodosPago();
+        msjAlert('error', 'Medio de pago no indicado', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
         return;
       }
       //calcular si el totoal de los medios de pago es menor al abono inicial, abortar pago...
       let totalMediosPago:number = 0;
       for(let value of mapMediospago.values())totalMediosPago+=value;
       if(totalMediosPago<POS.gestionSubirModalPagar.valoresCredito.abonoinicial){
-        resaltarMetodosPago();
+        //msjAlert('error', 'Valor a pagar no corresponde', (document.querySelector('#divmsjalertaprocesarpago') as HTMLElement));
+        POS.gestionSubirModalPagar.mostrarMensajeMetodosPago?.();
         return;
       }
 
-      ocultarMensajeMetodosPago();
       btnPagar.disabled = true;
       btnPagar.value = 'Procesando...';
       procesarSeparado();
@@ -477,7 +410,7 @@
           const respuesta = await fetch(url, {method: 'POST', body: datos}); 
           const resultado = await respuesta.json();
           if(resultado.exito !== undefined){
-            msjalertToast('success', '\u00a1Exito!', resultado.exito[0]);
+            msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             /////// reinciar modulo de ventas
             //vaciarventa();
             btnPagar.disabled = false;
@@ -489,7 +422,7 @@
             
             setTimeout(() => { window.location.href = "/admin/creditos"; }, 900);
           }else{
-            msjalertToast('error', '\u00a1Error!', resultado.error[0]);
+            msjalertToast('error', '¡Error!', resultado.error[0]);
           }
       } catch (error) {
           console.log(error);
@@ -519,4 +452,3 @@
   }
 
 })();
-

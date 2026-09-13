@@ -121,17 +121,22 @@
                 <span class="material-symbols-outlined text-xl">add</span>
                 Agregar
               </span>
+
+              
+
             </label>
 
-            <div id="paymentMethodsRequiredMessage" class="payment-methods-required-message hidden" role="alert" aria-live="polite">
-              <span class="material-symbols-outlined">error</span>
-              <div>
-                <strong>Falta asignar el abono</strong>
-                <p>Selecciona un medio de pago y registra el valor correspondiente al abono inicial.</p>
-              </div>
-            </div>
 
             <div class="wrapper">
+              
+              <div id="paymentMethodsRequiredMessage" class="payment-methods-required-message" role="alert" aria-live="polite">
+                <span class="material-symbols-outlined">error</span>
+                <div>
+                  <strong>Falta asignar el abono</strong>
+                  <p>Selecciona un medio de pago y registra el valor correspondiente al abono inicial.</p>
+                </div>
+              </div>
+
               <div class="wrapper-content">
                 <div id="mediospagos" class="content grid grid-cols-1 gap-4 pt-5 md:grid-cols-2">
                   <?php foreach($mediospago as $index => $value):?>

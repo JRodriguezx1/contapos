@@ -17,7 +17,6 @@
 
         const parametrosURL = new URLSearchParams(window.location.search);
         const id = parametrosURL.get('id');
-        inicializarSelectsDetalleCliente();
 
         function clientesGraficas($url:string, $dato:string){
             if(id!=null&&!Number.isNaN(id))
@@ -32,30 +31,6 @@
                         console.log(error);
                     }
                 })();
-        }
-
-        function inicializarSelectsDetalleCliente():void{
-            const selectConfig = {
-                width: '100%',
-                minimumResultsForSearch: Infinity,
-                dropdownCssClass: 'cliente-detail-select2-dropdown'
-            };
-            ($('#PagoTotal_caja') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoPagoTotal')
-            });
-            ($('#PagoTotal_mediopago') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoPagoTotal')
-            });
-            ($('#abono_caja') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoAbono')
-            });
-            ($('#abono_mediopago') as any).select2({
-                ...selectConfig,
-                dropdownParent: $('#miDialogoAbono')
-            });
         }
 
         clientesGraficas('/admin/api/clientes/comprasXMesXCliente?id=', 'comprasXMes');
@@ -79,18 +54,7 @@
                     fill: true,
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: "#14233b",
-                                font: { weight: "bold" }
-                            }
-                        }
-                    }
-                }
+                options: { responsive: true }
                 });
             }
         }
@@ -115,17 +79,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: "bottom",
-                            labels: {
-                                color: "#14233b",
-                                font: { weight: "bold" },
-                                padding: 16
-                            }
-                        }
-                    }
+                    plugins: { legend: { position: "bottom" } }
                 }
                 });
             }
@@ -179,8 +133,8 @@
                             const tr = td.parentElement;
                             if(tr){
                                 tr.children[5].textContent = '$0';
-                                tr?.children[5].classList.remove('cliente-detail-debt-cell');
-                                tr.children[6].innerHTML = '<span class="cliente-detail-status cliente-detail-status--1">Finalizado</span>';
+                                tr?.children[5].classList.remove('!text-red-600');
+                                tr.children[6].innerHTML = '<span class="table-status table-status--success">Finalizado</span>';
                                 tr.children[6].classList.remove('is-open', 'pendiente');
                                 tr.children[6].classList.add('is-done');
                             }
@@ -294,12 +248,12 @@
                     document.querySelector('#totalDeudaText')!.textContent = '$'+deudatotalCiente;
                     indiceFila.children[5].textContent = '$'+saldopendienteCredito;
                     if((Number(saldopendienteCredito))== 0){
-                        indiceFila.children[5].classList.remove('cliente-detail-debt-cell');
-                        indiceFila.children[6].innerHTML = '<span class="cliente-detail-status cliente-detail-status--1">Finalizado</span>';
+                        indiceFila.children[5].classList.remove('!text-red-600');
+                        indiceFila.children[6].innerHTML = '<span class="table-status table-status--success">Finalizado</span>';
                         indiceFila.children[6].classList.remove('is-open', 'pendiente');
                         indiceFila.children[6].classList.add('is-done');
                     }else{
-                        indiceFila.children[6].innerHTML = '<span class="cliente-detail-status cliente-detail-status--2">Abierto</span>';
+                        indiceFila.children[6].innerHTML = '<span class="table-status table-status--warning">Abierto</span>';
                     }
                     (indiceFila.children[7].children[0] as HTMLDivElement).dataset.saldopendiente = saldopendienteCredito;
                     miDialogoAbono.close();

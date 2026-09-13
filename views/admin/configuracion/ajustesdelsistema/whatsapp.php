@@ -1,32 +1,32 @@
-<div class="contenido9 configNotificationWS config-whatsapp accordion_tab_content bg-white p-6 rounded-lg shadow-md w-full space-y-6 mt-6">
+<div class="contenido9 configNotificationWS accordion_tab_content mt-6 grid min-w-0 w-full gap-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
 
-  <div class="config-whatsapp__hero">
-    <div class="config-whatsapp__title">
-      <span><i class="fa-brands fa-whatsapp"></i></span>
+  <div class="border border-slate-200 rounded-xl p-4 shadow-lg bg-gradient-to-br from-indigo-600/10 to-cyan-400/5">
+    <div class="flex items-center gap-4 flex-1">
+      <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-green-100 text-3xl text-green-600 font-medium"><i class="fa-brands fa-whatsapp"></i></span>
       <div>
-        <p>Notificaciones</p>
-        <h1>WhatsApp</h1>
-        <small>Configura destinos y alertas automaticas del sistema.</small>
+        <p class="mb-1 mt-0 text-base font-extrabold uppercase text-indigo-600 leading-4">Notificaciones</p>
+        <h1 class="m-0 break-words text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">WhatsApp</h1>
+        <small class="mt-1 mb-0 text-lg leading-snug text-slate-500">Configura destinos y alertas automaticas del sistema.</small>
       </div>
     </div>
   </div>
 
-  <section class="config-whatsapp__section">
-    <div class="config-whatsapp__section-header">
+  <section class="rounded-xl border border-slate-200 bg-white p-4 shadow-lg">
+    <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-4">
       <div>
-        <h2>Destinos de notificaci&oacute;n</h2>
-        <p>Registra los contactos o grupos que recibir&aacute;n los avisos.</p>
+        <h2 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Destinos de notificaci&oacute;n</h2>
+        <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Registra los contactos o grupos que recibir&aacute;n los avisos.</p>
       </div>
-      <span><?php echo count($contactsNotificationWS);?> <?php echo count($contactsNotificationWS)>1?' Registros':' Registro';?></span>
+      <span class="text-base font-bold rounded-full py-1 px-3 text-indigo-600 border border-indigo-200 bg-indigo-50"><?php echo count($contactsNotificationWS);?> <?php echo count($contactsNotificationWS)>1?' Registros':' Registro';?></span>
     </div>
 
-    <div class="config-whatsapp__destinations">
-      <form id="formCreateContactNotifcationWs" class="config-whatsapp-form">
-        <div class="config-whatsapp-form__header">
-          <span><i class="fa-solid fa-user-plus"></i></span>
+    <div class="grid gap-4 xl:grid-cols-3">
+      <form id="formCreateContactNotifcationWs" class="formulario gap-3 p-4 border border-slate-200 rounded-xl bg-slate-50 xl:col-span-1">
+        <div class="flex items-center gap-3 border-b border-slate-200 pb-3">
+          <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-user-plus"></i></span>
           <div>
-            <h3>Agregar destino</h3>
-            <p>Contacto individual o grupo.</p>
+            <h3 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Agregar destino</h3>
+            <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Contacto individual o grupo.</p>
           </div>
         </div>
 
@@ -48,22 +48,22 @@
           </select>
         </div>
 
-        <button type="submit" class="config-whatsapp-form__submit">
+        <button type="submit" class="btnDialog btnDialog_esmeralda">
           <i class="fa-solid fa-plus"></i>
           Agregar destino
         </button>
       </form>
 
-      <div class="config-whatsapp-table">
-        <div class="config-whatsapp-table__header">
+      <div class="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 xl:col-span-2">
+        <div class="p-4">
           <div>
-            <h3>Destinos configurados</h3>
-            <p>Prueba o elimina los destinos activos.</p>
+            <h3 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Destinos configurados</h3>
+            <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Prueba o elimina los destinos activos.</p>
           </div>
         </div>
 
-        <div class="config-whatsapp-table__scroll">
-          <table id="tablaNumbersWS">
+        <div class="w-full min-w-0 max-w-full overflow-x-auto">
+          <table id="tablaNumbersWS" class="datatable-table tabla">
             <thead>
               <tr>
                 <th>Nombre</th>
@@ -79,17 +79,17 @@
               <?php foreach($contactsNotificationWS as $index => $value): ?>
               <tr id="<?php echo $value->id;?>">
                 <td>
-                  <span class="config-whatsapp-contact">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    <?php echo $value->nombre;?>
+                  <span class="table-entity">
+                    <span class="table-entity__icon !h-10 !bg-green-100 !text-green-600"><i class="fa-brands fa-whatsapp"></i></span>
+                    <span><?php echo $value->nombre;?></span>
                   </span>
                 </td>
-                <td><span class="config-whatsapp-pill config-whatsapp-pill--phone"><?php echo $value->movil;?></span></td>
-                <td><span class="config-whatsapp-pill"><?php echo $value->tipo;?></span></td>
-                <td><button class="test config-whatsapp-action config-whatsapp-action--test" type="button">Test</button></td>
-                <td><span class="config-whatsapp-status">Activo</span></td>
+                <td><span class="table-badge table-badge--info"><?php echo $value->movil;?></span></td>
+                <td><span class="table-badge table-badge--primary"><?php echo $value->tipo;?></span></td>
+                <td><button class="test inline-flex h-12 items-center justify-center rounded-md bg-indigo-50 px-4 text-base font-extrabold text-indigo-700 transition hover:bg-indigo-100" type="button">Test</button></td>
+                <td><span class="table-status table-status--success">Activo</span></td>
                 <td>
-                  <button class="config-whatsapp-icon-button eliminarContacto" type="button" title="Eliminar contacto">
+                  <button class="table-action table-action--danger eliminarContacto" type="button" title="Eliminar contacto">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
                 </td>
@@ -102,21 +102,21 @@
     </div>
   </section>
 
-  <section class="config-whatsapp__section">
-    <div class="config-whatsapp__section-header">
+  <section class="border border-slate-200 p-4 rounded-xl bg-white">
+    <div class="border-b border-slate-200 pb-4 mb-4">
       <div>
-        <h2>Eventos del sistema</h2>
-        <p>Activa los avisos que quieres enviar por WhatsApp API.</p>
+        <h2 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Eventos del sistema</h2>
+        <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Activa los avisos que quieres enviar por WhatsApp API.</p>
       </div>
     </div>
 
     <div class="config-whatsapp-events">
       <div class="config-whatsapp-event">
-        <div class="config-whatsapp-event__copy">
-          <span><i class="fa-solid fa-file-circle-xmark"></i></span>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-file-circle-xmark"></i></span>
           <div>
-            <h3>Factura eliminada</h3>
-            <p>Notifica cuando se elimina una factura.</p>
+            <h3 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Factura eliminada</h3>
+            <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Notifica cuando se elimina una factura.</p>
           </div>
         </div>
 
@@ -136,11 +136,11 @@
       </div>
 
       <div class="config-whatsapp-event">
-        <div class="config-whatsapp-event__copy">
-          <span><i class="fa-solid fa-cash-register"></i></span>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-cash-register"></i></span>
           <div>
-            <h3>Cierre de caja</h3>
-            <p>Envia el resumen al cerrar caja.</p>
+            <h3 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Cierre de caja</h3>
+            <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Envia el resumen al cerrar caja.</p>
           </div>
         </div>
 
@@ -160,11 +160,11 @@
       </div>
 
       <div class="config-whatsapp-event">
-        <div class="config-whatsapp-event__copy">
-          <span><i class="fa-solid fa-boxes-stacked"></i></span>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-boxes-stacked"></i></span>
           <div>
-            <h3>Stock m&iacute;nimo</h3>
-            <p>Alerta cuando el inventario est&aacute; bajo.</p>
+            <h3 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Stock m&iacute;nimo</h3>
+            <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Alerta cuando el inventario est&aacute; bajo.</p>
           </div>
         </div>
 
@@ -184,11 +184,11 @@
       </div>
 
       <div class="config-whatsapp-event">
-        <div class="config-whatsapp-event__copy">
-          <span><i class="fa-solid fa-truck-fast"></i></span>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600 font-medium"><i class="fa-solid fa-truck-fast"></i></span>
           <div>
-            <h3>Env&iacute;o de mercanc&iacute;a</h3>
-            <p>Alerta traslados o envios entre sucursales.</p>
+            <h3 class="m-0 break-words text-2xl font-extrabold leading-tight text-slate-900">Env&iacute;o de mercanc&iacute;a</h3>
+            <p class="mt-1 mb-0 text-lg leading-snug text-slate-500">Alerta traslados o envios entre sucursales.</p>
           </div>
         </div>
 

@@ -71,34 +71,39 @@
     actualizarResumen();
 
     function printCuotasCreditos(){
+        document.querySelector('#tablaCuotasCreditos_wrapper')
+            ?.closest('.config-table-card')
+            ?.querySelector('.config-datatable-custom-toolbar')
+            ?.remove();
+
         tablaCuotasCreditos.DataTable({
             destroy: true,
             data: cuotasCreditos,
             pageLength: 25,
             order: [[0, 'desc']],
             columns: [
-                {title: 'Fecha', data: 'fechapagado', className: 'report-cuotas__date'},
+                {title: 'Fecha', data: 'fechapagado', className: 'whitespace-nowrap'},
                 {
                     title: 'Tipo',
                     data: 'idtipofinanciacion',
-                    render: (data:number) => `<span class="report-cuotas__pill ${data==1?'report-cuotas__pill--credit':'report-cuotas__pill--separado'}">${data==1?'Credito':'Separado'}</span>`
+                    render: (data:number) => `<span class="table-badge ${data==1?'table-badge--primary':'table-badge--info'}">${data==1?'Credito':'Separado'}</span>`
                 },
                 {
                     title: 'Cliente',
                     data: 'cliente',
-                    render: (data:string) => `<span class="report-cuotas__client"><i class="fa-solid fa-user"></i>${data || 'Sin cliente'}</span>`
+                    render: (data:string) => `<span class="table-entity"><span class="table-entity__icon"><i class="fa-solid fa-user"></i></span><span>${data || 'Sin cliente'}</span></span>`
                 },
-                {title: 'Credito', data: 'credito', render: (data:string) => `<span class="report-cuotas__document">${data || '-'}</span>`},
+                {title: 'Credito', data: 'credito', render: (data:string) => `<span class="table-badge table-badge--neutral">${data || '-'}</span>`},
                 {title: 'No. cuota', data: 'numerocuota', render: (data:string) => `<strong>${data || '0'}</strong>`},
-                {title: 'Valor', data: 'valorpormedio', render: (data:number) => `<strong class="report-cuotas__money">${monedaCOP(data)}</strong>`},
-                {title: 'Medio de pago', data: 'mediopago', render: (data:string) => `<span class="report-cuotas__method">${data || 'No indicado'}</span>`},
+                {title: 'Valor', data: 'valorpormedio', render: (data:number) => `<strong class="table-amount">${monedaCOP(data)}</strong>`},
+                {title: 'Medio de pago', data: 'mediopago', render: (data:string) => `<span class="table-badge table-badge--info">${data || 'No indicado'}</span>`},
                 {
                     title: 'Estado',
                     data: 'idestadocreditos',
                     render: (data: any, type: any, row: any) => {
                         const estado = row.idestadocreditos=='1'?'Finalizado':row.idestadocreditos=='2'?'Abierto':'Anulado';
-                        const clase = row.idestadocreditos=='1'?'report-cuotas__status--success':row.idestadocreditos=='2'?'report-cuotas__status--warning':'report-cuotas__status--danger';
-                        return `<span class="report-cuotas__status ${clase}">${estado}</span>`;
+                        const clase = row.idestadocreditos=='1'?'table-status--success':row.idestadocreditos=='2'?'table-status--warning':'table-status--danger';
+                        return `<span class="table-status ${clase}">${estado}</span>`;
                     }
                 }
             ],
@@ -124,6 +129,7 @@
                 }
             },
         });
+        modernizarToolbarDataTable('#tablaCuotasCreditos');
     }
 
     POS.callApiReporte = callApiReporte;

@@ -1,68 +1,68 @@
 <div class="empleados">
-    <section class="config-list-panel config-empleados-panel">
-        <div class="config-list-panel__header">
-            <div class="config-list-panel__title">
-                <span class="material-symbols-outlined">groups</span>
+    <section>
+        <div class="mb-5 flex flex-col justify-between gap-3 border-b border-slate-200 pb-5 md:flex-row md:items-center">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-4xl font-medium text-indigo-600">groups</span>
                 <div>
-                    <h2>Gesti&oacute;n de empleados</h2>
-                    <p>Administra usuarios, perfiles de acceso y credenciales del equipo.</p>
+                    <h2 class="text-3xl font-bold text-slate-900">Gesti&oacute;n de empleados</h2>
+                    <p class="my-0 text-lg leading-snug text-slate-500">Administra usuarios, perfiles de acceso y credenciales del equipo.</p>
                 </div>
             </div>
-            <button id="crearempleado" class="btn-md btn-indigo config-list-panel__action">
+            <button id="crearempleado" class="btnDialog btnDialog_primary">
                 <i class="fa-solid fa-plus"></i>
                 Crear empleado
             </button>
         </div>
 
-        <div class="config-table-card">
-    <table id="tablaempleados" class="display responsive nowrap tabla config-data-table config-empleados-table" width="100%">
-        <thead>
-            <tr>
-                <th>N.</th>
-                <th>Nombre</th>
-                <th>Imagen</th>
-                <th>Usuario</th>
-                <th>Perfil</th>
-                <th class="accionesth">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($empleados as $index => $value): 
-                if($value->perfil!=1): ?>
-                <tr> 
-                    <td class=""><?php echo $index+1;?></td>        
-                    <td class="config-employee-name"><?php echo $value->nombre.' '.$value->apellido;?></td> 
-                    <td class="" ><div class="config-employee-avatar" data-initials="<?php echo strtoupper(substr($value->nombre, 0, 1).substr($value->apellido ?? '', 0, 1));?>"><img src="/build/img/<?php echo $value->img;?>" alt="" onerror="this.style.display='none';"></div></td> 
-                    <td class="config-employee-user"><?php echo $value->nickname;?></td>
-                    <td class=""><span class="config-profile-badge"><?php echo $value->perfil==1?'root':($value->perfil==2?'Superior':($value->perfil==3?'Administrador':'Asesor'));?></span></td>
-                    <td class="accionestd">
-                        <div class="acciones-btns" id="<?php echo $value->id;?>" data-empleado="<?php echo $value->nombre.' '.$value->apellido;?>">
-                            <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn-md btn-lima updatePassword" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
-                            </button>
-                            <button class="btn-md btn-red eliminarEmpleado" title="Eliminar empleado"><i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            <?php endif; endforeach; ?>
-        </tbody>
-    </table>
+        <div class="datatable-card config-table-card">
+            <table id="tablaempleados" class="display responsive nowrap tabla datatable-table" width="100%">
+                <thead>
+                    <tr>
+                        <th>N.</th>
+                        <th>Nombre</th>
+                        <th>Imagen</th>
+                        <th>Usuario</th>
+                        <th>Perfil</th>
+                        <th class="accionesth">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($empleados as $index => $value): 
+                        if($value->perfil!=1): ?>
+                        <tr> 
+                            <td class=""><?php echo $index+1;?></td>        
+                            <td class="config-employee-name"><?php echo $value->nombre.' '.$value->apellido;?></td> 
+                            <td class="" ><div class="config-employee-avatar" data-initials="<?php echo strtoupper(substr($value->nombre, 0, 1).substr($value->apellido ?? '', 0, 1));?>"><img src="/build/img/<?php echo $value->img;?>" alt="" onerror="this.style.display='none';"></div></td> 
+                            <td class="config-employee-user"><?php echo $value->nickname;?></td>
+                            <td class=""><span class="config-profile-badge"><?php echo $value->perfil==1?'root':($value->perfil==2?'Superior':($value->perfil==3?'Administrador':'Asesor'));?></span></td>
+                            <td class="accionestd">
+                                <div class="acciones-btns" id="<?php echo $value->id;?>" data-empleado="<?php echo $value->nombre.' '.$value->apellido;?>">
+                                    <button class="btn-md btn-turquoise editarEmpleado" title="Actualizar datos empleados"><i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn-md btn-lima updatePassword" title="Cambiar contraseña"><i class="fa-solid fa-key"></i>
+                                    </button>
+                                    <button class="btn-md btn-red eliminarEmpleado" title="Eliminar empleado"><i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endif; endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </section>
 
-    <dialog class="midialog-md config-empleado-dialog" id="miDialogoEmpleado">
-        <div class="config-empleado-dialog__header">
-            <span class="material-symbols-outlined">person_add</span>
+    <dialog class="detalledialog_md config-empleado-dialog" id="miDialogoEmpleado">
+        <div class="flex items-center gap-4 bg-gradient-to-br from-indigo-600/15 to-cyan-300/10 p-6">
+            <span class="material-symbols-outlined inline-flex size-20 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-white text-4xl font-medium text-indigo-600">person_add</span>
             <div>
-                <p>Empleado</p>
-                <h4 id="modalEmpleado">Crear empleado</h4>
-                <small>Registra los datos de acceso, perfil e imagen del empleado.</small>
+                <p class="my-0 text-base font-extrabold uppercase leading-5 text-indigo-600">Empleado</p>
+                <h4 id="modalEmpleado" class="text-3xl font-bold leading-6 text-slate-900">Crear empleado</h4>
+                <small class="mt-1 block text-lg leading-snug text-slate-500">Registra los datos de acceso, perfil e imagen del empleado.</small>
             </div>
         </div>
-        <div id="divmsjalertaempleado1"></div>
-        <form id="formCrearUpdateEmpleado" class="formulario" action="/admin/configuracion/crear_empleado" enctype="multipart/form-data" method="POST">
+        <div id="divmsjalertaempleado1" class="px-8"></div>
+        <form id="formCrearUpdateEmpleado" class="formulario px-8 pb-8" action="/admin/configuracion/crear_empleado" enctype="multipart/form-data" method="POST">
             
                 <div class="formulario__campo config-empleado-dialog__photo">
                     <div class="formulario__contentinputfile">
@@ -75,7 +75,7 @@
                         Cargar imagen
                     </button>
                 </div>
-            <div class="grid grid-cols-1 gap-x-6 sm:grid-cols-6 config-empleado-dialog__grid">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-6">
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label flex items-center gap-1 group relative" for="nombre">
                         Nombre
@@ -92,7 +92,7 @@
                     <div class="formulario__dato">
                         <input
                         id="nombreempleado"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input"
                         type="text"
                         placeholder="Nombre del empleado"
                         name="nombre"
@@ -105,7 +105,7 @@
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="apellido">Apellido</label>
                     <div class="formulario__dato">
-                        <input id="apellidoempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Apellido del empleado" name="apellido" value="<?php echo $empleado->apellido??'';?>">
+                        <input id="apellidoempleado" class="formulario__input" type="text" placeholder="Apellido del empleado" name="apellido" value="<?php echo $empleado->apellido??'';?>">
                         <!-- <label data-num="42" class="count-charts" for="">42</label> -->
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                     <div class="formulario__dato">
                         <input
                         id="nicknameempleado"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input"
                         type="text"
                         placeholder="Usuario del empleado"
                         name="nickname"
@@ -157,7 +157,7 @@
                     <div class="formulario__dato">
                         <input
                         id="passwordempleado"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input"
                         type="password"
                         placeholder="Contraseña de sesión"
                         name="password"
@@ -181,7 +181,7 @@
                     <div class="formulario__dato">
                         <input
                         id="passwordempleado2"
-                        class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1"
+                        class="formulario__input"
                         type="password"
                         placeholder="Confirmar contraseña"
                         name="password2"
@@ -194,21 +194,21 @@
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="movil">Teléfono</label>
                     <div class="formulario__dato">
-                        <input id="movilempleado" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
+                        <input id="movilempleado" class="formulario__input" type="number" min="3000000000" max="3777777777" placeholder="Tu Movil" name="movil" value="<?php echo $empleado->movil??'';?>">
                     </div>
                 </div>
 
                 <div class="formulario__campo sm:col-span-3">
                     <label class="formulario__label" for="porcentajeganancia">Porcentaje de ganancia (%)</label>
                     <div class="formulario__dato">
-                        <input 
-                            id="porcentajeganancia" 
-                            class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" 
-                            type="number" 
-                            min="00" 
-                            max="100" 
-                            placeholder="Porcentaje de ganancia por venta" 
-                            name="porcentajeganancia" 
+                        <input
+                            id="porcentajeganancia"
+                            class="formulario__input"
+                            type="number"
+                            min="00"
+                            max="100"
+                            placeholder="Porcentaje de ganancia por venta"
+                            name="porcentajeganancia"
                             value="<?php echo $empleado->porcentajeganancia??'';?>"
                         >
                     </div>
@@ -251,20 +251,13 @@
                         Campo obligatorio
                         </span>
                     </label>
-
-                    <div class="formulario__dato">
-                        <select
-                        id="perfilempleado"
-                        class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5     h-14 text-xl focus:outline-none focus:ring-1"
-                        name="perfil"
-                        required
-                        >
+                    
+                    <select id="perfilempleado" class="formulario__select" name="perfil"required>
                         <option value="" disabled selected>-Seleccionar-</option>
                         <option value="2" <?php echo $empleado->perfil==1?'selected':'';?>>Supervisor</option>
                         <option value="3" <?php echo $empleado->perfil==2?'selected':'';?>>Administrador</option>
                         <option value="4" <?php echo $empleado->perfil==3?'selected':'';?>>Asesor</option>
-                        </select>
-                    </div>
+                    </select>
                 </div>
             </div>
 
@@ -474,40 +467,40 @@
                 </div>
             </div>
 
-            <div class="config-empleado-dialog__actions">
-                <button class="btn-md btn-turquoise" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEditarCrearEmpleado" class="btn-md btn-indigo" type="submit" value="Crear">
+            <div class="formulario__contenedorBtns--gridfull">
+                <button class="btnDialog btnDialog_light" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEditarCrearEmpleado" class="btnDialog btnDialog_primary" type="submit" value="Crear">
             </div>
         </form>
     </dialog><!--fin crear empleado-->
 
-    <dialog class="midialog-md config-empleado-password-dialog" id="miDialogoContraseña">
-        <div class="config-empleado-dialog__header">
-            <div class="config-empleado-dialog__icon">
+    <dialog class="detalledialog_xs" id="miDialogoContraseña">
+        <div class="flex items-center gap-4 bg-gradient-to-br from-indigo-600/15 to-cyan-300/10 p-6">
+            <div class="inline-flex size-20 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-white text-4xl font-medium text-indigo-600">
                 <i class="fa-solid fa-key"></i>
             </div>
             <div>
-                <span>Credenciales</span>
-                <h4>Cambiar contraseña</h4>
-                <p>Actualiza la clave de acceso del empleado seleccionado.</p>
+                <p class="my-0 text-base font-extrabold uppercase leading-5 text-indigo-600">Credenciales</p>
+                <h4 class="text-3xl font-bold leading-6 text-slate-900">Cambiar contrase&ntilde;a</h4>
+                <small class="mt-1 block text-lg leading-snug text-slate-500">Actualiza la clave de acceso del empleado seleccionado.</small>
             </div>
         </div>
-        <div id="divmsjalertaempleado2"></div>
-        <form id="formContraseña" class="formulario config-empleado-password-dialog__form" method="POST">
-            <div class="config-empleado-password-dialog__user">
-                <span><i class="fa-solid fa-user-lock"></i></span>
+        <div id="divmsjalertaempleado2" class="px-8"></div>
+        <form id="formContraseña" class="formulario gap-4 px-8 pb-8 pt-6" method="POST">
+            <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <span class="inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-2xl text-indigo-600"><i class="fa-solid fa-user-lock"></i></span>
                 <div>
-                    <small>Empleado</small>
-                    <h5 id="nombreEmpleadoPass">Julian Rodriguez</h5>
+                    <small class="block text-base font-extrabold uppercase text-slate-500">Empleado</small>
+                    <h5 id="nombreEmpleadoPass" class="mt-1 text-xl font-extrabold text-slate-900">Julian Rodriguez</h5>
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="changePassword">Nueva contraseña</label>
                 <input id="changePassword" class="formulario__input" type="password" placeholder="Ingrese la nueva contraseña" value="" required>
             </div>
-            <div class="config-empleado-dialog__actions">
-                <button class="btn-md btn-turquoise" type="button" value="Cancelar">Cancelar</button>
-                <input id="btnEnviarContrasela" class="btn-md btn-indigo" type="submit" value="Actualizar">
+            <div class="formulario__contenedorBtns--gridfull">
+                <button class="btnDialog btnDialog_light" type="button" value="Cancelar">Cancelar</button>
+                <input id="btnEnviarContrasela" class="btnDialog btnDialog_primary" type="submit" value="Actualizar">
             </div>
         </form>
     </dialog><!--fin Act/ediar contraseña por empleado-->

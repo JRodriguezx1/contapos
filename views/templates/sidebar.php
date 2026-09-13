@@ -72,7 +72,7 @@
         <?php if(tienePermiso('Habilitar modulo de venta') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Ventas')?'activo':''; ?>" href="/admin/ventas<?php echo (getConfigLocal()['habilitar_venta_modo_rapido']??null)?->valor_final == 1?'/modorapido':''; ?>"><span class="material-symbols-outlined">storefront</span> <label class="btnav"> Ventas</label></a>
         <?php endif; ?>
-        <?php if(tienePermiso('Habilitar mÃ³dulo de credito/separados') || userPerfil()<=3): ?>
+        <?php if(tienePermiso('Habilitar módulo de credito/separados') || userPerfil()<=3): ?>
             <a class="<?php echo ($titulo === 'Creditos')?'activo':''; ?>" href="/admin/creditos"><span class="material-symbols-outlined">swap_horiz</span> <label class="btnav"> Creditos</label></a>
         <?php endif; ?>
         <?php if(tienePermiso('Habilitar modulo de reportes')&&userPerfil()==3 || userPerfil()<3): ?>

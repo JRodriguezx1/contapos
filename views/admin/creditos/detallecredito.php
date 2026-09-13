@@ -1,120 +1,122 @@
-<div class="p-6 min-h-screen detallecredito">
+<div class="detallecredito min-h-[calc(100vh-7rem)] w-full bg-gradient-to-b from-indigo-50/60 via-slate-50 to-slate-100 p-3 text-slate-900 sm:p-6">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
+
   <?php if(!empty($alertas['idcuota']) && ($_POST['imprimirComprobanteAbonoinicial'] ?? '0') === '1'): ?>
     <input id="autoPrintAbonoCredito" type="hidden" value="<?php echo $alertas['idcuota']; ?>">
   <?php endif; ?>
-  <div class="max-w-auto mx-auto bg-white shadow-lg rounded-2xl p-8">
+  
+  <div class="relative mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-white p-4 shadow-lg sm:p-6">
     <!-- Título principal -->
-    <a href="/admin/creditos" class="text-white bg-indigo-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-4 text-center inline-flex items-center me-2 mb-6">
-      <svg class="w-6 h-6 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-      </svg>
-      <span class="sr-only">Atrás</span>
+    <a href="/admin/creditos" class="absolute left-8 top-8 z-[2] inline-flex size-16 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 p-0 text-white shadow-lg transition hover:-translate-y-0.5 hover:text-white sm:left-14 sm:top-16">
+      <i class="fa-solid fa-arrow-left"></i>
     </a>
-    <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+    <h2 class="flex min-h-36 items-center gap-3 rounded-lg border border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 py-6 pl-24 pr-6 text-3xl font-extrabold leading-tight text-slate-900 sm:min-h-40 sm:pl-28 sm:text-4xl">
       Detalles del <?php echo $credito->idtipofinanciacion==1?'Crédito':'Separado'; ?>
-    </h2> 
+      <span class="ml-auto hidden shrink-0 rounded-lg border border-slate-200 bg-white/90 px-4 py-3 text-base font-extrabold uppercase text-slate-500 md:inline-flex">Vista de cartera</span>
+    </h2>
 
     <div id="divmsjalerta"></div>
     <!-- Información general del crédito -->
-    <div class="grid md:grid-cols-4 gap-6 mb-6">
-      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🧾 Factura</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">🧾 Factura</h3>
+        <p class="m-0 text-xl font-bold leading-tight text-slate-900"><?php echo $factura!=null?$factura->prefijo.' - '.$factura->num_consecutivo:'';?></p>
       </div>
 
-      <div class="bg-green-50 border border-green-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-green-700 mb-1 uppercase">💰 Credito</h3>
-        <p id="creditoText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💰 Credito</h3>
+        <p id="creditoText" class="m-0 text-xl font-bold leading-tight text-slate-900">$ <?php echo number_format($credito->capital,'2', ',', '.'); ?></p>
       </div>
 
-      <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💸 Abono Inicial</h3>
-        <p id="abonoInicialText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💸 Abono Inicial</h3>
+        <p id="abonoInicialText" class="m-0 text-xl font-bold leading-tight text-slate-900">$ <?php echo number_format($credito->abonoinicial,'2', ',', '.');?></p>
       </div>
 
-      <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-yellow-700 mb-1 uppercase">💷 Interes Total</h3>
-        <p id="interesText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💷 Interes Total</h3>
+        <p id="interesText" class="m-0 text-xl font-bold leading-tight text-slate-900">$ <?php echo number_format($credito->valorinterestotal,'2', ',', '.');?></p>
       </div>
     </div>
 
     <!-- Detalles financieros -->
-    <div class="grid md:grid-cols-4 gap-6 mb-6">
-      <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-purple-700 mb-1 uppercase">💲 Credito Total</h3>
-        <p id="creditoTotalText" class="text-gray-800 text-lg mb-0">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">💲 Credito Total</h3>
+        <p id="creditoTotalText" class="m-0 text-xl font-bold leading-tight text-slate-900">$ <?php echo number_format($credito->montototal,'2', ',', '.');?></p>
       </div>
 
-      <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-orange-700 mb-1 uppercase">📅 Fecha Emisión</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo $credito->fechainicio;?></p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">📅 Fecha Emisión</h3>
+        <p class="m-0 text-xl font-bold leading-tight text-slate-900"><?php echo $credito->fechainicio;?></p>
       </div>
 
-      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-blue-700 mb-1 uppercase">🔢 Plazo</h3>
-        <p class="text-gray-800 text-lg mb-0"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">🔢 Plazo</h3>
+        <p class="m-0 text-xl font-bold leading-tight text-slate-900"><?php echo ($credito->numcuota??0).' / '.$credito->cantidadcuotas;?> Cuotas</p>
       </div>
 
-      <div class="bg-red-50 border border-red-200 rounded-xl p-5 shadow-sm">
-        <h3 class="text-xl font-semibold text-red-700 mb-1 uppercase">📆 Fecha Vencimiento</h3>
-        <p class="text-gray-800 text-lg mb-0"> - </p>
+      <div class="grid min-h-28 gap-2 overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md">
+        <h3 class="m-0 text-base font-extrabold uppercase leading-tight text-indigo-600">📆 Fecha Vencimiento</h3>
+        <p class="m-0 text-xl font-bold leading-tight text-slate-900"> - </p>
       </div>
     </div>
 
     <!-- Estado actual -->
-    <div class="bg-gray-100 border border-gray-300 rounded-xl p-5 mb-8">
-      <h3 class="text-xl font-semibold text-gray-700 mb-3 uppercase">📊 Estado del Crédito</h3>
-      <div class="flex flex-col sm:flex-row gap-10">
-        <div class="flex items-center gap-4">
-          <span class="px-4 py-2 rounded-full text-base font-semibold <?php echo $credito->idestadocreditos==1?' bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':' bg-red-100 text-red-700'); ?>">
+    <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 class="mb-4 flex items-center gap-3 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900">📊 Estado del Crédito - <button class="btnDialog btnDialog_primary"><?php echo $sucursaldelcredito->nombre;?></button></h3>
+      <div class="flex flex-wrap items-center gap-4">
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="inline-flex min-h-11 items-center rounded-full px-3 py-1 text-base font-extrabold <?php echo $credito->idestadocreditos==1?'bg-cyan-100 text-blue-600':($credito->idestadocreditos==2?'bg-green-100 text-green-700':'bg-red-100 text-red-700'); ?>">
             <?php echo $credito->idestadocreditos==1?'Finalizado':($credito->idestadocreditos==2?'En curso':'Anulado'); ?>
           </span>
-          <span class="text-gray-600">Saldo pendiente: <strong id="saldopendientetext">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
+          <span class="text-xl font-semibold text-slate-500">Saldo pendiente: <strong id="saldopendientetext" class="font-extrabold text-slate-900">$<?php echo number_format($credito->saldopendiente,'2', ',', '.'); ?></strong></span>
         </div>
-        <div class="flex items-center">
-          <span class="text-gray-600">Cliente: <strong><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="text-xl font-semibold text-slate-500">Cliente: <strong class="font-extrabold text-slate-900"><?php echo $cliente->nombre.' '.$cliente->apellido; ?></strong></span>
         </div>
-        <div class="flex items-center">
-          <span class="text-gray-600">Productos: <div class="btn-xs <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></div></span>
+        <div class="flex flex-wrap items-center gap-4">
+          <span class="flex items-center gap-2 text-lg font-semibold text-slate-500">Productos: <span class="btn-xs inline-flex min-h-11 items-center rounded-full px-3 py-1 text-base font-extrabold <?php echo $credito->productoentregado==0?'btn-light':'btn-lima';?>"><?php echo $credito->productoentregado==0?'Pendiente':'Entregado';?></span></span>
         </div>
         <?php if($credito->idestadocreditos == 2 && $credito->idtipofinanciacion == 2):
                 if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
         ?>
-          <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="btn-md btn-blue">+</a></div>
+          <div><a href="/admin/creditos/adicionarProducto?id=<?php echo $credito->id;?>" class="inline-flex size-14 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-700 text-xl font-black text-white hover:text-white">+</a></div>
         <?php } endif;?>
       </div>
     </div>
 
     <!-- Historial de abonos -->
-    <div class="mb-10 detalle-credito-table-card config-table-card">
-      <h3 class="text-lg font-semibold text-gray-700 mb-4">📚 Historial de Abonos</h3>
-      <table id="tablacuotas" class="w-full border border-gray-200 rounded-xl overflow-hidden">
-        <thead class="bg-gray-100">
+    <div class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 class="mb-5 border-b border-slate-200 pb-4 text-2xl font-extrabold text-slate-900">📚 Historial de Abonos</h3>
+      <table id="tablacuotas">
+        <thead>
           <tr>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">N° de Cuota</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Fecha</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor cuota</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Valor pagado</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Medio pago</th>
-            <th class="px-4 py-2 text-base font-semibold text-gray-700">Acciones</th>
+            <th>N° de Cuota</th>
+            <th>Fecha</th>
+            <th>Valor cuota</th>
+            <th>Valor pagado</th>
+            <th>Medio pago</th>
+            <th>Recaudo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <?php foreach($cuotas as $value): ?>
-            <tr class="border-t">
-              <td class="px-4 py-2 text-gray-800"><?php echo $value->numerocuota;?></td>
-              <td class="px-4 py-2 text-gray-800"><?php echo $value->fechapagado;?></td>
-              <td class="px-4 py-2 text-gray-800">$<?php echo number_format($value->montocuota, '2', ',', '.');?></td>
-              <td class="px-4 py-2 text-gray-800">$<?php echo number_format($value->valorpagado, '2', ',', '.');?></td>
-              <td class="px-4 py-2 text-gray-800">
+            <tr>
+              <td><?php echo $value->numerocuota;?></td>
+              <td><?php echo $value->fechapagado;?></td>
+              <td>$<?php echo number_format($value->montocuota, '2', ',', '.');?></td>
+              <td>$<?php echo number_format($value->valorpagado, '2', ',', '.');?></td>
+              <td>
                 <?php foreach($value->mediosdepago as $idx => $element): ?>
-                <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago btn-xs btn-light"><?php echo $element->mediopago;?></button>
+                <button id="<?php echo $value->id;?>" data-totalpagado="<?php echo $value->valorpagado;?>" data-idcredito="<?php echo $value->id_credito;?>" data-idmediopago="<?php echo $element->idmediopago;?>" data-mediopagado="<?php echo $element->valor;?>" class="mediosdepago"><?php echo $element->mediopago;?></button>
                 <?php endforeach; ?>
               </td>
-              <td class="px-4 py-2 text-gray-800 text-center">
+              <td><div class="text-indigo-600 text-xl bg-indigo-50 rounded-lg pt-2 font-semibold"><?php echo $value->nombresucursal;?></div></td>
+              <td>
                 <div id="<?php echo $value->id;?>" class="flex justify-center gap-4">
-                  <button class="btn-xs btn-red anularAbono" title="Eliminar abono">X</button>
+                  <button class="anularAbono" title="Eliminar abono">X</button>
                   <button class="printPOSAbono material-symbols-outlined">print</button>
                 </div>
               </td>
@@ -126,43 +128,45 @@
     </div>
 
     <!-- Botones de acción -->
-    <div class="flex justify-end gap-4">
+    <div class="flex flex-col items-stretch gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
       <?php if($credito->idestadocreditos == 2):
-                if(tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4){
+                if($credito->id_fksucursal == id_sucursal() && (tienePermiso('Editar separados activos')&&userPerfil()>3 || userPerfil()<4)){
       ?>
-        <button id="ajustarCredito" class="btn-md btn-light mb-4 !py-4 px-6">🔄 Ajustar Credito</button>
+
+        <button id="ajustarCredito" class="nuevobtn nuevobtn_light w-full sm:w-auto">🔄 Ajustar Credito</button>
+      
       <?php } endif; ?>
-      <button id="btnDetalleProductos" class="btn-md btn-blue mb-4 !py-4 px-6">📄 Productos</button>
-      <button id="btnAbonar" class="btn-md btn-blueintense mb-4 !py-4 px-6 !bg-indigo-600">➕ Abonar</button>
-      <button id="btnPagarTodo" class="hover:bg-green-700 btn-turquoise text-white font-semibold  rounded-lg shadow flex items-center gap-2 mb-4 py-4 px-6">✅ Pagar Todo</button>
-      <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold  rounded-lg shadow flex items-center gap-2 mb-4 py-4 px-6">⬅️ Volver</button>
+      <button id="btnDetalleProductos" class="nuevobtn nuevobtn_blueintense w-full sm:w-auto">📄 Productos</button>
+      <button id="btnAbonar" class="nuevobtn nuevobtn_indigo w-full sm:w-auto">➕ Abonar</button>
+      <button id="btnPagarTodo" class="nuevobtn nuevobtn_turquoise w-full sm:w-auto">✅ Pagar Todo</button>
+      <button class="nuevobtn nuevobtn_gray w-full sm:w-auto">⬅️ Volver</button>
     </div>
   </div>
 
 
   <!-- MODAL DETALLE PRODUCTO-->
-  <dialog id="miDialogoDetalleProducto" class="detalle-producto-dialog">
-    <div class="detalle-producto-dialog__header">
-      <div class="detalle-producto-dialog__title">
-        <span class="detalle-producto-dialog__icon">
+  <dialog id="miDialogoDetalleProducto" class="detalledialog_md">
+    <div class="flex items-start justify-between gap-4 border-b border-slate-200 bg-gradient-to-br from-indigo-50 to-cyan-50 p-4 sm:items-center sm:p-5">
+      <div class="flex min-w-0 items-start gap-4 sm:items-center">
+        <span class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-2xl text-white sm:size-16">
           <i class="fa-solid fa-boxes-stacked"></i>
         </span>
         <div>
-          <p>Productos</p>
-          <h4 id="modalDetalleProducto">Detalle producto</h4>
-          <span><?php echo count($productos); ?> articulos asociados al <?php echo $credito->idtipofinanciacion==1?'credito':'separado'; ?>.</span>
+          <p class="m-0 text-base font-extrabold uppercase text-indigo-600">Productos</p>
+          <h4 id="modalDetalleProducto" class="m-0 text-xl font-extrabold text-slate-900 sm:text-2xl">Detalle producto</h4>
+          <span class="text-sm font-semibold text-slate-500 sm:text-base"><?php echo count($productos); ?> articulos asociados al <?php echo $credito->idtipofinanciacion==1?'credito':'separado'; ?>.</span>
         </div>
       </div>
-      <button type="button" class="detalle-producto-dialog__close" aria-label="Cerrar detalle de producto">
+      <button type="button" class="inline-flex size-12 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-xl text-slate-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 sm:size-14" aria-label="Cerrar detalle de producto">
           <i id="btnXCerrarModalDetalleProducto" class="fa-solid fa-xmark"></i>
       </button>
     </div>
     <div id="divmsjalerta1"></div>
     <!-- TABLA DE PRODUCTOS -->
-    <div class="detalle-producto-dialog__body">
-    <div class="detalle-producto-dialog__table-wrap">
+    <div class="p-4 sm:p-5">
+    <div class="overflow-visible rounded-lg border border-slate-200 bg-white p-3 sm:overflow-x-auto sm:bg-slate-50">
         <table id="tabladetalleProducto"
-            class="detalle-producto-dialog__table">
+            class="detalle-producto-dialog__table w-full min-w-0 border-separate border-spacing-0 sm:min-w-[58rem]">
             <thead>
                 <tr>
                     <th>Producto</th>

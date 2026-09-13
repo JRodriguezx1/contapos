@@ -59,41 +59,41 @@
     </div>
 
     <div class="ordenresumen-metrics">
-        <div class="ordenresumen-metric-card">
-            <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined">
+        <div class="border border-slate-200 rounded-xl p-4">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     calendar_month
                 </span>
                 Fecha Orden
             </p>
-            <p><?php echo $factura->fechacreacion??'';?></p>
+            <p class="text-slate-900 text-xl font-semibold"><?php echo $factura->fechacreacion??'';?></p>
         </div>
-        <div class="ordenresumen-metric-card">
-            <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined">
+        <div class="border border-slate-200 rounded-xl p-4">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     payments
                 </span>
                 Fecha Pago
             </p>
-            <p><?php echo $factura->fechapago??'';?></p>
+            <p class="text-slate-900 text-xl font-semibold"><?php echo $factura->fechapago??'';?></p>
         </div>
-        <div class="ordenresumen-metric-card">
-            <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined">
+        <div class="border border-slate-200 rounded-xl p-4">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     badge
                 </span>
                 Vendedor
             </p>
             <button id="btnSelectVendedor" class="btn-xs btn-light"><?php echo $factura->vendedor??'';?></button>
         </div>
-        <div class="ordenresumen-metric-card">
-            <p class="ordenresumen-metric-label">
-                <span class="material-symbols-outlined">
+        <div class="border border-slate-200 rounded-xl p-4">
+            <p class="text-slate-500 font-bold text-lg flex items-center gap-4 mt-0 uppercase">
+                <span class="material-symbols-outlined text-indigo-600 text-3xl">
                     inventory_2
                 </span>
                 Estado Orden
             </p>
-            <p id="estadoOrden" class="m-0 !mb-[.3rem] text-[1.55rem] font-extrabold text-teal-700"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
+            <p id="estadoOrden" class="m-0 text-2xl font-bold text-teal-700"><?php echo (($factura->tipoventa =='Contado'|| $factura->tipoventa =='')&&$factura->remision==0)?$factura->estado:($factura->remision==1 && ($factura->estado == 'Paga' || $factura->estado == 'Aceptada')?'Remision - '.$factura->estado:($factura->remision==1&&$factura->estado=='Remision'?$factura->estado:"Credito - F. $factura->estado"));?></p>
             <p class="m-0 text-gray-600 text-xl font-medium"> - Factura: <?php echo ($factura->prefijo??'') . $factura->num_consecutivo;?></p>
         </div>
     </div>
@@ -102,9 +102,9 @@
 
     <div class="ordenresumen-main-grid">
         <div class="ordenresumen-products-card">
-            <div class="ordenresumen-card-head">
-                <h3 class="ordenresumen-card-title">
-                    <span class="material-symbols-outlined">
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <h3 class="text-slate-900 text-3xl font-bold flex items-center gap-4">
+                    <span class="material-symbols-outlined text-indigo-600 text-4xl">
                         inventory_2
                     </span>
                     Productos de la orden
@@ -117,18 +117,10 @@
             <table class="ordenresumen-table">
                 <thead>
                     <tr>
-                        <th scope="col">
-                            Nombre producto
-                        </th>
-                        <th scope="col">
-                            Qty
-                        </th>
-                        <th scope="col">
-                            Unidad
-                        </th>
-                        <th scope="col">
-                            Total
-                        </th>
+                        <th scope="col"> Nombre producto</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Unidad</th>
+                        <th scope="col">Total</th>
                     </tr>
                 </thead>
                 <tbody id="tablaDetalleProductos">
@@ -176,81 +168,58 @@
     
     
         <aside class="ordenresumen-side">
-            <div class="ordenresumen-info-card">
-                <p class="ordenresumen-info-title">
-                    <span class="material-symbols-outlined">
-                        person
-                    </span>
+            <div class="border border-slate-200 rounded-xl p-4">
+                <p class="flex items-center text-slate-900 font-semibold gap-4 text-2xl mt-0">
+                    <span class="material-symbols-outlined text-indigo-600">person</span>
                     Cliente
                 </p>
-                <p class="ordenresumen-info-line"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
-                <p class="ordenresumen-info-line"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
-                <p class="ordenresumen-info-line"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">person</span><?php echo $factura->cliente??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">mail</span><?php echo $cliente->email??'';?></p>
+                <p class="flex items-center gap-4 text-slate-500 mb-0 mt-2 text-xl"><span class="material-symbols-outlined">phone_in_talk</span><?php echo $cliente->telefono??'';?></p>
             </div>
-            <div class="ordenresumen-info-card">
-                <p class="ordenresumen-info-title">
-                    <span class="material-symbols-outlined">
-                        local_shipping
-                    </span>
+            <div class="border border-slate-200 rounded-xl p-4">
+                <p class="flex items-center text-slate-900 font-semibold gap-4 text-2xl mt-0">
+                    <span class="material-symbols-outlined text-indigo-600">local_shipping</span>
                     Direcci&oacute;n de entrega
                 </p>
-                <p class="ordenresumen-info-line">Tipo entrega: <?php echo $factura->entrega??'';?></p>
-                <p class="ordenresumen-info-line"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
-                <p class="ordenresumen-info-line">Tarifa env&iacute;o: $<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
+                <p class="text-slate-500 mb-0 text-xl mt-2">Tipo entrega: <?php echo $factura->entrega??'';?></p>
+                <p class="text-slate-500 mb-0 text-xl mt-2"><?php echo $direccion->ciudad.'-'.$direccion->direccion??'';?></p>
+                <p class="text-slate-500 mb-0 text-xl mt-2">Tarifa env&iacute;o: $<?php echo number_format($factura->valortarifa??'0', 0, ',', '.');?></p>
             </div>
-            <div class="ordenresumen-info-card">
-                <p class="ordenresumen-info-title">
-                    <span class="material-symbols-outlined">
-                        receipt_long
-                    </span>
+            <div class="border border-slate-200 rounded-xl p-4">
+                <p class="flex items-center text-slate-900 font-semibold gap-4 text-2xl mt-0">
+                    <span class="material-symbols-outlined text-indigo-600">receipt_long</span>
                     Direcci&oacute;n de facturaci&oacute;n
                 </p>
-                <p class="ordenresumen-info-line"> - </p>
+                <p class="text-slate-500 mb-0 text-xl mt-2"> - </p>
             </div>
         </aside>     
     </div>
 
-    <div class="ordenresumen-bottom">
-        <div class="ordenresumen-bottom-grid">
+    <div class="border border-slate-200 rounded-xl p-4 mt-6">
+        <div class="grid lg:grid-cols-3 gap-4">
             <!-- OBSERVACIONES -->
-            <section class="ordenresumen-observations">
-
-                <p class="font-semibold text-slate-800 text-xl mb-4">
-                    Observaciones
-                </p>
-
+            <section class="border border-slate-200 bg-slate-50 p-4 rounded-xl lg:col-span-2">
+                <p class="font-semibold text-slate-800 text-xl mb-4">Observaciones</p>
                 <?php if(empty(trim($factura->observacion ?? ''))): ?>
                     <div class="flex items-center gap-2 mt-6 text-slate-500 italic">
-                        <span class="material-symbols-outlined text-xl">
-                            info
-                        </span>
+                        <span class="material-symbols-outlined text-xl">info</span>
                         <span>Sin observaciones registradas.</span>
                     </div>
                 <?php else: ?>
-
-                    <p class="text-slate-600 text-lg mb-4">
-                        <?php echo $factura->observacion;?>
-                    </p>
-
+                    <p class="text-slate-600 text-lg mb-4"><?php echo $factura->observacion;?></p>
                 <?php endif; ?>
 
                 <?php if(!empty($factura->observacioneliminacion)): ?>
                     <div class="border-t border-slate-200 pt-4 mt-4">
-
-                        <p class="font-medium text-red-600 mb-2">
-                            Observaci&oacute;n de eliminaci&oacute;n
-                        </p>
-
-                        <p class="text-slate-600 text-lg">
-                            <?php echo $factura->observacioneliminacion;?>
-                        </p>
-
+                        <p class="font-medium text-red-600 mb-2">Observaci&oacute;n de eliminaci&oacute;n</p>
+                        <p class="text-slate-600 text-lg"><?php echo $factura->observacioneliminacion;?></p>
                     </div>
                 <?php endif; ?>
             </section>
 
             <!-- RESUMEN DE PAGO -->
-            <section class="ordenresumen-payment-summary">
+            <section class="border border-slate-200 bg-slate-50 p-4 rounded-xl lg:col-span-1">
                 <p class="font-semibold text-slate-800 text-xl mb-5">Resumen de pago</p>
                 <div class="flex justify-between">
                     <div class="text-start">

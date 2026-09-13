@@ -1,22 +1,22 @@
 <div class="inicio dashboard-home">
   <div class="dashboard-home__inner">
 
-    <header class="dashboard-home__header">
+    <header class="flex items-center justify-between">
       <div>
-        <p class="dashboard-home__eyebrow">Panel principal</p>
-        <h1>Dashboard</h1>
-        <p class="dashboard-home__subtitle">
+        <p class="text-indigo-600 text-lg font-bold m-0 uppercase">Panel principal</p>
+        <h1 class="text-slate-900 font-bold text-5xl">Dashboard</h1>
+        <p class="text-slate-500 m-0 text-xl">
           Resumen general del negocio. &Uacute;ltima actualizaci&oacute;n:
           <span id="ultimaActualizacion">--</span>
         </p>
       </div>
 
-      <div class="dashboard-home__actions">
-        <button class="dashboard-action dashboard-action--ghost" type="button">
+      <div class="flex items-center gap-4">
+        <button class="btnDialog btnDialog_light" type="button">
           <span class="material-symbols-outlined">download</span>
           Exportar
         </button>
-        <button class="dashboard-action dashboard-action--primary" type="button">
+        <button class="btnDialog btnDialog_primary" type="button">
           <span class="material-symbols-outlined">refresh</span>
           Actualizar
         </button>
@@ -42,7 +42,7 @@
         <small id="metaFacturado">Periodo: --</small>
       </article>
 
-      <article class="dashboard-kpi dashboard-kpi--danger dashboard-kpi--split">
+      <article class="dashboard-kpi dashboard-kpi--danger">
         <div class="dashboard-kpi__top">
           <span class="dashboard-kpi__icon material-symbols-outlined">receipt_long</span>
           <span class="dashboard-kpi__label">Facturas</span>
@@ -107,7 +107,7 @@
           </div>
           <span class="material-symbols-outlined">monitoring</span>
         </div>
-        <div class="card-canvas dashboard-chart">
+        <div class="dashboard-chart">
           <canvas id="chartVentasGastos"></canvas>
         </div>
       </article>
@@ -120,14 +120,14 @@
           </div>
           <span class="material-symbols-outlined">bar_chart</span>
         </div>
-        <div class="card-canvas dashboard-chart">
+        <div class="dashboard-chart">
           <canvas id="chartIngresosDias"></canvas>
         </div>
       </article>
     </section>
 
     <section class="dashboard-bottom">
-      <article class="dashboard-panel dashboard-panel--table">
+      <article class="dashboard-panel">
         <div class="dashboard-panel__head">
           <div>
             <h2>Top 8 productos m&aacute;s vendidos</h2>
@@ -160,7 +160,7 @@
         </div>
       </article>
 
-      <article class="dashboard-panel dashboard-stock">
+      <article class="dashboard-panel">
         <div class="dashboard-panel__head">
           <div>
             <h2>Stock m&iacute;nimo</h2>

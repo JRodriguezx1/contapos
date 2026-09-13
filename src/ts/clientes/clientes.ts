@@ -51,14 +51,8 @@
   
       document.addEventListener("click", cerrarDialogoExterno);
       //////////////////  TABLA //////////////////////
-      tablaClientes = ($('#tablaClientes') as any).DataTable({
-        ...configdatatables,
-        dom: 'rtip',
-        order: [[0, 'desc']]
-      });
+      tablaClientes = ($('#tablaClientes') as any).DataTable({...configdatatables,});
       modernizarToolbarDataTable('#tablaClientes');
-      ocultarToolbarNativoClientes();
-      ($('#tablaClientes') as any).on('draw.dt', ocultarToolbarNativoClientes);
   
       btncrearCliente?.addEventListener('click', (e):void=>{
         control = 0;
@@ -84,7 +78,8 @@
           dropdownParent: $('#miDialogoCrearDireccion'),
           placeholder: "Seleccionar el cliente",
           minimumResultsForSearch: Infinity,
-          width: '100%'
+          width: '100%',
+          dropdownCssClass: 'select2-theme-dropdown'
         });
         select2Init = true;
       }
@@ -151,15 +146,7 @@
                   const identificacion = ($('#identificacion').val() as string) || '';
                   const telefono = ($('#telefono').val() as string) || '';
                   const email = ($('#email').val() as string) || '';
-                  filaApi.data(renderClienteRowData({
-                    id: uncliente.id,
-                    identificacion,
-                    nombre,
-                    apellido,
-                    telefono,
-                    email,
-                    acciones: datosActuales[6]
-                  })).draw(false);
+                  //filaApi.data(renderClienteRowData({ id: uncliente.id, identificacion, nombre, apellido, telefono, email, acciones: datosActuales[6] })).draw(false);
                   (tablaClientes as any).page(info.page).draw(false); //me mantiene la pagina actual
                   try {
                     (tablaClientes as any).columns.adjust().responsive.recalc();
@@ -238,11 +225,7 @@
         const target = e.target as HTMLElement;
         let idcliente = target.parentElement!.id, info = (tablaClientes as any).page.info();
         if(target.tagName === 'I')idcliente = target.parentElement!.parentElement!.id;
-        const currentRow = target.closest('tr');
-        const dataRow = currentRow?.classList.contains('child') ? currentRow.previousElementSibling : currentRow;
-        const filaApi = (tablaClientes as any).row(dataRow);
-        const cliente = clientes.find(x=>x.id === idcliente);
-        const nombreCliente = `${cliente?.nombre ?? 'este cliente'} ${cliente?.apellido ?? ''}`.trim();
+        indiceFila = (tablaClientes as any).row((e.target as HTMLElement).closest('tr')).index();
         Swal.fire({
             customClass: {
               popup: 'j2-confirm j2-confirm--danger',
@@ -256,7 +239,7 @@
             buttonsStyling: false,
             icon: 'question',
             title: 'Eliminar cliente',
-            html: `Esta accion eliminara definitivamente a <strong>${escapeClienteHtml(nombreCliente)}</strong>.`,
+            html: `Esta accion eliminara definitivamente al cliente.`,
             showCancelButton: true,
             confirmButtonText: 'Si, eliminar',
             cancelButtonText: 'No',
@@ -270,9 +253,8 @@
                         const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                         const resultado = await respuesta.json();  
                         if(resultado.exito !== undefined){
-                          filaApi.remove().draw(false); 
-                          (tablaClientes as any).page(info.page).draw(false);
-                          clientes = clientes.filter(a => a.id !== idcliente);
+                          (tablaClientes as any).row(indiceFila+info.start).remove().draw(); 
+                          (tablaClientes as any).page(info.page).draw('page');
                           Swal.fire({
                             customClass: {
                               popup: 'j2-confirm j2-confirm--success',
@@ -346,33 +328,6 @@
             "'": '&#039;'
           };
           return entities[char];
-        });
-      }
-
-      function renderClienteNombre(nombre:string):string{
-        return `<span class="clientes-name"><span class="clientes-name__icon"><i class="fa-solid fa-user"></i></span><span>${escapeClienteHtml(nombre)}</span></span>`;
-      }
-
-      function renderClientePill(value:string, type:string):string{
-        return `<span class="clientes-table-pill clientes-table-pill--${type}">${escapeClienteHtml(value)}</span>`;
-      }
-
-      function renderClienteRowData(cliente:{id:string, identificacion:string, nombre:string, apellido:string, telefono:string, email:string, acciones:string}):string[]{
-        return [
-          escapeClienteHtml(cliente.id),
-          renderClientePill(cliente.identificacion, 'document'),
-          renderClienteNombre(cliente.nombre),
-          escapeClienteHtml(cliente.apellido),
-          renderClientePill(cliente.telefono, 'phone'),
-          renderClientePill(cliente.email, 'email'),
-          cliente.acciones
-        ];
-      }
-
-      function ocultarToolbarNativoClientes():void{
-        const wrapper = document.querySelector('#tablaClientes_wrapper');
-        wrapper?.querySelectorAll('.dataTables_length, .dataTables_filter').forEach((control)=>{
-          (control as HTMLElement).remove();
         });
       }
 

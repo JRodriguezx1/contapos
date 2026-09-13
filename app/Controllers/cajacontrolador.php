@@ -25,8 +25,8 @@ use App\Models\configuraciones\consecutivos;
 use App\Models\parametrizacion\config_local;
 use App\Models\configuraciones\negocio;
 use App\Models\sucursales;
-use App\Repositories\creditos\separadoMediopagoRepository;
 use App\services\cajaService;
+use App\services\caja\CajaConsultasService;
 use App\services\whatsAppService;
 use App\classes\Traits\DocumentTrait;
 use App\Models\configuraciones\emisores;
@@ -38,122 +38,50 @@ class cajacontrolador{
 
   use DocumentTrait;
 
+  /**
+   * GET /admin/caja.
+   *
+   * Renderiza el panel general. La preparación de cierres abiertos, facturas,
+   * medios de pago y catálogos se delega a CajaConsultasService.
+   */
   public static function index(Router $router){
     //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
+    $datos = (new CajaConsultasService())->obtenerPanelCaja(
+      id_sucursal(),
+      (int)$_SESSION['perfil'],
+      (int)$_SESSION['id']
+    );
 
-    $mediospago = mediospago::all();
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            
-    }
-
-    $ultimoscierres = cierrescajas::whereArray(['idsucursal_id'=>id_sucursal(), 'estado'=>0]);
-    $datacierrescajas['ingresoventas'][] = 0;
-    foreach($ultimoscierres as $value){
-      if($value->ingresoventas>0 || $value->totalcotizaciones>0 || $value->totalfacturas>0){
-        $datacierrescajas['ids'][] = $value->id;
-        $datacierrescajas['ingresoventas'][0] += $value->ingresoventas;
-      }
-    }
-
-    $facturas = [];
-    /*if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::IN_Where('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal()]);
-    
-    foreach($facturas as $value)
-      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;"); 
-    */
-    if(!empty($ultimoscierres)&&isset($datacierrescajas['ids']))$facturas = facturas::facturasConMediosPago('idcierrecaja', $datacierrescajas['ids'], ['id_sucursal', id_sucursal(), $_SESSION['perfil'], $_SESSION['id']]);
-    foreach($facturas as $value)$value->mediosdepago = json_decode($value->mediosdepago);
-    //debuguear($facturas);
-    $bancos = bancos::all();
-
-    $cajas = caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]);
-    $categoriasgastos = categoriagastos::all();
-    $conflocal = config_local::getParamGlobal();
-    $router->render('admin/caja/index', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'sucursal'=>nombreSucursal(), 'datacierrescajas'=>$datacierrescajas['ingresoventas'][0], 'categoriasgastos'=>$categoriasgastos, 'cajas'=>$cajas, 'bancos'=>$bancos, 'facturas'=>$facturas, 'mediospago'=>$mediospago, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/index', $datos + [
+      'titulo'=>'Caja',
+      'sucursal'=>nombreSucursal(),
+      'alertas'=>[],
+      'sucursales'=>sucursales::all(),
+      'user'=>$_SESSION
+    ]);
   }
 
 
+  /**
+   * GET /admin/caja/cerrarcaja.
+   *
+   * Renderiza el cierre abierto de la caja principal. El resumen financiero se
+   * obtiene desde CajaConsultasService y se comparte con las demás consultas.
+   */
   public static function cerrarcaja(Router $router){
     //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $idsucursal = id_sucursal();
-    $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
-    $conflocal = config_local::getParamGlobal();
-    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
-  
-    //calcular el id de la caja princial de la sucursal
-    $idcajaprincipal = $cajas[0]->id;
-    foreach($cajas as $value){
-      if($value->editable == 0){
-        $idcajaprincipal = $value->id;
-        break;
-      }
-    }
+    $datos = (new CajaConsultasService())->obtenerCierrePrincipal(id_sucursal());
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST' ){  ///if se puede eliminar
-            
-    }
-
-    $separdomediospagoRepo = new separadoMediopagoRepository();
-  
-    $mediospagos = mediospago::whereArray(['estado'=>1]);  //se usa para la declaracion de valores.
-    $facturas = []; $discriminarmediospagos=[]; $discriminarimpuesto=[]; $discriminargastos=[]; $ventasxusuarios=[]; $sobrantefaltante=[];
-    $ultimocierre = cierrescajas::uniquewhereArray(['estado'=>0, 'idcaja'=>$idcajaprincipal, 'idsucursal_id'=>id_sucursal()]); //ultimo cierre por caja
-    if(isset($ultimocierre)){
-      $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-
-      $factmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);
-      $sepMediosPago = $separdomediospagoRepo->allMediospagoXCierrecaja($ultimocierre->id);
-      foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
-          $id = $item['idmediopago'];
-          if (!isset($discriminarmediospagos[$id])) {
-              $discriminarmediospagos[$id] = $item;
-              $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
-          } else {
-              $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
-          }
-      }
-
-      $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
-      $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $idcajaprincipal, $idsucursal);
-      $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
-      $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);
-      //////////// Indicador de caja //////////////////
-      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
-      //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-      
-      $sobrantefaltante = $declaracion;
-      foreach($discriminarmediospagos as $i => $dis){
-        if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
-        $aux = 0;
-        foreach($declaracion as $j => $dec){
-          if($dis['idmediopago'] == $dec->id_mediopago){
-            $sobrantefaltante[$j]->valorsistema = $dis['valor'];
-            $aux = 1;
-            break;
-          }
-        }
-        if($aux == 0){
-          $newobj = new stdClass();
-          $newobj->id_mediopago = $dis['idmediopago'];
-          $newobj->idcierrecajaid = $ultimocierre->id;
-          $newobj->nombremediopago = $dis['mediopago'];
-          $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
-          $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
-          $sobrantefaltante[] = $newobj;
-        }
-      }
-      //debuguear($sobrantefaltante);
-      foreach($facturas as $value)
-        $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
-    }
-    
-    $router->render('admin/caja/cerrarcaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'cajas'=>$cajas, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$ultimocierre, 'facturas'=>$facturas, 'ventasxusuarios'=>$ventasxusuarios, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/cerrarcaja', $datos + [
+      'titulo'=>'Caja',
+      'alertas'=>[],
+      'sucursales'=>sucursales::all(),
+      'user'=>$_SESSION
+    ]);
   }
 
   
@@ -418,16 +346,35 @@ debuguear($facturas);
   }
 
 
+  /**
+   * GET /admin/caja/ultimoscierres.
+   *
+   * Lista cierres finalizados. La consulta por sucursal y orden descendente se
+   * delega a CajaConsultasService.
+   */
   public static function ultimoscierres(Router $router){
     //session_start();
     isadmin();
     if(!tienePermiso('Habilitar modulo de caja')&&userPerfil()>3)return;
-    $alertas = [];
-    $ultimoscierres = cierrescajas::whereArray(['estado'=>1, 'idsucursal_id'=>id_sucursal()], 'DESC');
-    $router->render('admin/caja/ultimoscierres', ['titulo'=>'Caja', 'ultimoscierres'=>$ultimoscierres, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $ultimoscierres = (new CajaConsultasService())
+      ->listarCierresFinalizados(id_sucursal());
+
+    $router->render('admin/caja/ultimoscierres', [
+      'titulo'=>'Caja',
+      'ultimoscierres'=>$ultimoscierres,
+      'alertas'=>[],
+      'sucursales'=>sucursales::all(),
+      'user'=>$_SESSION
+    ]);
   }
 
 
+  /**
+   * GET /admin/caja/detallecierrecaja?id={id}.
+   *
+   * Renderiza un cierre finalizado. El resumen financiero reutilizable se
+   * obtiene desde CajaConsultasService.
+   */
   public static function detallecierrecaja(Router $router){
     //session_start();
     isadmin();
@@ -435,62 +382,17 @@ debuguear($facturas);
     $id = $_GET['id'];
     if(!is_numeric($id))return;
 
-    $alertas = [];
-    $discriminarmediospagos=[];
+    $datos = (new CajaConsultasService())
+      ->obtenerDetalleCierreFinalizado((int)$id, id_sucursal());
 
-    $conflocal = config_local::getParamGlobal();
-    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
+    if($datos === null)return;
 
-    $separdomediospagoRepo = new separadoMediopagoRepository();
-    $cierreselected = cierrescajas::uniquewhereArray(['id'=>$id, 'estado'=>1]);
-    $facturas = facturas::idregistros('idcierrecaja', $cierreselected->id);
-    
-    $factmediospagos = cierrescajas::discriminarmediospagos($cierreselected->id);
-    $sepMediosPago = $separdomediospagoRepo->allMediospagoXCierrecaja($cierreselected->id);
-    foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
-        $id = $item['idmediopago'];
-        if (!isset($discriminarmediospagos[$id])) {
-            $discriminarmediospagos[$id] = $item;
-            $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
-        } else {
-            $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
-        }
-    }
-
-    $discriminarimpuesto = cierrescajas::discriminarimpuesto($cierreselected->id);
-    $discriminargastos = cierrescajas::discriminargastos($cierreselected->id, $cierreselected->idcaja, id_sucursal());
-    $ventasxusuarios = cierrescajas::ventasXusuario($cierreselected->id);
-    $mediospagos = mediospago::all();
-    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $cierreselected->id);
-    //////////// Indicador de caja //////////////////
-    $diferencial = $indicadorCaja == 1?($cierreselected->basecaja - $cierreselected->gastoscaja):($indicadorCaja == 2?(-$cierreselected->gastoscaja):($indicadorCaja == 3?($cierreselected->basecaja - $cierreselected->gastoscaja - $cierreselected->domicilios):(- $cierreselected->gastoscaja - $cierreselected->domicilios)));
-    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    $sobrantefaltante = $declaracion;
-    foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
-      $aux = 0;
-      foreach($declaracion as $j => $dec){
-        if($dis['idmediopago'] == $dec->id_mediopago){
-          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
-          $aux = 1;
-          break;
-        }
-      }
-      if($aux == 0){
-        $newobj = new stdClass();
-        $newobj->id_mediopago = $dis['idmediopago'];
-        $newobj->idcierrecajaid = $cierreselected->id;
-        $newobj->nombremediopago = $dis['mediopago'];
-        $newobj->valordeclarado = 0;
-        $newobj->valorsistema = $dis['valor'];
-        $sobrantefaltante[] = $newobj;
-      }
-    }
-
-    foreach($facturas as $value)
-        $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
-    
-    $router->render('admin/caja/detallecierrecaja', ['titulo'=>'Caja', 'conflocal'=>$conflocal, 'discriminarimpuesto'=>$discriminarimpuesto, 'discriminargastos'=>$discriminargastos, 'sobrantefaltante'=>$sobrantefaltante, 'mediospagos'=>$mediospagos, 'discriminarmediospagos'=>$discriminarmediospagos, 'ultimocierre'=>$cierreselected, 'ventasxusuarios'=>$ventasxusuarios, 'facturas'=>$facturas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);
+    $router->render('admin/caja/detallecierrecaja', $datos + [
+      'titulo'=>'Caja',
+      'alertas'=>[],
+      'sucursales'=>sucursales::all(),
+      'user'=>$_SESSION
+    ]);
   }
 
   public static function pedidosguardados(Router $router){
@@ -743,74 +645,32 @@ debuguear($facturas);
   }
 
 
-  // cuando se cambia la caja para ver y cerrar la caja
-  public static function datoscajaseleccionada(){ //llamado desde cerrarcaja.ts
-    //session_start();
+  /**
+   * POST /admin/api/datoscajaseleccionada.
+   *
+   * Es llamado por src/ts/caja/cerrarcaja.ts cuando el usuario cambia la caja
+   * que desea revisar. La construcción del resumen se delega al servicio.
+   */
+  public static function datoscajaseleccionada(){
     isadmin();
-    $alertas = [];
-    $idsucursal = id_sucursal();
-    $conflocal = config_local::getParamGlobal();
-    $indicadorCaja = $conflocal['indicador_caja']->valor_final;
-    $separdomediospagoRepo = new separadoMediopagoRepository();
+    $cajaId = filter_var($_POST['idcaja'] ?? null, FILTER_VALIDATE_INT, [
+      'options'=>['min_range'=>1]
+    ]);
 
-    $discriminarmediospagos=[];
-
-    $ultimocierre = cierrescajas::uniquewhereArray(['idsucursal_id'=>$idsucursal, 'estado'=>0, 'idcaja'=>$_POST['idcaja']]); //ultimo cierre por caja
-    $facturas = facturas::idregistros('idcierrecaja', $ultimocierre->id);
-    $factmediospagos = cierrescajas::discriminarmediospagos($ultimocierre->id);  //lo que el sistema registra
-    $sepMediosPago = $separdomediospagoRepo->allMediospagoXCierrecaja($ultimocierre->id);
-    foreach (array_merge($factmediospagos, $sepMediosPago) as $item) {
-        $id = $item['idmediopago'];
-        if (!isset($discriminarmediospagos[$id])) {
-            $discriminarmediospagos[$id] = $item;
-            $discriminarmediospagos[$id]['valor'] = (float)$item['valor'];
-        } else {
-            $discriminarmediospagos[$id]['valor'] += (float)$item['valor'];
-        }
+    if($cajaId === false){
+      echo json_encode(['error'=>['La caja seleccionada no es válida.']]);
+      return;
     }
 
-    $discriminarimpuesto = cierrescajas::discriminarimpuesto($ultimocierre->id);
-    $discriminargastos = cierrescajas::discriminargastos($ultimocierre->id, $_POST['idcaja'], $idsucursal);
-    $ventasxusuarios = cierrescajas::ventasXusuario($ultimocierre->id);
-    $declaracion = declaracionesdineros::idregistros('idcierrecajaid', $ultimocierre->id);  //lo que el usuario declara de forma manual.
-    //////////// Indicador de caja //////////////////
-      $diferencial = $indicadorCaja == 1?($ultimocierre->basecaja - $ultimocierre->gastoscaja):($indicadorCaja == 2?(-$ultimocierre->gastoscaja):($indicadorCaja == 3?($ultimocierre->basecaja - $ultimocierre->gastoscaja - $ultimocierre->domicilios):(- $ultimocierre->gastoscaja - $ultimocierre->domicilios)));
-    //////////// mapeo de arreglo de valores declarados con el arreglo de los pagos discriminados /////////////
-    $sobrantefaltante = $declaracion;
-    foreach($discriminarmediospagos as $i => $dis){
-      if($dis['idmediopago'] == 1)$dis['valor'] += $diferencial;
-      $aux = 0;
-      foreach($declaracion as $j => $dec){
-        if($dis['idmediopago'] == $dec->id_mediopago){
-          $sobrantefaltante[$j]->valorsistema = $dis['valor'];
-          $aux = 1;
-          break;
-        }
-      }
-      if($aux == 0){
-        $newobj = new stdClass();
-        $newobj->id_mediopago = $dis['idmediopago'];
-        $newobj->idcierrecajaid = $ultimocierre->id;
-        $newobj->nombremediopago = $dis['mediopago'];
-        $newobj->valordeclarado = 0;   // si no coincide el medio de pago del sistema con el declarado coloca 0
-        $newobj->valorsistema = $dis['valor']; // si no coincide el medio de pago del sistema con el declarado coloca 0
-        $sobrantefaltante[] = $newobj;
-      }
+    $datos = (new CajaConsultasService())
+      ->obtenerCajaSeleccionada((int)$cajaId, id_sucursal());
+
+    if($datos === null){
+      echo json_encode(['error'=>['No existe un cierre abierto para la caja seleccionada.']]);
+      return;
     }
 
-    foreach($facturas as $value)
-      $value->mediosdepago = ActiveRecord::camposJoinObj("SELECT * FROM factmediospago JOIN mediospago ON factmediospago.idmediopago = mediospago.id WHERE id_factura = $value->id;");
-    
-    
-    $alertas['exito'][] = "Cambio de caja.";
-    $alertas['ultimocierre'] = $ultimocierre;
-    $alertas['discriminarmediospagos'] = $discriminarmediospagos;
-    $alertas['facturas'] = $facturas;
-    $alertas['discriminarimpuesto'] = $discriminarimpuesto;
-    $alertas['discriminargastos'] = $discriminargastos;
-    $alertas['ventasxusuarios'] = $ventasxusuarios;
-    $alertas['sobrantefaltante'] = $sobrantefaltante;
-    echo json_encode($alertas);
+    echo json_encode(['exito'=>['Cambio de caja.']] + $datos);
   }
 
 

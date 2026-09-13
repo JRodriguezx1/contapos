@@ -30,53 +30,6 @@
   
       let facturadores:facturadoresapi[]=[], unfacturador:facturadoresapi|undefined;
 
-      function escapeHtmlFacturador(valor:any):string{
-        return String(valor ?? '').replace(/[&<>"']/g, (caracter:string) => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        }[caracter] as string));
-      }
-
-      function nombreTipoFacturador(facturador:any):string{
-        const tipo = facturador?.nombretipofacturador;
-        return escapeHtmlFacturador(typeof tipo === 'object' ? tipo?.nombre : tipo);
-      }
-
-      function renderNombreFacturador(nombre:any):string{
-        return `<span class="config-facturador-name">
-          <span class="config-facturador-name__icon"><i class="fa-solid fa-receipt"></i></span>
-          <span>${escapeHtmlFacturador(nombre)}</span>
-        </span>`;
-      }
-
-      function renderPillFacturador(valor:any, modificador:string):string{
-        return `<span class="config-table-pill config-table-pill--${modificador}">${escapeHtmlFacturador(valor)}</span>`;
-      }
-
-      function renderEstadoFacturador(estado:any):string{
-        const activo = Number(estado) === 1;
-        return `<span class="config-table-status ${activo ? 'config-table-status--active' : 'config-table-status--expired'}">${activo ? 'Activo' : 'Expirada'}</span>`;
-      }
-
-      function filaFacturador(numero:number, facturador:any):any[]{
-        return [
-          numero,
-          renderNombreFacturador(facturador?.nombre),
-          renderPillFacturador(nombreTipoFacturador(facturador), 'type'),
-          renderPillFacturador(`${facturador?.rangoinicial ?? ''} - ${facturador?.rangofinal ?? ''}`, 'range'),
-          renderPillFacturador(facturador?.siguientevalor, 'next'),
-          renderPillFacturador(facturador?.fechafin, 'date'),
-          renderEstadoFacturador(facturador?.estado),
-          `<div class="acciones-btns" id="${escapeHtmlFacturador(facturador?.id)}" data-facturador="${escapeHtmlFacturador(facturador?.nombre)}">
-              <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
-              ${Number(facturador?.id) > 1 ? '<button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>' : ''}
-          </div>`
-        ];
-      }
-
       (async ()=>{
         try {
             const url = "/admin/api/allfacturadores"; //llamado a la API REST y se trae todos los consecutivos
@@ -194,6 +147,40 @@
         })();//cierre de async()
     });
 
+    function filaFacturador(numero:number, facturador:any):any[]{
+      return [
+        numero,
+        `<span class="table-entity">
+          <span class="table-entity__icon"><i class="fa-solid fa-receipt"></i></span>
+          <span>${facturador?.nombre}</span>
+        </span>`,
+        renderBadgeFacturador(nombreTipoFacturador(facturador), 'type'),
+        renderBadgeFacturador(`${facturador?.rangoinicial ?? ''} - ${facturador?.rangofinal ?? ''}`, 'range'),
+        renderBadgeFacturador(facturador?.siguientevalor, 'next'),
+        renderBadgeFacturador(facturador?.fechafin, 'date'),
+        `<span class="table-status ${facturador?.estado == 1 ? 'table-status--success' : 'table-status--danger'}">${facturador?.estado == 1 ? 'Activo' : 'Expirada'}</span>`,
+        `<div class="acciones-btns" id="${facturador?.id}" data-facturador="${facturador?.nombre}">
+            <button class="btn-md btn-turquoise editarFacturador"><i class="fa-solid fa-pen-to-square"></i></button>
+            ${Number(facturador?.id) > 1 ? '<button class="btn-md btn-red eliminarFacturador"><i class="fa-solid fa-trash-can"></i></button>' : ''}
+        </div>`
+      ];
+    }
+
+
+    function nombreTipoFacturador(facturador:any):string{
+        const tipo = facturador?.nombretipofacturador;
+        return typeof tipo === 'object' ? tipo?.nombre : tipo;
+    }
+
+    function renderBadgeFacturador(valor:any, modificador:string):string{
+      const clases:Record<string,string> = {
+        type: 'table-badge--neutral',
+        range: 'table-badge--primary',
+        next: 'table-badge--success',
+        date: 'table-badge--warning'
+      };
+      return `<span class="table-badge ${clases[modificador] ?? 'table-badge--neutral'}">${valor}</span>`;
+    }
 
     ////////////////////  Eliminar facturador  //////////////////////
     function eliminarFacturador(e:Event){

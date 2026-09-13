@@ -28,53 +28,17 @@
     function resaltarBotonConsultar(){
       if(!usaCalendarioModerno || !consultarFechaPersonalizada)return;
 
-      consultarFechaPersonalizada.classList.remove('report-cuotas__filter-button--attention', 'ventas-generales__filter-btn--attention');
+      consultarFechaPersonalizada.classList.remove('daterangepicker-action--attention');
       void consultarFechaPersonalizada.offsetWidth;
-      consultarFechaPersonalizada.classList.add(esReporteVentasGenerales ? 'ventas-generales__filter-btn--attention' : 'report-cuotas__filter-button--attention');
+      consultarFechaPersonalizada.classList.add('daterangepicker-action--attention');
       consultarFechaPersonalizada.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       setTimeout(()=>{
-        consultarFechaPersonalizada.classList.remove('report-cuotas__filter-button--attention', 'ventas-generales__filter-btn--attention');
+        consultarFechaPersonalizada.classList.remove('daterangepicker-action--attention');
       }, 2400);
     }
 
-    dateRangeInput.daterangepicker({
-      timePicker: true,
-      autoUpdateInput: !usaCalendarioModerno,
-      //startDate: moment().startOf('hour'),
-      //endDate: moment().startOf('hour').add(32, 'hour'),
-      startDate: moment().set({ hour: 0, minute: 0, second: 1 }),
-      endDate: moment().set({ hour: 23, minute: 59, second: 59 }),
-      locale: {
-        format: 'M/DD hh:mm A',
-        applyLabel: 'Aplicar',
-        cancelLabel: 'Cancelar',
-        daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-        monthNames: [
-          'Enero',
-          'Febrero',
-          'Marzo',
-          'Abril',
-          'Mayo',
-          'Junio',
-          'Julio',
-          'Agosto',
-          'Septiembre',
-          'Octubre',
-          'Noviembre',
-          'Diciembre'
-        ]
-      }
-    });
-
-    dateRangeInput.on('show.daterangepicker', function(ev: Event, picker: any) {
-      if(esReporteCuotas){
-        picker.container.addClass('report-cuotas__calendar');
-      }
-      if(esReporteVentasGenerales){
-        picker.container.addClass('ventas-generales__calendar');
-      }
-    });
+    inicializarDateRangePicker(dateRangeInput, { autoUpdateInput: !usaCalendarioModerno });
 
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
         var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');

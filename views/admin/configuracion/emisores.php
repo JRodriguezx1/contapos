@@ -1,22 +1,22 @@
 <div class="gestionEmisores">
 
-  <section class="config-list-panel config-emisores-panel">
-    <div class="config-list-panel__header">
-      <div class="config-list-panel__title">
-        <span class="material-symbols-outlined">badge</span>
+  <section class="">
+    <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 border-b border-slate-200 mb-5 pb-5">
+      <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined inline-flex size-16 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-4xl text-indigo-600 font-medium">badge</span>
         <div>
-          <h2>Gesti&oacute;n de emisores</h2>
-          <p>Administra los emisores disponibles para facturaci&oacute;n y operaci&oacute;n.</p>
+          <h2 class="text-slate-900 text-3xl font-bold">Gesti&oacute;n de emisores</h2>
+          <p class="my-0 text-lg leading-snug text-slate-500">Administra los emisores disponibles para facturaci&oacute;n y operaci&oacute;n.</p>
         </div>
       </div>
-      <button id="crearEmisor" class="btn-md btn-indigo config-list-panel__action">
+      <button id="crearEmisor" class="btnDialog btnDialog_primary">
         <i class="fa-solid fa-plus"></i>
         Crear emisor
       </button>
     </div>
 
-    <div class="config-table-card">
-      <table id="tablaEmisores" class="display responsive nowrap tabla config-data-table" width="100%">
+    <div class="datatable-card config-table-card">
+      <table id="tablaEmisores" class="display responsive nowrap tabla datatable-table" width="100%">
           <thead>
               <tr>
                   <th>N.</th>
@@ -50,21 +50,21 @@
     </div>
   </section>
 
-  <dialog id="miDialogoEmisor" class="midialog-sm config-emisor-dialog">
-    <div class="config-emisor-dialog__header">
-        <span class="material-symbols-outlined">badge</span>
+  <dialog id="miDialogoEmisor" class="detalledialog_xs">
+    <div class="p-6 flex items-center gap-4 bg-gradient-to-br from-indigo-600/15 to-cyan-300/10">
+        <span class="material-symbols-outlined inline-flex size-20 shrink-0 items-center justify-center rounded-xl bg-white text-4xl text-indigo-600 font-medium border border-indigo-100">badge</span>
         <div>
-            <p>Emisor</p>
-            <h4 id="modalEmisor">Crear emisor</h4>
-            <small>Registra los datos fiscales y de contacto del emisor.</small>
+            <p class="my-0 text-base leading-5 font-extrabold uppercase text-indigo-600">Emisor</p>
+            <h4 id="modalEmisor" class="text-slate-900 text-3xl leading-6 font-bold">Crear emisor</h4>
+            <small class="mt-1 text-lg leading-snug text-slate-500">Registra los datos fiscales y de contacto del emisor.</small>
         </div>
     </div>
     <div id="divmsjalertaEmisor"></div>
-    <form id="formCrearUpdateEmisor" class="formulario" action="/admin/config/crear_Emisor" method="POST">
-        <div class="empleado-grid config-emisor-dialog__grid">
-            <div class="formulario__campo">
+    <form id="formCrearUpdateEmisor" class="pb-8" action="/admin/config/crear_Emisor" method="POST">
+        <div class="formulario--grid">
+            <div class="formulario__campo col-span-full">
                 <label class="formulario__label" for="sucursalEmisor">Sucursal</label>
-                <select id="sucursalEmisor" class="formulario__select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" name="sucursalEmisor" required>
+                <select id="sucursalEmisor" class="formulario__select" name="sucursalEmisor" required>
                     <option value="" disabled selected>-Seleccionar-</option>
                     <?php foreach($sucursales as $value): ?>
                         <option value="<?php echo $value->id;?>"><?php echo $value->nombre;?></option>
@@ -73,27 +73,27 @@
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="nombreEmisor">Nombre del emisor</label>
-                <input id="nombreEmisor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nombre del emisor" name="nombreEmisor" value="" required>
+                <input id="nombreEmisor" class="formulario__input" type="text" placeholder="Nombre del emisor" name="nombreEmisor" value="" required>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="nitEmisor">Nit</label>
-                <input id="nitEmisor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Nit del emisor" name="nitEmisor" value="" required>
+                <input id="nitEmisor" class="formulario__input" type="text" placeholder="Nit del emisor" name="nitEmisor" value="" required>
             </div>
-            <div class="formulario__campo">
+            <div class="formulario__campo col-span-full">
                 <label class="formulario__label" for="datosencabezadosEmisor">Datos del Rut</label>
                 <div class="formulario__dato">
-                    <textarea id="datosencabezadosEmisor" class="formulario__textarea w-full bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block p-2.5 text-xl focus:outline-none focus:ring-1 h-32" name="datosencabezadosEmisor" placeholder="datos de encabezado de la factura" rows="4"></textarea>
+                    <textarea id="datosencabezadosEmisor" class="formulario__textarea formulario__textarea--textarea !min-h-32" name="datosencabezadosEmisor" placeholder="datos de encabezado de la factura" rows="4"></textarea>
                 </div>
             </div>
             <div class="formulario__campo">
                 <label class="formulario__label" for="movilEmisor">Movil</label>
-                <input id="movilEmisor" class="formulario__input bg-gray-50 border border-gray-300 text-gray-900 !rounded-lg focus:border-indigo-600 block w-full p-2.5 h-14 text-xl focus:outline-none focus:ring-1" type="text" placeholder="Contacto del emisor" name="movilEmisor" value="" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0)">
+                <input id="movilEmisor" class="formulario__input" type="text" placeholder="Contacto del emisor" name="movilEmisor" value="" oninput="this.value = parseInt(this.value.replace(/[^\d.,]/g, '').replace(/[,.]/g, '')||0)">
             </div>
         </div>
         
-        <div class="config-emisor-dialog__actions">
-            <button class="btn-md btn-turquoise" type="button" value="Salir">Salir</button>
-            <input id="btnEditarCrearEmisor" class="btn-md btn-indigo" type="submit" value="Crear">
+        <div class="formulario__contenedorBtns--gridfull px-8">
+            <button class="btnDialog btnDialog_esmeralda" type="button" value="Salir">Salir</button>
+            <input id="btnEditarCrearEmisor" class="btnDialog btnDialog_light" type="submit" value="Crear">
         </div>
     </form>
   </dialog><!--fin crear/editar Emisor-->

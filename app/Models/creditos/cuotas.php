@@ -66,8 +66,8 @@ class cuotas {
     }
 
 
-    public function preparar($credito) {
-        $this->numerocuota = $credito->numcuota + 1;
+    public function preparar(object $credito) {
+        $this->numerocuota = $credito->numerodecuota;
         $this->montocuota = $credito->montocuota;
     }
 

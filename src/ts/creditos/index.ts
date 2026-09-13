@@ -4,17 +4,25 @@
     type creditsapi = {
       id:string,
       id_fksucursal: string,
+      idemisor: string,
+      usuariofk: string,
+      idtipofinanciacion:string,
       factura_id: string,
       cliente_id: string,
+      idestadocreditos: string,
+      num_orden: string,
       nombrecliente: string,
       capital: string,
       abonoinicial: string,
+      abonodecuotas: string,
       saldopendiente: string,
       numcuota: string,
       cantidadcuotas: string,
       montocuota: string,
       frecuenciapago: string,
       fechainicio: string,
+      fechafin: string,
+      diasenmora: string,
       interes: string,
       interesxcuota: string,
       interestotal: string,
@@ -23,8 +31,41 @@
       montototal: string,
       fechavencimiento: string,
       productoentregado: string,
+      base: string,
+      valorimpuestototal: string,
+      dctox100: string,
+      descuento: string,
+      abonototalantiguo: string,
+      cantidadcuotasantiguas: string,
+      fechaultimoabonoantiguo: string,
+      nota: string,
+      cliente?: string,
+      telefono?: string,
+      identificacion?: string,
+      sucursal?: string,
       estado: string,
       created_at: string,
+    };
+
+    type CreditoInterSucursal = {
+      id: string,
+      num_orden: string,
+      idtipofinanciacion: string,
+      id_fksucursal: string,
+      fechainicio: string,
+      fechavencimiento: string,
+      montototal: string,
+      saldopendiente: string,
+      cliente: string,
+      telefono: string,
+      identificacion: string,
+      sucursal: string,
+    };
+
+    type RespuestaBusquedaIntersucursal = {
+      ok: boolean,
+      data?: CreditoInterSucursal[],
+      error?: string,
     };
     
     /*interface Item {
@@ -34,11 +75,16 @@
       valorimpuesto: number
     }
     let factimpuestos:Item[] = [];*/
+    const creditoInterSucursal = document.querySelector("#creditoInterSucursal") as HTMLInputElement;
+    const miDialogoBuscarIntersucursal = document.querySelector('#miDialogoBuscarIntersucursal') as HTMLDialogElement;
+    const listaCreditosIntersucursales = document.querySelector('#listaCreditosIntersucursales') as HTMLDivElement;
 
     let printerBT:string = getParam.impresora_principal_de_CAJA_para_Android_por_BT.valor_final;
     let credits:creditsapi[]=[], uncredito:creditsapi;
-    let indiceFila=0, control=0;
+    let indiceFila=0, debounceTimer: ReturnType<typeof setTimeout>, controller: AbortController | null = null;
 
+
+    document.addEventListener("click", cerrarDialogoExterno);
 
     /*(async ()=>{
       try {
@@ -52,12 +98,121 @@
     })();*/
 
 
+    document.querySelector('#btnInterSucursal')?.addEventListener('click', ()=>{
+      miDialogoBuscarIntersucursal.showModal();
+      requestAnimationFrame(()=>creditoInterSucursal.focus());
+    });
+
+    creditoInterSucursal.addEventListener('input', (e:Event)=>{
+      const contact = (e.target as HTMLInputElement).value.trim();
+      clearTimeout(debounceTimer);
+      controller?.abort();// Cancela un fetch anterior si todavía está en ejecución
+
+      if(contact === ''){
+        renderEstadoBusqueda('Escribe el ID del crédito, el nombre del cliente o su identificación.');
+        return;
+      }
+
+      const esIdNumerico = /^\d+$/.test(contact);
+      if(!esIdNumerico && contact.length < 4){
+        renderEstadoBusqueda('Ingresa mínimo 4 caracteres para buscar por cliente o identificación.');
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        const requestController = new AbortController();
+        controller = requestController;
+        renderEstadoBusqueda('Buscando créditos abiertos en otras sucursales...', 'cargando');
+        try {
+              const url = "/admin/api/creditos/buscarIntersucursal?q="+encodeURIComponent(contact); //llamado a la API REST
+              const respuesta = await fetch(url, {
+                method: 'GET',
+                headers:{"Accept": "application/json"},
+                signal: requestController.signal
+              });
+              const resultado = await respuesta.json() as RespuestaBusquedaIntersucursal;
+              if(requestController.signal.aborted)return;
+              if(!respuesta.ok || !resultado.ok){
+                throw new Error(resultado.error || 'No fue posible realizar la búsqueda.');
+              }
+              printCreditosInterSucursal(resultado.data ?? []);
+        }catch(error){
+          if(error instanceof DOMException && error.name === 'AbortError') {
+              return;
+          }
+          renderEstadoBusqueda(error instanceof Error ? error.message : 'No fue posible realizar la búsqueda.', 'error');
+        }finally{
+          if(controller === requestController)controller = null;
+        }
+      }, 400);
+    });
+
+
+    function renderEstadoBusqueda(mensaje:string, tipo:'normal'|'cargando'|'error' = 'normal'):void{
+      while(listaCreditosIntersucursales.firstChild)listaCreditosIntersucursales.removeChild(listaCreditosIntersucursales.firstChild);
+      const estado = document.createElement('p');
+      estado.className = 'rounded-lg border p-4 text-center text-base font-semibold';
+      estado.classList.add(
+        tipo === 'error' ? 'border-rose-200' : tipo === 'cargando' ? 'border-indigo-200' : 'border-slate-200',
+        tipo === 'error' ? 'bg-rose-50' : tipo === 'cargando' ? 'bg-indigo-50' : 'bg-slate-50',
+        tipo === 'error' ? 'text-rose-700' : tipo === 'cargando' ? 'text-indigo-700' : 'text-slate-500'
+      );
+      estado.textContent = mensaje;
+      listaCreditosIntersucursales.appendChild(estado);
+    }
+
+
+    function printCreditosInterSucursal(creditos:CreditoInterSucursal[]):void{
+      while(listaCreditosIntersucursales.firstChild)listaCreditosIntersucursales.removeChild(listaCreditosIntersucursales.firstChild);
+      if(creditos.length === 0){
+        renderEstadoBusqueda('No se encontraron créditos abiertos en otras sucursales.');
+        return;
+      }
+      const html = creditos.map(credito => `
+        <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="table-badge table-badge--info">${credito.idtipofinanciacion === '2'? 'Separado': 'Crédito'}</span>
+                <span class="rounded-full bg-indigo-50 px-4 py-2 text-base font-semibold text-indigo-600">${credito.sucursal || 'Sin información'}</span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <div class="">
+                <h5 class="mb-0 mt-3 text-xl font-semibold text-slate-900">${credito.cliente || 'Cliente sin nombre'}</h5>
+                <p class="mt-1 mb-0 text-lg text-slate-500">
+                    Identificación: ${credito.identificacion || 'No registrada'} * Teléfono: ${credito.telefono || 'No registrado'}
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="">
+                  <p class="m-0 text-base font-semibold text-slate-500">Crédito</p>
+                  <p class="m-0 text-lg font-bold text-slate-900">#${credito.id}</p>
+                </div>
+                <div class="">
+                  <p class="m-0 text-base font-semibold text-slate-500">Saldo pendiente</p>
+                  <p class="m-0 text-lg font-bold text-slate-900">$${Number(credito.saldopendiente).toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2 flex justify-end">
+              <a class="btnDialog btnDialog_primary" href="/admin/creditos/detallecredito?id=${credito.id}">
+                Seleccionar
+              </a>
+            </div>
+        </article>`).join('');
+        listaCreditosIntersucursales.innerHTML = html;
+    }
 
     
     //////////////////  TABLA //////////////////////
     let tablaCreditos = ($('#tablaCreditos') as any).DataTable({
       ...configdatatablesgenerico,
-      dom: 'Brtip',
+      layout: {
+        topStart: 'buttons',
+        topEnd: null,
+        bottomStart: 'info',
+        bottomEnd: 'paging'
+      },
       buttons: [
         {extend: 'copyHtml5', className: 'creditos-export-button creditos-export-button--copy', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-copy"></i></span><span>Copiar</span>', title: 'creditos-y-separados'},
         {extend: 'excelHtml5', className: 'creditos-export-button creditos-export-button--excel', text: '<span class="creditos-export-button__icon"><i class="fa-regular fa-file-excel"></i></span><span>Excel</span>', title: 'creditos-y-separados'},
@@ -70,8 +225,6 @@
     });
     modernizarToolbarDataTable('#tablaCreditos');
     modernizarBotonesExportacionCreditos(tablaCreditos);
-    ocultarToolbarNativoCreditos();
-    ($('#tablaCreditos') as any).on('draw.dt', ocultarToolbarNativoCreditos);
 
 
     //evento a la tabla
@@ -115,8 +268,8 @@
                       const resultado = await respuesta.json();
                       if(resultado.exito !== undefined){
                         const datosActuales = (tablaCreditos as any).row(indiceFila).data();
-                        datosActuales[9] = '<span class="creditos-status creditos-status--danger">Anulado</span>';
-                        datosActuales[10] = `<div class="acciones-btns" id="${idcredito}"><a class="creditos-action creditos-action--detail" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a></div>`;
+                        datosActuales[9] = '<span class="table-status table-status--danger">Anulado</span>';
+                        datosActuales[10] = `<div class="acciones-btns" id="${idcredito}"><a class="table-action table-action--view" href="/admin/creditos/detallecredito?id=${idcredito}" title="Ver detalle del credito"><i class="fa-solid fa-chart-simple"></i></a></div>`;
                         (tablaCreditos as any).row(indiceFila).data(datosActuales).draw();
                         (tablaCreditos as any).page(info.page).draw('page'); 
                         Swal.fire({
@@ -174,76 +327,6 @@
       });
     }
 
-    function ocultarToolbarNativoCreditos():void{
-      const wrapper = document.querySelector('#tablaCreditos_wrapper');
-      wrapper?.querySelectorAll('.dataTables_length, .dataTables_filter').forEach((control)=>{
-        (control as HTMLElement).remove();
-      });
-    }
-
-    function modernizarBotonesExportacionCreditos(dataTable:any):void{
-      const wrapper = document.querySelector('#tablaCreditos_wrapper') as HTMLElement|null;
-      const botonesNativos = wrapper?.querySelector('.dt-buttons') as HTMLElement|null;
-      if(!wrapper || !botonesNativos || wrapper.querySelector('.creditos-export-toolbar'))return;
-
-      botonesNativos.classList.add('creditos-native-export-buttons');
-      botonesNativos.style.display = 'none';
-      botonesNativos.setAttribute('aria-hidden', 'true');
-
-      const acciones = [
-        {indice: 0, clase: 'copy', icono: 'fa-regular fa-copy', texto: 'Copiar'},
-        {indice: 1, clase: 'excel', icono: 'fa-regular fa-file-excel', texto: 'Excel'},
-        {indice: 2, clase: 'csv', icono: 'fa-solid fa-file-csv', texto: 'CSV'},
-        {indice: 3, clase: 'pdf', icono: 'fa-regular fa-file-pdf', texto: 'PDF'},
-        {indice: 4, clase: 'print', icono: 'fa-solid fa-print', texto: 'Imprimir'},
-        {indice: 5, clase: 'columns', icono: 'fa-solid fa-table-columns', texto: 'Columnas'}
-      ];
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'creditos-export-toolbar';
-      toolbar.innerHTML = `
-        <div class="creditos-export-menu">
-          <button type="button" class="creditos-export-trigger" aria-expanded="false">
-            <span><i class="fa-solid fa-download"></i></span>
-            Exportar
-            <i class="fa-solid fa-chevron-down"></i>
-          </button>
-          <div class="creditos-export-menu__list">
-          ${acciones.map((accion)=>`
-            <button type="button" class="creditos-export-chip creditos-export-chip--${accion.clase}" data-export-index="${accion.indice}">
-              <span class="creditos-export-chip__icon"><i class="${accion.icono}"></i></span>
-              <span>${accion.texto}</span>
-            </button>
-          `).join('')}
-          </div>
-        </div>
-      `;
-
-      botonesNativos.insertAdjacentElement('beforebegin', toolbar);
-      const trigger = toolbar.querySelector('.creditos-export-trigger') as HTMLButtonElement|null;
-      const menu = toolbar.querySelector('.creditos-export-menu') as HTMLElement|null;
-
-      trigger?.addEventListener('click', (event)=>{
-        event.stopPropagation();
-        const abierto = menu?.classList.toggle('is-open') ?? false;
-        trigger.setAttribute('aria-expanded', abierto ? 'true' : 'false');
-      });
-
-      document.addEventListener('click', ()=>{
-        menu?.classList.remove('is-open');
-        trigger?.setAttribute('aria-expanded', 'false');
-      });
-
-      toolbar.querySelectorAll('[data-export-index]').forEach((boton)=>{
-        boton.addEventListener('click', (event)=>{
-          event.stopPropagation();
-          dataTable.button(Number((boton as HTMLElement).dataset.exportIndex)).trigger();
-          menu?.classList.remove('is-open');
-          trigger?.setAttribute('aria-expanded', 'false');
-        });
-      });
-    }
-
 
     async function printPOSSeparado(idcredito:string){
       //printTicketPOS(resultado.idfactura, resultado.dataInvoice);
@@ -293,6 +376,18 @@
       }*/
     }
 
-  }
 
+    function cerrarDialogoExterno(event:Event) {
+      const f = event.target;
+      if(!(f instanceof Element))return;
+      if(f === miDialogoBuscarIntersucursal || f.closest('.btnXCerrarInterSucursal')){
+        miDialogoBuscarIntersucursal.close();
+        clearTimeout(debounceTimer);
+        controller?.abort();
+        controller = null;
+        creditoInterSucursal.value = '';
+        renderEstadoBusqueda('Escribe el ID del crédito, el nombre del cliente o su identificación.');
+      }
+    }
+  }
 })();
