@@ -663,7 +663,7 @@ class facturacionService
         $factura->num_orden = facturas::calcularNumOrden($this->sucursalId);
 
         $factura->entrega == 'Presencial' ? $factura->entregado=1 : $factura->entregado=0;
-        
+
         if($this->parametros['valor_por_punto']->valor_final && ((int)$factura->idcliente ?? 0)>0){
             if($this->estado == "Paga"){
                 $this->puntos = (float)$factura->total/(float)$this->parametros['valor_por_punto']->valor_final;
@@ -808,10 +808,9 @@ class facturacionService
     private function actualizarPuntosCliente(facturas $factura, int $idFactura, bool $dir = true):void{
         if($this->parametros['valor_por_punto']->valor_final && ((int)$factura->idcliente ?? 0)>0){
            $cliente = clientes::findForUpdate('id', $factura->idcliente);
-           $dir? ($cliente->puntos += $this->puntos): ($cliente->puntos -= $factura->puntos_descontados);
+           $dir? ($cliente->puntos += ($this->puntos - $factura->puntos_descontados)): ($cliente->puntos -= $factura->puntos_descontados);
            $cliente->actualizar();
         }
-        
     }
 
     /**
