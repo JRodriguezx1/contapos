@@ -514,6 +514,7 @@
       for(const key in valorTotal)valorTotal[key as keyof typeof valorTotal] = 0; //reiniciar objeto
       $('#selectCliente').val('').trigger('change');   //aqui tambien se reinicia el valor de la tarifa y al disparar este evento, se ejecuta POS.valorCarritoTotal(); linea 135 de ahelper.clientes.ts 
       POS.gestionarDomiciliosVenta.reiniciarDomicilio();
+      POS.gestionRedmir.pts = 0;
       //volver a mapear los productos con los valores originales de inventario
       //actualizar DOM
       for(const prod of products){
