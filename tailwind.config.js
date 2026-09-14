@@ -16,6 +16,10 @@ module.exports = {
       },
 
       keyframes: {
+        menuSlideUp: {
+          '0%': { opacity: '0', transform: 'translateY(24px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         ticker: {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(-100%)' },
@@ -39,6 +43,7 @@ module.exports = {
       },
 
       animation: {
+        menuSlideUp: 'menuSlideUp 250ms ease-out both',
         ticker: 'ticker 18s linear infinite',
         tickerMobile: 'tickerMobile 41s linear infinite',
 

@@ -1,4 +1,4 @@
-﻿<div class="box caja !pb-20">
+﻿<div class="box caja !pb-20 [@media(max-width:991px)]:!pb-[calc(10rem+env(safe-area-inset-bottom))]">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
   <div class="mb-5 flex flex-wrap items-end justify-between gap-3 border-b-2 border-indigo-600 pb-2">
     <div>
@@ -32,7 +32,7 @@
         Lista de Ordenes
     </h5>
 
-  <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
+  <div class="overflow-hidden rounded-lg border border-slate-200 bg-white [@media(max-width:991px)]:[&_.dt-paging]:!p-3">
   <table id="tablaListaPedidos" class="display responsive nowrap tabla caja-table" width="100%">
       <thead>
           <tr>

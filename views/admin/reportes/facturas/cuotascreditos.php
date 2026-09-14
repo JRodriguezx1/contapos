@@ -1,4 +1,4 @@
-<div class="box cuotasCreditos w-full overflow-x-hidden pb-60 sm:pb-12">
+<div class="box cuotasCreditos w-full overflow-x-hidden sm:pb-12 [@media(max-width:991px)]:!pb-[calc(10rem+env(safe-area-inset-bottom))]">
   <div class="content-spinner1" style="display: none;"><div class="spinner1"></div></div>
 
   <div class="mx-auto grid min-w-0 max-w-screen-2xl gap-6 rounded-lg border border-slate-200 bg-gradient-to-b from-indigo-50 via-white to-white p-4 shadow-sm sm:p-6">
@@ -82,7 +82,7 @@
       </div>
     </section>
 
-    <section class="datatable-card config-table-card min-w-0 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+    <section class="datatable-card config-table-card min-w-0 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6 [@media(max-width:991px)]:[&_.dt-paging]:!p-3">
       <div class="flex min-w-0 flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 class="m-0 text-3xl font-extrabold leading-tight text-slate-900">Cuotas de creditos/separados</h2>

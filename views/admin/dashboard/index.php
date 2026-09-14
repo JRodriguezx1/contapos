@@ -1,7 +1,7 @@
 <div class="inicio dashboard-home">
   <div class="dashboard-home__inner">
 
-    <header class="flex items-center justify-between">
+    <header class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
       <div>
         <p class="text-indigo-600 text-lg font-bold m-0 uppercase">Panel principal</p>
         <h1 class="text-slate-900 font-bold text-5xl">Dashboard</h1>
@@ -11,7 +11,7 @@
         </p>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex w-full flex-wrap items-center gap-4 md:w-auto md:flex-nowrap">
         <button class="btnDialog btnDialog_light" type="button">
           <span class="material-symbols-outlined">download</span>
           Exportar

@@ -1,4 +1,4 @@
-﻿<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
 <!-- Flowbite -->
 <!-- <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.min.js"></script> -->
@@ -211,71 +211,71 @@
 
 
 <!-- Menu movil barra inferior -->
-<dialog id="miDialogomenumovil" class="p-0 w-[96%] max-w-lg h-[72%] max-h-[640px] bg-white rounded-xl overflow-hidden" hidden>
-  <div class="fixed inset-0 bg-black bg-opacity-40" onclick="document.getElementById('miDialogomenumovil').close()"></div>
+<dialog id="miDialogomenumovil" class="fixed inset-x-0 bottom-0 top-auto m-0 mx-auto w-full max-w-[48rem] max-h-[90dvh] overflow-y-auto rounded-t-3xl border-0 bg-white p-0 shadow-2xl backdrop:bg-slate-900/50 motion-safe:open:animate-menuSlideUp" aria-labelledby="tituloMenuMovil" hidden>
 
-  <div class="relative z-10 flex h-full flex-col bg-white px-7 py-7 sm:px-8">
-    <div class="shrink-0">
-      <div class="flex justify-center">
-        <img id="logoj2" class="h-24 w-72 object-contain" src="/build/img/Logoj2indigo.png" alt="JDOS">
+
+  <div class="relative flex flex-col bg-slate-100 px-6 pt-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:px-8">
+    <div class="flex min-w-0 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-200 via-indigo-100 to-cyan-100 p-3 pr-[5.5rem]">
+      <div class="flex shrink-0 justify-center rounded-xl bg-white p-2 shadow-sm">
+        <img id="logoj2" class="h-14 w-32 shrink-0 object-contain" src="/build/img/Logoj2indigo.png" alt="JDOS">
       </div>
-      <div class="mt-1 text-center">
-        <span class="inline-flex max-w-full items-center justify-center rounded-full bg-indigo-600 px-5 py-2 text-lg font-bold uppercase tracking-wide text-white shadow-xl">
+      <div class="min-w-0 text-right">
+        <span class="inline-flex max-w-full items-center justify-center break-words rounded-xl bg-white/80 px-3 py-2 text-base font-bold uppercase text-indigo-700">
           <?php echo nombreSucursal(); ?>
         </span>
       </div>
     </div>
 
     <div class="mt-6 flex shrink-0 items-center justify-between">
-      <h4 class="m-0 text-4xl font-semibold leading-none text-gray-800">Men&uacute;</h4>
-      <button onclick="document.getElementById('miDialogomenumovil').close()"
-              class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 text-white transition-colors hover:bg-indigo-700">
+      <h4 id="tituloMenuMovil" class="m-0 text-3xl font-bold leading-none text-slate-900">Men&uacute;</h4>
+      <button type="button" aria-label="Cerrar menú" onclick="document.getElementById('miDialogomenumovil').close()"
+              class="absolute right-9 top-8 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600">
         <span class="material-symbols-outlined text-4xl leading-none">close</span>
       </button>
     </div>
 
-    <nav class="mt-6 flex min-h-0 flex-1 flex-col space-y-3 overflow-y-auto pr-1">
+    <nav class="mt-4 grid grid-cols-2 gap-3">
       <?php if(tienePermiso('Mostrar dashboard') || userPerfil()<=3): ?>
-        <a href="/admin/dashboard" class="flex h-20 w-full items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 text-2xl text-gray-900 transition hover:border-indigo-200 hover:bg-indigo-50 focus:border-indigo-600 focus:outline-none focus:ring-0">
-          <span class="material-symbols-outlined text-3xl text-indigo-500">home</span>
+        <a href="/admin/dashboard" class="flex min-h-[8rem] min-w-0 flex-col items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-white p-3 shadow-sm text-center text-xl font-semibold text-slate-800 transition hover:border-indigo-200 hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600">
+          <span class="material-symbols-outlined inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-3xl text-indigo-600">home</span>
           <span>Inicio</span>
         </a>
       <?php endif; ?>
 
       <?php if(tienePermiso(html_entity_decode('Habilitar m&oacute;dulo de credito/separados', ENT_QUOTES, 'UTF-8')) || tienePermiso('Habilitar modulo de credito/separados') || userPerfil()<=3): ?>
-        <a href="/admin/creditos" class="flex h-20 w-full items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 text-2xl text-gray-900 transition hover:border-indigo-200 hover:bg-indigo-50 focus:border-indigo-600 focus:outline-none focus:ring-0">
-          <span class="material-symbols-outlined text-3xl text-indigo-500">swap_horiz</span>
+        <a href="/admin/creditos" class="flex min-h-[8rem] min-w-0 flex-col items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-white p-3 shadow-sm text-center text-xl font-semibold text-slate-800 transition hover:border-indigo-200 hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600">
+          <span class="material-symbols-outlined inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-3xl text-cyan-700">swap_horiz</span>
           <span>Cr&eacute;ditos</span>
         </a>
       <?php endif; ?>
 
       <?php if(tienePermiso('Habilitar modulo de reportes')&&userPerfil()==3 || userPerfil()<3): ?>
-        <a href="/admin/reportes" class="flex h-20 w-full items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 text-2xl text-gray-900 transition hover:border-indigo-200 hover:bg-indigo-50 focus:border-indigo-600 focus:outline-none focus:ring-0">
-          <span class="material-symbols-outlined text-3xl text-indigo-500">format_list_bulleted</span>
+        <a href="/admin/reportes" class="flex min-h-[8rem] min-w-0 flex-col items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-white p-3 shadow-sm text-center text-xl font-semibold text-slate-800 transition hover:border-indigo-200 hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600">
+          <span class="material-symbols-outlined inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-3xl text-indigo-600">format_list_bulleted</span>
           <span>Reportes</span>
         </a>
       <?php endif; ?>
 
-      <a href="/admin/clientes" class="flex h-20 w-full items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 text-2xl text-gray-900 transition hover:border-indigo-200 hover:bg-indigo-50 focus:border-indigo-600 focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-3xl text-indigo-500">support_agent</span>
+      <a href="/admin/clientes" class="flex min-h-[8rem] min-w-0 flex-col items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-white p-3 shadow-sm text-center text-xl font-semibold text-slate-800 transition hover:border-indigo-200 hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600">
+        <span class="material-symbols-outlined inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-3xl text-cyan-700">support_agent</span>
         <span>Clientes</span>
       </a>
 
-      <a href="/admin/perfil" class="flex h-20 w-full items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 text-2xl text-gray-900 transition hover:border-indigo-200 hover:bg-indigo-50 focus:border-indigo-600 focus:outline-none focus:ring-0">
-        <span class="material-symbols-outlined text-3xl text-indigo-500">manage_accounts</span>
+      <a href="/admin/perfil" class="col-span-2 flex min-h-[6rem] min-w-0 flex-row items-center justify-center gap-2 rounded-xl border border-indigo-100 bg-white p-3 shadow-sm text-center text-xl font-semibold text-slate-800 transition hover:border-indigo-200 hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-600">
+        <span class="material-symbols-outlined inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-3xl text-indigo-600">manage_accounts</span>
         <span>Perfil</span>
       </a>
     </nav>
 
-    <div class="mt-5 shrink-0 border-t border-slate-200 pt-4 text-center">
-      <p class="text-xl font-bold text-indigo-600"><?php echo $_SESSION['nombre']; ?></p>
-      <div class="mt-2 flex items-center justify-center gap-4 text-lg">
+    <div class="mt-5 shrink-0 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-center">
+      <p class="m-0 break-words text-xl font-bold text-slate-800"><?php echo $_SESSION['nombre']; ?></p>
+      <div class="mt-3 flex flex-wrap items-stretch justify-center gap-3 text-lg">
         <?php if($user['perfil']<4): ?>
-          <a class="font-semibold text-slate-500 transition-colors hover:text-indigo-700" href="/admin/comisiones">Comisiones</a>
+          <a class="btnDialog btnDialog_light flex-1" href="/admin/comisiones">Comisiones</a>
         <?php endif; ?>
-        <a class="font-bold text-indigo-600 transition-colors hover:text-indigo-800" href="/logout">Cerrar sesi&oacute;n</a>
+        <a class="btnDialog btnDialog_light flex-1 !text-rose-600" href="/logout">Cerrar sesi&oacute;n</a>
       </div>
-      <p class="mt-3 text-base font-semibold text-slate-500">JDOS <?php echo $_SESSION['sucursal']->version; ?></p>
+      <p class="mb-0 mt-3 text-sm font-medium text-slate-400">JDOS <?php echo $_SESSION['sucursal']->version; ?></p>
     </div>
   </div>
 </dialog>

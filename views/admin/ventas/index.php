@@ -88,7 +88,7 @@
         
         <div class="mt-3 grid grid-cols-2 gap-2 xlg:grid-cols-3">
           <div class="relative min-w-0">
-            <button id="btnCategorias" class="btn-md btn-indigo !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-[1.6rem] font-semibold !leading-[1.15]">Categorias</button>
+            <button id="btnCategorias" class="btn-md btn-indigo !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-xl !font-semibold !normal-case !leading-none">Categorias</button>
             <div id="menuCategorias" class="absolute left-0 top-full z-30 mt-2 hidden w-80 max-w-[calc(100vw-3rem)] max-h-[24rem] overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 shadow-xl ring-1 ring-slate-900/5">
               <a data-categoria="Todos" class="filtrocategorias categoria-activa flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-4 py-3.5 text-left text-xl font-semibold text-indigo-700 bg-indigo-50 transition-colors hover:bg-indigo-50 hover:text-indigo-700">
                 <span class="truncate">Todos</span>
@@ -105,21 +105,21 @@
 
 
           <!-- Boton Otros -->
-          <button id="btnotros" class="btn-md btn-turquoise !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-[1.6rem] font-semibold !leading-[1.15]">
-            <i class="fas fa-th-large text-[1.6rem] leading-none"></i>
+          <button id="btnotros" class="btn-md btn-turquoise !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-xl !font-semibold !normal-case !leading-none">
+            <i class="fas fa-th-large !text-2xl !leading-none"></i>
             Otros
           </button>
 
           <!-- Boton Adquiriente -->
-          <button id="facturarA" class="btn-md col-span-2 rounded-lg border border-slate-300 bg-white !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-[1.6rem] font-semibold !leading-[1.15] text-slate-900 shadow-[0_2px_6px_rgba(15,23,42,0.08)] hover:border-slate-400 hover:bg-slate-50 hover:shadow-[0_8px_18px_rgba(15,23,42,0.10)] focus:outline-none focus:ring-2 focus:ring-indigo-400 xlg:col-span-1">
-            <i class="fas fa-user text-[1.6rem] leading-none"></i>
+          <button id="facturarA" class="btn-md col-span-2 rounded-lg border border-slate-300 bg-white !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4 !text-xl !font-semibold !normal-case !leading-none text-slate-900 shadow-[0_2px_6px_rgba(15,23,42,0.08)] hover:border-slate-400 hover:bg-slate-50 hover:shadow-[0_8px_18px_rgba(15,23,42,0.10)] focus:outline-none focus:ring-2 focus:ring-indigo-400 xlg:col-span-1">
+            <i class="fas fa-user !text-2xl !leading-none"></i>
             Adquiriente
           </button>
         </div>
 
         <p class="mt-4 mb-0 text-base font-medium text-slate-500 uppercase tracking-wide">Categoria: <strong id="categorySelect" class="text-slate-900 normal-case text-lg">Todos</strong></p>
 
-        <div id="productos" class="list grid gap-3 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-3 border-solid border-t border-slate-300 pt-3"> <!-- contenedor de los productos -->
+        <div id="productos" class="list grid gap-3 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-3 border-solid border-t border-slate-300 pt-3 tlg:max-h-[60dvh] tlg:overflow-y-auto tlg:overscroll-y-contain tlg:pr-2 tlg:pb-2 tlg:[scrollbar-color:rgba(79,70,229,.5)_rgba(238,242,255,.85)] tlg:[scrollbar-width:thin]"> <!-- contenedor de los productos -->
           <?php foreach($productos as $producto): 
             if($producto->visible==1&&$producto->estado==1):?>
             <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="producto rounded-lg bg-slate-100 border border-slate-200 hover:border-indigo-300 hover:bg-white hover:shadow-sm transition-all grid grid-cols-[4.75rem_minmax(0,1fr)_3rem] items-center gap-3 px-3 py-3 min-h-[106px] group cursor-pointer" data-id="<?php echo $producto->ID;?>">
@@ -167,7 +167,7 @@
           </ul>
 
           <!-- List.js inyectar -->
-          <ul class="pagination mt-4 justify-center"></ul>
+          <ul class="pagination mx-auto mt-4 w-fit max-w-full flex-wrap items-center justify-center !gap-1 rounded-full border border-slate-200 bg-gradient-to-br from-slate-50 to-white !p-2 shadow-sm empty:hidden [&_a]:!inline-flex [&_a]:h-[3.4rem] [&_a]:min-w-[3.4rem] [&_a]:items-center [&_a]:justify-center [&_a]:!rounded-full [&_a]:!border-0 [&_a]:!px-3 [&_a]:!py-0 [&_a]:text-lg [&_a]:font-extrabold [&_a]:!text-slate-600 [&_a]:transition-colors [&_a:hover]:!bg-indigo-50 [&_a:focus-visible]:outline [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-indigo-600 [&_.active_a]:bg-gradient-to-br [&_.active_a]:from-[#5b52f0] [&_.active_a]:to-indigo-700 [&_.active_a]:!text-white [&_.active_a]:shadow-[0_0.55rem_1.2rem_rgba(79,70,229,0.24)]"></ul>
         </div>
       </div>
 
@@ -191,7 +191,7 @@
     <!-- fondo oscuro para version movil cuando abre el drawe lateral del carrito -->
     <div id="overlayCarrito" class="hidden fixed inset-0 bg-black/50 z-30 tlg:hidden"></div>
 
-    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:sticky tlg:top-2 tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3 tlg:min-w-0">
+    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:sticky tlg:top-2 tlg:bottom-auto tlg:self-start tlg:max-h-[calc(100dvh-10rem)] tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-y-auto tlg:overscroll-y-contain tlg:pr-2 tlg:pb-2 [scrollbar-color:rgba(79,70,229,.5)_rgba(238,242,255,.85)] [scrollbar-width:thin] tlg:basis-1/3 tlg:min-w-0">
       <div class="flex justify-between items-center tlg:hidden">
         <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
         <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
@@ -250,9 +250,9 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3">
+            <div class="flex flex-col items-stretch justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
                 <div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-indigo-600 text-3xl">shopping_cart</span>
                         <div>
                              <h4 class="text-3xl font-bold text-slate-900 m-0">Carrito</h4>
@@ -277,11 +277,11 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end gap-3">
+                <div class="flex flex-wrap items-center justify-between gap-3">
                     <span class="text-slate-500 text-lg font-bold uppercase tracking-wide">Productos</span>
                     <span
                         id="totalunidades"
-                        class="flex items-center justify-center min-w-9 h-9 max-w-[5.75rem] px-2 rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200 text-2xl font-bold"
+                        class="flex shrink-0 items-center justify-center min-w-9 h-9 whitespace-nowrap px-2 rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200 text-2xl font-bold"
                     >
                         0
                     </span>
@@ -289,7 +289,7 @@
             </div>
 
         <!-- Apilamiento de productos -->
-        <div class="mt-3 rounded-lg border border-slate-200 bg-white min-w-0 overflow-x-auto">
+        <div class="mt-3 rounded-lg border border-slate-200 bg-white min-w-0 overflow-x-auto [scrollbar-color:rgba(79,70,229,.5)_rgba(238,242,255,.85)] [scrollbar-width:thin]">
           <table id="tablaventa" class="w-full min-w-max border-separate border-spacing-0" width="100%">
               <thead class="bg-slate-50">
                   <tr class="rounded-t-xl overflow-hidden">
@@ -345,13 +345,6 @@
                             Total
                         </p>
                     </div>
-                    <?php if($conflocal['mostrar_tasa_de_cambio_de_divisa']->valor_final == 1):  ?>
-                      <div class="pt-3 mt-3 border-t border-slate-300">
-                          <p class="uppercase tracking-[0.2em] text-lg font-bold text-slate-500">
-                              Equivalente:
-                          </p>
-                      </div>
-                    <?php endif;  ?>
 
                 </div>
 
@@ -368,37 +361,40 @@
                     >
                         $0
                     </p>
-                    <?php if($conflocal['mostrar_tasa_de_cambio_de_divisa']->valor_final == 1):  ?>
-                      <div class="pt-3 mt-3 border-t border-slate-300 flex items-center gap-2">
-                          <p id="equivalente" class="text-2xl font-semibold text-slate-800">$0</p>
-                          <p id="monedaCodigo" class="text-slate-600 text-lg font-semibold"></p>
-                      </div>
-                    <?php endif;  ?>
                     
                 </div>
             </div>
+            <?php if($conflocal['mostrar_tasa_de_cambio_de_divisa']->valor_final == 1):  ?>
+              <div class="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-lg border border-indigo-100 bg-indigo-50 px-3 py-2">
+                  <p class="!m-0 text-lg font-semibold text-slate-600">Equivalente</p>
+                  <div class="ml-auto flex flex-wrap items-baseline justify-end gap-2">
+                      <p id="equivalente" class="!m-0 text-xl font-semibold text-slate-800">$0</p>
+                      <p id="monedaCodigo" class="!m-0 text-base font-semibold text-slate-600"></p>
+                  </div>
+              </div>
+            <?php endif;  ?>
         </div>
-        <div class="grid grid-cols-2 gap-2 p-0">
+        <div class="grid grid-cols-2 gap-x-2 gap-y-4 p-0">
           
           <button id="btnguardar" class="btn-md btn-turquoise !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !px-4 !py-0">
             <span class="material-symbols-outlined text-2xl !leading-none">save</span>
-            <span class="text-2xl font-medium uppercase !leading-none">Orden</span>
+            <span class="!text-xl !font-semibold !normal-case !leading-none">Orden</span>
           </button>
           
           <button id="btnfacturar" class="btn-md btn-indigo !mt-0 !mb-0 !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 !py-0 px-4">
             <span class="material-symbols-outlined text-2xl !leading-none">receipt_long</span>
-            <span class="text-2xl font-medium uppercase !leading-none">Facturar</span>
+            <span class="!text-xl !font-semibold !normal-case !leading-none">Facturar</span>
           </button>
           
           <button id="btnaplicarcredito" class="<?php echo $conflocal['valor_por_punto']->valor_final ? '':'col-span-2';  ?> mx-auto !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 rounded-md border border-gray-300 !px-6 !py-0 text-gray-800 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
             <span class="material-symbols-outlined text-2xl !leading-none">payments</span>
-            <span class="text-2xl font-medium !leading-none">Cr&eacute;dito</span>
+            <span class="!text-xl !font-semibold !normal-case !leading-none">Cr&eacute;dito</span>
           </button>
 
           <?php if($conflocal['valor_por_punto']->valor_final):  ?>
             <button id="btnredimir" class=" mx-auto !inline-flex !h-14 !min-h-[3.5rem] !w-full items-center justify-center gap-2 rounded-md border border-gray-300 !px-6 !py-0 text-gray-800 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
               <span class="material-symbols-outlined text-2xl text-indigo-600">featured_seasonal_and_gifts</span>
-              <span class="text-2xl font-medium !leading-none">Redimir</span>
+              <span class="!text-xl !font-semibold !normal-case !leading-none">Redimir</span>
             </button>
           <?php endif;  ?>
         </div>

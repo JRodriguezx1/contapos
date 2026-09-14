@@ -1,4 +1,4 @@
-<div class="box clientes">
+<div class="box clientes [@media(max-width:991px)]:!pb-[calc(10rem+env(safe-area-inset-bottom))]">
   
     <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
@@ -18,7 +18,7 @@
       </div>
     </header>
 
-    <section class="flex flex-wrap items-center gap-3 mb-6 rounded-lg border border-slate-200 bg-white p-4">
+    <section class="flex flex-col items-stretch gap-3 mb-6 rounded-lg border border-slate-200 bg-white p-4 sm:flex-row sm:flex-wrap sm:items-center">
       <button id="crearCliente" class="btnDialog btnDialog_primary" type="button">
         <i class="fa-solid fa-user-plus"></i>
         Crear cliente
@@ -35,7 +35,7 @@
       </a>
     </section>
 
-    <section class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+    <section class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6 [@media(max-width:991px)]:[&_.dt-paging]:!p-3">
       <div class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center">
         <div>
           <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Directorio de clientes</h2>

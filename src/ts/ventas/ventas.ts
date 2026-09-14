@@ -292,11 +292,11 @@
       totalunidades.textContent = formatCantidadBadge(cantidadTotalProductos);
       POS.gestionAnimaciones.actualizarBadgeCarritoMovil(cantidadTotalProductos);
       //equivalencia divisa
-      /*if(viewTasaCambio === '1'){
+      if(viewTasaCambio === '1'){
         const divisa = monedas.find(x=>x.id == sucursal.idmoneda);
         (document.querySelector('#equivalente') as HTMLParagraphElement).textContent = '$'+(valorTotal.total * sucursal.tasacambio).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         (document.querySelector('#monedaCodigo') as HTMLParagraphElement).textContent = divisa?.codigo??'';
-      }*/
+      }
     }
 
 

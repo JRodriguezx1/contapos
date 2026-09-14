@@ -9,7 +9,7 @@
   }
 ?>
 
-<div class="box creditosAnulados w-full overflow-x-hidden pb-60 sm:pb-12">
+<div class="box creditosAnulados w-full overflow-x-hidden sm:pb-12 [@media(max-width:991px)]:!pb-[calc(10rem+env(safe-area-inset-bottom))]">
   <div class="mx-auto grid min-w-0 max-w-screen-2xl gap-6 rounded-lg border border-slate-200 bg-gradient-to-b from-indigo-50 via-white to-white p-4 shadow-sm sm:p-6">
     <section class="grid min-w-0 grid-cols-1 items-center gap-5 rounded-lg border border-slate-200 bg-gradient-to-br from-violet-100 to-cyan-50 p-4 sm:p-6 md:grid-cols-[auto_minmax(0,1fr)] xl:grid-cols-[auto_minmax(0,1fr)_auto]">
       <a href="/admin/creditos" class="inline-flex size-16 items-center justify-center rounded-lg bg-indigo-600 text-2xl text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700 hover:text-white" aria-label="Volver a creditos">
@@ -40,7 +40,7 @@
       </div>
     </section>
 
-    <section class="datatable-card config-table-card min-w-0 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+    <section class="datatable-card config-table-card min-w-0 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6 [@media(max-width:991px)]:[&_.dt-paging]:!p-3">
       <div class="flex min-w-0 flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 class="m-0 text-3xl font-extrabold leading-tight text-slate-900">Historial anulado</h2>

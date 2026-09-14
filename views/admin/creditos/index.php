@@ -11,7 +11,7 @@
   }
 ?>
 
-<div class="creditos w-full p-3 pb-12 text-slate-900 sm:p-0">
+<div class="creditos w-full p-3 text-slate-900 sm:p-0 [@media(max-width:991px)]:pb-[calc(10rem+env(safe-area-inset-bottom))]">
   <?php include __DIR__. "/../../templates/alertas.php"; ?>
 
   <div class="mx-auto grid max-w-[150rem] gap-6 rounded-lg border border-slate-200 bg-gradient-to-b from-indigo-50/60 via-white to-white p-4 shadow-sm sm:p-6">
@@ -39,7 +39,7 @@
       </div>
     </section>
 
-    <section class="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white p-4">
+    <section class="flex flex-col items-stretch gap-3 rounded-lg border border-slate-200 bg-white p-4 sm:flex-row sm:flex-wrap sm:items-center">
       <a class="btnDialog btnDialog_primary" href="/admin/creditos/separado">
         <span class="material-symbols-outlined text-2xl">add_2</span>
         Crear separado
@@ -60,7 +60,7 @@
 
     <div id="divmsjalerta"></div>
 
-    <section class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+    <section class="datatable-card config-table-card overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6 [@media(max-width:991px)]:[&_.dt-paging]:!p-3">
       <div class="flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center">
         <div>
           <h2 class="m-0 text-2xl font-extrabold leading-tight text-slate-900">Historial de creditos</h2>
