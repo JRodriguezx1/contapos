@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\classes\Email;
 use App\classes\Traits\DocumentTrait;
 use App\Models\configuraciones\usuarios; //namespace\clase hija
 use App\Models\inventario\productos;
@@ -55,10 +54,8 @@ class ventascontrolador{
     $categorias = categorias::all();
     $mediospago = mediospago::whereArray(['estado'=>1]);
     $clientes = clientes::all();
-    $tarifas = tarifas::all();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
-    $departments = departments::all();
     //$usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $usuarios = usuarios::camposJoinObj("SELECT * FROM usuarios WHERE idsucursal = $idsucursal OR perfil IN (1, 2, 3);");
     $conflocal = config_local::getParamCaja();
@@ -81,7 +78,7 @@ class ventascontrolador{
       }
     }
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'tarifas'=>$tarifas, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 

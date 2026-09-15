@@ -419,7 +419,6 @@
       lastOperation.textContent = '0';
       historialCalculadora.length = 0;
       const products = POS.products as productsapi[];
-      console.log(products);
       producto = products.find(x=>x.id==elementProduct.dataset.id!);
       productoConfigurado = structuredClone(producto);
       cargarPreciosAdicionales();

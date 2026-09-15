@@ -263,6 +263,7 @@ function formatearMoneda(input: HTMLInputElement): void {
 
 
 function obtenerNumero(input: HTMLInputElement):number|null{
+    if(input == null)return null;
     const valor = input.value.replace(/\./g, '').replace(',', '.').trim();
     if (valor === '')return null;
     const numero = Number(valor);

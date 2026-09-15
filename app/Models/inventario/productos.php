@@ -165,7 +165,7 @@ class productos extends \App\Models\ActiveRecord {
 
     public static function SelectProducts_Category_StockXsucursal():array{
         $idsucursal = id_sucursal();
-        $sql = "SELECT p.id as ID, p.idcategoria, p.nombre, p.foto, p.sku, p.precio_venta, p.estado, p.visible, 
+        $sql = "SELECT p.id as ID, p.idcategoria, p.nombre, p.foto, p.tipoproducto, p.tipoproduccion, p.sku, p.precio_venta, p.estado, p.visible, 
                 sps.productoid, sps.sucursalid, sps.stock, sps.habilitarventa, c.nombre as categoria
                 FROM productos p 
                 JOIN stockproductossucursal sps ON p.id = sps.productoid

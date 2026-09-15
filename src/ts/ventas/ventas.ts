@@ -297,6 +297,39 @@
         (document.querySelector('#equivalente') as HTMLParagraphElement).textContent = '$'+(valorTotal.total * sucursal.tasacambio).toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         (document.querySelector('#monedaCodigo') as HTMLParagraphElement).textContent = divisa?.codigo??'';
       }
+      actualizarStockVisible();
+    }
+
+
+    function actualizarStockVisible(): void {
+      const tarjetas = document.querySelectorAll<HTMLElement>('#productos .producto');
+      tarjetas.forEach(tarjeta => {
+          const idProducto = tarjeta.dataset.id;
+          const producto = products.find(producto => producto.id == idProducto);
+          const elementoStock = tarjeta.querySelector<HTMLElement>('.stockProduct');
+
+          if(!producto || !elementoStock)return;
+          // Conserva el guion utilizado actualmente para este tipo de producto.
+          if(producto.tipoproducto === '1' && producto.tipoproduccion === '0'){
+              elementoStock.textContent = ' - ';
+              return;
+          }
+
+          /*
+          * Un producto puede aparecer varias veces en el carrito
+          * con diferentes precios o configuraciones.
+          */
+          const cantidadEnCarrito = carrito.reduce(
+              (total, item) => {
+                  if(item.idproducto == producto.id)return total + Number(item.stock);
+                  return total;
+              },
+              0
+          );
+
+          const stockDisponible = Number(producto.stock) - cantidadEnCarrito;
+          elementoStock.textContent = stockDisponible.toFixed(2);
+      });
     }
 
 
@@ -632,6 +665,9 @@
             //IMPRIMIR TICKET POS
             if(resultado.idfactura && imprimir.value === '1')printTicketPOS(resultado.idfactura, resultado.dataInvoice);
             vaciarventa();
+            products = await POS.productosAPI.getProductosAPI();
+            POS.products = products;
+            actualizarStockVisible();
           }else{
             limpiarFormFacturar();
             msjalertToast('error', 'Error!', resultado.error[0]);

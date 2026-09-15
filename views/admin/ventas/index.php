@@ -119,15 +119,15 @@
 
         <p class="mt-4 mb-0 text-base font-medium text-slate-500 uppercase tracking-wide">Categoria: <strong id="categorySelect" class="text-slate-900 normal-case text-lg">Todos</strong></p>
 
-        <div id="productos" class="list grid gap-3 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-3 border-solid border-t border-slate-300 pt-3 tlg:max-h-[60dvh] tlg:overflow-y-auto tlg:overscroll-y-contain tlg:pr-2 tlg:pb-2 tlg:[scrollbar-color:rgba(79,70,229,.5)_rgba(238,242,255,.85)] tlg:[scrollbar-width:thin]"> <!-- contenedor de los productos -->
+        <div id="productos" class="list grid gap-3 grid-cols-1 sm:grid-cols-2 tlg:grid-cols-1 xlg:grid-cols-2 2xlg:grid-cols-3 mt-3 border-solid border-t border-slate-300 pt-3"> <!-- contenedor de los productos -->
           <?php foreach($productos as $producto): 
             if($producto->visible==1&&$producto->estado==1):?>
-            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="producto rounded-lg bg-slate-100 border border-slate-200 hover:border-indigo-300 hover:bg-white hover:shadow-sm transition-all grid grid-cols-[4.75rem_minmax(0,1fr)_3rem] items-center gap-3 px-3 py-3 min-h-[106px] group cursor-pointer" data-id="<?php echo $producto->ID;?>">
+            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" class="producto rounded-lg bg-slate-100 border border-slate-200 hover:border-indigo-300 hover:bg-white hover:shadow-sm transition-all grid grid-cols-[4.75rem_minmax(0,1fr)_3rem] grid-rows-[1fr_auto] items-center gap-x-3 px-3 py-3 min-h-[106px] group cursor-pointer" data-id="<?php echo $producto->ID;?>">
                 <img
                     loading="lazy"
                     src="/build/img/<?php echo ($producto->foto!=null&&$producto->foto!='null'&&$producto->foto!='undefined')?$producto->foto:'default-product.png';?>" 
                     onerror="this.onerror=null;this.src='/build/img/default-product.png';"
-                    class="block object-contain h-20 min-w-20 w-20 rounded-md bg-white border border-slate-100"
+                    class="row-span-2 block object-contain h-20 min-w-20 w-20 rounded-md bg-white border border-slate-100"
                     alt="Imagen de <?php echo $producto->nombre; ?>">
                 
                 <div class="flex flex-col justify-center gap-1.5 min-w-0 overflow-hidden">
@@ -136,28 +136,10 @@
                     <p class="precioVenta m-0 text-blue-600 text-xl font-bold">$<?php echo number_format($producto->precio_venta, '2', ',', '.'); ?></p>
                 </div>
                 <button id="precioadicional" title="Precio personalizado" class="grid h-11 w-11 place-items-center justify-self-end self-start rounded-lg text-indigo-600 bg-white border border-indigo-200 shadow-sm hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition-colors"><i class="fa-solid fa-pen-to-square text-2xl"></i></button>
-                <!--<div class="popup absolute right-8 top-1/3 -translate-y-14 translate-x-10 opacity-100 transition-all duration-800 ease-out w-10 h-10 rounded-full text-center grid place-items-center bg-teal-400 text-white">2</div>-->
+                <p class="col-start-2 col-span-2 m-0 text-sm text-right font-medium text-slate-500">stock: 
+                  <span class="stockProduct font-semibold text-lg text-indigo-600"><?php echo $producto->tipoproducto == 1 && $producto->tipoproduccion == 0 ? ' - ' : $producto->stock; ?></span>
+                </p>
             </div>
-
-            <!--
-            <div data-categoria="<?php echo $producto->categoria;?>" data-code="<?php echo $producto->sku;?>" id="producto" class="relative producto rounded-lg bg-slate-200  gap-4 p-4 pr-4 h-32 md:h-auto" data-id="<?php echo $producto->id;?>">
-              <div class="flex gap-4  h-32 md:h-auto">  
-                <img 
-                    src="/build/img/<?php echo $producto->foto;?>" 
-                    onerror="this.onerror=null;this.src='/build/img/default-product.png';"
-                    class="block object-contain h-24 min-w-24 w-24 rounded-md" 
-                    alt="Imagen de <?php echo $producto->nombre; ?>">
-                
-                <div class="overflow-hidden">
-                    <p class="card-producto m-0 text-xl leading-5 text-slate-500"><?php echo $producto->nombre;?></p>
-                </div>
-              </div>
-              <div class="flex justify-between">
-                  <p class="m-0 text-blue-600 font-semibold">$<?php echo number_format($producto->precio_venta, '0', ',', '.'); ?></p>
-                  <button title="Precio personalizado" class="text-indigo-600 hover:text-indigo-800"><i class="fa-solid fa-pen-to-square fa-xl"></i></button>
-              </div>
-            </div>
-              -->
 
           <?php endif; endforeach; ?>
         </div> <!-- fin contenedor de productos -->
@@ -179,7 +161,8 @@
         <span class="material-symbols-outlined">leak_add</span>
         <span id="carritoMovilBadge">0</span>
       </button> 
-      <div id="ventaCarritoToast" role="status" aria-live="polite">
+
+      <div id="ventaCarritoToast" role="status" aria-live="polite" class=" tlg:hidden">
         <span class="venta-carrito-toast__icon"><i class="fa-solid fa-check"></i></span>
         <span>
           <span id="ventaCarritoToastTitle" class="venta-carrito-toast__title">Producto agregado</span>
@@ -191,7 +174,7 @@
     <!-- fondo oscuro para version movil cuando abre el drawe lateral del carrito -->
     <div id="overlayCarrito" class="hidden fixed inset-0 bg-black/50 z-30 tlg:hidden"></div>
 
-    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:sticky tlg:top-2 tlg:bottom-auto tlg:self-start tlg:max-h-[calc(100dvh-10rem)] tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-y-auto tlg:overscroll-y-contain tlg:pr-2 tlg:pb-2 [scrollbar-color:rgba(79,70,229,.5)_rgba(238,242,255,.85)] [scrollbar-width:thin] tlg:basis-1/3 tlg:min-w-0">
+    <div id="contenedorDesktop" class="p-4 tlg:p-0 fixed top-3 right-0 bottom-3 w-11/12 sm:max-w-3xl bg-white z-40 rounded-2xl shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto tlg:translate-x-0 tlg:sticky tlg:top-2 tlg:w-auto tlg:max-w-none tlg:rounded-none tlg:shadow-none tlg:overflow-visible tlg:basis-1/3 tlg:min-w-0">
       <div class="flex justify-between items-center tlg:hidden">
         <h4 id="modalCarritoMovil" class="font-semibold text-gray-700 mb-4">Lista de productos</h4>
         <button id="btnCerrarCarritoMovil" class="btn-md btn-indigo"><i class="fa-solid fa-xmark"></i></button>
