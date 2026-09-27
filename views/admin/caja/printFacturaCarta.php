@@ -33,7 +33,7 @@
 
                 <div class="text-lg leading-normal">
                     <div class="grid font-medium text-gray-800 text-center text-lg leading-normal">
-                        <span class="block font-semibold text-lg uppercase"><?php echo $sucursal->negocio;?></span>
+                        <span class="block font-semibold text-lg uppercase"><?php echo $factura->nombrecompania??' - ';?></span>
                         <address class="not-italic font-light">
                             <?php echo $sucursal->nombre;?>,<br>
                             <?php echo $sucursal->direccion;?>,<br>
@@ -155,7 +155,7 @@
     <footer class="border-t border-gray-200 py-5 text-center text-sm text-gray-500 leading-snug">
         <p class="mb-1.5">
             Esta factura es un documento válido generado electrónicamente por 
-            <span class="font-semibold text-gray-700"><?php echo $sucursal->negocio;?></span> - NIT <?php echo $sucursal->nit;?>.
+            <span class="font-semibold text-gray-700"><?php echo $factura->nombrecompania??' - ';?></span> - NIT <?php echo $factura->nit ?? ' - ';?>.
         </p>
         <p class="mb-1">Gracias por su compra.</p>
         <p class="mb-1">
@@ -165,7 +165,7 @@
         </p>
         <p class="mb-1">Dirección: <?php echo $sucursal->direccion??'';?>, <?php echo $sucursal->ciudad??'';?> - <?php echo $sucursal->departamento??'';?></p>
         <p class="mt-3 text-xs text-gray-400">
-            © <?php echo date("Y"); ?> <?php echo $sucursal->negocio;?>. Todos los derechos reservados.
+            © <?php echo date("Y"); ?> <?php echo $factura->nombrecompania??' - ';?>. Todos los derechos reservados.
         </p>
         <p class="mt-1 text-xs text-gray-400">
             Generado con <span class="text-indigo-500 font-semibold">J2 Software POS Multisucursal</span>

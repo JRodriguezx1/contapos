@@ -86,10 +86,6 @@ final class CajaOrdenesService
         }
 
         $emisores = emisores::whereArray(['idsucursal'=>$sucursalId, 'estado'=>1]);
-        $nombreEmisores = array_column($emisores, 'nombre', 'id');
-        $nitEmisores = array_column($emisores, 'nit', 'id');
-        $factura->nombreemisor = $nombreEmisores[$factura->idemisor] ?? null;
-        $factura->nitemisor = $nitEmisores[$factura->idemisor] ?? null;
 
         return [
             'factura'=>$factura,

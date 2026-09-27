@@ -38,11 +38,12 @@ use App\Models\parametrizacion\config_local;
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($emisor?$emisor->nombre:$sucursal->negocio)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($factura->nombrecompania??' - ')),0,'C',false);
             $this->pdf->SetFont('Arial','B',8);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".($emisor?$emisor->nit:$sucursal->nit)),0,'C',false);
+            if($lineasencabezado == [])
+                $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".($sucursal->nit??' - ')),0,'C',false);
             //LINEA DE ENCABEZADO SEGUN EMPRESA O EMISOR
             foreach($lineasencabezado as $value)$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
@@ -231,7 +232,7 @@ use App\Models\parametrizacion\config_local;
         }
 
 
-        public function generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[], object|null $emisor = null){
+        public function generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos=[], $cuotas=[], object|null $identidadFiscal = null){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
@@ -239,11 +240,11 @@ use App\Models\parametrizacion\config_local;
             # Encabezado y datos de la empresa #
             $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($emisor?$emisor->nombre:$sucursal->negocio)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($identidadFiscal?->nombre ?? $sucursal->negocio)),0,'C',false);
             $this->pdf->SetFont('Arial','B',8);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".($emisor?$emisor->nit:$sucursal->nit)),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".($identidadFiscal?->nit ?? $sucursal->nit)),0,'C',false);
             foreach($lineasencabezado as $value)$this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1", $value),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
@@ -361,17 +362,19 @@ use App\Models\parametrizacion\config_local;
         }
 
 
-        public function generarComptobanteAbono($sucursal, $credito, $cuota, $cliente,  $productos=[]){
+        public function generarComprobanteAbono($sucursal, $credito, $cuota, $cliente,  $productos=[], object|null $identidadFiscal = null){
             $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
             if(!$existe_archivo) $sucursal->logo = "Logoj2negro.png";
             $this->pdf->Image(__DIR__ . '/../../../public/build/img/'.$sucursal->logo, 20, 5, 40, 28); // (ruta, x, y, ancho)
             $this->pdf->Ln(25);
             # Encabezado y datos de la empresa #
-             $this->pdf->SetFont('Arial','B',10);
+            $this->pdf->SetFont('Arial','B',10);
             $this->pdf->SetTextColor(0,0,0);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($identidadFiscal?->nombre  ?? $sucursal->negocio)),0,'C',false);
+            $this->pdf->SetFont('Arial','B',8);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($sucursal->nombre)),0,'C',false);
             $this->pdf->SetFont('Arial','',9);
-            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$sucursal->nit),0,'C',false);
+            $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","NIT: ".$identidadFiscal?->nit ?? $sucursal->nit),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Direccion: ".$sucursal->direccion),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$sucursal->movil),0,'C',false);
             $this->pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$sucursal->email),0,'C',false);

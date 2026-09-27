@@ -154,13 +154,28 @@ class creditosService {
         $cuotasRepo = new cuotasRepository();
         $productos = new productsSeparadosRepository();
         $credito = $credito->find($id);
+        $factura = !empty($credito->factura_id) ? facturas::uniquewhereArray(['id'=>(int)$credito->factura_id, 'id_sucursal'=>(int)$credito->id_fksucursal]) : null;
 
-        $lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
         $emisor = null;
-        if($credito->idemisor){
-            $emisor = emisores::find('id', $credito->idemisor);
-            $lineasencabezado = $emisor->datosencabezados?explode("\n", $emisor->datosencabezados??''):[];
+        if($factura){
+            // Crédito con factura: utilizar snapshot histórico.
+            $identidadFiscal = (object)[
+                'nombre' => (string)$factura->nombrecompania,
+                'nit' => (string)$factura->nit,
+                'datosrut' => (string)$factura->datosrut
+            ];
+        }else{
+            // Separado activo sin factura: no existe snapshot todavía.
+            if(!empty($credito->idemisor))
+                $emisor = emisores::uniquewhereArray(['id' => (int)$credito->idemisor, 'idsucursal' => (int)$credito->id_fksucursal]);
+            $identidadFiscal = (object)[
+                'nombre' => (string)($emisor?->nombre ?? $sucursal->negocio),
+                'nit' => (string)($emisor?->nit ?? $sucursal->nit),
+                'datosrut' => (string)($emisor?->datosencabezados ?? $sucursal->datosencabezados)
+            ];
         }
+
+        $lineasencabezado = $identidadFiscal->datosrut !== '' ? explode("\n", $identidadFiscal->datosrut) : [];
 
         $detalle = [
             'titulo' => 'Creditos',
@@ -173,7 +188,8 @@ class creditosService {
             'productos' => $credito->idtipofinanciacion == 2 ? $productos->obtenerPorCredito($credito->id) : ventas::idregistros('idfactura', $credito->factura_id),
             'cliente' => clientes::find('id', $credito->cliente_id),  //$credito->cliente_id
             'cajas' => caja::whereArray(['idsucursalid'=>id_sucursal(), 'estado'=>1]),
-            'factura' => facturas::find('id', $credito->factura_id),
+            'identidadFiscal' => $identidadFiscal,
+            'factura' => $factura,
             'mediospago' => mediospago::whereArray(['estado'=>1]),
             'usuario' => usuarios::find('id', $credito->usuariofk)
         ];
@@ -324,14 +340,18 @@ class creditosService {
 
 
     public static function registrarFactura(object $credito, $ultimocierre, $ultimoValorPagado):int{
-        
+        $sucursalId = id_sucursal();
+        $sucursal = sucursales::find('id', $sucursalId);
+        if(!$sucursal)throw new \RuntimeException('La sucursal no existe.');
+
         $productos = new productsSeparadosRepository();
         $carrito = $productos->obtenerPorCredito($credito->id);
         $dircli =direcciones::find('idcliente', $credito->cliente_id);
         $venta = new ventas();
         $factimpuestos = new factimpuestos;
         $arrayfactura = [
-                    'id_sucursal' => id_sucursal(), 
+                    'idemisor' => null,
+                    'id_sucursal' => $sucursalId,
                     'idcliente' => $credito->cliente_id, 
                     'idvendedor' => $credito->usuariofk, 
                     'idcaja' => $ultimocierre->idcaja, 
@@ -342,6 +362,9 @@ class creditosService {
                     /*'num_orden' => 
                     'prefijo' => 
                     'num_consecutivo' => */
+                    'nombrecompania' => (string)$sucursal->negocio,
+                    'nit' => (string)$sucursal->nit,
+                    'datosrut' => (string)$sucursal->datosencabezados,
                     'cliente' => '',
                     'vendedor' => '',
                     'caja' => '',
@@ -378,8 +401,9 @@ class creditosService {
                     /*'opc1' => '',
                     'opc2' =>  '',*/
                 ];
+
         $factura = new facturas($arrayfactura);
-        $factura->num_orden = facturas::calcularNumOrden(id_sucursal());
+        $factura->num_orden = facturas::calcularNumOrden($sucursalId);
         $consecutivo = consecutivos::findForUpdate('id', 1);
         $numConsecutivo = $consecutivo->siguientevalor;
         $factura->num_consecutivo = $numConsecutivo;
@@ -388,7 +412,7 @@ class creditosService {
         $consecutivo->siguientevalor = $numConsecutivo + 1;
         $consecutivo->actualizar();
 
-        $mapMpuesto = ['0'=>1, '5'=>2, '16'=>3, '19'=>4, 'excluido'=>5, '8'=>6];
+        $mapImpuesto = ['0'=>1, '5'=>2, '16'=>3, '19'=>4, 'excluido'=>5, '8'=>6];
         $impuestos = [];
         foreach($carrito as $value){
             $value->idfactura = $r[1];
@@ -397,7 +421,7 @@ class creditosService {
             $value->dato2 = '';
 
             $obj = new stdClass;
-            $obj->id_impuesto = $mapMpuesto[$value->impuesto];
+            $obj->id_impuesto = $mapImpuesto[$value->impuesto];
             $obj->facturaid = $r[1];
             $obj->basegravable = $value->base;
             $obj->valorimpuesto = $value->valorimp;

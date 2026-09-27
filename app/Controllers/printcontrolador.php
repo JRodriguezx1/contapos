@@ -47,7 +47,6 @@ class printcontrolador{
 
   ////////////  print del credito/separado  ///////////////
   public static function printPDFPOSSeparado():void{
-    //session_start();
     isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
@@ -61,17 +60,19 @@ class printcontrolador{
       'productos'=>$productos,
       'cliente'=>$cliente,
       'direccion'=>$direccion,
+      'identidadFiscal'=>$identidadFiscal,
       'usuario'=>$usuario,
       'factura'=>$factura
     ] = $datos;
 
     $print = new ticketPOS();
-    $print->generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos, $cuotas, $emisor);
+    $print->generarCredito($sucursal, $lineasencabezado, $credito, $usuario, $cliente, $direccion, $productos, $cuotas, $identidadFiscal);
   }
 
 
   //////////////  print del abono ////////////////////
   public static function printPDFAbonoCredito():void{
+    isadmin();
     $id = $_GET['id'];
     if(!is_numeric($id))return;
     $sucursal = sucursales::find('id', id_sucursal());
@@ -80,14 +81,16 @@ class printcontrolador{
     $repoCredito = new creditosRepository();
     $credito = $repoCredito->find($cuota->id_credito);
     $cliente = clientes::find('id', $credito->cliente_id);
-    if($credito->idtipofinanciacion){
+    $datosCredito = creditosService::detallecredito((int)$credito->id);
+    $identidadFiscal = $datosCredito['identidadFiscal'];
+    if((int)$credito->idtipofinanciacion === 1){
       $productos = ventas::idregistros('idfactura', $credito->factura_id);
     }else{
       $repoProductsSep = new productsSeparadosRepository();
       $productos = $repoProductsSep->findAll('idcredito', $credito->id);
     }
     $print = new ticketPOS();
-    $print->generarComptobanteAbono($sucursal, $credito, $cuota, $cliente, $productos);
+    $print->generarComprobanteAbono($sucursal, $credito, $cuota, $cliente, $productos, $identidadFiscal);
   }
 
 

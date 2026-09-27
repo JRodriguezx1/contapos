@@ -10,9 +10,9 @@
             <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-700 px-10 py-8 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 print:bg-transparent print:text-slate-900 print:px-0 print:py-6 print:border-b print:border-slate-200">
                 <div>
                     <div class="flex items-center gap-3">
-                    <span class="text-2xl font-bold tracking-tight"><?php echo $sucursal->negocio??'';?></span>
+                    <span class="text-2xl font-bold tracking-tight"><?php echo $factura->nombrecompania??'';?></span>
                     </div>
-                    <p class="text-base text-slate-400 mt-2 print:text-slate-500">NIT: <?php echo $sucursal->nit??'';?></p>
+                    <p class="text-base text-slate-400 mt-2 print:text-slate-500">NIT: <?php echo $factura->nit??'';?></p>
                 </div>
                 
                 <div class="text-left sm:text-right">
@@ -43,7 +43,7 @@
                 <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:shadow-md transition-all">
                     <h3 class="text-lg font-semibold text-indigo-600 uppercase tracking-wider">Origen / Despachado por</h3>
                     <div class="mt-2 text-sm text-slate-600 space-y-1">
-                        <p class="font-semibold text-slate-900 text-base"><?php echo $sucursal->nombre??$sucursal->negocio;?></p>
+                        <p class="font-semibold text-slate-900 text-base"><?php echo $sucursal->nombre??$factura->nombrecompania??' - ';?></p>
                         <p><?php echo $sucursal->direccion??'';?></p>
                         <p><?php echo $sucursal->ciudad??'';?></p>
                         <p class="text-slate-400"><?php echo $sucursal->email??'';?></p>

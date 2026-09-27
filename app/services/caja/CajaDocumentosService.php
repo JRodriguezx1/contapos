@@ -85,9 +85,9 @@ final class CajaDocumentosService
 
         $resultado = [
             'host'=>$sucursal->host,
-            'negocio'=>$sucursal->negocio,
+            'negocio'=>(string)$factura->nombrecompania,
             'sucursal'=>$sucursal->nombre,
-            'nit'=>$sucursal->nit,
+            'nit'=>(string)$factura->nit,
             'direccion'=>$sucursal->direccion,
             'telefono'=>$sucursal->telefono,
             'email'=>$sucursal->email,
@@ -186,15 +186,11 @@ final class CajaDocumentosService
 
         $tarifa = tarifas::find('id', (int)$direccion->idtarifa) ?? new tarifas();
         $vendedor = usuarios::find('id', (int)$factura->idvendedor) ?? (object)['nombre'=>'', 'apellido'=>''];
-        $lineasencabezado = explode("\n", (string)($sucursal->datosencabezados ?? ''));
+        $lineasencabezado = explode("\n", (string)($factura->datosrut ?? ''));
         $emisor = null;
 
-        if((int)$factura->idemisor > 0){
+        if((int)$factura->idemisor > 0)
             $emisor = emisores::uniquewhereArray(['id'=>(int)$factura->idemisor, 'idsucursal'=>$sucursalId]);
-            if($emisor)$lineasencabezado = $emisor->datosencabezados
-                ? explode("\n", (string)$emisor->datosencabezados)
-                : [];
-        }
 
         return compact('factura','productos', 'cliente', 'direccion', 'tarifa', 'vendedor', 'lineasencabezado', 'sucursal', 'emisor', 'mediosPago');
     }

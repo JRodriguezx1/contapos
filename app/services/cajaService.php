@@ -4,6 +4,7 @@ namespace App\services;
 
 use App\Models\caja\cierrescajas;
 use App\Models\caja\factmediospago;
+use App\Models\configuraciones\caja;
 use App\Models\configuraciones\consecutivos;
 use App\Models\configuraciones\emisores;
 use App\Models\factimpuestos;
@@ -48,13 +49,24 @@ class cajaService {
     public static function cambiarEmisor(array $data):array{
         $repoMovimientocaja = new movimientos_cajaRepository();
         $creditoRepo = new creditosRepository();
+        $nuevoEmisor = null;
         $idfactura = $data['id'];
         $idemisor = $data['idemisor'];
         $idNewCaja = $data['idcaja'];
+        $sucursal = sucursales::find('id', id_sucursal());
+        if(!$sucursal)return ['error' => ['La sucursal no existe.']];
+        $nuevaCaja = caja::uniquewhereArray(['id' => (int)$idNewCaja, 'idsucursalid' => $sucursal->id]);
         $factura = facturas::find('id', $idfactura);
+        if(!$factura)return ['error'=>['No se encontro factura']];
         $credito = $creditoRepo->uniqueWhere(['factura_id'=>$factura->id]);
         if($factura->idcaja == $idNewCaja)return ['error'=>['Debes elegir un emisor distinto al inicial']];
-        if(!$factura)return ['error'=>['No se encontro factura']];
+        if(!$nuevaCaja)return ['error' => ['La caja seleccionada no existe.']];
+        
+        if(!empty($nuevaCaja->idemisor)){
+            $nuevoEmisor = emisores::uniquewhereArray(['id' => (int)$nuevaCaja->idemisor, 'idsucursal' => $sucursal->id]);
+            if(!$nuevoEmisor)return ['error' => ['El emisor de la caja no existe.']];
+        }
+        
         //actualizar valores de la caja actual
         $mediospago = factmediospago::uniquewhereArray(['id_factura'=>$factura->id, 'idmediopago'=>1])->valor??0; //me trae la factura que pago en efectivo
         $factMP = factmediospago::idregistros('id_factura', $factura->id);
@@ -63,7 +75,7 @@ class cajaService {
 
         //obtener las cuotas de la caja actual
         $cuotasRepo = new cuotasRepository();
-        $cuotas = $cuotasRepo->where(['id_credito'=>$credito->id, 'cierrecaja_id'=>$cierrecajafactura->id]);
+        $cuotas =  $credito ? $cuotasRepo->where(['id_credito'=>$credito->id, 'cierrecaja_id'=>$cierrecajafactura->id]) : [];
 
         ///// ACTUALIZAR CAJA ACTUAL
         /////////// calcular cantidad de facturas y discriminar por tipo
@@ -142,10 +154,23 @@ class cajaService {
         $ultimocierre->basegravable += $factura->base;
 
         //ACTUALIZAR FACTURA
-        $factura->idemisor = $idemisor==0?NULL:$idemisor;
+        if ($nuevoEmisor) {
+            $factura->idemisor = (int)$nuevoEmisor->id;
+            $factura->nombrecompania = (string)$nuevoEmisor->nombre;
+            $factura->nit = (string)$nuevoEmisor->nit;
+            $factura->datosrut = (string)$nuevoEmisor->datosencabezados;
+            $emisorRespuesta = $nuevoEmisor;
+        } else {
+            $factura->idemisor = null;
+            $factura->nombrecompania = (string)$sucursal->negocio;
+            $factura->nit = (string)$sucursal->nit;
+            $factura->datosrut = (string)$sucursal->datosencabezados;
+            $emisorRespuesta = $sucursal;
+        }
+
         $factura->idcaja = $idNewCaja;
         $factura->idcierrecaja = $ultimocierre->id;
-        $credito && $credito->idemisor = $idemisor==0?NULL:$idemisor;
+        $credito && $credito->idemisor = $factura->idemisor;
 
         $r2 = $factura->actualizar();
         if($r2){
@@ -162,7 +187,7 @@ class cajaService {
             $tempcierrecaja->actualizar();
             return ['error'=>['Error al actualizar el emisor en la factura']];
         }
-        return ['exito'=>['Emisor actualizado en factura'], 'emisor'=>$idemisor==0?sucursales::find('id', id_sucursal()):emisores::find('id', $factura->idemisor)];
+        return ['exito'=>['Emisor actualizado en factura'],  'emisor' => $emisorRespuesta];
     }
 
 

@@ -54,8 +54,8 @@
 
     <div class="mb-6 flex flex-wrap items-center gap-[.8rem] border-b border-slate-200 pb-4 text-[1.45rem] text-slate-600">
         <button id="btnEmisor" class="btn-xs btn-light">Emisor</button>
-        <span id="nitEmisor">NIT: <?php echo $factura->nitemisor ?? $sucursal->nit; ?></span>, 
-        <span id="nombreEmisor"><?= $factura->nombreemisor ?? $sucursal->negocio; ?></span>
+        <span id="nitEmisor">NIT: <?php echo $factura->nit??' - '; ?></span>, 
+        <span id="nombreEmisor"><?= $factura->nombrecompania??' - '; ?></span>
     </div>
 
     <div class="ordenresumen-metrics">

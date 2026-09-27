@@ -13,6 +13,8 @@ use App\Models\felectronicas\adquirientes;
 use App\Models\parametrizacion\config_local;
 use App\Models\ventas\facturas;
 use App\Models\ventas\ventas;
+use App\Models\sucursales;
+use App\Models\configuraciones\emisores;
 use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
@@ -428,6 +430,7 @@ class facturacionService
 
             $cierre = $this->obtenerOAbrirCierreCaja();
             $factura = $this->construirFactura($cierre);
+            $this->asignarDatosFiscales($factura);
             $respuesta = $this->estado === 'Paga' ? $this->guardarFacturaPagada($factura, $cierre) :  ($this->estado === 'Redimido' ? $this->guardarRedimido($factura, $cierre): $this->guardarNuevaOrden($factura, $cierre));
             $db->commit();
             //enviar stock minimo a whatsapp
@@ -872,6 +875,32 @@ class facturacionService
         if((float)$factura->valorgananciauser <= 0)return;
         $this->comisionServicio ??= new comisionesService();
         $this->comisionServicio->crearComision(  $idFactura, (int)$factura->idvendedor, (float)$factura->total, (float)$factura->porcentgananciauser, (float)$factura->valorgananciauser );
+    }
+
+
+    private function asignarDatosFiscales(facturas $factura): void{
+        $sucursalId = $this->sucursalId;
+        $sucursal = sucursales::find('id', $sucursalId);
+        $caja = caja::uniquewhereArray(['id' => (int)$factura->idcaja, 'idsucursalid' => $sucursalId]);
+
+        if(!$caja)throw new \Exception('La caja seleccionada no existe.');
+
+        if(!empty($caja->idemisor)){
+            $emisor = emisores::uniquewhereArray(['id' => (int)$caja->idemisor, 'idsucursal' => $sucursalId]);
+
+            if(!$emisor)throw new \Exception('El emisor asociado a la caja no existe.');
+
+            $factura->idemisor = (int)$emisor->id;
+            $factura->nombrecompania = (string)$emisor->nombre;
+            $factura->nit = (string)$emisor->nit;
+            $factura->datosrut = (string)$emisor->datosencabezados;
+            return;
+        }
+
+        $factura->idemisor = null;
+        $factura->nombrecompania = (string)$sucursal->negocio;
+        $factura->nit = (string)$sucursal->nit;
+        $factura->datosrut = (string)$sucursal->datosencabezados;
     }
 
 }

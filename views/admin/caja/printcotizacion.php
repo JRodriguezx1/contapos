@@ -33,7 +33,7 @@
 
                 <div class="text-lg leading-normal">
                     <div class="grid font-medium text-gray-800 text-center text-lg leading-normal">
-                        <span class="block font-semibold text-lg uppercase"><?php echo $sucursal->negocio;?></span>
+                        <span class="block font-semibold text-lg uppercase"><?php echo $factura->nombrecompania??' - ';?></span>
                         <address class="not-italic font-light">
                             <?php echo $sucursal->nombre;?>,<br>
                             <?php echo $sucursal->direccion;?>,<br>
