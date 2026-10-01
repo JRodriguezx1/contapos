@@ -22,23 +22,25 @@ final class CurrencyService{
          *
          * destino = origen × tasa
          */
-        $tasaDirecta = $this->tasaRepository->obtenerUltimaTasa($monedaOrigenId, $monedaDestinoId);
+        $tasa = $this->obtenerTasa($monedaOrigenId, $monedaDestinoId);
 
-        if($tasaDirecta !== null)
-            return bcmul($valor, $tasaDirecta->getTasa(), $decimales);  //bcmul = multiplicar
+        return bcmul($valor, $tasa, $decimales);
+    }
 
-        /*
-         * Si no existe tasa directa, buscamos la relación inversa:
-         *
-         * VES ← COP
-         */
-        $tasaInversa = $this->tasaRepository->obtenerUltimaTasa($monedaDestinoId, $monedaOrigenId);
 
-        if($tasaInversa !== null){
-            if(bccomp($tasaInversa->getTasa(), '0', 10) === 0) //bccomp = comparar
+    public function obtenerTasa(int $monedaOrigenId, int $monedaDestinoId, int $precision = 10): string{
+        if($monedaOrigenId === $monedaDestinoId)return '1';
+
+        $directa = $this->tasaRepository->obtenerUltimaTasa($monedaOrigenId, $monedaDestinoId);
+
+        if($directa !== null)return $directa->getTasa();
+
+        $inversa = $this->tasaRepository->obtenerUltimaTasa($monedaDestinoId, $monedaOrigenId);
+
+        if($inversa !== null){
+            if (bccomp($inversa->getTasa(), '0', 10) === 0)
                 throw new RuntimeException('La tasa de cambio no puede ser cero.');
-
-            return bcdiv($valor, $tasaInversa->getTasa(), $decimales);  //bcdiv = dividir
+            return bcdiv('1', $inversa->getTasa(), $precision);
         }
 
         throw new RuntimeException('No existe una tasa de cambio para las monedas solicitadas.');

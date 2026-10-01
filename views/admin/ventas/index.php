@@ -534,6 +534,7 @@
     const getParam = <?= json_encode($conflocal) ?>;
     const percentComisionUser = <?= json_encode($user['porcentajeganancia']); ?> //porcentaje de comision del usuario logueado
     const sucursal = <?= json_encode(negocionSucursal()) ?>;
+    window.currencyConfig = <?= json_encode($currencyPageData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
   </script>
 
 </div>

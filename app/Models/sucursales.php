@@ -4,7 +4,7 @@ namespace App\Models;
 
 class sucursales extends \App\Models\ActiveRecord{
     protected static $tabla = 'sucursales';
-    protected static $columnasDB = ['id', 'idplan', 'valorplan', 'fecha_corte', 'descuento', 'detalledescuento', 'cargo', 'detallecargo', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'host', 'idmoneda', 'tasacambio', 'timezone', 'version'];
+    protected static $columnasDB = ['id', 'idplan', 'valorplan', 'fecha_corte', 'descuento', 'detalledescuento', 'cargo', 'detallecargo', 'negocio', 'nombre', 'nit', 'departamento', 'ciudad', 'direccion', 'telefono', 'movil', 'email', 'datosencabezados', 'www', 'ws', 'facebook', 'instagram', 'tiktok', 'youtube', 'logo', 'estado', 'host', 'idmoneda', 'tasacambio', 'timezone', 'version', 'moneda_base_id', 'moneda_visualizacion_id', 'mostrar_equivalencia'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
@@ -39,11 +39,13 @@ class sucursales extends \App\Models\ActiveRecord{
         $this->timezone = $args['timezone']??'America/Bogota';
         $this->version = $args['version']??'';
         $this->created_at = $args['created_at']??'';
+        $this->moneda_base_id = $args['moneda_base_id']??'';
+        $this->moneda_visualizacion_id = $args['moneda_visualizacion_id']??'';
+        $this->mostrar_equivalencia = $args['mostrar_equivalencia']??'';
     }
 
 
-    public function validar():array
-    {
+    public function validar():array{
         
         if(!$this->negocio)self::$alertas['error'][] = "negocio no especificado";
         if(strlen($this->negocio)>34)self::$alertas['error'][] = "Has excecido el limite de caracteres del nombre del negocio";

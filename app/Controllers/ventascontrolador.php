@@ -30,7 +30,7 @@ class ventascontrolador{
 
   use DocumentTrait;
 
-  public $currencyData = [
+  public static $currencyData = [
       'mostrarEquivalencia' => false,
       'monedaBase' => null,
       'monedaVisualizacion' => null,
@@ -88,30 +88,27 @@ class ventascontrolador{
     }
 
     $conexion = $canalesVentaRepo->getDB();
-    /*$sucursalActiva = $_SESSION['sucursal'];
+    $sucursalActiva = $_SESSION['sucursal'];
 
-    $conexion = $canalesVentaRepo->getDB();
-    $tasaRepository = new TasaCambioRepository($conexion);
+    /*$tasaRepository = new TasaCambioRepository($conexion);
     $currencyService = new CurrencyService($tasaRepository);*/
 
-    /*$monedaRepository = new MonedaRepository($conexion);
-    $monedaBase = $monedaRepository->buscarPorId((int) $sucursal->moneda_base_id);
+    $monedaRepository = new MonedaRepository($conexion);
+    $monedaBase = $monedaRepository->buscarPorId((int)$sucursalActiva->moneda_base_id);
     static::$currencyData['monedaBase'] = $monedaBase;
     
-    if($sucursal->mostrar_equivalencia && $sucursal->moneda_visualizacion_id !== null){
-      $monedaVisualizacion = $monedaRepository->buscarPorId((int) $sucursal->moneda_visualizacion_id);
-    
+    if($sucursalActiva->mostrar_equivalencia && $sucursalActiva->moneda_visualizacion_id !== null){
+      $monedaVisualizacion = $monedaRepository->buscarPorId((int)$sucursalActiva->moneda_visualizacion_id);
       if($monedaVisualizacion !== null){
-        $totalEquivalente = $currencyService->convertir($total, $monedaBase->getId(), $monedaVisualizacion->getId());
+        //$totalEquivalente = $currencyService->convertir($total, $monedaBase->getId(), $monedaVisualizacion->getId());
+        //$tasa = $currencyService->obtenerTasa($sucursalActiva->moneda_base_id, $sucursalActiva->moneda_visualizacion_id);
         static::$currencyData['mostrarEquivalencia'] = true;
         static::$currencyData['monedaVisualizacion'] = $monedaVisualizacion;
-        static::$currencyData['totalEquivalente'] = $totalEquivalente;
+        //static::$currencyData['totalEquivalente'] = $totalEquivalente;
       }
     }
 
-    $monedaVisualizacion = $monedaRepository->buscarPorId((int) $sucursal->moneda_visualizacion_id);
-*/
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'currencyData'=>static::$currencyData, 'user'=>$_SESSION]);
   }
 
 
