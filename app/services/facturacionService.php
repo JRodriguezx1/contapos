@@ -664,8 +664,7 @@ class facturacionService
         $factura->idcaja = (int)$this->datos['idcaja'];
         $factura->idcierrecaja = $cierre->id;
         $factura->num_orden = facturas::calcularNumOrden($this->sucursalId);
-
-        $factura->entrega == 'Presencial' ? $factura->entregado=1 : $factura->entregado=0;
+        (($factura->entrega == 'Presencial' || $factura->entrega == 'Domicilio') && ($this->estado == 'Paga' && $factura->entregado == 1)) ? $factura->entregado=1 : $factura->entregado=0;
 
         if($this->parametros['valor_por_punto']->valor_final && ((int)$factura->idcliente ?? 0)>0){
             if($this->estado == "Paga"){
@@ -677,7 +676,7 @@ class facturacionService
         return $factura;
     }
 
-    /** Guarda una cotizacion o remision nueva y sus lineas, sin inventario. */
+    /** Guarda redimido. */
     private function guardarRedimido(facturas $factura, cierrescajas $cierre){
         $this->normalizarTipoOrden($factura);
         [$creada, $idFactura] = $factura->crear_guardar();

@@ -20,13 +20,22 @@ use App\Models\sucursales;
 use App\Repositories\ventas\canalVentaRepository;
 use App\services\facturacionService;
 use App\services\ventasService;
-
+use App\Shared\Currency\CurrencyService;
+use App\Shared\Currency\MonedaRepository;
+use App\Shared\Currency\TasaCambioRepository;
 use MVC\Router;  //namespace\clase
 use stdClass;
 
 class ventascontrolador{
 
   use DocumentTrait;
+
+  public $currencyData = [
+      'mostrarEquivalencia' => false,
+      'monedaBase' => null,
+      'monedaVisualizacion' => null,
+      'totalEquivalente' => null
+  ];
 
   public static function index(Router $router):void{
     isadmin();
@@ -78,6 +87,30 @@ class ventascontrolador{
       }
     }
 
+    $conexion = $canalesVentaRepo->getDB();
+    /*$sucursalActiva = $_SESSION['sucursal'];
+
+    $conexion = $canalesVentaRepo->getDB();
+    $tasaRepository = new TasaCambioRepository($conexion);
+    $currencyService = new CurrencyService($tasaRepository);*/
+
+    /*$monedaRepository = new MonedaRepository($conexion);
+    $monedaBase = $monedaRepository->buscarPorId((int) $sucursal->moneda_base_id);
+    static::$currencyData['monedaBase'] = $monedaBase;
+    
+    if($sucursal->mostrar_equivalencia && $sucursal->moneda_visualizacion_id !== null){
+      $monedaVisualizacion = $monedaRepository->buscarPorId((int) $sucursal->moneda_visualizacion_id);
+    
+      if($monedaVisualizacion !== null){
+        $totalEquivalente = $currencyService->convertir($total, $monedaBase->getId(), $monedaVisualizacion->getId());
+        static::$currencyData['mostrarEquivalencia'] = true;
+        static::$currencyData['monedaVisualizacion'] = $monedaVisualizacion;
+        static::$currencyData['totalEquivalente'] = $totalEquivalente;
+      }
+    }
+
+    $monedaVisualizacion = $monedaRepository->buscarPorId((int) $sucursal->moneda_visualizacion_id);
+*/
     $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
