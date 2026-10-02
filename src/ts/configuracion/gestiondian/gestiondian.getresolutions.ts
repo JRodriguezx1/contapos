@@ -28,8 +28,9 @@
                                             });
         const resultado = await respuesta.json();
         let arrayResolutions = resultado.ResponseDian.Envelope.Body.GetNumberingRangeResponse.GetNumberingRangeResult.ResponseList.NumberRangeResponse;
-        if(typeof arrayResolutions == 'object')arrayResolutions = [arrayResolutions];
-        if(arrayResolutions&&arrayResolutions.length>0)printResolutions(idcompany, arrayResolutions, token);
+        if(typeof arrayResolutions == 'object' && !Array.isArray(arrayResolutions))
+          arrayResolutions = [arrayResolutions];
+        if(Array.isArray(arrayResolutions)&&arrayResolutions.length>0)printResolutions(idcompany, arrayResolutions, token);
       } catch (error) {
         console.log(error);  
       }
