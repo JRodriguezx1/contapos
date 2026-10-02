@@ -11,7 +11,6 @@ final class TasaCambioRepository{
     {}
 
     public function obtenerUltimaTasa(int $monedaOrigenId, int $monedaDestinoId): ?TasaCambio {
-
         $sql = "
             SELECT id, moneda_origen_id, moneda_destino_id, tasa, fecha_hora, fuente
             FROM tasas_cambio
