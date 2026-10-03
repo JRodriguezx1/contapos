@@ -155,6 +155,7 @@ final class CajaConsultasService
             'ultimocierre' => $resumen['ultimocierre'],
             'facturas' => $resumen['facturas'],
             'ventasxusuarios' => $resumen['ventasxusuarios'],
+            'costo_total' => $resumen['costo_total']
         ];
     }
 
