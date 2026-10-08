@@ -607,7 +607,7 @@
       datos.append('direccion', dirEntrega.options[dirEntrega.selectedIndex]?.text??'');
       datos.append('tarifazona', nombretarifa||'');
       datos.append('carrito', JSON.stringify(carrito.filter(x=>x.stock>0)));  //envio de todos los productos con sus cantidades
-      datos.append('totalunidades', totalunidades.textContent!);
+      datos.append('totalunidades', (totalunidades.textContent)!.replace(',', '.'));
       //datos.append('mediosPago', JSON.stringify(Object.fromEntries(mapMediospago)));
       datos.append('mediosPago', JSON.stringify(Array.from(mapMediospago, ([idmediopago, valor])=>({idmediopago, id_factura:0, valor}))));
       datos.append('factimpuestos', JSON.stringify(factimpuestos));
