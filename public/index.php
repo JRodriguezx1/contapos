@@ -112,6 +112,7 @@ $router->get('/admin/almacen/cambioPrecios', [almacencontrolador::class, 'cambio
 $router->get('/admin/almacen/estadisticas', [almacencontrolador::class, 'estadisticas']);
 $router->get('/admin/almacen/productosParaFormulas', [almacencontrolador::class, 'productosParaFormulas']);
 $router->get('/admin/almacen/conversionUnidades', [almacencontrolador::class, 'conversionUnidades']);
+$router->get('/admin/almacen/costosProductosPorProveedor', [almacencontrolador::class, 'costosProductosPorProveedor']);
 ////// area de traslados de inventario  //////
 $router->get('/admin/almacen/solicitudesrecibidas', [trasladosinvcontrolador::class, 'solicitudesrecibidas']);
 $router->get('/admin/almacen/trasladarinventario', [trasladosinvcontrolador::class, 'trasladarinventario']);

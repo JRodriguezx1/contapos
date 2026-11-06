@@ -331,6 +331,13 @@ class almacencontrolador{
   }
 
 
+  public static function costosProductosPorProveedor(Router $router){
+    isadmin();
+    if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
+    
+    $router->render('admin/almacen/costosProductosPorProveedor', ['titulo'=>'Almacen',  'sucursales'=>sucursales::all()]);
+  }
+
   ////////////////////////////   API   //////////////////////////////
   public static function actualizar_categoria(){ //actualizar editar categoria
     if(!self::autorizarComandoInventario())return;
