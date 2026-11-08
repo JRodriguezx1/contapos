@@ -76,17 +76,14 @@ class facturacionService
             $alertasFactura = $this->facturaSolicitud->validar_nueva_factura();
             if(!empty($alertasFactura['error']))return $alertasFactura;
 
-            $this->separarLineasOrden();
+            $this->separarLineasOrden(); //Separa las lineas de las agregadas al editar una orden.
             $this->ordenOrigen = $this->buscarOrdenOrigen(); //devuelve la orden guardada (cotizacion/remision)
-
             //prepara items para mover y descontar de inventario
             $erroresStock = $this->prepararYValidarInventario();
             if(!empty($erroresStock))return ['error'=>$erroresStock];
-
             //contizacion/remision
             if($this->ordenOrigen && $this->estado !== 'Paga')
                 return $this->editarOrdenExistente();
-
             //procesar factura o crear nueva cotizacion/remision o redimido
             return $this->procesarEnTransaccion();
         }catch(InvalidArgumentException $th){
@@ -215,12 +212,8 @@ class facturacionService
         $this->cargarDetalleOrdenPersistido();
 
         $this->mediosPago = $this->decodificarArray('mediosPago');
-        $this->valoresCredito = (object)[
-                                    'capital' => 0,
-                                    'abonoinicial' => 0,
-                                ];
+        $this->valoresCredito = (object)['capital' => 0, 'abonoinicial' => 0,];
         $this->datosAdquiriente = json_decode(json_encode(adquirientes::find('id', 1)));
-
         return true;
     }
 
@@ -543,8 +536,7 @@ class facturacionService
         }
 
         $this->marcarOrdenEliminada($orden);
-        if(!$orden->actualizar())
-            throw new RuntimeException('No fue posible actualizar el estado de la orden.');
+        if(!$orden->actualizar())throw new RuntimeException('No fue posible actualizar el estado de la orden.');
 
         if($inventarioVenta !== null)
             ventasService::devolverInventarioXVenta( $inventarioVenta, $this->sucursalId, 'devolucion', "retorno de unidades por anulacion de remision #{$orden->id}", false );
@@ -664,6 +656,7 @@ class facturacionService
         $factura->idcaja = (int)$this->datos['idcaja'];
         $factura->idcierrecaja = $cierre->id;
         $factura->num_orden = facturas::calcularNumOrden($this->sucursalId);
+
         (($factura->entrega == 'Presencial' || $factura->entrega == 'Domicilio') && ($this->estado == 'Paga' && $factura->entregado == 1)) ? $factura->entregado=1 : $factura->entregado=0;
 
         if($this->parametros['valor_por_punto']->valor_final && ((int)$factura->idcliente ?? 0)>0){
@@ -721,7 +714,6 @@ class facturacionService
      * abierta por procesarEnTransaccion().
      */
     private function guardarFacturaPagada(facturas $factura, cierrescajas $cierre):array{
-
         $esRemisionOrigen = $this->ordenOrigen && (int)$this->ordenOrigen->remision === 1;
         $inventarioYaDescontado = $esRemisionOrigen && (int)$this->ordenOrigen->entregado === 1;
 
@@ -801,7 +793,7 @@ class facturacionService
     /** Crea el credito y devuelve el id de la cuota para los medios de pago. */
     private function registrarCredito(facturas $factura, int $idFactura):int|string{
         if($this->tipoVenta !== 'Credito')return 'NULL';
-        $resultado = creditosService::crearCredito( $this->valoresCredito, $idFactura, (int)is_numeric((int)$factura->idcliente), $factura->totalunidades, $factura->base, $factura->valorimpuestototal, (int)$factura->dctox100, $factura->descuento, (int)$factura->idcierrecaja, (int)$factura->idcaja, (int)$factura->idvendedor, $factura->idemisor );
+        $resultado = creditosService::crearCredito( $this->valoresCredito, $idFactura, (int)$factura->idcliente, $factura->totalunidades, $factura->base, $factura->valorimpuestototal, (int)$factura->dctox100, $factura->descuento, (int)$factura->idcierrecaja, (int)$factura->idcaja, (int)$factura->idvendedor, $factura->idemisor );
         if(!empty($resultado['error']))throw new RuntimeException(implode(' ', $resultado['error']));
         return $resultado['idcuota'] ?? 'NULL';
     }
@@ -834,11 +826,9 @@ class facturacionService
             $linea->idfactura = $idFactura;
             $linea->dato1 = '';
             $linea->dato2 = '';
-
             // Los productos libres llamados "Otros" se relacionan con el
             // producto y categoria reservados por el sistema.
-            if((int)($linea->idproducto ?? 0) < 0
-                && (int)($linea->idcategoria ?? 0) < 0){
+            if((int)($linea->idproducto ?? 0)<0 && (int)($linea->idcategoria ?? 0)<0){
                 $linea->idproducto = 1;
                 $linea->idcategoria = 1;
             }
@@ -881,12 +871,10 @@ class facturacionService
         $sucursalId = $this->sucursalId;
         $sucursal = sucursales::find('id', $sucursalId);
         $caja = caja::uniquewhereArray(['id' => (int)$factura->idcaja, 'idsucursalid' => $sucursalId]);
-
         if(!$caja)throw new \Exception('La caja seleccionada no existe.');
 
         if(!empty($caja->idemisor)){
             $emisor = emisores::uniquewhereArray(['id' => (int)$caja->idemisor, 'idsucursal' => $sucursalId]);
-
             if(!$emisor)throw new \Exception('El emisor asociado a la caja no existe.');
 
             $factura->idemisor = (int)$emisor->id;

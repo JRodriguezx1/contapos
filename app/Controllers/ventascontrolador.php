@@ -65,6 +65,7 @@ class ventascontrolador{
     $clientes = clientes::all();
     $cajas = caja::whereArray(['idsucursalid'=>$idsucursal, 'estado'=>1]);
     $consecutivos = consecutivos::whereArray(['id_sucursalid'=>$idsucursal, 'estado'=>1]);
+    $departments = departments::all();
     //$usuarios = usuarios::whereArray(['idsucursal'=>$idsucursal]);
     $usuarios = usuarios::camposJoinObj("SELECT * FROM usuarios WHERE idsucursal = $idsucursal OR perfil IN (1, 2, 3);");
     $conflocal = config_local::getParamCaja();
@@ -87,17 +88,17 @@ class ventascontrolador{
       }
     }
 
-    $conexion = $canalesVentaRepo->getDB();
-    $sucursalActiva = $_SESSION['sucursal'];
+    //$conexion = $canalesVentaRepo->getDB();
+    //$sucursalActiva = $_SESSION['sucursal'];
 
     /*$tasaRepository = new TasaCambioRepository($conexion);
     $currencyService = new CurrencyService($tasaRepository);*/
 
-    $monedaRepository = new MonedaRepository($conexion);
+    /*$monedaRepository = new MonedaRepository($conexion);
     $monedaBase = $monedaRepository->buscarPorId((int)$sucursalActiva->moneda_base_id);
-    static::$currencyData['monedaBase'] = $monedaBase;
+    static::$currencyData['monedaBase'] = $monedaBase;*/
     
-    if($sucursalActiva->mostrar_equivalencia && $sucursalActiva->moneda_visualizacion_id !== null){
+    /*if($sucursalActiva->mostrar_equivalencia && $sucursalActiva->moneda_visualizacion_id !== null){
       $monedaVisualizacion = $monedaRepository->buscarPorId((int)$sucursalActiva->moneda_visualizacion_id);
       if($monedaVisualizacion !== null){
         //$totalEquivalente = $currencyService->convertir($total, $monedaBase->getId(), $monedaVisualizacion->getId());
@@ -106,9 +107,9 @@ class ventascontrolador{
         static::$currencyData['monedaVisualizacion'] = $monedaVisualizacion;
         //static::$currencyData['totalEquivalente'] = $totalEquivalente;
       }
-    }
+    }*/
 
-    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'currencyData'=>static::$currencyData, 'user'=>$_SESSION]);
+    $router->render('admin/ventas/index', ['titulo'=>'Ventas', 'num_orden'=>$num_orden, 'facturacotz'=>$facturacotz, 'productoscotz'=>$productoscotz, 'categorias'=>$categorias, 'productos'=>$productos, 'mediospago'=>$mediospago, 'clientes'=>$clientes, 'cajas'=>$cajas, 'consecutivos'=>$consecutivos, 'canalesVenta'=>$canalesVenta, 'departments'=>$departments, 'usuarios'=>$usuarios, 'conflocal'=>$conflocal, 'resolucionesVencidas'=>$resolucionesVencidas, 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), /*'currencyData'=>static::$currencyData,*/ 'user'=>$_SESSION]);
   }
 
 

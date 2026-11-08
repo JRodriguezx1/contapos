@@ -20,6 +20,7 @@ use App\services\exportService;
 use App\services\inventario\ActualizarCostoInventarioService;
 use App\services\inventario\ActualizarPrecioVentaInventarioService;
 use App\services\inventario\CategoriasInventarioService;
+use App\services\inventario\CostosProveedorConsultaService;
 use App\services\inventario\InsumosInventarioService;
 use App\services\inventario\PanelInventarioService;
 use App\services\inventario\ProductosInventarioService;
@@ -303,7 +304,7 @@ class almacencontrolador{
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $productos = [];
     $productos = productos::all();
-    $router->render('admin/almacen/cambioPrecios', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all()]);
+    $router->render('admin/almacen/cambioPrecios', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -311,7 +312,7 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $alertas = [];
-    $router->render('admin/almacen/estadisticas', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'sucursales'=>sucursales::all()]);
+    $router->render('admin/almacen/estadisticas', ['titulo'=>'Almacen', 'alertas'=>$alertas, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -319,7 +320,7 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $productos = productos::all();
-    $router->render('admin/almacen/productosParaFormulas', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all()]);
+    $router->render('admin/almacen/productosParaFormulas', ['titulo'=>'Almacen', 'productos'=>$productos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -327,7 +328,7 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     $subproductos = subproductos::all();
-    $router->render('admin/almacen/conversionUnidades', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'sucursales'=>sucursales::all()]);
+    $router->render('admin/almacen/conversionUnidades', ['titulo'=>'Almacen', 'subproductos'=>$subproductos, 'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
 
@@ -335,7 +336,7 @@ class almacencontrolador{
     isadmin();
     if(!tienePermiso('Habilitar modulo de inventario')&&userPerfil()>3)return;
     
-    $router->render('admin/almacen/costosProductosPorProveedor', ['titulo'=>'Almacen',  'sucursales'=>sucursales::all()]);
+    $router->render('admin/almacen/costosProductosPorProveedor', ['titulo'=>'Almacen',  'sucursales'=>sucursales::all(), 'user'=>$_SESSION]);
   }
 
   ////////////////////////////   API   //////////////////////////////
@@ -489,6 +490,41 @@ class almacencontrolador{
     }
     $resultado = (new ActualizarCostoInventarioService())->ejecutar($_POST, id_sucursal());
     echo json_encode($resultado);
+  }
+
+
+  /** Guarda el costo vigente de un proveedor para un producto o insumo. */
+  public static function guardarCostoProveedor(): void{
+    if(!self::autorizarComandoInventario())return;
+    header('Content-Type: application/json; charset=utf-8');
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+      http_response_code(405);
+      echo json_encode(['error'=>['Método no permitido.']]);
+      return;
+    }
+    $resultado = (new ActualizarCostoInventarioService())->guardarCostoProveedor($_POST, id_sucursal());
+    echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+  }
+
+
+  /** Devuelve artículos y costos activos por proveedor para la sucursal actual. */
+  public static function obtenerCostosProveedor(): void{
+    isadmin();
+    header('Content-Type: application/json; charset=utf-8');
+    if(!tienePermiso('Habilitar modulo de inventario') && userPerfil()>3){
+      http_response_code(403);
+      echo json_encode(['error'=>['No tienes permiso para consultar el inventario.']]);
+      return;
+    }
+
+    try{
+      $resultado = (new CostosProveedorConsultaService())->obtener(id_sucursal());
+      echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+    }catch(\Throwable $error){
+      error_log('Error al consultar costos por proveedor: '.$error->getMessage());
+      http_response_code(500);
+      echo json_encode(['error'=>['No fue posible consultar los costos.']]);
+    }
   }
 
 

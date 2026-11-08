@@ -235,6 +235,8 @@ $router->get('/admin/api/allConversionesUnidades', [almacencontrolador::class, '
 $router->post('/admin/api/almacen/crearNuevaConversionUnidad', [almacencontrolador::class, 'crearNuevaConversionUnidad']);
 $router->get('/admin/api/almacen/eliminarConversionUnidad', [almacencontrolador::class, 'eliminarConversionUnidad']);
 $router->post('/admin/api/actualizarcostos', [almacencontrolador::class, 'actualizarcostos']);  //actualizar costos, api llamada desde ajustarcostos.ts
+$router->post('/admin/api/almacen/guardarCostoProveedor', [almacencontrolador::class, 'guardarCostoProveedor']);
+$router->get('/admin/api/almacen/costosProductosPorProveedor', [almacencontrolador::class, 'obtenerCostosProveedor']);
 $router->post('/admin/api/actualizarPreciosVenta', [almacencontrolador::class, 'actualizarPreciosVenta']);  //actualizar precios, api llamada desde ajustarprecios.ts
 $router->get('/admin/api/totalitems', [almacencontrolador::class, 'totalitems']);  //api llamada desde compras.ts para obtener los productos simples y subproductos
 $router->post('/admin/api/registrarCompra', [almacencontrolador::class, 'registrarCompra']);  //
