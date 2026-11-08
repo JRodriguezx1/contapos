@@ -79,11 +79,13 @@
           <td><span class="table-badge table-badge--neutral">${sorted.length}</span></td>
           <td>${best
             ? `<span class="table-badge table-badge--success">${escapeHTML(best.name)}</span>`
-            : '<span class="text-slate-400">Sin proveedor</span>'}</td>
-          <td>${best
+            : '<span class="text-slate-400">Sin proveedor</span>'}
+          </td>`+
+          /*<td>${best
             ? `<span class="table-amount">${money(best.cost)}</span>`
-            : '<span class="text-slate-400">—</span>'}</td>
-          <td>
+            : '<span class="text-slate-400">—</span>'}
+          </td>*/
+          `<td>
             <button type="button" data-toggle="${articleKey}"
               aria-expanded="${expanded}"
               aria-label="${expanded ? 'Ocultar' : 'Mostrar'} proveedores de ${escapeHTML(p.name)}"

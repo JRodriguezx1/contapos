@@ -63,7 +63,7 @@
                 <th scope="col" class="!text-center">Producto</th>
                 <th scope="col" class="!text-center">Proveedores</th>
                 <th scope="col" class="!text-center">Mejor proveedor</th>
-                <th scope="col" class="!text-center">Menor costo</th>
+                <!--<th scope="col" class="!text-center">Menor costo</th>-->
                 <th scope="col" class="!text-center">Ver</th>
             </tr>
           </thead>
