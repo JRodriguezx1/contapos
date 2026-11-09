@@ -64,17 +64,21 @@
       });
 
 
+      inputBuscar?.addEventListener('input', (e) => {
+        if(!hackerList)return;
+        const texto = (e.target as HTMLInputElement).value.trim();
+        hackerList?.search(texto, ['card-producto', 'code']);
+      });
+
+
       inputBuscar?.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter') return;
-
+        if(e.key !== 'Enter')return;
         e.preventDefault();
-
-        if (!hackerList) return;
+        if(!hackerList)return;
 
         const items = hackerList.visibleItems;
-
         console.log(items);
-        if (!items.length) {
+        if(!items.length){
           inputBuscar.value = '';
           hackerList.search('');
           return;
@@ -86,7 +90,6 @@
         const productoConfigurado = structuredClone(productoItem);
         filtrarInsumos(productoConfigurado);
         POS.actualizarCarrito(productosku.dataset.id, 1, true, true, productoItem?.precio_venta, productoConfigurado);
-
         inputBuscar.value = '';
         hackerList.search('');
       });
@@ -106,7 +109,7 @@
           document.removeEventListener('click', cerrarMenuCategorias);
         });
       });
-      // cerrar al hacer click fuera del menÃº
+      // cerrar al hacer click fuera del menu
       function cerrarMenuCategorias() {
         menuCategorias?.classList.add('hidden');
         document.removeEventListener('click', cerrarMenuCategorias);
