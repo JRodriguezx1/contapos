@@ -701,6 +701,10 @@ video {
   left: 50%;
 }
 
+.left-3 {
+  left: 0.75rem;
+}
+
 .left-4 {
   left: 1rem;
 }
@@ -725,10 +729,6 @@ video {
   right: 1.5rem;
 }
 
-.right-8 {
-  right: 2rem;
-}
-
 .right-9 {
   right: 2.25rem;
 }
@@ -747,10 +747,6 @@ video {
 
 .top-1\/2 {
   top: 50%;
-}
-
-.top-1\/3 {
-  top: 33.333333%;
 }
 
 .top-24 {
@@ -1831,6 +1827,10 @@ video {
   min-width: 72rem;
 }
 
+.min-w-\[760px\] {
+  min-width: 760px;
+}
+
 .min-w-\[8\.8rem\] {
   min-width: 8.8rem;
 }
@@ -1842,10 +1842,6 @@ video {
 .min-w-max {
   min-width: -moz-max-content;
   min-width: max-content;
-}
-
-.min-w-24 {
-  min-width: 6rem;
 }
 
 .\!max-w-4xl {
@@ -1980,6 +1976,10 @@ video {
   max-width: 20rem;
 }
 
+.max-w-7xl {
+  max-width: 80rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2045,11 +2045,6 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.-translate-y-14 {
-  --tw-translate-y: -3.5rem;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .-translate-y-2 {
   --tw-translate-y: -0.5rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -2057,11 +2052,6 @@ video {
 
 .translate-x-0 {
   --tw-translate-x: 0px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-x-10 {
-  --tw-translate-x: 2.5rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -3189,11 +3179,6 @@ video {
   background-color: rgb(248 250 252 / 0.9);
 }
 
-.bg-teal-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(45 212 191 / var(--tw-bg-opacity));
-}
-
 .bg-teal-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(240 253 250 / var(--tw-bg-opacity));
@@ -3851,12 +3836,12 @@ video {
   padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
 }
 
-.pl-16 {
-  padding-left: 4rem;
+.pl-10 {
+  padding-left: 2.5rem;
 }
 
-.pl-2 {
-  padding-left: 0.5rem;
+.pl-16 {
+  padding-left: 4rem;
 }
 
 .pl-24 {
@@ -6347,10 +6332,6 @@ video {
     height: 5rem;
   }
 
-  .md\:h-auto {
-    height: auto;
-  }
-
   .md\:min-h-0 {
     min-height: 0px;
   }
@@ -7027,10 +7008,6 @@ video {
     position: sticky;
   }
 
-  .tlg\:bottom-auto {
-    bottom: auto;
-  }
-
   .tlg\:top-2 {
     top: 0.5rem;
   }
@@ -7049,14 +7026,6 @@ video {
 
   .tlg\:h-full {
     height: 100%;
-  }
-
-  .tlg\:max-h-\[60dvh\] {
-    max-height: 60dvh;
-  }
-
-  .tlg\:max-h-\[calc\(100dvh-10rem\)\] {
-    max-height: calc(100dvh - 10rem);
   }
 
   .tlg\:\!w-full {
@@ -7112,10 +7081,6 @@ video {
     row-gap: 0.75rem;
   }
 
-  .tlg\:self-start {
-    align-self: flex-start;
-  }
-
   .tlg\:overflow-hidden {
     overflow: hidden;
   }
@@ -7124,16 +7089,8 @@ video {
     overflow: visible;
   }
 
-  .tlg\:overflow-y-auto {
-    overflow-y: auto;
-  }
-
   .tlg\:overflow-y-scroll {
     overflow-y: scroll;
-  }
-
-  .tlg\:overscroll-y-contain {
-    overscroll-behavior-y: contain;
   }
 
   .tlg\:rounded-none {
@@ -7144,30 +7101,14 @@ video {
     padding: 0px;
   }
 
-  .tlg\:pb-2 {
-    padding-bottom: 0.5rem;
-  }
-
   .tlg\:pl-4 {
     padding-left: 1rem;
-  }
-
-  .tlg\:pr-2 {
-    padding-right: 0.5rem;
   }
 
   .tlg\:shadow-none {
     --tw-shadow: 0 0 #0000;
     --tw-shadow-colored: 0 0 #0000;
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  }
-
-  .tlg\:\[scrollbar-color\:rgba\(79\2c 70\2c 229\2c \.5\)_rgba\(238\2c 242\2c 255\2c \.85\)\] {
-    scrollbar-color: rgba(79,70,229,.5) rgba(238,242,255,.85);
-  }
-
-  .tlg\:\[scrollbar-width\:thin\] {
-    scrollbar-width: thin;
   }
 }
 
