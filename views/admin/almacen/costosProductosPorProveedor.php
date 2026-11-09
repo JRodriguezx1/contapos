@@ -87,7 +87,7 @@
       <form id="costForm" class="space-y-4">
         <label class="block">
             <span class="mb-1.5 block text-lg font-medium text-slate-600">Producto</span>
-            <select id="productSelect" required class="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base focus:border-indigo-500 focus:outline-none"></select>
+            <select id="productSelect" multiple required class="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base focus:border-indigo-500 focus:outline-none"></select>
         </label>
         <label class="block">
             <span class="mb-1.5 block text-lg font-medium text-slate-600">Proveedor</span>

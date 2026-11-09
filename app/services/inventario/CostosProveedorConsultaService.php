@@ -22,8 +22,9 @@ final class CostosProveedorConsultaService{
         }
 
         // La clave incluye el tipo porque productos y subproductos pueden tener el mismo ID.
+        $productos = productos::whereArray(['visible'=>1, 'tipoproducto'=>0]);
         $articulos = [];
-        foreach(productos::all() as $producto){
+        foreach($productos as $producto){
             $id = (int)$producto->id;
             $articulos["0:$id"] = [
                 'id'=>$id,

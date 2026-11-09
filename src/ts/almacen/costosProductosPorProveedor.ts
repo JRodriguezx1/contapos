@@ -157,7 +157,7 @@
     productSelect.innerHTML = products.map(p =>`<option value="${key(p)}">${tipo(p)} · ${escapeHTML(p.name)}</option>`).join('');
     supplierSelect.innerHTML = suppliers.map(s =>`<option value="${s.id}">${escapeHTML(s.name)}</option>`).join('');
 
-    productSelect.value = articleKey ?? key(products[0]);
+    productSelect.value = articleKey ?? '';
     supplierSelect.value = String(supplierId ?? suppliers[0].id);
     syncCost();
     modal.classList.replace('hidden', 'flex');
@@ -181,6 +181,7 @@
       products = data.products;
       suppliers = data.suppliers;
       render();
+      activarselect2();
     }catch(error){
       console.error(error);
       body.innerHTML = `
@@ -189,6 +190,15 @@
         </td></tr>`;
     }
   })();
+
+  function activarselect2(){
+      ($('#productSelect') as any).select2({
+        dropdownParent: $('#modal'),
+        placeholder: "Seleccionar el producto",
+        maximumSelectionLength: 1,
+        width: '100%',
+      });  
+  }
 
   body.addEventListener('click', event => {
     if(!(event.target instanceof Element))return;
@@ -220,6 +230,7 @@
   filter.addEventListener('change', render);
   productSelect.addEventListener('change', syncCost);
   supplierSelect.addEventListener('change', syncCost);
+
 
   // registrar costo
   const btnRegistrarCosto = document.querySelector('#registrarCosto') as HTMLButtonElement;
@@ -261,6 +272,7 @@
         openRows.add(key(article));
         render();
         hideModal();
+        $('#productSelect').val('').trigger('change');
         msjalertToast('success', 'Exito!', result.exito[0]);
     }catch(error){
         msjalertToast('error', 'Error!', 'No fue posible registrar el costo. - '+error);
