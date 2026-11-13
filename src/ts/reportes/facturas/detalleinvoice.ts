@@ -314,6 +314,7 @@
     async function asignarAdquirienteAFactura(datosAdquiriente: Record<string, FormDataEntryValue>){
       datosAdquiriente.idfactura = (document.querySelector('#idfactura') as HTMLInputElement).value;  ////id de la factura general
       datosAdquiriente.idfe = (document.querySelector('#idfe') as HTMLInputElement).value;
+      //datosAdquiriente.dv = String(getDgv(Number(datosAdquiriente.identification_number)));
       try{
             const url = "/admin/api/asignarAdquirienteAFactura";
             const respuesta = await fetch(url, {

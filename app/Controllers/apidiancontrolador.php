@@ -551,6 +551,9 @@ class apidiancontrolador{
       $resAdq = facturaElectronicaService::createUpDateAdquiriente($datosadquiriente);
       $facturaDian->id_adquiriente = $resAdq['id'];
       
+      $datosadquiriente['name'] = $datosadquiriente['business_name'];
+      unset($datosadquiriente['business_name'], $datosadquiriente['idfe'], $datosadquiriente['idfactura'], $datosadquiriente['department_id']);
+      
       $json_envio = json_decode($facturaDian->json_envio);
       $json_envio->customer = $datosadquiriente;
       $facturaDian->json_envio = json_encode($json_envio, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
