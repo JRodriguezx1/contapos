@@ -1,5 +1,5 @@
 (()=>{
-  if(!document.querySelector('.ventas')&&!document.querySelector('.modorapido'))return;
+  if(!document.querySelector('.ventas')&&!document.querySelector('.modorapido')&&!document.querySelector('.detalleinvoice'))return;
 
   const POS = (window as any).POS;
 
@@ -93,8 +93,7 @@
 
 
 
-  //buscar adquiriente
-  documentinput.addEventListener('input', buscarAquiriente);
+  documentinput.addEventListener('input', buscarAquiriente); //buscar adquiriente con numero de identificacion
   businessNameInput.addEventListener('input', buscarAquiriente);
 
   function buscarAquiriente(e:Event){

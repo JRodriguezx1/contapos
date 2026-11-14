@@ -252,13 +252,11 @@ class reportescontrolador{
         $adquiriente = adquirientes::find('id', 1);
         //Obtener la ultima factura electronica por prioridad de estado
         if($facturasElectronicas){
-          $max = 0;
-          $prioridades = [2 => 3, 1 => 2, 3 => 2, 4 => 1];
+          $prioridades = [1=>3, 3=>2, 2=>1, 4=>-1];
           $prioridadActual = 0;
           foreach($facturasElectronicas as $value){
             $p = $prioridades[$value->id_estadoelectronica];
-            if($p > $prioridadActual || ($value->id > $max && $p == $prioridadActual)){
-              $max = $value->id;
+            if($p>=$prioridadActual){
               $ultimaFacturaElectronica = $value;
               $prioridadActual = $p;
             }

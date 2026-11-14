@@ -89,8 +89,10 @@
                 Datos del adquiriente
             </h3>
 
-            <span class="bg-red-50 text-red-600 text-sm font-semibold px-3 py-1 rounded-full border border-red-200">
-                No asignado
+            <span 
+                id="adqrState" 
+                class="text-base font-semibold px-3 py-1 rounded-full border <?php echo $adquiriente->identification_number === '222222222222'?'bg-red-50 text-red-600 border-red-200':'bg-emerald-50 text-emerald-600 border-emerald-200';?>">
+                <?php echo $adquiriente->identification_number === '222222222222'?'No asignado':'Asignado'; ?>
             </span>
         </div>
 

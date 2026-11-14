@@ -225,18 +225,14 @@ class apidiancontrolador{
 
 
   public static function filterAdquirientes(){
-    //session_start();
     isadmin();
-    $alertas = [];
     $adquirientes = adquirientes::all();
     echo json_encode($adquirientes);
   }
 
   
   public static function guardarAdquiriente(){
-    //session_start();
     isadmin();
-    $alertas = [];
     if($_SERVER['REQUEST_METHOD'] !== 'POST'){
       http_response_code(405); // Método no permitido
       echo json_encode(['error' => 'Método no permitido']);

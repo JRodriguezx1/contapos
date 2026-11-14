@@ -15,11 +15,14 @@
     const modalEditarResolution = document.querySelector('#modalEditarResolution') as HTMLDialogElement;
     const formFacturarA = document.querySelector('#formFacturarA') as HTMLFormElement;
     const documentinput = document.querySelector('#identification_number') as HTMLInputElement;
+    const btnBuscarAdquiriente = document.querySelector('#btnBuscarAdquiriente') as HTMLButtonElement;
     const selectDepartments = document.querySelector('#department_id') as HTMLSelectElement;
     const selectdCities = document.querySelector('#municipality_id') as HTMLSelectElement;
-    let isElectronica = false, idfeEditarResolution:string;
+    const idfe = document.querySelector('#idfe') as HTMLInputElement;
+    const idfeState = document.querySelector('#idfeState') as HTMLInputElement;
+    let idfeEditarResolution:string;
     let customers:adquirientes[] = [];
-    let customersfiltrados:adquirientes[] = [];
+    let customersfiltrados:adquirientes[] = [], token:string|undefined;
 
 
     interface document {
@@ -46,6 +49,12 @@
       fecha_nota:string
     }
 
+    interface getAdquirienteDian {
+      ReceiverEmail:string, 
+      ReceiverName:string, 
+      StatusCode:string
+    }
+
     interface adquirientes {
       id?:string,
       type_document_identification_id:string,
@@ -61,7 +70,12 @@
       phone:string
     }
 
-    type municipalities = { id:string, department_id:string, name:string, code:string };
+    type municipalities = { 
+      id:string, 
+      department_id:string, 
+      name:string, 
+      code:string 
+    };
     let cities:municipalities[]=[];
 
 
@@ -72,6 +86,45 @@
       customers = resultado;
     })();
 
+
+    //consultar token
+    (async ()=>{
+      const url = `/admin/api/getCompaniesAll`; 
+      const respuesta = await fetch(url);
+      const resultado:{id:string, identification_number:string, business_name:string, idsoftware:string, token:string, estado:string}[] = await respuesta.json();
+      token = resultado.find(x=>x.estado==='1')?.token;
+    })();
+
+    btnBuscarAdquiriente.addEventListener('click', (e:Event)=>{
+      if(documentinput.value.trim().length > 4 && token!=undefined){
+        console.log(documentinput.value.trim());
+        GetAcquirerDian(documentinput.value.trim());
+      }
+    });
+
+    const GetAcquirerDian = async (identificationnumber: string)=>{
+      try {
+            const url = "https://apidianj2.com/api/ubl2.1/getAcquirer/13/"+identificationnumber;  //va al controlador ventascontrolador
+            const respuesta = await fetch(url, {
+                                      method: 'GET',
+                                      headers: { 
+                                        "Accept": "application/json", 
+                                        "Content-Type": "application/json",
+                                        "Authorization": "Bearer "+token
+                                      },
+                                    }); 
+            const resultado = await respuesta.json();
+            const {ReceiverEmail, ReceiverName, StatusCode}:getAdquirienteDian = resultado.data.GetAcquirerResult;
+            if(StatusCode === '200'){
+              (formFacturarA['business_name'] as HTMLInputElement).value = ReceiverName;
+              (formFacturarA['email'] as HTMLInputElement).value = ReceiverEmail;
+            }else{
+              msjAlert('error', 'No se encontro cliente en base de datos de la Dian', document.querySelector('#divmsjalertanoclienteDian') as HTMLElement);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     //buscar adquiriente con el numero de indentificacion que esta en el modal de adquiriente
     documentinput.addEventListener('input', buscarAquiriente);
@@ -161,19 +214,19 @@
     ///////////////////// Enviar a DIAN //////////////////////
     btnEnvarDian.addEventListener('click', async ()=>{
       const idfactura:string = (document.querySelector('#idfactura') as HTMLInputElement).value;
-      const idfe:string = (document.querySelector('#idfe') as HTMLInputElement).value;
-      const idfeState:string = (document.querySelector('#idfeState') as HTMLInputElement).value;
       (document.querySelector('.content-spinner1') as HTMLElement).style.display = "grid";
-      if(idfeState != '2'){
+      if(idfeState.value != '2'){
         const resDian = await POS.sendInvoiceAPI.sendInvoice(idfactura);
-        const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfe}"]`);
+        const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfe.value}"]`);
         if(resDian.exito !== undefined){
+          idfeState.value = '2';
           document.querySelector('#estadoFactura')!.textContent = 'Aceptada DIAN';
           document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'text-gray-700', 'bg-yellow-100', 'text-yellow-700');
           document.querySelector('#estadoFactura')?.classList.add('bg-green-500', 'text-white');
           msjalertToast('success', '¡Éxito!', resDian.exito[0]);
           if(filaDoc)filaDoc.children[3].children[1].innerHTML = `<a class="btn-xs btn-lima" href="${resDian.link}" target="_blank"> Aceptada </a>`;
         }else{
+          idfeState.value = '3';
           document.querySelector('#estadoFactura')!.textContent = 'Error';
           document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'g-green-500', 'text-gray-700', 'bg-yellow-100', 'text-yellow-700');
           document.querySelector('#estadoFactura')?.classList.add('bg-red-500', 'text-white');
@@ -231,13 +284,12 @@
             const resultado = await respuesta.json();
             if(resultado.exito !== undefined){
               msjalertToast('success', '¡Éxito!', resultado.exito[0]);
-              (document.querySelector('#idfe') as HTMLInputElement).value = resultado.facturaelectronica.id;
-              (document.querySelector('#idfeState') as HTMLInputElement).value = resultado.facturaelectronica.id_estadoelectronica;
+              idfe.value = resultado.facturaelectronica.id;
+              idfeState.value = resultado.facturaelectronica.id_estadoelectronica; //al crear nueva factura, el estado es 1 = pendiente
               document.querySelector('#prefixNumber')!.textContent = `Factura #${resultado.facturaelectronica.num_factura}`;
               document.querySelector('#estadoFactura')!.textContent = 'Pendiente DIAN';
               document.querySelector('#estadoFactura')?.classList.remove('bg-slate-100', 'text-gray-700', 'bg-green-500', 'text-white');
               document.querySelector('#estadoFactura')?.classList.add('bg-yellow-100', 'text-yellow-700');
-              isElectronica = true;  //condicion para que el adquiriente se aguarde y se asocie al documento
               printDocumentInTable(resultado.facturaelectronica);
               insertInModalNC(resultado.facturaelectronica);
               customersfiltrados = customers.filter(x=>x.id == resultado.facturaelectronica.id_adquiriente);
@@ -293,7 +345,7 @@
           Swal.fire("Correo incorrecto", "Debe ingresar un email válido o enviar a consumidor final o generico: 222222222222", "error");
           return; // detiene el proceso
       }
-      if(isElectronica){
+      if(/^[1-9]\d*$/.test(idfe?.value.trim() ?? '')){
         document.querySelector('#nombreAdquiriente')!.textContent = datosAdquiriente.business_name as string;
         document.querySelector('#identificacionAdquiriente')!.textContent = datosAdquiriente.identification_number as string;
         document.querySelector('#emailAdquiriente')!.textContent = datosAdquiriente.email as string;
@@ -312,9 +364,10 @@
 
     //asigna adquiriente a la ultima factura electronica.
     async function asignarAdquirienteAFactura(datosAdquiriente: Record<string, FormDataEntryValue>){
+      const adqrState = document.querySelector('#adqrState') as HTMLSpanElement;
       datosAdquiriente.idfactura = (document.querySelector('#idfactura') as HTMLInputElement).value;  ////id de la factura general
       datosAdquiriente.idfe = (document.querySelector('#idfe') as HTMLInputElement).value;
-      //datosAdquiriente.dv = String(getDgv(Number(datosAdquiriente.identification_number)));
+      datosAdquiriente.dv = String(getDgv(Number(datosAdquiriente.identification_number)));
       try{
             const url = "/admin/api/asignarAdquirienteAFactura";
             const respuesta = await fetch(url, {
@@ -328,6 +381,8 @@
               document.querySelector('#nombreAdquiriente')!.textContent = datosAdquiriente.business_name as string;
               document.querySelector('#identificacionAdquiriente')!.textContent = datosAdquiriente.identification_number as string;
               document.querySelector('#emailAdquiriente')!.textContent = datosAdquiriente.email as string;
+              adqrState.classList.remove('bg-red-50', 'text-red-600', 'border-red-200');
+              adqrState.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-200');
               if(resultado.tipo == "crear"){
                 customers = [...customers, resultado.obj];
               }else{
@@ -369,11 +424,10 @@
         e.preventDefault();
         const idfactura:string = (document.querySelector('#idfactura') as HTMLInputElement).value;  //id de la factura general
         const idInvoice:string = (document.querySelector('#selectInvoice') as HTMLSelectElement).value;
-        const idfeState:string = (document.querySelector('#idfeState') as HTMLInputElement).value;
         const consecutivo = (document.querySelector('#consecutivoPersonalizado') as HTMLInputElement).value;
         miDialogoNC.close();
         document.removeEventListener("click", cerrarDialogoExterno);
-        if(idfeState == '2'){
+        if(idfeState.value == '2'){
           try {
               const url = "/admin/api/sendNc"; //llamado a la API REST apidiancontrolador.php
               const respuesta = await fetch(url, {
@@ -465,21 +519,21 @@
       }
     });
 
-    async function eliminarFacturaElectronica(idfe:string){
+    async function eliminarFacturaElectronica(idregfe:string){
       try {
           const url = "/admin/api/eliminarFacturaElectronica"; //llamado a la API REST apidiancontrolador.php
           const respuesta = await fetch(url, {
               method: 'POST', 
               headers: { "Accept": "application/json", "Content-Type": "application/json" },
-              body: JSON.stringify({id: idfe})
+              body: JSON.stringify({id: idregfe})
           });
           const resultado = await respuesta.json(); 
           console.log(resultado);
-          const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idfe}"]`);
+          const filaDoc = document.querySelector(`#detalleDocumentos tr[data-idfe="${idregfe}"]`);
           if(resultado.exito !== undefined){
             msjalertToast('success', '¡Éxito!', resultado.exito[0]);
             if(filaDoc)filaDoc.remove();
-            eliminarOptionSelectNC(idfe);
+            eliminarOptionSelectNC(idregfe);
           }else{
             msjalertToast('error', '¡Error!', resultado.error[0]);
           }
