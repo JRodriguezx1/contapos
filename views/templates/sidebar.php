@@ -1,4 +1,4 @@
-﻿<!--<aside class="dashboard__sidebar">
+<!--<aside class="dashboard__sidebar">
     <nav class="dashboard__menu">
         <a href="/admin/dashboard" class="dashboard__enlace <?php echo validar_string_url('/dashboard')?'dashboard__enlace--actual':''; ?>">
             <i class="fa-solid fa-house"></i>
