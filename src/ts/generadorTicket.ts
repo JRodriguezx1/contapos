@@ -460,7 +460,7 @@ class InvoiceTicketBuilder2 extends EscPosBuilder {
         return this.build(buildBytes);
     }
 
-    private async header() {
+    private async header(){
         await this.image(`/build/img/${this.invoice.logo}`, {
             width: 220,
             align: 'center'

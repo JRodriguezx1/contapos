@@ -701,7 +701,7 @@
         //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
         //const url = `intent://base64,${base64}#Intent;scheme=rawbt;package=ru.a4024.rawbtprinter;end;`;
         //window.location.href = url;
-        if (isAndroid)window.location.href = `rawbt:base64,${base64}`;
+        if(isAndroid)window.location.href = `rawbt:base64,${base64}`;
 
         //version string
           //const encoder = new TextEncoder();

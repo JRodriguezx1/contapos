@@ -47,7 +47,10 @@ function id_sucursal():int{
 }
 
 function negocionSucursal():object{
-    return $_SESSION['sucursal'];
+    $sucursal = $_SESSION['sucursal'];
+    $existe_archivo = !empty($sucursal->logo)&&file_exists($_SERVER['DOCUMENT_ROOT']."/build/img/$sucursal->logo");
+    if(!$existe_archivo)$sucursal->logo = "Logoj2negro.png";
+    return $sucursal;
     //$lineasencabezado = explode("\n", $sucursal->datosencabezados??'');
 }
 
